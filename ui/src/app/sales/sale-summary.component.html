@@ -1,0 +1,91 @@
+<div class="card-row card" >
+    <div class="card-header">
+        <div class="row">
+            <div class="col-10 col-md-10">
+                <i class="fas fa-list-ul"></i>&nbsp;Riepilogo
+            </div>
+            <div class="col-2 col-md-2">
+                <a (click)="endSummary()">
+                    <span class="d-none d-md-inline">Termina&nbsp;</span><i class="fas fa-step-forward"></i>
+                </a>
+            </div>
+        </div>
+
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1 d-none d-md-inline">
+                <div class="green-led" [hidden]="!sale.payed"></div>
+                <div class="red-led" [hidden]="sale.payed"></div>
+            </div>
+            <div class="col-md-8 col">
+                <h5 class="card-title">{{sale.customer.firstName}} {{sale.customer.lastName}} (#{{sale.id}})</h5>
+            </div>
+
+            <div class="col-md-1 col">
+                <a (click)="paySale()"
+                   data-toggle="modal"
+                   data-target="#payModal"
+                   aria-hidden="true"
+                   *ngIf="current_role_view == 1 && !sale.payed">
+                    <i class="far fa-credit-card" title="Paga" ></i>
+                </a>
+            </div>
+            <div class="col-md-1 col">
+                <a (click)="deleteSale()" *ngIf="current_role_view == 1 && !sale.payed">
+                    <i class="fa fa-trash-alt" title="Rimuovi"></i>
+                </a>
+            </div>
+            <div class="col-md-1 col">
+                <a (click)="toggle()">
+                    <i [hidden]="hidden" class="fa fa-angle-down" title="Apri"></i>
+                    <i [hidden]="!hidden" class="fa fa-angle-up" title="Chiudi"></i>
+                </a>
+            </div>
+        </div>
+        <div [hidden]="!hidden" >
+            <div class="row">
+                <div class="col-sm-1 d-none d-md-inline"></div>
+                <div class="col-sm-5 col-12">
+                    <i class="fa fa-calendar-alt"></i>&nbsp;
+                    <span class="d-none d-md-inline">Creato il</span>&nbsp;
+                    <span [innerHTML]="getDate(sale.createdAt)"></span>
+                </div>
+                <div class="card-text col-sm-6 col-12">
+                    <div [hidden]="!sale.payed">
+                        <i class="fa fa-calendar-check"></i>&nbsp;
+                        <span class="d-none d-md-inline">Pagato il</span>&nbsp;
+                        <span [innerHTML]="getDate(sale.payedDate)"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-1 d-none d-md-inline"></div>
+                <div class="card-text col-sm-5 col-12">
+                    <i class="fa fa-money-bill-wave"></i>&nbsp;&nbsp;Totale&nbsp;{{sale.totalPrice}}&euro;
+                </div>
+                <div class="card-text col-sm-6 col-12">
+                    <div [hidden]="sale.payed">
+                        <i class="fab fa-cc-apple-pay"></i>&nbsp;&nbsp;Da Pagare&nbsp;
+                        <span [innerHTML]="sale.totalPrice-sale.amountPayed"></span>&euro;
+                    </div>
+                </div>
+            </div>
+            <div class="row" *ngFor="let b of sale.salesLineItems; let i=index">
+                <div class="col-sm-1 d-none d-sm-block">
+                </div>
+                <div  class="col-sm-11 col">
+                    <bundle-details [bundle]="b.bundleSpecification" mode="read" classMode="light"></bundle-details>
+                    <div class="line" *ngIf="i < (sale.salesLineItems.length-1)"></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<sale-modal (event)="updateSale(sale.id)"
+            modalId="payModal"
+            modalTitle="Paga la Rata"
+            modalCloseId="payModalClose"></sale-modal>

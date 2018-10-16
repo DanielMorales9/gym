@@ -1,0 +1,87 @@
+<div class="modal" tabindex="-1" role="dialog" [id]="modalId">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form #f="ngForm" role="form" novalidate (ngSubmit)="f.form.valid && submitBundle()">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{modalTitle}}</h5>
+                    <button type="button" class="close" [id]="modalCloseId" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name" class="sr-only">Nome</label>
+                        <input type="text"
+                               placeholder="Nome"
+                               class="form-control"
+                               id="name"
+                               name="name"
+                               [ngClass]="{ 'is-invalid': f.submitted && name.invalid }" required
+                               [(ngModel)]="bundle.name" #name="ngModel"/>
+                        <div *ngIf="f.submitted && name.invalid" class="error-message">
+                            <div *ngIf="name.errors.required">Nome del pacchetto obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="price" class="sr-only">Prezzo</label>
+                        <input type="number"
+                               placeholder="Prezzo&nbsp;&euro;"
+                               class="form-control"
+                               id="price"
+                               numeric="true"
+                               name="price"
+                               [ngClass]="{ 'is-invalid': f.submitted && price.invalid }" required
+                               [(ngModel)]="bundle.price" #price="ngModel"/>
+                        <div *ngIf="f.submitted && price.invalid" class="error-message">
+                            <div *ngIf="price.errors.required">Prezzo del pacchetto obbligatorio</div>
+                            <div *ngIf="!price.valid">Prezzo del pacchetto non valido</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="numSessions" class="sr-only">Numero di Sessioni</label>
+                        <input type="number"
+                               placeholder="Numero di sessioni"
+                               class="form-control"
+                               id="numSessions"
+                               name="numSessions"
+                               numeric="true"
+                               [ngClass]="{ 'is-invalid': f.submitted && numSessions.invalid }" required
+                               [(ngModel)]="bundle.numSessions" #numSessions="ngModel"/>
+                        <div *ngIf="f.submitted && numSessions.invalid" class="error-message">
+                            <div *ngIf="numSessions.errors.required">Numero di sessioni obbligatori</div>
+                            <div *ngIf="!numSessions.valid">Il numero di sessioni deve essere intero</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="sr-only">Descrizione</label>
+                        <textarea placeholder="Descrizione"
+                                  class="form-control"
+                                  id="description"
+                                  name="description"
+                                  [ngClass]="{ 'is-invalid': f.submitted && description.invalid }" required
+                                  [(ngModel)]="bundle.description" #description="ngModel">
+        </textarea>
+                        <div *ngIf="f.submitted && description.invalid" class="error-message">
+                            <div *ngIf="description.errors.required">Descrizione del pacchetto obbligatoria</div>
+                        </div>
+                    </div>
+                    <!--div class="error-message" *ngIf="error">
+                        <p [innerHTML]="message"></p>
+                    </div-->
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<div id="loader" [hidden]="!loading">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</div>

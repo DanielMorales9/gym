@@ -1,0 +1,40 @@
+<table class="card-table">
+    <thead>
+    <th colspan="2">
+        <div class="input-group" id="adv-search">
+            <label class="sr-only" for="search">Search</label>
+            <input type="text" title="Ricerca Utenti"
+                   [(ngModel)]="query"
+                   class="form-control"
+                   id="search"
+                   placeholder="Search" />
+            <button type="submit" class="btn" id="search-submit" (click)="findUsers()">
+                <i class="fa fa-search"></i>
+            </button>
+            <button type="button" class="btn btn-primary" id="search-add"
+                    data-toggle="modal"
+                    data-target="#postModal"
+                    title="Aggiungi Utente">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </th>
+    </thead>
+    <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
+        <span><i class="fa fa-times-circle"></i> Nessun utente registrato...</span>
+    </tr>
+    <tr *ngFor="let u of users" >
+        <user-details [user]="u"></user-details>
+
+    </tr>
+</table>
+<pager #pagerComponent (pager)="getUsersByPage()"></pager>
+<user-modal (done)="getUsersByPage()"
+            [role]="current_role_view"
+            modalClosingMessage=" è stato creato!"
+            modalCloseId="post-close"
+            modalMode="create"
+            modalTitle="Registra Nuova Utenza"
+            modalId="postModal">
+
+</user-modal>

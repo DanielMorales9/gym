@@ -1,0 +1,84 @@
+<div class="card-row card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1 d-none d-md-inline"></div>
+            <div class="col-md-9 col-6"><h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5></div>
+            <div class="col-md-1 col-3">
+                <a (click)="editUser()" [hidden]="current_role_view > 1" data-toggle="modal" data-target="#putModal">
+                    <i class="fa fa-plus" aria-hidden="true" title="Modifica"></i>
+                </a>
+            </div>
+            <div class="col-md-1 col-3">
+                <a (click)="editUser()" [hidden]="current_role_view > 1" data-toggle="modal" data-target="#patchModal">
+                    <i class="fa fa-edit" aria-hidden="true" title="Aggiungi Ruolo"></i>
+                </a>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 1rem">
+            <div class="col-md-1 d-none d-md-inline">
+            </div>
+            <div class="col-md-6 col-12">
+                <p class="card-text"><i class="fa fa-envelope"></i>&nbsp;&nbsp;
+                    <a href="mailto:user.email">{{user.email}}</a></p>
+            </div>
+            <div class="col-md-5 col-12">
+                <div [hidden]="current_role_view > 1">
+
+                    <div class="card-text" style="color: red;" [hidden]="user.verified">
+                        <i class="fa fa-times-circle"></i>&nbsp;&nbsp;Non Verificato
+                    </div>
+                    <div class="card-text" style="color: green" [hidden]="!user.verified">
+                        <i class="fa fa-check-circle"></i>&nbsp;&nbsp;Verificato
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: .75rem">
+            <div class="col-md-1 d-none d-md-inline">
+            </div>
+            <div class="card-text col-md-11 col">
+                <i class="fa fa-calendar-alt"></i>&nbsp;&nbsp;
+                <span class="d-none d-sm-inline">
+                        Membro dal:
+                    </span>
+                <span [innerHTML]="getUserCreatedAt()"></span>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: .75rem">
+            <div class="col-md-1 d-none d-md-inline"></div>
+            <div class="card-text  col-md-11">
+                <i class="fa fa-pencil-ruler"></i>&nbsp;&nbsp;
+                <b>Ruoli</b>&nbsp;
+                <span *ngFor="let r of roles">{{r}}&nbsp;</span>
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: .75rem" *ngIf="user.height && user.weight">
+            <div class="col-md-1 d-none d-md-inline"></div>
+            <div class="card-text col-md-4">
+                <i class="fa fa-weight"></i>&nbsp;&nbsp;
+                {{user.weight}}
+            </div>
+            <div class="card-text col-md-4">
+                <i class="fa fa-text-height"></i>&nbsp;&nbsp;
+                {{user.height}}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<user-modal (done)="updateUser()"
+            [role]="current_role_view"
+            modalMode="edit"
+            modalClosingMessage=" è stato modificato!"
+            modalCloseId="patch-close"
+            modalTitle="Modifica Dati"
+            modalId="patchModal"></user-modal>
+
+<user-modal (done)="updateUser()"
+            [role]="current_role_view"
+            modalMode="add"
+            modalClosingMessage=" è stato aggiunto!"
+            modalCloseId="put-close"
+            modalTitle="Aggiungi Ruolo"
+            modalId="putModal"></user-modal>

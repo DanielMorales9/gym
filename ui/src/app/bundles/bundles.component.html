@@ -1,0 +1,48 @@
+<table class="card-table">
+    <thead>
+    <th>
+        <div class="input-group" id="adv-search">
+            <label class="sr-only" for="search">Search</label>
+            <input type="text" title="Ricerca Pacchetto"
+                   [(ngModel)]="query"
+                   class="form-control"
+                   id="search"
+                   placeholder="Search" />
+            <button type="submit" class="btn" id="search-submit" (click)="findBundles()">
+                <i class="fa fa-search"></i>
+            </button>
+            <button type="button" class="btn btn-primary" id="search-add"
+                    data-toggle="modal"
+                    title="Aggiungi Pacchetto"
+                    data-target="#postModal">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </th>
+    </thead>
+    <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
+        <span><i class="fa fa-times-circle"></i> Nessun pacchetto disponibile...</span>
+    </tr>
+    <tr *ngFor="let b of bundles">
+        <bundle-details [bundle]="b" mode="write" classMode="default"></bundle-details>
+    </tr>
+</table>
+<pager #pagerComponent (pager)="getBundlesByPage()"></pager>
+
+
+<bundle-modal
+        edit="false"
+        modalTitle="Crea Nuovo Pacchetto"
+        modalId="postModal"
+        modalCloseId="postClose"
+        modalClosingMessage=" è stato creato!"
+        (modalEvent)="delayedFindBundles()">
+</bundle-modal>
+<bundle-modal
+        modalTitle="Modifica pacchetto"
+        modalId="putModal"
+        modalCloseId="putClose"
+        modalClosingMessage=" è stato modificato!"
+        edit="true"
+        (modalEvent)="delayedFindBundles()">
+</bundle-modal>

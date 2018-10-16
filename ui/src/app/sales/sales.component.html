@@ -1,0 +1,31 @@
+<table class="card-table">
+    <thead>
+    <th colspan="2">
+        <div class="input-group" id="adv-search">
+            <label class="sr-only" for="search">Search</label>
+            <input type="text" title="Ricerca Vendite"
+                   [(ngModel)]="query"
+                   class="form-control"
+                   id="search"
+                   placeholder="Search" />
+            <button type="submit" class="btn" id="search-submit-endTime" (click)="searchByPage()">
+                <i class="fa fa-search"></i>
+            </button>
+
+        </div>
+    </th>
+    </thead>
+    <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
+        <span><i class="fa fa-times-circle"></i> Nessun Vendita Effettuata...</span>
+    </tr>
+    <tr *ngFor="let s of sales" >
+        <sale-details [sale]="s" (event)="findSales()"></sale-details>
+
+    </tr>
+</table>
+<pager #pagerComponent (pager)="getSalesByPage()"></pager>
+
+<sale-modal (event)="delayedFindSales()"
+            modalId="payModal"
+            modalTitle="Paga la Rata"
+            modalCloseId="payModalClose"></sale-modal>

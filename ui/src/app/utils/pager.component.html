@@ -1,0 +1,13 @@
+<nav aria-label="Naviga tra i pacchetti" [hidden]="empty">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" [ngClass]="{'disabled': page == 0}">
+            <a class="page-link" (click)="previousPage()">Previous</a>
+        </li>
+        <li class="page-item" [ngClass]="{'active': i == page}" *ngFor="let p of pages; let i = index">
+            <a class="page-link" (click)="setPage(i)">{{i}}</a>
+        </li>
+        <li class="page-item" [ngClass]="{'disabled': page == totalPages-1}">
+            <a class="page-link" (click)="nextPage()">Next</a>
+        </li>
+    </ul>
+</nav>

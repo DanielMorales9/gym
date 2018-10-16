@@ -1,0 +1,44 @@
+version: "2"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    volumes:
+    - ../data/postgres:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_DB: crm
+      POSTGRES_PASSWORD: daniel
+      POSTGRES_USER: daniel
+      PGDATA: /var/lib/postgresql/data/pgdata
+  redis:
+    container_name: redis
+    image: redis
+  gateway:
+    container_name: gateway
+    image: tenentedan9/gateway:0.0.1-SNAPSHOT
+    ports:
+      - 80:8080
+    depends_on:
+      - postgres
+      - redis
+  ui:
+    container_name: ui
+    image: tenentedan9/ui:0.0.1-SNAPSHOT
+    ports:
+    - 8081:8081
+    volumes:
+      - ./ui/target/dependency/META-INF:/app
+      - ./ui/target/dependency/BOOT-INF/lib:/app/lib
+      - ./ui/target/dependency/BOOT-INF/classes:/app
+    depends_on:
+    - gateway
+    - redis
+  api:
+    container_name: api
+    image: tenentedan9/api:0.0.1-SNAPSHOT
+    ports:
+    - 9000:9000
+    depends_on:
+    - gateway
+    - redis

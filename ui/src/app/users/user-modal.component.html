@@ -1,0 +1,107 @@
+<div class="modal" tabindex="-1" role="dialog" [id]="modalId">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form [formGroup]="form" role="form" novalidate (ngSubmit)="form.invalid && submitUser()">
+                <div class="modal-header">
+                    <h5 class="modal-title">{{modalTitle}}</h5>
+                    <button type="button" class="close" [id]="modalCloseId" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group" [hidden]="role > 1 || modalMode == 'add'">
+                        <label for="firstName" class="sr-only">Nome:</label>
+                        <input name="firstName"
+                               placeholder="Nome"
+                               class="form-control"
+                               id="firstName"
+                               type="text"
+                               formControlName="firstName" />
+                        <div *ngIf="f.submitted && f.firstName.invalid" class="error-message">
+                            <div *ngIf="f.firstName.errors.required">Nome obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group" [hidden]="role > 1 || modalMode == 'add'">
+                        <label for="lastName" class="sr-only">Cognome:</label>
+                        <input name="lastName"
+                               placeholder="Cognome"
+                               class="form-control"
+                               id="lastName"
+                               type="text"
+                               formControlName="lastName"/>
+                        <div *ngIf="f.submitted && f.lastName.invalid" class="error-message">
+                            <div *ngIf="f.lastName.errors.required">Cognome obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group" [hidden]="role > 1 || modalMode == 'add'">
+                        <label for="email" class="sr-only">Email:</label>
+                        <input name="email"
+                               placeholder="Email"
+                               class="form-control"
+                               id="email"
+                               type="text"
+                               formControlName="email" />
+                        <div *ngIf="f.submitted && f.email.invalid" class="error-message">
+                            <div *ngIf="f.email.errors.required">Email obbligatoria</div>
+                            <div *ngIf="f.email.errors.pattern">Email non valida</div>
+                        </div>
+                    </div>
+                    <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || user.defaultRoles[0] != 3">
+                        <label for="height" class="sr-only">Altezza</label>
+                        <input type="number"
+                               placeholder="Altezza (cm)"
+                               class="form-control"
+                               id="height"
+                               numeric="true"
+                               name="height"
+                               formControlName="height" />
+                        <div *ngIf="f.submitted && f.height.invalid" class="error-message">
+                            <div *ngIf="f.height.errors.required">Altezza obbligatoria</div>
+                            <div *ngIf="!f.height.valid">Altezza non valida</div>
+                        </div>
+                    </div>
+                    <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || user.defaultRoles[0] != 3">
+                        <label for="weight" class="sr-only">Peso</label>
+                        <input type="number"
+                               placeholder="Peso (kg)"
+                               class="form-control"
+                               id="weight"
+                               numeric="true"
+                               name="weight"
+                               formControlName="weight"/>
+                        <div *ngIf="f.submitted && f.weight.invalid" class="error-message">
+                            <div *ngIf="f.weight.errors.required">Peso obbligatorio</div>
+                            <div *ngIf="!f.weight.valid">Peso non valido</div>
+                        </div>
+                    </div>
+                    <div class="form-group" [hidden]="role > 1 || modalMode == 'edit'">
+                        <label for="role" ><b>Ruolo</b></label>
+                        <select class="form-control"
+                                name="role"
+                                id="role"
+                                type="text"
+                                formControlName="type">
+                            <option value="customer">Utente</option>
+                            <option value="admin">Amministratore</option>
+                            <option value="trainer">Allenatore</option>
+                        </select>
+                        <div *ngIf="f.submitted && f.type.invalid" class="error-message">
+                            <div *ngIf="f.type.errors.required">Ruolo obbligatorio</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-lg btn-primary btn-block">Invia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div id="loader" [hidden]="!loading">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</div>

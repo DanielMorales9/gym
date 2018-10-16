@@ -1,0 +1,51 @@
+<table class="card-table">
+    <thead>
+    <th>
+        <div class="input-group" id="adv-search">
+            <label class="sr-only" for="search">Search</label>
+            <input type="text" title="Ricerca Pacchetto"
+                   [(ngModel)]="query"
+                   class="form-control"
+                   id="search"
+                   placeholder="Search" />
+            <button type="submit" class="btn" id="search-submit-endTime" (click)="findBundles()">
+                <i class="fa fa-search"></i>
+            </button>
+        </div>
+    </th>
+    </thead>
+    <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
+        <span><i class="fa fa-times-circle"></i> Nessun pacchetto disponibile...</span>
+    </tr>
+    <tr *ngFor="let b of bundles">
+        <bundle-details [bundle]="b" mode="add" classMode="default" (event)="addBundle($event)"></bundle-details>
+    </tr>
+</table>
+<pager #pagerComponent></pager>
+
+<table class="card-table" *ngIf="soldBundles.length > 0">
+    <thead>
+    <th>
+        <div class="card card-row">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-10 col-xs-11">
+                        <h5 class="card-text">
+                            <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Carrello
+                        </h5>
+                    </div>
+                    <div class="col-2 col-xs-1">
+                        <a (click)="confirmSale()">
+                            <i class="fa fa-clipboard-check" title="Conferma Vendita">&nbsp;&nbsp;</i>
+                            <span class="d-none d-md-inline">Conferma</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </th>
+    </thead>
+    <tr *ngFor="let b of soldBundles">
+        <bundle-details [bundle]="b" mode="delete" classMode="default" (event)="deleteBundle($event)"></bundle-details>
+    </tr>
+</table>

@@ -1,0 +1,21 @@
+logging:
+  level:
+    org.springframework.security: DEBUG
+spring:
+  application:
+    name: gateway
+  cloud:
+    gateway:
+      routes:
+      - id: api
+        uri: http://api:9000
+        predicates:
+        - Path=/api/**
+        filters:
+        - RewritePath=/api/(?<path>.*), /$\{path}
+      - id: ui
+        uri: http://ui:8081
+        predicates:
+        - Path=/**
+server:
+  port: 8080

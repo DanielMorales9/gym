@@ -1,0 +1,211 @@
+<ng-template #modalContent let-close="close">
+    <div class="modal-header">
+        <h5 class="modal-title"> {{modalData?.title}}</h5>
+        <button type="button" class="close" (click)="close()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div [ngSwitch]="modalData?.action"         >
+        <div *ngSwitchCase="'hour'">
+            <div *ngIf="modalData?.role == 3">
+                <div class="modal-body" >
+                    <div>
+                        L'ora selezionata ({{ modalData?.event.date | date :  'HH:mm a - dd/MM/yyyy'}}) è disponibile.
+                        <br>
+                        Conferma per prenotare oppure cancella.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
+                    <button type="button" class="btn btn-primary" (click)="book(modalData?.event.date)">Conferma</button>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchCase="'delete'">
+            <div class="modal-body" >
+                <div>
+                    Vuoi eliminare la prenotazione ({{ modalData?.event.start | date :  'HH:mm a - dd/MM/yyyy'}}) ?
+                    <br>
+                    Conferma per eliminare oppure cancella.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
+                <button type="button" class="btn btn-primary" (click)="delete(modalData?.event)">Conferma</button>
+            </div>
+        </div>
+        <div *ngSwitchCase="'info'">
+            <div *ngIf="modalData?.role == 3">
+
+                <div class="modal-body" >
+                    <div class="row" >
+                        <div class="col-12">
+                            <i class="fas fa-check" *ngIf="modalData.event.meta.confirmed"></i>
+                            <i class="fas fa-ban" *ngIf="!modalData.event.meta.confirmed"></i>&nbsp;
+                            Il tuo allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+                            alle {{ modalData?.event.end | date :  'HH:mm a'}}
+                            <span *ngIf="!modalData.event.meta.confirmed"> non</span> è stato
+                            <span *ngIf="!modalData.event.meta.confirmed"> confermato</span> confermato.
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
+                </div>
+            </div>
+            <div *ngIf="modalData?.role < 3">
+                <div class="modal-body" >
+                    <div class="row">
+                        <div class="col-12">
+                            <i class="fas fa-check" *ngIf="modalData.event.meta.confirmed"></i>
+                            <i class="fas fa-check-double"
+                               *ngIf="modalData.event.meta.confirmed && modalData.event.meta.session.completed"></i>
+                            <i class="fas fa-ban" *ngIf="!modalData.event.meta.confirmed"></i>&nbsp;
+                            L'allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+                            alle {{ modalData?.event.end | date :  'HH:mm a'}}
+                            del cliente {{modalData.event.meta.customer.lastName}}
+                            <span *ngIf="!modalData.event.meta.confirmed"> non</span> è stato confermato e
+                            <span *ngIf="!modalData.event.meta.session.completed"> non è stato </span> completato!
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            *ngIf="!modalData.event.meta.confirmed"
+                            (click)="confirm(modalData?.event)">Conferma</button>
+                    <button type="button"
+                            class="btn btn-primary"
+                            *ngIf="!modalData.event.meta.session.completed && modalData.event.meta.confirmed"
+                            (click)="complete(modalData?.event)">Completa</button>
+                </div>
+            </div>
+        </div>
+        <div *ngSwitchDefault>
+            <div class="modal-body">
+                <div>
+                    Action:
+                    <pre>{{ modalData?.action }}</pre>
+                </div>
+                <div>
+                    Event:
+                    <pre>{{ modalData?.event | json }}</pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
+            </div>
+        </div>
+    </div>
+
+</ng-template>
+
+<div class="row text-center">
+    <div class="col-md-4">
+        <div class="btn-group">
+            <div
+                    class="btn btn-primary"
+                    mwlCalendarPreviousView
+                    [view]="view"
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="onViewDateChanged()">
+                Previous
+            </div>
+            <div
+                    class="btn btn-outline-secondary"
+                    mwlCalendarToday
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="onViewDateChanged()" >
+                Today
+            </div>
+            <div
+                    class="btn btn-primary"
+                    mwlCalendarNextView
+                    [view]="view"
+                    [(viewDate)]="viewDate"
+                    (viewDateChange)="onViewDateChanged()">
+                Next
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h5>{{ viewDate | calendarDate:(view + 'ViewTitle'):'it' }}</h5>
+    </div>
+    <div class="col-md-4">
+        <div class="btn-group">
+            <div
+                    class="btn btn-primary"
+                    (click)="onViewDateChanged(CalendarView.Month)"
+                    [class.active]="view === CalendarView.Month">
+                Month
+            </div>
+            <div
+                    class="btn btn-primary"
+                    (click)="onViewDateChanged(CalendarView.Week)"
+                    [class.active]="view === CalendarView.Week">
+                Week
+            </div>
+            <div
+                    class="btn btn-primary"
+                    (click)="onViewDateChanged(CalendarView.Day)"
+                    [class.active]="view === CalendarView.Day">
+                Day
+            </div>
+        </div>
+    </div>
+</div>
+<br>
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view
+            *ngSwitchCase="CalendarView.Month"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            locale="it"
+            [activeDayIsOpen]="activeDayIsOpen"
+            [excludeDays]="excludeDays"
+            (dayClicked)="dayClicked($event)"
+            (eventClicked)="handleEvent('info', $event.event)"
+            (eventTimesChanged)="eventTimesC1hanged($event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+            *ngSwitchCase="CalendarView.Week"
+            [viewDate]="viewDate"
+            [dayStartHour]="8"
+            [dayEndHour]="22"
+            [events]="events"
+            [excludeDays]="excludeDays"
+            locale="it"
+            [hourSegments]="1"
+            [refresh]="refresh"
+            (hourSegmentClicked)="hourSegmentClicked($event)"
+            (dayHeaderClicked)="dayClicked($event)"
+            (eventClicked)="handleEvent('info', $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+            *ngSwitchCase="CalendarView.Day"
+            [viewDate]="viewDate"
+            [events]="events"
+            [dayStartHour]="8"
+            [events]="events"
+            [refresh]="refresh"
+            [dayEndHour]="22"
+            [refresh]="refresh"
+            locale="it"
+            [hourSegments]="1"
+            (hourSegmentClicked)="hourSegmentClicked($event)"
+            (dayClicked)="dayClicked($event)"
+            (eventClicked)="handleEvent('info', $event.event)"
+            (eventTimesChanged)="eventTimesChanged($event)">
+    </mwl-calendar-day-view>
+</div>
+
+<div *ngIf="loading">
+    <div class="spinner">
+        <div class="bounce1"></div>
+        <div class="bounce2"></div>
+        <div class="bounce3"></div>
+    </div>
+</div>
