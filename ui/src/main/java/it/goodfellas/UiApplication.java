@@ -20,8 +20,8 @@ import java.io.IOException;
 @Controller
 public class UiApplication extends WebSecurityConfigurerAdapter {
 
-    @RequestMapping({ "/home", "/home/**/*", "/users/*",
-                      "/users/**/*", "/login", "/verification"})
+    @RequestMapping({ "/home", "/home/**/*", "/user/*",
+                      "/user/**/*", "/login", "/verification"})
     public String publicAPI() {
         return "forward:/index.html";
     }
