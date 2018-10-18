@@ -1,5 +1,10 @@
 package it.goodfellas;
 
+import it.goodfellas.model.Admin;
+import it.goodfellas.model.Role;
+import it.goodfellas.repository.AdminRepository;
+import it.goodfellas.repository.RoleRepository;
+import it.goodfellas.utility.Constants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

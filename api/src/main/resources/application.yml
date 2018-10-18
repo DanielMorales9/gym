@@ -1,3 +1,7 @@
+logging:
+  level:
+    org.springframework.security: INFO
+
 baseUrl: http://localhost:8080
 spring:
   mail:

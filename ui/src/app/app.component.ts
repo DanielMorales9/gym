@@ -55,7 +55,7 @@ export class AppComponent {
     }
 
     logout() {
-        this.http.get('logout').finally(() => {
+        this.http.get('/logout').finally(() => {
             this.app.authenticated = false;
             this.current_role_view = undefined;
             this.roles = undefined;

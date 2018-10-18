@@ -10,15 +10,20 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 
 @SpringBootApplication
 @Controller
 public class UiApplication extends WebSecurityConfigurerAdapter {
 
-    @GetMapping(value = "/")
-    public String index() {
-        return "index.html";
+    @RequestMapping({ "/home", "/home/**/*", "/users/*",
+                      "/users/**/*", "/login", "/verification"})
+    public String publicAPI() {
+        return "forward:/index.html";
     }
 
     @Override

@@ -73,14 +73,17 @@ const routes: Routes = [
     }
 ];
 
+const baseUrl = "http://localhost";
+
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
 
     constructor(private app: AppService) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
+        let url = req.url.replace(baseUrl, "");
         const xhr = req.clone({
-            url: "/api" + req.url,
+            url: "/api" + url,
             setHeaders: {
                 'X-Requested-With': 'XMLHttpRequest',
                 'authorization': this.app.getAuthorizationHeader()
