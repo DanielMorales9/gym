@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { AppService } from './services/app.service';
 import { HttpClient } from '@angular/common/http';
 import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
@@ -11,7 +11,7 @@ import {ChangeViewService} from "./services/change-view.service";
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
 
     current_role_view: number;
     user: any;
@@ -23,7 +23,11 @@ export class AppComponent {
                 private changeViewService: ChangeViewService,
                 private messageService: MessageService) {
 
-        router.events.subscribe(event => {
+    }
+
+    ngOnInit(): void {
+
+        this.router.events.subscribe(event => {
             if(event instanceof NavigationStart && event.url == "/") {
                 this.app.authenticate(undefined, (isAuthenticated) => {
                     if (isAuthenticated) {

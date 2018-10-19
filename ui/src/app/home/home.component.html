@@ -1,4 +1,4 @@
-<div *ngIf="current_role_view != 0" class="page-content container" [hidden]="!authenticated()">
+<div *ngIf="current_role_view != 0" class="page-content container" [hidden]="!authenticated">
     <div class="row ">
         <div class="col-lg-3 d-none d-lg-block">
             <div id="admin-menu">
@@ -50,7 +50,7 @@
         </div>
     </div>
 </div>
-<div [hidden]="authenticated()">
+<div [hidden]="authenticated">
     <h1>Welcome</h1>
     <p>Login to see your greeting</p>
 </div>

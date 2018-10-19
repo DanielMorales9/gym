@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Controller;
@@ -20,8 +21,9 @@ import java.io.IOException;
 @Controller
 public class UiApplication extends WebSecurityConfigurerAdapter {
 
-    @RequestMapping({ "/home", "/home/**/*", "/user/*",
-                      "/user/**/*", "/login", "/verification"})
+    @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
+            "/user*", "/user/**/*", "/user/**",  "/logout",
+            "/login", "/verification*"})
     public String publicAPI() {
         return "forward:/index.html";
     }
@@ -32,11 +34,13 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic().and()
                 .authorizeRequests()
-                .antMatchers("/", "/home").permitAll()
+                .antMatchers( "/", "/home*", "/home/**/*", "/user*",
+                        "/user/**/*", "/logout", "/login", "/verification*").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
                 .and().csrf()
-                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+                .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
         // @formatter:on
     }
 
@@ -49,8 +53,6 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
             }
         };
     };
-
-
 
     @Override
     public void configure(WebSecurity web) throws Exception {
