@@ -60,6 +60,9 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				response.setStatus(403);
 				response.sendRedirect("/");
 			}
+			else {
+				logger.info(request.getUserPrincipal().toString());
+			}
 		};
 	};
 
