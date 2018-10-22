@@ -51,6 +51,10 @@ export class BookingComponent implements OnInit {
 
     user: User;
 
+    dayStartHour: number = 8;
+
+    dayEndHour: number = 22;
+
     CalendarView = CalendarView;
 
     excludeDays: number[] = [0, 6];
@@ -101,11 +105,13 @@ export class BookingComponent implements OnInit {
     ngOnInit(): void {
         this.app.getFullUser(res => {
             this.user = res;
+            console.log(this.user);
             this.getEvents();
         }, this.app._systemError());
     }
 
     private getEvents() : void {
+        this.events = [];
         switch (this.current_role_view) {
             case 3:
                 this.getReservations(this.user.id);
@@ -129,10 +135,9 @@ export class BookingComponent implements OnInit {
     private timesOff(id?: number) {
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.timesOffService.getTimesOff(startDay, res => {
-            this.events = res.map(res => {
-                return this.formatEvent(res)
+            res.map(res => {
+                this.events.push(this.formatEvent(res))
             });
-            console.log(res);
             this.refreshView();
         }, undefined, id, endDay);
     }
@@ -140,8 +145,8 @@ export class BookingComponent implements OnInit {
     private getReservations(id?: number) {
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.trainingService.getReservations(startDay, res => {
-            this.events = res.map(res => {
-                return this.formatEvent(res)
+            res.forEach(res => {
+                this.events.push(this.formatEvent(res))
             });
             this.refreshView();
         }, err => {
@@ -152,8 +157,9 @@ export class BookingComponent implements OnInit {
         if (date < new Date()) {
             return;
         }
+        let {startTime, endTime} = this.getStartAndEndTimeByGymConfiguration(new Date(date));
         let title = "Giorno di chiusura";
-        this.timesOffService.check(date, this.user.id,res => {
+        this.timesOffService.check(startTime, endTime, this.user.id,res => {
             this.modalData = { action, title, role, event };
             this.modal.open(this.modalContent);
         }, err => {
@@ -163,6 +169,14 @@ export class BookingComponent implements OnInit {
             };
             this.messageService.sendMessage(message);
         });
+    }
+
+    private getStartAndEndTimeByGymConfiguration(date) {
+        let startTime = date;
+        let endTime = new Date(date);
+        startTime.setHours(startTime.getHours() + this.dayStartHour);
+        endTime.setHours(endTime.getHours() + this.dayEndHour);
+        return {startTime, endTime};
     }
 
     private checkAvailability(action, role, date, event) {
@@ -208,7 +222,7 @@ export class BookingComponent implements OnInit {
         console.log(action, event);
         switch (action) {
             case 'delete':
-                title = "Sei sicuro di voler eliminare " + event.meta.eventName + " ?";
+                title = "Sei sicuro di voler eliminare la " + event.meta.eventName + " ?";
                 break;
             case 'info':
                 title = event.title;
@@ -274,8 +288,10 @@ export class BookingComponent implements OnInit {
             case "reservation":
                 this.deleteReservation(modalData);
                 break;
-            case "timeOff":
+            case "admin":
                 this.deleteTimeOff(modalData);
+                break;
+            case "trainer":
                 break;
             default:
                 break;
@@ -309,31 +325,37 @@ export class BookingComponent implements OnInit {
             this.modal.dismissAll();
         })
     }
+
     deleteTimeOff (modalData) {
-        let event = modalData.event;
-        this.timesOffService.delete(event.meta.id, res => {
-            this.loading = false;
-            let that = this;
-            setTimeout(function() {
-                that.getEvents();
-                that.refreshView();
-            }, 1000);
-            this.modal.dismissAll();
-            let message = {
-                text: event.meta.eventName+" è stata eliminata!",
-                class: "alert-warning"
-            };
-            this.messageService.sendMessage(message);
-            this.events = this.events.filter(iEvent => iEvent !== event);
-        }, err => {
-            this.loading = false;
-            let message = {
-                text: err.message,
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-            this.modal.dismissAll();
-        })
+        let type = modalData.event.type;
+        let isDeletable = ((this.current_role_view == 1 && type=='admin') ||
+            (this.current_role_view <3 && type=='trainer'));
+        if (isDeletable) {
+            let event = modalData.event;
+            this.timesOffService.delete(event.meta.id, res => {
+                this.loading = false;
+                let that = this;
+                setTimeout(function () {
+                    that.getEvents();
+                    that.refreshView();
+                }, 1000);
+                this.modal.dismissAll();
+                let message = {
+                    text: event.meta.eventName + " è stata eliminata!",
+                    class: "alert-warning"
+                };
+                this.messageService.sendMessage(message);
+                this.events = this.events.filter(iEvent => iEvent !== event);
+            }, err => {
+                this.loading = false;
+                let message = {
+                    text: err.message,
+                    class: "alert-danger"
+                };
+                this.messageService.sendMessage(message);
+                this.modal.dismissAll();
+            })
+        }
     }
 
     private formatEvent(res: any) {
@@ -347,12 +369,11 @@ export class BookingComponent implements OnInit {
         let isATimeOff = res.type !== undefined;
         if (isATimeOff) {
             title = res.name;
-            res.eventName = (res.type == "admin") ? "la chiusura" : "le ferie";
-            res.type = "timeOff";
+            res.eventName = (res.type == "admin") ? "chiusura" : "ferie";
         }
         else {
             res.type = "reservation";
-            res.eventName = "la prenotazione";
+            res.eventName = "prenotazione";
             if (this.current_role_view == 3) {
                 title = 'Il tuo allenamento dalle ' + startHour + ' alle ' + endHour;
             } else {
@@ -367,7 +388,7 @@ export class BookingComponent implements OnInit {
             title: title,
             color: (isATimeOff) ? colors.red : (res.confirmed) ? colors.blue : colors.yellow,
             actions: isDeletable ? this.actions: [],
-            allDay: allDay == 24,
+            allDay: allDay == (this.dayEndHour - this.dayStartHour),
             resizable: {
                 beforeStart: false,
                 afterEnd: false
@@ -405,15 +426,14 @@ export class BookingComponent implements OnInit {
 
     private bookTimeOff(date: any) {
         this.loading = true;
-        let currentDate = new Date(date);
-        let stringDate = BookingComponent.getDateString(currentDate);
-        this.timesOffService.book(currentDate, this.timeOffName, this.user.id, (res) => {
+        let {startTime, endTime} = this.getStartAndEndTimeByGymConfiguration(new Date(date));
+        let stringDate = BookingComponent.getDateString(startTime);
+        this.timesOffService.book(startTime, endTime, this.timeOffName, this.user.id, (res) => {
             this.loading = false;
             let message = {
                 text: "Chiusura confermata per il " + stringDate,
                 class: "alert-success"
             };
-            console.log(res);
             this.messageService.sendMessage(message);
             this.modal.dismissAll();
             this.events.push(this.formatEvent(res));
@@ -422,7 +442,6 @@ export class BookingComponent implements OnInit {
         }, (err) => {
             this.modal.dismissAll();
             this.loading = false;
-            console.log(err);
             let message = {
                 text: err.message,
                 class: "alert-danger"
@@ -469,19 +488,29 @@ export class BookingComponent implements OnInit {
     }
 
     dayClicked(event): void {
-        if (this.viewDate == event.day.date &&
-            this.activeDayIsOpen && event.day.events.length > 0) {
+        if (this.viewDate.getTime() === event.day.date.getTime() && this.activeDayIsOpen) {
             this.view = CalendarView.Day;
+            this.activeDayIsOpen = false;
         }
         else {
-            this.viewDate = event.day.date;
-            if (event.day.events.length == 0 ||
-                this.activeDayIsOpen) {
-                this.view = CalendarView.Day;
+            if (this.activeDayIsOpen) {
+                if (event.day.events.length > 0) {
+                    this.viewDate = event.day.date
+                }
+                else {
+                    this.view = CalendarView.Day;
+                    this.activeDayIsOpen = false;
+                }
             }
-            this.activeDayIsOpen = !this.activeDayIsOpen;
-            if (this.view == CalendarView.Day) {
-                this.activeDayIsOpen = false;
+            else {
+                if (event.day.events.length > 0) {
+                    this.viewDate = event.day.date;
+                    this.activeDayIsOpen = true;
+                }
+                else {
+                    this.view = CalendarView.Day;
+                    this.activeDayIsOpen = false;
+                }
             }
         }
     }

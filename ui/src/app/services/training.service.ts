@@ -17,8 +17,8 @@ export class TrainingService {
     }
 
     private static getDateString(date: Date) {
-        return date.getDate() + "-" + (date.getMonth() + 1) + "-"
-            + date.getFullYear() + "_" + date.getHours() + ":" + date.getMinutes();
+        return date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-"
+            + date.getUTCFullYear() + "_" + date.getUTCHours() + ":" + date.getUTCMinutes();
     }
 
     getReservations(startDay: Date, success: (res) => void, error: (err) => void, id?: number, endDay?: Date) {

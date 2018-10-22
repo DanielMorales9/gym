@@ -83,19 +83,24 @@ public class TrainingReservationController {
     @Transactional
     ResponseEntity<String> checkAvailableDay(@RequestParam("date")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
-                                                     Date date,
+                                                     Date startDate,
                                              @RequestParam("id") Long id) {
 
-        if (checkDateBeforeToday(date))
+        logger.info("Checking availability and enablement");
+        logger.info("Checking whether the date is past");
+        if (checkDateBeforeToday(startDate))
             return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
 
-        if (checkBeforeHour(date))
+        logger.info("Checking whether the date is before certain amount of hours");
+        if (checkBeforeHour(startDate))
             return new ResponseEntity<>("E' necessario prenotare almeno " +
                     this.reservationBeforeHours + " ore prima"
                     , HttpStatus.NOT_ACCEPTABLE);
 
+        logger.info("Getting customer by id");
         Customer customer = this.customerService.findById(id);
 
+        logger.info("Checking whether the bundles are expired");
         boolean allDeleted = customer
                 .getCurrentTrainingBundles()
                 .parallelStream()
@@ -105,6 +110,7 @@ public class TrainingReservationController {
 
         if (!allDeleted) throw new AvailabilityCheckException();
 
+        logger.info("Checking whether there are bundles left");
         long bundleCount = customer
                 .getCurrentTrainingBundles()
                 .parallelStream()
@@ -112,8 +118,9 @@ public class TrainingReservationController {
         if (bundleCount == 0)
             return new ResponseEntity<String>("Non hai pacchetti", HttpStatus.NOT_ACCEPTABLE);
 
-        Date endDate = DateUtils.addHours(date, 1);
-        List<TimeOff> timesOff = this.timeRepository.findAllTimesOff(date, endDate);
+        logger.info("Checking whether there are times off");
+        Date endDate = DateUtils.addHours(startDate, 1);
+        List<TimeOff> timesOff = this.timeRepository.findTimesOffInBetween(startDate, endDate);
         Stream<String> countAdmin = timesOff
                 .parallelStream()
                 .map(TimeOff::getType)
@@ -121,13 +128,15 @@ public class TrainingReservationController {
         if (countAdmin.count() == 1)
             return new ResponseEntity<String>("Chiusura Aziendale", HttpStatus.NOT_ACCEPTABLE);
 
+        logger.info("Checking whether there are times off");
         Long numTrainers = this.trainerRepository.countAllTrainer();
         Long numOffTrainers = timesOff.parallelStream().filter(t -> t.getType().equals("worker")).count();
         long numAvailableTrainers = numTrainers - numOffTrainers;
         if (numAvailableTrainers == 0)
             return new ResponseEntity<String>("Nessun Personal Trainer", HttpStatus.NOT_ACCEPTABLE);
 
-        List<Reservation> reservations = this.reservationService.findByStartTime(date);
+        logger.info("Checking whether there are trainers available");
+        List<Reservation> reservations = this.reservationService.findByStartTime(startDate);
         numAvailableTrainers = numAvailableTrainers - reservations.size();
 
         if (numAvailableTrainers == 0)
@@ -152,17 +161,25 @@ public class TrainingReservationController {
                                              @RequestParam("date")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startTime) {
 
+        logger.info("Checking whether time is past");
         if (checkDateBeforeToday(startTime)) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
+        logger.info("Getting customer by id");
         Customer c = this.customerService.findById(customerId);
+        logger.info("Getting current training bundle");
+
         List<ATrainingBundle> currentTrainingBundles = c.getCurrentTrainingBundles();
         if (currentTrainingBundles.size() == 0) {
             throw new AvailabilityCheckException();
         }
+
+        logger.info("Getting current training bundle");
         ATrainingBundle trainingBundle = currentTrainingBundles.get(0);
         Date endTime = DateUtils.addHours(startTime, 1);
+        logger.info("Booking training bundle.");
         Reservation res = trainingBundle.book(c, startTime, endTime);
 
+        logger.info("Saving session");
         ATrainingSession session = this.sessionRepository.save(res.getSession());
         res.setSession(session);
         res = this.reservationService.save(res);
@@ -179,10 +196,13 @@ public class TrainingReservationController {
     @Transactional
     ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
                                                Principal principal) {
+        logger.info("Getting reservation by id");
         Reservation res = this.reservationService.findById(reservationId);
 
+        logger.info("Getting session from reservation");
         ATrainingSession session = res.getSession();
 
+        logger.info("Getting the current user");
         AUser user = this.userRepository.findByEmail(principal.getName());
         List<String> roles = user.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 
@@ -191,6 +211,7 @@ public class TrainingReservationController {
         else
             throw new NotAllowedException("Non è possibile eliminare la prenotazione");
 
+        logger.info("Deleting training session");
         this.trainingBundleService.save(session.getTrainingBundle());
         sessionRepository.delete(session);
         this.reservationService.delete(res);
@@ -212,6 +233,7 @@ public class TrainingReservationController {
     @GetMapping(path="/reservations/complete/{sessionId}")
     @ResponseBody
     ResponseEntity<TrainingSessionResource> complete(@PathVariable(value = "sessionId") Long sessionId) {
+        logger.info("completing session");
         ATrainingSession session = this.sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new POJONotFoundException("Sessione", sessionId));
         session.complete();
@@ -221,6 +243,7 @@ public class TrainingReservationController {
     @GetMapping(path="/reservations/confirm/{reservationId}")
     @ResponseBody
     ResponseEntity<ReservationResource> confirm(@PathVariable(value = "reservationId") Long reservationId) {
+        logger.info("confirming session");
         Reservation res = this.reservationService.findById(reservationId);
         res.setConfirmed(true);
         res = this.reservationService.save(res);

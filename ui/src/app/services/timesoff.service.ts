@@ -6,30 +6,34 @@ export class TimesOffService {
 
     constructor(private http: HttpClient) {}
 
-    check(date: Date, id: number,  success: (res) => void, error: (error) => void) {
-        let dateString = TimesOffService.getDateString(date);
-        this.http.get("/timesOff/checkAvailabilityAndEnablement?day=" + dateString)
+    check(startTime: Date, endTime: Date, id: number,  success: (res) => void, error: (error) => void) {
+        let startTimeString = TimesOffService.getDateString(startTime);
+        let endTimeString = TimesOffService.getDateString(endTime);
+        this.http.get("/timesOff/checkAvailabilityAndEnablement?startTime="
+            + startTimeString + "&endTime=" + endTimeString)
             .subscribe(success, error)
     }
 
-    book(date: Date, name: string, id: number, success: (res) => void, error: (error) => void) {
-        let dateString = TimesOffService.getDateString(date);
-        this.http.get("/timesOff/book/"+id+"?name="+name+"&date=" + dateString).subscribe(success, error)
+    book(startTime: Date, endTime: Date, name: string, id: number,
+         success: (res) => void, error: (error) => void) {
+        let startTimeString = TimesOffService.getDateString(startTime);
+        let endTimeString = TimesOffService.getDateString(endTime);
+        this.http.get("/timesOff/book/"+id+"?name="+name
+            +"&startTime="+startTimeString+"&endTime="+endTimeString).subscribe(success, error)
     }
 
-    private static getDateString(date: Date, hour:boolean = false) {
-        let dateString = date.getDate() + "-" + (date.getMonth() + 1) + "-"
-            + date.getFullYear();
-        if (hour) {dateString += "_"+date.getHours()+":"+date.getMinutes();}
-        return dateString;
+    private static getDateString(date: Date) {
+        return date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-"
+            + date.getUTCFullYear() + "_" +
+            date.getUTCHours() + ":" + date.getUTCMinutes();
     }
 
     getTimesOff(startDay: Date, success: (res) => void, error: (err) => void, id?: number, endDay?: Date) {
         let endpoint = "/timesOff?";
         if (id)
             endpoint += "id="+id + "&";
-        endpoint += "startDay="+TimesOffService.getDateString(startDay, true) + "&";
-        endpoint += "endDay="+ TimesOffService.getDateString(endDay, true);
+        endpoint += "startTime="+TimesOffService.getDateString(startDay) + "&";
+        endpoint += "endTime="+ TimesOffService.getDateString(endDay);
         this.http.get(endpoint).subscribe(success, error);
     }
 

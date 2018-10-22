@@ -56,24 +56,33 @@ public class TimeOffController {
     @GetMapping(path = "/timesOff/checkAvailabilityAndEnablement",
             produces = "text/plain")
     @Transactional
-    ResponseEntity<String> checkAvailableDay(@RequestParam("day")
-                                             @DateTimeFormat(pattern="dd-MM-yyyy") Date day) {
-
-        if (checkDateBeforeToday(day))
+    ResponseEntity<String> checkAvailableDay(@RequestParam("startTime")
+                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                             @RequestParam("endTime")
+                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        
+        logger.info("checking availability and enablement");
+        logger.info("checking whether the date is before today");
+        logger.info(startTime.toString());
+        if (checkDateBeforeToday(startTime))
             return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
 
-        Date endDate = DateUtils.addHours(day, 24);
+        logger.info("counting number of reservations");
 
-        Integer nReservations = this.reservationRepository.countByInterval(day, endDate);
+        Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
         if (nReservations > 0)
             return new ResponseEntity<>("Non è possibile chiudere " +
                     "la palestra con delle prenotazioni attive.", HttpStatus.NOT_ACCEPTABLE);
+        logger.info("Everything went fine");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")
-                                         @RequestParam("date") Date date) {
+    private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
+            iso = DateTimeFormat.ISO.DATE_TIME )
+                                         @RequestParam("startTime") Date date) {
         return date.before(new Date());
     }
 
@@ -82,12 +91,16 @@ public class TimeOffController {
     @Transactional
     ResponseEntity<TimeOffResource> book(@PathVariable Long adminId,
                                          @RequestParam("name") String name,
-                                         @RequestParam("date")
-                                         @DateTimeFormat(pattern="dd-MM-yyyy") Date startTime) {
+                                         @RequestParam("startTime")
+                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                         @RequestParam("endTime")
+                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
         logger.info("booking time off");
+        logger.info(startTime.toString());
         if (checkDateBeforeToday(startTime)) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
-        Date endTime = DateUtils.addHours(startTime, 24);
         Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
         logger.info("# Reservations " + nReservations);
         if (nReservations > 0)
@@ -126,14 +139,19 @@ public class TimeOffController {
     }
 
     @GetMapping(path="/timesOff")
-    ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "startDay")
-                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startDay,
-                                                      @RequestParam(value = "endDay")
-                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date endDay) {
-        List<TimeOff> res = this.timeRepository.findAllTimesOff(startDay, endDay);
+    ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "startTime")
+                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                              iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                      @RequestParam(value = "endTime")
+                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                              iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        List<TimeOff> res = this.timeRepository.findAllTimesOff(startTime, endTime);
+        logger.info("# of Times off " + res.size());
+        logger.info(startTime.toString());
+        logger.info(endTime.toString());
         return ResponseEntity.ok(new TimeOffAssembler().toResources(res));
     }
-/*
+    /*
     @GetMapping(path="/reservations/complete/{sessionId}")
     @ResponseBody
     ResponseEntity<TrainingSessionResource> complete(@PathVariable(value = "sessionId") Long sessionId) {
@@ -152,6 +170,6 @@ public class TimeOffController {
         res = this.reservationService.save(res);
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }
-*/
+    */
 
 }

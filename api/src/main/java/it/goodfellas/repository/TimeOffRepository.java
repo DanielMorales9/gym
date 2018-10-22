@@ -12,8 +12,12 @@ import java.util.List;
 @RepositoryRestResource(path="/timesOff")
 public interface TimeOffRepository extends JpaRepository<TimeOff, Long> {
 
-    @Query("select t from TimeOff as t where t.startTime <= :starttime and t.endTime >= :endtime")
+    @Query("select t from TimeOff as t where t.startTime >= :starttime  and t.endTime <= :endtime")
     List<TimeOff> findAllTimesOff(@RequestParam("starttime") Date starttime,
                                   @RequestParam("endtime") Date endtime);
+
+    @Query("select t from TimeOff as t where t.startTime <= :starttime and t.endTime >= :endtime")
+    List<TimeOff> findTimesOffInBetween(@RequestParam("starttime") Date starttime,
+                                        @RequestParam("endtime") Date endtime);
 }
 
