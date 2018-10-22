@@ -43,6 +43,7 @@ import {TrainingService} from "./services/training.service";
 import {TrainingComponent} from "./training/training.component";
 import {TrainingDetailsComponent} from "./training/training-details.component";
 import {registerLocaleData} from "@angular/common";
+import {TimesOffService} from "./services/timesoff.service";
 
 registerLocaleData(localeIt);
 
@@ -143,6 +144,7 @@ export class XhrInterceptor implements HttpInterceptor {
         SalesService,
         ExchangeUserService,
         ExchangeSaleService,
+        TimesOffService,
         ExchangeBundleService,
         UserService,
         {

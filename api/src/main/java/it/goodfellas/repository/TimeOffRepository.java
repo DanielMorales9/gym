@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 
-@RepositoryRestResource
+@RepositoryRestResource(path="/timesOff")
 public interface TimeOffRepository extends JpaRepository<TimeOff, Long> {
 
     @Query("select t from TimeOff as t where t.startTime <= :starttime and t.endTime >= :endtime")

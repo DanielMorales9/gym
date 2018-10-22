@@ -5,7 +5,7 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div [ngSwitch]="modalData?.action"         >
+    <div [ngSwitch]="modalData?.action">
         <div *ngSwitchCase="'hour'">
             <div *ngIf="modalData?.role == 3">
                 <div class="modal-body" >
@@ -17,22 +17,61 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
-                    <button type="button" class="btn btn-primary" (click)="book(modalData?.event.date)">Conferma</button>
+                    <button type="button" class="btn btn-primary" (click)="book(modalData)">Conferma</button>
+                </div>
+            </div>
+            <div *ngIf="modalData?.role == 1">
+                <div class="modal-body" >
+                    Vuoi chiudere la palestra il giorno ({{ modalData?.event.day.date | date : 'dd/MM/yyyy'}})?
+                    <br>
+                    <div class="form-group" >
+                        <label for="name" class="sr-only">Nome:</label>
+                        <input name="name"
+                               placeholder="Esempio: Chiusura per Festività"
+                               class="form-control"
+                               id="name"
+                               type="text"
+                               [(ngModel)]="timeOffName"/>
+                    </div>
+                    <br>
+                    Conferma per chiudere la palestra oppure cancella.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
+                    <button type="button" class="btn btn-primary" (click)="book(modalData)">Conferma</button>
                 </div>
             </div>
         </div>
         <div *ngSwitchCase="'delete'">
-            <div class="modal-body" >
-                <div>
-                    Vuoi eliminare la prenotazione ({{ modalData?.event.start | date :  'HH:mm a - dd/MM/yyyy'}}) ?
-                    <br>
-                    Conferma per eliminare oppure cancella.
+
+            <div *ngIf="modalData?.role == 3">
+                <div class="modal-body" >
+                    <div>
+                        Vuoi eliminare la prenotazione ({{ modalData?.event.start | date :  'HH:mm a - dd/MM/yyyy'}}) ?
+                        <br>
+                        Conferma per eliminare oppure cancella.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
+                    <button type="button" class="btn btn-primary" (click)="delete(modalData)">Conferma</button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
-                <button type="button" class="btn btn-primary" (click)="delete(modalData?.event)">Conferma</button>
+            <div *ngIf="modalData?.role == 1">
+                <div class="modal-body" >
+                    <div>
+                        Vuoi eliminare la chiusura ({{ modalData?.event.start | date :  'HH:mm a - dd/MM/yyyy'}}) ?
+                        <br>
+                        Conferma per eliminare oppure cancella.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
+                    <button type="button" class="btn btn-primary" (click)="delete(modalData)">Conferma</button>
+                </div>
             </div>
+
+
         </div>
         <div *ngSwitchCase="'info'">
             <div *ngIf="modalData?.role == 3">
@@ -45,7 +84,7 @@
                             Il tuo allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
                             alle {{ modalData?.event.end | date :  'HH:mm a'}}
                             <span *ngIf="!modalData.event.meta.confirmed"> non</span> è stato
-                            <span *ngIf="!modalData.event.meta.confirmed"> confermato</span> confermato.
+                            <span *ngIf="!modalData.event.meta.confirmed"> confermato</span>.
                         </div>
                     </div>
                 </div>
@@ -180,7 +219,7 @@
             [hourSegments]="1"
             [refresh]="refresh"
             (hourSegmentClicked)="hourSegmentClicked($event)"
-            (dayHeaderClicked)="dayClicked($event)"
+            (dayHeaderClicked)="dayHeaderClicked($event)"
             (eventClicked)="handleEvent('info', $event.event)"
             (eventTimesChanged)="eventTimesChanged($event)">
     </mwl-calendar-week-view>

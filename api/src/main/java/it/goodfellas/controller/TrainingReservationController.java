@@ -21,9 +21,11 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @RestController
+@PropertySource("application.yml")
 public class TrainingReservationController {
 
     private final TimeOffRepository timeRepository;
@@ -51,6 +54,9 @@ public class TrainingReservationController {
     private final TrainingBundleService trainingBundleService;
     private final TrainingSessionRepository sessionRepository;
     private final UserRepository userRepository;
+
+    @Value("${reservationBeforeHours}")
+    Integer reservationBeforeHours;
 
     private final static Logger logger = LoggerFactory.getLogger(TrainingReservationController.class);
 
@@ -80,7 +86,13 @@ public class TrainingReservationController {
                                                      Date date,
                                              @RequestParam("id") Long id) {
 
-        if (checkDateBeforeToday(date)) return new ResponseEntity<String>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
+        if (checkDateBeforeToday(date))
+            return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
+
+        if (checkBeforeHour(date))
+            return new ResponseEntity<>("E' necessario prenotare almeno " +
+                    this.reservationBeforeHours + " ore prima"
+                    , HttpStatus.NOT_ACCEPTABLE);
 
         Customer customer = this.customerService.findById(id);
 
@@ -122,6 +134,10 @@ public class TrainingReservationController {
             return new ResponseEntity<String>("Questo orario è già stato prenotato", HttpStatus.NOT_ACCEPTABLE);
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private boolean checkBeforeHour(Date date) {
+        return DateUtils.addHours(date, -this.reservationBeforeHours).before(new Date());
     }
 
     private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")

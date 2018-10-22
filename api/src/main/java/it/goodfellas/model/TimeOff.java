@@ -14,6 +14,9 @@ public class TimeOff {
     @Column(name="time_off_id")
     private Long id;
 
+    @Column(name="name")
+    private String name;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private AUser user;
@@ -26,7 +29,20 @@ public class TimeOff {
     @Column(name = "end_time")
     private Date endTime;
 
+    @Column(name="type")
     private String type;
+
+    public TimeOff() {
+
+    }
+
+    public TimeOff(String name, String type, AUser user, Date startTime, Date endTime) {
+        this.name = name;
+        this.type = type;
+        this.user = user;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 
     public AUser getUser() {
         return user;
@@ -66,5 +82,24 @@ public class TimeOff {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(" Tipo :" + this.type );
+        builder.append(" Nome :" + this.name);
+        builder.append(" User :" + this.user.toString());
+        builder.append(" Data :" + this.startTime.toString());
+
+        return builder.toString();
     }
 }
