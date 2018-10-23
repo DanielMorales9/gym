@@ -14,10 +14,10 @@ addons:
 
 cache:
   directories:
-  - ui/node_modules
+  - .ui/node_modules
 
 install:
-- npm install ui
+- npm install
 
 script:
 - npm run test -- --single-run --no-progress --browser=ChromeHeadlessCI
