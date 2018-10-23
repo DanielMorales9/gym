@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RepositoryRestController
 public class TrainingBundleSpecificationController {
     private final static Logger logger = LoggerFactory.getLogger(TrainingBundleSpecificationController.class);
+
     private final TrainingBundleSpecificationRepository repository;
 
     @Autowired

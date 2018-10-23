@@ -13,7 +13,9 @@ export class LoginComponent {
 
     credentials = {username: '', password: ''};
 
-    constructor(private app: AppService, private http: HttpClient, private router: Router) {
+    constructor(private app: AppService,
+                private http: HttpClient,
+                private router: Router) {
     }
 
     login() {

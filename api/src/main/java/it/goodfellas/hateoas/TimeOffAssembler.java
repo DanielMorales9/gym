@@ -1,6 +1,5 @@
 package it.goodfellas.hateoas;
 
-import it.goodfellas.model.Admin;
 import it.goodfellas.model.TimeOff;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -16,8 +15,7 @@ public class TimeOffAssembler extends ResourceAssemblerSupport<TimeOff, TimeOffR
         TimeOffResource res =  new TimeOffResource(timeOff);
         res.add(linkTo(TimeOff.class).slash("timeOff")
                 .slash(timeOff.getId()).withSelfRel());
-        res.add(linkTo(Admin.class).slash("admins")
-                .slash(timeOff.getUser().getId()).withRel("admins"));
+        res.setUser(timeOff.getUser());
         return res;
     }
 }

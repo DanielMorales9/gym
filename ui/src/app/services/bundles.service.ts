@@ -8,7 +8,7 @@ export class BundlesService {
     constructor(private http: HttpClient) {}
 
     put(bundle: Bundle, success?: (value: any) => void, error?: (error: any) => void) {
-        var endpoint = "/bundleSpecs/"+bundle.id;
+        let endpoint = "/bundleSpecs/"+bundle.id;
         this.http.put(endpoint, bundle).subscribe(success, error);
     }
 

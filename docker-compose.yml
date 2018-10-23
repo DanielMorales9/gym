@@ -15,6 +15,7 @@ services:
     container_name: redis
     image: redis
   gateway:
+    restart: always
     container_name: gateway
     image: tenentedan9/gateway:0.0.1-SNAPSHOT
     ports:
@@ -23,6 +24,7 @@ services:
       - postgres
       - redis
   ui:
+    restart: always
     container_name: ui
     image: tenentedan9/ui:0.0.1-SNAPSHOT
     ports:
@@ -35,6 +37,7 @@ services:
     - gateway
     - redis
   api:
+    restart: always
     container_name: api
     image: tenentedan9/api:0.0.1-SNAPSHOT
     ports:

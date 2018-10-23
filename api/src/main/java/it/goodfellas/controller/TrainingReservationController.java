@@ -130,7 +130,7 @@ public class TrainingReservationController {
 
         logger.info("Checking whether there are times off");
         Long numTrainers = this.trainerRepository.countAllTrainer();
-        Long numOffTrainers = timesOff.parallelStream().filter(t -> t.getType().equals("worker")).count();
+        Long numOffTrainers = timesOff.parallelStream().filter(t -> t.getType().equals("trainer")).count();
         long numAvailableTrainers = numTrainers - numOffTrainers;
         if (numAvailableTrainers == 0)
             return new ResponseEntity<String>("Nessun Personal Trainer", HttpStatus.NOT_ACCEPTABLE);

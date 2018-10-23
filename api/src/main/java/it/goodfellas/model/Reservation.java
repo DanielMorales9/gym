@@ -15,7 +15,7 @@ public class Reservation {
     private Long id;
 
     @ManyToOne
-    private Customer customer;
+    private Customer user;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
@@ -36,7 +36,7 @@ public class Reservation {
                 Date endTime,
                 boolean isConfirmed) {
         this.session = session;
-        this.customer = c;
+        this.user = c;
         this.startTime = startTime;
         this.endTime = endTime;
         this.isConfirmed = isConfirmed;
@@ -58,12 +58,12 @@ public class Reservation {
         this.startTime = startTime;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public Customer getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(Customer user) {
+        this.user = user;
     }
 
     public Long getId() {

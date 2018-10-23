@@ -4,7 +4,7 @@ import {ChangeViewService} from "../services/change-view.service";
 import {
     CalendarEvent,
     CalendarEventAction,
-    CalendarEventTimesChangedEvent,
+    CalendarEventTimesChangedEvent, CalendarMonthViewDay,
     CalendarView,
     DAYS_OF_WEEK
 } from "angular-calendar";
@@ -115,11 +115,12 @@ export class BookingComponent implements OnInit {
         switch (this.current_role_view) {
             case 3:
                 this.getReservations(this.user.id);
-                this.timesOff();
+                this.timesOff(undefined, "admin");
                 break;
             case 2:
                 this.getReservations();
                 this.timesOff(this.user.id);
+                this.timesOff(undefined, "admin");
                 break;
             case 1:
                 this.getReservations();
@@ -128,18 +129,17 @@ export class BookingComponent implements OnInit {
             default:
                 break;
         }
-
         this.events = [];
     }
 
-    private timesOff(id?: number) {
+    private timesOff(id?: number, type?: string) {
         let {startDay, endDay} = this.getStartAndEndTimeByView();
-        this.timesOffService.getTimesOff(startDay, res => {
+        this.timesOffService.getTimesOff(startDay, endDay, res => {
             res.map(res => {
                 this.events.push(this.formatEvent(res))
             });
             this.refreshView();
-        }, undefined, id, endDay);
+        }, undefined, id, type);
     }
 
     private getReservations(id?: number) {
@@ -154,12 +154,14 @@ export class BookingComponent implements OnInit {
     }
 
     private checkClosable(action, role, date, event) {
+
         if (date < new Date()) {
             return;
         }
+        let title = (role == 1)? "Giorno di chiusura": "Giorno di Ferie";
+        let type = (role == 1)? "admin" : "trainer";
         let {startTime, endTime} = this.getStartAndEndTimeByGymConfiguration(new Date(date));
-        let title = "Giorno di chiusura";
-        this.timesOffService.check(startTime, endTime, this.user.id,res => {
+        this.timesOffService.check(startTime, endTime, type, this.user.id,res => {
             this.modalData = { action, title, role, event };
             this.modal.open(this.modalContent);
         }, err => {
@@ -193,6 +195,17 @@ export class BookingComponent implements OnInit {
                 class: "alert-danger"
             };
             this.messageService.sendMessage(message);
+        });
+    }
+
+    beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
+        body.forEach(cell => {
+            const groups: any = {};
+            cell.events.forEach((event: CalendarEvent<{ type: string }>) => {
+                groups[event.meta.type] = groups[event.meta.type] || [];
+                groups[event.meta.type].push(event);
+            });
+            cell['eventGroups'] = Object.entries(groups);
         });
     }
 
@@ -327,7 +340,7 @@ export class BookingComponent implements OnInit {
     }
 
     deleteTimeOff (modalData) {
-        let type = modalData.event.type;
+        let type = modalData.event.meta.type;
         let isDeletable = ((this.current_role_view == 1 && type=='admin') ||
             (this.current_role_view <3 && type=='trainer'));
         if (isDeletable) {
@@ -381,7 +394,8 @@ export class BookingComponent implements OnInit {
                     endHour + " di " + res['customer']['lastName']
             }
         }
-        let isDeletable = (isATimeOff && this.current_role_view == 1 ) || !isATimeOff;
+        let isMyEvent = res.user.id == this.user.id;
+        let isDeletable = this.current_role_view == 1 || isMyEvent;
         return {
             start: startTime,
             end: endTime,
@@ -428,7 +442,7 @@ export class BookingComponent implements OnInit {
         this.loading = true;
         let {startTime, endTime} = this.getStartAndEndTimeByGymConfiguration(new Date(date));
         let stringDate = BookingComponent.getDateString(startTime);
-        this.timesOffService.book(startTime, endTime, this.timeOffName, this.user.id, (res) => {
+        this.timesOffService.book(startTime, endTime, 'admin', this.timeOffName, this.user.id, (res) => {
             this.loading = false;
             let message = {
                 text: "Chiusura confermata per il " + stringDate,
@@ -488,30 +502,21 @@ export class BookingComponent implements OnInit {
     }
 
     dayClicked(event): void {
-        if (this.viewDate.getTime() === event.day.date.getTime() && this.activeDayIsOpen) {
-            this.view = CalendarView.Day;
-            this.activeDayIsOpen = false;
+        if (this.viewDate.getTime() === event.day.date.getTime()) {
+            if (this.activeDayIsOpen || event.day.events.length == 0) {
+                this.view = CalendarView.Day;
+                this.activeDayIsOpen = true;
+            }
+            this.activeDayIsOpen = !this.activeDayIsOpen;
         }
         else {
-            if (this.activeDayIsOpen) {
-                if (event.day.events.length > 0) {
-                    this.viewDate = event.day.date
-                }
-                else {
+            this.viewDate = event.day.date;
+            if (!this.activeDayIsOpen) {
+                if (event.day.events.length == 0) {
                     this.view = CalendarView.Day;
-                    this.activeDayIsOpen = false;
                 }
             }
-            else {
-                if (event.day.events.length > 0) {
-                    this.viewDate = event.day.date;
-                    this.activeDayIsOpen = true;
-                }
-                else {
-                    this.view = CalendarView.Day;
-                    this.activeDayIsOpen = false;
-                }
-            }
+            this.activeDayIsOpen = !this.activeDayIsOpen;
         }
     }
 
@@ -521,6 +526,9 @@ export class BookingComponent implements OnInit {
         let date = event['day']['date'];
         switch (this.current_role_view) {
             case 1:
+                this.checkClosable(action, role, date, event);
+                break;
+            case 2:
                 this.checkClosable(action, role, date, event);
                 break;
             default:

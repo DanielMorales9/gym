@@ -100,7 +100,7 @@
                             <i class="fas fa-ban" *ngIf="!modalData.event.meta.confirmed"></i>&nbsp;
                             L'allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
                             alle {{ modalData?.event.end | date :  'HH:mm a'}}
-                            del cliente {{modalData.event.meta.customer.lastName}}
+                            del cliente {{modalData.event.meta.user.lastName}}
                             <span *ngIf="!modalData.event.meta.confirmed"> non</span> è stato confermato e
                             <span *ngIf="!modalData.event.meta.session.completed"> non è stato </span> completato!
                         </div>

@@ -8,10 +8,7 @@ import it.goodfellas.exception.POJONotFoundException;
 import it.goodfellas.hateoas.*;
 import it.goodfellas.model.*;
 import it.goodfellas.repository.*;
-import it.goodfellas.service.AdminService;
-import it.goodfellas.service.CustomerService;
-import it.goodfellas.service.ReservationService;
-import it.goodfellas.service.TrainingBundleService;
+import it.goodfellas.service.*;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +27,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -43,14 +41,19 @@ import java.util.stream.Stream;
 public class TimeOffController {
 
     private final static Logger logger = LoggerFactory.getLogger(TimeOffController.class);
-    @Autowired
-    private AdminService adminService;
+
     @Autowired
     private ReservationRepository reservationRepository;
     @Autowired
     private TimeOffRepository timeRepository;
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
+    @Autowired
+    private TrainerRepository trainerRepository;
+    @Autowired
+    private ReservationRepository reservationService;
+    @Autowired
+    private TimeOffService timeOffService;
 
 
     @GetMapping(path = "/timesOff/checkAvailabilityAndEnablement",
@@ -61,20 +64,43 @@ public class TimeOffController {
                                                      iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                              @RequestParam("endTime")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        
+                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
+                                             @RequestParam("type")
+                                                     String type) {
+
         logger.info("checking availability and enablement");
         logger.info("checking whether the date is before today");
         logger.info(startTime.toString());
         if (checkDateBeforeToday(startTime))
             return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
 
-        logger.info("counting number of reservations");
+        switch (type) {
+            case "admin":
+                logger.info("counting number of reservations");
+                Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
+                if (nReservations > 0)
+                    return new ResponseEntity<>("Non è possibile chiudere la palestra " +
+                            "con delle prenotazioni attive.", HttpStatus.NOT_ACCEPTABLE);
+                break;
+            case "trainer":
+                logger.info("checking whether there are trainers available");
+                Long numTrainers = this.trainerRepository.countAllTrainer();
+                Long numOffTrainers = this.timeRepository.findTimesOffInBetween(startTime, endTime)
+                        .parallelStream()
+                        .filter(t -> t.getType().equals("trainer"))
+                        .count();
+                long numAvailableTrainers = numTrainers - numOffTrainers;
+                List<Reservation> reservations = this.reservationService.findByStartTime(startTime);
+                numAvailableTrainers = numAvailableTrainers - reservations.size();
+                if (numAvailableTrainers == 0)
+                    return new ResponseEntity<String>("Sei l'unico Trainer disponibile in questo orario",
+                            HttpStatus.NOT_ACCEPTABLE);
+                break;
+            default:
+                return new ResponseEntity<String>("Non puoi prendere un giorno di ferie",
+                        HttpStatus.BAD_REQUEST);
+        }
 
-        Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
-        if (nReservations > 0)
-            return new ResponseEntity<>("Non è possibile chiudere " +
-                    "la palestra con delle prenotazioni attive.", HttpStatus.NOT_ACCEPTABLE);
         logger.info("Everything went fine");
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -87,29 +113,51 @@ public class TimeOffController {
     }
 
 
-    @GetMapping(path = "/timesOff/book/{adminId}")
+    @GetMapping(path = "/timesOff/book/{id}")
     @Transactional
-    ResponseEntity<TimeOffResource> book(@PathVariable Long adminId,
+    ResponseEntity<TimeOffResource> book(@PathVariable Long id,
                                          @RequestParam("name") String name,
                                          @RequestParam("startTime")
                                          @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                  iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                          @RequestParam("endTime")
                                          @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
+                                         @RequestParam("type")
+                                                 String type) {
         logger.info("booking time off");
         logger.info(startTime.toString());
         if (checkDateBeforeToday(startTime)) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
-        Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
-        logger.info("# Reservations " + nReservations);
-        if (nReservations > 0)
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        switch (type) {
+            case "admin":
+                logger.info("counting number of reservations");
+                Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
+                if (nReservations > 0)
+                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                break;
+            case "trainer":
+                logger.info("checking whether there are trainers");
+                Long numTrainers = this.trainerRepository.countAllTrainer();
+                Long numOffTrainers = this.timeRepository.findTimesOffInBetween(startTime, endTime)
+                        .parallelStream()
+                        .filter(t -> t.getType().equals("trainer"))
+                        .count();
+                long numAvailableTrainers = numTrainers - numOffTrainers;
+                List<Reservation> reservations = this.reservationService.findByInterval(startTime, endTime);
+                numAvailableTrainers = numAvailableTrainers - reservations.size();
+                if (numAvailableTrainers == 0)
+                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                break;
+            default:
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
 
-        Admin admin = this.adminService.findById(adminId);
-        logger.info(admin.toString());
 
-        TimeOff timeOff = new TimeOff(name, "admin", admin, startTime, endTime);
+        AUser user = this.userService.findById(id);
+        logger.info(user.toString());
+
+        TimeOff timeOff = new TimeOff(name, type, user, startTime, endTime);
         logger.info(timeOff.toString());
 
         timeOff = this.timeRepository.save(timeOff);
@@ -129,7 +177,7 @@ public class TimeOffController {
             throw new POJONotFoundException("TimeOff", timesId);
 
         TimeOff time = res.get();
-        AUser user = this.userRepository.findByEmail(principal.getName());
+        AUser user = this.userService.findByEmail(principal.getName());
         if (!time.getUser().equals(user) || !(user instanceof Admin))
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
@@ -139,16 +187,19 @@ public class TimeOffController {
     }
 
     @GetMapping(path="/timesOff")
-    ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "startTime")
+    ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "id", required = false)
+                                                              Long id,
+                                                      @RequestParam(value = "type", required = false)
+                                                              String type,
+                                                      @RequestParam(value = "startTime")
                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                               iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                       @RequestParam(value = "endTime")
                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                               iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<TimeOff> res = this.timeRepository.findAllTimesOff(startTime, endTime);
+        List<TimeOff> res = this.timeOffService.findByStartTimeAndEndTimeAndIdAndType(Optional.ofNullable(id),
+                Optional.ofNullable(type), startTime, endTime);
         logger.info("# of Times off " + res.size());
-        logger.info(startTime.toString());
-        logger.info(endTime.toString());
         return ResponseEntity.ok(new TimeOffAssembler().toResources(res));
     }
     /*

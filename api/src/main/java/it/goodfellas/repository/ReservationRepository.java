@@ -18,7 +18,7 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findByInterval(@RequestParam Date startDay,
                                      @RequestParam Date endDay);
 
-    @Query("select r from Reservation as r where r.customer.id = :id " +
+    @Query("select r from Reservation as r where r.user.id = :id " +
             "and r.startTime >= :startDay and r.endTime <= :endDay")
     List<Reservation> findByInterval(@RequestParam("id") Long id,
                                      @RequestParam Date startDay,

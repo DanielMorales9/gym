@@ -6,20 +6,20 @@ export class TimesOffService {
 
     constructor(private http: HttpClient) {}
 
-    check(startTime: Date, endTime: Date, id: number,  success: (res) => void, error: (error) => void) {
+    check(startTime: Date, endTime: Date, type: string, id: number,  success: (res) => void, error: (error) => void) {
         let startTimeString = TimesOffService.getDateString(startTime);
         let endTimeString = TimesOffService.getDateString(endTime);
         this.http.get("/timesOff/checkAvailabilityAndEnablement?startTime="
-            + startTimeString + "&endTime=" + endTimeString)
+            + startTimeString + "&endTime=" + endTimeString+"&type="+type)
             .subscribe(success, error)
     }
 
-    book(startTime: Date, endTime: Date, name: string, id: number,
+    book(startTime: Date, endTime: Date, type: string, name: string, id: number,
          success: (res) => void, error: (error) => void) {
         let startTimeString = TimesOffService.getDateString(startTime);
         let endTimeString = TimesOffService.getDateString(endTime);
         this.http.get("/timesOff/book/"+id+"?name="+name
-            +"&startTime="+startTimeString+"&endTime="+endTimeString).subscribe(success, error)
+            +"&startTime="+startTimeString+"&endTime="+endTimeString+"&type="+type).subscribe(success, error)
     }
 
     private static getDateString(date: Date) {
@@ -28,12 +28,16 @@ export class TimesOffService {
             date.getUTCHours() + ":" + date.getUTCMinutes();
     }
 
-    getTimesOff(startDay: Date, success: (res) => void, error: (err) => void, id?: number, endDay?: Date) {
+    getTimesOff(startDay: Date, endDay: Date, success: (res) => void, error: (err) => void,
+                id?: number,
+                type?: string,) {
         let endpoint = "/timesOff?";
         if (id)
             endpoint += "id="+id + "&";
         endpoint += "startTime="+TimesOffService.getDateString(startDay) + "&";
         endpoint += "endTime="+ TimesOffService.getDateString(endDay);
+        if (type)
+            endpoint += "&type="+type;
         this.http.get(endpoint).subscribe(success, error);
     }
 
