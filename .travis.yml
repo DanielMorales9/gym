@@ -17,7 +17,7 @@ cache:
   - ui/node_modules
 
 install:
-- npm install
+- npm install ui
 
 script:
 - npm run test -- --single-run --no-progress --browser=ChromeHeadlessCI
