@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AppService } from './services/app.service';
-import { HttpClient } from '@angular/common/http';
+import { AppService } from '../services/app.service';
 import { Router } from '@angular/router';
 
 @Component({
     templateUrl: './login.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['../app.component.css']
 })
 export class LoginComponent {
 
@@ -14,7 +13,6 @@ export class LoginComponent {
     credentials = {username: '', password: ''};
 
     constructor(private app: AppService,
-                private http: HttpClient,
                 private router: Router) {
     }
 

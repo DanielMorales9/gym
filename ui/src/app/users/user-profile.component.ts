@@ -1,5 +1,5 @@
 import {Component, OnInit} from "@angular/core";
-import {User} from "./user.interface";
+import {User} from "./user.class";
 import {MessageService} from "../services/message.service";
 import {UserService} from "../services/users.service";
 import {AppService} from "../services/app.service";
@@ -50,17 +50,16 @@ export class UserProfileComponent implements OnInit {
     updateUser() {
         let closure = (res=> {
             this.user = res;
-            this.service.getRoles(this.user,
-                res1 => {
+            this.service.getRoles(this.user.id).subscribe(res1 => {
                     this.roles = res1['_embedded']['roles'].map(i => i.name.toLowerCase());
                 }, this._error());
         });
 
         if (this.id) {
-            this.service.findById(this.id, closure, this._error());
+            this.service.findById(this.id).subscribe(closure, this._error());
         }
         else {
-            this.service.findByEmail(this.email, closure, this._error());
+            this.service.findByEmail(this.email).subscribe(closure, this._error());
         }
     }
 

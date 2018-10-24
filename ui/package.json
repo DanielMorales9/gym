@@ -6,9 +6,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "npm run test --single-run --no-progress --browser=ChromeHeadlessCI",
+    "test": "ng test --code-coverage=false --progress=false --watch=false",
     "lint": "ng lint",
-    "e2e": "npm run e2e --no-progress --config=protractor-ci.conf.js"
+    "coverage": "ng test  --progress=false --watch=false",
+    "e2e": "ng e2e"
   },
   "private": true,
   "dependencies": {
@@ -39,7 +40,6 @@
     "rxjs": "^6.3.1",
     "rxjs-compat": "^6.0.0-rc.0",
     "stream": "0.0.2",
-    "webpack": "^4.17.1",
     "zone.js": "^0.8.26"
   },
   "devDependencies": {

@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {PagerComponent} from "../utils/pager.component";
-import {User} from "../users/user.interface";
+import {User} from "../users/user.class";
 import {MessageService} from "../services/message.service";
 import {UserService} from "../services/users.service";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -46,17 +46,17 @@ export class TrainingComponent implements OnInit {
     updateUser() {
         let closure = (res => {
             this.user = res;
-            this.userService.getCurrentTrainingBundles(this.user.id, res => {
+            this.userService.getCurrentTrainingBundles(this.user.id).subscribe( res => {
                 console.log(res);
-                    this.user.currentTrainingBundles = res._embedded.personalTrainingBundles;
+                    this.user.currentTrainingBundles = res["_embedded"].personalTrainingBundles;
             }, err => this._error())
         });
 
         if (this.id) {
-            this.userService.findById(this.id, closure, this._error());
+            this.userService.findById(this.id).subscribe(closure, this._error());
         }
         else {
-            this.userService.findByEmail(this.email, closure, this._error());
+            this.userService.findByEmail(this.email).subscribe( closure, this._error());
         }
     }
 

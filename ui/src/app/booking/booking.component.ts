@@ -12,7 +12,7 @@ import 'rxjs/add/operator/finally';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {TrainingService} from "../services/training.service";
-import {User} from "../users/user.interface";
+import {User} from "../users/user.class";
 import {MessageService} from "../services/message.service";
 import {TimesOffService} from "../services/timesoff.service";
 

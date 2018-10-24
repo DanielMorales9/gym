@@ -5,7 +5,7 @@ import {Bundle} from "../bundles/bundle.interface";
 import {BundlesService} from "../services/bundles.service";
 import {SalesService} from "../services/sales.service";
 import {PagerComponent} from "../utils/pager.component";
-import {User} from "../users/user.interface";
+import {User} from "../users/user.class";
 import {MessageService} from "../services/message.service";
 import {UserService} from "../services/users.service";
 import {ChangeViewService} from "../services/change-view.service";

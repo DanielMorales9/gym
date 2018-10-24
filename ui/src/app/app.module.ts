@@ -2,12 +2,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import {Injectable, NgModule} from '@angular/core';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HTTP_INTERCEPTORS, HttpClientModule, HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
-import { RouterModule, Routes } from '@angular/router';
 import localeIt from '@angular/common/locales/it';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
-import {LoginComponent} from "./login.component";
 import {VerificationComponent} from "./verify.component";
 import {ErrorComponent} from "./error.component";
 import {HomeComponent} from "./home/home.component";
@@ -44,35 +42,9 @@ import {TrainingComponent} from "./training/training.component";
 import {TrainingDetailsComponent} from "./training/training-details.component";
 import {registerLocaleData} from "@angular/common";
 import {TimesOffService} from "./services/timesoff.service";
+import {AppRouting} from "./app.routing";
 
 registerLocaleData(localeIt);
-
-const routes: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: 'home'},
-    { path: 'login', component: LoginComponent},
-    { path: 'verification', component: VerificationComponent},
-    { path: 'error', component: ErrorComponent},
-    { path: 'home',
-        component: HomeComponent,
-        children: [
-            { path: '', redirectTo: 'booking' , pathMatch: "full"},
-            { path: 'users', component: UsersComponent },
-            { path: 'sales', component: SalesComponent },
-            { path: 'bundles', component: BundlesComponent},
-            { path: 'booking', component: BookingComponent}
-        ]
-    },
-    { path: 'user/:id?', component: SingleUserComponent,
-        children: [
-            { path: '', redirectTo: 'profile', pathMatch: "full" },
-            { path: 'profile', component: UserProfileComponent },
-            { path: 'makeSale', component: MakeSaleComponent },
-            { path: 'sales', component: SalesComponent },
-            { path: 'summarySale/:saleId', component: SaleSummaryComponent },
-            { path: 'trainings', component: TrainingComponent },
-        ]
-    }
-];
 
 const baseUrl = "http://localhost";
 
@@ -100,7 +72,6 @@ export class XhrInterceptor implements HttpInterceptor {
         AppComponent,
         HomeComponent,
         UserProfileComponent,
-        LoginComponent,
         SalesComponent,
         BundleModalComponent,
         BundleDetailsComponent,
@@ -123,7 +94,6 @@ export class XhrInterceptor implements HttpInterceptor {
         BookingComponent
     ],
     imports: [
-        RouterModule.forRoot(routes),
         BrowserModule,
         NgbModalModule,
         ReactiveFormsModule,
@@ -133,7 +103,8 @@ export class XhrInterceptor implements HttpInterceptor {
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory
-        })
+        }),
+        AppRouting,
     ],
     providers: [
         AppService,

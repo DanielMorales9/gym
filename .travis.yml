@@ -14,11 +14,10 @@ addons:
 
 cache:
   directories:
-  - .ui/node_modules
+  - ./node_modules
 
 install:
-- npm install
+- mvn clean install
 
 script:
-- npm run test -- --single-run --no-progress --browser=ChromeHeadlessCI
-- npm run e2e -- --no-progress --config=protractor-ci.conf.js
+- mvn test

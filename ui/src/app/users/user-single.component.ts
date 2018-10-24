@@ -39,7 +39,7 @@ export class SingleUserComponent implements OnInit {
     }
 
     private getRoles(user) {
-        this.userService.getRoles(user, res => {
+        this.userService.getRoles(user.id).subscribe(res => {
             this.roles = res['_embedded']['roles'];
         }, this._systemError())
     }

@@ -1,4 +1,4 @@
-import {User} from "./user.interface";
+import {User} from "./user.class";
 import {Component, Input, OnInit} from "@angular/core";
 import {AppService} from "../services/app.service";
 import {Router} from "@angular/router";

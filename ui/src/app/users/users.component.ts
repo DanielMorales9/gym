@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {User} from "./user.interface";
+import {User} from "./user.class";
 import {UserService} from "../services/users.service";
 import {PagerComponent} from "../utils/pager.component";
 import {AppService} from "../services/app.service";
@@ -47,7 +47,7 @@ export class UsersComponent implements  OnInit {
     private searchByPage() {
         this.service.search(this.query,
             this.pagerComponent.getPage(),
-            this.pagerComponent.getSize(), res => {
+            this.pagerComponent.getSize()).subscribe(res => {
                 this.users = res['content'];
                 this.pagerComponent.setPageNumber(res['number']);
                 this.pagerComponent.setTotalPages(res['totalPages']);
@@ -87,8 +87,8 @@ export class UsersComponent implements  OnInit {
     getUsersByPage() {
         this.service.get(
             this.pagerComponent.getPage(),
-            this.pagerComponent.getSize(),
-            this._success(), this._error())
+            this.pagerComponent.getSize())
+            .subscribe(this._success(), this._error())
     }
 
     findUsers() {

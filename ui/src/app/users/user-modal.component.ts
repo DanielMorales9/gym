@@ -1,4 +1,4 @@
-import {User} from "./user.interface";
+import {User} from "./user.class";
 import {UserService} from "../services/users.service";
 import {MessageService} from "../services/message.service";
 import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
@@ -142,8 +142,7 @@ export class UserModalComponent implements OnInit {
     }
 
     addRole() {
-        this.service.addRole(this.user.id,
-            this.f.type.value,
+        this.service.addRole(this.user.id, this.f.type.value).subscribe(
             this._success("Il Ruolo " + this.f.type.value),
             this._error( "L'utente ha già questo ruolo!"))
     }
@@ -157,7 +156,8 @@ export class UserModalComponent implements OnInit {
         user.type = this.f.type.value;
         user.height = this.f.height.value;
         user.weight = this.f.weight.value;
-        this.service.patch(user, this._success("L'utente " + this.f.lastName.value),
+        this.service.patch(user).subscribe(
+            this._success("L'utente " + this.f.lastName.value),
             this._error( ""))
     }
 
@@ -168,7 +168,7 @@ export class UserModalComponent implements OnInit {
         user.lastName = this.f.lastName.value;
         user.email = this.f.email.value;
         user.type = this.f.type.value;
-        this.service.post(user,
+        this.service.post(user).subscribe(
             this._success("L'utente " + this.f.lastName.value),
             this._error( "Esiste già un utente con questa email!"));
     }

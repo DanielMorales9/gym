@@ -104,7 +104,8 @@ export class AppService {
         let user = JSON.parse(window.localStorage.getItem('full_user'));
         user = (user) ? user : this.getUser();
         if (!user['id']) {
-            this.userService.findByEmail(user.email, res => {
+            this.userService.findByEmail(user.email).subscribe(
+                res => {
                 this.saveFullUser(res);
                 success(res);
             }, error)

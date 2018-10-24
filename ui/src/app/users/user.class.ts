@@ -1,5 +1,5 @@
-export interface User {
-    id: number,
+export class User {
+    id: number;
     email: string; // required, must be valid email format
     password: string; // required, value must be equal to confirm password.
     confirmPassword: string; // required, value must be equal to password.
@@ -10,5 +10,9 @@ export interface User {
     verified: boolean;
     height: number;
     weight: number;
-    defaultRoles: number[]
+    defaultRoles: number[];
+
+    constructor() {
+
+    }
 }
