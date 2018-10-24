@@ -6,8 +6,6 @@ import localeIt from '@angular/common/locales/it';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
-import {VerificationComponent} from "./verify.component";
-import {ErrorComponent} from "./error.component";
 import {HomeComponent} from "./home/home.component";
 import {SalesComponent} from "./sales/sales.component";
 import {UsersComponent} from "./users/users.component";
@@ -83,8 +81,6 @@ export class XhrInterceptor implements HttpInterceptor {
         UsersComponent,
         SaleDetailsComponent,
         PagerComponent,
-        VerificationComponent,
-        ErrorComponent,
         SaleModalComponent,
         TrainingComponent,
         EqualValidator,

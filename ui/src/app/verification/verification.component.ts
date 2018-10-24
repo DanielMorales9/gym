@@ -1,12 +1,12 @@
-import {AppService} from "./services/app.service";
+import {AppService} from "../services/app.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Component, OnInit} from "@angular/core";
-import { User } from './users/user.class';
+import { User } from '../users/user.class';
 
 
 @Component({
-    templateUrl: './verify.component.html',
-    styleUrls: ['./app.component.css']
+    templateUrl: './verification.component.html',
+    styleUrls: ['../app.component.css']
 })
 export class VerificationComponent implements OnInit {
 

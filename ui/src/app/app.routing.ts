@@ -1,6 +1,4 @@
 import { RouterModule, Routes } from "@angular/router";
-import { VerificationComponent } from "./verify.component";
-import { ErrorComponent } from "./error.component";
 import { HomeComponent } from "./home/home.component";
 import { UsersComponent } from "./users/users.component";
 import { SalesComponent } from "./sales/sales.component";
@@ -13,13 +11,11 @@ import { SaleSummaryComponent } from "./sales/sale-summary.component";
 import { TrainingComponent } from "./training/training.component";
 import { NgModule } from "@angular/core";
 
-import {LoginModule} from "./login/login.module";
-
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
     { path: 'login', loadChildren: "app/login/login.module#LoginModule"},
-    { path: 'verification', component: VerificationComponent},
-    { path: 'error', component: ErrorComponent},
+    { path: 'verification', loadChildren: "app/verification/verification.module#VerificationModule"},
+    { path: 'error', loadChildren: "app/error/error.module#ErrorModule"},
     { path: 'home',
         component: HomeComponent,
         children: [

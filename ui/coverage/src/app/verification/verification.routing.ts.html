@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for src/app/services/message.service.ts</title>
+    <title>Code coverage report for src/app/verification/verification.routing.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../prettify.css" />
     <link rel="stylesheet" href="../../../base.css" />
@@ -16,13 +16,13 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../../index.html">All files</a> / <a href="index.html">src/app/services</a> message.service.ts
+      <a href="../../../index.html">All files</a> / <a href="index.html">src/app/verification</a> verification.routing.ts
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">80.95% </span>
+        <span class="strong">94.44% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>17/21</span>
+        <span class='fraction'>17/18</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">50% </span>
@@ -30,14 +30,14 @@
         <span class='fraction'>11/22</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">40% </span>
+        <span class="strong">66.67% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>2/5</span>
+        <span class='fraction'>2/3</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">82.35% </span>
+        <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>14/17</span>
+        <span class='fraction'>14/14</span>
       </div>
     </div>
     <p class="quiet">
@@ -61,7 +61,10 @@
 <a name='L13'></a><a href='#L13'>13</a>
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
-<a name='L16'></a><a href='#L16'>16</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L16'></a><a href='#L16'>16</a>
+<a name='L17'></a><a href='#L17'>17</a>
+<a name='L18'></a><a href='#L18'>18</a>
+<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -72,26 +75,32 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs/Subject';<span class="branch-1 cbranch-no" title="branch not covered" ></span>
- <span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span></span>
-@Injectable()<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" ><span class="missing-if-branch" title="else path not taken" >E</span></span></span>
-export class Message<span class="branch-1 cbranch-no" title="branch not covered" >Se</span>rvi<span class="branch-2 cbranch-no" title="branch not covered" >ce {</span>
-    private subject = new Subject&lt;any&gt;();
- 
-    sendMessage(message: any) {
-        this.subject.next(message);
-    }
- <span class="fstat-no" title="function not covered" ></span>
-    getM<span class="cstat-no" title="statement not covered" >essage(): Observable&lt;any&gt; {</span>
-        return this.subject.asObservable();
-    }<span class="fstat-no" title="function not covered" ></span>
-}<span class="cstat-no" title="statement not covered" ></span></pre></td></tr>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { NgModule } from '@angular/core';
+import {RouterModule, Routes} from "@angular/router";
+import {VerificationComponent} from "./verification<span class="branch-1 cbranch-no" title="branch not covered" >.component";</span>
+<span class="cstat-no" title="statement not covered" ><span class="missing-if-branch" title="if path not taken" >I</span></span>
+const routes: Routes = [<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" ><span class="missing-if-branch" title="else path not taken" >E</span></span></span>
+    { path: '', comp<span class="branch-1 cbranch-no" title="branch not covered" >on</span>ent<span class="branch-2 cbranch-no" title="branch not covered" >: VerificationComponent },</span>
+];
+&nbsp;
+&nbsp;
+@NgModule({
+  imports: [
+      RouterModule.forChild(routes)
+  ],
+  exports: [
+      RouterModule
+  ]<span class="fstat-no" title="function not covered" ></span>
+})
+export class VerificationRouting { }
+&nbsp;</pre></td></tr>
 </table></pre>
 <div class='push'></div><!-- for sticky footer -->
 </div><!-- /wrapper -->
