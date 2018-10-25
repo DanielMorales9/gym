@@ -22,7 +22,7 @@
                 <div class="dropdown-menu" aria-labelledby="homeDropdown">
                     <a class="dropdown-item"
                        [routerLinkActive]="['active-link']"
-                       routerLink="/user/profile">
+                       routerLink="/profile/user">
                         <i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>
                     <a class="dropdown-item"
                        *ngIf="current_role_view == 1"
@@ -67,11 +67,11 @@
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerLinkActive="active" [hidden]="authenticated()" routerLink="/login">
+                <a class="nav-link" routerLinkActive="active" [hidden]="authenticated" routerLink="/login">
                     <i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Login</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" routerlinkactive="active" [hidden]="!authenticated()" (click)="logout()">
+                <a class="nav-link" routerlinkactive="active" [hidden]="!authenticated" (click)="logout()">
                     <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
             </li>
         </ul>

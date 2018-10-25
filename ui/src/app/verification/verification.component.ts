@@ -1,7 +1,7 @@
-import {AppService} from "../services/app.service";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Component, OnInit} from "@angular/core";
-import { User } from '../users/user.class';
+import {User} from "../core/model/user.class";
+import {AppService} from "../core/services/app.service";
 
 
 @Component({
@@ -17,7 +17,9 @@ export class VerificationComponent implements OnInit {
     resent = false;
     toResendToken = false;
 
-    constructor(private app: AppService, private activatedRoute: ActivatedRoute, private router: Router) {
+    constructor(private app: AppService,
+                private activatedRoute: ActivatedRoute,
+                private router: Router) {
     }
 
     private static defaultErrorCallback(err) {

@@ -3,9 +3,8 @@ import {RouterModule, Routes} from "@angular/router";
 import {VerificationComponent} from "./verification.component";
 
 const routes: Routes = [
-    { path: '', component: VerificationComponent },
+    { path: '', pathMatch: 'full', component: VerificationComponent },
 ];
-
 
 @NgModule({
   imports: [

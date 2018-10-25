@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import { AppService } from '../services/app.service';
-import {ChangeViewService} from "../services/change-view.service";
+import {AppService} from "../core/services/app.service";
+import {ChangeViewService} from "../core/services/change-view.service";
 
 @Component({
     templateUrl: './home.component.html',

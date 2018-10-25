@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import { AppService } from './services/app.service';
 import { HttpClient } from '@angular/common/http';
 import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {MessageService} from "./services/message.service";
-import {ChangeViewService} from "./services/change-view.service";
+import {AppService} from "./core/services/app.service";
+import {ChangeViewService} from "./core/services/change-view.service";
+import {MessageService} from "./core/services/message.service";
 
 @Component({
     selector: 'app-root',
@@ -16,6 +16,7 @@ export class AppComponent implements OnInit {
     current_role_view: number;
     user: any;
     roles: any[];
+    authenticated: boolean;
 
     constructor(private app: AppService,
                 private http: HttpClient,
@@ -28,12 +29,13 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
 
         this.router.events.subscribe(event => {
-            if(event instanceof NavigationStart && event.url == "/") {
+            if(event instanceof NavigationStart) {
                 this.app.authenticate(undefined, (isAuthenticated) => {
                     if (isAuthenticated) {
                         this.current_role_view = this.app.current_role_view;
                         this.roles = this.app.roles;
                     }
+                    this.authenticated = isAuthenticated;
                 }, undefined);
             }
         });
@@ -68,8 +70,6 @@ export class AppComponent implements OnInit {
             this.app.logout();
         }, error1 => {console.log(error1)});
     }
-
-    authenticated() { return this.app.authenticated; }
 
 
     switchView(role) {
