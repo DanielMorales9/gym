@@ -3,13 +3,12 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "env": "ngx-scripts env npm_package_version",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --code-coverage=false --progress=false --watch=false",
     "lint": "ng lint",
-    "coverage": "ng test  --progress=false --watch=false",
+    "coverage": "ng test --progress=false --watch=true",
     "e2e": "ng e2e"
   },
   "private": true,

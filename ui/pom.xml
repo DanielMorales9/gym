@@ -108,21 +108,21 @@
                 <executions>
                     <execution>
                         <id>install-npm</id>
-                        <phase>package</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>npm-install</id>
-                        <phase>package</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>
                     </execution>
                     <execution>
                         <id>npm-build</id>
-                        <phase>package</phase>
+                        <phase>compile</phase>
                         <goals>
                             <goal>npm</goal>
                         </goals>

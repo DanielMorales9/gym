@@ -1,15 +1,18 @@
-import { TestBed, inject } from '@angular/core/testing';
+import {TestBed, inject, ComponentFixture} from '@angular/core/testing';
 
 import { LoggerService } from './logger.service';
 
 describe('LoggerService', () => {
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      providers: [LoggerService]
-    });
-  });
+    let service: LoggerService;
 
-  it('should be created', inject([LoggerService], (service: LoggerService) => {
-    expect(service).toBeTruthy();
-  }));
+    beforeEach(() => {
+        TestBed.configureTestingModule({
+            providers: [LoggerService],
+        });
+        service = new LoggerService("hello world");
+    });
+
+    it('should be created', () => {
+        expect(service).toBeTruthy();
+    });
 });

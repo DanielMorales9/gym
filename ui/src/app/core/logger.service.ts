@@ -9,9 +9,9 @@
  *
  * Example usage:
  * ```
- * import { Logger } from 'app/core/logger.service';
+ * import { LoggerService } from 'app/core/logger.service';
  *
- * const log = new Logger('myFile');
+ * const log = new LoggerService('myFile');
  * ...
  * log.debug('something happened');
  * ```
@@ -21,18 +21,18 @@
  * export class AppComponent implements OnInit {
  *   ngOnInit() {
  *     if (environment.production) {
- *       Logger.enableProductionMode();
+ *       LoggerService.enableProductionMode();
  *     }
  *     ...
  *   }
  * }
  *
- * If you want to process logs through other outputs than console, you can add LogOutput functions to Logger.outputs.
+ * If you want to process logs through other outputs than console, you can add LogOutput functions to LoggerService.outputs.
  */
 
 /**
  * The possible log levels.
- * LogLevel.Off is never emitted and only used with Logger.level property to disable logs.
+ * LogLevel.Off is never emitted and only used with LoggerService.level property to disable logs.
  */
 export enum LogLevel {
     Off = 0,
@@ -47,7 +47,7 @@ export enum LogLevel {
  */
 export type LogOutput = (source: string, level: LogLevel, ...objects: any[]) => void;
 
-export class Logger {
+export class LoggerService {
 
     /**
      * Current logging level.
@@ -65,7 +65,7 @@ export class Logger {
      * Sets logging level to LogLevel.Warning.
      */
     static enableProductionMode() {
-        Logger.level = LogLevel.Warning;
+        LoggerService.level = LogLevel.Warning;
     }
 
     constructor(private source?: string) { }
@@ -103,10 +103,10 @@ export class Logger {
     }
 
     private log(func: Function, level: LogLevel, objects: any[]) {
-        if (level <= Logger.level) {
+        if (level <= LoggerService.level) {
             const log = this.source ? ['[' + this.source + ']'].concat(objects) : objects;
             func.apply(console, log);
-            Logger.outputs.forEach((output) => output.apply(output, [this.source, level].concat(objects)));
+            LoggerService.outputs.forEach((output) => output.apply(output, [this.source, level].concat(objects)));
         }
     }
 

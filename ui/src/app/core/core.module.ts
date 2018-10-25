@@ -18,6 +18,7 @@ import {HttpService} from "./http/http.service";
 import {CacheInterceptor} from "./http/cache.interceptor";
 import {ErrorHandlerInterceptor} from "./http/error-handler.interceptor";
 import {HttpCacheService} from "./http/http-cache.service";
+import {LoggerService} from "./logger.service";
 
 
 @NgModule({
@@ -37,6 +38,7 @@ import {HttpCacheService} from "./http/http-cache.service";
             provide: HttpClient,
             useClass: HttpService
         },
+        LoggerService,
         HttpCacheService,
         ApiPrefixInterceptor,
         ErrorHandlerInterceptor,

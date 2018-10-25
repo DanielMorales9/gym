@@ -17,11 +17,14 @@ addons:
 
 cache:
   directories:
-  - ./node_modules
+  - .ui/node_modules
+  - .ui/node
 
+before_install:
+  - mvn compile
 
 install:
-- mvn install
+  - mvn install
 
 script:
 - mvn test
