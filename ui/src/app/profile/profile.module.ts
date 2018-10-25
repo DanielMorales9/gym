@@ -7,16 +7,15 @@ import {TrainingComponent} from "./components/training.component";
 import {TrainingDetailsComponent} from "./components/training-details.component";
 import {CoreModule} from "../core/core.module";
 import {MakeSaleComponent} from "./components/sale-make.component";
-import {HomeModule} from "../home/home.module";
 import {SharedModule} from "../shared/shared.module";
 import {SaleSummaryComponent} from "./components/sale-summary.component";
 import {FormsModule} from "@angular/forms";
+import {HomeModule} from "../home/home.module";
 
 @NgModule({
     imports: [
         CommonModule,
         CoreModule,
-        HomeModule,
         FormsModule,
         SharedModule,
         ProfileRouting

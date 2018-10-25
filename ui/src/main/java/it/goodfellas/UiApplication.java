@@ -22,7 +22,7 @@ import java.io.IOException;
 public class UiApplication extends WebSecurityConfigurerAdapter {
 
     @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
-            "/user*", "/user/**/*", "/user/**",  "/logout",
+            "/user*", "/profile/**/*", "/profile/**",  "/logout",
             "/login", "/verification*"})
     public String publicAPI() {
         return "forward:/index.html";

@@ -16,6 +16,7 @@ export class HomeComponent implements OnInit {
                 private changeViewService: ChangeViewService) { }
 
     ngOnInit() :void {
+        console.log("init");
         this.user = this.app.user;
         this.current_role_view = this.app.current_role_view;
         this.changeViewService.getView().subscribe(value => {
@@ -25,8 +26,12 @@ export class HomeComponent implements OnInit {
     }
 
     authenticate() {
+        console.log("authentication");
         this.app.authenticate(undefined, (isAuthenticated) => {
+            console.log(isAuthenticated);
             this.authenticated = isAuthenticated
-        }, undefined);
+        }, err => {
+            console.log(err)
+        });
     }
 }

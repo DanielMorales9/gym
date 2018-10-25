@@ -40,8 +40,8 @@ export class AppService {
         this.current_role_view = this.roles.map((item, _) => {
             return item['role_index']
         }).reduce((a, b) => {
-                return (a > b) ? b : a
-            });
+            return (a > b) ? b : a
+        });
     }
 
     changeView(role) {
@@ -106,9 +106,9 @@ export class AppService {
         if (!user['id']) {
             this.userService.findByEmail(user.email).subscribe(
                 res => {
-                this.saveFullUser(res);
-                success(res);
-            }, error)
+                    this.saveFullUser(res);
+                    success(res);
+                }, error)
         }
         else {
             success(user)
@@ -166,7 +166,12 @@ export class AppService {
         })
     }
 
-    logout() {
-        this.discardUsers()
+    logout(callback) {
+        this.http.get('/logout').finally(() => {
+            this.authenticated = false;
+            return callback && callback()
+        }).subscribe(res => {
+            this.discardUsers()
+        }, error1 => {console.log(error1)});
     }
 }

@@ -1,14 +1,15 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {ExchangeBundleService} from "../core/services/exchange-bundle.service";
-import {ChangeViewService} from "../core/services/change-view.service";
-import {AppService} from "../core/services/app.service";
-import {Bundle} from "../core/model/bundle.class";
-import {BundlesService} from "../core/services/bundles.service";
+import {Bundle} from "../../core/model/bundle.class";
+import {BundlesService} from "../../core/services/bundles.service";
+import {AppService} from "../../core/services/app.service";
+import {ChangeViewService} from "../../core/services/change-view.service";
+import {ExchangeBundleService} from "../../core/services/exchange-bundle.service";
+
 
 @Component({
     selector: 'bundle-details',
     templateUrl: './bundle-details.component.html',
-    styleUrls: ['../app.component.css']
+    styleUrls: ['../../app.component.css']
 })
 export class BundleDetailsComponent implements OnInit {
 

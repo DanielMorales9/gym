@@ -19,7 +19,6 @@ export class AppComponent implements OnInit {
     authenticated: boolean;
 
     constructor(private app: AppService,
-                private http: HttpClient,
                 private router: Router,
                 private changeViewService: ChangeViewService,
                 private messageService: MessageService) {
@@ -61,14 +60,11 @@ export class AppComponent implements OnInit {
     }
 
     logout() {
-        this.http.get('/logout').finally(() => {
-            this.app.authenticated = false;
+        this.app.logout( () => {
             this.current_role_view = undefined;
             this.roles = undefined;
             this.router.navigateByUrl("/login")
-        }).subscribe(res => {
-            this.app.logout();
-        }, error1 => {console.log(error1)});
+        })
     }
 
 

@@ -3,9 +3,9 @@ import {TrainingComponent} from "./components/training.component";
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {ProfileComponent} from "./components/profile.component";
-import {SalesComponent} from "../home/sales/sales.component";
 import {MakeSaleComponent} from "./components/sale-make.component";
 import {SaleSummaryComponent} from "./components/sale-summary.component";
+import {SalesComponent} from "../shared/sales/sales.component";
 
 
 const routes = [

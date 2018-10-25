@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {AppService} from "../../core/services/app.service";
 import {ChangeViewService} from "../../core/services/change-view.service";
 import {ActivatedRoute} from "@angular/router";
-import {PagerComponent} from "../../shared/pager.component";
+import {PagerComponent} from "../pager.component";
 import {SalesService} from "../../core/services/sales.service";
 
 
