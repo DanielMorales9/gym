@@ -6,9 +6,9 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "test": "ng test --code-coverage=false --progress=false --watch=false",
+    "test": "ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
-    "coverage": "ng test --progress=false --watch=true",
+    "coverage": "ng test --progress=false --watch=true --browsers=ChromeHeadlessCI",
     "e2e": "ng e2e"
   },
   "private": true,
