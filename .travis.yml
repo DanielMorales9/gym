@@ -23,8 +23,5 @@ cache:
 before_install:
   - mvn compile
 
-install:
-  - mvn install
-
 script:
 - mvn test
