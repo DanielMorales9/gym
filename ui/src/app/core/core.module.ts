@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {NgModule, Optional, SkipSelf} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {MessageService} from "./services/message.service";
 import {AppService} from "./services/app.service";
@@ -11,15 +11,36 @@ import {SalesService} from "./services/sales.service";
 import {BundlesService} from "./services/bundles.service";
 import {TimesOffService} from "./services/timesoff.service";
 import {TrainingService} from "./services/training.service";
+import {ApiPrefixInterceptor} from "./http/api-prefix.interceptor";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
+import {XhrInterceptor} from "./http/xhr.interceptor";
+import {HttpService} from "./http/http.service";
+import {CacheInterceptor} from "./http/cache.interceptor";
+import {ErrorHandlerInterceptor} from "./http/error-handler.interceptor";
+import {HttpCacheService} from "./http/http-cache.service";
 
 
 @NgModule({
     imports: [
         CommonModule,
+        HttpClientModule
     ],
     declarations: [],
     exports: [],
     providers: [
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: XhrInterceptor,
+            multi: true
+        },
+        {
+            provide: HttpClient,
+            useClass: HttpService
+        },
+        HttpCacheService,
+        ApiPrefixInterceptor,
+        ErrorHandlerInterceptor,
+        CacheInterceptor,
         UserService,
         SalesService,
         BundlesService,
@@ -32,4 +53,6 @@ import {TrainingService} from "./services/training.service";
         MessageService,
         AppService]
 })
-export class CoreModule { }
+export class CoreModule {
+
+}
