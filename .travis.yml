@@ -5,6 +5,9 @@ language: node_js
 node_js:
 - "9.11"
 
+services:
+  - docker
+
 addons:
   apt:
     sources:
@@ -16,8 +19,9 @@ cache:
   directories:
   - ./node_modules
 
+
 install:
-- mvn clean install
+- mvn install
 
 script:
 - mvn test
