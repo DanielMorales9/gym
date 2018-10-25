@@ -64,23 +64,23 @@ export class BundlesComponent implements OnInit {
     private searchByPage() {
         this.service.search(this.query,
             this.pagerComponent.getPage(),
-            this.pagerComponent.getSize(), res => {
-            this.bundles = res['content'];
-            this.pagerComponent.setPageNumber(res['number']);
-            this.pagerComponent.setTotalPages(res['totalPages']);
-            this.pagerComponent.updatePages();
-            this.empty = this.bundles == undefined || this.bundles.length == 0;
-            this.pagerComponent.setEmpty(this.empty)
-        }, this._error())
+            this.pagerComponent.getSize())
+            .subscribe( res => {
+                this.bundles = res['content'];
+                this.pagerComponent.setPageNumber(res['number']);
+                this.pagerComponent.setTotalPages(res['totalPages']);
+                this.pagerComponent.updatePages();
+                this.empty = this.bundles == undefined || this.bundles.length == 0;
+                this.pagerComponent.setEmpty(this.empty)
+            }, this._error())
     }
 
     getBundlesByPage() {
         if (this.query === undefined || this.query == ''){
             this.service.get(
                 this.pagerComponent.getPage(),
-                this.pagerComponent.getSize(),
-                this._success(),
-                this._error());
+                this.pagerComponent.getSize())
+                .subscribe(this._success(), this._error());
         }
         else {
             this.searchByPage();

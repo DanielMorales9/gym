@@ -1,6 +1,6 @@
 import {NgModule, Optional, SkipSelf} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MessageService} from "./services/message.service";
+import {NotificationService} from "./services/notification.service";
 import {AppService} from "./services/app.service";
 import {ExchangeBundleService} from "./services/exchange-bundle.service";
 import {ExchangeUserService} from "./services/exchange-user.service";
@@ -52,7 +52,7 @@ import {LoggerService} from "./logger.service";
         ExchangeSaleService,
         ExchangeUserService,
         ExchangeBundleService,
-        MessageService,
+        NotificationService,
         AppService]
 })
 export class CoreModule {

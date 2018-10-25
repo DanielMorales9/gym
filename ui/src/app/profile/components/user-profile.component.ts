@@ -5,7 +5,7 @@ import {AppService} from "../../core/services/app.service";
 import {ActivatedRoute} from "@angular/router";
 import {ExchangeUserService} from "../../core/services/exchange-user.service";
 import {UserService} from "../../core/services/users.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 @Component({
     templateUrl: './user-profile.component.html',
     styleUrls: ['../../app.component.css'],
@@ -22,7 +22,7 @@ export class UserProfileComponent implements OnInit {
     current_role_view: number;
     email: string;
 
-    constructor(private messageService: MessageService,
+    constructor(private messageService: NotificationService,
                 private service: UserService,
                 private route: ActivatedRoute,
                 private app: AppService,

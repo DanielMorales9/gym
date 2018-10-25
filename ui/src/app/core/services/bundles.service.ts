@@ -1,39 +1,39 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import {Bundle} from "../../core/model/bundle.class";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class BundlesService {
 
     constructor(private http: HttpClient) {}
 
-    put(bundle: Bundle, success?: (value: any) => void, error?: (error: any) => void) {
-        let endpoint = "/bundleSpecs/"+bundle.id;
-        this.http.put(endpoint, bundle).subscribe(success, error);
+    put(bundle: Bundle) : Observable<Object> {
+        return this.http.put(`/bundleSpecs/${bundle.id}`, bundle);
     }
 
-    post(bundle: Bundle, success: (res) => void, error: (err) => void) {
-        this.http.post("/bundleSpecs", bundle).subscribe(success, error)
+    post(bundle: Bundle) : Observable<Object> {
+        return this.http.post("/bundleSpecs", bundle);
     }
 
-    get(page: number, size: number, success: (res) => void, error: (error1) => void) {
-        this.http.get("/bundleSpecs?page="+page+"&size="+size+"&sort=name").subscribe(success, error)
+    get(page: number, size: number) : Observable<Object> {
+        return this.http.get(`/bundleSpecs?page=${page}&size=${size}&sort=name`);
     }
 
-    search(query:string, page: number, size: number, success: (res) => void, error: (error1) => void) {
-        this.http.get("/bundleSpecs/search?query="+query+"&page="+page+"&size="+size+"&sort=createdAt,desc&sort=name,asc").subscribe(success, error)
+    search(query:string, page: number, size: number) : Observable<Object> {
+        return this.http.get(`/bundleSpecs/search?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 
-    searchNotDisabled(query: string, page: number, size: number, success: (res) => void, error: (err) => void) {
-        this.http.get("/bundleSpecs/searchNotDisabled?query="+query+"&page="+page+"&size="+size+"&sort=createdAt,desc&sort=name,asc").subscribe(success, error)
+    searchNotDisabled(query: string, page: number, size) : Observable<Object> {
+        return this.http.get(`/bundleSpecs/searchNotDisabled?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 
-    getNotDisabled(page: number, size: number, success: (res) => void, error: (err) => void) {
-        this.http.get("/bundleSpecs/getNotDisabled?page="+page+"&size="+size+"&sort=createdAt,desc&sort=name,asc").subscribe(success, error)
+    getNotDisabled(page: number, size: number) : Observable<Object> {
+        return this.http.get(`/bundleSpecs/getNotDisabled?page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 
-    getSessions(endpoint, success: (res) => void, error: (err) => void) {
-        this.http.get(endpoint).subscribe(success, error)
+    getSessions(endpoint) : Observable<Object> {
+        return this.http.get(endpoint);
     }
 
 }

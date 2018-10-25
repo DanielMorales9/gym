@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {ChangeViewService} from "../../core/services/change-view.service";
 import {UserService} from "../../core/services/users.service";
 import {AppService} from "../../core/services/app.service";
@@ -20,7 +20,7 @@ export class ProfileComponent implements OnInit {
     constructor(private app: AppService,
                 private userService: UserService,
                 private changeViewService: ChangeViewService,
-                private messageService: MessageService,
+                private messageService: NotificationService,
                 private route: ActivatedRoute) {
         this.current_role_view = this.app.current_role_view;
         this.email = this.app.user.email;

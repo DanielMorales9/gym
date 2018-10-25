@@ -43,12 +43,13 @@ export class TrainingDetailsComponent implements OnInit {
         if (!this.training.sessions) {
             if (this.hidden) {
                 let endpoint = this.training._links.sessions.href;
-                this.bundleService.getSessions(endpoint, res => {
-                    this.training.sessions = res._embedded.personalTrainingSessions || [];
-                    this.training.leftSessions = this.training.numSessions - this.training.sessions.length
-                }, err => {
-                    console.log(err)
-                });
+                this.bundleService.getSessions(endpoint)
+                    .subscribe( res => {
+                        this.training.sessions = res["_embedded"].personalTrainingSessions || [];
+                        this.training.leftSessions = this.training.numSessions - this.training.sessions.length
+                    }, err => {
+                        console.log(err)
+                    });
             }
         }
     }

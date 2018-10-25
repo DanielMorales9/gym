@@ -11,7 +11,7 @@ import 'rxjs/add/operator/finally';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {AppService} from "../../core/services/app.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {ChangeViewService} from "../../core/services/change-view.service";
 import {User} from "../../core/model/user.class";
 import {TimesOffService} from "../../core/services/timesoff.service";
@@ -94,7 +94,7 @@ export class BookingComponent implements OnInit {
 
     constructor(private app: AppService,
                 private modal: NgbModal,
-                private messageService: MessageService,
+                private messageService: NotificationService,
                 private changeViewService: ChangeViewService,
                 private trainingService: TrainingService,
                 private timesOffService: TimesOffService) {

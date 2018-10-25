@@ -1,7 +1,7 @@
 import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ExchangeUserService} from "../../core/services/exchange-user.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {UserService} from "../../core/services/users.service";
 import {User} from "../../core/model/user.class";
 
@@ -33,7 +33,7 @@ export class UserModalComponent implements OnInit {
     // Message service mi serve per comunicare con l'app component
     constructor(private builder:FormBuilder,
                 private service: UserService,
-                private messageService: MessageService,
+                private messageService: NotificationService,
                 private exchangeService: ExchangeUserService) {
         this.loading = false;
     }

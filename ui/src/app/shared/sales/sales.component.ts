@@ -38,8 +38,8 @@ export class SalesComponent implements OnInit {
             if (this.id) {
                 this.service.findUserSales(this.id,
                     this.pagerComponent.getPage(),
-                    this.pagerComponent.getSize(),
-                    this._success(), this._error())
+                    this.pagerComponent.getSize())
+                    .subscribe(this._success(), this._error())
             }
             else {
                 this.getSalesByPage();
@@ -90,13 +90,13 @@ export class SalesComponent implements OnInit {
         if (!this.id) {
             this.service.get(
                 this.pagerComponent.getPage(),
-                this.pagerComponent.getSize(),
-                this._success(), this._error())
+                this.pagerComponent.getSize())
+                .subscribe(this._success(), this._error())
         } else {
             this.service.findUserSales(this.id,
                 this.pagerComponent.getPage(),
-                this.pagerComponent.getSize(),
-                this._success(), this._error())
+                this.pagerComponent.getSize())
+                .subscribe(this._success(), this._error())
         }
     }
 
@@ -104,13 +104,13 @@ export class SalesComponent implements OnInit {
         if (!this.id) {
             this.service.searchByLastName(this.query,
                 this.pagerComponent.getPage(),
-                this.pagerComponent.getSize(),
-                this._success(), this._error())
+                this.pagerComponent.getSize())
+                .subscribe(this._success(), this._error())
         } else {
             this.service.searchByDate(this.query, this.id,
                 this.pagerComponent.getPage(),
-                this.pagerComponent.getSize(),
-                this._success(), this._error())
+                this.pagerComponent.getSize())
+                .subscribe(this._success(), this._error())
         }
     }
 

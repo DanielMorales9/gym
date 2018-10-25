@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {ExchangeSaleService} from "../../core/services/exchange-sale.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {ChangeViewService} from "../../core/services/change-view.service";
 import {AppService} from "../../core/services/app.service";
 import {SalesService} from "../../core/services/sales.service";
@@ -24,16 +24,17 @@ export class SaleDetailsComponent implements OnInit {
                 private appService: AppService,
                 private changeViewService: ChangeViewService,
                 private exchangeSale: ExchangeSaleService,
-                private messageService: MessageService) {
+                private messageService: NotificationService) {
         this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
     ngOnInit(): void {
         if (!this.sale.customer) {
-            this.saleService.getEndpoint(this.sale._links.customer.href, res => {
-                this.sale.customer = res;
-            }, undefined)
+            this.saleService.getEndpoint(this.sale._links.customer.href)
+                .subscribe( res => {
+                    this.sale.customer = res;
+                })
         }
     }
 
@@ -50,18 +51,20 @@ export class SaleDetailsComponent implements OnInit {
         this.hidden = !this.hidden;
         if (!this.sale.salesLineItems) {
             if (this.hidden) {
-                this.saleService.getEndpoint(this.sale._links.salesLineItems.href, res => {
-                    this.sale.salesLineItems = [];
-                    let salesLineItems = this.sale.salesLineItems;
-                    res._embedded
-                        .salesLineItems
-                        .map(res => {
-                            let endpoint = res._links.bundleSpecification.href;
-                            this.saleService.getEndpoint(endpoint, res1 => {
-                                salesLineItems.push({id: res.id, bundleSpecification: res1});
-                            }, undefined);
-                        });
-                }, undefined)
+                this.saleService.getEndpoint(this.sale._links.salesLineItems.href)
+                    .subscribe(res => {
+                        this.sale.salesLineItems = [];
+                        let salesLineItems = this.sale.salesLineItems;
+                        res["_embedded"]
+                            .salesLineItems
+                            .map(res => {
+                                let endpoint = res._links.bundleSpecification.href;
+                                this.saleService.getEndpoint(endpoint)
+                                    .subscribe( res1 => {
+                                        salesLineItems.push({id: res.id, bundleSpecification: res1});
+                                    });
+                            });
+                    })
             }
         }
     }
@@ -81,14 +84,15 @@ export class SaleDetailsComponent implements OnInit {
         let confirmed = confirm("Vuoi confermare l'eliminazione della vendita per il cliente " +
             this.sale.customer.firstName + this.sale.customer.lastName + "?");
         if (confirmed) {
-            this.saleService.delete(this.sale.id, res => {
-                let message = {
-                    text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",
-                    class: "alert-warning"
-                };
-                this.event.emit(res);
-                this.messageService.sendMessage(message);
-            }, this._systemError())
+            this.saleService.delete(this.sale.id)
+                .subscribe( res => {
+                    let message = {
+                        text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",
+                        class: "alert-warning"
+                    };
+                    this.event.emit(res);
+                    this.messageService.sendMessage(message);
+                }, this._systemError())
         }
     }
 

@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {ExchangeSaleService} from "../../core/services/exchange-sale.service";
 import {AppService} from "../../core/services/app.service";
 import {ChangeViewService} from "../../core/services/change-view.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {SalesService} from "../../core/services/sales.service";
 
 @Component({
@@ -22,7 +22,7 @@ export class SaleSummaryComponent implements OnInit {
                 private exchangeSale: ExchangeSaleService,
                 private app: AppService,
                 private changeViewService: ChangeViewService,
-                private messageService: MessageService) {
+                private messageService: NotificationService) {
         this.current_role_view = app.current_role_view;
         this.hidden = true;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
@@ -36,28 +36,32 @@ export class SaleSummaryComponent implements OnInit {
     }
 
     updateSale (saleId) {
-        this.saleService.findById(saleId, success => {
-            this.sale = success;
-            if (!this.sale.customer) {
-                this.saleService.getEndpoint(this.sale._links.customer.href, res => {
-                    this.sale.customer = res;
-                }, undefined)
-            }
-            if (!this.sale.salesLineItems) {
-                this.saleService.getEndpoint(this.sale._links.salesLineItems.href, res => {
-                    this.sale.salesLineItems = [];
-                    let salesLineItems = this.sale.salesLineItems;
-                    res._embedded
-                        .salesLineItems
-                        .map(res => {
-                            let endpoint = res._links.bundleSpecification.href;
-                            this.saleService.getEndpoint(endpoint, res1 => {
-                                salesLineItems.push({id: res.id, bundleSpecification: res1});
-                            }, undefined);
-                        });
-                }, undefined)
-            }
-        }, this._systemError())
+        this.saleService.findById(saleId)
+            .subscribe(success => {
+                this.sale = success;
+                if (!this.sale.customer) {
+                    this.saleService.getEndpoint(this.sale._links.customer.href)
+                        .subscribe( res => {
+                            this.sale.customer = res;
+                        })
+                }
+                if (!this.sale.salesLineItems) {
+                    this.saleService.getEndpoint(this.sale._links.salesLineItems.href)
+                        .subscribe(res => {
+                            this.sale.salesLineItems = [];
+                            let salesLineItems = this.sale.salesLineItems;
+                            res['_embedded']
+                                .salesLineItems
+                                .map(res => {
+                                    let endpoint = res._links.bundleSpecification.href;
+                                    this.saleService.getEndpoint(endpoint)
+                                        .subscribe( res1 => {
+                                            salesLineItems.push({id: res.id, bundleSpecification: res1});
+                                        }, );
+                                });
+                        }, )
+                }
+            }, this._systemError())
     }
 
     getDate(d) {
@@ -73,13 +77,14 @@ export class SaleSummaryComponent implements OnInit {
         let confirmed = confirm("Vuoi confermare l'eliminazione della vendita per il cliente " +
             this.sale.customer.firstName + this.sale.customer.lastName + "?");
         if (confirmed) {
-            this.saleService.delete(this.sale.id, res => {
-                let message = {
-                    text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",
-                    class: "alert-warning"
-                };
-                this.messageService.sendMessage(message);
-            }, this._systemError())
+            this.saleService.delete(this.sale.id)
+                .subscribe( res => {
+                    let message = {
+                        text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",
+                        class: "alert-warning"
+                    };
+                    this.messageService.sendMessage(message);
+                }, this._systemError())
         }
     }
 

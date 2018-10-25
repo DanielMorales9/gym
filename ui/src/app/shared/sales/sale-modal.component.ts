@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {ExchangeSaleService} from "../../core/services/exchange-sale.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {SalesService} from "../../core/services/sales.service";
 
 @Component({
@@ -23,7 +23,7 @@ export class SaleModalComponent implements OnInit {
 
     constructor(private service: SalesService,
                 private exchangeSale: ExchangeSaleService,
-                private messageService: MessageService) {
+                private messageService: NotificationService) {
         this.loading = false;
     }
 
@@ -61,7 +61,10 @@ export class SaleModalComponent implements OnInit {
 
     submit() {
         this.loading = true;
-        if (this.sale.amount > 0 ) this.service.pay(this.id, this.sale.amount, this._success(), this._error())
+        if (this.sale.amount > 0 ) {
+            this.service.pay(this.id, this.sale.amount)
+                .subscribe(this._success(), this._error())
+        }
     }
 
 }

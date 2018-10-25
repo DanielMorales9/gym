@@ -1,7 +1,7 @@
 import {Component, OnInit, } from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {UserService} from "../../core/services/users.service";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {ChangeViewService} from "../../core/services/change-view.service";
 import {AppService} from "../../core/services/app.service";
 import {BundlesService} from "../../core/services/bundles.service";
@@ -22,7 +22,7 @@ export class TrainingComponent implements OnInit {
     current_role_view: number;
     email: string;
 
-    constructor(private messageService: MessageService,
+    constructor(private messageService: NotificationService,
                 private userService: UserService,
                 private bundleService: BundlesService,
                 private route: ActivatedRoute,

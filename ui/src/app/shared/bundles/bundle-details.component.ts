@@ -41,7 +41,7 @@ export class BundleDetailsComponent implements OnInit {
         const bundle = this.bundle;
         bundle.type = "P";
         bundle.disabled = !bundle.disabled;
-        this.service.put(bundle, undefined, undefined);
+        this.service.put(bundle).subscribe();
     }
 
     editBundle() {

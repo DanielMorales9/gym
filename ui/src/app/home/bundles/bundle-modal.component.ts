@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {Bundle} from "../../core/model/bundle.class";
-import {MessageService} from "../../core/services/message.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {ExchangeBundleService} from "../../core/services/exchange-bundle.service";
 import {BundlesService} from "../../core/services/bundles.service";
 
@@ -24,7 +24,7 @@ export class BundleModalComponent implements OnInit {
 
     constructor(private service: BundlesService,
                 private exBundleService: ExchangeBundleService,
-                private messageService: MessageService) {
+                private messageService: NotificationService) {
         this.loading = false;
 
     }
@@ -75,13 +75,15 @@ export class BundleModalComponent implements OnInit {
     submitBundle() {
         if (this.edit == "true") {
             this.bundle.type = "P";
-            this.service.put(this.bundle, this._success(), this._error());
+            this.service.put(this.bundle)
+                .subscribe(this._success(), this._error());
 
         }
         else {
             const bundle = this.bundle;
             delete bundle.id;
-            this.service.post(this.bundle, this._success(), this._error());
+            this.service.post(this.bundle)
+                .subscribe(this._success(), this._error());
         }
         this.loading = true
     }

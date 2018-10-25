@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ChangeViewService} from "./change-view.service";
-import {MessageService} from "./message.service";
+import {NotificationService} from "./notification.service";
 import {UserService} from "./users.service";
 
 @Injectable()
@@ -27,7 +27,7 @@ export class AppService {
 
     constructor(private http: HttpClient,
                 private userService: UserService,
-                private messageService: MessageService,
+                private messageService: NotificationService,
                 private changeViewService: ChangeViewService) {
         this.user = this.getUser();
         if (this.user) {

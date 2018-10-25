@@ -1,59 +1,57 @@
 import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
+import {Observable} from "rxjs";
 
 @Injectable()
 export class SalesService {
 
     constructor(private http: HttpClient) {}
 
-    findUserSales(id: number, page: number, size: number, success: (res) => void, error: (error1) => void) {
-        this.http.get("/sales/findUserSales?id="+id+"&page="+page+"&size="+size+"&sort=createdAt,desc")
-            .subscribe(success, error)
+    findUserSales(id: number, page: number, size: number) : Observable<Object> {
+        return this.http.get(`/sales/findUserSales?id=${id}&page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    get(page: number, size: number, success: (res) => void, error1: (err) => void) {
-        this.http.get("/sales?page="+page+"&size="+size+"&sort=createdAt,desc").subscribe(success, error1)
+    get(page: number, size: number) : Observable<Object> {
+        return this.http.get(`/sales?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    createNewSale(email: string, id: number, success: (res) => void, error: (err) => void) {
-        this.http.get("/sales/createNewSale/"+email+"/"+id).subscribe(success, error)
+    createNewSale(email: string, id: number) : Observable<Object> {
+        return this.http.get(`sales/createNewSale/${email}/${id}`);
     }
 
-    delete(id: any, success: (res) => void, error: (err) => void) {
-        this.http.delete("/sales/"+id).subscribe(success, error)
+    delete(id: number) : Observable<Object> {
+        return this.http.delete(`/sales/${id}`);
     }
 
-    addSalesLineItem(saleId: any, bundleId: any, success: (res) => void, error: (err) => void) {
-        this.http.get("/sales/addSalesLineItem/" + saleId + "/" + bundleId).subscribe(success, error)
+    addSalesLineItem(saleId: number, bundleId: number) : Observable<Object> {
+        return this.http.get(`/sales/addSalesLineItem/${saleId}/${bundleId}`);
     }
 
-    deleteSalesLineItem(saleId: any, salesLineItemId: any, success: (res) => void, error: (err) => void) {
-        this.http.delete("/sales/deleteSalesLineItem/" + saleId + "/" + salesLineItemId).subscribe(success, error)
+    deleteSalesLineItem(saleId: number, salesLineItemId: number) : Observable<Object> {
+        return this.http.delete(`/sales/deleteSalesLineItem/${saleId}/${salesLineItemId}`);
     }
 
-    confirmSale(id: number, success: (res) => any, error: (error) => any) {
-        this.http.get("/sales/confirmSale/"+id).subscribe(success, error)
+    confirmSale(id: number) : Observable<Object> {
+        return this.http.get(`/sales/confirmSale/${id}`);
     }
 
-    findById(saleId: number, param2: (success) => any, param3: (error) => any) {
-        this.http.get("/sales/"+saleId).subscribe(param2, param3)
+    findById(saleId: number) : Observable<Object> {
+        return this.http.get(`/sales/${saleId}`);
     }
 
-    getEndpoint(endpoint: any, param2: (res) => void, param3: (res) => void) {
-        this.http.get(endpoint).subscribe(param2, param3)
+    getEndpoint(endpoint: string) : Observable<Object> {
+        return this.http.get(endpoint);
     }
 
-    pay(id: any, amount: number , param2: (res) => void, param3: (res) => void) {
-        this.http.post("/sales/pay/"+id, amount).subscribe(param2, param3)
+    pay(id: number, amount: number) : Observable<Object> {
+        return this.http.post(`/sales/pay/${id}`, amount);
     }
 
-    searchByLastName(query: string, page: number, size: number, success: (res) => void, error1: (err) => void) {
-        this.http.get("/sales/searchByLastName?lastName="+query+
-            "&page="+page+"&size="+size+"&sort=createdAt,desc").subscribe(success, error1)
+    searchByLastName(query: string, page: number, size: number) : Observable<Object> {
+        return this.http.get(`/sales/searchByLastName?lastName=${query}&page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    searchByDate(query: string, id: number, page: number, size: number, success: (res) => void, error1: (err) => void) {
-        this.http.get("/sales/searchByDate?id="+id+"&date="+query+
-            "&page="+page+"&size="+size+"&sort=createdAt,asc").subscribe(success, error1)
+    searchByDate(query: string, id: number, page: number, size: number) : Observable<Object> {
+        return this.http.get(`/sales/searchByDate?id=${id}&date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
     }
 }

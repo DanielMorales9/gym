@@ -4,7 +4,7 @@ import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/r
 import 'rxjs/add/operator/finally';
 import {AppService} from "./core/services/app.service";
 import {ChangeViewService} from "./core/services/change-view.service";
-import {MessageService} from "./core/services/message.service";
+import {NotificationService} from "./core/services/notification.service";
 
 @Component({
     selector: 'app-root',
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     constructor(private app: AppService,
                 private router: Router,
                 private changeViewService: ChangeViewService,
-                private messageService: MessageService) {
+                private messageService: NotificationService) {
 
     }
 
