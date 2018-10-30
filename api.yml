@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: redis-deployment
+  name: api-deployment
   labels:
-    app: redis
+    app: api
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: redis
+      app: api
   template:
     metadata:
       labels:
-        app: redis
+        app: api
     spec:
       containers:
-      - name: redis
-        image: redis:latest
+      - name: api
+        image: tenentedan9/api:0.0.1-SNAPSHOT
         ports:
-        - containerPort: 6379
+        - containerPort: 900
