@@ -40,4 +40,4 @@ maven-test:
 docker-build:
   image: maven:3-jdk-8
   stage: package
-  script: "mvn package"
+  script: "mvn package -X"
