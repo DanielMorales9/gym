@@ -1,7 +1,7 @@
 image: docker:latest
 services:
  - docker:dind
- - maven:3-jdk-8
+
 #variables:
 #  DOCKER_DRIVER: overlay
 
@@ -23,6 +23,7 @@ before_script:
   - "apt-get -y install google-chrome-stable"
 
 maven-build:
+  image: maven:3-jdk-8
   stage: build
   script: "mvn compile"
   artifacts:
@@ -32,9 +33,11 @@ maven-build:
     - gateway/target/*
 
 maven-test:
+  image: maven:3-jdk-8
   stage: test
   script: "mvn test"
 
 docker-build:
+  image: maven:3-jdk-8
   stage: package
   script: "mvn package"
