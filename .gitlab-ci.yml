@@ -2,8 +2,9 @@ image: docker:latest
 services:
  - docker:dind
 
-#variables:
-#  DOCKER_DRIVER: overlay
+variables:
+  DOCKER_DRIVER: overlay
+  DOCKER_HOST: tcp://docker:2375
 
 stages:
 - build
