@@ -1,0 +1,26 @@
+image: docker:latest
+services:
+- docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+
+stages:
+- build
+- test
+- package
+
+maven-build:
+  image: maven:3-jdk-8
+  stage: build
+  script: "mvn compile"
+
+maven-test:
+  image: maven:3-jdk-8
+  stage: test
+  script: "mvn test"
+
+docker-build:
+  image: maven:3-jdk-8
+  stage: package
+  script: "mvn package"
