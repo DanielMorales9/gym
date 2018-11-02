@@ -1,6 +1,6 @@
-image: gitlab/dind
+image: docker:latest
 services:
- - maven:3-jdk-8
+ - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
@@ -13,14 +13,11 @@ stages:
 - build
 - test
 - package
-- install
 
 cache:
   paths:
   - ui/node
   - ui/node_modules
-  - maven.repository/
-
 
 before_script:
   - "apt-get -qq -y install wget"
@@ -30,6 +27,7 @@ before_script:
   - "apt-get -y install google-chrome-stable"
 
 maven-build:
+  image: maven:3-jdk-8
   stage: build
   script: "mvn compile"
   artifacts:
@@ -39,6 +37,7 @@ maven-build:
     - gateway/target/*
 
 maven-test:
+  image: maven:3-jdk-8
   stage: test
   script: "mvn test"
   artifacts:
@@ -49,12 +48,18 @@ maven-test:
 
 
 docker-build:
+  image: maven:3-jdk-8
   stage: package
   script:
   - "mvn package"
+  artifacts:
+    paths:
+    - ui/target/*
+    - api/target/*
+    - gateway/target/*
 
-docker-push:
-  stage: install
+docker-build:
+  stage: package
   script:
   - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
   - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
@@ -63,9 +68,9 @@ docker-push:
   - docker push $AWS_DOCKER_REGISTRY/ui:$TAG
   - docker push $AWS_DOCKER_REGISTRY/gateway:$TAG
   - docker push $AWS_DOCKER_REGISTRY/api:$TAG
-
   artifacts:
     paths:
     - ui/target/*
     - api/target/*
     - gateway/target/*
+
