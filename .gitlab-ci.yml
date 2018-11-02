@@ -1,7 +1,6 @@
 image: gitlab/dind
 services:
  - maven:3-jdk-8
- - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
