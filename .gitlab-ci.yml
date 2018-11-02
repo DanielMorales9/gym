@@ -36,7 +36,7 @@ maven-build:
 maven-test:
   image: maven:3-jdk-8
   stage: test
-  script: "mvn test -Dmaven.compile.skip=true"
+  script: "mvn test"
   artifacts:
     paths:
     - ui/target/*
@@ -47,7 +47,7 @@ maven-test:
 docker-build:
   image: maven:3-jdk-8
   stage: package
-  script: "mvn package -Dmaven.compile.skip=true -Dmaven.test.skip=true"
+  script: "mvn package"
   artifacts:
     paths:
     - ui/target/*

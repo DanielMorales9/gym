@@ -4,6 +4,7 @@ services:
   postgres:
     container_name: postgres
     image: postgres
+
     volumes:
     - ../data/postgres:/var/lib/postgresql/data/pgdata
     environment:

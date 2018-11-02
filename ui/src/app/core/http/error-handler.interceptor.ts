@@ -4,9 +4,6 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
 import { environment } from '../../../environments/environment';
-import { LoggerService } from '../logger.service';
-
-const log = new LoggerService('ErrorHandlerInterceptor');
 
 /**
  * Adds a default error handler to all requests.
@@ -22,7 +19,7 @@ export class ErrorHandlerInterceptor implements HttpInterceptor {
     private errorHandler(response: HttpEvent<any>): Observable<HttpEvent<any>> {
         if (!environment.production) {
             // Do something with the error
-            log.error('Request error', response);
+            console.error('Request error', response);
         }
         throw response;
     }

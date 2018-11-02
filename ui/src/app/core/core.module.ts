@@ -1,4 +1,4 @@
-import {NgModule, Optional, SkipSelf} from '@angular/core';
+import {NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {NotificationService} from "./services/notification.service";
 import {AppService} from "./services/app.service";
@@ -18,7 +18,6 @@ import {HttpService} from "./http/http.service";
 import {CacheInterceptor} from "./http/cache.interceptor";
 import {ErrorHandlerInterceptor} from "./http/error-handler.interceptor";
 import {HttpCacheService} from "./http/http-cache.service";
-import {LoggerService} from "./logger.service";
 
 
 @NgModule({
@@ -38,7 +37,6 @@ import {LoggerService} from "./logger.service";
             provide: HttpClient,
             useClass: HttpService
         },
-        LoggerService,
         HttpCacheService,
         ApiPrefixInterceptor,
         ErrorHandlerInterceptor,
