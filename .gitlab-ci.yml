@@ -59,7 +59,7 @@ docker-build:
     - gateway/target/*
 
 docker-package:
-  stage: package
+  stage: install
   script:
   - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
   - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
