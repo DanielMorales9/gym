@@ -20,14 +20,13 @@ cache:
   - ui/node
   - ui/node_modules
 
-before_script:
+maven-build:
+  before_script:
   - "apt-get -qq -y install wget"
   - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
   - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
   - "apt-get -y update"
   - "apt-get -y install google-chrome-stable"
-
-maven-build:
   image: maven:3-jdk-8
   stage: build
   script: "mvn compile"
@@ -38,6 +37,12 @@ maven-build:
     - gateway/target/*
 
 maven-test:
+  before_script:
+  - "apt-get -qq -y install wget"
+  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
+  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
+  - "apt-get -y update"
+  - "apt-get -y install google-chrome-stable"
   image: maven:3-jdk-8
   stage: test
   script: "mvn test"
@@ -49,6 +54,12 @@ maven-test:
 
 
 docker-build:
+  before_script:
+  - "apt-get -qq -y install wget"
+  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
+  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
+  - "apt-get -y update"
+  - "apt-get -y install google-chrome-stable"
   image: maven:3-jdk-8
   stage: package
   script:
