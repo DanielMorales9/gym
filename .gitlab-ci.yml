@@ -1,6 +1,7 @@
-image: maven:3-jdk-8
+image: gitlab/dind
 services:
- - gitlab:dind
+ - maven:3-jdk-8
+ - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
@@ -13,6 +14,7 @@ stages:
 - build
 - test
 - package
+- install
 
 cache:
   paths:
@@ -51,6 +53,10 @@ docker-build:
   stage: package
   script:
   - "mvn package"
+
+docker-push:
+  stage: install
+  script:
   - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
   - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
   - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
