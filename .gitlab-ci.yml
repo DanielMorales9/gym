@@ -6,6 +6,7 @@ variables:
   DOCKER_DRIVER: overlay
   DOCKER_HOST: tcp://docker:2375
   TAG: 0.0.1-SNAPSHOT
+  MAVEN_OPTS: "-Dmaven.repo.local=m2-repository"
 #  BUILD_DEPENDENCY: target/dependency
 
 stages:
@@ -17,20 +18,14 @@ cache:
   paths:
   - ui/node
   - ui/node_modules
+  - m2-repository
 #  - ui/target/
 #  - gateway/target/
 #  - api/target/
-#  - maven.repository
 
 maven-build:
   image: maven:3-jdk-8
   stage: build
-  before_script:
-  - "apt-get -qq -y install wget"
-  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
-  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
-  - "apt-get -y update"
-  - "apt-get -y install google-chrome-stable"
   script: "mvn compile"
   artifacts:
     paths:
