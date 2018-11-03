@@ -17,10 +17,10 @@ cache:
   paths:
   - ui/node
   - ui/node_modules
-  - ui/target/
-  - gateway/target/
-  - api/target/
-  - maven.repository
+#  - ui/target/
+#  - gateway/target/
+#  - api/target/
+#  - maven.repository
 
 maven-build:
   image: maven:3-jdk-8
@@ -38,23 +38,23 @@ maven-build:
     - api/target/*
     - gateway/target/*
 
-maven-test:
-  image: maven:3-jdk-8
-  stage: test
-  script: "mvn test"
-
-docker-build:
-  stage: package
-  before_script:
-  - docker info
-  script:
-  - docker build -t tenentedan9/ui:$TAG ./ui
-  - docker build -t tenentedan9/gateway:$TAG ./gateway
-  - docker build -t tenentedan9/api:$TAG ./api
-  - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
-  - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
-  - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
-  - docker tag tenentedan9/api:$TAG $AWS_DOCKER_REGISTRY/api:$TAG
-  - docker push $AWS_DOCKER_REGISTRY/ui:$TAG
-  - docker push $AWS_DOCKER_REGISTRY/gateway:$TAG
-  - docker push $AWS_DOCKER_REGISTRY/api:$TAG
+#maven-test:
+#  image: maven:3-jdk-8
+#  stage: test
+#  script: "mvn test"
+#
+#docker-build:
+#  stage: package
+#  before_script:
+#  - docker info
+#  script:
+#  - docker build -t tenentedan9/ui:$TAG ./ui
+#  - docker build -t tenentedan9/gateway:$TAG ./gateway
+#  - docker build -t tenentedan9/api:$TAG ./api
+#  - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
+#  - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
+#  - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
+#  - docker tag tenentedan9/api:$TAG $AWS_DOCKER_REGISTRY/api:$TAG
+#  - docker push $AWS_DOCKER_REGISTRY/ui:$TAG
+#  - docker push $AWS_DOCKER_REGISTRY/gateway:$TAG
+#  - docker push $AWS_DOCKER_REGISTRY/api:$TAG
