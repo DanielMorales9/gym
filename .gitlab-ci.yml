@@ -42,9 +42,7 @@ maven-test:
   <<: *chrome_definition
   stage: test
   script:
-  - export PATH=$PATH:ui/node
-  - ui/node_modules/@angular/cli/bin/ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI
-  - ui/node_modules/@angular/cli/bin/ng e2e
+  - "mvn test -X"
 
 docker-build:
   <<: *chrome_definition
