@@ -18,6 +18,9 @@ cache:
   paths:
   - ui/node
   - ui/node_modules
+  - ui/target/
+  - gateway/target/
+  - api/target/
 
 .chrome_template: &chrome_job_definition
   image: maven:3-jdk-8
