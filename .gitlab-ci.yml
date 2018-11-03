@@ -46,9 +46,9 @@ maven-test:
 docker-build:
   stage: package
   script:
-  - docker build --build-arg DEPENDENCY=ui/$BUILD_DEPENDENCY -t tenentedan9/ui:TAG ./ui
-  - docker build --build-arg DEPENDENCY=gateway/$BUILD_DEPENDENCY -t tenentedan9/gateway:TAG ./gateway
-  - docker build --build-arg DEPENDENCY=api/$BUILD_DEPENDENCY -t tenentedan9/api:TAG ./api
+  - docker build -t tenentedan9/ui:$TAG ./ui
+  - docker build -t tenentedan9/gateway:$TAG ./gateway
+  - docker build -t tenentedan9/api:$TAG ./api
 
 docker-push:
   stage: install
