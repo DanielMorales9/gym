@@ -42,6 +42,7 @@ docker-install:
   before_script:
   - docker info
   script:
+  - ls
   - docker build -t tenentedan9/ui:$TAG ./ui
   - docker build -t tenentedan9/gateway:$TAG ./gateway
   - docker build -t tenentedan9/api:$TAG ./api
