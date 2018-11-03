@@ -19,9 +19,8 @@ cache:
   - ui/node
   - ui/node_modules
 
-chrome:
+.chrome_template: &chrome_job_definition  # Hidden key that defines an anchor named 'job_definition'
   image: maven:3-jdk-8
-  script:
   before_script:
   - "apt-get -qq -y install wget"
   - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
@@ -35,12 +34,12 @@ chrome:
     - gateway/target/*
 
 maven-build:
-  extends: chrome
+  <<: *chrome_job_definition
   stage: build
   script: "mvn compile"
 
 maven-test:
-  extends: chrome
+  <<: *chrome_job_definition
   stage: test
   script: "mvn test"
 
