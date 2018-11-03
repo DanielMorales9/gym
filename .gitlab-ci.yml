@@ -41,20 +41,15 @@ maven-build:
 maven-test:
   <<: *chrome_definition
   stage: test
-  script: "mvn test -X"
-
+  script:
+  - "mvn test -X"
+  - ui/node_modules/@angular/cli/bin/ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI
+  - ui/node_modules/@angular/cli/bin/ng e2e
 
 docker-build:
   <<: *chrome_definition
-  image: maven:3-jdk-8
   stage: package
   script: "mvn package -X"
-
-#maven-test:
-#  image: maven:3-jdk-8
-#  stage: test
-#  script: "mvn test"
-#
 
 docker-install:
   stage: install
