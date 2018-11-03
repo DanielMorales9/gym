@@ -32,7 +32,7 @@ maven-build:
     - gateway/target/*
 
 maven-test:
-  image: ubuntu
+  image: maven:3-jdk-8
   before_script:
   - "apt-get -qq -y install wget"
   - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
@@ -40,10 +40,7 @@ maven-test:
   - "apt-get -y update"
   - "apt-get -y install google-chrome-stable"
   stage: test
-  script:
-  - cd ui
-  - ./ng e2e
-  - ./ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI
+  script: "mvn test"
 
 docker-build:
   stage: package
