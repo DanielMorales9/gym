@@ -1,6 +1,4 @@
-image: docker:latest
-services:
- - docker:dind
+image: gitlab:dind
 
 variables:
   DOCKER_DRIVER: overlay
