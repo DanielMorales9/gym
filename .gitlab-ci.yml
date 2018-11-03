@@ -30,7 +30,9 @@ cache:
 maven-build:
   <<: *chrome_definition
   stage: test
-  script: "mvn test -X"
+  script:
+  - mvn test -X
+  - ls
   artifacts:
     paths:
     - ui/target/*
