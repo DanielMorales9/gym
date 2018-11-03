@@ -42,9 +42,9 @@ docker-install:
   before_script:
   - docker info
   script:
-  - docker build --build-arg DEPENDENCY=target/dependency -t tenentedan9/ui:$TAG ui/
-  - docker build --build-arg DEPENDENCY=target/dependency -t tenentedan9/gateway:$TAG gateway/
-  - docker build --build-arg DEPENDENCY=target/dependency -t tenentedan9/api:$TAG api/
+  - docker build -t tenentedan9/ui:$TAG -f ui/Dockerfile ui
+  - docker build -t tenentedan9/gateway:$TAG -f ui/Dockerfile gateway
+  - docker build -t tenentedan9/api:$TAG -f ui/Dockerfile api
   - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
   - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
   - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
