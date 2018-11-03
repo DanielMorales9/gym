@@ -8,7 +8,7 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2"
 
 stages:
-- package
+- test
 - install
 
 cache:
@@ -28,8 +28,8 @@ cache:
 
 maven-build:
   <<: *chrome_definition
-  stage: package
-  script: "mvn package -X"
+  stage: test
+  script: "mvn test -X"
   artifacts:
     paths:
     - ui/target/*
@@ -41,16 +41,13 @@ docker-install:
   before_script:
   - docker info
   script:
-  - docker images
-
-#  script:
-#  - docker build -t tenentedan9/ui:$TAG ./ui
-#  - docker build -t tenentedan9/gateway:$TAG ./gateway
-#  - docker build -t tenentedan9/api:$TAG ./api
-#  - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
-#  - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
-#  - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
-#  - docker tag tenentedan9/api:$TAG $AWS_DOCKER_REGISTRY/api:$TAG
-#  - docker push $AWS_DOCKER_REGISTRY/ui:$TAG
-#  - docker push $AWS_DOCKER_REGISTRY/gateway:$TAG
-#  - docker push $AWS_DOCKER_REGISTRY/api:$TAG
+  - docker build -t tenentedan9/ui:$TAG ./ui
+  - docker build -t tenentedan9/gateway:$TAG ./gateway
+  - docker build -t tenentedan9/api:$TAG ./api
+  - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
+  - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
+  - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
+  - docker tag tenentedan9/api:$TAG $AWS_DOCKER_REGISTRY/api:$TAG
+  - docker push $AWS_DOCKER_REGISTRY/ui:$TAG
+  - docker push $AWS_DOCKER_REGISTRY/gateway:$TAG
+  - docker push $AWS_DOCKER_REGISTRY/api:$TAG
