@@ -6,13 +6,12 @@ variables:
   DOCKER_DRIVER: overlay
   DOCKER_HOST: tcp://docker:2375
   TAG: 0.0.1-SNAPSHOT
-  BUILD_DEPENDENCY: target/dependency
+#  BUILD_DEPENDENCY: target/dependency
 
 stages:
 - build
 - test
 - package
-- install
 
 cache:
   paths:
@@ -22,29 +21,29 @@ cache:
   - gateway/target/
   - api/target/
 
-.chrome_template: &chrome_job_definition
+maven-build:
   image: maven:3-jdk-8
-  before_script:
-  - "apt-get -qq -y install wget"
-  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
-  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
-  - "apt-get -y update"
-  - "apt-get -y install google-chrome-stable"
+  stage: build
+  script: "mvn compile"
   artifacts:
     paths:
     - ui/target/*
     - api/target/*
     - gateway/target/*
 
-maven-build:
-  <<: *chrome_job_definition
-  stage: build
-  script: "mvn compile"
-
 maven-test:
-  <<: *chrome_job_definition
+  image: alpine:3.7
+  before_script:
+  - "apt-get -qq -y install wget"
+  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
+  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
+  - "apt-get -y update"
+  - "apt-get -y install google-chrome-stable"
   stage: test
-  script: "mvn test"
+  script:
+  - cd ui
+  - ./ng e2e
+  - ./ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI
 
 docker-build:
   stage: package
