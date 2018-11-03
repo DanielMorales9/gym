@@ -48,8 +48,6 @@ maven-test:
 
 docker-build:
   stage: package
-  services:
-  - docker:dind
   before_script:
   - docker info
   script:
