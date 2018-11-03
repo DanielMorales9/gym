@@ -56,7 +56,7 @@ docker-install:
   before_script:
   - docker info
   script:
-  - docker ps
+  - docker images
 
 #  script:
 #  - docker build -t tenentedan9/ui:$TAG ./ui
