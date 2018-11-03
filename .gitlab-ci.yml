@@ -8,8 +8,6 @@ variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2"
 
 stages:
-- build
-- test
 - package
 - install
 
@@ -29,25 +27,14 @@ cache:
   - "apt-get -y install google-chrome-stable"
 
 maven-build:
-  image: maven:3-jdk-8
-  stage: build
-  script: "mvn compile -X"
+  <<: *chrome_definition
+  stage: package
+  script: "mvn package -X"
   artifacts:
     paths:
     - ui/target/*
     - api/target/*
     - gateway/target/*
-
-maven-test:
-  <<: *chrome_definition
-  stage: test
-  script:
-  - "mvn test -X"
-
-docker-build:
-  <<: *chrome_definition
-  stage: package
-  script: "mvn package -X"
 
 docker-install:
   stage: install
