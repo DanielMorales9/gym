@@ -20,48 +20,33 @@ cache:
   - ui/node
   - ui/node_modules
 
-maven-build:
+chrome:
+  image: maven:3-jdk-8
+  script:
   before_script:
   - "apt-get -qq -y install wget"
   - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
   - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
   - "apt-get -y update"
   - "apt-get -y install google-chrome-stable"
-  image: maven:3-jdk-8
+  artifacts:
+    paths:
+    - ui/target/*
+    - api/target/*
+    - gateway/target/*
+
+maven-build:
+  extends: chrome
   stage: build
   script: "mvn compile"
-  artifacts:
-    paths:
-    - ui/target/*
-    - api/target/*
-    - gateway/target/*
 
 maven-test:
-  before_script:
-  - "apt-get -qq -y install wget"
-  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
-  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
-  - "apt-get -y update"
-  - "apt-get -y install google-chrome-stable"
-  image: maven:3-jdk-8
   stage: test
   script: "mvn test"
-  artifacts:
-    paths:
-    - ui/target/*
-    - api/target/*
-    - gateway/target/*
-
 
 docker-build:
-  before_script:
-  - "apt-get -qq -y install wget"
-  - "wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - "
-  - "sh -c 'echo \"deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main\" >> /etc/apt/sources.list.d/google-chrome.list'"
-  - "apt-get -y update"
-  - "apt-get -y install google-chrome-stable"
-  image: maven:3-jdk-8
   stage: package
+  extends: chrome
   script:
   - "mvn package"
   artifacts:
@@ -70,9 +55,10 @@ docker-build:
     - api/target/*
     - gateway/target/*
 
-docker-package:
+docker-push:
   stage: install
   script:
+  - ls
   - docker login -u AWS -p $AWS_TOKEN https://$AWS_DOCKER_REGISTRY/
   - docker tag tenentedan9/ui:$TAG $AWS_DOCKER_REGISTRY/ui:$TAG
   - docker tag tenentedan9/gateway:$TAG $AWS_DOCKER_REGISTRY/gateway:$TAG
