@@ -32,7 +32,7 @@ test:
 install:
   - mvn package
   - docker images
-  - docker login -u AWS -p $AWS_REGISTRY_TOKEN $AWS_REGISTRY
+  - docker login -u AWS -p $AWS_REGISTRY_TOKEN https://$AWS_REGISTRY/
   - docker tag tenentedan9/ui:$TAG $AWS_REGISTRY/ui:$TAG
   - docker tag tenentedan9/gateway:$TAG $AWS_REGISTRY/gateway:$TAG
   - docker tag tenentedan9/api:$TAG $AWS_REGISTRY/api:$TAG
