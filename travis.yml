@@ -8,6 +8,12 @@ node_js:
 services:
 - docker
 
+env:
+ - DOCKER_DRIVER: overlay
+ - DOCKER_HOST: tcp://docker:2375
+ - MAVEN_OPTS: "-Dmaven.repo.local=.m2"
+ - TAG: 0.0.1-SNAPSHOT
+
 addons:
   apt:
     sources:
@@ -19,6 +25,7 @@ cache:
   directories:
   - .ui/node_modules
   - .ui/node
+  - .m2/
 
 before_install:
 - mvn compile
