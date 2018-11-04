@@ -12,7 +12,7 @@ env:
 # - DOCKER_DRIVER=overlay
 # - DOCKER_HOST=tcp://docker:2375
  - MAVEN_OPTS="-Dmaven.repo.local=.m2"
-# - TAG=0.0.1-SNAPSHOT
+ - TAG=0.0.1-SNAPSHOT
 
 addons:
   apt:
@@ -27,8 +27,10 @@ cache:
   - .ui/node
   - .m2/
 
-before_install:
-- mvn compile
-
 script:
 - mvn test
+
+install:
+- docker build -t tenentedan9/ui:$TAG -f ui/Dockerfile ui
+- docker build -t tenentedan9/gateway:$TAG -f ui/Dockerfile gateway
+- docker build -t tenentedan9/api:$TAG -f ui/Dockerfile api
