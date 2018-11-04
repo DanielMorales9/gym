@@ -28,6 +28,7 @@ cache:
   - ./ui/node
   - ./.m2/
 before_cache:
+- echo "listing cache directories"
 - ls -la
 
 test:
