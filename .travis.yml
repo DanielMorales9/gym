@@ -23,6 +23,8 @@ cache:
   - ./ui/node_modules
   - ./ui/node
   - ./.m2/
+before_cache:
+- la -la
 
 test:
   - echo "fake test"
