@@ -31,10 +31,9 @@ before_cache:
 - echo "listing cache directories"
 - ls -la
 
-test:
-  - echo "fake test"
+install: true
 
-install:
+script:
   - mvn package -B
   - docker images
   - docker login -u AWS -p $AWS_REGISTRY_TOKEN https://$AWS_REGISTRY/
