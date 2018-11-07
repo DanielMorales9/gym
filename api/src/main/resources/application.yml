@@ -2,7 +2,7 @@
 # ------------------------------
 # BUSINESS CONFIGURATION
 # ------------------------------
-baseUrl: http://${BASE_HOST}
+baseUrl: ${BASE_HOST}
 reservationBeforeHours: 6
 
 logging:
