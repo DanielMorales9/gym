@@ -41,6 +41,8 @@ services:
     restart: always
     container_name: api
     image: tenentedan9/api:0.0.1-SNAPSHOT
+    environment:
+      POSTGRES_HOST: postgres
     ports:
     - 9000:9000
     depends_on:

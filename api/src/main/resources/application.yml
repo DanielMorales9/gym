@@ -19,7 +19,7 @@ spring:
       auth: true
       starttls.enable: true
   datasource:
-    url: jdbc:postgresql://postgres:5432/crm
+    url: jdbc:postgresql://${POSTGRES_HOST}:5432/crm
     username: daniel
     password: daniel
   jpa:
