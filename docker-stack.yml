@@ -1,0 +1,89 @@
+version: "3"
+
+services:
+  postgres:
+    container_name: postgres
+    image: postgres
+    volumes:
+    - /data/postgres:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_DB: crm
+      POSTGRES_PASSWORD: password#
+      POSTGRES_USER: goodfellas
+      PGDATA: /var/lib/postgresql/data/pgdata
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+        - node.hostname == data
+    networks:
+      - overall
+  redis:
+    container_name: redis
+    image: redis
+    volumes:
+    - /data/redis:/data
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+        - node.hostname == data
+    networks:
+      - overall
+  gateway:
+    container_name: gateway
+    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/gateway:0.0.1-SNAPSHOT
+    ports:
+      - 80:8080
+    depends_on:
+      - postgres
+      - redis
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+        - node.role == manager
+    networks:
+      - overall
+  ui:
+    container_name: ui
+    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/ui:0.0.1-SNAPSHOT
+    ports:
+    - 8081:8081
+    depends_on:
+    - gateway
+    - redis
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+    - overall
+  api:
+    container_name: api
+    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/api:0.0.1-SNAPSHOT
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: password#
+      POSTGRES_USER: goodfellas
+      BASE_HOST: 3.121.142.98
+    ports:
+    - 9000:9000
+    depends_on:
+    - gateway
+    - redis
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+    networks:
+    - overall
+
+networks:
+  overall:

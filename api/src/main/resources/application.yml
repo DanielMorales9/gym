@@ -2,7 +2,7 @@
 # ------------------------------
 # BUSINESS CONFIGURATION
 # ------------------------------
-baseUrl: http://localhost
+baseUrl: http://${BASE_HOST}
 reservationBeforeHours: 6
 
 logging:
@@ -20,8 +20,8 @@ spring:
       starttls.enable: true
   datasource:
     url: jdbc:postgresql://${POSTGRES_HOST}:5432/crm
-    username: daniel
-    password: daniel
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
   jpa:
     hibernate.ddl-auto: create
     show-sql: true
