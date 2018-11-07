@@ -72,7 +72,7 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: password#
       POSTGRES_USER: goodfellas
-      BASE_HOST: 3.121.142.98
+      BASE_HOST: http://3.121.142.98
     ports:
     - 9000:9000
     depends_on:
