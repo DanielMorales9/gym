@@ -23,7 +23,7 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
 
     @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
             "/user*", "/profile/**/*", "/profile/*",  "/logout",
-            "/auth*", "/auth/**", "/auth/**/*"})
+            "/auth/login/", "/auth/login"})
     public String publicAPI() {
         return "forward:/index.html";
     }
