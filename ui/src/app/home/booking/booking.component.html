@@ -160,14 +160,14 @@
                     [view]="view"
                     [(viewDate)]="viewDate"
                     (viewDateChange)="onViewDateChanged()">
-                Previous
+                Prossimo
             </div>
             <div
                     class="btn btn-outline-secondary"
                     mwlCalendarToday
                     [(viewDate)]="viewDate"
                     (viewDateChange)="onViewDateChanged()" >
-                Today
+                Oggi
             </div>
             <div
                     class="btn btn-primary"
@@ -175,7 +175,7 @@
                     [view]="view"
                     [(viewDate)]="viewDate"
                     (viewDateChange)="onViewDateChanged()">
-                Next
+                Successivo
             </div>
         </div>
     </div>
@@ -188,19 +188,19 @@
                     class="btn btn-primary"
                     (click)="onViewDateChanged(CalendarView.Month)"
                     [class.active]="view === CalendarView.Month">
-                Month
+                Mese
             </div>
             <div
                     class="btn btn-primary"
                     (click)="onViewDateChanged(CalendarView.Week)"
                     [class.active]="view === CalendarView.Week">
-                Week
+                Settimana
             </div>
             <div
                     class="btn btn-primary"
                     (click)="onViewDateChanged(CalendarView.Day)"
                     [class.active]="view === CalendarView.Day">
-                Day
+                Giorno
             </div>
         </div>
     </div>

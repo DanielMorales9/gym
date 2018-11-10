@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
-import {User} from "../../core/model/user.class";
-import {AppService} from "../../core/services/app.service";
+import {User} from "../../shared/model";
+import {AppService} from "../../app.service";
 
 
 @Component({
@@ -38,7 +38,7 @@ export class UserDetailsComponent implements OnInit {
     }
 
     goToUserProfile() {
-        this.router.navigate(['/user', this.user.id]);
+        this.router.navigate(['/profile', this.user.id]);
     }
 
 }

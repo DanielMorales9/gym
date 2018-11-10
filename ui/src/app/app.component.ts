@@ -1,10 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import {ActivatedRoute, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService} from "./core/services/app.service";
-import {ChangeViewService} from "./core/services/change-view.service";
-import {NotificationService} from "./core/services/notification.service";
+import { ChangeViewService, NotificationService} from "./shared/services";
+import {AppService} from "./app.service";
 
 @Component({
     selector: 'app-root',
@@ -63,7 +61,7 @@ export class AppComponent implements OnInit {
         this.app.logout( () => {
             this.current_role_view = undefined;
             this.roles = undefined;
-            this.router.navigateByUrl("/login")
+            this.router.navigateByUrl("/auth/login")
         })
     }
 

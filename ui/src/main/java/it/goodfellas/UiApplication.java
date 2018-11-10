@@ -22,8 +22,8 @@ import java.io.IOException;
 public class UiApplication extends WebSecurityConfigurerAdapter {
 
     @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
-            "/user*", "/profile/**/*", "/profile/**",  "/logout",
-            "/login", "/verification*"})
+            "/user*", "/profile/**/*", "/profile/*",  "/logout",
+            "/auth*", "/auth/**", "/auth/**/*"})
     public String publicAPI() {
         return "forward:/index.html";
     }
@@ -35,7 +35,7 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
                 .httpBasic().and()
                 .authorizeRequests()
                 .antMatchers( "/", "/home*", "/home/**/*", "/user*",
-                        "/user/**/*", "/logout", "/login", "/verification*").permitAll()
+                        "/user/**/*", "/logout", "/auth*").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
                 .and().csrf()

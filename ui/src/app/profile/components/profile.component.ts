@@ -1,9 +1,7 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {NotificationService} from "../../core/services/notification.service";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {UserService} from "../../core/services/users.service";
-import {AppService} from "../../core/services/app.service";
+import {ChangeViewService, NotificationService, UserService} from "../../shared/services";
+import {AppService} from "../../app.service";
 
 @Component({
     templateUrl: './profile.component.html',

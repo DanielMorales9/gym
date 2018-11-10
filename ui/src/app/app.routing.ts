@@ -3,11 +3,11 @@ import { NgModule } from "@angular/core";
 
 const routes: Routes = [
     { path: '', pathMatch: "full", redirectTo: "home"},
-    { path: 'login', loadChildren: "app/login/login.module#LoginModule"},
-    { path: 'verification', loadChildren: "app/verification/verification.module#VerificationModule"},
+    { path: 'auth', loadChildren: "app/auth/auth.module#AuthModule"},
     { path: 'error', loadChildren: "app/error/error.module#ErrorModule"},
     { path: 'home', loadChildren: "app/home/home.module#HomeModule" },
-    { path: 'profile/:id?', loadChildren: "app/profile/profile.module#ProfileModule" }
+    { path: 'profile/:id?', loadChildren: "app/profile/profile.module#ProfileModule" },
+    { path: '**', redirectTo: 'home' }
 ];
 
 @NgModule({

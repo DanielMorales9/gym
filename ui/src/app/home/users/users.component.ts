@@ -1,9 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {User} from "../../core/model/user.class";
-import {UserService} from "../../core/services/users.service";
-import {AppService} from "../../core/services/app.service";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {PagerComponent} from "../../shared/pager.component";
+import {User} from "../../shared/model";
+import {PagerComponent} from "../../shared/components";
+import { ChangeViewService, UserService} from "../../shared/services";
+import {AppService} from "../../app.service";
 
 @Component({
     templateUrl: './users.component.html',

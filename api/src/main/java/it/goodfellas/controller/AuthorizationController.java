@@ -15,6 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,21 +28,21 @@ import java.security.Principal;
 import java.util.Calendar;
 
 @RestController
+@PropertySource("application.yml")
 public class AuthorizationController {
     private final static Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
     private IUserAuthService userService;
-    private final AdminService adminService;
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RoleRepository roleRepository;
+    @Value("${baseUrl}")
+    private String baseUrl;
 
     @Autowired
-    public AuthorizationController(AdminService adminService,
-                                   UserRepository userRepository,
+    public AuthorizationController(UserRepository userRepository,
                                    JavaMailSender mailSender,
                                    RoleRepository roleRepository) {
-        this.adminService = adminService;
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.roleRepository = roleRepository;
@@ -178,7 +180,7 @@ public class AuthorizationController {
         String recipientAddress = user.getEmail();
         String subject = "Verifica Account";
         String confirmationUrl
-                = Constants.BASE_URL+ "/verification?token=" + newToken.getToken();
+                = this.baseUrl+ "/auth/verification?token=" + newToken.getToken();
         String message = "Ti abbiamo generato un nuovo link di verifica: ";
 
         SimpleMailMessage email = new SimpleMailMessage();
