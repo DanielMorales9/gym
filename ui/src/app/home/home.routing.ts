@@ -4,7 +4,7 @@ import {HomeComponent} from "./home.component";
 import {UsersComponent} from "./users/users.component";
 import {BundlesComponent} from "./bundles/bundles.component";
 import {BookingComponent} from "./booking/booking.component";
-import {SalesComponent} from "../shared/sales/sales.component";
+import {SalesComponent} from "../shared/components/sales/sales.component";
 
 const routes = [
 
@@ -13,7 +13,8 @@ const routes = [
             { path: 'users', component: UsersComponent },
             { path: 'sales', component: SalesComponent },
             { path: 'bundles', component: BundlesComponent },
-            { path: 'booking', component: BookingComponent }
+            { path: 'booking', component: BookingComponent },
+            { path: '**', redirectTo: 'booking' }
         ]},
 ];
 @NgModule({

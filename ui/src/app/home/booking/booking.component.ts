@@ -10,12 +10,15 @@ import {
 import 'rxjs/add/operator/finally';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
-import {AppService} from "../../core/services/app.service";
-import {NotificationService} from "../../core/services/notification.service";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {User} from "../../core/model/user.class";
-import {TimesOffService} from "../../core/services/timesoff.service";
-import {TrainingService} from "../../core/services/training.service";
+import {User} from "../../shared/model";
+import {
+    ChangeViewService,
+    NotificationService,
+    TimesOffService,
+    TrainingService
+} from "../../shared/services";
+import {AppService} from "../../app.service";
+
 
 const colors: any = {
     red: {

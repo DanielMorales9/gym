@@ -1,22 +1,30 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {PagerComponent} from "./pager.component";
-import {NumberValidator} from "./number-validator.directive";
-import {EqualValidator} from "./equal-validator.directive";
-import {CoreModule} from "../core/core.module";
-import {SalesComponent} from "./sales/sales.component";
-import {SaleDetailsComponent} from "./sales/sale-details.component";
-import {SaleModalComponent} from "./sales/sale-modal.component";
+import {
+    BundleDetailsComponent,
+    PagerComponent,
+    SaleDetailsComponent,
+    SaleModalComponent, SalesComponent,
+    UserModalComponent
+} from "./components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {UserModalComponent} from "./users/user-modal.component";
-import {BundleDetailsComponent} from "./bundles/bundle-details.component";
+import {EqualValidator, NumberValidator} from "./directives";
+import {
+    BundlesService,
+    ChangeViewService,
+    ExchangeBundleService, ExchangeSaleService,
+    ExchangeUserService,
+    NotificationService, SalesService,
+    TimesOffService,
+    TrainingService,
+    UserService
+} from "./services";
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        CoreModule
     ],
     declarations: [
         SalesComponent,
@@ -37,6 +45,18 @@ import {BundleDetailsComponent} from "./bundles/bundle-details.component";
         BundleDetailsComponent,
         NumberValidator,
         EqualValidator
+    ],
+    providers: [
+        SalesService,
+        BundlesService,
+        ChangeViewService,
+        ExchangeSaleService,
+        ExchangeBundleService,
+        ExchangeUserService,
+        NotificationService,
+        TimesOffService,
+        TrainingService,
+        UserService,
     ]
 })
 export class SharedModule { }

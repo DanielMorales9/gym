@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {AppService} from "../../core/services/app.service";
-import {BundlesService} from "../../core/services/bundles.service";
+import { BundlesService, ChangeViewService} from "../../shared/services";
+import {AppService} from "../../app.service";
 
 
 @Component({

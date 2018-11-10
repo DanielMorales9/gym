@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {Bundle} from "../../core/model/bundle.class";
-import {PagerComponent} from "../../shared/pager.component";
-import {BundlesService} from "../../core/services/bundles.service";
+import {Bundle} from "../../shared/model";
+import {PagerComponent} from "../../shared/components";
+import {BundlesService} from "../../shared/services";
 
 @Component({
     templateUrl: './bundles.component.html',

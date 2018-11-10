@@ -1,14 +1,15 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Bundle} from "../../core/model/bundle.class";
-import {NotificationService} from "../../core/services/notification.service";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {UserService} from "../../core/services/users.service";
-import {AppService} from "../../core/services/app.service";
-import {User} from "../../core/model/user.class";
-import {PagerComponent} from "../../shared/pager.component";
-import {BundlesService} from "../../core/services/bundles.service";
-import {SalesService} from "../../core/services/sales.service";
+import {
+    BundlesService,
+    ChangeViewService,
+    NotificationService,
+    SalesService,
+    UserService
+} from "../../shared/services";
+import {Bundle, User} from "../../shared/model";
+import {PagerComponent} from "../../shared/components";
+import {AppService} from "../../app.service";
 
 
 @Component({

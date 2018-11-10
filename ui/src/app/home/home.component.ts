@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService} from "../core/services/app.service";
-import {ChangeViewService} from "../core/services/change-view.service";
+import { ChangeViewService} from "../shared/services";
+import {AppService} from "../app.service";
 
 @Component({
     templateUrl: './home.component.html',
@@ -16,7 +16,6 @@ export class HomeComponent implements OnInit {
                 private changeViewService: ChangeViewService) { }
 
     ngOnInit() :void {
-        console.log("init");
         this.user = this.app.user;
         this.current_role_view = this.app.current_role_view;
         this.changeViewService.getView().subscribe(value => {
@@ -26,9 +25,7 @@ export class HomeComponent implements OnInit {
     }
 
     authenticate() {
-        console.log("authentication");
         this.app.authenticate(undefined, (isAuthenticated) => {
-            console.log(isAuthenticated);
             this.authenticated = isAuthenticated
         }, err => {
             console.log(err)

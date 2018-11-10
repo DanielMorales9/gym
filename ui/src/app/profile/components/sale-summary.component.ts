@@ -1,10 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ExchangeSaleService} from "../../core/services/exchange-sale.service";
-import {AppService} from "../../core/services/app.service";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {NotificationService} from "../../core/services/notification.service";
-import {SalesService} from "../../core/services/sales.service";
+import {
+    ChangeViewService,
+    ExchangeSaleService,
+    NotificationService,
+    SalesService
+} from "../../shared/services";
+import {AppService} from "../../app.service";
 
 @Component({
     templateUrl: './sale-summary.component.html',

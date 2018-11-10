@@ -1,11 +1,15 @@
 import {Component, OnInit} from "@angular/core";
-import {User} from "../../core/model/user.class";
-import {ChangeViewService} from "../../core/services/change-view.service";
-import {AppService} from "../../core/services/app.service";
 import {ActivatedRoute} from "@angular/router";
-import {ExchangeUserService} from "../../core/services/exchange-user.service";
-import {UserService} from "../../core/services/users.service";
-import {NotificationService} from "../../core/services/notification.service";
+import {User} from "../../shared/model";
+import {
+    ChangeViewService,
+    ExchangeUserService,
+    NotificationService,
+    UserService
+} from "../../shared/services";
+import {AppService} from "../../app.service";
+
+
 @Component({
     templateUrl: './user-profile.component.html',
     styleUrls: ['../../app.component.css'],

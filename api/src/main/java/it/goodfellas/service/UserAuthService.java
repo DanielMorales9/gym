@@ -77,7 +77,7 @@ public class UserAuthService implements IUserAuthService {
         String recipientAddress = user.getEmail();
         String subject = "Conferma la registrazione";
         String confirmationUrl
-                = this.baseUrl+ "/verification?token=" + token;
+                = this.baseUrl+ "/auth/verification?token=" + token;
         String message = "Per registrare autenticati al seguente indirizzo: ";
 
         SimpleMailMessage email = new SimpleMailMessage();
@@ -125,7 +125,7 @@ public class UserAuthService implements IUserAuthService {
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        logger.info(email);
+        logger.info("The email " + email);
         try {
             AUser user = userRepository.findByEmail(email);
             if (user == null) {

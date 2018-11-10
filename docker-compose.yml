@@ -45,6 +45,7 @@ services:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: daniel
       POSTGRES_USER: daniel
+      BASE_HOST: http://www.goodfellas.fitness
     ports:
     - 9000:9000
     depends_on:
