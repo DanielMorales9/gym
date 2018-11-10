@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-    BundleDetailsComponent,
+    BundleDetailsComponent, NoCardComponent,
     PagerComponent,
     SaleDetailsComponent,
     SaleModalComponent, SalesComponent,
@@ -31,6 +31,7 @@ import {
         SaleDetailsComponent,
         SaleModalComponent,
         UserModalComponent,
+        NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
         NumberValidator,
@@ -40,6 +41,7 @@ import {
         SalesComponent,
         SaleDetailsComponent,
         SaleModalComponent,
+        NoCardComponent,
         UserModalComponent,
         PagerComponent,
         BundleDetailsComponent,

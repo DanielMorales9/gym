@@ -21,7 +21,7 @@
     </th>
     </thead>
     <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <span><i class="fa fa-times-circle"></i> Nessun pacchetto disponibile...</span>
+        <no-card message="Nessun pacchetto disponibile"></no-card>
     </tr>
     <tr *ngFor="let b of bundles">
         <bundle-details [bundle]="b" mode="write" classMode="default"></bundle-details>
