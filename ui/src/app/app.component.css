@@ -154,7 +154,7 @@ tr.empty-list {
 
 .card-row {
     width: 100%;
-    margin: 2px 1px 2px 2px;
+    margin: 2px 2px 2px 2px;
 }
 
 .line {
@@ -292,6 +292,11 @@ tr.empty-list {
           transform: scale(1.0);
       }
 }
+
+.navbar-color {
+    background-color: #4f91f9;
+}
+
 
 .active-link {
     background-color: rgba(12,13,14,0.05);

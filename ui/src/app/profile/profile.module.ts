@@ -8,14 +8,12 @@ import {
     TrainingComponent, TrainingDetailsComponent,
     UserProfileComponent
 } from "./components";
-import {CoreModule} from "../core";
 import {SharedModule} from "../shared";
 import {FormsModule} from "@angular/forms";
 
 @NgModule({
     imports: [
         CommonModule,
-        CoreModule,
         FormsModule,
         SharedModule,
         ProfileRouting
