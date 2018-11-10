@@ -5,7 +5,7 @@
     </th>
     </thead>
     <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <span><i class="fa fa-times-circle"></i> Nessun pacchetto attivo...</span>
+        <no-card message="Nessun pacchetto attivo"></no-card>
     </tr>
     <tr *ngFor="let b of user.currentTrainingBundles">
         <training-details [training]="b" ></training-details>
