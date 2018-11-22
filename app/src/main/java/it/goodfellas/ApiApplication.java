@@ -24,18 +24,27 @@ import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
-@RestController
+@Controller
 public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
+
+    @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
+            "/user*", "/profile/**/*", "/profile/*",  "/logout",
+            "/auth/**/*", "/auth/*", "/auth*"})
+    public String publicAPI() {
+        return "forward:/index.html";
+    }
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -45,12 +54,18 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/", "/home", "/user",
                         "/logout", "/login", "/profile", "/profile/*",
-						"/verification*",  "/auth/**/*", "/auth/*", "/auth*").permitAll()
+						"/verification*",  "/auth/*", "/auth/**/*").permitAll()
 				.anyRequest().authenticated()
 				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
 				.and().csrf()
 				.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
 		// @formatter:on
+	}
+
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css");
+
 	}
 
 	@Bean

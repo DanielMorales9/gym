@@ -6,12 +6,10 @@
     <artifactId>microservices</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Microservices Application for the Gym Management System</name>
+    <name>Gym Management System</name>
 
     <modules>
-        <module>gateway</module>
-        <module>ui</module>
-        <module>api</module>
+        <module>app</module>
     </modules>
 
 </project>

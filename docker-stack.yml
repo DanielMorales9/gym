@@ -34,56 +34,21 @@ services:
         - node.hostname == data
     networks:
       - overall
-  gateway:
-    container_name: gateway
-    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/gateway:0.0.1-SNAPSHOT
-    ports:
-      - 80:8080
-    depends_on:
-      - postgres
-      - redis
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-      placement:
-        constraints:
-        - node.role == manager
-    networks:
-      - overall
   ui:
     container_name: ui
     image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/ui:0.0.1-SNAPSHOT
     ports:
-    - 8081:8081
-    depends_on:
-    - gateway
-    - redis
-    deploy:
-      replicas: 1
-      restart_policy:
-        condition: on-failure
-    networks:
-    - overall
-  api:
-    container_name: api
-    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/api:0.0.1-SNAPSHOT
+    - 80:9000
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: password#
       POSTGRES_USER: goodfellas
       BASE_HOST: http://www.goodfellas.fitness
-    ports:
-    - 9000:9000
-    depends_on:
-    - gateway
-    - redis
     deploy:
       replicas: 1
       restart_policy:
         condition: on-failure
     networks:
     - overall
-
 networks:
   overall:
