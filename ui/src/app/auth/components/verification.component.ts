@@ -33,15 +33,15 @@ export class VerificationComponent implements OnInit {
 
         var role = this.app.INDEX2ROLE[roleId];
         var user = {email: this.user.email, password: this.user.password};
-        // TODO add eventually server side password validation error handler
-        this.app.changePassword(user, role.toLowerCase(), (response) => {
+        this.app.verifyPassword(user, role.toLowerCase(), (response) => {
             var cred = {username: response.email, password: this.user.password};
             this.app.authenticate(cred, (isAuthenticated) => {
                 if (!isAuthenticated) {
                     this.router.navigate(['/error'],
                         {queryParams:
                                 { "message": "Errore di Autenticazione" +
-                                        "<br>Rivolgiti all'amministratore per risolvere il problema"}})
+                                        "<br>Rivolgiti all'amministratore per risolvere il problema"}}
+                    )
                 }
                 else {
                     this.router.navigateByUrl('/');
@@ -54,25 +54,11 @@ export class VerificationComponent implements OnInit {
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
 
         this.app.getUserFromVerificationToken(this.token, (res) => {
-            console.info(res);
             if (res.verified) {
                 this.router.navigateByUrl('/');
             }
             else {
-                this.user = {
-                    height: NaN,
-                    weight: NaN,
-                    id: NaN,
-                    createdAt: '',
-                    defaultRoles: [],
-                    verified: false,
-                    email: res.email,
-                    firstName: res.firstName,
-                    lastName: res.lastName,
-                    type: '',
-                    password: '',
-                    confirmPassword: '',
-                };
+                this.user = res;
                 this.defaultRoles = res.defaultRoles;
             }
         }, (err) => {
@@ -83,10 +69,11 @@ export class VerificationComponent implements OnInit {
             }
             else if (err.status == 500) {
                 this.toResendToken = true;
-                this.router.navigate(['/error'], {queryParams: { "message": err.error.message }})
+                this.router.navigate(['/error'], {
+                    queryParams: { "message": err.error.message }
+                })
             }
         });
-        console.info(this.token)
     }
 
     resendToken() {

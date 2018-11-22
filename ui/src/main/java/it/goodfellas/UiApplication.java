@@ -23,7 +23,7 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
 
     @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
             "/user*", "/profile/**/*", "/profile/*",  "/logout",
-            "/auth/**/*", "/auth/*"})
+            "/auth/**/*", "/auth/*", "/auth*"})
     public String publicAPI() {
         return "forward:/index.html";
     }
@@ -34,14 +34,13 @@ public class UiApplication extends WebSecurityConfigurerAdapter {
         http
                 .httpBasic().and()
                 .authorizeRequests()
-                .antMatchers( "/", "/home*", "/home/**/*", "/user*",
-                        "/user/**/*", "/logout", "/auth*").permitAll()
+                .antMatchers( "/", "/home*", "/home/**/*",
+                        "/logout", "/auth*", "/auth/*", "/auth/**/*").permitAll()
                 .anyRequest().authenticated()
                 .and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
                 .and().csrf()
                 .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 .and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER);
-        // @formatter:on
     }
 
     @Bean

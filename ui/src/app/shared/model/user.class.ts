@@ -13,6 +13,6 @@ export class User {
     defaultRoles: number[];
 
     constructor() {
-
     }
+
 }

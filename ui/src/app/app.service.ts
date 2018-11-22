@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ChangeViewService, NotificationService, UserService} from "./shared/services";
+import {User} from "./shared/model";
 
 @Injectable({
     providedIn: 'root'
@@ -23,13 +24,13 @@ export class AppService {
     authenticated = false;
     user : any;
     roles = [];
-    private credentials: any;
+    credentials: any;
 
     constructor(private http: HttpClient,
                 private userService: UserService,
                 private messageService: NotificationService,
                 private changeViewService: ChangeViewService) {
-        this.user = this.getUser();
+        // this.user = this.getUser();
         if (this.user) {
             this.getRolesAndCurrentRoleView();
         }
@@ -52,14 +53,14 @@ export class AppService {
     authenticate(credentials, callback, errorCallback) {
         let user = {};
         this.credentials = credentials !== undefined ? credentials: this.credentials;
-        if (this.credentials) {
-            this.saveCredentials()
-        }
-        else {
-            this.credentials = this.getCredentials()
-        }
+        // if (this.credentials) {
+        //     this.saveCredentials()
+        // }
+        // else {
+        //     this.credentials = this.getCredentials()
+        // }
         this.http.get('/user').subscribe(response => {
-            this.authenticated = !!response['name'];
+            this.authenticated = !!response && !!response['name'];
             if (this.authenticated) {
                 user['roles'] = response['authorities'].map((item, _) => {
                     let role = item['authority'];
@@ -71,7 +72,7 @@ export class AppService {
                     });
                 user['email'] = response['principal']['username'];
                 this.user = user;
-                this.saveUser();
+                // this.saveUser();
                 this.getRolesAndCurrentRoleView();
             }
             return callback && callback(this.authenticated);
@@ -81,41 +82,41 @@ export class AppService {
     }
 
 
-    private getCredentials() {
-        return JSON.parse(window.localStorage.getItem('credentials'));
-    }
+    // private getCredentials() {
+    //     return JSON.parse(window.localStorage.getItem('credentials'));
+    // }
+    //
+    // private saveCredentials() {
+    //     window.localStorage.setItem('credentials', JSON.stringify(this.credentials));
+    // }
+    //
+    // private saveUser() {
+    //     window.localStorage.setItem('user', JSON.stringify(this.user));
+    // }
 
-    private saveCredentials() {
-        window.localStorage.setItem('credentials', JSON.stringify(this.credentials));
-    }
-
-    private saveUser() {
-        window.localStorage.setItem('user', JSON.stringify(this.user));
-    }
-
-    private saveFullUser(user: any) {
-        window.localStorage.setItem('full_user', JSON.stringify(user));
-    }
-
-    private getUser() {
-        return JSON.parse(window.localStorage.getItem('user'));
-    }
+    // private saveFullUser(user: any) {
+    //     window.localStorage.setItem('full_user', JSON.stringify(user));
+    // }
+    //
+    // private getUser() {
+    //     return JSON.parse(window.localStorage.getItem('user'));
+    // }
 
     getFullUser(success, error) {
-        let user = JSON.parse(window.localStorage.getItem('full_user'));
-        user = (user) ? user : this.getUser();
-        if (user) {
-            if (!user['id']) {
-                this.userService.findByEmail(user.email).subscribe(
-                    res => {
-                        this.saveFullUser(res);
-                        success(res);
-                    }, error)
-            }
-            else {
-                success(user)
-            }
+        // let user = JSON.parse(window.localStorage.getItem('full_user'));
+        // user = (user) ? user : this.getUser();
+        // if (user) {
+        if (!!this.user && !!this.user['email']) {
+            this.userService.findByEmail(this.user.email).subscribe(
+                res => {
+                    // this.saveFullUser(res);
+                    success(res);
+                }, error)
         }
+        // else {
+        //     success(this.user)
+        // }
+        // }
 
     }
 
@@ -130,7 +131,7 @@ export class AppService {
     }
 
     public getAuthorizationHeader() {
-        if (!this.credentials){
+        if (!this.credentials || !this.authenticated) {
             return 'Basic ';
         }
         return 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password);
@@ -139,9 +140,9 @@ export class AppService {
     public discardUsers() {
         this.credentials = {};
         this.user = {};
-        window.localStorage.removeItem('credentials');
-        window.localStorage.removeItem('user');
-        window.localStorage.removeItem('full_user');
+        // window.localStorage.removeItem('credentials');
+        // window.localStorage.removeItem('user');
+        // window.localStorage.removeItem('full_user');
     }
 
     getUserFromVerificationToken(token: any, successCallback, errorCallback) {
@@ -161,8 +162,12 @@ export class AppService {
         })
     }
 
-    changePassword(cred, role, successCallback, errorCallback) {
-        let endPoint = "/auth/"+role+"/changePassword";
+    changePassword(user: User, userType: string) {
+        return this.http.post(`/auth/${userType}/changePassword`, user);
+    }
+
+    verifyPassword(cred, role, successCallback, errorCallback) {
+        let endPoint = "/auth/"+role+"/verifyPassword";
         this.http.post(endPoint, cred).subscribe(response => {
             return successCallback && successCallback(response);
         }, error => {
@@ -179,5 +184,9 @@ export class AppService {
                 this.authenticated = false;
                 return callback && callback()
             });
+    }
+
+    findByEmail(email: string) {
+        return this.http.get(`/auth/findByEmail?email=${email}`)
     }
 }
