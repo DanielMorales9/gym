@@ -45,7 +45,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/", "/home", "/user",
                         "/logout", "/login", "/profile", "/profile/*",
-						"/verification*", "/auth/**/*").permitAll()
+						"/verification*",  "/auth/**/*", "/auth/*", "/auth*").permitAll()
 				.anyRequest().authenticated()
 				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
 				.and().csrf()

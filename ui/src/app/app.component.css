@@ -118,6 +118,20 @@ tr.empty-list {
     border-bottom: 1px #e1e4e8 solid;
     flex-flow: row wrap;
 }
+
+.form-footer {
+    font-size: small;
+    display: flex;
+    padding-top: 8px;
+    margin-top: 16px;
+    border-top: 1px #e1e4e8 solid;
+    flex-flow: row wrap;
+}
+
+.form-header>a {
+    text-align: -moz-right;
+}
+
 .form-gym {
     margin: 0 auto;
 }

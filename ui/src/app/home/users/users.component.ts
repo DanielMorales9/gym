@@ -27,19 +27,7 @@ export class UsersComponent implements  OnInit {
     }
 
     ngOnInit(): void {
-        this.user = {
-            height: NaN,
-            weight: NaN,
-            id: NaN,
-            defaultRoles: [],
-            email: '',
-            verified: false,
-            createdAt: '',
-            password: '',
-            confirmPassword: '',
-            firstName: '',
-            lastName: '',
-            type: ''};
+        this.user = new User();
         this.getUsersByPage();
     }
 

@@ -139,14 +139,12 @@ public abstract class AUser {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("User: ");
-        builder.append(this.firstName);
-        builder.append(", ");
-        builder.append(this.lastName);
-        builder.append(", ");
-        builder.append(this.email);
-        return builder.toString();
+        return "User: " +
+                this.firstName +
+                ", " +
+                this.lastName +
+                ", " +
+                this.email;
     }
 
     public abstract List<Long> getDefaultRoles();

@@ -3,7 +3,11 @@ import { CommonModule } from '@angular/common';
 import {AuthRouting} from "./auth.routing";
 import {FormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
-import {LoginComponent, VerificationComponent} from "./components";
+import {
+    ChangePasswordComponent, LoginComponent, ModifyPasswordComponent,
+    VerificationComponent
+} from "./components";
+
 @NgModule({
     imports: [
         CommonModule,
@@ -13,7 +17,9 @@ import {LoginComponent, VerificationComponent} from "./components";
     ],
     declarations: [
         LoginComponent,
-        VerificationComponent
+        VerificationComponent,
+        ChangePasswordComponent,
+        ModifyPasswordComponent
     ],
 })
 export class AuthModule { }

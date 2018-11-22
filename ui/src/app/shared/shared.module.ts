@@ -4,7 +4,7 @@ import {
     BundleDetailsComponent, NoCardComponent,
     PagerComponent,
     SaleDetailsComponent,
-    SaleModalComponent, SalesComponent,
+    SaleModalComponent, SalesComponent, SpinnerComponent,
     UserModalComponent
 } from "./components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -35,7 +35,8 @@ import {
         PagerComponent,
         BundleDetailsComponent,
         NumberValidator,
-        EqualValidator
+        EqualValidator,
+        SpinnerComponent
     ],
     exports: [
         SalesComponent,
@@ -46,7 +47,8 @@ import {
         PagerComponent,
         BundleDetailsComponent,
         NumberValidator,
-        EqualValidator
+        EqualValidator,
+        SpinnerComponent
     ],
     providers: [
         SalesService,

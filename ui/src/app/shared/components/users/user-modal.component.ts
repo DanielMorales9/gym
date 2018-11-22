@@ -42,19 +42,7 @@ export class UserModalComponent implements OnInit {
     ngOnInit(): void {
 
         console.log(this.modalMode, this.role);
-        this.user = {
-            id: NaN,
-            email: '',
-            height: NaN,
-            weight: NaN,
-            verified: false,
-            defaultRoles: [],
-            createdAt: '',
-            password: '',
-            confirmPassword: '',
-            firstName: '',
-            lastName: '',
-            type: ''};
+        this.user = new User();
         this.buildForm();
         this.exchangeService.getUser().subscribe((res) => {
             this.user = res;

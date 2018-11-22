@@ -80,6 +80,10 @@ public class UserAuthService implements IUserAuthService {
                 = this.baseUrl+ "/auth/verification?token=" + token;
         String message = "Per registrare autenticati al seguente indirizzo: ";
 
+        sendMail(recipientAddress, subject, confirmationUrl, message);
+    }
+
+    private void sendMail(String recipientAddress, String subject, String confirmationUrl, String message) {
         SimpleMailMessage email = new SimpleMailMessage();
         email.setTo(recipientAddress);
         email.setSubject(subject);
