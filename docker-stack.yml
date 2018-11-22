@@ -34,9 +34,9 @@ services:
         - node.hostname == data
     networks:
       - overall
-  ui:
-    container_name: ui
-    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/ui:0.0.1-SNAPSHOT
+  app:
+    container_name: app
+    image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT
     ports:
     - 80:9000
     environment:
@@ -45,7 +45,7 @@ services:
       POSTGRES_USER: goodfellas
       BASE_HOST: http://www.goodfellas.fitness
     deploy:
-      replicas: 1
+      replicas: 2
       restart_policy:
         condition: on-failure
     networks:
