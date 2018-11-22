@@ -15,39 +15,18 @@ services:
   redis:
     container_name: redis
     image: redis
-  gateway:
+  app:
     restart: always
-    container_name: gateway
-    image: tenentedan9/gateway:0.0.1-SNAPSHOT
+    container_name: app
+    image: tenentedan9/app:0.0.1-SNAPSHOT
     ports:
-      - 80:8080
-    depends_on:
-      - postgres
-      - redis
-  ui:
-    restart: always
-    container_name: ui
-    image: tenentedan9/ui:0.0.1-SNAPSHOT
-    ports:
-    - 8081:8081
+    - 80:9000
     volumes:
-      - ./ui/target/dependency/META-INF:/app
-      - ./ui/target/dependency/BOOT-INF/lib:/app/lib
-      - ./ui/target/dependency/BOOT-INF/classes:/app
-    depends_on:
-    - gateway
-    - redis
-  api:
-    restart: always
-    container_name: api
-    image: tenentedan9/api:0.0.1-SNAPSHOT
+#      - ./app/target/dependency/META-INF:/app
+#      - ./app/target/dependency/BOOT-INF/lib:/app/lib
+      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: daniel
       POSTGRES_USER: daniel
       BASE_HOST: http://localhost
-    ports:
-    - 9000:9000
-    depends_on:
-    - gateway
-    - redis
