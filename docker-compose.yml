@@ -4,7 +4,6 @@ services:
   postgres:
     container_name: postgres
     image: postgres
-
     volumes:
     - ../data/postgres:/var/lib/postgresql/data/pgdata
     environment:
@@ -21,12 +20,14 @@ services:
     image: tenentedan9/app:0.0.1-SNAPSHOT
     ports:
     - 80:9000
-    volumes:
+#    volumes:
 #      - ./app/target/dependency/META-INF:/app
 #      - ./app/target/dependency/BOOT-INF/lib:/app/lib
-      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
+#      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: daniel
       POSTGRES_USER: daniel
       BASE_HOST: http://localhost
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
