@@ -2,54 +2,51 @@ version: "3"
 
 services:
   postgres:
-    container_name: postgres
     image: postgres
     volumes:
     - /data/postgres:/var/lib/postgresql/data/pgdata
     environment:
       POSTGRES_DB: crm
-      POSTGRES_PASSWORD: daniel
-      POSTGRES_USER: daniel
+      POSTGRES_PASSWORD: password#
+      POSTGRES_USER: goodfellas
       PGDATA: /var/lib/postgresql/data/pgdata
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
       placement:
         constraints:
-        - node.hostname == data
+        - node.hostname == ip-10-0-0-79
     networks:
       - overall
   redis:
-    container_name: redis
     image: redis
     volumes:
     - /data/redis:/data
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
       placement:
         constraints:
-        - node.hostname == data
+        - node.hostname == ip-10-0-0-79
     networks:
       - overall
   app:
-    container_name: app
     image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT
     ports:
     - 80:9000
     environment:
-      POSTGRES_HOST: postgres
-      POSTGRES_PASSWORD: daniel
-      POSTGRES_USER: daniel
+      POSTGRES_HOST:  postgres
+      POSTGRES_PASSWORD: password#
+      POSTGRES_USER: goodfellas
       REDIS_PORT: 6379
       REDIS_HOST: redis
       BASE_HOST: http://www.goodfellas.fitness
     deploy:
-      replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - node.hostname == ip-10-0-0-98
     networks:
     - overall
 networks:
