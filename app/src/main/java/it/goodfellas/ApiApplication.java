@@ -29,12 +29,14 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @SpringBootApplication
 @Controller
+@EnableRedisHttpSession
 public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
@@ -81,6 +83,9 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		};
 	};
 
+	@Autowired @Qualifier("userAuthService")
+	UserAuthService userDetailsService;
+
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
@@ -91,8 +96,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-	@Autowired @Qualifier("userAuthService")
-	UserAuthService userDetailsService;
 
 	@Autowired
 	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
