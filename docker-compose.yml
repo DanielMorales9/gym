@@ -18,10 +18,14 @@ services:
     restart: always
     container_name: app
     image: tenentedan9/app:0.0.1-SNAPSHOT
+    command: --spring.profiles.active=dev
+    depends_on:
+      - redis
+      - postgres
     ports:
     - 80:9000
     volumes:
-      - ./app/target/dependency/META-INF/resources:/app/resources
+      - ./app/target/dependency/META-INF:/app/META-INF
 #      - ./app/target/dependency/BOOT-INF/lib:/app/lib
 #      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
     environment:

@@ -28,8 +28,7 @@ export class UserModalComponent implements OnInit {
 
     CONSTRAINT_VIOLATION_EXCEPTION = "ConstraintViolationException";
 
-    // Message service mi serve per comunicare con l'app component
-    constructor(private builder:FormBuilder,
+    constructor(private builder: FormBuilder,
                 private service: UserService,
                 private messageService: NotificationService,
                 private exchangeService: ExchangeUserService) {
@@ -40,8 +39,6 @@ export class UserModalComponent implements OnInit {
 
 
     ngOnInit(): void {
-
-        console.log(this.modalMode, this.role);
         this.user = new User();
         this.buildForm();
         this.exchangeService.getUser().subscribe((res) => {
@@ -56,7 +53,7 @@ export class UserModalComponent implements OnInit {
         if (this.role == 1) {
             if (this.modalMode != 'edit')
                 type = [Validators.required];
-            if (this.modalMode == 'edit' && this.user.defaultRoles[0] == 3) {
+            if (this.modalMode == 'edit' && this.user.roles[0].id == 3) {
                 height = [Validators.required, Validators.max(300), Validators.min(100)];
                 weight = [Validators.required, Validators.max(1000), Validators.min(20)];
             }

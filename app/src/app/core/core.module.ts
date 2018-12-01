@@ -2,6 +2,7 @@ import {NgModule, Optional, SkipSelf} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
 import {
+    ApiPrefixInterceptor,
     CacheInterceptor,
     ErrorHandlerInterceptor,
     HttpCacheService,
@@ -28,6 +29,7 @@ import {
             useClass: HttpService
         },
         HttpCacheService,
+        ApiPrefixInterceptor,
         ErrorHandlerInterceptor,
         CacheInterceptor]
 })

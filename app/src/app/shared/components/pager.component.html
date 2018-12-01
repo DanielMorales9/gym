@@ -1,4 +1,4 @@
-<nav aria-label="Naviga tra i pacchetti" [hidden]="empty">
+<nav aria-label="Naviga tra i pacchetti" [hidden]="totalPages <= 1">
     <ul class="pagination justify-content-center">
         <li class="page-item" [ngClass]="{'disabled': page == 0}">
             <a class="page-link" (click)="previousPage()">Previous</a>

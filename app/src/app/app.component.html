@@ -52,7 +52,7 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item dropdown" *ngIf="roles && roles.length > 1">
+            <li class="nav-item dropdown" *ngIf="user.roles && user.roles.length > 1">
                 <a class="nav-link active dropdown-toggle"
                    id="viewDropdown"
                    role="button"
@@ -62,10 +62,10 @@
                     <i class="fas fa-eye">&nbsp;&nbsp;</i>Viste
                 </a>
                 <div class="dropdown-menu" aria-labelledby="viewDropdown">
-                    <a *ngFor="let r of roles" class="dropdown-item"
-                       [ngClass]="{'active-link': current_role_view == r.role_index}"
-                       (click)="switchView(r.role_index)">
-                        <i class="fas fa-user">&nbsp;&nbsp;</i>{{r.role_name}}</a>
+                    <a *ngFor="let r of user.roles" class="dropdown-item"
+                       [ngClass]="{'active-link': current_role_view == r.index}"
+                       (click)="switchView(r.id)">
+                        <i class="fas fa-user">&nbsp;&nbsp;</i>{{r.name}}</a>
                 </div>
             </li>
             <li class="nav-item">

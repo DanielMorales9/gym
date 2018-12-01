@@ -13,7 +13,6 @@ export class UsersComponent implements  OnInit {
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
 
-    private user : User;
     users: User[];
     current_role_view: number;
     empty: boolean;
@@ -27,21 +26,27 @@ export class UsersComponent implements  OnInit {
     }
 
     ngOnInit(): void {
-        this.user = new User();
         this.getUsersByPage();
     }
 
     private searchByPage() {
         this.service.search(this.query,
-            this.pagerComponent.getPage(),
-            this.pagerComponent.getSize()).subscribe(res => {
+            this.getPage(),
+            this.getSize()).subscribe(res => {
                 this.users = res['content'];
                 this.pagerComponent.setPageNumber(res['number']);
                 this.pagerComponent.setTotalPages(res['totalPages']);
                 this.pagerComponent.updatePages();
                 this.empty = this.users == undefined || this.users.length == 0;
-                this.pagerComponent.setEmpty(this.empty)
             }, this._error())
+    }
+
+    private getSize() {
+        return this.pagerComponent.getSize();
+    }
+
+    private getPage() {
+        return this.pagerComponent.getPage();
     }
 
     _success () {
@@ -59,23 +64,21 @@ export class UsersComponent implements  OnInit {
             this.pagerComponent.setTotalPages(res['page']['totalPages']);
             this.pagerComponent.updatePages();
             this.empty = this.users == undefined || this.users.length == 0;
-            this.pagerComponent.setEmpty(this.empty);
         }
     }
 
     _error () {
         return (err) => {
             this.empty = true;
-            this.pagerComponent.setEmpty(this.empty)
+            this.pagerComponent.setTotalPages(0)
         }
     }
 
 
     getUsersByPage() {
         this.service.get(
-            this.pagerComponent.getPage(),
-            this.pagerComponent.getSize())
-            .subscribe(this._success(), this._error())
+            this.getPage(),
+            this.getSize()).subscribe(this._success(), this._error())
     }
 
     findUsers() {

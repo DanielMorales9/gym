@@ -1,6 +1,7 @@
 package it.goodfellas.service;
 
 import it.goodfellas.model.AUser;
+import it.goodfellas.model.DefaultRoles;
 import it.goodfellas.model.Role;
 import it.goodfellas.model.VerificationToken;
 import it.goodfellas.repository.RoleRepository;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.AuthenticatedPrincipal;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -23,6 +25,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -55,7 +58,7 @@ public class UserAuthService implements IUserAuthService {
 
         passwordValidationService.validate(input.getPassword());
 
-        List<Long> rolesId = input.getDefaultRoles();
+        List<Long> rolesId = input.getDefaultRoles().stream().map(Role::getId).collect(Collectors.toList());
         input.setPassword(passwordEncoder.encode(input.getPassword()));
         List<Role> roles = roleRepository.findAllById(rolesId);
         input.setRoles(roles);

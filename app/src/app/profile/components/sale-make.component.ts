@@ -106,14 +106,13 @@ export class MakeSaleComponent implements OnInit {
             this.pagerComponent.setTotalPages(res['totalPages']);
             this.pagerComponent.updatePages();
             this.empty = this.bundles == undefined || this.bundles.length == 0;
-            this.pagerComponent.setEmpty(this.empty)
         }
     }
 
     _error () {
         return (err) => {
             this.empty = true;
-            this.pagerComponent.setEmpty(this.empty)
+            this.pagerComponent.setTotalPages(0)
         }
     }
 
@@ -137,7 +136,7 @@ export class MakeSaleComponent implements OnInit {
             this.pagerComponent.setTotalPages(res['totalPages']);
             this.pagerComponent.updatePages();
             this.empty = this.bundles == undefined || this.bundles.length == 0;
-            this.pagerComponent.setEmpty(this.empty)
+            this.pagerComponent.setTotalPages(0)
         }, this._error())
     }
 

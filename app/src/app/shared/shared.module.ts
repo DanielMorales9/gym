@@ -16,7 +16,7 @@ import {
     ExchangeUserService,
     NotificationService, SalesService,
     TimesOffService,
-    TrainingService,
+    TrainingService, UserHelperService,
     UserService
 } from "./services";
 
@@ -53,6 +53,7 @@ import {
     providers: [
         SalesService,
         BundlesService,
+        UserHelperService,
         ChangeViewService,
         ExchangeSaleService,
         ExchangeBundleService,

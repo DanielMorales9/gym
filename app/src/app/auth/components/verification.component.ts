@@ -22,18 +22,45 @@ export class VerificationComponent implements OnInit {
                 private router: Router) {
     }
 
-    private static defaultErrorCallback(err) {
+        private static defaultErrorCallback(err) {
         console.error(err);
     };
 
+    ngOnInit(): void {
+        this.user = new User();
+        this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
+
+        this.app.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
+            if (res.verified) {
+                this.router.navigateByUrl('/');
+            }
+            else {
+                this.user = res;
+                this.defaultRoles = res.defaultRoles;
+            }
+        },(err) => {
+            if (err.status == 510) {
+                this.toResendToken = true;
+                this.user = err.error;
+            }
+            else if (err.status == 500) {
+                this.toResendToken = true;
+                this.router.navigate(['/error'], {
+                    queryParams: { "message": err.error.message }
+                })
+            }
+        }
+        );
+    }
+
     verifyPassword() {
         var roleId = this.defaultRoles.reduce((a, b) => {
-            return ( a < b)? a : b;
+            return ( a < b) ? a : b;
         });
 
         var role = this.app.INDEX2ROLE[roleId];
         var user = {email: this.user.email, password: this.user.password};
-        this.app.verifyPassword(user, role.toLowerCase(), (response) => {
+        this.app.verifyPassword(user, role.toLowerCase()).subscribe( (response: User) => {
             var cred = {username: response.email, password: this.user.password};
             this.app.authenticate(cred, (isAuthenticated) => {
                 if (!isAuthenticated) {
@@ -47,42 +74,13 @@ export class VerificationComponent implements OnInit {
                     this.router.navigateByUrl('/');
                 }
             }, VerificationComponent.defaultErrorCallback)
-        }, VerificationComponent.defaultErrorCallback);
-    }
-
-    ngOnInit(): void {
-        this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
-
-        this.app.getUserFromVerificationToken(this.token, (res) => {
-            if (res.verified) {
-                this.router.navigateByUrl('/');
-            }
-            else {
-                this.user = res;
-                this.defaultRoles = res.defaultRoles;
-            }
-        }, (err) => {
-            console.info(err);
-            if (err.status == 510) {
-                this.toResendToken = true;
-                this.user = err.error;
-            }
-            else if (err.status == 500) {
-                this.toResendToken = true;
-                this.router.navigate(['/error'], {
-                    queryParams: { "message": err.error.message }
-                })
-            }
         });
     }
 
+
     resendToken() {
-        console.info(this.token);
-        this.app.resendToken(this.token,(response) => {
+        this.app.resendToken(this.token).subscribe((response) => {
             this.resent = true;
-        }, (err) => {
-            console.error(err);
-            this.router.navigateByUrl('/error')
         })
     }
 

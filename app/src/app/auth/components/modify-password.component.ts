@@ -23,9 +23,8 @@ export class ModifyPasswordComponent {
     ngOnInit(): void {
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
 
-        this.app.getUserFromVerificationToken(this.token, (res) => {
+        this.app.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
             this.user = res;
-            console.log(res)
         }, (err) => {
             this.toResendToken = true;
             this.router.navigate(['/error'], {

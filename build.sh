@@ -15,7 +15,7 @@ _PREFIX="tenentedan9/"
 
 while getopts "vf" OPTION
 do
-  case $OPTION in
+  case ${OPTION} in
     v) _V=1
         echo "Verbosity output set"
        ;;
@@ -35,7 +35,7 @@ n_arguments+=$#
 n_arguments+=-$_V
 n_arguments+=-$_F
 
-if [ $n_containers -gt 0 ]; then
+if [[ ${n_containers} -gt 0 ]]; then
     echo "Stopping Containers..."
     log "docker-compose down"
     n_containers=$(docker ps -aq | wc -l)
@@ -46,7 +46,7 @@ if [ $n_containers -gt 0 ]; then
     echo "Containers stopped..."
 fi
 
-if  [ $_F -eq 1 -a $n_arguments -gt 0 ]; then
+if  [[ ${_F} -eq 1 && ${n_arguments} -gt 0 ]]; then
  echo "Removing Images..."
  for var in "$@"
     do
@@ -59,12 +59,14 @@ if  [ $_F -eq 1 -a $n_arguments -gt 0 ]; then
             echo "Image" $var "deleted..."
         fi
     done
-elif [ $_F -eq 1 -a $n_arguments -eq 0 ]; then
+
+elif [[ ${_F} -eq 1 && ${n_arguments} -eq 0 ]]; then
     echo "Removing Images..."
     for D in `find . -maxdepth 1 -type d | egrep ^\.\/[^\.].*`
     do
         IMAGE=`docker images "$_PREFIX${D:2}" -q`
         N_IMAGES=$(docker images "$_PREFIX${D:2}" -q | wc -l)
+
         if [ $N_IMAGES -gt 1 ]; then
             log "docker rmi $IMAGE"
             directory="${D:2}/target"

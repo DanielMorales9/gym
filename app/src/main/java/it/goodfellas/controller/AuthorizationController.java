@@ -21,12 +21,12 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.security.Principal;
 import java.util.Calendar;
 import java.util.UUID;
 
 @RestController
 @PropertySource("application.yml")
+@RequestMapping("/authentication")
 public class AuthorizationController {
     private final static Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
@@ -53,7 +53,7 @@ public class AuthorizationController {
     }
 
 
-    @PostMapping(path = "/auth/customer/registration")
+    @PostMapping(path = "/customer/registration")
     ResponseEntity<CustomerResource> customerRegistration(@Valid @RequestBody Customer input) {
         logger.info("Customer is trying to register: " + input.toString());
 
@@ -62,7 +62,7 @@ public class AuthorizationController {
                 new CustomerAssembler().toResource((Customer) c), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/auth/trainer/registration")
+    @PostMapping(path = "/trainer/registration")
     ResponseEntity<TrainerResource> trainerRegistration(@Valid @RequestBody Trainer input) {
         logger.info("Trainer is trying to register: " + input.toString());
 
@@ -72,7 +72,7 @@ public class AuthorizationController {
     }
 
 
-    @PostMapping(path = "/auth/admin/registration")
+    @PostMapping(path = "/admin/registration")
     ResponseEntity<AdminResource> adminRegistration(@Valid @RequestBody Admin input) {
         logger.info("Admin is trying to register: " + input.toString());
 
@@ -81,49 +81,49 @@ public class AuthorizationController {
                 new AdminAssembler().toResource((Admin) c), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/customer/verifyPassword")
+    @PostMapping("/customer/verifyPassword")
     ResponseEntity<CustomerResource> changeCustomerPassword(@RequestBody Customer user) {
         logger.info(user.toString());
         user = (Customer) userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new CustomerAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/admin/verifyPassword")
+    @PostMapping("/admin/verifyPassword")
     ResponseEntity<AdminResource> changeAdminPassword(@RequestBody Admin user) {
         user = (Admin) userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new AdminAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/trainer/verifyPassword")
+    @PostMapping("/trainer/verifyPassword")
     ResponseEntity<TrainerResource> changeTrainerPassword(@RequestBody Trainer user) {
         user = (Trainer) userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new TrainerAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/customer/changePassword")
+    @PostMapping("/customer/changePassword")
     ResponseEntity<AUserResource> modifyCustomerPassword(@RequestBody Customer user) {
         logger.info("About to change password for customer");
         AUser u = userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new AUserAssembler().toResource(u), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/trainer/changePassword")
+    @PostMapping("/trainer/changePassword")
     ResponseEntity<AUserResource> modifyTrainerPassword(@RequestBody Trainer user) {
         logger.info("About to change password for trainer");
         AUser u = userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new AUserAssembler().toResource(u), HttpStatus.OK);
     }
 
-    @PostMapping("/auth/admin/changePassword")
+    @PostMapping("/admin/changePassword")
     ResponseEntity<AUserResource> modifyAdminPassword(@RequestBody Admin user) {
         logger.info("About to change password for admin");
         AUser u = userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new AUserAssembler().toResource(u), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/auth/verification")
+    @GetMapping(path = "/verification")
     ResponseEntity<AUserResource> verify(@RequestParam String token) {
-
+        logger.info("About to verify...");
         VerificationToken verificationToken = userService.getVerificationToken(token);
         if (verificationToken == null) {
             throw new InvalidTokenException();
@@ -139,7 +139,7 @@ public class AuthorizationController {
                 new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/auth/findByEmail")
+    @GetMapping(path = "/findByEmail")
     ResponseEntity<AUserResource> findEmail(@RequestParam String email) {
         logger.info("Authentication: Find By Email");
         AUser user = userRepository.findByEmail(email);
@@ -162,7 +162,7 @@ public class AuthorizationController {
 
     }
 
-    @GetMapping(path = "/auth/resendToken")
+    @GetMapping(path = "/resendToken")
     public ResponseEntity resendRegistrationToken(@RequestParam("token") String existingToken) {
         VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
         logger.info("RESEND TOKEN");
@@ -181,7 +181,7 @@ public class AuthorizationController {
                 new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PutMapping(path = "/auth/users/{userId}/roles/{roleId}")
+    @PutMapping(path = "/users/{userId}/roles/{roleId}")
     ResponseEntity<AUserResource> addRoleToUser(@PathVariable Long userId,
                                                 @PathVariable Long roleId) {
         AUser user = this.userRepository.findById(userId)

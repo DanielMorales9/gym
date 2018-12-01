@@ -49,7 +49,7 @@
             <div class="card-text  col-md-11">
                 <i class="fa fa-pencil-ruler"></i>&nbsp;&nbsp;
                 <b>Ruoli</b>&nbsp;
-                <span *ngFor="let r of roles">{{r}}&nbsp;</span>
+                <span *ngFor="let r of user.roles">{{r}}&nbsp;</span>
             </div>
         </div>
         <div class="row" style="margin-bottom: .75rem" *ngIf="user.height && user.weight">
@@ -67,7 +67,7 @@
 </div>
 
 
-<user-modal (done)="updateUser()"
+<user-modal (done)="updateUser(user.id)"
             [role]="current_role_view"
             modalMode="edit"
             modalClosingMessage=" è stato modificato!"
@@ -75,7 +75,7 @@
             modalTitle="Modifica Dati"
             modalId="patchModal"></user-modal>
 
-<user-modal (done)="updateUser()"
+<user-modal (done)="updateUser(user.id)"
             [role]="current_role_view"
             modalMode="add"
             modalClosingMessage=" è stato aggiunto!"
