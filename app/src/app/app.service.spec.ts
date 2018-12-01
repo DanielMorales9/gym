@@ -1,7 +1,7 @@
 import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {AppService} from "./app.service";
-import {ChangeViewService, NotificationService, UserService} from "./shared/services";
+import {ChangeViewService, NotificationService, UserHelperService, UserService} from "./shared/services";
 import {Role, User} from "./shared/model";
 
 describe('AppService', () => {
@@ -15,6 +15,7 @@ describe('AppService', () => {
             imports: [ HttpClientTestingModule ],
             providers: [
                 UserService,
+                UserHelperService,
                 NotificationService,
                 ChangeViewService
             ]
@@ -61,23 +62,6 @@ describe('AppService', () => {
         });
     });
 
-    describe ("testing #getFullUser method", () => {
-        it("it should return a user", done => {
-            appService.user = new User();
-            appService.user.email = email;
-            appService.getFullUser().subscribe((res) => {
-                expect(res).toEqual(new User());
-                done()
-            });
-
-            let req = backend.expectOne({
-                url: `/users/findByEmail?email=${email}`,
-                method: "GET"
-            });
-
-            req.flush(new User())
-        });
-    });
 
     describe ("testing #getUserFromVerificationToken method", () => {
         it("it should return a user", done => {
@@ -171,7 +155,7 @@ describe('AppService', () => {
         it("it should discard session", done => {
             appService.discardSession();
             expect(appService.credentials).toEqual({});
-            expect(appService.user).toEqual(undefined);
+            expect(appService.user).toEqual(new User());
             done()
         });
     });

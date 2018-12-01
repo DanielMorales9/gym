@@ -63,7 +63,7 @@ public class Customer extends AUser {
 
 
     @Override
-    public List<Role> getDefaultRoles() {
+    public List<Role> defaultRoles() {
         return Collections.singletonList(
                 new Role((long) 3, "CUSTOMER"));
     }

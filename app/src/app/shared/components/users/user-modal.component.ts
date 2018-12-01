@@ -1,7 +1,8 @@
 import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserService, NotificationService, ExchangeUserService} from "../../services/";
+import {UserService, NotificationService, ExchangeUserService, UserHelperService} from "../../services/";
 import {User} from "../../model";
+import {UserDetailsComponent} from "../../../home/users";
 
 @Component({
     selector: 'user-modal',
@@ -12,17 +13,17 @@ export class UserModalComponent implements OnInit {
 
     // questo event Emitter mi serve per
     // invocare il metodo del componente padre
-    @Output()
-    done = new EventEmitter();
-    form: FormGroup;
+    @Output() public done = new EventEmitter();
 
-    user: User;
     @Input() public modalMode: string;
     @Input() public modalId: string;
     @Input() public modalCloseId: string;
     @Input() public modalClosingMessage: string;
     @Input() public modalTitle: string;
     @Input() public role: number;
+
+    form: FormGroup;
+    user: User;
     loading: boolean;
     error = true;
 
@@ -30,6 +31,7 @@ export class UserModalComponent implements OnInit {
 
     constructor(private builder: FormBuilder,
                 private service: UserService,
+                private userHelperService: UserHelperService,
                 private messageService: NotificationService,
                 private exchangeService: ExchangeUserService) {
         this.loading = false;
@@ -41,19 +43,25 @@ export class UserModalComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.buildForm();
-        this.exchangeService.getUser().subscribe((res) => {
-            this.user = res;
+        this.exchangeService.getUser().subscribe((user) => {
+            this.user = user;
             this.buildForm()
         });
+    }
+
+    isCustomer() {
+        return this.userHelperService.getHighestRole(this.user) == 3
     }
 
     buildForm() {
         const config = {};
         let height, weight, type, email, firstName, lastName = [];
+
+
         if (this.role == 1) {
             if (this.modalMode != 'edit')
                 type = [Validators.required];
-            if (this.modalMode == 'edit' && this.user.roles[0].id == 3) {
+            if (this.modalMode == 'edit' && this.isCustomer()) {
                 height = [Validators.required, Validators.max(300), Validators.min(100)];
                 weight = [Validators.required, Validators.max(1000), Validators.min(20)];
             }

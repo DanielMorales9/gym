@@ -14,12 +14,12 @@ export class ProfileComponent implements OnInit {
     sub: any;
     user: User;
 
-    constructor(private app: AppService,
+    constructor(private appService: AppService,
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService,
                 private route: ActivatedRoute) {
-        this.current_role_view = this.app.current_role_view;
+        this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
@@ -31,7 +31,7 @@ export class ProfileComponent implements OnInit {
                 this.userHelperService.getUser(id, this.getUser());
             }
             else {
-                this.app.getFullUser().subscribe(this.getUser())
+                this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
             }
         });
     }
