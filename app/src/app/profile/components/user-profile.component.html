@@ -49,7 +49,7 @@
             <div class="card-text  col-md-11">
                 <i class="fa fa-pencil-ruler"></i>&nbsp;&nbsp;
                 <b>Ruoli</b>&nbsp;
-                <span *ngFor="let r of user.roles">{{r}}&nbsp;</span>
+                <span *ngFor="let r of user.roles">{{r.name}}&nbsp;</span>
             </div>
         </div>
         <div class="row" style="margin-bottom: .75rem" *ngIf="user.height && user.weight">
@@ -65,7 +65,6 @@
         </div>
     </div>
 </div>
-
 
 <user-modal (done)="updateUser(user.id)"
             [role]="current_role_view"

@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {User} from "../../shared/model";
+import {Role, User} from "../../shared/model";
 import {
     ChangeViewService,
     ExchangeUserService,
@@ -33,8 +33,7 @@ export class UserProfileComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.sub = this.route.params.subscribe(params => {
-            let id = +params['id?'];
-            this.updateUser(id);
+            this.updateUser(+params['id?']);
         });
     }
 
@@ -45,10 +44,14 @@ export class UserProfileComponent implements OnInit {
     private getUser() {
         return (user) => {
             this.user = user;
-            if (!this.user.roles) {
+            if (!this.user.roles || !(this.user.roles instanceof Array)) {
                 this.userHelperService.getRoles(user.id, (roles)  => {
                     this.user.roles = roles;
+                    this.exchangeService.sendUser(this.user)
                 })
+            }
+            else {
+                this.exchangeService.sendUser(this.user)
             }
         }
     }
@@ -62,7 +65,7 @@ export class UserProfileComponent implements OnInit {
             this.userHelperService.getUser(id, this.getUser());
         }
         else {
-            this.appService.getFullUser().subscribe(this.getUser())
+            this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
         }
     }
 

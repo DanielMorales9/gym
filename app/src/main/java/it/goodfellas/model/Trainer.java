@@ -13,7 +13,7 @@ import java.util.List;
 public class Trainer extends AUser {
 
     @Override
-    public List<Role> getDefaultRoles() {
+    public List<Role> defaultRoles() {
         return Collections.singletonList(new Role((long) 2, "TRAINER"));
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 public class Admin extends AUser {
 
     @Override
-    public List<Role> getDefaultRoles() {
+    public List<Role> defaultRoles() {
         return Arrays.asList(
                 new Role((long) 1, "ADMIN"),
                 new Role((long) 2, "TRAINER"),

@@ -31,6 +31,10 @@ export class UserHelperService {
         });
     }
 
+    getHighestRole(user) {
+        return user.roles.map(role => role.id).reduce((a, b) => Math.min(a, b), 3);
+    }
+
     getUserCreatedAt(user) {
         let date = new Date(user.createdAt);
         return date.toLocaleDateString();
@@ -38,5 +42,10 @@ export class UserHelperService {
 
     getUser(id: number, callback: (user: User) => void) {
         this.userService.findById(id).subscribe(callback)
+    }
+
+
+    getUserByEmail(email: string, callback: (user) => void) {
+        this.userService.findByEmail(email).subscribe(callback)
     }
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import { ChangeViewService, NotificationService} from "./shared/services";
+import {ChangeViewService, NotificationService, UserHelperService} from "./shared/services";
 import {AppService} from "./app.service";
 import {User} from "./shared/model";
 
@@ -18,6 +18,7 @@ export class AppComponent implements OnInit {
 
     constructor(private appService: AppService,
                 private router: Router,
+                private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService) {
     }

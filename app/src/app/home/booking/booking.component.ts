@@ -15,7 +15,7 @@ import {
     ChangeViewService,
     NotificationService,
     TimesOffService,
-    TrainingService
+    TrainingService, UserHelperService
 } from "../../shared/services";
 import {AppService} from "../../app.service";
 
@@ -95,19 +95,20 @@ export class BookingComponent implements OnInit {
     loading : boolean;
     timeOffName: string = "";
 
-    constructor(private app: AppService,
+    constructor(private appService: AppService,
                 private modal: NgbModal,
                 private messageService: NotificationService,
+                private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private trainingService: TrainingService,
                 private timesOffService: TimesOffService) {
-        this.current_role_view = this.app.current_role_view;
+        this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value);
         this.loading = false;
     }
 
     ngOnInit(): void {
-        this.app.getFullUser().subscribe((res: User) => {
+        this.userHelperService.getUserByEmail(this.appService.user.email, (res: User) => {
             this.user = res;
             this.getEvents()
         });

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {ChangeViewService, NotificationService, UserService} from "./shared/services";
+import {ChangeViewService, NotificationService, UserHelperService, UserService} from "./shared/services";
 import {Role, User} from "./shared/model";
 import {Observable} from "rxjs";
 
@@ -28,6 +28,7 @@ export class AppService {
 
     constructor(private http: HttpClient,
                 private userService: UserService,
+                private userHelperService: UserHelperService,
                 private messageService: NotificationService,
                 private changeViewService: ChangeViewService) {
         this.user = new User();
@@ -57,8 +58,7 @@ export class AppService {
     }
 
     private getRolesAndCurrentRoleView() {
-        this.current_role_view = this.user.roles.map( role => role.id)
-            .reduce((a, b) => Math.min(a, b), 3);
+        this.current_role_view = this.userHelperService.getHighestRole(this.user);
     }
 
     private getEmail(response) {
@@ -73,11 +73,6 @@ export class AppService {
             return role;
         });
     }
-
-    getFullUser() {
-        return this.userService.findByEmail(this.user.email);
-    }
-
 
     public getAuthorizationHeader() {
         if (!this.credentials) {

@@ -26,7 +26,7 @@ describe('NoCardComponent', () => {
         it("it should set message input", done => {
             noCardComponent.message = 'test input';
             fixture.detectChanges();
-            expect(spanEl.nativeElement.innerText).toEqual('test input');
+            expect(spanEl.nativeElement.innerText.trim()).toEqual('test input');
             done()
         });
     });
