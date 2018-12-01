@@ -16,7 +16,7 @@ export class AppComponent implements OnInit {
     user: User;
     authenticated: boolean;
 
-    constructor(private app: AppService,
+    constructor(private appService: AppService,
                 private router: Router,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService) {
@@ -26,12 +26,12 @@ export class AppComponent implements OnInit {
         this.user = new User();
         this.router.events.subscribe(event => {
             if(event instanceof NavigationStart) {
-                this.app.authenticate(undefined, (isAuthenticated) => {
-                    if (isAuthenticated) {
-                        this.current_role_view = this.app.current_role_view;
-                        this.user = this.app.user;
-                    }
+                this.appService.authenticate(undefined, (isAuthenticated) => {
                     this.authenticated = isAuthenticated;
+                    if (this.authenticated) {
+                        this.current_role_view = this.appService.current_role_view;
+                        this.user = this.appService.user;
+                    }
                 }, undefined);
             }
         });
@@ -57,7 +57,7 @@ export class AppComponent implements OnInit {
     }
 
     logout() {
-        this.app.logout( () => {
+        this.appService.logout( () => {
             this.current_role_view = undefined;
             this.user = undefined;
             this.router.navigateByUrl("/auth/login")
@@ -65,7 +65,7 @@ export class AppComponent implements OnInit {
     }
 
     switchView(role) {
-        this.app.changeView(role);
+        this.appService.changeView(role);
     }
 
 }
