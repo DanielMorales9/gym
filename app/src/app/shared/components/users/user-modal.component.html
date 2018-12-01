@@ -46,7 +46,7 @@
                             <div *ngIf="f.email.errors.pattern">Email non valida</div>
                         </div>
                     </div>
-                    <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || user.defaultRoles[0] != 3">
+                    <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || !isCustomer()">
                         <label for="height" class="sr-only">Altezza</label>
                         <input type="number"
                                placeholder="Altezza (cm)"
@@ -60,7 +60,7 @@
                             <div *ngIf="!f.height.valid">Altezza non valida</div>
                         </div>
                     </div>
-                    <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || user.defaultRoles[0] != 3">
+                    <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || !isCustomer()">
                         <label for="weight" class="sr-only">Peso</label>
                         <input type="number"
                                placeholder="Peso (kg)"

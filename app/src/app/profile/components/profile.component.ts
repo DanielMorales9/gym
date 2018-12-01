@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {ChangeViewService, NotificationService, UserHelperService, UserService} from "../../shared/services";
+import {ChangeViewService, NotificationService, UserHelperService} from "../../shared/services";
 import {AppService} from "../../app.service";
 import {User} from "../../shared/model";
 
@@ -47,13 +47,12 @@ export class ProfileComponent implements OnInit {
         return (user) => {
             this.user = user;
             if (!this.user.roles) {
-                this.userHelperService.getRoles(user.id, (roles)  => {
+                this.userHelperService.getRoles(user, (roles)  => {
                     this.user.roles = roles;
                 })
             }
         }
     }
-
 
     ngOnDestroy() {
         this.sub.unsubscribe();

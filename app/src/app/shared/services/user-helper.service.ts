@@ -22,8 +22,25 @@ export class UserHelperService {
     constructor(private userService: UserService) {}
 
 
-    getRoles(id: number, callback) : void {
-        this.userService.getRoles(id).subscribe(value => {
+    getRoles(user: User, callback) : void {
+        if (!!user.roles) {
+            if (!!user.roles['_embedded']) {
+                let roles = user.roles['_embedded']['roleResources'].map(val => {
+                    return new Role(this.ROLE2INDEX[val.name], val.name);
+                });
+                return callback(roles);
+            }
+            else {
+                this._getRoles(user, callback)
+            }
+        }
+        else {
+            this._getRoles(user, callback)
+        }
+    }
+
+    private _getRoles(user, callback): void {
+        this.userService.getRoles(user.id).subscribe(value => {
             let roles = value['_embedded']['roles'].map(val => {
                 return new Role(this.ROLE2INDEX[val.name], val.name);
             });
