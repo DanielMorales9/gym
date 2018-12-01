@@ -22,7 +22,7 @@ export class UserDetailsComponent implements OnInit {
     ngOnInit(): void {
         this.hidden = false;
         if (!this.user.roles) {
-            this.userHelperService.getRoles(this.user.id, (roles: Role[]) => {
+            this.userHelperService.getRoles(this.user, (roles: Role[]) => {
                 this.user.roles = roles;
             });
         }

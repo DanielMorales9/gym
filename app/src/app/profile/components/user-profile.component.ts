@@ -45,7 +45,7 @@ export class UserProfileComponent implements OnInit {
         return (user) => {
             this.user = user;
             if (!this.user.roles || !(this.user.roles instanceof Array)) {
-                this.userHelperService.getRoles(user.id, (roles)  => {
+                this.userHelperService.getRoles(user, (roles)  => {
                     this.user.roles = roles;
                     this.exchangeService.sendUser(this.user)
                 })
