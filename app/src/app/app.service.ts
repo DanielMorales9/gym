@@ -30,12 +30,8 @@ export class AppService {
                 private userService: UserService,
                 private messageService: NotificationService,
                 private changeViewService: ChangeViewService) {
-        if (this.user) {
-            this.getRolesAndCurrentRoleView();
-        }
-        else {
-            this.user = new User();
-        }
+        this.user = new User();
+        this.getRolesAndCurrentRoleView();
     }
 
     changeView(role) {
@@ -61,11 +57,8 @@ export class AppService {
     }
 
     private getRolesAndCurrentRoleView() {
-        this.current_role_view = this.user.roles.map( role => {
-            return role.id
-        }).reduce((a, b) => {
-            return (a > b) ? b : a
-        }, 3);
+        this.current_role_view = this.user.roles.map( role => role.id)
+            .reduce((a, b) => Math.min(a, b), 3);
     }
 
     private getEmail(response) {
@@ -95,7 +88,7 @@ export class AppService {
 
     public discardSession() {
         this.credentials = {};
-        this.user = undefined;
+        this.user = new User();
     }
 
     getUserFromVerificationToken(token: any) {
