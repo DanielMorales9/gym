@@ -107,11 +107,10 @@ export class BookingComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.app.getFullUser(res => {
+        this.app.getFullUser().subscribe((res: User) => {
             this.user = res;
-            console.log(this.user);
-            this.getEvents();
-        }, this.app._systemError());
+            this.getEvents()
+        });
     }
 
     private getEvents() : void {

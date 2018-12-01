@@ -33,7 +33,6 @@ export class SalesComponent implements OnInit {
     ngOnInit(): void {
         this.route.parent.params.subscribe(params => {
             this.id = +params['id?'];
-            console.log(this.id);
             if (this.id) {
                 this.service.findUserSales(this.id,
                     this.pagerComponent.getPage(),
@@ -56,7 +55,6 @@ export class SalesComponent implements OnInit {
             this.pagerComponent.setTotalPages(page['totalPages']);
             this.pagerComponent.updatePages();
             this.empty = this.sales == undefined || this.sales.length == 0;
-            this.pagerComponent.setEmpty(this.empty);
         }
     }
 
@@ -64,7 +62,7 @@ export class SalesComponent implements OnInit {
         return (err) => {
             this.sales = [];
             this.empty = true;
-            this.pagerComponent.setEmpty(this.empty)
+            this.pagerComponent.setTotalPages(0)
         }
     }
 

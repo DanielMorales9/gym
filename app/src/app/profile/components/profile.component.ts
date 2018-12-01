@@ -1,7 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {ChangeViewService, NotificationService, UserService} from "../../shared/services";
+import {ChangeViewService, NotificationService, UserHelperService, UserService} from "../../shared/services";
 import {AppService} from "../../app.service";
+import {User} from "../../shared/model";
 
 @Component({
     templateUrl: './profile.component.html',
@@ -11,57 +12,48 @@ export class ProfileComponent implements OnInit {
 
     current_role_view: number;
     sub: any;
-    id : number;
-    roles: string[];
-    email: string;
+    user: User;
 
     constructor(private app: AppService,
-                private userService: UserService,
+                private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService,
                 private route: ActivatedRoute) {
         this.current_role_view = this.app.current_role_view;
-        this.email = this.app.user.email;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
-    _systemError() {
-        return err => {
-            console.log(err);
-            let message ={
-                text: err.error.message,
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-        }
-    }
-
-    private getRoles(user) {
-        this.userService.getRoles(user.id).subscribe(res => {
-            this.roles = res['_embedded']['roles'];
-        }, this._systemError())
-    }
-
     ngOnInit(): void {
+        this.user = new User();
         this.sub = this.route.params.subscribe(params => {
-            this.id = +params['id?'];
-            console.log(params);
-            if (this.id) {
-                this.getRoles({ id: this.id });
+            let id = +params['id?'];
+            if (!!id) {
+                this.userHelperService.getUser(id, this.getUser());
             }
             else {
-                this.app.getFullUser(res => {
-                    this.id = res.id;
-                    if (!res['roles']) {
-                        this.getRoles(res);
-                    }
-                    else {
-                        this.roles = res['roles']['_embedded']['roleResources']
-                    }
-                }, this.app._systemError())
+                this.app.getFullUser().subscribe(this.getUser())
             }
         });
     }
+
+    isCustomer() {
+        if (!!this.user.roles) {
+            return this.user.roles.reduce((min,val) => Math.min(min, val.id), 3) == 3;
+        }
+        return true
+    }
+
+    private getUser() {
+        return (user) => {
+            this.user = user;
+            if (!this.user.roles) {
+                this.userHelperService.getRoles(user.id, (roles)  => {
+                    this.user.roles = roles;
+                })
+            }
+        }
+    }
+
 
     ngOnDestroy() {
         this.sub.unsubscribe();

@@ -5,6 +5,7 @@ import it.goodfellas.utility.Constants;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -60,8 +61,11 @@ public class Customer extends AUser {
         return this.currentTrainingBundles.remove(bundle);
     }
 
+
     @Override
-    public List<Long> getDefaultRoles() {
-        return Collections.singletonList(Constants.ROLE_ID_CUSTOMER);
+    public List<Role> getDefaultRoles() {
+        return Collections.singletonList(
+                new Role((long) 3, "CUSTOMER"));
     }
+
 }

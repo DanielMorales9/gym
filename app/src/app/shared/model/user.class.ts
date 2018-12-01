@@ -1,3 +1,5 @@
+import {Role} from "./role.class";
+
 export class User {
     id: number;
     email: string; // required, must be valid email format
@@ -11,8 +13,10 @@ export class User {
     height: number;
     weight: number;
     defaultRoles: number[];
+    roles: Role[];
 
     constructor() {
+        this.roles = [];
     }
 
 }

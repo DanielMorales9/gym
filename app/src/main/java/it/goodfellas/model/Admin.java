@@ -5,7 +5,9 @@ import it.goodfellas.utility.Constants;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -13,8 +15,10 @@ import java.util.List;
 public class Admin extends AUser {
 
     @Override
-    public List<Long> getDefaultRoles() {
-        return Arrays.asList(Constants.ROLES);
+    public List<Role> getDefaultRoles() {
+        return Arrays.asList(
+                new Role((long) 1, "ADMIN"),
+                new Role((long) 2, "TRAINER"),
+                new Role((long) 3, "CUSTOMER"));
     }
-
 }

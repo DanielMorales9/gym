@@ -21,7 +21,7 @@ export class UserService {
     }
 
     post(user: User): Observable<Object> {
-        return this.http.post( `/auth/${user.type}/registration`, user);
+        return this.http.post( `/authentication/${user.type}/registration`, user);
     }
 
     get(page: number, size: number) : Observable<Object> {

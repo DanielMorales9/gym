@@ -42,11 +42,23 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
 
     @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
-            "/user*", "/profile/**/*", "/profile/*",  "/logout",
-            "/auth/**/*", "/auth/*", "/auth*"})
+            "/profile/**/*", "/profile/*",  "/logout",
+            "/auth/**/*", "/auth/*"})
     public String publicAPI() {
         return "forward:/index.html";
     }
+
+	@RequestMapping("/user")
+	@ResponseBody
+	public Principal user(Principal user) {
+		if (user == null){
+			logger.info("this is null");
+		}
+		else {
+			logger.info(user.toString());
+		}
+		return user;
+	}
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -56,7 +68,8 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				.authorizeRequests()
 				.antMatchers("/", "/home", "/user",
                         "/logout", "/login", "/profile", "/profile/*",
-						"/verification*",  "/auth/*", "/auth/**/*").permitAll()
+						"/verification*",  "/auth/*", "/auth/**/*",
+						"/authentication/**/*", "/authentication/*").permitAll()
 				.anyRequest().authenticated()
 				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
 				.and().csrf()
@@ -138,18 +151,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 			return mapper.get(type);
 		}
 
-	}
-
-	@RequestMapping("/user")
-	@ResponseBody
-	public Principal user(Principal user) {
-		if (user == null){
-			logger.info("this is null");
-		}
-		else {
-			logger.info(user.toString());
-		}
-		return user;
 	}
 
 	public static void main(String[] args) {

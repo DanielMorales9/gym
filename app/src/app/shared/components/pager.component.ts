@@ -10,7 +10,6 @@ export class PagerComponent implements OnInit {
     @Output()
     private pager = new EventEmitter();
 
-    empty: boolean;
     page: number = 0;
     size: number = 3;
     pages: Array<number>;
@@ -26,11 +25,6 @@ export class PagerComponent implements OnInit {
     public setSize(size) {
         this.size = size;
     }
-
-    public setEmpty(empty) {
-        this.empty = empty
-    }
-
 
     public getSize() {
         return this.size

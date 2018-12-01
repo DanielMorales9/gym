@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import {AppService} from "../../app.service";
 
@@ -23,14 +23,11 @@ export class LoginComponent {
             }
             else {
                 this.error = false;
-                this.router.navigateByUrl('/');
+                this.router.navigateByUrl('/home');
             }
-            console.log(isAuthenticated)
         }, (error) => {
-            console.error(error);
             this.error = true
         });
-        return false;
     }
 
 }

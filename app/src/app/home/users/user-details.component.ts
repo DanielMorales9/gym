@@ -1,7 +1,8 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
-import {User} from "../../shared/model";
+import {Role, User} from "../../shared/model";
 import {AppService} from "../../app.service";
+import {UserHelperService, UserService} from "../../shared/services";
 
 
 @Component({
@@ -15,11 +16,16 @@ export class UserDetailsComponent implements OnInit {
     hidden: boolean;
 
 
-    constructor(private appService : AppService,
+    constructor(private userHelperService: UserHelperService,
                 private router: Router) { }
 
     ngOnInit(): void {
         this.hidden = false;
+        if (!this.user.roles) {
+            this.userHelperService.getRoles(this.user.id, (roles: Role[]) => {
+                this.user.roles = roles;
+            });
+        }
     }
 
     toggle() {
@@ -27,14 +33,15 @@ export class UserDetailsComponent implements OnInit {
     }
 
     getUserRole() {
-        let minIndexRole = this.user.defaultRoles.reduce((min,val) => Math.min(min,val),
-            this.user.defaultRoles[0]);
-        return this.appService.INDEX2ROLE[minIndexRole]
+        if (!!this.user.roles) {
+            let minIndexRole = this.user.roles.reduce((min,val) => Math.min(min, val.id), 3);
+            return this.userHelperService.INDEX2ROLE[minIndexRole]
+        }
+        return "CUSTOMER";
     }
 
     getUserCreatedAt() {
-        let date = new Date(this.user.createdAt);
-        return date.toLocaleDateString();
+        return this.userHelperService.getUserCreatedAt(this.user)
     }
 
     goToUserProfile() {

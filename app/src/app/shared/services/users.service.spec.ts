@@ -6,8 +6,6 @@ import {User} from "../model";
 
 describe('UserService', () => {
 
-
-
     let userService: UserService;
     let backend: HttpTestingController;
 
@@ -75,7 +73,7 @@ describe('UserService', () => {
             done();
         });
         let req = backend.expectOne({
-            url: "/auth/customer/registration",
+            url: "/authentication/customer/registration",
             method: "POST"
         });
         user.createdAt = "now";

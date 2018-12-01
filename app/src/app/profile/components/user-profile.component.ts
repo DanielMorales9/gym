@@ -4,8 +4,7 @@ import {User} from "../../shared/model";
 import {
     ChangeViewService,
     ExchangeUserService,
-    NotificationService,
-    UserService
+    UserHelperService
 } from "../../shared/services";
 import {AppService} from "../../app.service";
 
@@ -17,67 +16,54 @@ import {AppService} from "../../app.service";
 export class UserProfileComponent implements OnInit {
 
     user: User;
-    roles: string[];
     sales: any[];
-    empty = false;
 
-    id: number;
     private sub: any;
     current_role_view: number;
-    email: string;
 
-    constructor(private messageService: NotificationService,
-                private service: UserService,
+    constructor(private appService: AppService,
+                private userHelperService: UserHelperService,
                 private route: ActivatedRoute,
-                private app: AppService,
                 private changeViewService: ChangeViewService,
                 private exchangeService: ExchangeUserService) {
-        this.current_role_view = this.app.current_role_view;
-        this.email = this.app.user.email;
+        this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
-    //TODO Refactor this piece of common code: use a service instead
-    getUserCreatedAt() {
-        let date = new Date(this.user.createdAt);
-        return date.toLocaleDateString();
-    }
-
     ngOnInit(): void {
-        this.sub = this.route.parent.params.subscribe(params => {
-            this.id = +params['id?'];
-            this.updateUser()
-        })
-    }
-
-    updateUser() {
-        let closure = (res=> {
-            this.user = res;
-            this.service.getRoles(this.user.id).subscribe(res1 => {
-                    this.roles = res1['_embedded']['roles'].map(i => i.name.toLowerCase());
-                }, this._error());
+        this.user = new User();
+        this.sub = this.route.params.subscribe(params => {
+            let id = +params['id?'];
+            this.updateUser(id);
         });
-
-        if (this.id) {
-            this.service.findById(this.id).subscribe(closure, this._error());
-        }
-        else {
-            this.service.findByEmail(this.email).subscribe(closure, this._error());
-        }
-    }
-
-    _error() {
-        return err => {
-            let message = {
-                text: "Qualcosa è andato storto",
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-        }
     }
 
     ngOnDestroy() {
         this.sub.unsubscribe();
+    }
+
+    private getUser() {
+        return (user) => {
+            this.user = user;
+            if (!this.user.roles) {
+                this.userHelperService.getRoles(user.id, (roles)  => {
+                    this.user.roles = roles;
+                })
+            }
+        }
+    }
+
+    getUserCreatedAt() {
+        return this.userHelperService.getUserCreatedAt(this.user)
+    }
+
+    updateUser(id) {
+        if (!!id) {
+            this.userHelperService.getUser(id, this.getUser());
+        }
+        else {
+            this.appService.getFullUser().subscribe(this.getUser())
+        }
     }
 
     editUser() {

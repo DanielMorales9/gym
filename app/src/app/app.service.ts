@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {ChangeViewService, NotificationService, UserService} from "./shared/services";
-import {User} from "./shared/model";
+import {Role, User} from "./shared/model";
+import {Observable} from "rxjs";
 
 @Injectable({
     providedIn: 'root'
@@ -20,29 +21,21 @@ export class AppService {
         3: 'CUSTOMER'
     };
 
-    current_role_view: any;
+    current_role_view: number;
     authenticated = false;
-    user : any;
-    roles = [];
+    user : User;
     credentials: any;
 
     constructor(private http: HttpClient,
                 private userService: UserService,
                 private messageService: NotificationService,
                 private changeViewService: ChangeViewService) {
-        // this.user = this.getUser();
         if (this.user) {
             this.getRolesAndCurrentRoleView();
         }
-    }
-
-    private getRolesAndCurrentRoleView() {
-        this.roles = this.user.roles;
-        this.current_role_view = this.roles.map((item, _) => {
-            return item['role_index']
-        }).reduce((a, b) => {
-            return (a > b) ? b : a
-        });
+        else {
+            this.user = new User();
+        }
     }
 
     changeView(role) {
@@ -51,28 +44,14 @@ export class AppService {
     }
 
     authenticate(credentials, callback, errorCallback) {
-        let user = {};
         this.credentials = credentials !== undefined ? credentials: this.credentials;
-        // if (this.credentials) {
-        //     this.saveCredentials()
-        // }
-        // else {
-        //     this.credentials = this.getCredentials()
-        // }
-        this.http.get('/user').subscribe(response => {
-            this.authenticated = !!response && !!response['name'];
+
+        this.http.get('/user').subscribe(res => {
+            this.authenticated = !!res && !!res['name'];
             if (this.authenticated) {
-                user['roles'] = response['authorities'].map((item, _) => {
-                    let role = item['authority'];
-                    return {'role_name': role, 'role_index': this.ROLE2INDEX[role]}
-                });
-                this.current_role_view = user['roles'].map((item, _) => {return item['role_index']})
-                    .reduce((a, b) => {
-                        return (a > b) ? b : a
-                    });
-                user['email'] = response['principal']['username'];
-                this.user = user;
-                // this.saveUser();
+                this.user = new User();
+                this.getRoles(res);
+                this.getEmail(res);
                 this.getRolesAndCurrentRoleView();
             }
             return callback && callback(this.authenticated);
@@ -81,112 +60,74 @@ export class AppService {
         });
     }
 
-
-    // private getCredentials() {
-    //     return JSON.parse(window.localStorage.getItem('credentials'));
-    // }
-    //
-    // private saveCredentials() {
-    //     window.localStorage.setItem('credentials', JSON.stringify(this.credentials));
-    // }
-    //
-    // private saveUser() {
-    //     window.localStorage.setItem('user', JSON.stringify(this.user));
-    // }
-
-    // private saveFullUser(user: any) {
-    //     window.localStorage.setItem('full_user', JSON.stringify(user));
-    // }
-    //
-    // private getUser() {
-    //     return JSON.parse(window.localStorage.getItem('user'));
-    // }
-
-    getFullUser(success, error) {
-        // let user = JSON.parse(window.localStorage.getItem('full_user'));
-        // user = (user) ? user : this.getUser();
-        // if (user) {
-        if (!!this.user && !!this.user['email']) {
-            this.userService.findByEmail(this.user.email).subscribe(
-                res => {
-                    // this.saveFullUser(res);
-                    success(res);
-                }, error)
-        }
-        // else {
-        //     success(this.user)
-        // }
-        // }
-
+    private getRolesAndCurrentRoleView() {
+        this.current_role_view = this.user.roles.map( role => {
+            return role.id
+        }).reduce((a, b) => {
+            return (a > b) ? b : a
+        }, 3);
     }
 
-    _systemError() {
-        return err => {
-            let message ={
-                text: err.error.message,
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-        }
+    private getEmail(response) {
+        this.user['email'] = response['principal']['username'];
     }
+
+    private getRoles(response) {
+        this.user.roles = response['authorities'].map((item, _) => {
+            let role = new Role(1, "ADMIN");
+            role.name = item['authority'];
+            role.id = this.ROLE2INDEX[item['authority']];
+            return role;
+        });
+    }
+
+    getFullUser() {
+        return this.userService.findByEmail(this.user.email);
+    }
+
 
     public getAuthorizationHeader() {
-        if (!this.credentials || !this.authenticated) {
+        if (!this.credentials) {
             return 'Basic ';
         }
         return 'Basic ' + btoa(this.credentials.username + ':' + this.credentials.password);
     }
 
-    public discardUsers() {
+    public discardSession() {
         this.credentials = {};
-        this.user = {};
-        // window.localStorage.removeItem('credentials');
-        // window.localStorage.removeItem('user');
-        // window.localStorage.removeItem('full_user');
+        this.user = undefined;
     }
 
-    getUserFromVerificationToken(token: any, successCallback, errorCallback) {
-        this.http.get("/auth/verification",{ params: {token: token}}).subscribe(response => {
-            return successCallback && successCallback(response)
-        }, error => {
-            return errorCallback && errorCallback(error)
-        })
+    getUserFromVerificationToken(token: any) {
+        return this.http.get("/authentication/verification",{ params: {token: token}});
     }
 
-    resendToken(token: any, successCallback, errorCallback) {
-        this.http.get("/auth/resendToken",
-            {params: {token: token}}).subscribe(response => {
-            return successCallback && successCallback(response)
-        }, error => {
-            return errorCallback && errorCallback(error)
-        })
+    resendToken(token: string) {
+        return this.http.get("/authentication/resendToken", {params: {token: token}})
     }
 
     changePassword(user: User, userType: string) {
-        return this.http.post(`/auth/${userType}/changePassword`, user);
+        return this.http.post(`/authentication/${userType}/changePassword`, user);
     }
 
-    verifyPassword(cred, role, successCallback, errorCallback) {
-        let endPoint = "/auth/"+role+"/verifyPassword";
-        this.http.post(endPoint, cred).subscribe(response => {
-            return successCallback && successCallback(response);
-        }, error => {
-            return errorCallback && errorCallback(error);
-        })
+    verifyPassword(credentials, role) {
+        return this.http.post( `/authentication/${role}/verifyPassword`, credentials);
+    }
+
+    findByEmail(email: string) {
+        return this.http.get(`/authentication/findByEmail?email=${email}`)
     }
 
     logout(callback) {
-        this.http.get('/logout').subscribe(res => {
-                this.discardUsers()
+        this.http.get('/logout').subscribe(
+            _ => {
+                this.discardSession()
             },
-            error1 => {console.log(error1)},
+            undefined,
             () => {
                 this.authenticated = false;
                 return callback && callback()
             });
     }
 
-    findByEmail(email: string) {
-        return this.http.get(`/auth/findByEmail?email=${email}`)
-    }
 }

@@ -4,6 +4,7 @@ import it.goodfellas.utility.Constants;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,8 +13,8 @@ import java.util.List;
 public class Trainer extends AUser {
 
     @Override
-    public List<Long> getDefaultRoles() {
-        return Collections.singletonList(Constants.ROLE_ID_TRAINER);
+    public List<Role> getDefaultRoles() {
+        return Collections.singletonList(new Role((long) 2, "TRAINER"));
     }
 
 }

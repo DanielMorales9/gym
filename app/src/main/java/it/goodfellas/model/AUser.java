@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name="users")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="user_type", discriminatorType=DiscriminatorType.STRING, length=1)
-public abstract class AUser {
+public abstract class AUser implements DefaultRoles {
 
     @Id
     @SequenceGenerator(name = "users_user_id_seq",
@@ -146,8 +146,6 @@ public abstract class AUser {
                 ", " +
                 this.email;
     }
-
-    public abstract List<Long> getDefaultRoles();
 
     public boolean isVerified() {
         return this.isVerified;
