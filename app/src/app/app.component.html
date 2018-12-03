@@ -7,13 +7,15 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
-                <a class="nav-link active" routerLink="/home">
+        <ul class="navbar-nav mr-auto" >
+            <li class="nav-item" *ngIf="authenticated"  [ngClass]="{'active': !isOnHome()}">
+                <a class="nav-link"
+                   (click)="toHome()"
+                   [ngClass]="{'disabled': isOnHome()}">
                     <i class="fas fa-home"></i>&nbsp;&nbsp;Home<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item dropdown d-lg-none" *ngIf="current_role_view">
-                <a class="nav-link dropdown-toggle"
+                <a class="nav-link dropdown-toggle active"
                    id="homeDropdown"
                    role="button"
                    data-toggle="dropdown"

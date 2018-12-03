@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {NotificationService, UserHelperService, UserService} from "./shared/services";
+import {UserHelperService, UserService} from "./shared/services";
 import {Role, User} from "./shared/model";
-import {ChangeViewService} from "./services";
+import {ChangeViewService, NotificationService} from "./services";
 
 @Injectable({
     providedIn: 'root'
@@ -42,7 +42,6 @@ export class AppService {
 
     authenticate(credentials, callback, errorCallback) {
         this.credentials = credentials !== undefined ? credentials: this.credentials;
-        console.log(this.credentials);
 
         this.http.get('/user').subscribe(res => {
             this.authenticated = !!res && !!res['name'];

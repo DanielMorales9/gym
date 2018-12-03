@@ -14,7 +14,6 @@ import {
     ExchangeBundleService,
     ExchangeSaleService,
     ExchangeUserService,
-    NotificationService,
     SalesService,
     TimesOffService,
     TrainingService,
@@ -58,7 +57,6 @@ import {
         ExchangeSaleService,
         ExchangeBundleService,
         ExchangeUserService,
-        NotificationService,
         TimesOffService,
         TrainingService,
         UserService

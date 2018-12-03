@@ -2,11 +2,10 @@ import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
     ExchangeSaleService,
-    NotificationService,
     SalesService
 } from "../../shared/services";
 import {AppService} from "../../app.service";
-import {ChangeViewService} from "../../services/change-view.service";
+import {ChangeViewService, NotificationService} from "../../services";
 
 @Component({
     templateUrl: './sale-summary.component.html',

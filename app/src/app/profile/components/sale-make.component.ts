@@ -2,14 +2,13 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
     BundlesService,
-    NotificationService,
     SalesService,
     UserService
 } from "../../shared/services";
 import {Bundle, User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
 import {AppService} from "../../app.service";
-import {ChangeViewService} from "../../services/change-view.service";
+import {ChangeViewService, NotificationService} from "../../services";
 
 
 @Component({

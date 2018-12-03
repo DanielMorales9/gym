@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {PagerComponent} from "../pager.component";
 import {SalesService} from "../../services";
 import {AppService} from "../../../app.service";
-import {ChangeViewService} from "../../../services/change-view.service";
+import {ChangeViewService} from "../../../services";
 
 
 @Component({

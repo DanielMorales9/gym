@@ -1,8 +1,8 @@
 import {Component, OnInit, } from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import { BundlesService, NotificationService, UserService} from "../../shared/services";
+import { BundlesService, UserService} from "../../shared/services";
 import {AppService} from "../../app.service";
-import {ChangeViewService} from "../../services/change-view.service";
+import {ChangeViewService, NotificationService} from "../../services";
 
 @Component({
     templateUrl: './training.component.html',
