@@ -8,21 +8,21 @@
                             <i class="fas fa-home">&nbsp;&nbsp;</i>Operazioni
                         </a>
                     </li>
-                    <li class="nav-item menu-item" [routerLinkActive]="['active']">
-                        <a routerLink="['profile', user.id, 'user']">
+                    <li class="nav-item menu-item" [ngClass]="isOnProfile()">
+                        <a (click)="navigateToProfile()">
                             <i class="fa fa-info" >&nbsp;&nbsp;</i>Informazioni
                         </a>
                     </li>
                     <li class="nav-item menu-item"
                         *ngIf="current_role_view == 1 && isCustomer()" [routerLinkActive]="['active']">
-                        <a routerLink="/profile/makeSale">
+                        <a routerLink="makeSale">
                             <i class="fa fa-box" >&nbsp;&nbsp;</i>Crea Vendita
                         </a>
                     </li>
                     <li class="nav-item menu-item"
                         *ngIf="isCustomer()"
                         [routerLinkActive]="['active']">
-                        <a routerLink="/profile/sales">
+                        <a routerLink="sales">
                             <i class="fa fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite
                         </a>
                     </li>
@@ -44,14 +44,14 @@
                     <i class="fas fa-cogs">&nbsp;&nbsp;</i>Operazioni
                 </button>
                 <div class="dropdown-menu" aria-labelledby="profileDropdown">
-                    <a routerLink="/profile/user" class="dropdown-item"  [routerLinkActive]="['active']">
+                    <a routerLink="user" class="dropdown-item" [ngClass]="isOnProfile()">
                         <i class="fa fa-info" >&nbsp;&nbsp;</i>Informazioni
                     </a>
-                    <a routerLink="/profile/makeSale" class="dropdown-item"  [routerLinkActive]="['active']"
+                    <a routerLink="makeSale" class="dropdown-item"  [routerLinkActive]="['active']"
                        *ngIf="current_role_view == 1 && isCustomer()">
                         <i class="fa fa-box" >&nbsp;&nbsp;</i>Crea Vendita
                     </a>
-                    <a routerLink="/profile/sales" class="dropdown-item"  [routerLinkActive]="['active']"
+                    <a routerLink="sales" class="dropdown-item"  [routerLinkActive]="['active']"
                        *ngIf="isCustomer()">
                         <i class="fa fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite
                     </a>

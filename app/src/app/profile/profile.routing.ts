@@ -2,12 +2,12 @@ import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {
     MakeSaleComponent,
-    ProfileComponent,
     SaleSummaryComponent,
     TrainingComponent,
     UserProfileComponent
 } from "./components";
 import {SalesComponent} from "../shared/components/sales";
+import {ProfileComponent} from "./profile.component";
 
 
 const routes = [

@@ -1,12 +1,12 @@
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
-import {ChangeViewService, NotificationService, UserHelperService} from "../../shared/services";
-import {AppService} from "../../app.service";
-import {User} from "../../shared/model";
+import {ActivatedRoute, Router} from "@angular/router";
+import {ChangeViewService, NotificationService, UserHelperService} from "../shared/services";
+import {AppService} from "../app.service";
+import {User} from "../shared/model";
 
 @Component({
     templateUrl: './profile.component.html',
-    styleUrls: ['../../app.component.css'],
+    styleUrls: ['../app.component.css'],
 })
 export class ProfileComponent implements OnInit {
 
@@ -18,7 +18,8 @@ export class ProfileComponent implements OnInit {
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private router: Router) {
         this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
@@ -38,9 +39,23 @@ export class ProfileComponent implements OnInit {
 
     isCustomer() {
         if (!!this.user.roles) {
-            return this.user.roles.reduce((min,val) => Math.min(min, val.id), 3) == 3;
+            if (!this.user.roles['_embedded']) {
+                return this.user.roles.reduce((min,val) => Math.min(min, val.id), 3) == 3;
+            }
+            return true;
         }
         return true
+    }
+
+    isOnProfile() {
+        if (this.router.url.match('/profile/(.*/)+user')) {
+            return 'active'
+        }
+        return ''
+    }
+
+    navigateToProfile() {
+        this.router.navigate(['profile', this.user.id, 'user']);
     }
 
     private getUser() {
