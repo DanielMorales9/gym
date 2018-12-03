@@ -3,13 +3,13 @@ import { CommonModule } from '@angular/common';
 import {ProfileRouting} from "./profile.routing";
 import {
     MakeSaleComponent,
-    ProfileComponent,
     SaleSummaryComponent,
     TrainingComponent, TrainingDetailsComponent,
     UserProfileComponent
 } from "./components";
 import {SharedModule} from "../shared";
 import {FormsModule} from "@angular/forms";
+import {ProfileComponent} from "./profile.component";
 
 @NgModule({
     imports: [

@@ -1,14 +1,14 @@
 <!doctype html>
 <html lang="en">
 <head>
-    <title>Code coverage report for src/app/profile/components/profile.component.ts</title>
+    <title>Code coverage report for src/app/profile/profile.component.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../../prettify.css" />
-    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="stylesheet" href="../../../prettify.css" />
+    <link rel="stylesheet" href="../../../base.css" />
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../../sort-arrow-sprite.png);
+            background-image: url(../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -16,28 +16,28 @@
 <div class='wrapper'>
   <div class='pad1'>
     <h1>
-      <a href="../../../../index.html">All files</a> / <a href="index.html">src/app/profile/components</a> profile.component.ts
+      <a href="../../../index.html">All files</a> / <a href="index.html">src/app/profile</a> profile.component.ts
     </h1>
     <div class='clearfix'>
       <div class='fl pad1y space-right2'>
-        <span class="strong">46.43% </span>
+        <span class="strong">43.55% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>26/56</span>
+        <span class='fraction'>27/62</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">51.43% </span>
+        <span class="strong">46.15% </span>
         <span class="quiet">Branches</span>
-        <span class='fraction'>18/35</span>
+        <span class='fraction'>18/39</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">21.43% </span>
+        <span class="strong">20% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>3/14</span>
+        <span class='fraction'>3/15</span>
       </div>
       <div class='fl pad1y space-right2'>
-        <span class="strong">44.9% </span>
+        <span class="strong">41.82% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>22/49</span>
+        <span class='fraction'>23/55</span>
       </div>
     </div>
     <p class="quiet">
@@ -111,7 +111,17 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -155,6 +165,15 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,15 +195,16 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ChangeViewService, NotificationService, Use<span class="branch-1 cbranch-no" title="branch not covered" >rHelperService} from "../../shared/services";</span>
-impo<span class="missing-if-branch" title="if path not taken" >I</span>rt {AppService} from "../../app.service";<span class="cstat-no" title="statement not covered" ></span>
-import {User} from "../../shared/model";<span class="branch-1 cbranch-no" title="branch not covered" ><span class="missing-if-branch" title="else path not taken" >E</span></span>
+import {ChangeViewService, NotificationService, Use<span class="branch-1 cbranch-no" title="branch not covered" >rHelperService} from "../shared/services";</span>
+impo<span class="missing-if-branch" title="if path not taken" >I</span>rt {AppService} from "../app.service";<span class="cstat-no" title="statement not covered" ></span>
+import {User} from "../shared/model";<span class="branch-1 cbranch-no" title="branch not covered" ><span class="missing-if-branch" title="else path not taken" >E</span></span>
 <span class="branch-2 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" ></span></span>
 @Component({
     templateUrl: './profile.component.html',
-    <span class="missing-if-branch" title="else path not taken" >E</span>styleUrls: ['../../app.component.css'],
+    <span class="missing-if-branch" title="else path not taken" >E</span>styleUrls: ['../app.component.css'],
 })
 export class ProfileComponent implements OnInit {
 &nbsp;
@@ -217,28 +237,38 @@ export class ProfileComponent implements OnInit {
 &nbsp;
     isCustomer() {
         if (!!this.user.roles) {
-            return this.user.roles.reduce((m<span class="fstat-no" title="function not covered" >in</span>,val) =&gt; Math.min(min, val.id), 3) == 3;
-<span class="cstat-no" title="statement not covered" >        }</span>
-        retu<span class="cstat-no" title="statement not covered" >rn true<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+            if (!this.user.roles['_embedded'<span class="fstat-no" title="function not covered" >])</span> {
+<span class="cstat-no" title="statement not covered" >                return this.user.roles.reduce((min,val) =&gt; Math.min(min, val.id), 3) == 3;</span>
+<span class="cstat-no" title="statement not covered" >            }</span>
+            retu<span class="cstat-no" title="statement not covered" >rn true;<span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ></span></span></span>
+        }
+        retu<span class="cstat-no" title="statement not covered" >rn true</span>
     }
 <span class="cstat-no" title="statement not covered" ></span>
-    navigateToProfile() {
-        this.router.navigate(['profile', this.user.<span class="fstat-no" title="function not covered" >id</span>, 'user']);
+    isOnProfile() {
+        if (this.router.url.match('/profile/(<span class="fstat-no" title="function not covered" >.*</span>/)+user')) {
+<span class="cstat-no" title="statement not covered" >            return 'active'</span>
+        }<span class="cstat-no" title="statement not covered" ></span>
+        return ''
     }<span class="cstat-no" title="statement not covered" ></span>
 &nbsp;
-    private getUser() {<span class="fstat-no" title="function not covered" ></span>
-        return (user<span class="cstat-no" title="statement not covered" >) =&gt; </span>{
-<span class="cstat-no" title="statement not covered" >            thi<span class="fstat-no" title="function not covered" >s.</span>user = user;</span>
-<span class="cstat-no" title="statement not covered" >            if (!this.user.role</span>s) {
-<span class="cstat-no" title="statement not covered" >                this.userHelperService.getRoles(user, (roles)  =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >                    this.user.roles = roles;<span class="fstat-no" title="function not covered" ></span></span>
-                })<span class="cstat-no" title="statement not covered" ></span>
+    navigateToProfile() {<span class="fstat-no" title="function not covered" ></span>
+<span class="cstat-no" title="statement not covered" >        this.router.navigate(['profile', this.user.id, 'user']);</span>
+    }
+<span class="fstat-no" title="function not covered" ></span>
+    private getUser(<span class="cstat-no" title="statement not covered" >) {</span>
+<span class="cstat-no" title="statement not covered" >        return <span class="fstat-no" title="function not covered" >(u</span>ser) =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            this.user = user;</span>
+<span class="cstat-no" title="statement not covered" >            if (!this.user.roles) {</span>
+<span class="cstat-no" title="statement not covered" >                this.userHelperService.getRoles(user, (<span class="fstat-no" title="function not covered" >ro</span>les)  =&gt; {</span>
+<span class="cstat-no" title="statement not covered" >                    this.user.roles = roles;</span>
+                })
             }
         }
     }
-&nbsp;
-    ngOnDestroy() {<span class="fstat-no" title="function not covered" ></span>
-<span class="cstat-no" title="statement not covered" >        this.sub.unsubscribe();</span>
+<span class="fstat-no" title="function not covered" ></span>
+    ngOn<span class="cstat-no" title="statement not covered" >Destroy() {</span>
+        this.sub.unsubscribe();
     }
 &nbsp;
 }</pre></td></tr>
@@ -247,10 +277,10 @@ export class ProfileComponent implements OnInit {
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Dec 03 2018 12:46:33 GMT+0100 (CET)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Mon Dec 03 2018 13:02:15 GMT+0100 (CET)
 </div>
 </div>
-<script src="../../../../prettify.js"></script>
+<script src="../../../prettify.js"></script>
 <script>
 window.onload = function () {
         if (typeof prettyPrint === 'function') {
@@ -258,7 +288,7 @@ window.onload = function () {
         }
 };
 </script>
-<script src="../../../../sorter.js"></script>
-<script src="../../../../block-navigation.js"></script>
+<script src="../../../sorter.js"></script>
+<script src="../../../block-navigation.js"></script>
 </body>
 </html>
