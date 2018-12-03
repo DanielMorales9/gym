@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {Injectable, NgModule} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
 import {AppComponent} from "./app.component";
@@ -7,6 +7,7 @@ import {AppRouting} from "./app.routing";
 import {SharedModule} from "./shared";
 import {CoreModule} from "./core";
 import {AppService} from "./app.service";
+import {ChangeViewService} from "./services/change-view.service";
 
 @NgModule({
     declarations: [
@@ -20,7 +21,7 @@ import {AppService} from "./app.service";
         SharedModule,
         AppRouting,
     ],
-    providers: [AppService],
+    providers: [AppService, ChangeViewService],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

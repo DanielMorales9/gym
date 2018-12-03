@@ -11,9 +11,9 @@ import {
 @NgModule({
     imports: [
         CommonModule,
-        AuthRouting,
+        FormsModule,
         SharedModule,
-        FormsModule
+        AuthRouting,
     ],
     declarations: [
         LoginComponent,

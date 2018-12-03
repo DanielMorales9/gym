@@ -2,7 +2,6 @@ import {Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {
     BundlesService,
-    ChangeViewService,
     NotificationService,
     SalesService,
     UserService
@@ -10,6 +9,7 @@ import {
 import {Bundle, User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
 import {AppService} from "../../app.service";
+import {ChangeViewService} from "../../services/change-view.service";
 
 
 @Component({
@@ -28,6 +28,7 @@ export class MakeSaleComponent implements OnInit {
     empty: boolean;
     bundles: Bundle[];
     admin: User;
+
     soldBundles = [];
     sale: any;
 

@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {ChangeViewService, NotificationService, UserHelperService} from "./shared/services";
+import { NotificationService, UserHelperService } from "./shared/services";
 import {AppService} from "./app.service";
 import {User} from "./shared/model";
+import {ChangeViewService} from "./services/change-view.service";
 
 @Component({
     selector: 'app-root',
@@ -21,13 +22,22 @@ export class AppComponent implements OnInit {
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService) {
+        console.log(this.changeViewService.id);
     }
 
     ngOnInit(): void {
         this.user = new User();
+        this.authOnNavigation();
+
+        this.handleMessage();
+        this.changeViewService.getView().subscribe(value => this.current_role_view = value)
+    }
+
+    private authOnNavigation() {
         this.router.events.subscribe(event => {
-            if(event instanceof NavigationStart) {
+            if (event instanceof NavigationStart) {
                 this.appService.authenticate(undefined, (isAuthenticated) => {
+                    console.log(isAuthenticated);
                     this.authenticated = isAuthenticated;
                     if (this.authenticated) {
                         this.current_role_view = this.appService.current_role_view;
@@ -36,9 +46,6 @@ export class AppComponent implements OnInit {
                 }, undefined);
             }
         });
-
-        this.handleMessage();
-        this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
     handleMessage() {
@@ -60,13 +67,31 @@ export class AppComponent implements OnInit {
     logout() {
         this.appService.logout( () => {
             this.current_role_view = undefined;
+            this.authenticated = false;
             this.user = undefined;
             this.router.navigateByUrl("/auth/login")
         })
     }
 
     switchView(role) {
+        console.log(role);
         this.appService.changeView(role);
+        this.current_role_view = role;
+    }
+
+    hasRoles() {
+        if (!!this.user && !!this.user.roles) {
+            return this.user.roles && this.user.roles.length > 1
+        }
+        return false
+    }
+
+    hideLogin() {
+        return this.router.url === "/auth/login" || this.authenticated
+    }
+
+    hideLogout() {
+        return !this.authenticated
     }
 
 }

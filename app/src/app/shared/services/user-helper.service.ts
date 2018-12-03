@@ -23,6 +23,7 @@ export class UserHelperService {
 
 
     getRoles(user: User, callback) : void {
+        console.log(user);
         if (!!user.roles) {
             if (!!user.roles['_embedded']) {
                 let roles = user.roles['_embedded']['roleResources'].map(val => {

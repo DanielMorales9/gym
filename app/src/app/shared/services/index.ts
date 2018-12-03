@@ -1,5 +1,4 @@
 export * from './bundles.service';
-export * from './change-view.service';
 export * from './exchange-bundle.service';
 export * from './exchange-sale.service';
 export * from './exchange-user.service';

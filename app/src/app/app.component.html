@@ -24,7 +24,7 @@
                 <div class="dropdown-menu" aria-labelledby="homeDropdown">
                     <a class="dropdown-item"
                        [routerLinkActive]="['active-link']"
-                       routerLink="/profile/user">
+                       routerLink="['profile', user.id, 'user']">
                         <i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>
                     <a class="dropdown-item"
                        *ngIf="current_role_view == 1"
@@ -52,7 +52,7 @@
         </ul>
 
         <ul class="nav navbar-nav navbar-right">
-            <li class="nav-item dropdown" *ngIf="user.roles && user.roles.length > 1">
+            <li class="nav-item dropdown" *ngIf="hasRoles()">
                 <a class="nav-link active dropdown-toggle"
                    id="viewDropdown"
                    role="button"
@@ -63,17 +63,17 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="viewDropdown">
                     <a *ngFor="let r of user.roles" class="dropdown-item"
-                       [ngClass]="{'active-link': current_role_view == r.index}"
+                       [ngClass]="{'active-link': current_role_view == r.id}"
                        (click)="switchView(r.id)">
                         <i class="fas fa-user">&nbsp;&nbsp;</i>{{r.name}}</a>
                 </div>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" [hidden]="authenticated" routerLink="/auth/login">
+                <a class="nav-link active" [hidden]="hideLogin()" routerLink="/auth/login">
                     <i class="fas fa-sign-in-alt"></i>&nbsp;&nbsp;Login</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" [hidden]="!authenticated" (click)="logout()">
+                <a class="nav-link active" [hidden]="hideLogout()" (click)="logout()">
                     <i class="fas fa-sign-out-alt"></i>&nbsp;&nbsp;Logout</a>
             </li>
         </ul>

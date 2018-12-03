@@ -1,12 +1,12 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {Role, User} from "../../shared/model";
+import {User} from "../../shared/model";
 import {
-    ChangeViewService,
     ExchangeUserService,
     UserHelperService
 } from "../../shared/services";
 import {AppService} from "../../app.service";
+import {ChangeViewService} from "../../services/change-view.service";
 
 
 @Component({
