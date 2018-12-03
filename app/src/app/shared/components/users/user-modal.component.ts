@@ -1,8 +1,8 @@
 import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserService, NotificationService, ExchangeUserService, UserHelperService} from "../../services/";
+import {UserService, ExchangeUserService, UserHelperService} from "../../services/";
 import {User} from "../../model";
-import {UserDetailsComponent} from "../../../home/users";
+import {NotificationService} from "../../../services";
 
 @Component({
     selector: 'user-modal',

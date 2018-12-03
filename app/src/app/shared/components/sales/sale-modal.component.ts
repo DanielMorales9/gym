@@ -1,5 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {SalesService, NotificationService, ExchangeSaleService} from "../../services";
+import {SalesService, ExchangeSaleService} from "../../services";
+import {NotificationService} from "../../../services";
 
 @Component({
     selector: 'sale-modal',

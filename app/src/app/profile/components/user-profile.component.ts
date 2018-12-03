@@ -32,7 +32,7 @@ export class UserProfileComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = new User();
-        this.sub = this.route.params.subscribe(params => {
+        this.sub = this.route.parent.params.subscribe(params => {
             this.updateUser(+params['id?']);
         });
     }
@@ -62,9 +62,11 @@ export class UserProfileComponent implements OnInit {
 
     updateUser(id) {
         if (!!id) {
+            console.log('getUser');
             this.userHelperService.getUser(id, this.getUser());
         }
         else {
+            console.log('getUserByEmail');
             this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
         }
     }

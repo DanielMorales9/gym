@@ -228,6 +228,11 @@ tr.empty-list {
     border-radius: 0 .25rem .25em 0;
 }
 
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
 #search-submit-end {
     border-radius: 0 .25rem .25em 0;
 }

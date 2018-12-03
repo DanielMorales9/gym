@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import { NotificationService, UserHelperService } from "./shared/services";
+import { UserHelperService } from "./shared/services";
 import {AppService} from "./app.service";
 import {User} from "./shared/model";
-import {ChangeViewService} from "./services/change-view.service";
+import {NotificationService, ChangeViewService} from "./services";
 
 @Component({
     selector: 'app-root',
@@ -22,7 +22,6 @@ export class AppComponent implements OnInit {
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService) {
-        console.log(this.changeViewService.id);
     }
 
     ngOnInit(): void {
@@ -37,7 +36,6 @@ export class AppComponent implements OnInit {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
                 this.appService.authenticate(undefined, (isAuthenticated) => {
-                    console.log(isAuthenticated);
                     this.authenticated = isAuthenticated;
                     if (this.authenticated) {
                         this.current_role_view = this.appService.current_role_view;
@@ -74,9 +72,14 @@ export class AppComponent implements OnInit {
     }
 
     switchView(role) {
-        console.log(role);
         this.appService.changeView(role);
         this.current_role_view = role;
+    }
+
+    toHome() {
+        if(!this.isOnHome()) {
+            this.router.navigateByUrl('/home')
+        }
     }
 
     hasRoles() {
@@ -92,6 +95,10 @@ export class AppComponent implements OnInit {
 
     hideLogout() {
         return !this.authenticated
+    }
+
+    isOnHome() {
+        return this.router.url.startsWith('/home');
     }
 
 }
