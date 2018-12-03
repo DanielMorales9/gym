@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import {ModuleWithProviders, NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     BundleDetailsComponent, NoCardComponent,
@@ -11,12 +11,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {EqualValidator, NumberValidator} from "./directives";
 import {
     BundlesService,
-    ChangeViewService,
-    ExchangeBundleService, ExchangeSaleService,
+    ExchangeBundleService,
+    ExchangeSaleService,
     ExchangeUserService,
-    NotificationService, SalesService,
+    NotificationService,
+    SalesService,
     TimesOffService,
-    TrainingService, UserHelperService,
+    TrainingService,
+    UserHelperService,
     UserService
 } from "./services";
 
@@ -36,8 +38,7 @@ import {
         BundleDetailsComponent,
         NumberValidator,
         EqualValidator,
-        SpinnerComponent
-    ],
+        SpinnerComponent],
     exports: [
         SalesComponent,
         SaleDetailsComponent,
@@ -54,14 +55,16 @@ import {
         SalesService,
         BundlesService,
         UserHelperService,
-        ChangeViewService,
         ExchangeSaleService,
         ExchangeBundleService,
         ExchangeUserService,
         NotificationService,
         TimesOffService,
         TrainingService,
-        UserService,
+        UserService
     ]
+
 })
-export class SharedModule { }
+export class SharedModule {
+
+}

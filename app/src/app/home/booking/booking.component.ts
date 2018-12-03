@@ -12,12 +12,12 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import {Subject} from 'rxjs';
 import {User} from "../../shared/model";
 import {
-    ChangeViewService,
     NotificationService,
     TimesOffService,
     TrainingService, UserHelperService
 } from "../../shared/services";
 import {AppService} from "../../app.service";
+import {ChangeViewService} from "../../services/change-view.service";
 
 
 const colors: any = {
@@ -103,7 +103,11 @@ export class BookingComponent implements OnInit {
                 private trainingService: TrainingService,
                 private timesOffService: TimesOffService) {
         this.current_role_view = this.appService.current_role_view;
-        this.changeViewService.getView().subscribe(value => this.current_role_view = value);
+        console.log(this.changeViewService.id);
+        this.changeViewService.getView().subscribe(value => {
+            console.log(value);
+            this.current_role_view = value
+        });
         this.loading = false;
     }
 

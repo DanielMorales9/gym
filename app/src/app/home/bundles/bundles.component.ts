@@ -9,18 +9,24 @@ import {BundlesService} from "../../shared/services";
 })
 export class BundlesComponent implements OnInit {
 
+    private BUNDLE_FIELD = 'aTrainingBundleSpecifications';
+    private SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
+    private SEARCH_NO_CARD_MESSAGE = "Nessun pacchetto disponibile con questo nome";
+
     query: string;
+    noCardMessage: string;
+    empty: boolean;
+
 
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
 
-    empty: boolean;
 
     bundles: Bundle[];
 
-    private BUNDLE_FIELD = 'aTrainingBundleSpecifications';
 
     constructor(private service: BundlesService) {
+        this.noCardMessage=this.SIMPLE_NO_CARD_MESSAGE;
     }
 
     ngOnInit(): void {
@@ -29,6 +35,8 @@ export class BundlesComponent implements OnInit {
 
     _success () {
         return (res) => {
+            if (res['page']['totalElement'] == 0)
+                this.noCardMessage=this.SIMPLE_NO_CARD_MESSAGE;
             this.bundles = res['_embedded'][this.BUNDLE_FIELD];
             this.pagerComponent.setTotalPages(res['page']['totalPages']);
             this.pagerComponent.updatePages();
@@ -38,6 +46,7 @@ export class BundlesComponent implements OnInit {
 
     _error () {
         return (err) => {
+            console.log(err);
             this.empty = true;
             this.pagerComponent.setTotalPages(0);
         }
@@ -65,6 +74,8 @@ export class BundlesComponent implements OnInit {
             this.pagerComponent.getPage(),
             this.pagerComponent.getSize())
             .subscribe( res => {
+                if (res['totalElements'] === 0)
+                    this.noCardMessage = this.SEARCH_NO_CARD_MESSAGE;
                 this.bundles = res['content'];
                 this.pagerComponent.setPageNumber(res['number']);
                 this.pagerComponent.setTotalPages(res['totalPages']);

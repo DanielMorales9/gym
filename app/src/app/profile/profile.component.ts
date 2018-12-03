@@ -1,8 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {ChangeViewService, NotificationService, UserHelperService} from "../shared/services";
+import { NotificationService, UserHelperService} from "../shared/services";
 import {AppService} from "../app.service";
 import {User} from "../shared/model";
+import {ChangeViewService} from "../services/change-view.service";
 
 @Component({
     templateUrl: './profile.component.html',
@@ -12,6 +13,7 @@ export class ProfileComponent implements OnInit {
 
     current_role_view: number;
     sub: any;
+    id: number;
     user: User;
 
     constructor(private appService: AppService,
@@ -27,9 +29,9 @@ export class ProfileComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.sub = this.route.params.subscribe(params => {
-            let id = +params['id?'];
-            if (!!id) {
-                this.userHelperService.getUser(id, this.getUser());
+            this.id = +params['id?'];
+            if (!!this.id) {
+                this.userHelperService.getUser(this.id, this.getUser());
             }
             else {
                 this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
@@ -39,12 +41,12 @@ export class ProfileComponent implements OnInit {
 
     isCustomer() {
         if (!!this.user.roles) {
-            if (!this.user.roles['_embedded']) {
-                return this.user.roles.reduce((min,val) => Math.min(min, val.id), 3) == 3;
+            if (!this.user.roles['_embedded'] && this.user.roles.length > 0) {
+                let role = this.user.roles.reduce((min,val) => Math.min(min, val.id), 3);
+                return role == 3;
             }
-            return true;
         }
-        return true
+        return false
     }
 
     isOnProfile() {
@@ -55,7 +57,7 @@ export class ProfileComponent implements OnInit {
     }
 
     navigateToProfile() {
-        this.router.navigate(['profile', this.user.id, 'user']);
+        this.router.navigate(['profile', this.id, 'user']);
     }
 
     private getUser() {

@@ -1,8 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute} from "@angular/router";
 import {PagerComponent} from "../pager.component";
-import {ChangeViewService, SalesService} from "../../services";
+import {SalesService} from "../../services";
 import {AppService} from "../../../app.service";
+import {ChangeViewService} from "../../../services/change-view.service";
 
 
 @Component({
