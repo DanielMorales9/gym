@@ -8,7 +8,13 @@ export class SaleHelperService {
     constructor(private saleService: SalesService) {}
 
     getSaleLineItems(sale: Sale) {
-        this.saleService.getEndpoint(sale['_links'].salesLineItems.href).subscribe(res => {
+        let endpoint;
+        if (sale['_links'])
+            endpoint = sale['_links'].salesLineItems.href;
+        else
+            endpoint = `/sales/${sale.id}/salesLineItems`;
+
+        this.saleService.getEndpoint(endpoint).subscribe(res => {
                 res["_embedded"].salesLineItems
                     .map(res1 => {
                         let endpoint = res1._links.bundleSpecification.href;
@@ -24,7 +30,12 @@ export class SaleHelperService {
     }
 
     getCustomer(sale: Sale) {
-        this.saleService.getEndpoint(sale['_links'].customer.href)
+        let endpoint;
+        if (sale['_links'])
+            endpoint = sale['_links'].customer.href;
+        else
+            endpoint = `/sales/${sale.id}/customer`;
+        this.saleService.getEndpoint(endpoint)
             .subscribe( res=> {
                 sale.customer = res as User;
             })

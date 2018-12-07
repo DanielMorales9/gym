@@ -5,11 +5,11 @@
                 <div class="green-led" [hidden]="!sale.payed"></div>
                 <div class="red-led" [hidden]="sale.payed"></div>
             </div>
-            <div class="col-md-8 col">
+            <div class="col-md-8 col-6">
                 <h5 class="card-title">{{sale.customer.firstName}} {{sale.customer.lastName}} (#{{sale.id}})</h5>
             </div>
 
-            <div class="col-md-1 col">
+            <div class="col-md-1 col-2">
                 <a (click)="paySale()"
                    data-toggle="modal"
                    data-target="#payModal"
@@ -18,12 +18,12 @@
                     <i class="far fa-credit-card" title="Paga" ></i>
                 </a>
             </div>
-            <div class="col-md-1 col">
+            <div class="col-md-1 col-2">
                 <a (click)="deleteSale()" *ngIf="current_role_view == 1 && !sale.payed">
                     <i class="fa fa-trash-alt" title="Rimuovi"></i>
                 </a>
             </div>
-            <div class="col-md-1 col">
+            <div class="col-md-1 col-2">
                 <a (click)="toggle()">
                     <i [hidden]="hidden" class="fa fa-angle-down" title="Apri"></i>
                     <i [hidden]="!hidden" class="fa fa-angle-up" title="Chiudi"></i>

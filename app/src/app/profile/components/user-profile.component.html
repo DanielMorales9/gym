@@ -2,13 +2,13 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-1 d-none d-md-inline"></div>
-            <div class="col-md-9 col-6"><h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5></div>
-            <div class="col-md-1 col-3">
+            <div class="col-md-9 col-8"><h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5></div>
+            <div class="col-md-1 col-2">
                 <a (click)="editUser()" [hidden]="current_role_view > 1" data-toggle="modal" data-target="#putModal">
                     <i class="fa fa-plus" aria-hidden="true" title="Modifica"></i>
                 </a>
             </div>
-            <div class="col-md-1 col-3">
+            <div class="col-md-1 col-2  ">
                 <a (click)="editUser()" [hidden]="current_role_view > 1" data-toggle="modal" data-target="#patchModal">
                     <i class="fa fa-edit" aria-hidden="true" title="Aggiungi Ruolo"></i>
                 </a>

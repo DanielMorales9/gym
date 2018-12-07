@@ -61,11 +61,9 @@ export class UserProfileComponent implements OnInit {
 
     updateUser(id) {
         if (!!id) {
-            console.log('getUser');
             this.userHelperService.getUser(id, this.getUser());
         }
         else {
-            console.log('getUserByEmail');
             this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
         }
     }
