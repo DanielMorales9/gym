@@ -4,10 +4,14 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
 import {AppComponent} from "./app.component";
 import {AppRouting} from "./app.routing";
-import { SharedModule} from "./shared";
+import {SharedModule} from "./shared";
 import {CoreModule} from "./core";
 import {AppService} from "./app.service";
-import {ChangeViewService, NotificationService} from "./services";
+import {
+    ChangeViewService,
+    DateService,
+    NotificationService, SaleHelperService,
+} from "./services";
 
 @NgModule({
     declarations: [
@@ -21,7 +25,13 @@ import {ChangeViewService, NotificationService} from "./services";
         SharedModule,
         AppRouting,
     ],
-    providers: [AppService, ChangeViewService, NotificationService],
+    providers: [
+        AppService,
+        ChangeViewService,
+        NotificationService,
+        SaleHelperService,
+        DateService
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

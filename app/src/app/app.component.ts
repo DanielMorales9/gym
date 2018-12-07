@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import { UserHelperService } from "./shared/services";
 import {AppService} from "./app.service";
 import {User} from "./shared/model";
 import {NotificationService, ChangeViewService} from "./services";
+import {UserHelperService} from "./shared/services";
 
 @Component({
     selector: 'app-root',

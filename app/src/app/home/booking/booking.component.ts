@@ -97,9 +97,9 @@ export class BookingComponent implements OnInit {
     constructor(private appService: AppService,
                 private modal: NgbModal,
                 private messageService: NotificationService,
-                private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private trainingService: TrainingService,
+                private userHelperService: UserHelperService,
                 private timesOffService: TimesOffService) {
         this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => {

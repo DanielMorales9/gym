@@ -1,8 +1,7 @@
 
 import { Injectable } from '@angular/core'
-import {UserService} from "./users.service";
+import {UserService} from ".";
 import {Role, User} from "../model";
-import {Observable} from "rxjs";
 
 @Injectable()
 export class UserHelperService {
@@ -23,7 +22,6 @@ export class UserHelperService {
 
 
     getRoles(user: User, callback) : void {
-        console.log(user);
         if (!!user.roles) {
             if (!!user.roles['_embedded']) {
                 let roles = user.roles['_embedded']['roleResources'].map(val => {

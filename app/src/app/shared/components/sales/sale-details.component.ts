@@ -1,7 +1,9 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {SalesService, ExchangeSaleService} from "../../services";
 import {AppService} from "../../../app.service";
-import {ChangeViewService, NotificationService} from "../../../services";
+import {ChangeViewService, NotificationService, SaleHelperService} from "../../../services";
+import {Sale, User} from "../../model";
+import {DateService} from "../../../services";
 
 @Component({
     selector: 'sale-details',
@@ -10,7 +12,7 @@ import {ChangeViewService, NotificationService} from "../../../services";
 })
 export class SaleDetailsComponent implements OnInit {
 
-    @Input() public sale: any;
+    @Input() public sale: Sale;
 
     @Output() private event = new EventEmitter();
 
@@ -20,48 +22,29 @@ export class SaleDetailsComponent implements OnInit {
     constructor(private saleService: SalesService,
                 private appService: AppService,
                 private changeViewService: ChangeViewService,
+                private saleHelperService: SaleHelperService,
                 private exchangeSale: ExchangeSaleService,
+                private dateService: DateService,
                 private messageService: NotificationService) {
         this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
     ngOnInit(): void {
-        if (!this.sale.customer) {
-            this.saleService.getEndpoint(this.sale._links.customer.href)
-                .subscribe( res => {
-                    this.sale.customer = res;
-                })
+        if (!this.sale.customer.id) {
+            this.saleHelperService.getCustomer(this.sale)
         }
     }
 
     getDate(d) {
-        let currentdate = new Date(d);
-        return currentdate.getDate() + "/"
-            + (currentdate.getMonth()+1)  + "/"
-            + currentdate.getFullYear() + ", "
-            + currentdate.getHours() + ":"
-            + currentdate.getMinutes();
+        return this.dateService.getDate(d)
     }
 
     toggle() {
         this.hidden = !this.hidden;
-        if (!this.sale.salesLineItems) {
+        if (this.sale.salesLineItems.length == 0) {
             if (this.hidden) {
-                this.saleService.getEndpoint(this.sale._links.salesLineItems.href)
-                    .subscribe(res => {
-                        this.sale.salesLineItems = [];
-                        let salesLineItems = this.sale.salesLineItems;
-                        res["_embedded"]
-                            .salesLineItems
-                            .map(res => {
-                                let endpoint = res._links.bundleSpecification.href;
-                                this.saleService.getEndpoint(endpoint)
-                                    .subscribe( res1 => {
-                                        salesLineItems.push({id: res.id, bundleSpecification: res1});
-                                    });
-                            });
-                    })
+                this.saleHelperService.getSaleLineItems(this.sale);
             }
         }
     }
@@ -92,7 +75,6 @@ export class SaleDetailsComponent implements OnInit {
                 }, this._systemError())
         }
     }
-
 
     paySale() {
         this.exchangeSale.sendSale(this.sale)

@@ -16,7 +16,7 @@
     </th>
     </thead>
     <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <no-card message="Nessun vendita effettuata"></no-card>
+        <no-card [(message)]="no_card_message"></no-card>
     </tr>
     <tr *ngFor="let s of sales" >
         <sale-details [sale]="s" (event)="findSales()"></sale-details>
