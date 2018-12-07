@@ -26,7 +26,7 @@
                 <div class="dropdown-menu" aria-labelledby="homeDropdown">
                     <a class="dropdown-item"
                        [routerLinkActive]="['active-link']"
-                       routerLink="['profile', user.id, 'user']">
+                       routerLink="/profile/user">
                         <i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>
                     <a class="dropdown-item"
                        *ngIf="current_role_view == 1"

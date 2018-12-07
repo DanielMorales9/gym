@@ -53,12 +53,12 @@ import {
         BundlesService,
         SalesService,
         ExchangeSaleService,
-        UserHelperService,
         ExchangeBundleService,
         ExchangeUserService,
         TimesOffService,
         TrainingService,
-        UserService
+        UserService,
+        UserHelperService
     ]
 
 })
