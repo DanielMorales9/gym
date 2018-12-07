@@ -16,8 +16,7 @@ import {
     ExchangeUserService,
     SalesService,
     TimesOffService,
-    TrainingService,
-    UserHelperService,
+    TrainingService, UserHelperService,
     UserService
 } from "./services";
 
@@ -51,10 +50,10 @@ import {
         SpinnerComponent
     ],
     providers: [
-        SalesService,
         BundlesService,
-        UserHelperService,
+        SalesService,
         ExchangeSaleService,
+        UserHelperService,
         ExchangeBundleService,
         ExchangeUserService,
         TimesOffService,

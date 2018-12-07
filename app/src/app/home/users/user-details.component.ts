@@ -1,8 +1,7 @@
 import {Component, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {Role, User} from "../../shared/model";
-import {AppService} from "../../app.service";
-import {UserHelperService, UserService} from "../../shared/services";
+import {UserHelperService} from "../../shared/services";
 
 
 @Component({
