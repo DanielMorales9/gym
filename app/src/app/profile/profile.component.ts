@@ -31,11 +31,9 @@ export class ProfileComponent implements OnInit {
         this.sub = this.route.params.subscribe(params => {
             this.id = +params['id?'];
             if (!!this.id) {
-                console.log("getUser");
                 this.userHelperService.getUser(this.id, this.getUser());
             }
             else {
-                console.log("getUserByEmail");
                 this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
             }
         });

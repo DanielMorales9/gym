@@ -29,7 +29,9 @@ export class AppComponent implements OnInit {
         this.authOnNavigation();
 
         this.handleMessage();
-        this.changeViewService.getView().subscribe(value => this.current_role_view = value)
+        this.changeViewService.getView().subscribe(value => {
+            this.current_role_view = value;
+        })
     }
 
     private authOnNavigation() {

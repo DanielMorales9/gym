@@ -23,7 +23,9 @@ export class UsersComponent implements  OnInit {
                 private changeViewService: ChangeViewService,
                 private app: AppService) {
         this.current_role_view = this.app.current_role_view;
-        this.changeViewService.getView().subscribe(value => this.current_role_view = value)
+        this.changeViewService.getView().subscribe(value => {
+            this.current_role_view = value;
+        })
     }
 
     ngOnInit(): void {

@@ -5,16 +5,16 @@
                 <div class="green-led" [hidden]="bundle.disabled"></div>
                 <div class="red-led" [hidden]="!bundle.disabled"></div>
             </div>
-            <div class="col-md-8 col">
+            <div class="col-md-8 col-6">
                 <h5 class="card-title">{{bundle.name}}</h5>
             </div>
-            <div class="col-md-1 col">
+            <div class="col-md-1 col-2">
                 <a (click)="toggleDisabled()" *ngIf="mode == 'write' && current_role_view == 1">
                     <i class="fa fa-ban" [hidden]="bundle.disabled" title="Disabilita"></i>
                     <i class="fa fa-check" [hidden]="!bundle.disabled" title="Abilita"></i>
                 </a>
             </div>
-            <div class="col-md-1 col">
+            <div class="col-md-1 col-2">
                 <a (click)="editBundle()" *ngIf="mode == 'write' && current_role_view == 1"
                    data-toggle="modal" data-target="#putModal">
                     <i class="fa fa-edit" aria-hidden="true" title="Modifica"></i>
@@ -26,7 +26,7 @@
                     <i class="fa fa-minus" title="Rimuovi"></i>
                 </a>
             </div>
-            <div class="col-md-1 col">
+            <div class="col-md-1 col-2">
                 <a (click)="toggle()">
                     <i [hidden]="hidden" class="fa fa-angle-down" title="Apri"></i>
                     <i [hidden]="!hidden" class="fa fa-angle-up" title="Chiudi"></i>
