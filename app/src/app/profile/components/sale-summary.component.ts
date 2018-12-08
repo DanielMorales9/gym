@@ -5,7 +5,8 @@ import {
     SalesService
 } from "../../shared/services";
 import {AppService} from "../../app.service";
-import {ChangeViewService, NotificationService} from "../../services";
+import {ChangeViewService, DateService, NotificationService, SaleHelperService} from "../../services";
+import {Sale, User} from "../../shared/model";
 
 @Component({
     templateUrl: './sale-summary.component.html',
@@ -13,13 +14,14 @@ import {ChangeViewService, NotificationService} from "../../services";
 })
 export class SaleSummaryComponent implements OnInit {
 
-    sale: any;
-    current_role_view: any;
+    sale: Sale;
+    current_role_view: number;
     hidden: boolean;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
-                private saleService: SalesService,
+                private saleHelperService: SaleHelperService,
+                private dateService: DateService,
                 private exchangeSale: ExchangeSaleService,
                 private app: AppService,
                 private changeViewService: ChangeViewService,
@@ -30,55 +32,33 @@ export class SaleSummaryComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.sale = new Sale();
+        this.sale.customer = new User();
         this.route.params.subscribe(params => {
-            let saleId = +params['saleId'];
-            this.updateSale(saleId)
+            this.updateSale(+params['saleId'])
         })
     }
 
     updateSale (saleId) {
-        this.saleService.findById(saleId)
-            .subscribe(success => {
-                this.sale = success;
-                if (!this.sale.customer) {
-                    this.saleService.getEndpoint(this.sale._links.customer.href)
-                        .subscribe( res => {
-                            this.sale.customer = res;
-                        })
-                }
-                if (!this.sale.salesLineItems) {
-                    this.saleService.getEndpoint(this.sale._links.salesLineItems.href)
-                        .subscribe(res => {
-                            this.sale.salesLineItems = [];
-                            let salesLineItems = this.sale.salesLineItems;
-                            res['_embedded']
-                                .salesLineItems
-                                .map(res => {
-                                    let endpoint = res._links.bundleSpecification.href;
-                                    this.saleService.getEndpoint(endpoint)
-                                        .subscribe( res1 => {
-                                            salesLineItems.push({id: res.id, bundleSpecification: res1});
-                                        }, );
-                                });
-                        }, )
-                }
+        this.saleHelperService.findById(saleId)
+            .subscribe(res => {
+                this.sale = res as Sale;
+                if (!this.sale.customer) this.sale.customer = new User();
+                if (!this.sale.salesLineItems) this.sale.salesLineItems = [];
+                this.saleHelperService.getCustomer(this.sale);
+                this.saleHelperService.getSaleLineItems(this.sale);
             }, this._systemError())
     }
 
     getDate(d) {
-        let currentdate = new Date(d);
-        return currentdate.getDate() + "/"
-            + (currentdate.getMonth()+1)  + "/"
-            + currentdate.getFullYear() + ", "
-            + currentdate.getHours() + ":"
-            + currentdate.getMinutes();
+       return this.dateService.getDate(d);
     }
 
     deleteSale() {
         let confirmed = confirm("Vuoi confermare l'eliminazione della vendita per il cliente " +
             this.sale.customer.firstName + this.sale.customer.lastName + "?");
         if (confirmed) {
-            this.saleService.delete(this.sale.id)
+            this.saleHelperService.delete(this.sale.id)
                 .subscribe( res => {
                     let message = {
                         text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",
@@ -89,7 +69,6 @@ export class SaleSummaryComponent implements OnInit {
         }
     }
 
-    // TODO: refactor with sales-details
     paySale() {
         this.exchangeSale.sendSale(this.sale)
     }
@@ -104,7 +83,6 @@ export class SaleSummaryComponent implements OnInit {
 
     _systemError() {
         return err => {
-            console.log(err);
             let message ={
                 text: err.error.message,
                 class: "alert-danger"

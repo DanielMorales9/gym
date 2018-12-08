@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {PagerComponent} from "../pager.component";
 import {SalesService} from "../../services";
 import {AppService} from "../../../app.service";
-import {ChangeViewService} from "../../../services";
+import {ChangeViewService, SaleHelperService} from "../../../services";
 import {Sale, User} from "../../model";
 
 
@@ -27,6 +27,7 @@ export class SalesComponent implements OnInit {
     no_card_message: string;
 
     constructor(private service: SalesService,
+                private saleHelperService: SaleHelperService,
                 private app: AppService,
                 private changeViewService: ChangeViewService,
                 private route: ActivatedRoute) {
@@ -62,8 +63,8 @@ export class SalesComponent implements OnInit {
             let page = res['page'] || res;
             this.sales = content;
             this.sales.forEach(value => {
-                value.customer = new User();
-                value.salesLineItems = [];
+                if (!value.customer) value.customer = new User();
+                if (!value.salesLineItems) value.salesLineItems = [];
             });
             this.pagerComponent.setTotalPages(page['totalPages']);
             this.pagerComponent.updatePages();

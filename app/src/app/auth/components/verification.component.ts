@@ -20,16 +20,17 @@ export class VerificationComponent implements OnInit {
     constructor(private app: AppService,
                 private activatedRoute: ActivatedRoute,
                 private router: Router) {
+        console.log(this.token);
     }
 
-        private static defaultErrorCallback(err) {
+    private static defaultErrorCallback(err) {
         console.error(err);
     };
 
     ngOnInit(): void {
         this.user = new User();
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
-
+        console.log(this.token);
         this.app.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
             if (res.verified) {
                 this.router.navigateByUrl('/');
