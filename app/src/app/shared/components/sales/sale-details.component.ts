@@ -49,9 +49,8 @@ export class SaleDetailsComponent implements OnInit {
         }
     }
 
-    _systemError() {
+    _error() {
         return err => {
-            console.log(err);
             let message ={
                 text: err.error.message,
                 class: "alert-danger"
@@ -67,12 +66,12 @@ export class SaleDetailsComponent implements OnInit {
             this.saleHelperService.delete(this.sale.id)
                 .subscribe( res => {
                     let message = {
-                        text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",
+                        text: `Vendita eliminata per il cliente ${this.sale.customer.lastName}!`,
                         class: "alert-warning"
                     };
                     this.event.emit(res);
                     this.messageService.sendMessage(message);
-                }, this._systemError())
+                }, this._error())
         }
     }
 

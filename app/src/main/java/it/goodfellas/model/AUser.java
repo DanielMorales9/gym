@@ -33,6 +33,10 @@ public abstract class AUser implements DefaultRoles {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
+    @Column(name = "confirmPassword")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private String confirmPassword;
+
     @Column(name = "firstname", nullable = false)
     @NotNull
     @Size(min=2, max=30)
@@ -161,4 +165,11 @@ public abstract class AUser implements DefaultRoles {
         return u.getId().equals(this.getId());
     }
 
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 }

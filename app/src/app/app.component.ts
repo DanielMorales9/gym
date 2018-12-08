@@ -92,7 +92,7 @@ export class AppComponent implements OnInit {
     }
 
     hideLogin() {
-        return this.router.url === "/auth/login" || this.authenticated
+        return this.router.url.startsWith("/auth") || this.authenticated
     }
 
     hideLogout() {

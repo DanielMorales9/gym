@@ -118,4 +118,7 @@ export class AppService {
             });
     }
 
+    resendChangePasswordToken(token: string) {
+        return this.http.get("/authentication/resendChangePasswordToken", {params: {token: token}})
+    }
 }

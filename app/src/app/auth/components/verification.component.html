@@ -1,53 +1,55 @@
-<div class="row" style="margin-top: 7%;">
-    <div class="col-lg-4 d-none d-md-inline"></div>
-    <div class="col-lg-4 col-12">
-        <div class="card">
-            <div class="card-body">
-                <form role="form" (submit)="resendToken()" *ngIf="toResendToken">
-                    <div class="form-group">
-                        <h4>{{user.firstName}} il tuo token è scaduto</h4>
-                        <h6>Rinnovalo Subito!</h6>
-                    </div>
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">Re-invia token</button>
-                </form>
-                <form #f="ngForm" role="form" novalidate (ngSubmit)="f.form.valid && verifyPassword()" *ngIf="!toResendToken">
-                    <div>
-                        <h4>Benvenuto {{user.firstName}} {{user.lastName}}</h4>
-                        <h5>Verifica il tuo account.</h5>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Password:</label>
-                        <input type="password" id="password"
-                               class="form-control" name="password"
-                               pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$"
-                               [(ngModel)]="user.password" #password="ngModel"
-                               [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required
-                               validateEqual="confirmPassword" reverse="true"
-                        />
-                        <div *ngIf="f.submitted && password.invalid" class="error-message">
-                            <div *ngIf="password.errors.required">Password obbligatoria</div>
-                            <div *ngIf="password.errors.pattern"><p>La password deve contenere almeno 8 caratteri,
-                                con almeno un carattere minuscolo, maiuscolo, speciale e numerico</p></div>
+<div class="page-content container">
+    <div class="row" style="margin-top: 7%;">
+        <div class="col-lg-4 d-none d-md-inline"></div>
+        <div class="col-lg-4 col-12">
+            <div class="card">
+                <div class="card-body">
+                    <form role="form" (submit)="resendToken()" *ngIf="toResendToken">
+                        <div class="form-group">
+                            <h4>{{user.firstName}} il tuo token è scaduto</h4>
+                            <h6>Rinnovalo Subito!</h6>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword">Conferma Password:</label>
-                        <input type="password" id="confirmPassword"
-                               class="form-control" name="confirmPassword"
-                               [ngModel]="user.confirmPassword" #confirmPassword="ngModel"
-                               [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid }"
-                               required validateEqual="password"
-                        />
-                        <div *ngIf="f.submitted && confirmPassword.invalid" class="error-message">
-                            <div *ngIf="confirmPassword.errors.required">Conferma password obbligatoria</div>
-                            <div *ngIf="!confirmPassword.valid">Le password non sono identiche</div>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Re-invia token</button>
+                    </form>
+                    <form #f="ngForm" role="form" novalidate (ngSubmit)="f.form.valid && verifyPassword()" *ngIf="!toResendToken">
+                        <div>
+                            <h4>Benvenuto {{user.firstName}} {{user.lastName}}</h4>
+                            <h5>Verifica il tuo account.</h5>
                         </div>
-                    </div>
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
-                </form>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password"
+                                   class="form-control" name="password"
+                                   pattern="^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$"
+                                   [(ngModel)]="user.password" #password="ngModel"
+                                   [ngClass]="{ 'is-invalid': f.submitted && password.invalid }" required
+                                   validateEqual="confirmPassword" reverse="true"
+                            />
+                            <div *ngIf="f.submitted && password.invalid" class="error-message">
+                                <div *ngIf="password.errors.required">Password obbligatoria</div>
+                                <div *ngIf="password.errors.pattern"><p>La password deve contenere almeno 8 caratteri,
+                                    con almeno un carattere minuscolo, maiuscolo, speciale e numerico</p></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Conferma Password:</label>
+                            <input type="password" id="confirmPassword"
+                                   class="form-control" name="confirmPassword"
+                                   [ngModel]="user.confirmPassword" #confirmPassword="ngModel"
+                                   [ngClass]="{ 'is-invalid': f.submitted && confirmPassword.invalid }"
+                                   required validateEqual="password"
+                            />
+                            <div *ngIf="f.submitted && confirmPassword.invalid" class="error-message">
+                                <div *ngIf="confirmPassword.errors.required">Conferma password obbligatoria</div>
+                                <div *ngIf="!confirmPassword.valid">Le password non sono identiche</div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
+                    </form>
+                </div>
             </div>
         </div>
+        <div class="col-lg-4 d-none d-md-inline"></div>
     </div>
-    <div class="col-lg-4 d-none d-md-inline"></div>
 </div>
 
