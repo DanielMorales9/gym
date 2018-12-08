@@ -1,8 +1,9 @@
 import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserService, ExchangeUserService, UserHelperService} from "../../services/";
+import {UserService, ExchangeUserService} from "../../services/";
 import {User} from "../../model";
 import {NotificationService} from "../../../services";
+import {UserHelperService} from "../../services";
 
 @Component({
     selector: 'user-modal',
@@ -22,17 +23,26 @@ export class UserModalComponent implements OnInit {
     @Input() public modalTitle: string;
     @Input() public role: number;
 
+    emailId: string;
+    firstNameId: string;
+    lastNameId: string;
+    roleId: string;
+    weightId: string;
+    heightId: string;
+
     form: FormGroup;
     user: User;
     loading: boolean;
     error = true;
+
+    //TODO: Qui è da rifare tutto. Non funzionano la validation
 
     CONSTRAINT_VIOLATION_EXCEPTION = "ConstraintViolationException";
 
     constructor(private builder: FormBuilder,
                 private service: UserService,
                 private userHelperService: UserHelperService,
-                private notificationService: NotificationService,
+                private messageService: NotificationService,
                 private exchangeService: ExchangeUserService) {
         this.loading = false;
     }
@@ -41,12 +51,23 @@ export class UserModalComponent implements OnInit {
 
 
     ngOnInit(): void {
+        this.initIds();
+
         this.user = new User();
         this.buildForm();
         this.exchangeService.getUser().subscribe((user) => {
             this.user = user;
             this.buildForm()
         });
+    }
+
+    initIds() {
+        this.emailId = "email"+this.modalId;
+        this.firstNameId = "firstName"+this.modalId;
+        this.lastNameId = "lastName"+this.modalId;
+        this.heightId = "height"+this.modalId;
+        this.weightId = "weight"+this.modalId;
+        this.roleId = "role"+this.modalId;
     }
 
     isCustomer() {
@@ -105,7 +126,7 @@ export class UserModalComponent implements OnInit {
                 text: mex + this.modalClosingMessage,
                 class: "alert-success"
             };
-            this.notificationService.sendMessage(message);
+            this.messageService.sendMessage(message);
             this.done.emit('completed');
         }
     }
@@ -125,7 +146,7 @@ export class UserModalComponent implements OnInit {
                 text: text,
                 class: "alert-danger"
             };
-            this.notificationService.sendMessage(message);
+            this.messageService.sendMessage(message);
         }
     }
 
@@ -136,7 +157,7 @@ export class UserModalComponent implements OnInit {
     }
 
     editUser() {
-        let user = Object();
+        let user = new User();
         user.id = this.user.id;
         user.firstName = this.f.firstName.value;
         user.lastName = this.f.lastName.value;

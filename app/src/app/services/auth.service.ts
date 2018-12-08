@@ -43,4 +43,8 @@ export class AuthService {
     resendTokenAnonymous(id: number) {
         return this.http.get(`/authentication/resendToken/${id}`)
     }
+
+    changeNewPassword(id: number, model: { password: string; oldPassword: string; confirmPassword: string }) {
+        return this.http.post(`/authentication/changeNewPassword/${id}`, model);
+    }
 }

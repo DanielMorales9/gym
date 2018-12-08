@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -36,6 +37,9 @@ public class AuthorizationController {
     private final JavaMailSender mailSender;
     private final RoleRepository roleRepository;
     private final VerificationTokenRepository tokenRepository;
+
+    private final PasswordEncoder passwordEncoder;
+
     @Value("${baseUrl}")
     private String baseUrl;
 
@@ -43,12 +47,15 @@ public class AuthorizationController {
     public AuthorizationController(UserRepository userRepository,
                                    JavaMailSender mailSender,
                                    VerificationTokenRepository tokenRepository,
-                                   RoleRepository roleRepository) {
+                                   RoleRepository roleRepository,
+                                   PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.tokenRepository = tokenRepository;
         this.roleRepository = roleRepository;
+        this.passwordEncoder = passwordEncoder;
     }
+
 
     @Autowired
     @Qualifier("userAuthService")
@@ -67,8 +74,7 @@ public class AuthorizationController {
             response = new ResponseEntity<>(
                     new CustomerAssembler().toResource((Customer) c), HttpStatus.OK);
         else
-            response = new ResponseEntity<>(
-                    new CustomerAssembler().toResource(null), HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         return response;
     }
 
@@ -82,8 +88,7 @@ public class AuthorizationController {
             response = new ResponseEntity<>(
                     new TrainerAssembler().toResource((Trainer) c), HttpStatus.OK);
         else
-            response = new ResponseEntity<>(
-                    new TrainerAssembler().toResource(null), HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         return response;
     }
 
@@ -98,8 +103,7 @@ public class AuthorizationController {
             response = new ResponseEntity<>(
                     new AdminAssembler().toResource((Admin) c), HttpStatus.OK);
         else
-            response = new ResponseEntity<>(
-                    new AdminAssembler().toResource(null), HttpStatus.INTERNAL_SERVER_ERROR);
+            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         return response;
     }
 
@@ -143,6 +147,26 @@ public class AuthorizationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(u), HttpStatus.OK);
     }
 
+    @PostMapping("/changeNewPassword/{id}")
+    ResponseEntity<AUserResource> changeNewPassword(@PathVariable("id") Long id,
+                                                    @RequestBody PasswordForm form) {
+        AUser user = this.userRepository.findById(id)
+                .orElseThrow(() -> new POJONotFoundException("User", id));
+        logger.info(form.toString());
+
+        String newPwd = passwordEncoder.encode(form.getPassword());
+        logger.info(passwordEncoder.matches(form.getOldPassword(), user.getPassword()) ?
+                "password coincidono": "password non coincidono");
+        if (passwordEncoder.matches(form.getOldPassword(), user.getPassword())
+                && form.getConfirmPassword().equals(form.getPassword())) {
+            user.setPassword(newPwd);
+            user.setConfirmPassword(newPwd);
+            user = this.userRepository.save(user);
+            return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        }
+        logger.info(form.getConfirmPassword().equals(form.getPassword()) ? "nuove password coincidono" : "nuove password non coincidono");
+        return ResponseEntity.badRequest().body(null);
+    }
     @GetMapping(path = "/verification")
     ResponseEntity<AUserResource> verify(@RequestParam String token) {
         logger.info("About to verify...");
@@ -281,4 +305,6 @@ public class AuthorizationController {
 
         return userService.register(input);
     }
+
+
 }

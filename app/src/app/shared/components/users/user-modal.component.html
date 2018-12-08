@@ -10,11 +10,11 @@
                 </div>
                 <div class="modal-body">
                     <div class="form-group" [hidden]="role > 1 || modalMode == 'add'">
-                        <label for="firstName" class="sr-only">Nome:</label>
+                        <label [for]="firstNameId" class="sr-only">Nome:</label>
                         <input name="firstName"
                                placeholder="Nome"
                                class="form-control"
-                               id="firstName"
+                               [id]="firstNameId"
                                type="text"
                                formControlName="firstName" />
                         <div *ngIf="f.submitted && f.firstName.invalid" class="error-message">
@@ -22,11 +22,11 @@
                         </div>
                     </div>
                     <div class="form-group" [hidden]="role > 1 || modalMode == 'add'">
-                        <label for="lastName" class="sr-only">Cognome:</label>
+                        <label [for]="lastNameId" class="sr-only">Cognome:</label>
                         <input name="lastName"
                                placeholder="Cognome"
                                class="form-control"
-                               id="lastName"
+                               [id]="lastNameId"
                                type="text"
                                formControlName="lastName"/>
                         <div *ngIf="f.submitted && f.lastName.invalid" class="error-message">
@@ -34,11 +34,11 @@
                         </div>
                     </div>
                     <div class="form-group" [hidden]="role > 1 || modalMode == 'add'">
-                        <label for="email" class="sr-only">Email:</label>
+                        <label [for]="emailId" class="sr-only">Email:</label>
                         <input name="email"
                                placeholder="Email"
                                class="form-control"
-                               id="email"
+                               [id]="emailId"
                                type="text"
                                formControlName="email" />
                         <div *ngIf="f.submitted && f.email.invalid" class="error-message">
@@ -47,11 +47,11 @@
                         </div>
                     </div>
                     <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || !isCustomer()">
-                        <label for="height" class="sr-only">Altezza</label>
+                        <label [for]="heightId" class="sr-only">Altezza</label>
                         <input type="number"
                                placeholder="Altezza (cm)"
                                class="form-control"
-                               id="height"
+                               [id]="heightId"
                                numeric="true"
                                name="height"
                                formControlName="height" />
@@ -61,11 +61,11 @@
                         </div>
                     </div>
                     <div class="form-group" [hidden]="role > 1 || modalMode != 'edit' || !isCustomer()">
-                        <label for="weight" class="sr-only">Peso</label>
+                        <label [for]="weightId" class="sr-only">Peso</label>
                         <input type="number"
                                placeholder="Peso (kg)"
                                class="form-control"
-                               id="weight"
+                               [id]="weightId"
                                numeric="true"
                                name="weight"
                                formControlName="weight"/>
@@ -75,10 +75,10 @@
                         </div>
                     </div>
                     <div class="form-group" [hidden]="role > 1 || modalMode == 'edit'">
-                        <label for="role" ><b>Ruolo</b></label>
+                        <label [for]="roleId" ><b>Ruolo</b></label>
                         <select class="form-control"
                                 name="role"
-                                id="role"
+                                [id]="roleId"
                                 type="text"
                                 formControlName="type">
                             <option value="customer">Utente</option>
