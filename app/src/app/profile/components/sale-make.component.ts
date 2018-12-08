@@ -7,7 +7,7 @@ import {
 } from "../../shared/services";
 import {Bundle, Sale, User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services/app.service";
 import {ChangeViewService, NotificationService, SaleHelperService} from "../../services";
 
 

@@ -2,7 +2,7 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
 import {UserHelperService, UserService} from "../../shared/services";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services";
 import {ChangeViewService} from "../../services";
 
 @Component({
@@ -90,7 +90,6 @@ export class UsersComponent implements  OnInit {
             }
         }
     }
-
 
     getUsersByPage() {
         this.service.get(

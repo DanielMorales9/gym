@@ -1,9 +1,8 @@
 import {Component, OnInit, Output, EventEmitter, Input} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserService, ExchangeUserService} from "../../services/";
+import {UserService, ExchangeUserService, UserHelperService} from "../../services/";
 import {User} from "../../model";
 import {NotificationService} from "../../../services";
-import {UserHelperService} from "../../services/user-helper.service";
 
 @Component({
     selector: 'user-modal',
@@ -33,7 +32,7 @@ export class UserModalComponent implements OnInit {
     constructor(private builder: FormBuilder,
                 private service: UserService,
                 private userHelperService: UserHelperService,
-                private messageService: NotificationService,
+                private notificationService: NotificationService,
                 private exchangeService: ExchangeUserService) {
         this.loading = false;
     }
@@ -106,7 +105,7 @@ export class UserModalComponent implements OnInit {
                 text: mex + this.modalClosingMessage,
                 class: "alert-success"
             };
-            this.messageService.sendMessage(message);
+            this.notificationService.sendMessage(message);
             this.done.emit('completed');
         }
     }
@@ -126,7 +125,7 @@ export class UserModalComponent implements OnInit {
                 text: text,
                 class: "alert-danger"
             };
-            this.messageService.sendMessage(message);
+            this.notificationService.sendMessage(message);
         }
     }
 

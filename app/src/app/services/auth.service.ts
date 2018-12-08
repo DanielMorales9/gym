@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
-import {User} from "../../shared/model";
-import {AppService} from "../../app.service";
+import {User} from "../shared/model";
+import {AppService} from "./app.service";
 
 @Injectable()
 export class AuthService {
@@ -40,4 +40,7 @@ export class AuthService {
         return this.http.get("/authentication/resendChangePasswordToken", {params: {token: token}})
     }
 
+    resendTokenAnonymous(id: number) {
+        return this.http.get(`/authentication/resendToken/${id}`)
+    }
 }

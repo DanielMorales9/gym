@@ -6,7 +6,7 @@ import {AppComponent} from "./app.component";
 import {AppRouting} from "./app.routing";
 import {SharedModule} from "./shared";
 import {CoreModule} from "./core";
-import {AppService} from "./app.service";
+import {AppService, AuthService} from "./services";
 import {
     ChangeViewService,
     DateService,
@@ -27,6 +27,7 @@ import {
     ],
     providers: [
         AppService,
+        AuthService,
         ChangeViewService,
         NotificationService,
         SaleHelperService,

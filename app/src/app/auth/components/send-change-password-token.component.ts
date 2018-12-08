@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import {AppService} from "../../app.service";
 import {Router} from "@angular/router";
-import {AuthService} from "../services";
+import {AuthService} from "../../services";
 
 @Component({
     templateUrl: './send-change-password-token.component.html',

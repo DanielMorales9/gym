@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.core.GrantedAuthority;
@@ -65,7 +66,13 @@ public class UserAuthService implements IUserAuthService {
 
         input = this.userRepository.save(input);
 
-        confirmRegistration(input);
+        try {
+            confirmRegistration(input);
+
+        } catch (MailException e) {
+            this.userRepository.delete(input);
+            return null;
+        }
 
         return input;
     }

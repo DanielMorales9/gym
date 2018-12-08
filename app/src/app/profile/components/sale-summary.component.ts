@@ -4,7 +4,7 @@ import {
     ExchangeSaleService,
     SalesService
 } from "../../shared/services";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services/app.service";
 import {ChangeViewService, DateService, NotificationService, SaleHelperService} from "../../services";
 import {Sale, User} from "../../shared/model";
 

@@ -1,9 +1,10 @@
 import {TestBed} from "@angular/core/testing";
 import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
 import {AppService} from "./app.service";
-import {UserHelperService, UserService} from "./shared/services";
-import {Role, User} from "./shared/model";
-import {ChangeViewService, NotificationService} from "./services";
+import {UserHelperService, UserService} from "../shared/services";
+import {Role, User} from "../shared/model";
+import {NotificationService} from "./notification.service";
+import {ChangeViewService} from "./change-view.service";
 
 describe('AppService', () => {
 

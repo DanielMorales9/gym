@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService} from "./app.service";
+import {AppService} from "./services/app.service";
 import {User} from "./shared/model";
 import {NotificationService, ChangeViewService} from "./services";
 import {UserHelperService} from "./shared/services";

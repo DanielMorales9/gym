@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {AppService} from "../app.service";
+import {AppService} from "../services";
 import {User} from "../shared/model";
-import {ChangeViewService, NotificationService} from "../services";
+import {AuthService, ChangeViewService, NotificationService} from "../services";
 import {UserHelperService} from "../shared/services";
 
 @Component({
@@ -17,9 +17,10 @@ export class ProfileComponent implements OnInit {
     user: User;
 
     constructor(private appService: AppService,
+                private authService: AuthService,
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
-                private messageService: NotificationService,
+                private notificationService: NotificationService,
                 private route: ActivatedRoute,
                 private router: Router) {
         this.current_role_view = this.appService.current_role_view;
@@ -73,4 +74,25 @@ export class ProfileComponent implements OnInit {
         this.sub.unsubscribe();
     }
 
+    resendToken() {
+        let roleName = this.user.roles
+            .reduce((prev, curr) => (prev.id < curr.id)? prev : curr)
+            .name.toLowerCase();
+        this.authService.resendTokenAnonymous(this.user.id).subscribe(_ => {
+            this.notificationService.sendMessage({
+                text: `E' stato re-inviato un token al seguente indirizzo email ${this.user.email}`,
+                class: 'alert-success'
+            })
+        })
+    }
+
+    isAdmin() {
+        if (!!this.user.roles) {
+            if (!this.user.roles['_embedded'] && this.user.roles.length > 0) {
+                let role = this.user.roles.reduce((min,val) => Math.min(min, val.id), 3);
+                return role == 1;
+            }
+        }
+        return false
+    }
 }
