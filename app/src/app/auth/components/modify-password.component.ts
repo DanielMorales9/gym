@@ -4,6 +4,7 @@ import {AppService} from "../../app.service";
 import {User} from "../../shared/model";
 import {UserHelperService} from "../../shared/services";
 import {NotificationService} from "../../services";
+import {AuthService} from "../services";
 
 @Component({
     templateUrl: './modify-password.component.html',
@@ -19,7 +20,7 @@ export class ModifyPasswordComponent {
     constructor(private activatedRoute: ActivatedRoute,
                 private userHelperService: UserHelperService,
                 private notificationService: NotificationService,
-                private app: AppService,
+                private authService: AuthService,
                 private router: Router) {
     }
 
@@ -27,7 +28,7 @@ export class ModifyPasswordComponent {
     ngOnInit(): void {
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
 
-        this.app.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
+        this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
             this.user = res;
             this.userHelperService.getRoles(this.user);
         }, (err) => {
@@ -53,7 +54,8 @@ export class ModifyPasswordComponent {
             default:
                 break;
         }
-        this.app.changePassword(this.user, userType).subscribe(res => {
+
+        this.authService.changePassword(this.user, userType).subscribe(res => {
             this.notificationService.sendMessage({
                 text: `${this.user.firstName} la tua password è stata modificata, <br> Ora puoi accedere alla tua area Personale.`,
                 class: "alert-success",
@@ -67,7 +69,7 @@ export class ModifyPasswordComponent {
     }
 
     resendToken() {
-        this.app.resendChangePasswordToken(this.token).subscribe((response) => {
+        this.authService.resendChangePasswordToken(this.token).subscribe((response) => {
             this.notificationService.sendMessage({
                 text: `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`,
                 class: "alert-success"
@@ -75,4 +77,6 @@ export class ModifyPasswordComponent {
             return this.router.navigateByUrl("/auth/login")
         })
     }
+
+
 }
