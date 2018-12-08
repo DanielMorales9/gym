@@ -52,7 +52,7 @@ export class AppComponent implements OnInit {
         this.messageService.getMessage().subscribe((mess) => {
             let node = document.createElement("div");
             node.className = "alert " + mess.class;
-            node.innerText = mess.text;
+            node.innerHTML = mess.text;
             let delay = mess.delay || 10000;
             node.addEventListener('click', function() {
                 node.remove()

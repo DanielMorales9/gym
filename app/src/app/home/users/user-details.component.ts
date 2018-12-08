@@ -21,9 +21,7 @@ export class UserDetailsComponent implements OnInit {
     ngOnInit(): void {
         this.hidden = false;
         if (!this.user.roles) {
-            this.userHelperService.getRoles(this.user, (roles: Role[]) => {
-                this.user.roles = roles;
-            });
+            this.userHelperService.getRoles(this.user);
         }
     }
 
@@ -40,7 +38,7 @@ export class UserDetailsComponent implements OnInit {
     }
 
     getUserCreatedAt() {
-        return this.userHelperService.getUserCreatedAt(this.user)
+        return UserHelperService.getUserCreatedAt(this.user)
     }
 
     goToUserProfile() {

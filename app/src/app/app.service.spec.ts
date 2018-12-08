@@ -202,6 +202,7 @@ describe('AppService', () => {
         });
         it("it should return an error", done => {
             appService.authenticate(credentials, undefined, (err)=> {
+                console.log(err);
                 expect(err.status).toEqual(401);
                 done();
             });

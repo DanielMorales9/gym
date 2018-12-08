@@ -64,9 +64,7 @@ export class ProfileComponent implements OnInit {
         return (user) => {
             this.user = user;
             if (!this.user.roles) {
-                this.userHelperService.getRoles(user, (roles)  => {
-                    this.user.roles = roles;
-                })
+                this.userHelperService.getRoles(user)
             }
         }
     }

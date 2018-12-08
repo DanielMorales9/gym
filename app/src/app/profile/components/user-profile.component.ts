@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
-import {User} from "../../shared/model";
+import {Sale, User} from "../../shared/model";
 import {
     ExchangeUserService, UserHelperService,
 } from "../../shared/services";
@@ -15,7 +15,6 @@ import {ChangeViewService} from "../../services";
 export class UserProfileComponent implements OnInit {
 
     user: User;
-    sales: any[];
 
     private sub: any;
     current_role_view: number;
@@ -24,7 +23,7 @@ export class UserProfileComponent implements OnInit {
                 private userHelperService: UserHelperService,
                 private route: ActivatedRoute,
                 private changeViewService: ChangeViewService,
-                private exchangeService: ExchangeUserService) {
+                private userExchangeService: ExchangeUserService) {
         this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
@@ -43,20 +42,14 @@ export class UserProfileComponent implements OnInit {
     private getUser() {
         return (user) => {
             this.user = user;
-            if (!this.user.roles || !(this.user.roles instanceof Array)) {
-                this.userHelperService.getRoles(user, (roles)  => {
-                    this.user.roles = roles;
-                    this.exchangeService.sendUser(this.user)
-                })
-            }
-            else {
-                this.exchangeService.sendUser(this.user)
-            }
+            this.userHelperService.getRoles(user, ()  => {
+                this.userExchangeService.sendUser(this.user)
+            });
         }
     }
 
     getUserCreatedAt() {
-        return this.userHelperService.getUserCreatedAt(this.user)
+        return UserHelperService.getUserCreatedAt(this.user)
     }
 
     updateUser(id) {
@@ -69,6 +62,6 @@ export class UserProfileComponent implements OnInit {
     }
 
     editUser() {
-        this.exchangeService.sendUser(this.user);
+        this.userExchangeService.sendUser(this.user);
     }
 }

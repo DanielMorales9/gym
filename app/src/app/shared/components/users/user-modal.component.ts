@@ -58,7 +58,6 @@ export class UserModalComponent implements OnInit {
         const config = {};
         let height, weight, type, email, firstName, lastName = [];
 
-
         if (this.role == 1) {
             if (this.modalMode != 'edit')
                 type = [Validators.required];
@@ -71,8 +70,6 @@ export class UserModalComponent implements OnInit {
                 firstName = [Validators.required];
                 lastName = [Validators.required]
             }
-
-
         }
         config['email'] = [this.user.email, email];
         config["type"] = [this.user.type, type];
@@ -155,7 +152,7 @@ export class UserModalComponent implements OnInit {
 
 
     createUser() {
-        let user = Object();
+        let user = new User();
         user.firstName = this.f.firstName.value;
         user.lastName = this.f.lastName.value;
         user.email = this.f.email.value;
