@@ -2,7 +2,6 @@ import { Inject, Injectable, InjectionToken, Injector, Optional } from '@angular
 import { HttpClient, HttpEvent, HttpInterceptor, HttpHandler, HttpRequest } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { ErrorHandlerInterceptor } from './error-handler.interceptor';
 import { CacheInterceptor } from './cache.interceptor';
 import { ApiPrefixInterceptor } from './api-prefix.interceptor';
 
@@ -20,12 +19,6 @@ declare module '@angular/common/http/src/client' {
          * @return {HttpClient} The new instance.
          */
         cache(forceUpdate?: boolean): HttpClient;
-
-        /**
-         * Skips default error handler for this request.
-         * @return {HttpClient} The new instance.
-         */
-        skipErrorHandler(): HttpClient;
 
         /**
          * Do not use API prefix for this request.
@@ -73,7 +66,6 @@ export class HttpService extends HttpClient {
             // Configure default interceptors that can be disabled here
             this.interceptors = [
                 this.injector.get(ApiPrefixInterceptor),
-                this.injector.get(ErrorHandlerInterceptor)
             ];
         }
     }
@@ -83,9 +75,6 @@ export class HttpService extends HttpClient {
         return this.addInterceptor(cacheInterceptor);
     }
 
-    skipErrorHandler(): HttpClient {
-        return this.removeInterceptor(ErrorHandlerInterceptor);
-    }
 
     disableApiPrefix(): HttpClient {
         return this.removeInterceptor(ApiPrefixInterceptor);

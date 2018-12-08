@@ -4,7 +4,6 @@ import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/h
 import {
     ApiPrefixInterceptor,
     CacheInterceptor,
-    ErrorHandlerInterceptor,
     HttpCacheService,
     HttpService,
     XhrInterceptor
@@ -30,7 +29,6 @@ import {
         },
         HttpCacheService,
         ApiPrefixInterceptor,
-        ErrorHandlerInterceptor,
         CacheInterceptor]
 })
 export class CoreModule {

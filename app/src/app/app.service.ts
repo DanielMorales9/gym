@@ -40,7 +40,7 @@ export class AppService {
         this.changeViewService.sendView(this.current_role_view)
     }
 
-    authenticate(credentials, callback, errorCallback) {
+    authenticate(credentials, success?, error?) {
         this.credentials = credentials !== undefined ? credentials: this.credentials;
 
         this.http.get('/user').subscribe(res => {
@@ -51,9 +51,9 @@ export class AppService {
                 this.getEmail(res);
                 this.getRolesAndCurrentRoleView();
             }
-            return callback && callback(this.authenticated);
-        }, error => {
-            return errorCallback && errorCallback(error)
+            return !!success && success(this.authenticated);
+        }, err => {
+            return !!error && error(err)
         });
     }
 

@@ -1,7 +1,7 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
-import { UserService} from "../../shared/services";
+import {UserHelperService, UserService} from "../../shared/services";
 import {AppService} from "../../app.service";
 import {ChangeViewService} from "../../services";
 
@@ -14,15 +14,21 @@ export class UsersComponent implements  OnInit {
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
 
+    private SIMPLE_NO_CARD_MESSAGE = "Nessun utente registrato";
+    private SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
+
     users: User[];
+    no_card_message: string;
     current_role_view: number;
     empty: boolean;
     query: string;
 
     constructor(private service: UserService,
+                private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private app: AppService) {
         this.current_role_view = this.app.current_role_view;
+        this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         })
@@ -36,12 +42,13 @@ export class UsersComponent implements  OnInit {
         this.service.search(this.query,
             this.getPage(),
             this.getSize()).subscribe(res => {
-                this.users = res['content'];
+                this.users = res['content'] as User[];
                 this.pagerComponent.setPageNumber(res['number']);
                 this.pagerComponent.setTotalPages(res['totalPages']);
                 this.pagerComponent.updatePages();
                 this.empty = this.users == undefined || this.users.length == 0;
-            }, this._error())
+                if (this.empty) this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
+            }, this._error(), this._complete())
     }
 
     private getSize() {
@@ -52,28 +59,32 @@ export class UsersComponent implements  OnInit {
         return this.pagerComponent.getPage();
     }
 
-    _success () {
+    private _success () {
         return (res) => {
-            this.users = [];
-            if (res['_embedded']['admins']) {
-                this.users = this.users.concat(res['_embedded']['admins'])
-            }
-            if (res['_embedded']['customers']) {
-                this.users = this.users.concat(res['_embedded']['customers'])
-            }
-            if (res['_embedded']['trainers']) {
-                this.users = this.users.concat(res['_embedded']['trainers'])
-            }
+            this.users = UserHelperService.wrapUsers(res);
             this.pagerComponent.setTotalPages(res['page']['totalPages']);
             this.pagerComponent.updatePages();
             this.empty = this.users == undefined || this.users.length == 0;
         }
     }
 
-    _error () {
+    private _error () {
         return (err) => {
             this.empty = true;
-            this.pagerComponent.setTotalPages(0)
+            this.pagerComponent.setTotalPages(0);
+        }
+    }
+
+    private _complete() {
+        return () => {
+            if (this.empty) {
+                if (this.query === undefined || this.query == '') {
+                    this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
+                }
+                else {
+                    this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
+                }
+            }
         }
     }
 
@@ -81,7 +92,7 @@ export class UsersComponent implements  OnInit {
     getUsersByPage() {
         this.service.get(
             this.getPage(),
-            this.getSize()).subscribe(this._success(), this._error())
+            this.getSize()).subscribe(this._success(), this._error(), this._complete())
     }
 
     findUsers() {

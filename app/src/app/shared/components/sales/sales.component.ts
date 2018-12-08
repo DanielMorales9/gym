@@ -16,8 +16,8 @@ export class SalesComponent implements OnInit {
 
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
-    private SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
-    private SEARCH_NO_CARD_MESSAGE = "Nessun pacchetto disponibile con questa query";
+    private SIMPLE_NO_CARD_MESSAGE = "Nessuna vendita disponibile";
+    private SEARCH_NO_CARD_MESSAGE = "Nessuna vendita disponibile con questa query";
 
     sales: Sale[];
     empty: boolean;
@@ -72,11 +72,23 @@ export class SalesComponent implements OnInit {
         }
     }
 
+    private err() {
+        this.sales = [];
+        this.empty = true;
+        this.pagerComponent.setTotalPages(0)
+    }
+
     _error () {
         return (err) => {
-            this.sales = [];
-            this.empty = true;
-            this.pagerComponent.setTotalPages(0)
+            this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
+            this.err()
+        }
+    }
+
+    _searchError () {
+        return (err) => {
+            this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
+            this.err()
         }
     }
 
@@ -116,12 +128,12 @@ export class SalesComponent implements OnInit {
             this.service.searchByLastName(this.query,
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success('search'), this._error())
+                .subscribe(this._success('search'), this._searchError())
         } else {
             this.service.searchByDate(this.query, this.id,
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success('search'), this._error())
+                .subscribe(this._success('search'), this._searchError())
         }
     }
 

@@ -21,7 +21,7 @@
     </th>
     </thead>
     <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <no-card message="Nessun utente registrato"></no-card>
+        <no-card [(message)]="no_card_message"></no-card>
     </tr>
     <tr *ngFor="let u of users" >
         <user-details [user]="u"></user-details>
