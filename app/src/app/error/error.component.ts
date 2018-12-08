@@ -13,11 +13,12 @@ export class ErrorComponent implements OnInit {
     ngOnInit(): void {
         var message = this.router.snapshot.queryParamMap.get("message");
         switch (message) {
-
             case "Invalid Token Exception":
                 this.message = "Token invalido. <br> Rivolgiti all'amministratore per risolvere il problema.";
                 break;
-
+            default:
+                this.message = message;
+                break
         }
     }
 

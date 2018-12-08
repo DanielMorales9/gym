@@ -12,7 +12,6 @@ export class User {
     verified: boolean;
     height: number;
     weight: number;
-    defaultRoles: number[];
     roles: Role[];
 
     constructor() {

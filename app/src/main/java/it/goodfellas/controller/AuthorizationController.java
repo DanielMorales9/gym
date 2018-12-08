@@ -146,21 +146,39 @@ public class AuthorizationController {
         AUser user = userRepository.findByEmail(email);
         logger.info(user.toString());
 
-        String token = UUID.randomUUID().toString();
-        userService.createVerificationToken(user, token);
+        if (user.isVerified()) {
+            String token = UUID.randomUUID().toString();
+            userService.createVerificationToken(user, token);
+            sendChangePasswordTokenToEmail(user, token);
+            return new ResponseEntity<>(
+                    new AUserAssembler().toResource(user), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(
+                new AUserAssembler().toResource(user), HttpStatus.BAD_GATEWAY);
+    }
 
+    private void sendChangePasswordTokenToEmail(AUser user, String token) {
         String recipientAddress = user.getEmail();
         String subject = "Cambia la tua password";
         String confirmationUrl
                 = this.baseUrl+ "/auth/modifyPassword?token=" + token;
         String message = "Per modificare la password usa il seguente link: ";
 
-        sendEmail(subject,
-                message+confirmationUrl,
-                recipientAddress);
+        sendEmail(subject,message+confirmationUrl, recipientAddress);
+    }
+
+    @GetMapping(path = "/resendChangePasswordToken")
+    public ResponseEntity resendChangePasswordToken(@RequestParam("token") String existingToken) {
+        VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
+        logger.info("RESEND CHANGE PASSWORD TOKEN");
+        Long userId = newToken.getUser().getId();
+        AUser user = this.userRepository.findById(userId)
+                .orElseThrow(() -> new POJONotFoundException("User", userId));
+
+        sendChangePasswordTokenToEmail(user, newToken.getToken());
+
         return new ResponseEntity<>(
                 new AUserAssembler().toResource(user), HttpStatus.OK);
-
     }
 
     @GetMapping(path = "/resendToken")
