@@ -13,13 +13,11 @@ export class SendChangePasswordTokenComponent {
     error: boolean = false;
     sent: boolean = false;
 
-    constructor(private app: AppService,
-                private authService: AuthService,
+    constructor(private authService: AuthService,
                 private router: Router) {
     }
 
     changePassword() {
-        this.app.credentials = undefined;
         this.authService.findByEmail(this.email).subscribe(res => {
             this.sent = true;
         }, err => {
