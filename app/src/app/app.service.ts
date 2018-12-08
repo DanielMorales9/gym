@@ -86,39 +86,18 @@ export class AppService {
         this.user = new User();
     }
 
-    getUserFromVerificationToken(token: any) {
-        return this.http.get("/authentication/verification",{ params: {token: token}});
-    }
 
-    resendToken(token: string) {
-        return this.http.get("/authentication/resendToken", {params: {token: token}})
-    }
-
-    changePassword(user: User, userType: string) {
-        return this.http.post(`/authentication/${userType}/changePassword`, user);
-    }
-
-    verifyPassword(credentials, role) {
-        return this.http.post( `/authentication/${role}/verifyPassword`, credentials);
-    }
-
-    findByEmail(email: string) {
-        return this.http.get(`/authentication/findByEmail?email=${email}`)
-    }
 
     logout(callback) {
-        this.http.get('/logout').subscribe(
-            _ => {
-                this.discardSession()
-            },
-            undefined,
-            () => {
-                this.authenticated = false;
-                return callback && callback()
-            });
+        this.http.get('/logout')
+            .subscribe(_ => {
+                    this.discardSession()
+                },
+                undefined,
+                () => {
+                    this.authenticated = false;
+                    return !!callback && callback()
+                });
     }
 
-    resendChangePasswordToken(token: string) {
-        return this.http.get("/authentication/resendChangePasswordToken", {params: {token: token}})
-    }
 }

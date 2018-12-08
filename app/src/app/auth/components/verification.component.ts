@@ -4,6 +4,7 @@ import {User} from "../../shared/model";
 import {AppService} from "../../app.service";
 import {UserHelperService} from "../../shared/services";
 import {NotificationService} from "../../services";
+import {AuthService} from "../services";
 
 
 @Component({
@@ -17,7 +18,8 @@ export class VerificationComponent implements OnInit {
     token = '';
     toResendToken = false;
 
-    constructor(private app: AppService,
+    constructor(private authService: AuthService,
+                private appService: AppService,
                 private userHelperService: UserHelperService,
                 private notificationService: NotificationService,
                 private activatedRoute: ActivatedRoute,
@@ -27,7 +29,7 @@ export class VerificationComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
-        this.app.getUserFromVerificationToken(this.token).subscribe( (res) => {
+        this.authService.getUserFromVerificationToken(this.token).subscribe( (res) => {
             let user = res as User;
             if (user.verified) this.router.navigateByUrl('/');
             else {
@@ -51,9 +53,9 @@ export class VerificationComponent implements OnInit {
     verifyPassword() {
         let roleName = this.user.roles.reduce((a, b) => {return ( a.id < b.id) ? a : b;}).name.toLowerCase();
 
-        this.app.verifyPassword({email: this.user.email, password: this.user.password}, roleName)
+        this.authService.verifyPassword({email: this.user.email, password: this.user.password}, roleName)
             .subscribe( (response: User) => {
-                this.app.authenticate({username: response.email, password: this.user.password},
+                this.appService.authenticate({username: response.email, password: this.user.password},
                     (isAuthenticated) => {
                         if (!isAuthenticated) return this.router.navigate(['/error'],
                             {queryParams: { "message": "Errore di Autenticazione" +
@@ -65,7 +67,7 @@ export class VerificationComponent implements OnInit {
 
 
     resendToken() {
-        this.app.resendToken(this.token).subscribe((response) => {
+        this.authService.resendToken(this.token).subscribe((response) => {
             this.notificationService.sendMessage({
                 text: `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`,
                 class: "alert-success"

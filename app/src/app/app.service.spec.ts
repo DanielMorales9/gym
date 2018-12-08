@@ -64,22 +64,6 @@ describe('AppService', () => {
     });
 
 
-    describe ("testing #getUserFromVerificationToken method", () => {
-        it("it should return a user", done => {
-            let token = "aaaa";
-            appService.getUserFromVerificationToken(token).subscribe((res) => {
-                expect(res).toEqual(new User());
-                done()
-            });
-
-            let req = backend.expectOne({
-                url: `/authentication/verification?token=${token}`,
-                method: "GET"
-            });
-
-            req.flush(new User())
-        });
-    });
 
     describe ("testing #resendToken method", () => {
         it("it should return empty user", done => {
