@@ -21,6 +21,8 @@ export class BundleModalComponent implements OnInit {
     @Input() public modalClosingMessage: string;
     @Input() public edit: string;
 
+    //TODO: controlla che la validazione funzioni
+
     constructor(private service: BundlesService,
                 private exBundleService: ExchangeBundleService,
                 private messageService: NotificationService) {
@@ -39,9 +41,10 @@ export class BundleModalComponent implements OnInit {
             type: 'P'};
         if (this.edit == "true") {
             console.log(this.modalId, this.edit);
-            this.exBundleService.getBundle().subscribe(bundle => {
-                this.bundle = bundle
-            })
+            this.exBundleService.getBundle()
+                .subscribe(bundle => {
+                    this.bundle = bundle
+                })
 
         }
     }

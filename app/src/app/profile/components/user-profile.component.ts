@@ -1,11 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Sale, User} from "../../shared/model";
-import {
-    ExchangeUserService, UserHelperService,
-} from "../../shared/services";
+import {User} from "../../shared/model";
+import {ExchangeUserService, UserHelperService} from "../../shared/services";
 import {AppService} from "../../services";
-import {AuthService, ChangeViewService} from "../../services";
+import {ChangeViewService} from "../../services";
 
 
 @Component({
