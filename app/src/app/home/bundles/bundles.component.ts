@@ -21,34 +21,42 @@ export class BundlesComponent implements OnInit {
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
 
-
     bundles: Bundle[];
 
-
     constructor(private service: BundlesService) {
-        this.no_card_message=this.SIMPLE_NO_CARD_MESSAGE;
+        this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
     }
 
     ngOnInit(): void {
         this.getBundlesByPage();
     }
 
-    _success () {
+    private _success () {
         return (res) => {
-            if (res['page']['totalElement'] == 0)
-                this.no_card_message=this.SIMPLE_NO_CARD_MESSAGE;
-            this.bundles = res['_embedded'][this.BUNDLE_FIELD];
+            this.bundles = res['_embedded'][this.BUNDLE_FIELD] as Bundle[];
             this.pagerComponent.setTotalPages(res['page']['totalPages']);
             this.pagerComponent.updatePages();
-            this.empty = this.bundles == undefined || this.bundles.length == 0;
+            this.setEmpty()
         }
     }
 
-    _error () {
-        return (err) => {
-            console.log(err);
+    private _error () {
+        return (_) => {
             this.empty = true;
             this.pagerComponent.setTotalPages(0);
+        }
+    }
+
+    private _complete () {
+        return () => {
+            if (this.empty) {
+                if (this.query === undefined || this.query == '') {
+                    this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
+                }
+                else {
+                    this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
+                }
+            }
         }
     }
 
@@ -64,9 +72,7 @@ export class BundlesComponent implements OnInit {
             this.pagerComponent.setPageNumber(0);
             this.getBundlesByPage()
         }
-        else {
-            this.searchByPage();
-        }
+        else this.searchByPage();
     }
 
     private searchByPage() {
@@ -74,27 +80,25 @@ export class BundlesComponent implements OnInit {
             this.pagerComponent.getPage(),
             this.pagerComponent.getSize())
             .subscribe( res => {
-                if (res['totalElements'] === 0)
-                    this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-                this.bundles = res['content'];
+                this.bundles = res['content'] as Bundle[];
                 this.pagerComponent.setPageNumber(res['number']);
                 this.pagerComponent.setTotalPages(res['totalPages']);
                 this.pagerComponent.updatePages();
-                this.empty = this.bundles == undefined || this.bundles.length == 0;
-            }, this._error())
+                this.setEmpty();
+            }, this._error(), this._complete())
+    }
+
+    private setEmpty() {
+        this.empty = this.bundles == undefined || this.bundles.length == 0;
     }
 
     getBundlesByPage() {
-        if (this.query === undefined || this.query == ''){
+        if (this.query === undefined || this.query == '')
             this.service.get(
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success(), this._error());
-        }
-        else {
-            this.searchByPage();
-        }
-
+                .subscribe(this._success(), this._error(), this._complete());
+        else this.searchByPage();
     }
 
 }

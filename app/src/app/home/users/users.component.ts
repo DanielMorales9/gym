@@ -46,9 +46,8 @@ export class UsersComponent implements  OnInit {
                 this.pagerComponent.setPageNumber(res['number']);
                 this.pagerComponent.setTotalPages(res['totalPages']);
                 this.pagerComponent.updatePages();
-                this.empty = this.users == undefined || this.users.length == 0;
-                if (this.empty) this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-            }, this._error(), this._complete())
+                this.setEmpty()
+        }, this._error(), this._complete())
     }
 
     private getSize() {
@@ -64,8 +63,12 @@ export class UsersComponent implements  OnInit {
             this.users = UserHelperService.wrapUsers(res);
             this.pagerComponent.setTotalPages(res['page']['totalPages']);
             this.pagerComponent.updatePages();
-            this.empty = this.users == undefined || this.users.length == 0;
+            this.setEmpty();
         }
+    }
+
+    private setEmpty() {
+        this.empty = this.users == undefined || this.users.length == 0;
     }
 
     private _error () {

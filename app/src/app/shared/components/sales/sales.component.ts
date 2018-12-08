@@ -46,50 +46,10 @@ export class SalesComponent implements OnInit {
                 this.service.findUserSales(this.id,
                     this.pagerComponent.getPage(),
                     this.pagerComponent.getSize())
-                    .subscribe(this._success('user'), this._error())
+                    .subscribe(this._success(), this._error())
             }
-            else {
-                this.getSalesByPage();
-            }
+            else this.getSalesByPage();
         })
-    }
-
-    _success (type: string) {
-        return (res) => {
-            if (type === 'search' && res['totalElements'] === 0)
-                this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-            let content = res['_embedded'] || res['content'];
-            content = content['sales'] || content;
-            let page = res['page'] || res;
-            this.sales = content;
-            this.sales.forEach(value => {
-                if (!value.customer) value.customer = new User();
-                if (!value.salesLineItems) value.salesLineItems = [];
-            });
-            this.pagerComponent.setTotalPages(page['totalPages']);
-            this.pagerComponent.updatePages();
-            this.empty = this.sales == undefined || this.sales.length == 0;
-        }
-    }
-
-    private err() {
-        this.sales = [];
-        this.empty = true;
-        this.pagerComponent.setTotalPages(0)
-    }
-
-    _error () {
-        return (err) => {
-            this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
-            this.err()
-        }
-    }
-
-    _searchError () {
-        return (err) => {
-            this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-            this.err()
-        }
     }
 
     delayedFindSales() {
@@ -114,12 +74,12 @@ export class SalesComponent implements OnInit {
             this.service.get(
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success('all'), this._error())
+                .subscribe(this._success(), this._error(), this._complete())
         } else {
             this.service.findUserSales(this.id,
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success('user'), this._error())
+                .subscribe(this._success(), this._error(), this._complete())
         }
     }
 
@@ -128,14 +88,53 @@ export class SalesComponent implements OnInit {
             this.service.searchByLastName(this.query,
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success('search'), this._searchError())
+                .subscribe(this._success(), this._error(), this._complete())
         } else {
             this.service.searchByDate(this.query, this.id,
                 this.pagerComponent.getPage(),
                 this.pagerComponent.getSize())
-                .subscribe(this._success('search'), this._searchError())
+                .subscribe(this._success(), this._error(), this._complete())
         }
     }
 
+    private _success () {
+        return (res) => {
+            let content = res['_embedded'] || res['content'];
+            content = content['sales'] || content;
+            let page = res['page'] || res;
+            this.sales = content as Sale[];
+            this.sales.forEach(value => {
+                if (!value.customer) value.customer = new User();
+                if (!value.salesLineItems) value.salesLineItems = [];
+            });
+            this.pagerComponent.setTotalPages(page['totalPages']);
+            this.pagerComponent.updatePages();
+            this.setEmpty();
+        }
+    }
 
+    private setEmpty() {
+        this.empty = this.sales == undefined || this.sales.length == 0;
+    }
+
+    private _error () {
+        return (_) => {
+            this.sales = [];
+            this.empty = true;
+            this.pagerComponent.setTotalPages(0)
+        }
+    }
+
+    private _complete() {
+        return () => {
+            if (this.empty) {
+                if (this.query === undefined || this.query == '') {
+                    this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
+                }
+                else {
+                    this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
+                }
+            }
+        };
+    }
 }
