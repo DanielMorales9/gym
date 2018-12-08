@@ -1,8 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {UserHelperService, UserService} from "./shared/services";
-import {Role, User} from "./shared/model";
-import {ChangeViewService, NotificationService} from "./services";
+import {UserHelperService, UserService} from "../shared/services";
+import {Role, User} from "../shared/model";
+import {NotificationService} from "./notification.service";
+import {ChangeViewService} from "./change-view.service";
 
 @Injectable({
     providedIn: 'root'

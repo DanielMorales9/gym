@@ -1,11 +1,11 @@
 import {Component, OnInit} from "@angular/core";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {Sale, User} from "../../shared/model";
 import {
     ExchangeUserService, UserHelperService,
 } from "../../shared/services";
-import {AppService} from "../../app.service";
-import {ChangeViewService} from "../../services";
+import {AppService} from "../../services";
+import {AuthService, ChangeViewService} from "../../services";
 
 
 @Component({
@@ -22,6 +22,7 @@ export class UserProfileComponent implements OnInit {
     constructor(private appService: AppService,
                 private userHelperService: UserHelperService,
                 private route: ActivatedRoute,
+                private router: Router,
                 private changeViewService: ChangeViewService,
                 private userExchangeService: ExchangeUserService) {
         this.current_role_view = this.appService.current_role_view;
@@ -64,4 +65,5 @@ export class UserProfileComponent implements OnInit {
     editUser() {
         this.userExchangeService.sendUser(this.user);
     }
+
 }

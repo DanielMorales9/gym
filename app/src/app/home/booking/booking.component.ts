@@ -15,7 +15,7 @@ import {
     TimesOffService,
     TrainingService, UserHelperService
 } from "../../shared/services";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services/app.service";
 import {ChangeViewService, NotificationService} from "../../services";
 
 

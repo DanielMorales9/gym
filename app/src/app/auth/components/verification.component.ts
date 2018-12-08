@@ -1,10 +1,9 @@
 import {ActivatedRoute, Router} from "@angular/router";
 import {Component, OnInit} from "@angular/core";
 import {User} from "../../shared/model";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services/app.service";
 import {UserHelperService} from "../../shared/services";
-import {NotificationService} from "../../services";
-import {AuthService} from "../services";
+import {AuthService, NotificationService} from "../../services";
 
 
 @Component({

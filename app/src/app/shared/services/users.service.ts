@@ -49,4 +49,5 @@ export class UserService {
     getCurrentTrainingBundles(id: number) : Observable<Object> {
         return this.http.get(`/customers/${id}/currentTrainingBundles`);
     }
+
 }

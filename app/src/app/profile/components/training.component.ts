@@ -1,7 +1,7 @@
 import {Component, OnInit, } from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import { BundlesService, UserService} from "../../shared/services";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services/app.service";
 import {ChangeViewService, NotificationService} from "../../services";
 
 @Component({

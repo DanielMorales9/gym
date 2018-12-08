@@ -7,7 +7,6 @@ import {
     SendChangePasswordTokenComponent, LoginComponent, ModifyPasswordComponent,
     VerificationComponent
 } from "./components";
-import {AuthService} from "./services";
 
 @NgModule({
     imports: [
@@ -21,9 +20,6 @@ import {AuthService} from "./services";
         VerificationComponent,
         SendChangePasswordTokenComponent,
         ModifyPasswordComponent
-    ],
-    providers: [
-        AuthService
     ]
 })
 export class AuthModule { }

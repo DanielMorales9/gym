@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {BundlesService, ExchangeBundleService} from "../../services";
-import {AppService} from "../../../app.service";
+import {AppService} from "../../../services/app.service";
 import {Bundle} from "../../model";
 import {ChangeViewService} from "../../../services";
 

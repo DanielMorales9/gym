@@ -6,6 +6,7 @@ import it.goodfellas.hateoas.*;
 import it.goodfellas.model.*;
 import it.goodfellas.repository.RoleRepository;
 import it.goodfellas.repository.UserRepository;
+import it.goodfellas.repository.VerificationTokenRepository;
 import it.goodfellas.service.IUserAuthService;
 import it.goodfellas.utility.PasswordGenerator;
 import org.slf4j.Logger;
@@ -34,15 +35,18 @@ public class AuthorizationController {
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RoleRepository roleRepository;
+    private final VerificationTokenRepository tokenRepository;
     @Value("${baseUrl}")
     private String baseUrl;
 
     @Autowired
     public AuthorizationController(UserRepository userRepository,
                                    JavaMailSender mailSender,
+                                   VerificationTokenRepository tokenRepository,
                                    RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
+        this.tokenRepository = tokenRepository;
         this.roleRepository = roleRepository;
     }
 
@@ -58,8 +62,14 @@ public class AuthorizationController {
         logger.info("Customer is trying to register: " + input.toString());
 
         AUser c = registerUser(input);
-        return new ResponseEntity<>(
-                new CustomerAssembler().toResource((Customer) c), HttpStatus.OK);
+        ResponseEntity<CustomerResource> response;
+        if (c != null)
+            response = new ResponseEntity<>(
+                    new CustomerAssembler().toResource((Customer) c), HttpStatus.OK);
+        else
+            response = new ResponseEntity<>(
+                    new CustomerAssembler().toResource(null), HttpStatus.INTERNAL_SERVER_ERROR);
+        return response;
     }
 
     @PostMapping(path = "/trainer/registration")
@@ -67,8 +77,14 @@ public class AuthorizationController {
         logger.info("Trainer is trying to register: " + input.toString());
 
         AUser c = registerUser(input);
-        return new ResponseEntity<>(
-                new TrainerAssembler().toResource((Trainer) c), HttpStatus.OK);
+        ResponseEntity<TrainerResource> response;
+        if (c != null)
+            response = new ResponseEntity<>(
+                    new TrainerAssembler().toResource((Trainer) c), HttpStatus.OK);
+        else
+            response = new ResponseEntity<>(
+                    new TrainerAssembler().toResource(null), HttpStatus.INTERNAL_SERVER_ERROR);
+        return response;
     }
 
 
@@ -77,8 +93,14 @@ public class AuthorizationController {
         logger.info("Admin is trying to register: " + input.toString());
 
         AUser c = registerUser(input);
-        return new ResponseEntity<>(
-                new AdminAssembler().toResource((Admin) c), HttpStatus.OK);
+        ResponseEntity<AdminResource> response;
+        if (c != null)
+            response = new ResponseEntity<>(
+                    new AdminAssembler().toResource((Admin) c), HttpStatus.OK);
+        else
+            response = new ResponseEntity<>(
+                    new AdminAssembler().toResource(null), HttpStatus.INTERNAL_SERVER_ERROR);
+        return response;
     }
 
     @PostMapping("/customer/verifyPassword")
@@ -181,23 +203,38 @@ public class AuthorizationController {
                 new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/resendToken")
-    public ResponseEntity resendRegistrationToken(@RequestParam("token") String existingToken) {
+    @GetMapping(path = "/resendToken/{id}")
+    public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
+        AUser user = this.userRepository.findById(id)
+                .orElseThrow(() -> new POJONotFoundException("User", id));
+        VerificationToken token = this.tokenRepository.findByUser(user);
+        VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
+        sendVerificationEmail(newToken, user);
+        return new ResponseEntity<>(
+                new AUserAssembler().toResource(user), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/resendToken/")
+    public ResponseEntity resendTokenAnoymous(@RequestParam("token") String existingToken) {
         VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
         logger.info("RESEND TOKEN");
         Long userId = newToken.getUser().getId();
         AUser user = this.userRepository.findById(userId)
                 .orElseThrow(() -> new POJONotFoundException("User", userId));
 
+        sendVerificationEmail(newToken, user);
+
+        return new ResponseEntity<>(
+                new AUserAssembler().toResource(user), HttpStatus.OK);
+    }
+
+    private void sendVerificationEmail(VerificationToken newToken, AUser user) {
         String subject = "Verifica Account";
         String recipientAddress = user.getEmail();
         String confirmationUrl
                 = this.baseUrl+ "/auth/verification?token=" + newToken.getToken();
         String message = "Ti abbiamo generato un nuovo link di verifica: ";
         sendEmail(subject, message+confirmationUrl, recipientAddress);
-
-        return new ResponseEntity<>(
-                new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
     @PutMapping(path = "/users/{userId}/roles/{roleId}")

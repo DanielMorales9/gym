@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
-import {AppService} from "../../app.service";
+import {AppService} from "../../services/app.service";
 import {User} from "../../shared/model";
 import {UserHelperService} from "../../shared/services";
-import {NotificationService} from "../../services";
-import {AuthService} from "../services";
+import {AuthService, NotificationService} from "../../services";
 
 @Component({
     templateUrl: './modify-password.component.html',
