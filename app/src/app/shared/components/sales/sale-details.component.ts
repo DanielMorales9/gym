@@ -64,7 +64,7 @@ export class SaleDetailsComponent implements OnInit {
         let confirmed = confirm("Vuoi confermare l'eliminazione della vendita per il cliente " +
             this.sale.customer.firstName + this.sale.customer.lastName + "?");
         if (confirmed) {
-            this.saleService.delete(this.sale.id)
+            this.saleHelperService.delete(this.sale.id)
                 .subscribe( res => {
                     let message = {
                         text: "Vendita eliminata per il cliente " + this.sale.customer.lastName + "!",

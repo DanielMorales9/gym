@@ -5,10 +5,10 @@ import {
     SalesService,
     UserService
 } from "../../shared/services";
-import {Bundle, User} from "../../shared/model";
+import {Bundle, Sale, User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
 import {AppService} from "../../app.service";
-import {ChangeViewService, NotificationService} from "../../services";
+import {ChangeViewService, NotificationService, SaleHelperService} from "../../services";
 
 
 @Component({
@@ -20,6 +20,10 @@ export class MakeSaleComponent implements OnInit {
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
 
+    private SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
+    private SEARCH_NO_CARD_MESSAGE = "Nessun pacchetto disponibile con questo nome";
+
+    no_message_card: string;
     current_role_view: number;
     sub: any;
     id : number;
@@ -28,18 +32,19 @@ export class MakeSaleComponent implements OnInit {
     bundles: Bundle[];
     admin: User;
 
-    soldBundles = [];
-    sale: any;
+    soldBundles: Bundle[] = [];
+    sale: Sale;
 
     constructor(private app: AppService,
                 private router: Router,
                 private bundleService: BundlesService,
-                private saleService: SalesService,
+                private saleHelperService: SaleHelperService,
                 private userService: UserService,
                 private changeViewService: ChangeViewService,
                 private messageService: NotificationService,
                 private route: ActivatedRoute) {
         this.current_role_view = this.app.current_role_view;
+        this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
         this.admin = this.app.user;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
@@ -52,16 +57,15 @@ export class MakeSaleComponent implements OnInit {
             this.makeSale()
         });
 
-
         window.onbeforeunload = (ev) => {
             this.destroy();
         };
     }
 
     private makeSale() {
-        this.saleService.createNewSale(this.admin.email, this.id)
+        this.saleHelperService.createNewSale(this.admin.email, this.id)
             .subscribe(res => {
-                this.sale = res;
+                this.sale = res as Sale;
                 this.messageService.sendMessage({
                     text: "Vendita Iniziata!",
                     class: "alert-info",
@@ -72,7 +76,6 @@ export class MakeSaleComponent implements OnInit {
 
     _systemError() {
         return err => {
-            console.log(err);
             let message ={
                 text: err.error.message,
                 class: "alert-danger"
@@ -89,7 +92,7 @@ export class MakeSaleComponent implements OnInit {
         this.sub.unsubscribe();
         if (this.sale) {
             if (!this.sale.completed) {
-                this.saleService.delete(this.sale.id)
+                this.saleHelperService.delete(this.sale.id)
                     .subscribe( res => {
                         this.messageService.sendMessage({
                             text: "Vendita Eliminata!",
@@ -102,17 +105,20 @@ export class MakeSaleComponent implements OnInit {
 
     _success () {
         return (res) => {
-            this.bundles = res['content'];
+            this.bundles = res['content'] as Bundle[];
             this.pagerComponent.setTotalPages(res['totalPages']);
             this.pagerComponent.updatePages();
             this.empty = this.bundles == undefined || this.bundles.length == 0;
+            if (this.empty)
+                this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
         }
     }
 
     _error () {
         return (err) => {
             this.empty = true;
-            this.pagerComponent.setTotalPages(0)
+            this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
+            this.pagerComponent.setTotalPages(0);
         }
     }
 
@@ -130,14 +136,18 @@ export class MakeSaleComponent implements OnInit {
     private searchByPage() {
         this.bundleService.searchNotDisabled(this.query,
             this.pagerComponent.getPage(),
-            this.pagerComponent.getSize()).subscribe( res => {
-            this.bundles = res['content'];
-            this.pagerComponent.setPageNumber(res['number']);
-            this.pagerComponent.setTotalPages(res['totalPages']);
-            this.pagerComponent.updatePages();
-            this.empty = this.bundles == undefined || this.bundles.length == 0;
-            this.pagerComponent.setTotalPages(0)
-        }, this._error())
+            this.pagerComponent.getSize())
+            .subscribe( res => {
+                this.bundles = res['content'] as Bundle[];
+                this.pagerComponent.setPageNumber(res['number']);
+                this.pagerComponent.setTotalPages(res['totalPages']);
+                this.pagerComponent.updatePages();
+                this.empty = this.bundles == undefined || this.bundles.length == 0;
+                if (this.empty)
+                    this.no_message_card = this.SEARCH_NO_CARD_MESSAGE;
+
+                this.pagerComponent.setTotalPages(0)
+            }, this._error())
     }
 
     getBundlesByPage() {
@@ -155,9 +165,9 @@ export class MakeSaleComponent implements OnInit {
     addBundle($event) {
         let bundle = $event;
         this.soldBundles.push(bundle);
-        this.saleService.addSalesLineItem(this.sale.id, bundle.id)
+        this.saleHelperService.addSalesLineItem(this.sale.id, bundle.id)
             .subscribe( res=>{
-                this.sale = res;
+                this.sale = res as Sale;
                 this.messageService.sendMessage({
                     text: "Pacchetto " + bundle.name + " aggiunto al Carrello!",
                     class: "alert-info",
@@ -171,18 +181,16 @@ export class MakeSaleComponent implements OnInit {
         let i = this.soldBundles.indexOf(bundle);
 
         let id = this.sale
-            .salesLineItems
-            ._embedded
-            .salesLineItemResources
+            .salesLineItems['_embedded']['salesLineItemResources']
             .map(line => [line.id, line.bundleSpecification.id])
             .filter(line => line[1] == bundle.id)
             .map(line => line[0])[0];
-        this.saleService.deleteSalesLineItem(this.sale.id, id)
+        this.saleHelperService.deleteSalesLineItem(this.sale.id, id)
             .subscribe( res => {
                 if (i > -1) {
                     this.soldBundles.splice(i, 1);
                 }
-                this.sale = res;
+                this.sale = res as Sale;
                 this.messageService.sendMessage({
                     text: "Pacchetto " + bundle.name + " rimosso dal Carrello!",
                     class: "alert-warning",
@@ -192,9 +200,9 @@ export class MakeSaleComponent implements OnInit {
     }
 
     confirmSale() {
-        this.saleService.confirmSale(this.sale.id)
+        this.saleHelperService.confirmSale(this.sale.id)
             .subscribe( res => {
-                this.sale = res;
+                this.sale = res as Sale;
                 this.messageService.sendMessage({
                     text: "Vendita Confermata!",
                     class: "alert-primary",

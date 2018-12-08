@@ -3,7 +3,7 @@
     <th>
         <div class="input-group" id="adv-search">
             <label class="sr-only" for="search">Search</label>
-            <input type="text" title="Ricerca Pacchetto"
+            <input type="text" title="Ricerca Pacchetto per nome"
                    [(ngModel)]="query"
                    class="form-control"
                    id="search"
@@ -15,7 +15,7 @@
     </th>
     </thead>
     <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <no-card message="Nessun pacchetto disponibile"></no-card>
+        <no-card [(message)]="no_message_card"></no-card>
     </tr>
     <tr *ngFor="let b of bundles">
         <bundle-details [bundle]="b" mode="add" classMode="default" (event)="addBundle($event)"></bundle-details>
@@ -29,12 +29,12 @@
         <div class="card card-row">
             <div class="card-header">
                 <div class="row">
-                    <div class="col-10 col-xs-11">
+                    <div class="col-9 col-xs-11">
                         <h5 class="card-text">
                             <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Carrello
                         </h5>
                     </div>
-                    <div class="col-2 col-xs-1">
+                    <div class="col-3 col-xs-1">
                         <a (click)="confirmSale()">
                             <i class="fa fa-clipboard-check" title="Conferma Vendita">&nbsp;&nbsp;</i>
                             <span class="d-none d-md-inline">Conferma</span>

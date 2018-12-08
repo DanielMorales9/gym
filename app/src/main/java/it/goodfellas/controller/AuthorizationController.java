@@ -130,6 +130,7 @@ public class AuthorizationController {
         }
 
         AUser user = verificationToken.getUser();
+        logger.info(user.toString());
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
             return new ResponseEntity<>(

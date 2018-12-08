@@ -149,6 +149,7 @@ export class BookingComponent implements OnInit {
     private getReservations(id?: number) {
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.trainingService.getReservations(startDay, res => {
+            console.log(res);
             res.forEach(res => {
                 this.events.push(this.formatEvent(res))
             });

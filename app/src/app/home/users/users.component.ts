@@ -3,7 +3,7 @@ import {User} from "../../shared/model";
 import {PagerComponent} from "../../shared/components";
 import { UserService} from "../../shared/services";
 import {AppService} from "../../app.service";
-import {ChangeViewService} from "../../services/change-view.service";
+import {ChangeViewService} from "../../services";
 
 @Component({
     templateUrl: './users.component.html',

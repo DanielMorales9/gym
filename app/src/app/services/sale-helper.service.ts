@@ -10,14 +10,15 @@ export class SaleHelperService {
     getSaleLineItems(sale: Sale) {
         let endpoint;
         if (sale['_links'])
-            endpoint = sale['_links'].salesLineItems.href;
+            endpoint = sale['_links']['salesLineItems'].href;
         else
             endpoint = `/sales/${sale.id}/salesLineItems`;
-
+        if (!sale.salesLineItems)
+            sale.salesLineItems = [];
         this.saleService.getEndpoint(endpoint).subscribe(res => {
                 res["_embedded"].salesLineItems
                     .map(res1 => {
-                        let endpoint = res1._links.bundleSpecification.href;
+                        let endpoint = res1['_links']['bundleSpecification'].href;
                         let line = new SaleLineItem();
                         line.id = res1.id;
                         this.saleService.getEndpoint(endpoint)
@@ -27,6 +28,14 @@ export class SaleHelperService {
                             });
                     });
             })
+    }
+
+    createNewSale(email:string, id:number) {
+        return this.saleService.createNewSale(email, id);
+    }
+
+    delete(id: number) {
+        return this.saleService.delete(id);
     }
 
     getCustomer(sale: Sale) {
@@ -40,4 +49,22 @@ export class SaleHelperService {
                 sale.customer = res as User;
             })
     }
+
+    addSalesLineItem(saleId: number, bundleId: any) {
+        return this.saleService.addSalesLineItem(saleId, bundleId);
+    }
+
+    deleteSalesLineItem(saleId: number, adminId: any) {
+        return this.saleService.deleteSalesLineItem(saleId, adminId);
+        
+    }
+
+    confirmSale(id: number) {
+        return this.saleService.confirmSale(id);
+    }
+
+    findById(saleId: number) {
+        return this.saleService.findById(saleId);
+    }
+
 }
