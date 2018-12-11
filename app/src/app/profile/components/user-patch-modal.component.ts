@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {Role, User} from "../../shared/model";
+import {Component, EventEmitter, OnInit, Output} from "@angular/core";
+import {User} from "../../shared/model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserHelperService, UserService} from "../../shared/services";
-import {ExchangeUserService, NotificationService} from "../../services";
-import {a} from "@angular/core/src/render3";
+import {UserService} from "../../shared/services";
+import {AppService, ExchangeUserService, NotificationService} from "../../services";
+
 
 @Component({
     selector: 'user-patch-modal',
@@ -22,7 +22,7 @@ export class UserPatchModalComponent implements OnInit {
 
     constructor(private builder: FormBuilder,
                 private service: UserService,
-                private userHelperService: UserHelperService,
+                private appService: AppService,
                 private exchangeUserService: ExchangeUserService,
                 private messageService: NotificationService) {
         this.loading = false;
@@ -31,13 +31,12 @@ export class UserPatchModalComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.buildForm();
-
         this.exchangeUserService.getUser().subscribe(value => {
             this.user = value;
-            this.role = this.user.roles.reduce( (a, b) => {
-                return (a.id < b.id) ? a: b;
-            }).id;
-            this.buildForm();
+            this.service.getRoles(this.user.id).subscribe((res) => {
+                this.role = Math.min(...res['_embedded']['roles'].map(val => this.appService.ROLE2INDEX[val.name]));
+                this.buildForm()
+            })
         });
     }
 
@@ -46,7 +45,7 @@ export class UserPatchModalComponent implements OnInit {
 
         config['firstName'] = [this.user.firstName, [Validators.required]];
         config['lastName'] = [this.user.lastName, [Validators.required]];
-        if (!this.role || this.role == 3) {
+        if (!!this.role && this.role == 3) {
             config['height'] = [this.user.height, [
                 Validators.required,
                 Validators.max(300),
