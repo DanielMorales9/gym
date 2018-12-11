@@ -90,7 +90,6 @@ export class UserCreateModalComponent implements OnInit {
     }
 
     createUser() {
-        console.log(this.form.valid);
         this.loading = true;
         let user = new User();
         user.firstName = this.firstName.value;

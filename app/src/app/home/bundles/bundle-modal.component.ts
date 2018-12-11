@@ -40,7 +40,6 @@ export class BundleModalComponent implements OnInit {
             disabled: false,
             type: 'P'};
         if (this.edit == "true") {
-            console.log(this.modalId, this.edit);
             this.exBundleService.getBundle()
                 .subscribe(bundle => {
                     this.bundle = bundle

@@ -4,7 +4,6 @@ import {UserHelperService, UserService} from "../shared/services";
 import {Role, User} from "../shared/model";
 import {NotificationService} from "./notification.service";
 import {ChangeViewService} from "./change-view.service";
-import {ExchangeUserService} from "./exchange-user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -26,14 +25,9 @@ export class AppService {
                 private userService: UserService,
                 private userHelperService: UserHelperService,
                 private messageService: NotificationService,
-                private changeViewService: ChangeViewService,
-                private exchangeUserService: ExchangeUserService) {
+                private changeViewService: ChangeViewService) {
         this.user = new User();
         this.getRolesAndCurrentRoleView();
-        exchangeUserService.getUser().subscribe(value => {
-            console.log(value);
-            this.user = value;
-        })
     }
 
     changeView(role) {
