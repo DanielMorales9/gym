@@ -4,6 +4,7 @@ import {UserHelperService, UserService} from "../shared/services";
 import {Role, User} from "../shared/model";
 import {NotificationService} from "./notification.service";
 import {ChangeViewService} from "./change-view.service";
+import {ExchangeUserService} from "./exchange-user.service";
 
 @Injectable({
     providedIn: 'root'
@@ -16,12 +17,6 @@ export class AppService {
         'CUSTOMER' : 3
     };
 
-    INDEX2ROLE = {
-        1 :'ADMIN',
-        2: 'TRAINER',
-        3: 'CUSTOMER'
-    };
-
     current_role_view: number;
     authenticated = false;
     user : User;
@@ -31,9 +26,14 @@ export class AppService {
                 private userService: UserService,
                 private userHelperService: UserHelperService,
                 private messageService: NotificationService,
-                private changeViewService: ChangeViewService) {
+                private changeViewService: ChangeViewService,
+                private exchangeUserService: ExchangeUserService) {
         this.user = new User();
         this.getRolesAndCurrentRoleView();
+        exchangeUserService.getUser().subscribe(value => {
+            console.log(value);
+            this.user = value;
+        })
     }
 
     changeView(role) {

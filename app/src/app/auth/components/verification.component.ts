@@ -30,7 +30,7 @@ export class VerificationComponent implements OnInit {
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
         this.authService.getUserFromVerificationToken(this.token).subscribe( (res) => {
             let user = res as User;
-            if (user.verified) this.router.navigateByUrl('/');
+            if (user.verified) return this.router.navigateByUrl('/');
             else {
                 this.user = user;
                 this.userHelperService.getRoles(this.user)
@@ -58,7 +58,7 @@ export class VerificationComponent implements OnInit {
                     (isAuthenticated) => {
                         if (!isAuthenticated) return this.router.navigate(['/error'],
                             {queryParams: { "message": "Errore di Autenticazione" +
-                                        "<br>Rivolgiti all'amministratore per risolvere il problema"}});
+                                        "<br>Rivolgiti all'amministratore per risolvere il problema."}});
                         else return this.router.navigateByUrl('/');
                     })
             });

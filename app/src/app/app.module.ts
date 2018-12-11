@@ -6,7 +6,7 @@ import {AppComponent} from "./app.component";
 import {AppRouting} from "./app.routing";
 import {SharedModule} from "./shared";
 import {CoreModule} from "./core";
-import {AppService, AuthService} from "./services";
+import {AppService, AuthService, ExchangeBundleService, ExchangeSaleService, ExchangeUserService} from "./services";
 import {
     ChangeViewService,
     DateService,
@@ -31,7 +31,10 @@ import {
         ChangeViewService,
         NotificationService,
         SaleHelperService,
-        DateService
+        DateService,
+        ExchangeUserService,
+        ExchangeBundleService,
+        ExchangeSaleService
     ],
     bootstrap: [AppComponent]
 })

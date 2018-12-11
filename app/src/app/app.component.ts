@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService} from "./services/app.service";
+import {AppService} from "./services";
 import {User} from "./shared/model";
 import {NotificationService, ChangeViewService} from "./services";
 import {UserHelperService} from "./shared/services";
@@ -31,7 +31,7 @@ export class AppComponent implements OnInit {
         this.handleMessage();
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
-        })
+        });
     }
 
     private authOnNavigation() {

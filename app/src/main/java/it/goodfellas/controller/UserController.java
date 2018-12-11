@@ -23,11 +23,9 @@ public class UserController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserRepository repository;
-    private final RoleRepository roleRepository;
 
     @Autowired
-    public UserController(UserRepository repository, RoleRepository roleRepository) {
-        this.roleRepository = roleRepository;
+    public UserController(UserRepository repository) {
         this.repository = repository;
     }
 
@@ -43,24 +41,4 @@ public class UserController {
         logger.info("Query: " + email);
         return ResponseEntity.ok(new AUserAssembler().toResource(repository.findByEmail(email)));
     }
-
-
-    @GetMapping(path = "/users/{userId}/roles/{roleId}")
-    @Transactional
-    ResponseEntity<AUserResource> addRole(@PathVariable Long userId, @PathVariable Long roleId) {
-        Optional<AUser> opt = this.repository.findById(userId);
-        if(opt.isPresent()) {
-            AUser user = opt.get();
-            this.roleRepository.findById(roleId).ifPresent(role -> {
-                user.addRole(role);
-                this.repository.save(user);
-            });
-            return ResponseEntity.ok(new AUserAssembler().toResource(user));
-        }
-        else {
-            throw new UserNotFoundException(userId);
-        }
-    }
-
-
 }

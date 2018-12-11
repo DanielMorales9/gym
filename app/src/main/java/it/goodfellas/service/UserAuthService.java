@@ -130,7 +130,6 @@ public class UserAuthService implements IUserAuthService {
         logger.info("validated");
         user.setPassword(passwordEncoder.encode(password));
         user.setVerified(true);
-        user.setUpdatedAt(new Date());
         return userRepository.save(user);
     }
 

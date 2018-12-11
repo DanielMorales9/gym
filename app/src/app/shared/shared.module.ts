@@ -1,19 +1,15 @@
-import {ModuleWithProviders, NgModule} from '@angular/core';
+import { NgModule} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
     BundleDetailsComponent, NoCardComponent,
     PagerComponent,
     SaleDetailsComponent,
     SaleModalComponent, SalesComponent, SpinnerComponent,
-    UserModalComponent
 } from "./components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {EqualValidator, NumberValidator} from "./directives";
 import {
     BundlesService,
-    ExchangeBundleService,
-    ExchangeSaleService,
-    ExchangeUserService,
     SalesService,
     TimesOffService,
     TrainingService, UserHelperService,
@@ -30,7 +26,6 @@ import {
         SalesComponent,
         SaleDetailsComponent,
         SaleModalComponent,
-        UserModalComponent,
         NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
@@ -42,7 +37,6 @@ import {
         SaleDetailsComponent,
         SaleModalComponent,
         NoCardComponent,
-        UserModalComponent,
         PagerComponent,
         BundleDetailsComponent,
         NumberValidator,
@@ -52,9 +46,6 @@ import {
     providers: [
         BundlesService,
         SalesService,
-        ExchangeSaleService,
-        ExchangeBundleService,
-        ExchangeUserService,
         TimesOffService,
         TrainingService,
         UserService,

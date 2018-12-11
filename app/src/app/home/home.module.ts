@@ -7,8 +7,8 @@ import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import localeIt from '@angular/common/locales/it';
 import {BookingComponent} from "./booking";
 import {BundleModalComponent, BundlesComponent} from "./bundles";
-import {UserDetailsComponent, UsersComponent} from "./users";
-import {FormsModule} from "@angular/forms";
+import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from "./users";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
 
 registerLocaleData(localeIt);
@@ -18,6 +18,7 @@ registerLocaleData(localeIt);
     imports: [
         CommonModule,
         FormsModule,
+        ReactiveFormsModule,
         CalendarModule.forRoot({
             provide: DateAdapter,
             useFactory: adapterFactory
@@ -29,6 +30,7 @@ registerLocaleData(localeIt);
     declarations: [
         HomeComponent,
         UsersComponent,
+        UserCreateModalComponent,
         UserDetailsComponent,
         BundlesComponent,
         BundleModalComponent,
