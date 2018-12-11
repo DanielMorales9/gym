@@ -67,6 +67,8 @@ export class ChangePasswordModalComponent implements OnInit {
                     class: "alert-success"
                 };
                 this.messageService.sendMessage(message);
+            }, error1 => {
+                this.error = true
             })
     }
 

@@ -29,12 +29,6 @@
     </tr>
 </table>
 <pager #pagerComponent (pager)="getUsersByPage()"></pager>
-<user-modal (done)="getUsersByPage()"
-            [role]="current_role_view"
-            modalClosingMessage=" è stato creato!"
-            modalCloseId="post-close"
-            modalMode="create"
-            modalTitle="Registra Nuova Utenza"
-            modalId="postModal">
 
-</user-modal>
+<user-create-modal (done)="getUsersByPage()">
+</user-create-modal>

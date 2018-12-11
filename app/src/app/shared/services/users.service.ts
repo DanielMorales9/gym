@@ -32,14 +32,8 @@ export class UserService {
         return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
     }
 
-    patch(user: User) : Observable<Object> {
+    patch(user) : Observable<Object> {
         return this.http.patch(`/users/${user.id}`, user);
-    }
-
-    addRole(userId: any, roleType: any) {
-        // TODO change method to PUT
-        let roleId = (roleType == "customer") ? 3 : (roleType == "trainer") ? 2 : 1;
-        return this.http.get(`/users/${userId}/roles/${roleId}`);
     }
 
     getRoles(id: number): Observable<Object> {

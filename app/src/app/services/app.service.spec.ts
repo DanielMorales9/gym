@@ -5,6 +5,7 @@ import {UserHelperService, UserService} from "../shared/services";
 import {Role, User} from "../shared/model";
 import {NotificationService} from "./notification.service";
 import {ChangeViewService} from "./change-view.service";
+import {ExchangeUserService} from "./exchange-user.service";
 
 describe('AppService', () => {
 
@@ -19,7 +20,8 @@ describe('AppService', () => {
                 UserService,
                 UserHelperService,
                 NotificationService,
-                ChangeViewService
+                ChangeViewService,
+                ExchangeUserService
             ]
         });
 

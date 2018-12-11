@@ -1,8 +1,8 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {User} from "../../shared/model";
-import {ExchangeUserService, UserHelperService} from "../../shared/services";
-import {AppService} from "../../services";
+import {Role, User} from "../../shared/model";
+import {UserHelperService} from "../../shared/services";
+import {AppService, ExchangeUserService} from "../../services";
 import {ChangeViewService} from "../../services";
 
 
@@ -13,16 +13,16 @@ import {ChangeViewService} from "../../services";
 export class UserProfileComponent implements OnInit {
 
     user: User;
+    current_role_view: number;
 
     private sub: any;
-    current_role_view: number;
 
     constructor(private appService: AppService,
                 private userHelperService: UserHelperService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private changeViewService: ChangeViewService,
-                private userExchangeService: ExchangeUserService) {
+                private exchangeUserService: ExchangeUserService,
+                private changeViewService: ChangeViewService) {
         this.current_role_view = this.appService.current_role_view;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
@@ -41,8 +41,8 @@ export class UserProfileComponent implements OnInit {
     private getUser() {
         return (user) => {
             this.user = user;
-            this.userHelperService.getRoles(user, ()  => {
-                this.userExchangeService.sendUser(this.user)
+            this.userHelperService.getRoles(this.user, () => {
+                this.exchangeUserService.sendUser(this.user)
             });
         }
     }
@@ -59,9 +59,4 @@ export class UserProfileComponent implements OnInit {
             this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
         }
     }
-
-    editUser() {
-        this.userExchangeService.sendUser(this.user);
-    }
-
 }

@@ -1,0 +1,76 @@
+<div class="modal" tabindex="-1" role="dialog" id="patchModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form [formGroup]="form" role="form" novalidate (ngSubmit)="editUser()">
+                <div class="modal-header">
+                    <h5 class="modal-title">Modifica i Dati</h5>
+                    <button type="button" class="close" id="patchModalClose" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="firstNamePatchModal" class="sr-only">Nome:</label>
+                        <input name="firstName"
+                               placeholder="Nome"
+                               class="form-control"
+                               id="firstNamePatchModal"
+                               [(ngModel)]="user.firstName"
+                               type="text"
+                               formControlName="firstName"/>
+                        <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
+                            <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastNamePatchModal" class="sr-only">Cognome:</label>
+                        <input name="lastName"
+                               [(ngModel)]="user.lastName"
+                               placeholder="Cognome"
+                               class="form-control"
+                               id="lastNamePatchModal"
+                               type="text"
+                               formControlName="lastName"/>
+                        <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
+                            <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="role === 3">
+                        <label for="heightPatchModal" class="sr-only">Altezza</label>
+                        <input type="number"
+                               [(ngModel)]="user.height"
+                               placeholder="Altezza (cm)"
+                               class="form-control"
+                               id="heightPatchModal"
+                               numeric="true"
+                               name="height"
+                               formControlName="height" />
+                        <div *ngIf="height.touched && height.invalid" class="error-message">
+                            <div *ngIf="!!height.errors?.required">Altezza obbligatoria</div>
+                            <div *ngIf="!!height.errors?.min || !!height.errors?.max">Altezza non valida</div>
+                        </div>
+                    </div>
+                    <div class="form-group" *ngIf="role === 3">
+                        <label for="weightPatchModal" class="sr-only">Peso</label>
+                        <input type="number"
+                               [(ngModel)]="user.weight"
+                               placeholder="Peso (kg)"
+                               class="form-control"
+                               id="weightPatchModal"
+                               numeric="true"
+                               name="weight"
+                               formControlName="weight"/>
+                        <div *ngIf="weight.touched && weight.invalid" class="error-message">
+                            <div *ngIf="!!weight.errors?.required">Peso obbligatorio</div>
+                            <div *ngIf="!!weight.errors?.min || !!weight.errors?.max">Peso non valido</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<spinner [loading]="loading"></spinner>

@@ -51,10 +51,6 @@ public abstract class AUser implements DefaultRoles {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
-    @Column(name = "updatedat")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name="users_roles",
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}),
@@ -76,14 +72,6 @@ public abstract class AUser implements DefaultRoles {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public Long getId() {

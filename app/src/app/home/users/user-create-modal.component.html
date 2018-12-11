@@ -1,0 +1,74 @@
+<div class="modal" tabindex="-1" role="dialog" id="postModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && createUser()">
+                <div class="modal-header">
+                    <h5 class="modal-title">Registra Nuova Utenza</h5>
+                    <button type="button" class="close" id="postModalCloseId" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="firstNamePostModal" class="sr-only">Nome:</label>
+                        <input name="firstName"
+                               placeholder="Nome"
+                               class="form-control"
+                               id="firstNamePostModal"
+                               type="text"
+                               formControlName="firstName" />
+                        <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
+                            <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastNamePostModal" class="sr-only">Cognome:</label>
+                        <input name="lastName"
+                               placeholder="Cognome"
+                               class="form-control"
+                               id="lastNamePostModal"
+                               type="text"
+                               formControlName="lastName"/>
+                        <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
+                            <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="emailPostModal" class="sr-only">Email:</label>
+                        <input name="email"
+                               placeholder="Email"
+                               class="form-control"
+                               id="emailPostModal"
+                               type="text"
+                               formControlName="email" />
+                        <div *ngIf="email.touched && email.invalid" class="error-message">
+                            <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                            <div *ngIf="!!email.errors?.email">Email non valida</div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="rolePostModal" ><b>Ruolo</b></label>
+                        <select class="form-control"
+                                name="role"
+                                id="rolePostModal"
+                                type="text"
+                                formControlName="type">
+                            <option value="customer">Utente</option>
+                            <option value="admin">Amministratore</option>
+                            <option value="trainer">Allenatore</option>
+                        </select>
+                        <div *ngIf="type.touched && type.invalid" class="error-message">
+                            <div *ngIf="!!type.errors?.required">Ruolo obbligatorio</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit"
+                            class="btn btn-lg btn-primary btn-block">Invia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<spinner [loading]="loading"></spinner>

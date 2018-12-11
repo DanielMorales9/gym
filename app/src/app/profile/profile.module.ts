@@ -5,7 +5,7 @@ import {
     ChangePasswordModalComponent,
     MakeSaleComponent,
     SaleSummaryComponent,
-    TrainingComponent, TrainingDetailsComponent,
+    TrainingComponent, TrainingDetailsComponent, UserPatchModalComponent,
     UserProfileComponent
 } from "./components";
 import {SharedModule} from "../shared";
@@ -24,6 +24,7 @@ import {ProfileComponent} from "./profile.component";
         ProfileComponent,
         UserProfileComponent,
         MakeSaleComponent,
+        UserPatchModalComponent,
         SaleSummaryComponent,
         ChangePasswordModalComponent,
         TrainingComponent,

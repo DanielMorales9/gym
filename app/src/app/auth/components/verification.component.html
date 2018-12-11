@@ -40,7 +40,7 @@
                                    required validateEqual="password"
                             />
                             <div *ngIf="f.submitted && confirmPassword.invalid" class="error-message">
-                                <div *ngIf="confirmPassword.errors.required">Conferma password obbligatoria</div>
+                                <div *ngIf="confirmPassword.errors?.required">Conferma password obbligatoria</div>
                                 <div *ngIf="!confirmPassword.valid">Le password non sono identiche</div>
                             </div>
                         </div>

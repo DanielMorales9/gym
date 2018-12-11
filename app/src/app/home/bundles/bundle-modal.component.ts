@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {BundlesService, ExchangeBundleService} from "../../shared/services";
+import {BundlesService} from "../../shared/services";
 import {Bundle} from "../../shared/model";
-import {NotificationService} from "../../services";
+import {ExchangeBundleService, NotificationService} from "../../services";
 
 @Component({
     selector: 'bundle-modal',

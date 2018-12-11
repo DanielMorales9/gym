@@ -125,20 +125,6 @@ describe('UserService', () => {
         req.flush(user);
     });
 
-    it("testing #addRole", done => {
-        let user = new User();
-        user.id = 1;
-        userService.addRole(user.id, "customer").subscribe(res => {
-            expect(res).toEqual([]);
-            done();
-        });
-        let req = backend.expectOne({
-            url: "/users/1/roles/3",
-            method: "GET"
-        });
-        req.flush([]);
-    });
-
     it("testing #getCurrentTrainingBundles", done => {
         let user = new User();
         user.id = 1;

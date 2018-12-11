@@ -2,15 +2,10 @@
     <div class="card-body">
         <div class="row">
             <div class="col-md-1 d-none d-md-inline"></div>
-            <div class="col-md-9 col-8"><h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5></div>
+            <div class="col-md-10 col-10"><h5 class="card-title">{{user.firstName}} {{user.lastName}}</h5></div>
             <div class="col-md-1 col-2">
-                <a (click)="editUser()" [hidden]="current_role_view > 1" data-toggle="modal" data-target="#putModal">
-                    <i class="fa fa-plus" aria-hidden="true" title="Modifica"></i>
-                </a>
-            </div>
-            <div class="col-md-1 col-2  ">
-                <a (click)="editUser()" [hidden]="current_role_view > 1" data-toggle="modal" data-target="#patchModal">
-                    <i class="fa fa-edit" aria-hidden="true" title="Aggiungi Ruolo"></i>
+                <a [hidden]="current_role_view > 1" data-toggle="modal" data-target="#patchModal">
+                    <i class="fa fa-edit" aria-hidden="true" title="Modifica Dati"></i>
                 </a>
             </div>
         </div>
@@ -56,29 +51,15 @@
             <div class="col-md-1 d-none d-md-inline"></div>
             <div class="card-text col-md-4">
                 <i class="fa fa-weight"></i>&nbsp;&nbsp;
-                {{user.weight}}
+                {{user.weight}}&nbsp;kg
             </div>
             <div class="card-text col-md-4">
                 <i class="fa fa-text-height"></i>&nbsp;&nbsp;
-                {{user.height}}
+                {{user.height}}&nbsp;cm
             </div>
         </div>
 
     </div>
 </div>
 
-<user-modal (done)="updateUser(user.id)"
-            [role]="current_role_view"
-            modalMode="edit"
-            modalClosingMessage=" è stato modificato!"
-            modalCloseId="patch-close"
-            modalTitle="Modifica Dati"
-            modalId="patchModal"></user-modal>
-
-<user-modal (done)="updateUser(user.id)"
-            [role]="current_role_view"
-            modalMode="add"
-            modalClosingMessage=" è stato aggiunto!"
-            modalCloseId="put-close"
-            modalTitle="Aggiungi Ruolo"
-            modalId="putModal"></user-modal>
+<user-patch-modal (done)="updateUser(user.id)"></user-patch-modal>

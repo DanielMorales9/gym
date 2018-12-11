@@ -1,6 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService} from "../services/app.service";
-import {ChangeViewService} from "../services/change-view.service";
+import {AppService} from "../services";
+import {ChangeViewService} from "../services";
+import {User} from "../shared/model";
+import {Router} from "@angular/router";
 
 @Component({
     templateUrl: './home.component.html',
@@ -8,16 +10,15 @@ import {ChangeViewService} from "../services/change-view.service";
 })
 export class HomeComponent implements OnInit {
 
-    user = null;
+    user: User;
     current_role_view: number;
     authenticated: boolean = false;
 
     constructor(private app: AppService,
+                private router: Router,
                 private changeViewService: ChangeViewService) { }
 
     ngOnInit() :void {
-        this.user = this.app.user;
-        this.current_role_view = this.app.current_role_view;
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         });
@@ -26,9 +27,10 @@ export class HomeComponent implements OnInit {
 
     authenticate() {
         this.app.authenticate(undefined, (isAuthenticated) => {
-            this.authenticated = isAuthenticated
-        }, err => {
-            console.log(err)
+            this.current_role_view = this.app.current_role_view;
+            this.authenticated = isAuthenticated;
+            if (this.authenticated) this.user = this.app.user;
         });
     }
+
 }
