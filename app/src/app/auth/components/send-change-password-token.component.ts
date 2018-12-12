@@ -36,8 +36,8 @@ export class SendChangePasswordTokenComponent implements OnInit {
             if (err.status == 502) {
                 this.router.navigate(['/error'],
                     {queryParams: {
-                            "title": "Verifica prima il tuo account",
-                            "message":
+                            title: "Verifica prima il tuo account",
+                            message:
                                 "Controlla che nella tua posta elettronica ci sia un email di verifica."+
                                 "<br>In caso non dovessi trovare la mail, rivolgiti in segreteria."
                         }});
