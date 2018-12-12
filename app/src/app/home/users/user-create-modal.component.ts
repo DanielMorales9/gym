@@ -21,7 +21,7 @@ export class UserCreateModalComponent implements OnInit {
     constructor(private builder: FormBuilder,
                 private service: UserService,
                 private userHelperService: UserHelperService,
-                private messageService: NotificationService) {
+                private notificationService: NotificationService) {
         this.loading = false;
     }
 
@@ -65,7 +65,7 @@ export class UserCreateModalComponent implements OnInit {
                 text: `L'utente ${this.lastName.value} è stato creato`,
                 class: "alert-success"
             };
-            this.messageService.sendMessage(message);
+            this.notificationService.sendMessage(message);
             this.done.emit('completed');
         }
     }
@@ -85,7 +85,7 @@ export class UserCreateModalComponent implements OnInit {
                 text: text,
                 class: "alert-danger"
             };
-            this.messageService.sendMessage(message);
+            this.notificationService.sendMessage(message);
         }
     }
 

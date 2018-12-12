@@ -1,24 +1,37 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
-import {AuthService} from "../../services";
+import {AuthService, NotificationService} from "../../services";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     templateUrl: './send-change-password-token.component.html',
     styleUrls: ['../../app.component.css']
 })
-export class SendChangePasswordTokenComponent {
+export class SendChangePasswordTokenComponent implements OnInit {
 
-    email: string;
-    error: boolean = false;
-    sent: boolean = false;
+    form: FormGroup;
 
     constructor(private authService: AuthService,
+                private builder: FormBuilder,
+                private notificationService: NotificationService,
                 private router: Router) {
     }
 
+    ngOnInit(): void {
+        this.buildForm();
+    }
+
     changePassword() {
-        this.authService.findByEmail(this.email).subscribe(res => {
-            this.sent = true;
+        this.authService.findByEmail(this.email.value).subscribe(_ => {
+            this.buildForm();
+            let message = "Controlla la tua casella postale,<br>" +
+                "ti abbiamo inviato un link per modificare la tua password.";
+            let className = "alert-success";
+            this.notificationService.sendMessage({
+                text: message,
+                class: className
+            });
+            return this.router.navigateByUrl("/home")
         }, err => {
             if (err.status == 502) {
                 this.router.navigate(['/error'],
@@ -29,12 +42,21 @@ export class SendChangePasswordTokenComponent {
                                 "<br>In caso non dovessi trovare la mail, rivolgiti in segreteria."
                         }});
             }
-            else this.error = true;
+            else this.notificationService.sendMessage({
+                text: "Qualcosa è andato storto!",
+                class: "alert-danger"
+            });
         })
     }
 
-    end() {
-        this.router.navigateByUrl("/home")
+    get email() {
+        return this.form.get("email");
+    }
+
+    private buildForm() {
+        this.form = this.builder.group({
+            email: ['', [Validators.required, Validators.email]]
+        });
     }
 
 }

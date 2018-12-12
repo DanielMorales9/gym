@@ -4,6 +4,8 @@ import {User} from "../../shared/model";
 import {AppService} from "../../services";
 import {UserHelperService} from "../../shared/services";
 import {AuthService, NotificationService} from "../../services";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {passwordMatchValidator} from "../../shared/directives/password-match-validator";
 
 
 @Component({
@@ -13,6 +15,7 @@ import {AuthService, NotificationService} from "../../services";
 export class VerificationComponent implements OnInit {
 
     user: User;
+    form : FormGroup;
 
     token = '';
     toResendToken = false;
@@ -20,6 +23,7 @@ export class VerificationComponent implements OnInit {
     constructor(private authService: AuthService,
                 private appService: AppService,
                 private userHelperService: UserHelperService,
+                private builder: FormBuilder,
                 private notificationService: NotificationService,
                 private activatedRoute: ActivatedRoute,
                 private router: Router) {
@@ -27,13 +31,15 @@ export class VerificationComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = new User();
+        this.buildForm();
+
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
         this.authService.getUserFromVerificationToken(this.token).subscribe( (res) => {
             let user = res as User;
             if (user.verified) return this.router.navigateByUrl('/');
             else {
                 this.user = user;
-                this.userHelperService.getRoles(this.user)
+                this.userHelperService.getRoles(this.user);
             }
         },(err) => {
             if (err.status == 510) {
@@ -49,9 +55,32 @@ export class VerificationComponent implements OnInit {
         });
     }
 
+    get password() {
+        return this.form.get("password")
+    }
+
+    get confirmPassword() {
+        return this.form.get("confirmPassword")
+    }
+
+
+    private buildForm() {
+        this.form = this.builder.group({
+                password: ['', [
+                    Validators.required,
+                    Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^$@$!%*#?&]*[$@$!%*#?&])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
+                ]],
+                confirmPassword: ['', Validators.required]},
+            {
+                validator: passwordMatchValidator.bind(this)
+            })
+    }
+
     verifyPassword() {
         let roleName = this.user.roles.reduce((a, b) => {return ( a.id < b.id) ? a : b;}).name.toLowerCase();
 
+        this.user.password = this.password.value;
+        this.user.confirmPassword = this.confirmPassword.value;
         this.authService.verifyPassword({email: this.user.email, password: this.user.password}, roleName)
             .subscribe( (response: User) => {
                 this.appService.authenticate({username: response.email, password: this.user.password},
@@ -74,5 +103,4 @@ export class VerificationComponent implements OnInit {
             return this.router.navigateByUrl("/")
         })
     }
-
 }
