@@ -3,6 +3,7 @@ import {User} from "../../shared/model";
 import {Component, Input, OnInit} from "@angular/core";
 import {AbstractControl, Form, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {EqualValidator} from "../../shared/directives";
+import {passwordMatchValidator} from "../../shared/directives/password-match-validator";
 
 @Component({
     selector: 'change-password-modal',
@@ -31,11 +32,10 @@ export class ChangePasswordModalComponent implements OnInit {
                 password: ['', [
                     Validators.required,
                     Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^$@$!%*#?&]*[$@$!%*#?&])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
-                ]
-                ],
+                ]],
                 confirmPassword: ['', Validators.required]},
             {
-                validator: this.passwordMatchValidator.bind(this)
+                validator: passwordMatchValidator.bind(this)
             })
     }
 
@@ -73,15 +73,5 @@ export class ChangePasswordModalComponent implements OnInit {
                     class: "alert-danger"
                 };
                 this.messageService.sendMessage(message);            })
-    }
-
-    passwordMatchValidator(control: AbstractControl) {
-        const password: string = control.get('password').value; // get password from our password form control
-        const confirmPassword: string = control.get('confirmPassword').value; // get password from our confirmPassword form control
-        // compare is the password math
-        if (password !== confirmPassword) {
-            // if they don't match, set an error in our confirmPassword form control
-            control.get('confirmPassword').setErrors({ noPasswordMatch: true });
-        }
     }
 }
