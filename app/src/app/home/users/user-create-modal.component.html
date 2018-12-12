@@ -16,7 +16,9 @@
                                class="form-control"
                                id="firstNamePostModal"
                                type="text"
-                               formControlName="firstName" />
+                               formControlName="firstName"
+                               [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
+                        />
                         <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
                             <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
                         </div>
@@ -28,7 +30,9 @@
                                class="form-control"
                                id="lastNamePostModal"
                                type="text"
-                               formControlName="lastName"/>
+                               formControlName="lastName"
+                               [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"
+                        />
                         <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
                             <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
                         </div>
@@ -40,7 +44,9 @@
                                class="form-control"
                                id="emailPostModal"
                                type="text"
-                               formControlName="email" />
+                               formControlName="email"
+                               [ngClass]="{ 'is-invalid': email.touched && email.invalid }"
+                        />
                         <div *ngIf="email.touched && email.invalid" class="error-message">
                             <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
                             <div *ngIf="!!email.errors?.email">Email non valida</div>
@@ -53,7 +59,9 @@
                                 name="role"
                                 id="rolePostModal"
                                 type="text"
-                                formControlName="type">
+                                formControlName="type"
+                                [ngClass]="{ 'is-invalid': type.touched && type.invalid }"
+                        >
                             <option value="customer">Utente</option>
                             <option value="admin">Amministratore</option>
                             <option value="trainer">Allenatore</option>
