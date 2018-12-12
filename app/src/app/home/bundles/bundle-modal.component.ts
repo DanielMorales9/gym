@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {BundlesService} from "../../shared/services";
 import {Bundle} from "../../shared/model";
 import {ExchangeBundleService, NotificationService} from "../../services";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'bundle-modal',
@@ -10,9 +11,13 @@ import {ExchangeBundleService, NotificationService} from "../../services";
 })
 export class BundleModalComponent implements OnInit {
 
+    private DEFAULT_TYPE = "P";
+
     @Output()
     modalEvent = new EventEmitter();
+
     bundle: Bundle;
+    form: FormGroup;
     loading: boolean;
 
     @Input() public modalTitle: string;
@@ -21,31 +26,56 @@ export class BundleModalComponent implements OnInit {
     @Input() public modalClosingMessage: string;
     @Input() public edit: string;
 
-    //TODO: controlla che la validazione funzioni
-
     constructor(private service: BundlesService,
-                private exBundleService: ExchangeBundleService,
+                private builder: FormBuilder,
+                private exchangeBundleService: ExchangeBundleService,
                 private messageService: NotificationService) {
         this.loading = false;
 
     }
 
     ngOnInit(): void {
-        this.bundle = {
-            id: NaN,
-            name: '',
-            price: NaN,
-            description: undefined,
-            numSessions: undefined,
-            disabled: false,
-            type: 'P'};
-        if (this.edit == "true") {
-            this.exBundleService.getBundle()
-                .subscribe(bundle => {
-                    this.bundle = bundle
-                })
+        this.bundle = new Bundle();
 
-        }
+        this.buildForm();
+
+        if (this.edit == "true")
+            this.exchangeBundleService.getBundle()
+                .subscribe(bundle => {
+                    this.bundle = bundle;
+                    this.buildForm();
+                })
+    }
+
+    private buildForm() {
+        this.form = this.builder.group({
+            name: [this.bundle.name, [Validators.required]],
+            price: [this.bundle.price, [
+                Validators.required,
+                Validators.pattern(/^\d+\.\d{2}$/)
+            ]],
+            numSessions: [this.bundle.numSessions, [
+                Validators.required,
+                Validators.pattern(/^\d.*/)
+            ]],
+            description: [this.bundle.description, Validators.required ],
+        })
+    }
+
+    get name() {
+        return this.form.get("name")
+    }
+
+    get price() {
+        return this.form.get("price")
+    }
+
+    get numSessions() {
+        return this.form.get("numSessions")
+    }
+
+    get description() {
+        return this.form.get("description")
     }
 
     _success() {
@@ -74,19 +104,27 @@ export class BundleModalComponent implements OnInit {
     }
 
     submitBundle() {
-        if (this.edit == "true") {
-            this.bundle.type = "P";
-            this.service.put(this.bundle)
-                .subscribe(this._success(), this._error());
-
-        }
+        this.loading = true;
+        this.getBundleFromForm();
+        console.log(this.bundle);
+        if (this.edit == "true")
+            this.service.put(this.bundle).subscribe(this._success(), this._error());
         else {
-            const bundle = this.bundle;
-            delete bundle.id;
-            this.service.post(this.bundle)
-                .subscribe(this._success(), this._error());
+            delete this.bundle.id;
+            this.service.post(this.bundle).subscribe(this._success(), this._error());
         }
-        this.loading = true
     }
 
+
+    private getBundleFromForm() {
+        let bundle = new Bundle();
+        bundle.id = this.bundle.id;
+        bundle.name = this.name.value;
+        bundle.price = this.price.value;
+        bundle.description = this.description.value;
+        bundle.numSessions = this.numSessions.value;
+        bundle.disabled = (this.bundle.disabled !== undefined) ? this.bundle.disabled : false;
+        bundle.type = this.DEFAULT_TYPE;
+        this.bundle = bundle;
+    }
 }

@@ -15,13 +15,11 @@ export class ChangePasswordModalComponent implements OnInit {
 
     loading: boolean;
     form: FormGroup;
-    error: boolean;
 
     constructor(private authService: AuthService,
                 private messageService: NotificationService,
                 private builder: FormBuilder) {
         this.loading = false;
-        this.error = false;
     }
 
 
@@ -67,9 +65,14 @@ export class ChangePasswordModalComponent implements OnInit {
                     class: "alert-success"
                 };
                 this.messageService.sendMessage(message);
-            }, error1 => {
-                this.error = true
-            })
+            }, _ => {
+                this.loading = false;
+                document.getElementById("changePasswordModal").click();
+                let message ={
+                    text: "Qualcosa è andato storto",
+                    class: "alert-danger"
+                };
+                this.messageService.sendMessage(message);            })
     }
 
     passwordMatchValidator(control: AbstractControl) {
