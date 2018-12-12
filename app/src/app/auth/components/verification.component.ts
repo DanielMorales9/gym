@@ -86,7 +86,7 @@ export class VerificationComponent implements OnInit {
                 this.appService.authenticate({username: response.email, password: this.user.password},
                     (isAuthenticated) => {
                         if (!isAuthenticated) return this.router.navigate(['/error'],
-                            {queryParams: { "message": "Errore di Autenticazione" +
+                            {queryParams: { message: "Errore di Autenticazione" +
                                         "<br>Rivolgiti all'amministratore per risolvere il problema."}});
                         else return this.router.navigateByUrl('/');
                     })
