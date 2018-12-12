@@ -4,7 +4,7 @@
         <div class="col-lg-4 col-12">
             <div class="card">
                 <div class="card-body">
-                    <form role="form" class="form-gym" (submit)="login()">
+                    <form [formGroup]="form" role="form" class="form-gym" (submit)="form.valid && login()">
                         <h2 class="form-header">Login</h2>
                         <div class="form-group">
                             <label for="email" class="sr-only">Email</label>
@@ -12,7 +12,13 @@
                                    class="form-control"
                                    id="email"
                                    name="email"
-                                   [(ngModel)]="credentials.username"/>
+                                   formControlName="email"
+                                   [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
+                            <div *ngIf="email.touched && email.invalid" class="error-message">
+                                <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                                <div *ngIf="!!email.errors?.email"><p>
+                                    Email non valida</p></div>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="password" class="sr-only">Password</label>
@@ -20,7 +26,11 @@
                                    class="form-control"
                                    id="password"
                                    name="password"
-                                   [(ngModel)]="credentials.password"/>
+                                   formControlName="password"
+                                   [ngClass]="{ 'is-invalid': password.touched && password.invalid }" required/>
+                            <div *ngIf="password.touched && password.invalid" class="error-message">
+                                <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
+                            </div>
                         </div>
                         <div class="error-message" *ngIf="error"
                              style="padding-bottom: .5rem; text-align: center">
