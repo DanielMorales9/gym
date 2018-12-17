@@ -29,14 +29,14 @@ export class ModifyPasswordComponent implements OnInit {
 
     ngOnInit(): void {
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
-
+        this.buildForm();
         this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
             this.user = res;
             this.userHelperService.getRoles(this.user);
             this.buildForm();
         }, (err) => {
             this.toResendToken = true;
-            this.router.navigate(['/error'], {
+            return this.router.navigate(['/error'], {
                 queryParams: { "message": err.error.message }
             })
         });
