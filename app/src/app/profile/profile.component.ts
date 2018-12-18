@@ -87,7 +87,6 @@ export class ProfileComponent implements OnInit {
 
     isAdmin() {
         if (!!this.user.roles) {
-            console.log(this.user.roles['_embedded']);
             if (!this.user.roles['_embedded'] && this.user.roles.length > 0) {
                 let role = this.user.roles.reduce((min,val) => Math.min(min, val.id), 3);
                 return role == 1;
