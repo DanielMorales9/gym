@@ -52,11 +52,11 @@ export class BundleModalComponent implements OnInit {
             name: [this.bundle.name, [Validators.required]],
             price: [this.bundle.price, [
                 Validators.required,
-                Validators.pattern(/^\d+\.\d{2}$/)
+                Validators.pattern(/^\d+\.?\d{0,2}$/)
             ]],
             numSessions: [this.bundle.numSessions, [
                 Validators.required,
-                Validators.pattern(/^\d.*/)
+                Validators.pattern(/^\d+$/)
             ]],
             description: [this.bundle.description, Validators.required ],
         })

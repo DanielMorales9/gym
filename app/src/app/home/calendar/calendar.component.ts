@@ -15,7 +15,7 @@ import {
     TimesOffService,
     TrainingService, UserHelperService
 } from "../../shared/services";
-import {AppService} from "../../services/app.service";
+import {AppService} from "../../services";
 import {ChangeViewService, NotificationService} from "../../services";
 
 
@@ -186,7 +186,18 @@ export class BookingComponent implements OnInit {
         return {startTime, endTime};
     }
 
+    private defaultError() {
+        return err => {
+            let message = {
+                text: err.error,
+                class: "alert-danger"
+            };
+            this.messageService.sendMessage(message);
+        }
+    }
+
     private checkAvailability(action, role, date, event) {
+        console.log(date);
         if (date < new Date()) {
             return;
         }
@@ -194,13 +205,7 @@ export class BookingComponent implements OnInit {
         this.trainingService.check(date, this.user.id,res => {
             this.modalData = { action, title, role, event };
             this.modal.open(this.modalContent);
-        }, err => {
-            let message = {
-                text: err.error,
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-        });
+        }, this.defaultError());
     }
 
     beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
@@ -507,6 +512,7 @@ export class BookingComponent implements OnInit {
     }
 
     dayClicked(event): void {
+        console.log(event);
         if (this.viewDate.getTime() === event.day.date.getTime()) {
             if (this.activeDayIsOpen || event.day.events.length == 0) {
                 this.view = CalendarView.Day;
