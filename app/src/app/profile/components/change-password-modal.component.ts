@@ -1,9 +1,8 @@
 import {AuthService, NotificationService} from "../../services";
 import {User} from "../../shared/model";
 import {Component, Input, OnInit} from "@angular/core";
-import {AbstractControl, Form, FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {EqualValidator} from "../../shared/directives";
-import {passwordMatchValidator} from "../../shared/directives/password-match-validator";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {passwordMatchValidator} from "../../shared/directives";
 
 @Component({
     selector: 'change-password-modal',
@@ -22,8 +21,6 @@ export class ChangePasswordModalComponent implements OnInit {
                 private builder: FormBuilder) {
         this.loading = false;
     }
-
-
 
     ngOnInit(): void {
 
@@ -72,6 +69,7 @@ export class ChangePasswordModalComponent implements OnInit {
                     text: "Qualcosa è andato storto",
                     class: "alert-danger"
                 };
-                this.messageService.sendMessage(message);            })
+                this.messageService.sendMessage(message);
+            })
     }
 }
