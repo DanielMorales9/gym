@@ -34,7 +34,6 @@ export class AdminCalendarComponent extends BaseCalendar {
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.timesOffService.getTimesOff(startDay, endDay, undefined, "admin")
             .subscribe((value: Object[]) => {
-                console.log(value);
                 value.map(res => {
                     this.events.push(this.formatEvent(res))
                 });
@@ -43,6 +42,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
+        console.log(event);
         if (event.day.date >= new Date()) {
             let type = "admin";
             let {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(event.day.date));

@@ -78,7 +78,7 @@
             locale="it"
             [hourSegments]="1"
             [refresh]="refresh"
-            (dayHeaderClicked)="header('header', $event.event)"
+            (dayHeaderClicked)="header('header', $event)"
             (hourSegmentClicked)="handleEvent('hour', $event.event)"
             (eventClicked)="handleEvent('info', $event.event)"
             (eventTimesChanged)="handleEvent('none', $event.event)">

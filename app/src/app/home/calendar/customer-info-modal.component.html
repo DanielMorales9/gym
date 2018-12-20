@@ -10,9 +10,18 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body" >
-                <div class="row" >
-                    <div class="col-12">
+            <div [ngSwitch]="modalData?.event.meta?.type">
+                <div *ngSwitchCase="'admin'">
+                    <div class="modal-body" >
+                        <i class="fas fa-door-closed"></i>&nbsp;
+                        La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}.
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'reservation'">
+                    <div class="modal-body" >
                         <div *ngIf="!!modalData?.event.meta">
                             <i class="fas fa-check" *ngIf="modalData?.event.meta?.confirmed"></i>
                             <i class="fas fa-ban" *ngIf="!modalData?.event.meta?.confirmed"></i>&nbsp;
@@ -21,10 +30,10 @@
                             <span *ngIf="!modalData?.event.meta.confirmed"> non</span> è stato confermato.
                         </div>
                     </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
             </div>
         </div>
     </div>

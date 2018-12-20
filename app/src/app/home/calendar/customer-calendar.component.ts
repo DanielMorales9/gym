@@ -48,7 +48,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     getEvents() {
         this.events = [];
         this.getReservations();
-        // TODO Times Off
+        this.getTimesOff();
     }
 
     private checkAvailability(action: string, role: number, event: any) {
@@ -73,8 +73,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
         }
     }
 
-
-
     getReservations() {
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.trainingService
@@ -87,8 +85,18 @@ export class CustomerCalendarComponent extends BaseCalendar {
             })
     }
 
-    getTimesOff() {
-    }
 
+    getTimesOff() {
+        let {startDay, endDay} = this.getStartAndEndTimeByView();
+        this.timesOffService.getTimesOff(startDay, endDay, undefined, 'admin')
+            .subscribe((value : Object[]) => {
+                    value.map(res => {
+                        this.events.push(this.formatEvent(res))
+                    });
+                }, undefined,
+                () => {
+                    this.refreshView();
+                })
+    }
 
 }
