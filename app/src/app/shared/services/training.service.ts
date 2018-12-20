@@ -32,8 +32,11 @@ export class TrainingService {
         return this.http.get(endpoint);
     }
 
-    delete(id: number) {
-        return this.http.delete(`/reservations/${id}`);
+    delete(id: number, type?: string) {
+        let endpoint = `/reservations/${id}`;
+        if (type)
+            endpoint += `?type=${type}`;
+        return this.http.delete(endpoint);
     }
 
     confirm(id: number) : Observable<any> {
