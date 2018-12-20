@@ -17,6 +17,7 @@ import it.goodfellas.repository.UserRepository;
 import it.goodfellas.service.CustomerService;
 import it.goodfellas.service.ReservationService;
 import it.goodfellas.service.TrainingBundleService;
+import it.goodfellas.utility.MailSenderUtility;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +35,12 @@ import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import javax.websocket.server.PathParam;
 import java.security.Principal;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -54,6 +57,7 @@ public class TrainingReservationController {
     private final TrainingBundleService trainingBundleService;
     private final TrainingSessionRepository sessionRepository;
     private final UserRepository userRepository;
+    private final JavaMailSender mailSender;
 
     @Value("${reservationBeforeHours}")
     Integer reservationBeforeHours;
@@ -68,6 +72,7 @@ public class TrainingReservationController {
                                          TrainingSessionRepository sessionRepository,
                                          CustomerService customerService,
                                          UserRepository userRepository,
+                                         JavaMailSender mailSender,
                                          ReservationService reservationService) {
         this.timeRepository = timeRepository;
         this.trainerRepository = trainerRepository;
@@ -76,6 +81,7 @@ public class TrainingReservationController {
         this.userRepository = userRepository;
         this.customerService = customerService;
         this.reservationService = reservationService;
+        this.mailSender = mailSender;
     }
 
     @GetMapping(path = "/reservations/checkAvailabilityAndEnablement",
@@ -203,7 +209,20 @@ public class TrainingReservationController {
     @DeleteMapping(path = "/reservations/{reservationId}")
     @Transactional
     ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
+                                               @RequestParam(value = "type", defaultValue = "customer") String type,
                                                Principal principal) {
+        Reservation res = deleteReservation(reservationId, principal);
+
+        if (!type.equals("customer")) {
+            String recipientAddress = res.getUser().getEmail();
+            String message = "Ci dispiace informarla che per questioni tecniche la sua prenotazione è stata eliminata. " +
+                    "La ringraziamo per la comprensione.";
+            MailSenderUtility.sendEmail(this.mailSender, "Prenotazione eliminata", message, recipientAddress);
+        }
+        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+    }
+
+    private Reservation deleteReservation(@PathVariable Long reservationId, Principal principal) {
         logger.info("Getting reservation by id");
         Reservation res = this.reservationService.findById(reservationId);
 
@@ -223,22 +242,22 @@ public class TrainingReservationController {
         this.trainingBundleService.save(session.getTrainingBundle());
         sessionRepository.delete(session);
         this.reservationService.delete(res);
-
-        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+        return res;
     }
+
 
     @GetMapping(path="/reservations")
     ResponseEntity<List<ReservationResource>> getReservations(@RequestParam(value = "id", required = false) Long id,
-                                                        @RequestParam(value = "endDay")
-                                                        @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date endDay,
-                                                        @RequestParam(value = "startDay")
-                                                        @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startDay) {
+                                                              @RequestParam(value = "endDay")
+                                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date endDay,
+                                                              @RequestParam(value = "startDay")
+                                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startDay) {
         List<Reservation> res = this.reservationService
                 .findByStartTimeAndEndTimeAndId(Optional.ofNullable(id), startDay, endDay);
         return ResponseEntity.ok(new ReservationAssembler().toResources(res));
     }
 
-    @GetMapping(path="/reservations/onComplete/{sessionId}")
+    @GetMapping(path="/reservations/complete/{sessionId}")
     @ResponseBody
     ResponseEntity<TrainingSessionResource> complete(@PathVariable(value = "sessionId") Long sessionId) {
         logger.info("completing session");

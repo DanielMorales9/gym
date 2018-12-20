@@ -8,6 +8,7 @@ import it.goodfellas.repository.RoleRepository;
 import it.goodfellas.repository.UserRepository;
 import it.goodfellas.repository.VerificationTokenRepository;
 import it.goodfellas.service.IUserAuthService;
+import it.goodfellas.utility.MailSenderUtility;
 import it.goodfellas.utility.PasswordGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -210,7 +211,7 @@ public class AuthorizationController {
                 = this.baseUrl+ "/auth/modifyPassword?token=" + token;
         String message = "Per modificare la password usa il seguente link: ";
 
-        sendEmail(subject,message+confirmationUrl, recipientAddress);
+        MailSenderUtility.sendEmail(this.mailSender, subject,message+confirmationUrl, recipientAddress);
     }
 
     @GetMapping(path = "/resendChangePasswordToken")
@@ -258,7 +259,7 @@ public class AuthorizationController {
         String confirmationUrl
                 = this.baseUrl+ "/auth/verification?token=" + newToken.getToken();
         String message = "Ti abbiamo generato un nuovo link di verifica: ";
-        sendEmail(subject, message+confirmationUrl, recipientAddress);
+        MailSenderUtility.sendEmail(this.mailSender, subject, message+confirmationUrl, recipientAddress);
     }
 
     @PutMapping(path = "/users/{userId}/roles/{roleId}")
@@ -290,15 +291,7 @@ public class AuthorizationController {
         input.setPassword(password);
     }
 
-    private void sendEmail(String subject,
-                           String message,
-                           String recipientAddress) {
-        SimpleMailMessage email = new SimpleMailMessage();
-        email.setTo(recipientAddress);
-        email.setSubject(subject);
-        email.setText(message);
-        mailSender.send(email);
-    }
+
 
     private AUser registerUser(@RequestBody @Valid AUser input) {
         setRandomPassword(input);
