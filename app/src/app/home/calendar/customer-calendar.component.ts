@@ -15,8 +15,25 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        this.checkAvailability(EVENT_TYPES.HOUR, this.role, event);
-        this.openModal(action);
+        if (event.date >= new Date()) {
+            this.trainingService.check(event.date, this.user.id)
+                .subscribe(res => {
+                    this.modalData = {
+                        action: action,
+                        title: "Prenota il tuo allenamento!",
+                        userId: this.user.id,
+                        role: this.role,
+                        event: event
+                    };
+                    this.openModal(action);
+                }, err => {
+                    this.message = {
+                        text: err.error,
+                        class: "alert-danger"
+                    };
+                    this.notificationService.sendMessage(this.message);
+                });
+        }
     }
 
     delete(action: string, event: any) {
@@ -49,28 +66,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
         this.events = [];
         this.getReservations();
         this.getTimesOff();
-    }
-
-    private checkAvailability(action: string, role: number, event: any) {
-        if (event.date >= new Date()) {
-            this.trainingService.check(event.date, this.user.id)
-                .subscribe(res => {
-                    this.modalData = {
-                        action: action,
-                        title: "Prenota il tuo allenamento!",
-                        userId: this.user.id,
-                        role: role,
-                        event: event
-                    };
-                    document.getElementById('customer-hour-modal-button').click();
-                }, err => {
-                    this.message = {
-                        text: err.error,
-                        class: "alert-danger"
-                    };
-                    this.notificationService.sendMessage(this.message);
-                });
-        }
     }
 
     getReservations() {
