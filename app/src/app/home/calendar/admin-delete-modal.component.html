@@ -8,12 +8,12 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div [ngSwitch]="modalData?.event.meta.type">
+            <div [ngSwitch]="modalData?.event.meta?.type">
                 <div *ngSwitchCase="'admin'">
                     <div class="modal-body">
                         <div *ngIf="!!modalData?.event">
                             <div>
-                                Vuoi eliminare la chiusura ({{ modalData?.event.start | date :  'HH:mm a - dd/MM/yyyy'}}) ?
+                                Vuoi eliminare la chiusura {{ modalData?.event.start | date :  'dd/MM/yyyy'}}?
                                 <br>
                                 Conferma per eliminare oppure cancella.
                             </div>

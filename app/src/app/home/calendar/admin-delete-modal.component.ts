@@ -1,5 +1,5 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {DateService, NotificationService} from "../../services";
+import {Component, OnInit} from "@angular/core";
+import {NotificationService} from "../../services";
 import {TimesOffService, TrainingService} from "../../shared/services";
 import {BaseCalendarModal} from "./base-calendar-modal";
 
@@ -30,6 +30,9 @@ export class AdminDeleteModalComponent extends BaseCalendarModal implements OnIn
                 break;
             case 'reservation':
                 this.deleteReservation();
+                break;
+            case 'trainer':
+                this.deleteTrainerTimeOff();
                 break;
             default:
                 this.message = {
@@ -69,6 +72,28 @@ export class AdminDeleteModalComponent extends BaseCalendarModal implements OnIn
                 }, 1000);
                 this.message = {
                     text: `${this.modalData.event.meta.eventName} è stata eliminata!`,
+                    class: "alert-warning"
+                };
+            }, err => {
+                this.message = {
+                    text: err.error.message,
+                    class: "alert-danger"
+                };
+                this.onComplete();
+            }, () => {
+                this.onComplete();
+            })
+    }
+
+    private deleteTrainerTimeOff() {
+        this.timesOffService.delete(this.modalData.event.meta.id, 'trainer')
+            .subscribe(res => {
+                let that = this;
+                setTimeout(function () {
+                    that.event.emit();
+                }, 1000);
+                this.message = {
+                    text: `${this.modalData.event.meta.eventName} di ${this.modalData.event.meta.user.lastName} è stata eliminata!`,
                     class: "alert-warning"
                 };
             }, err => {
