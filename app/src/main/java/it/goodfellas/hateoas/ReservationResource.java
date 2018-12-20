@@ -4,17 +4,17 @@ import it.goodfellas.model.Reservation;
 
 public class ReservationResource extends ResourceModel<Reservation> {
 
-    private CustomerResource customer;
+    private CustomerResource user;
 
     ReservationResource(Reservation model) {
         super(model);
     }
 
-    public CustomerResource getCustomer() {
-        return customer;
+    public CustomerResource getUser() {
+        return user;
     }
 
-    public void setCustomer(CustomerResource customer) {
-        this.customer = customer;
+    public void setUser(CustomerResource user) {
+        this.user = user;
     }
 }

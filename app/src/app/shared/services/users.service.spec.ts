@@ -64,21 +64,6 @@ describe('UserService', () => {
         req.flush(user);
     });
 
-    it("testing #post", done => {
-        let user = new User();
-        user.id = 1;
-        user.type = "customer";
-        userService.post(user).subscribe(res => {
-            expect(res).toEqual(user);
-            done();
-        });
-        let req = backend.expectOne({
-            url: "/authentication/customer/registration",
-            method: "POST"
-        });
-        user.createdAt = "now";
-        req.flush(user);
-    });
 
     it("testing #get", done => {
         userService.get(1, 5).subscribe(res => {

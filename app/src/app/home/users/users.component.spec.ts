@@ -45,7 +45,7 @@ describe('UsersComponent', () => {
     //
     //
     // describe("test #getUsersByPage method", () => {
-    //     it("it should return users", done => {
+    //     it("it should return users", event => {
     //         usersComponent.getUsersByPage();
     //
     //     });

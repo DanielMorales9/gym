@@ -1,4 +1,4 @@
-export * from './booking';
+export * from './calendar';
 export * from './bundles';
 export * from './users';
 export * from './home.module';

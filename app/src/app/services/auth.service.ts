@@ -2,6 +2,7 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {User} from "../shared/model";
 import {AppService} from "./app.service";
+import {Observable} from "rxjs";
 
 @Injectable()
 export class AuthService {
@@ -19,6 +20,11 @@ export class AuthService {
         this.appService.credentials = undefined;
         return this.http.post( `/authentication/${role}/verifyPassword`, credentials);
     }
+
+    registration(user: User): Observable<Object> {
+        return this.http.post( `/authentication/${user.type}/registration`, user);
+    }
+
 
     resendToken(token: string) {
         this.appService.credentials = undefined;

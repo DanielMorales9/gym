@@ -20,6 +20,8 @@ export class SaleModalComponent implements OnInit {
 
     loading: boolean;
 
+    // TODO: convert this modal to an angular reactive form
+
     constructor(private service: SalesService,
                 private exchangeSale: ExchangeSaleService,
                 private messageService: NotificationService) {

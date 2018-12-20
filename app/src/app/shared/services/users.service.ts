@@ -20,10 +20,6 @@ export class UserService {
         return this.http.get(`/users/findByEmail?email=${email}`)
     }
 
-    post(user: User): Observable<Object> {
-        return this.http.post( `/authentication/${user.type}/registration`, user);
-    }
-
     get(page: number, size: number) : Observable<Object> {
         return this.http.get(`/users?page=${page}&size=${size}&sort=lastName`);
     }

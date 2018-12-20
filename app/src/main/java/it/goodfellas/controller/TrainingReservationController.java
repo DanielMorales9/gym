@@ -91,6 +91,15 @@ public class TrainingReservationController {
         if (checkDateBeforeToday(startDate))
             return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
 
+        logger.info("Checking double booking");
+        Date endDate = DateUtils.addHours(startDate, 1);
+        List<Reservation> reservations = this.reservationService.findByStartTimeAndEndTimeAndId(
+                Optional.of(id),
+                startDate,
+                endDate);
+        if (!reservations.isEmpty())
+            return new ResponseEntity<>("Hai già prenotato in questo orario", HttpStatus.NOT_ACCEPTABLE);
+
         logger.info("Checking whether the date is before certain amount of hours");
         if (checkBeforeHour(startDate))
             return new ResponseEntity<>("E' necessario prenotare almeno " +
@@ -119,7 +128,6 @@ public class TrainingReservationController {
             return new ResponseEntity<String>("Non hai pacchetti", HttpStatus.NOT_ACCEPTABLE);
 
         logger.info("Checking whether there are times off");
-        Date endDate = DateUtils.addHours(startDate, 1);
         List<TimeOff> timesOff = this.timeRepository.findTimesOffInBetween(startDate, endDate);
         Stream<String> countAdmin = timesOff
                 .parallelStream()
@@ -136,7 +144,7 @@ public class TrainingReservationController {
             return new ResponseEntity<String>("Nessun Personal Trainer", HttpStatus.NOT_ACCEPTABLE);
 
         logger.info("Checking whether there are trainers available");
-        List<Reservation> reservations = this.reservationService.findByStartTime(startDate);
+        reservations = this.reservationService.findByStartTime(startDate);
         numAvailableTrainers = numAvailableTrainers - reservations.size();
 
         if (numAvailableTrainers == 0)
@@ -230,7 +238,7 @@ public class TrainingReservationController {
         return ResponseEntity.ok(new ReservationAssembler().toResources(res));
     }
 
-    @GetMapping(path="/reservations/complete/{sessionId}")
+    @GetMapping(path="/reservations/onComplete/{sessionId}")
     @ResponseBody
     ResponseEntity<TrainingSessionResource> complete(@PathVariable(value = "sessionId") Long sessionId) {
         logger.info("completing session");
