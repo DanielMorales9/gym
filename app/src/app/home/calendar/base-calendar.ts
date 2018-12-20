@@ -1,7 +1,7 @@
 import {Subject} from "rxjs";
 import {Injectable, Input, OnInit} from "@angular/core";
 import {
-    CalendarEvent, CalendarEventAction, CalendarMonthViewEventTimesChangedEvent,
+    CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarMonthViewEventTimesChangedEvent,
     CalendarView,
 } from "angular-calendar";
 import {User} from "../../shared/model";
@@ -201,6 +201,7 @@ export abstract class BaseCalendar implements OnInit {
     day(action: string, event: any): void {
         if (this.viewDate.getTime() === event.day.date.getTime()) {
             if (this.activeDayIsOpen || event.day.events.length == 0) {
+                this.getEvents();
                 this.view = this.DAY;
                 this.activeDayIsOpen = true;
             }
@@ -210,6 +211,7 @@ export abstract class BaseCalendar implements OnInit {
             this.viewDate = event.day.date;
             if (!this.activeDayIsOpen) {
                 if (event.day.events.length == 0) {
+                    this.getEvents();
                     this.view = this.DAY;
                 }
             }
@@ -217,8 +219,21 @@ export abstract class BaseCalendar implements OnInit {
         }
     }
 
+
     refreshView() {
+        console.log(this.events);
         this.refresh.next();
+    }
+
+    beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
+        body.forEach(cell => {
+            const groups: any = {};
+            cell.events.forEach((event: CalendarEvent<{ type: string }>) => {
+                groups[event.meta.type] = groups[event.meta.type] || [];
+                groups[event.meta.type].push(event);
+            });
+            cell['eventGroups'] = Object.entries(groups);
+        });
     }
 
 }

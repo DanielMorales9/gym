@@ -1,16 +1,16 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {DateService, NotificationService} from "../../services";
+import {Component, OnInit} from "@angular/core";
+import {NotificationService} from "../../services";
 import {TimesOffService, TrainingService} from "../../shared/services";
 import {BaseCalendarModal} from "./base-calendar-modal";
 
 @Component({
-    selector: 'admin-delete-modal',
-    templateUrl: './admin-delete-modal.component.html',
+    selector: 'trainer-delete-modal',
+    templateUrl: './trainer-delete-modal.component.html',
     styleUrls: ['../../app.component.css']
 })
-export class AdminDeleteModalComponent extends BaseCalendarModal implements OnInit {
+export class TrainerDeleteModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON = 'admin-delete-modal-button';
+    private MODAL_BUTTON = 'trainer-delete-modal-button';
 
     constructor(private timesOffService: TimesOffService,
                 private trainingService: TrainingService,
@@ -23,17 +23,18 @@ export class AdminDeleteModalComponent extends BaseCalendarModal implements OnIn
     }
 
     submit() {
+        console.log(this.modalData.event.meta.type);
         this.loading = true;
         switch (this.modalData.event.meta.type) {
-            case 'admin':
-                this.deleteAdminTimeOff();
-                break;
             case 'reservation':
                 this.deleteReservation();
                 break;
+            case 'trainer':
+                this.deleteTimesOff();
+                break;
             default:
                 this.message = {
-                    text: `${this.modalData.event.meta.type} non può essere cancellata dall'admin!`,
+                    text: `${this.modalData.event.meta.type} non può essere cancellata dal trainer!`,
                     class: 'alert-danger'
                 };
                 this.onComplete();
@@ -41,8 +42,27 @@ export class AdminDeleteModalComponent extends BaseCalendarModal implements OnIn
         }
     }
 
+    private deleteTimesOff() {
+        this.timesOffService.delete(this.modalData.event.meta.id)
+            .subscribe(res => {
+                this.message = {
+                    text: `${this.modalData.event.meta.name} eliminata con successo.`,
+                    class: 'alert-warning'
+                };
+                this.event.emit();
+            }, err => {
+                this.message = {
+                    text: err.error,
+                    class: 'alert-danger'
+                };
+                this.onComplete();
+            }, () => {
+                this.onComplete();
+            });
+    }
+
     private deleteReservation() {
-        this.trainingService.delete(this.modalData.event.meta.id, 'admin')
+        this.trainingService.delete(this.modalData.event.meta.id, 'trainer')
             .subscribe(res => {
                 this.message = {
                     text: `${this.modalData.event.title} è stato eliminato.`,
@@ -50,6 +70,7 @@ export class AdminDeleteModalComponent extends BaseCalendarModal implements OnIn
                 };
                 this.event.emit();
             }, err => {
+                console.log(err);
                 this.message = {
                     text: err.error.message,
                     class: 'alert-danger'
@@ -60,25 +81,4 @@ export class AdminDeleteModalComponent extends BaseCalendarModal implements OnIn
             });
     }
 
-    private deleteAdminTimeOff() {
-        this.timesOffService.delete(this.modalData.event.meta.id)
-            .subscribe(res => {
-                let that = this;
-                setTimeout(function () {
-                    that.event.emit();
-                }, 1000);
-                this.message = {
-                    text: `${this.modalData.event.meta.eventName} è stata eliminata!`,
-                    class: "alert-warning"
-                };
-            }, err => {
-                this.message = {
-                    text: err.error.message,
-                    class: "alert-danger"
-                };
-                this.onComplete();
-            }, () => {
-                this.onComplete();
-            })
-    }
 }

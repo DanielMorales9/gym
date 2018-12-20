@@ -178,7 +178,10 @@ public class TimeOffController {
 
         TimeOff time = res.get();
         AUser user = this.userService.findByEmail(principal.getName());
-        if (!time.getUser().equals(user) || !(user instanceof Admin))
+        logger.info(user.toString());
+        logger.info(time.getUser().toString());
+        logger.info((user instanceof Admin) ? "true" : "false");
+        if (!time.getUser().equals(user) && !(user instanceof Admin))
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
         this.timeRepository.delete(time);

@@ -6,11 +6,18 @@ import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import localeIt from '@angular/common/locales/it';
 import {
-    AdminCalendarComponent, AdminDeleteModalComponent, AdminHeaderModalComponent, AdminInfoModalComponent,
+    AdminCalendarComponent,
+    AdminDeleteModalComponent,
+    AdminHeaderModalComponent,
+    AdminInfoModalComponent,
     CalendarComponent,
     CustomerCalendarComponent,
     CustomerDeleteModalComponent,
-    CustomerHourModalComponent, CustomerInfoModalComponent
+    CustomerHourModalComponent,
+    CustomerInfoModalComponent,
+    TrainerCalendarComponent, TrainerDeleteModalComponent,
+    TrainerHeaderModalComponent,
+    TrainerInfoModalComponent
 } from "./calendar";
 import {BundleModalComponent, BundlesComponent} from "./bundles";
 import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from "./users";
@@ -48,7 +55,12 @@ registerLocaleData(localeIt);
         AdminCalendarComponent,
         AdminInfoModalComponent,
         AdminHeaderModalComponent,
-        AdminDeleteModalComponent
+        AdminDeleteModalComponent,
+        TrainerCalendarComponent,
+        TrainerHeaderModalComponent,
+        TrainerInfoModalComponent,
+        TrainerDeleteModalComponent,
+
     ],
 })
 export class HomeModule { }

@@ -1,5 +1,5 @@
-<button id="admin-info-modal-button" [hidden]="true" data-toggle="modal" data-target="#admin-info-modal">Open Modal</button>
-<div class="modal" tabindex="-1" role="dialog" id="admin-info-modal">
+<button id="trainer-info-modal-button" [hidden]="true" data-toggle="modal" data-target="#trainer-info-modal">Open Modal</button>
+<div class="modal" tabindex="-1" role="dialog" id="trainer-info-modal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -35,12 +35,8 @@
                 </div>
                 <div *ngSwitchCase="'admin'">
                     <div class="modal-body" >
-                        <div class="row">
-                            <div class="col-12">
-                                <i class="fas fa-door-closed"></i>&nbsp;
-                                La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}.
-                            </div>
-                        </div>
+                        <i class="fas fa-door-closed"></i>&nbsp;
+                        La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
@@ -48,10 +44,9 @@
                 </div>
                 <div *ngSwitchCase="'trainer'">
                     <div class="modal-body" >
-                        <i class="fas fa-door-closed"></i>&nbsp;
-                        {{modalData?.event.meta?.user.firstName}} è di riposo dalle
-                        {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm a'}}
-                        alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
+                        <i class="fas fa-bed"></i>&nbsp;
+                        Sei di riposo dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+                        alle {{ modalData?.event.end | date :  'HH:mm a'}}.
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>

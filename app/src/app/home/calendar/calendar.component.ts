@@ -69,28 +69,6 @@ export class CalendarComponent implements OnInit {
     //     }
     // }
     //
-    // private timesOff(id?: number, type?: string) {
-    //     let {startDay, endDay} = this.getStartAndEndTimeByView();
-    //     this.timesOffService.getTimesOff(startDay, endDay, res => {
-    //         res.map(res => {
-    //             this.events.push(this.formatEvent(res))
-    //         });
-    //         this.refreshView();
-    //     }, undefined, id, type);
-    // }
-    //
-    // private getReservations(id?: number) {
-    //     let {startDay, endDay} = this.getStartAndEndTimeByView();
-    //     this.trainingService.getReservations(startDay, res => {
-    //         console.log(res);
-    //         res.forEach(res => {
-    //             this.events.push(this.formatEvent(res))
-    //         });
-    //         this.refreshView();
-    //     }, err => {
-    //     }, id, endDay);
-    // }
-    //
     // private checkClosable(action, role, date, event) {
     //
     //     if (date < new Date()) {
@@ -111,66 +89,11 @@ export class CalendarComponent implements OnInit {
     //     });
     // }
     //
-
-    //
-    // private defaultError() {
-    //     return err => {
-    //         let message = {
-    //             text: err.error,
-    //             class: "alert-danger"
-    //         };
-    //         this.notificationService.sendMessage(message);
-    //     }
-    // }
-    //
-    // beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
-    //     body.forEach(cell => {
-    //         const groups: any = {};
-    //         cell.events.forEach((event: CalendarEvent<{ type: string }>) => {
-    //             groups[event.meta.type] = groups[event.meta.type] || [];
-    //             groups[event.meta.type].push(event);
-    //         });
-    //         cell['eventGroups'] = Object.entries(groups);
-    //     });
-    // }
-    //
-    // book(data) {
-    //     switch(data.role) {
-    //         case 1:
-    //             this.bookTimeOff(data.event.DAY.date);
-    //             break;
-    //         case 3:
-    //             this.bookReservation(data.event.date);
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
-    //
     // eventTimesChanged({ event, newStart, newEnd}: CalendarEventTimesChangedEvent): void {
     //     event.start = newStart;
     //     event.end = newEnd;
     //     this.handleEvent('Dropped or resized', event);
     //     this.refresh.next();
-    // }
-    //
-    // handleEvent(action: string, event: CalendarEvent): void {
-    //     let role = this.current_role_view;
-    //     let title;
-    //     console.log(action, event);
-    //     switch (action) {
-    //         case 'delete':
-    //             title = "Sei sicuro di voler eliminare la " + event.meta.eventName + " ?";
-    //             break;
-    //         case 'info':
-    //             title = event.title;
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    //
-    //     this.modalData = { action, title, role, event};
-    //     this.modalContent.open(this.modalData);
     // }
     //
     // onComplete(event: CalendarEvent) {
@@ -196,24 +119,6 @@ export class CalendarComponent implements OnInit {
     //         this.notificationService.sendMessage(message);
     //     })
     // }
-    //
-    //
-    // delete(modalData) {
-    //     switch (modalData.event.meta.type) {
-    //         case "reservation":
-    //             this.deleteReservation(modalData);
-    //             break;
-    //         case "admin":
-    //             this.deleteTimeOff(modalData);
-    //             break;
-    //         case "trainer":
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
-    //
-    //
 
     //
     // private formatEvent(res: any) {
@@ -282,25 +187,5 @@ export class CalendarComponent implements OnInit {
     //     });
     //
     // }
-    //
-
-
-    //
-    // dayHeaderClicked(event) : void {
-    //     let action = "hour";
-    //     let role = this.current_role_view;
-    //     let date = event['DAY']['date'];
-    //     switch (this.current_role_view) {
-    //         case 1:
-    //             this.checkClosable(action, role, date, event);
-    //             break;
-    //         case 2:
-    //             this.checkClosable(action, role, date, event);
-    //             break;
-    //         default:
-    //             break;
-    //     }
-    // }
-    //
 
 }

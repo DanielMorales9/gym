@@ -65,7 +65,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
     getEvents() {
         this.events = [];
         this.getReservations();
-        this.getTimesOff();
     }
 
     getReservations() {
@@ -76,7 +75,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 res.forEach(val => {
                     this.events.push(this.formatEvent(val))
                 });
-                this.refreshView()
+                this.getTimesOff();
             })
     }
 
@@ -88,10 +87,8 @@ export class CustomerCalendarComponent extends BaseCalendar {
                     value.map(res => {
                         this.events.push(this.formatEvent(res))
                     });
-                }, undefined,
-                () => {
-                    this.refreshView();
-                })
+                this.refreshView();
+            })
     }
 
 }

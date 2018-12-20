@@ -1,16 +1,14 @@
 import {Component} from "@angular/core";
 import {BaseCalendar} from "./base-calendar";
 import {EVENT_TYPES} from "./event-types.enum";
-import {GymConfigurationService, NotificationService} from "../../services";
-import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
 
 
 @Component({
-    selector: "admin-calendar",
-    templateUrl: './admin-calendar.component.html',
+    selector: "trainer-calendar",
+    templateUrl: './trainer-calendar.component.html',
     styleUrls: ['../../app.component.css']
 })
-export class AdminCalendarComponent extends BaseCalendar {
+export class TrainerCalendarComponent extends BaseCalendar {
 
     getEvents() {
         this.events = [];
@@ -36,31 +34,29 @@ export class AdminCalendarComponent extends BaseCalendar {
                 value.map(res => {
                     this.events.push(this.formatEvent(res))
                 });
-                this.timesOffService.getTimesOff(startDay, endDay, undefined, 'trainer')
+                this.timesOffService.getTimesOff(startDay, endDay, this.user.id)
                     .subscribe((value: Object[]) => {
                         value.map(res => {
                             this.events.push(this.formatEvent(res))
                         });
                         this.refreshView();
                     })
-            })
+            });
     }
 
     header(action: string, event: any) {
-        console.log(event);
         if (event.day.date >= new Date()) {
-            let type = "admin";
             let {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(event.day.date));
-            this.timesOffService.check(startTime, endTime, type, this.user.id)
+            this.timesOffService.check(startTime, endTime, "trainer", this.user.id)
                 .subscribe(res => {
                 this.modalData = {
                     action: EVENT_TYPES.HEADER,
-                    title: "Giorno di Chiusura",
+                    title: "Giorno di Ferie",
                     userId: this.user.id,
                     role: this.role,
                     event: event
                 };
-                document.getElementById('admin-header-modal-button').click();
+                this.openModal(action);
             }, err => {
                 let message = {
                     text: err.error,
@@ -69,7 +65,6 @@ export class AdminCalendarComponent extends BaseCalendar {
                 this.notificationService.sendMessage(message);
             });
         }
-
     }
 
     delete(action: string, event: any) {
@@ -88,7 +83,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     info(action: string, event: any) {
-        console.log(event);
         this.modalData = {
             action: EVENT_TYPES.INFO,
             title: event.title,
@@ -100,7 +94,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     openModal(action: string) {
-        document.getElementById(`admin-${action}-modal-button`).click();
+        document.getElementById(`trainer-${action}-modal-button`).click();
     }
 
 
