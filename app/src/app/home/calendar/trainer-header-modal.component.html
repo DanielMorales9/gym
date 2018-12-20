@@ -1,0 +1,37 @@
+<button id="trainer-header-modal-button" [hidden]="true" data-toggle="modal" data-target="#trainer-header-modal">Open Modal</button>
+<div class="modal" tabindex="-1" role="dialog" id="trainer-header-modal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> {{modalData?.title}}</h5>
+                <button type="button" class="close" (click)="close()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" >
+                <div *ngIf="!!modalData?.event">
+                    Vuoi prenderti un giorno di ferie il ({{ modalData?.event.day?.date | date : 'dd/MM/yyyy'}})?
+                    <br>
+                    <div class="form-group" >
+                        <label for="name" class="sr-only">Nome:</label>
+                        <input name="name"
+                               placeholder="Motivo di ferie"
+                               class="form-control"
+                               id="name"
+                               type="text"
+                               [(ngModel)]="timeOffName"/>
+                    </div>
+                    <br>
+                    Conferma per prendere le ferie oppure cancella.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" (click)="close()">Cancella</button>
+                <button type="button" class="btn btn-primary" (click)="submit()">Conferma</button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<spinner [loading]="loading"></spinner>
