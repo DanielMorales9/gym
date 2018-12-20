@@ -1,44 +1,46 @@
 import {HttpClient} from '@angular/common/http'
 import {Injectable} from '@angular/core'
+import {Observable} from "rxjs";
 
 @Injectable()
 export class TrainingService {
 
     constructor(private http: HttpClient) {}
 
-    check(date: Date, id: number,  success: (res) => void, error: (error) => void) {
+    check(date: Date, id: number) : Observable<any> {
         let dateString = TrainingService.getDateString(date);
-        this.http.get("/reservations/checkAvailabilityAndEnablement?date=" + dateString + "&id=" + id).subscribe(success, error)
+        return this.http.get(`/reservations/checkAvailabilityAndEnablement?date=${dateString}&id=${id}`);
     }
 
-    book(date: Date, id: number, success: (res) => void, error: (error) => void) {
-        let dateString = TrainingService.getDateString(date);
-        this.http.get("/reservations/book/"+id+"?date=" + dateString).subscribe(success, error)
-    }
 
     private static getDateString(date: Date) {
         return date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-"
             + date.getUTCFullYear() + "_" + date.getUTCHours() + ":" + date.getUTCMinutes();
     }
 
-    getReservations(startDay: Date, success: (res) => void, error: (err) => void, id?: number, endDay?: Date) {
+    book(date: Date, id: number) : Observable<any> {
+        let dateString = TrainingService.getDateString(date);
+        return this.http.get(`/reservations/book/${id}?date=${dateString}`);
+    }
+
+    getReservations(startDay: Date, endDay: Date, id?: number) : Observable<any> {
         let endpoint = "/reservations?";
         if (id)
-            endpoint += "id="+id + "&";
-        endpoint += "startDay="+TrainingService.getDateString(startDay) + "&";
-        endpoint += "endDay="+ TrainingService.getDateString(endDay);
-        this.http.get(endpoint).subscribe(success, error);
+            endpoint += `id=${id}&`;
+        endpoint += `startDay=${TrainingService.getDateString(startDay)}&`;
+        endpoint += `endDay=${TrainingService.getDateString(endDay)}`;
+        return this.http.get(endpoint);
     }
 
-    delete(id: any, success: (res) => any, error: (err) => any) {
-        this.http.delete("/reservations/"+id).subscribe(success, error);
+    delete(id: number) {
+        return this.http.delete(`/reservations/${id}`);
     }
 
-    confirm(id: any, success: (res) => void, error: (err) => void) {
-        this.http.get("/reservations/confirm/"+id).subscribe(success, error)
+    confirm(id: number) : Observable<any> {
+        return this.http.get(`/reservations/confirm/${id}`);
     }
 
-    complete(id: any, success: (res) => void, error: (err) => void) {
-        this.http.get("/reservations/complete/"+id).subscribe(success, error)
+    complete(id: number) : Observable<any> {
+        return this.http.get(`/reservations/complete/${id}`);
     }
 }

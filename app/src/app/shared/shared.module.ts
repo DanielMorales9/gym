@@ -7,7 +7,6 @@ import {
     SaleModalComponent, SalesComponent, SpinnerComponent,
 } from "./components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {EqualValidator, NumberValidator} from "./directives";
 import {
     BundlesService,
     SalesService,
@@ -29,8 +28,6 @@ import {
         NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
-        NumberValidator,
-        EqualValidator,
         SpinnerComponent],
     exports: [
         SalesComponent,
@@ -39,8 +36,6 @@ import {
         NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
-        NumberValidator,
-        EqualValidator,
         SpinnerComponent
     ],
     providers: [

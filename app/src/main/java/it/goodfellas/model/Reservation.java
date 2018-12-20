@@ -58,14 +58,6 @@ public class Reservation {
         this.startTime = startTime;
     }
 
-    public Customer getUser() {
-        return user;
-    }
-
-    public void setUser(Customer user) {
-        this.user = user;
-    }
-
     public Long getId() {
         return id;
     }
@@ -94,5 +86,13 @@ public class Reservation {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Customer getUser() {
+        return user;
+    }
+
+    public void setUser(Customer user) {
+        this.user = user;
     }
 }

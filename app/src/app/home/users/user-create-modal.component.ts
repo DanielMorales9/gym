@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
 import {User} from "../../shared/model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserHelperService, UserService} from "../../shared/services";
-import {ExchangeUserService, NotificationService} from "../../services";
+import {AuthService, ExchangeUserService, NotificationService} from "../../services";
 
 @Component({
     selector: 'user-create-modal',
@@ -11,7 +11,7 @@ import {ExchangeUserService, NotificationService} from "../../services";
 })
 export class UserCreateModalComponent implements OnInit {
 
-    @Output() public done = new EventEmitter();
+    @Output() public event = new EventEmitter();
     form: FormGroup;
     loading: boolean;
 
@@ -19,7 +19,7 @@ export class UserCreateModalComponent implements OnInit {
     CONSTRAINT_VIOLATION_EXCEPTION = "ConstraintViolationException";
 
     constructor(private builder: FormBuilder,
-                private service: UserService,
+                private authService: AuthService,
                 private userHelperService: UserHelperService,
                 private notificationService: NotificationService) {
         this.loading = false;
@@ -66,7 +66,7 @@ export class UserCreateModalComponent implements OnInit {
                 class: "alert-success"
             };
             this.notificationService.sendMessage(message);
-            this.done.emit('completed');
+            this.event.emit('completed');
         }
     }
 
@@ -96,7 +96,7 @@ export class UserCreateModalComponent implements OnInit {
         user.lastName = this.lastName.value;
         user.email = this.email.value;
         user.type = this.type.value;
-        this.service.post(user).subscribe(
+        this.authService.registration(user).subscribe(
             this._success(),
             this._error());
     }

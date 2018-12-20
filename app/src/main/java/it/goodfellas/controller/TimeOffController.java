@@ -203,12 +203,12 @@ public class TimeOffController {
         return ResponseEntity.ok(new TimeOffAssembler().toResources(res));
     }
     /*
-    @GetMapping(path="/reservations/complete/{sessionId}")
+    @GetMapping(path="/reservations/onComplete/{sessionId}")
     @ResponseBody
-    ResponseEntity<TrainingSessionResource> complete(@PathVariable(value = "sessionId") Long sessionId) {
+    ResponseEntity<TrainingSessionResource> onComplete(@PathVariable(value = "sessionId") Long sessionId) {
         ATrainingSession session = this.sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new POJONotFoundException("Sessione", sessionId));
-        session.complete();
+        session.onComplete();
         return ResponseEntity.ok(new TrainingSessionAssembler().toResource(session));
     }
 

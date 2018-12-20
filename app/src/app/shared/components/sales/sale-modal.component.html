@@ -20,7 +20,7 @@
                                [(ngModel)]="sale.amount" #amount="ngModel"
                                [ngClass]="{ 'is-invalid': f.submitted && amount.invalid }" required/>
                         <div *ngIf="f.submitted && amount.invalid" class="error-message">
-                            <div *ngIf="amount.errors.required">Somma da pagare obbligatoria</div>
+                            <div *ngIf="!!amount.errors?.required">Somma da pagare obbligatoria</div>
                         </div>
                     </div>
 

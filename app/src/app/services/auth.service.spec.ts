@@ -49,6 +49,23 @@ describe('AuthService', () => {
         });
     });
 
+    it("testing #post", done => {
+        let user = new User();
+        user.id = 1;
+        user.type = "customer";
+        authService.registration(user).subscribe(res => {
+            expect(res).toEqual(user);
+            done();
+        });
+        let req = backend.expectOne({
+            url: "/authentication/customer/registration",
+            method: "POST"
+        });
+        user.createdAt = "now";
+        req.flush(user);
+    });
+
+
     describe ("testing #getUserFromVerificationToken method", () => {
         it("it should return a user", done => {
             let token = "aaaa";
