@@ -173,7 +173,7 @@ export abstract class BaseCalendar implements OnInit {
             }
         }
         let isMyEvent = event.user.id == this.user.id;
-        let isDeletable = this.role == 1 || isMyEvent;
+        let isDeletable = this.role == 1 || (event.type == 'reservation' && this.role < 3) || isMyEvent;
         return {
             start: startTime,
             end: endTime,

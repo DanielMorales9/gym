@@ -9,6 +9,7 @@ import it.goodfellas.hateoas.*;
 import it.goodfellas.model.*;
 import it.goodfellas.repository.*;
 import it.goodfellas.service.*;
+import it.goodfellas.utility.MailSenderUtility;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,7 @@ import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,6 +56,8 @@ public class TimeOffController {
     private ReservationRepository reservationService;
     @Autowired
     private TimeOffService timeOffService;
+    @Autowired
+    private JavaMailSender mailSender;
 
 
     @GetMapping(path = "/timesOff/checkAvailabilityAndEnablement",
@@ -170,6 +174,7 @@ public class TimeOffController {
     @DeleteMapping(path = "/timesOff/{timesId}")
     @Transactional
     ResponseEntity<TimeOffResource> delete(@PathVariable Long timesId,
+                                           @RequestParam(value = "type", defaultValue = "admin") String type,
                                            Principal principal) {
         Optional<TimeOff> res = this.timeRepository.findById(timesId);
 
@@ -184,8 +189,15 @@ public class TimeOffController {
         if (!time.getUser().equals(user) && !(user instanceof Admin))
             return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
 
-        this.timeRepository.delete(time);
 
+        if (!type.equals("admin")) {
+            String recipientAddress = time.getUser().getEmail();
+            String message = "Ci dispiace informarla che per questioni tecniche le sue ferie sono state eliminate. " +
+                    "La ringraziamo per la comprensione.";
+            MailSenderUtility.sendEmail(this.mailSender, "Ferie eliminate", message, recipientAddress);
+        }
+
+        this.timeRepository.delete(time);
         return ResponseEntity.ok(new TimeOffAssembler().toResource(time));
     }
 

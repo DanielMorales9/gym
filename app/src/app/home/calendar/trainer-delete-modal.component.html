@@ -8,7 +8,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div [ngSwitch]="modalData?.event.meta.type">
+            <div [ngSwitch]="modalData?.event.meta?.type">
                 <div *ngSwitchCase="'trainer'">
                     <div class="modal-body">
                         <div *ngIf="!!modalData?.event">

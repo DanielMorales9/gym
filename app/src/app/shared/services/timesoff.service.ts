@@ -36,8 +36,11 @@ export class TimesOffService {
         return this.http.get(endpoint);
     }
 
-    delete(id: number) : Observable<any> {
-        return this.http.delete(`/timesOff/${id}`);
+    delete(id: number, type?: string) : Observable<any> {
+        let endpoint = `/timesOff/${id}`;
+        if (type)
+            endpoint += `&type=${type}`;
+        return this.http.delete(endpoint);
     }
 
     confirm(id: any, success: (res) => void, error: (err) => void) {
