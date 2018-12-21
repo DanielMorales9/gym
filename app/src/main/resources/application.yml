@@ -26,7 +26,12 @@ spring:
 
 server:
   servlet.session.timeout: 60s
-  port: 9000
+  port: 8443
+  ssl:
+    key-store: /app/keystore.p12
+    key-store-password: goodfellas
+    keyStoreType: PKCS12
+    keyAlias: tomcat
 
 baseUrl: ${BASE_HOST}
 reservationBeforeHours: 6

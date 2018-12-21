@@ -41,6 +41,8 @@ services:
       REDIS_PORT: 6379
       REDIS_HOST: redis
       BASE_HOST: http://www.goodfellas.fitness
+    volumes:
+      - /home/ubuntu/keystore.p12:/app/keystore.p12
     deploy:
       restart_policy:
         condition: on-failure

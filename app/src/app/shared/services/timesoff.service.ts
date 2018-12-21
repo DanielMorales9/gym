@@ -43,11 +43,4 @@ export class TimesOffService {
         return this.http.delete(endpoint);
     }
 
-    confirm(id: any, success: (res) => void, error: (err) => void) {
-        this.http.get("/timesOff/confirm/"+id).subscribe(success, error)
-    }
-
-    complete(id: any, success: (res) => void, error: (err) => void) {
-        this.http.get("/reservations/onComplete/"+id).subscribe(success, error)
-    }
 }
