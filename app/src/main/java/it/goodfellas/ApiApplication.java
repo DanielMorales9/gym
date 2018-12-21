@@ -7,12 +7,19 @@ import java.util.Map;
 import it.goodfellas.model.*;
 import it.goodfellas.service.IUserAuthService;
 import it.goodfellas.service.UserAuthService;
+import org.apache.catalina.Context;
+import org.apache.catalina.connector.Connector;
+import org.apache.tomcat.util.descriptor.web.SecurityCollection;
+import org.apache.tomcat.util.descriptor.web.SecurityConstraint;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
@@ -33,6 +40,7 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @SpringBootApplication
 @Controller
@@ -41,7 +49,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
 
-    @RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
+	@RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
             "/profile/**/*", "/profile/*",  "/logout",
             "/auth/**/*", "/auth/*"})
     public String publicAPI() {
@@ -59,6 +67,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		}
 		return user;
 	}
+
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -81,6 +90,10 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	public void configure(WebSecurity web) throws Exception {
 		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css");
 
+	}
+
+	public static void main(String[] args) {
+		SpringApplication.run(ApiApplication.class, args);
 	}
 
 	@Bean
@@ -150,12 +163,8 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		public String getTrainingClass(String type) {
 			return mapper.get(type);
 		}
-
 	}
 
-	public static void main(String[] args) {
-		SpringApplication.run(ApiApplication.class, args);
-	}
 
 	@Component
 	public class ExposeEntityIdRestMvcConfiguration extends RepositoryRestConfigurerAdapter {
@@ -174,5 +183,4 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 					Trainer.class);
 		}
 	}
-
 }
