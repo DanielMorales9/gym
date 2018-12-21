@@ -43,6 +43,7 @@ services:
       BASE_HOST: http://www.goodfellas.fitness
     volumes:
       - /home/ubuntu/keystore.p12:/app/keystore.p12
+      - /home/ubuntu/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
     deploy:
       restart_policy:
         condition: on-failure

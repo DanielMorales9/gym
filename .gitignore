@@ -35,3 +35,5 @@ e2e/*.js
 e2e/*.map
 app/coverage
 app/keystore.p12
+app/keystore.csrcat
+app/AA22E6508A15A5F3C2425B7E6A9CF604.txt
