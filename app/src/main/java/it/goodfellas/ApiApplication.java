@@ -88,7 +88,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css");
+		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css", "/**/*.txt");
 
 	}
 
