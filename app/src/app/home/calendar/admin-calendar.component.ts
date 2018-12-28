@@ -1,8 +1,9 @@
 import {Component} from "@angular/core";
 import {BaseCalendar} from "./base-calendar";
 import {EVENT_TYPES} from "./event-types.enum";
-import {GymConfigurationService, NotificationService} from "../../services";
+import {DateService, GymConfigurationService, NotificationService} from "../../services";
 import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
+import {User} from "../../shared/model";
 
 
 @Component({
@@ -11,6 +12,15 @@ import {TimesOffService, TrainingService, UserHelperService} from "../../shared/
     styleUrls: ['../../app.component.css']
 })
 export class AdminCalendarComponent extends BaseCalendar {
+
+    constructor(public userHelperService: UserHelperService,
+                private dateService: DateService,
+                private trainingService: TrainingService,
+                private gymConf: GymConfigurationService,
+                private timesOffService: TimesOffService,
+                private notificationService: NotificationService) {
+        super(userHelperService);
+    }
 
     getEvents() {
         this.events = [];
@@ -53,23 +63,22 @@ export class AdminCalendarComponent extends BaseCalendar {
             let {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(event.day.date));
             this.timesOffService.check(startTime, endTime, type, this.user.id)
                 .subscribe(res => {
-                this.modalData = {
-                    action: EVENT_TYPES.HEADER,
-                    title: "Giorno di Chiusura",
-                    userId: this.user.id,
-                    role: this.role,
-                    event: event
-                };
-                document.getElementById('admin-header-modal-button').click();
-            }, err => {
-                let message = {
-                    text: err.error,
-                    class: "alert-danger"
-                };
-                this.notificationService.sendMessage(message);
-            });
+                    this.modalData = {
+                        action: EVENT_TYPES.HEADER,
+                        title: "Giorno di Chiusura",
+                        userId: this.user.id,
+                        role: this.role,
+                        event: event
+                    };
+                    document.getElementById('admin-header-modal-button').click();
+                }, err => {
+                    let message = {
+                        text: err.error,
+                        class: "alert-danger"
+                    };
+                    this.notificationService.sendMessage(message);
+                });
         }
-
     }
 
     delete(action: string, event: any) {
@@ -84,11 +93,34 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        console.log(action, event)
+        console.log(event);
+        if (event.date >= new Date()) {
+            let type = "admin";
+            let startTime = new Date(event.date);
+            let endTime = this.dateService.addHour(startTime);
+            this.timesOffService.check(startTime, endTime, type, this.user.id)
+                .subscribe(res => {
+                    this.modalData = {
+                        action: EVENT_TYPES.HOUR,
+                        title: "Ora di Chiusura",
+                        userId: this.user.id,
+                        role: this.role,
+                        event: event
+                    };
+                    document.getElementById('admin-hour-modal-button').click();
+                }, err => {
+                    let message = {
+                        text: err.error,
+                        class: "alert-danger"
+                    };
+                    this.notificationService.sendMessage(message);
+                });
+        }
     }
 
     info(action: string, event: any) {
         console.log(event);
+        event = event.event;
         this.modalData = {
             action: EVENT_TYPES.INFO,
             title: event.title,
@@ -97,6 +129,30 @@ export class AdminCalendarComponent extends BaseCalendar {
             event: event
         };
         this.openModal(action);
+    }
+
+    change(action: string, event: any) {
+        if (event.newStart >= new Date()) {
+            let type = "admin";
+            this.timesOffService.check(event.newStart, event.newEnd, type, this.user.id)
+                .subscribe(res => {
+                    this.modalData = {
+                        action: EVENT_TYPES.CHANGE,
+                        title: "Ora di Chiusura",
+                        userId: this.user.id,
+                        role: this.role,
+                        event: event
+                    };
+                    console.log(this.modalData);
+                    document.getElementById('admin-change-modal-button').click();
+                }, err => {
+                    let message = {
+                        text: err.error,
+                        class: "alert-danger"
+                    };
+                    this.notificationService.sendMessage(message);
+                });
+        }
     }
 
     openModal(action: string) {

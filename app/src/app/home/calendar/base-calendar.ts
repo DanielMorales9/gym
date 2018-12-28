@@ -5,10 +5,8 @@ import {
     CalendarView,
 } from "angular-calendar";
 import {User} from "../../shared/model";
-import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
-import {GymConfigurationService, NotificationService} from "../../services";
+import {UserHelperService} from "../../shared/services";
 import {EVENT_TYPES} from "./event-types.enum";
-import {WeekDay} from "@angular/common";
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -71,11 +69,7 @@ export abstract class BaseCalendar implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
-    constructor(private userHelperService: UserHelperService,
-                public notificationService: NotificationService,
-                public trainingService: TrainingService,
-                public timesOffService: TimesOffService,
-                public gymConf: GymConfigurationService) {
+    constructor(public userHelperService: UserHelperService) {
 
     }
 
@@ -94,6 +88,7 @@ export abstract class BaseCalendar implements OnInit {
     abstract info(action: string, event: CalendarEvent);
     abstract header(action: string, event: CalendarEvent);
     abstract hour(action: string, event: CalendarEvent);
+    abstract change(action: string, event: CalendarEvent);
 
     abstract openModal(action: string);
 
@@ -113,6 +108,9 @@ export abstract class BaseCalendar implements OnInit {
                 break;
             case EVENT_TYPES.DAY:
                 this.day(action, event);
+                break;
+            case EVENT_TYPES.CHANGE:
+                this.change(action, event);
                 break;
             default:
                 console.log('handleEvent');
@@ -174,6 +172,7 @@ export abstract class BaseCalendar implements OnInit {
         }
         let isMyEvent = event.user.id == this.user.id;
         let isDeletable = this.role == 1 || (event.type == 'reservation' && this.role < 3) || isMyEvent;
+        let isResizable = isATimeOff && isMyEvent;
         return {
             start: startTime,
             end: endTime,
@@ -182,8 +181,8 @@ export abstract class BaseCalendar implements OnInit {
             actions: isDeletable ? this.ACTIONS: [],
             allDay: allDay == (this.dayEndHour - this.dayStartHour),
             resizable: {
-                beforeStart: false,
-                afterEnd: false
+                beforeStart: isResizable,
+                afterEnd: isResizable
             },
             draggable: false,
             meta: event
@@ -235,5 +234,6 @@ export abstract class BaseCalendar implements OnInit {
             cell['eventGroups'] = Object.entries(groups);
         });
     }
+
 
 }

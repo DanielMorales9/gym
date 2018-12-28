@@ -38,7 +38,9 @@
                         <div class="row">
                             <div class="col-12">
                                 <i class="fas fa-door-closed"></i>&nbsp;
-                                La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}.
+                                La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
+                                dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+                                alle {{ modalData?.event.end | date :  'HH:mm a'}}.
                             </div>
                         </div>
                     </div>

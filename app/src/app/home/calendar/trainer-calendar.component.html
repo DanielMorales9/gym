@@ -64,8 +64,8 @@
             [activeDayIsOpen]="activeDayIsOpen"
             [excludeDays]="excludeDays"
             (dayClicked)="handleEvent('day', $event)"
-            (eventClicked)="handleEvent('info', $event.event)"
-            (eventTimesChanged)="handleEvent('time', $event.event)">
+            (eventClicked)="handleEvent('info', $event)"
+            (eventTimesChanged)="handleEvent('change', $event)">
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
             *ngSwitchCase="WEEK"
@@ -79,9 +79,9 @@
             [hourSegments]="1"
             [refresh]="refresh"
             (dayHeaderClicked)="header('header', $event)"
-            (hourSegmentClicked)="handleEvent('hour', $event.event)"
-            (eventClicked)="handleEvent('info', $event.event)"
-            (eventTimesChanged)="handleEvent('none', $event.event)">
+            (hourSegmentClicked)="handleEvent('hour', $event)"
+            (eventClicked)="handleEvent('info', $event)"
+            (eventTimesChanged)="handleEvent('change', $event)">
     </mwl-calendar-week-view>
     <mwl-calendar-day-view
             *ngSwitchCase="DAY"
@@ -93,8 +93,8 @@
             locale="it"
             [hourSegments]="1"
             (hourSegmentClicked)="handleEvent('hour', $event)"
-            (eventClicked)="handleEvent('info', $event.event)"
-            (eventTimesChanged)="handleEvent('none', $event.event)">
+            (eventClicked)="handleEvent('info', $event)"
+            (eventTimesChanged)="handleEvent('change', $event)">
     </mwl-calendar-day-view>
 </div>
 

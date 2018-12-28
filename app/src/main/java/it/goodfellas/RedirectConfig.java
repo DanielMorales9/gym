@@ -14,7 +14,6 @@ import org.springframework.context.annotation.PropertySource;
 
 @Configuration
 @EnableConfigurationProperties
-@PropertySource("application.yml")
 public class RedirectConfig {
 
     private final static int redirectPort = 443;
@@ -22,6 +21,7 @@ public class RedirectConfig {
     @Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+
             @Override
             protected void postProcessContext(Context context) {
                 SecurityConstraint securityConstraint = new SecurityConstraint();
@@ -31,6 +31,7 @@ public class RedirectConfig {
                 securityConstraint.addCollection(collection);
                 context.addConstraint(securityConstraint);
             }
+
         };
         tomcat.addAdditionalTomcatConnectors(redirectConnector());
         return tomcat;

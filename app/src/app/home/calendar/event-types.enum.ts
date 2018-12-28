@@ -3,5 +3,6 @@ export enum EVENT_TYPES {
     INFO = 'info',
     HOUR = 'hour',
     DELETE = 'delete',
-    DAY = 'day'
+    DAY = 'day',
+    CHANGE = 'change'
 }
