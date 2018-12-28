@@ -1,6 +1,8 @@
 import {Component} from "@angular/core";
 import {BaseCalendar} from "./base-calendar";
 import {EVENT_TYPES} from "./event-types.enum";
+import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
+import {DateService, GymConfigurationService, NotificationService} from "../../services";
 
 
 @Component({
@@ -9,6 +11,18 @@ import {EVENT_TYPES} from "./event-types.enum";
     styleUrls: ['../../app.component.css']
 })
 export class TrainerCalendarComponent extends BaseCalendar {
+
+    constructor(public userHelperService: UserHelperService,
+                private trainingService: TrainingService,
+                private gymConf: GymConfigurationService,
+                private timesOffService: TimesOffService,
+                private notificationService: NotificationService) {
+        super(userHelperService);
+    }
+
+    change(action: string, event: any) {
+
+    }
 
     getEvents() {
         this.events = [];
@@ -83,6 +97,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     info(action: string, event: any) {
+        event = event.event;
         this.modalData = {
             action: EVENT_TYPES.INFO,
             title: event.title,

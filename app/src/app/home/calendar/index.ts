@@ -4,6 +4,8 @@ export * from './admin-calendar.component';
 export * from './admin-info-modal.component';
 export * from './admin-header-modal.component';
 export * from './admin-delete-modal.component';
+export * from './admin-hour-modal.component';
+export * from './admin-change-modal.component';
 export * from './customer-hour-modal.component';
 export * from './customer-delete-modal.component';
 export * from './customer-info-modal.component';

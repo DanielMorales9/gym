@@ -21,6 +21,10 @@ public interface TimeOffRepository extends JpaRepository<TimeOff, Long> {
     List<TimeOff> findTimesOffInBetween(@RequestParam("starttime") Date starttime,
                                         @RequestParam("endtime") Date endtime);
 
+    @Query("select t from TimeOff as t where not (t.startTime > :endtime or t.endTime > :starttime)")
+    List<TimeOff> findOverlappingTimesOff(@RequestParam("starttime") Date starttime,
+                                          @RequestParam("endtime") Date endtime);
+
     @Query("select t from TimeOff as t where t.user.id = :id and t.startTime >= :starttime " +
             "and t.endTime <= :endtime ")
     List<TimeOff> findAllTimesOffById(Long id, @RequestParam("starttime") Date starttime,

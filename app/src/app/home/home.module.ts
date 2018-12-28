@@ -6,9 +6,9 @@ import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
 import localeIt from '@angular/common/locales/it';
 import {
-    AdminCalendarComponent,
+    AdminCalendarComponent, AdminChangeModalComponent,
     AdminDeleteModalComponent,
-    AdminHeaderModalComponent,
+    AdminHeaderModalComponent, AdminHourModalComponent,
     AdminInfoModalComponent,
     CalendarComponent,
     CustomerCalendarComponent,
@@ -53,6 +53,8 @@ registerLocaleData(localeIt);
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         AdminCalendarComponent,
+        AdminHourModalComponent,
+        AdminChangeModalComponent,
         AdminInfoModalComponent,
         AdminHeaderModalComponent,
         AdminDeleteModalComponent,

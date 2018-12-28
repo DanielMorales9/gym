@@ -13,9 +13,12 @@
             <div [ngSwitch]="modalData?.event.meta?.type">
                 <div *ngSwitchCase="'admin'">
                     <div class="modal-body" >
-                        <i class="fas fa-door-closed"></i>&nbsp;
-                        La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}.
-                    </div>
+                        <div class="col-12">
+                            <i class="fas fa-door-closed"></i>&nbsp;
+                            La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
+                            dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+                            alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+                        </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-secondary" (click)="close()">Ok</button>
                     </div>

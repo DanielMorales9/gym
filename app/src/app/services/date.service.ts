@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core'
-import {SaleLineItem, Sale, Bundle, User} from "../shared/model";
-import {SalesService} from "../shared/services";
 
 @Injectable()
 export class DateService {
@@ -15,5 +13,11 @@ export class DateService {
             + currentdate.getHours() + ":"
             + currentdate.getMinutes();
 
+    }
+
+    public addHour(startTime: Date) {
+       let endTime = new Date(startTime);
+       endTime.setHours(endTime.getHours()+1);
+       return endTime;
     }
 }

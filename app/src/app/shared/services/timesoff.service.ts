@@ -43,4 +43,9 @@ export class TimesOffService {
         return this.http.delete(endpoint);
     }
 
+    change(timeOffId: any, startTime: Date, endTime: Date, timeOffName: string, type: string) {
+        let start = TimesOffService.getDateString(startTime);
+        let end = TimesOffService.getDateString(endTime);
+        return this.http.get(`/timesOff/change/${timeOffId}/?startTime=${start}&endTime=${end}&name=${timeOffName}&type=${type}`)
+    }
 }

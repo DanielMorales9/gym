@@ -1,6 +1,8 @@
 import {Component} from "@angular/core";
 import {BaseCalendar} from "./base-calendar";
 import {EVENT_TYPES} from "./event-types.enum";
+import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
+import {DateService, GymConfigurationService, NotificationService} from "../../services";
 
 
 @Component({
@@ -9,6 +11,13 @@ import {EVENT_TYPES} from "./event-types.enum";
     styleUrls: ['../../app.component.css']
 })
 export class CustomerCalendarComponent extends BaseCalendar {
+
+    constructor(public userHelperService: UserHelperService,
+                private trainingService: TrainingService,
+                private timesOffService: TimesOffService,
+                private notificationService: NotificationService) {
+        super(userHelperService);
+    }
 
     header(action: string, event: any) {
         console.log(action, event)
@@ -36,6 +45,10 @@ export class CustomerCalendarComponent extends BaseCalendar {
         }
     }
 
+    change(action: string, event: any) {
+
+    }
+
     delete(action: string, event: any) {
         this.modalData = {
             action: action,
@@ -48,6 +61,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     info(action: string, event: any) {
+        event = event.event;
         this.modalData = {
             action: action,
             title: event.title,
