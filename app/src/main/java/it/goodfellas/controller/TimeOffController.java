@@ -13,7 +13,6 @@ import it.goodfellas.repository.TrainerRepository;
 import it.goodfellas.service.TimeOffService;
 import it.goodfellas.service.UserService;
 import it.goodfellas.utility.MailSenderUtility;
-import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,11 +66,48 @@ public class TimeOffController {
                                              @RequestParam("type")
                                                      String type) {
 
-        logger.info("checking availability and enablement");
-        logger.info("checking whether the date is before today");
-        logger.info(startTime.toString());
-        if (checkDateBeforeToday(startTime))
-            return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
+        if (checkDate(startTime)) return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
+
+        switch (type) {
+            case "admin":
+                logger.info("counting number of reservations");
+                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
+                    return new ResponseEntity<>("Non è possibile chiudere la palestra " +
+                            "con delle prenotazioni attive.", HttpStatus.NOT_ACCEPTABLE);
+                logger.info("checking other timesOff");
+                if (checkingOtherAdminTimesOff(startTime, endTime))
+                    return new ResponseEntity<>("Hai già effettuato una chiusura.",
+                            HttpStatus.NOT_ACCEPTABLE);
+                break;
+            case "trainer":
+                logger.info("checking whether there are trainers available");
+                if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
+                    return new ResponseEntity<String>("Non è possibile prendere le ferie in questo orario.",
+                            HttpStatus.NOT_ACCEPTABLE);
+                break;
+            default:
+                return new ResponseEntity<String>("Non puoi prendere un giorno di ferie",
+                        HttpStatus.BAD_REQUEST);
+        }
+
+        logger.info("Everything went fine");
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/timesOff/checkChange",
+            produces = "text/plain")
+    @Transactional
+    ResponseEntity<String> checkChange(@RequestParam("startTime")
+                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                             @RequestParam("endTime")
+                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
+                                             @RequestParam("type")
+                                                     String type) {
+
+        if (checkDate(startTime)) return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
 
         switch (type) {
             case "admin":
@@ -83,7 +119,7 @@ public class TimeOffController {
             case "trainer":
                 logger.info("checking whether there are trainers available");
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    return new ResponseEntity<String>("Sei l'unico Trainer disponibile in questo orario",
+                    return new ResponseEntity<String>("Non è possibile prendere le ferie in questo orario.",
                             HttpStatus.NOT_ACCEPTABLE);
                 break;
             default:
@@ -94,6 +130,22 @@ public class TimeOffController {
         logger.info("Everything went fine");
 
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    private boolean checkDate(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam("startTime") Date startTime) {
+        logger.info("checking availability and enablement");
+        logger.info("checking whether the date is before today");
+        logger.info(startTime.toString());
+        if (checkDateBeforeToday(startTime))
+            return true;
+        return false;
+    }
+
+    private boolean checkingOtherAdminTimesOff(Date startTime, Date endTime) {
+        List<TimeOff> timesOff = this.timeRepository.findOverlappingTimesOffByType(startTime, endTime, "admin");
+        logger.info(timesOff.toString());
+        logger.info(String.valueOf(timesOff.size()));
+        return timesOff.size() > 0;
     }
 
     private boolean checkingAvailabilityAdminTimeOff(Date startTime, Date endTime) {
@@ -161,13 +213,14 @@ public class TimeOffController {
                                                                iso = DateTimeFormat.ISO.DATE_TIME)
                                                        @RequestParam("endTime") Date endTime) {
         logger.info("checking whether there are trainers");
+        // TODO non funziona, ricontrollare
         Long numTrainers = this.trainerRepository.countAllTrainer();
         List<Reservation> reservations = this.reservationService.findByInterval(startTime, endTime);
         reservations.sort(Comparator.comparing(Reservation::getStartTime));
+        logger.info(reservations.toString());
 
-        Stream<TimeOff> streamTimesOff = this.timeRepository.findOverlappingTimesOff(startTime, endTime)
-                .parallelStream()
-                .filter(t -> t.getType().equals("trainer"));
+        Stream<TimeOff> streamTimesOff = this.timeRepository
+                .findOverlappingTimesOffByType(startTime, endTime, "trainer").parallelStream();
         if (id.isPresent()) {
             Long timeId = id.get();
             streamTimesOff = streamTimesOff.filter(timeOff -> !timeOff.getId().equals(timeId));
@@ -175,22 +228,24 @@ public class TimeOffController {
         List<TimeOff> timesOff = streamTimesOff
                 .sorted(Comparator.comparing(TimeOff::getStartTime))
                 .collect(Collectors.toList());
+        logger.info(timesOff.toString());
 
         // TODO high complexity
-        long numAvailableTrainers = numTrainers-1;
+        long numAvailableTrainers;
         for (Reservation r: reservations) {
+            numAvailableTrainers = numTrainers - 1;
             for (TimeOff time: timesOff) {
                 if (time.getStartTime().compareTo(r.getStartTime()) <= 0
                         && time.getEndTime().compareTo(r.getEndTime()) >= 0) {
-                    numAvailableTrainers --;
+                    numAvailableTrainers--;
                 }
                 else break;
             }
             if (numAvailableTrainers <= 0)
-                return false;
+                return true;
         }
 
-        return true;
+        return false;
     }
 
     @GetMapping(path = "/timesOff/change/{id}")

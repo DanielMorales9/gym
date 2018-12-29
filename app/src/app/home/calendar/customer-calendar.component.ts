@@ -69,6 +69,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
             userId: this.user.id,
             event: event
         };
+        console.log(event);
         this.openModal(action);
     }
 
@@ -82,6 +83,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     getReservations() {
+        console.log("get reservations");
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.trainingService
             .getReservations(startDay, endDay, this.user.id)
@@ -95,6 +97,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
 
     getTimesOff() {
+        console.log("get timesoff");
         let {startDay, endDay} = this.getStartAndEndTimeByView();
         this.timesOffService.getTimesOff(startDay, endDay, undefined, 'admin')
             .subscribe((value : Object[]) => {

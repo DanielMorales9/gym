@@ -61,7 +61,7 @@ export class AdminCalendarComponent extends BaseCalendar {
         if (event.day.date >= new Date()) {
             let type = "admin";
             let {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(event.day.date));
-            this.timesOffService.check(startTime, endTime, type, this.user.id)
+            this.timesOffService.check(startTime, endTime, type)
                 .subscribe(res => {
                     this.modalData = {
                         action: EVENT_TYPES.HEADER,
@@ -98,7 +98,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             let type = "admin";
             let startTime = new Date(event.date);
             let endTime = this.dateService.addHour(startTime);
-            this.timesOffService.check(startTime, endTime, type, this.user.id)
+            this.timesOffService.check(startTime, endTime, type)
                 .subscribe(res => {
                     this.modalData = {
                         action: EVENT_TYPES.HOUR,
@@ -134,7 +134,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     change(action: string, event: any) {
         if (event.newStart >= new Date()) {
             let type = "admin";
-            this.timesOffService.check(event.newStart, event.newEnd, type, this.user.id)
+            this.timesOffService.checkChange(event.newStart, event.newEnd, type)
                 .subscribe(res => {
                     this.modalData = {
                         action: EVENT_TYPES.CHANGE,
@@ -143,7 +143,6 @@ export class AdminCalendarComponent extends BaseCalendar {
                         role: this.role,
                         event: event
                     };
-                    console.log(this.modalData);
                     document.getElementById('admin-change-modal-button').click();
                 }, err => {
                     let message = {

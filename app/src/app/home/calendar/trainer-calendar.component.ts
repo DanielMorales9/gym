@@ -16,12 +16,32 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 private trainingService: TrainingService,
                 private gymConf: GymConfigurationService,
                 private timesOffService: TimesOffService,
+                private dateService: DateService,
                 private notificationService: NotificationService) {
         super(userHelperService);
     }
 
     change(action: string, event: any) {
-
+        if (event.newStart >= new Date()) {
+            let type = "trainer";
+            this.timesOffService.check(event.newStart, event.newEnd, type)
+                .subscribe(res => {
+                    this.modalData = {
+                        action: EVENT_TYPES.CHANGE,
+                        title: "Orario di Ferie",
+                        userId: this.user.id,
+                        role: this.role,
+                        event: event
+                    };
+                    document.getElementById('trainer-change-modal-button').click();
+                }, err => {
+                    let message = {
+                        text: err.error,
+                        class: "alert-danger"
+                    };
+                    this.notificationService.sendMessage(message);
+                });
+        }
     }
 
     getEvents() {
@@ -61,7 +81,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     header(action: string, event: any) {
         if (event.day.date >= new Date()) {
             let {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(event.day.date));
-            this.timesOffService.check(startTime, endTime, "trainer", this.user.id)
+            this.timesOffService.check(startTime, endTime, "trainer")
                 .subscribe(res => {
                 this.modalData = {
                     action: EVENT_TYPES.HEADER,
@@ -93,8 +113,29 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        console.log(action, event)
-    }
+        console.log(event);
+        if (event.date >= new Date()) {
+            let type = "trainer";
+            let startTime = new Date(event.date);
+            let endTime = this.dateService.addHour(startTime);
+            this.timesOffService.check(startTime, endTime, type)
+                .subscribe(res => {
+                    this.modalData = {
+                        action: EVENT_TYPES.HOUR,
+                        title: "Orario di Ferie",
+                        userId: this.user.id,
+                        role: this.role,
+                        event: event
+                    };
+                    document.getElementById('trainer-hour-modal-button').click();
+                }, err => {
+                    let message = {
+                        text: err.error,
+                        class: "alert-danger"
+                    };
+                    this.notificationService.sendMessage(message);
+                });
+        }    }
 
     info(action: string, event: any) {
         event = event.event;

@@ -7,7 +7,7 @@ export class TimesOffService {
 
     constructor(private http: HttpClient) {}
 
-    check(startTime: Date, endTime: Date, type: string, id: number) : Observable<any> {
+    check(startTime: Date, endTime: Date, type: string) : Observable<any> {
         let startTimeString = TimesOffService.getDateString(startTime);
         let endTimeString = TimesOffService.getDateString(endTime);
         return this.http.get(`/timesOff/checkAvailabilityAndEnablement?startTime=${startTimeString}&endTime=${endTimeString}&type=${type}`)
@@ -47,5 +47,11 @@ export class TimesOffService {
         let start = TimesOffService.getDateString(startTime);
         let end = TimesOffService.getDateString(endTime);
         return this.http.get(`/timesOff/change/${timeOffId}/?startTime=${start}&endTime=${end}&name=${timeOffName}&type=${type}`)
+    }
+
+    checkChange(newStart: Date, newEnd: Date, type: string) {
+        let startTimeString = TimesOffService.getDateString(newStart);
+        let endTimeString = TimesOffService.getDateString(newEnd);
+        return this.http.get(`/timesOff/checkChange?startTime=${startTimeString}&endTime=${endTimeString}&type=${type}`)
     }
 }

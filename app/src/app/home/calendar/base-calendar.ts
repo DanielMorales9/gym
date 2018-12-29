@@ -128,20 +128,24 @@ export abstract class BaseCalendar implements OnInit {
         let dayOfWeek = this.viewDate.getDay();
         let hour = 0;
         let min = 0;
+        let sec = 0;
 
         switch (this.view) {
             case this.MONTH:
+                console.log("month");
                 let nextMonth = month + 1;
-                startDay = new Date(year, month, 1, hour, min);
-                endDay = new Date(year, nextMonth, 0, hour, min);
+                startDay = new Date(year, month, 1, hour, min, sec);
+                endDay = new Date(year, nextMonth, 0, 23, 59, 59);
                 break;
             case this.WEEK:
-                startDay = new Date(year, month, date - dayOfWeek, hour, min);
-                endDay = new Date(year, month, date + (7 - dayOfWeek), hour, min);
+                console.log("week");
+                startDay = new Date(year, month, date - dayOfWeek, hour, min, sec);
+                endDay = new Date(year, month, date + (7 - dayOfWeek), 23, 59, 59);
                 break;
             default:
-                startDay = new Date(year, month, date, hour, min);
-                endDay = new Date(year, month, date, hour + 24, min);
+                console.log("day");
+                startDay = new Date(year, month, date, hour, min, sec);
+                endDay = new Date(year, month, date, hour + 24, 59, 59);
                 break;
         }
         return {startDay, endDay};
@@ -190,6 +194,7 @@ export abstract class BaseCalendar implements OnInit {
     }
 
     onViewDateChanged(view?: CalendarView) {
+        console.log(view);
         if (!!view) {
             this.view = view;
         }
