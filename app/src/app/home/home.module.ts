@@ -4,7 +4,6 @@ import {HomeRouting} from "./home.routing";
 import {HomeComponent} from "./home.component";
 import {CalendarModule, DateAdapter} from "angular-calendar";
 import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
-import localeIt from '@angular/common/locales/it';
 import {
     AdminCalendarComponent, AdminChangeModalComponent,
     AdminDeleteModalComponent,
@@ -15,14 +14,15 @@ import {
     CustomerDeleteModalComponent,
     CustomerHourModalComponent,
     CustomerInfoModalComponent,
-    TrainerCalendarComponent, TrainerDeleteModalComponent,
-    TrainerHeaderModalComponent,
+    TrainerCalendarComponent, TrainerChangeModalComponent, TrainerDeleteModalComponent,
+    TrainerHeaderModalComponent, TrainerHourModalComponent,
     TrainerInfoModalComponent
 } from "./calendar";
 import {BundleModalComponent, BundlesComponent} from "./bundles";
 import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from "./users";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
+import localeIt from '@angular/common/locales/it';
 
 registerLocaleData(localeIt);
 
@@ -61,6 +61,8 @@ registerLocaleData(localeIt);
         TrainerCalendarComponent,
         TrainerHeaderModalComponent,
         TrainerInfoModalComponent,
+        TrainerHourModalComponent,
+        TrainerChangeModalComponent,
         TrainerDeleteModalComponent,
 
     ],

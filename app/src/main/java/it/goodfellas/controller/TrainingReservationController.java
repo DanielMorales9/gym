@@ -134,17 +134,16 @@ public class TrainingReservationController {
             return new ResponseEntity<String>("Non hai pacchetti", HttpStatus.NOT_ACCEPTABLE);
 
         logger.info("Checking whether there are times off");
-        List<TimeOff> timesOff = this.timeRepository.findTimesOffInBetween(startDate, endDate);
+        List<String> timesOff = this.timeRepository.findTimesOffTypeInBetween(startDate, endDate);
         Stream<String> countAdmin = timesOff
                 .parallelStream()
-                .map(TimeOff::getType)
                 .filter(s -> s.equals("admin")).limit(1);
         if (countAdmin.count() == 1)
             return new ResponseEntity<String>("Chiusura Aziendale", HttpStatus.NOT_ACCEPTABLE);
 
         logger.info("Checking whether there are times off");
         Long numTrainers = this.trainerRepository.countAllTrainer();
-        Long numOffTrainers = timesOff.parallelStream().filter(t -> t.getType().equals("trainer")).count();
+        Long numOffTrainers = timesOff.parallelStream().filter(t -> t.equals("trainer")).count();
         long numAvailableTrainers = numTrainers - numOffTrainers;
         if (numAvailableTrainers == 0)
             return new ResponseEntity<String>("Nessun Personal Trainer", HttpStatus.NOT_ACCEPTABLE);
