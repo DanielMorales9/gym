@@ -34,7 +34,6 @@ services:
     image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT
     ports:
       - 443:8443
-      - 80:8080
     environment:
       POSTGRES_HOST:  postgres
       POSTGRES_PASSWORD: password#
@@ -42,9 +41,9 @@ services:
       REDIS_PORT: 6379
       REDIS_HOST: redis
       BASE_HOST: https://www.goodfellas.fitness
-    volumes:
-      - /home/ubuntu/keystore.p12:/app/keystore.p12
-      - /home/ubuntu/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
+#    volumes:
+#      - /home/ubuntu/keystore.p12:/app/keystore.p12
+#      - /home/ubuntu/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
     deploy:
       restart_policy:
         condition: on-failure
