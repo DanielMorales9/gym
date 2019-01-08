@@ -29,7 +29,7 @@ reservationBeforeHours: 6
 server:
   port: 8443
   ssl:
-    key-store: /app/keystore.p12
+    key-store: /app/certs/keystore.p12
     key-store-password: goodfellas
     keyStoreType: PKCS12
     keyAlias: tomcat

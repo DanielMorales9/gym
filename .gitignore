@@ -36,4 +36,3 @@ e2e/*.map
 app/coverage
 nginx/
 data/
-.well_known/
