@@ -35,6 +35,5 @@ e2e/*.js
 e2e/*.map
 app/coverage
 nginx/
-app/certs/
 data/
 .well_known/
