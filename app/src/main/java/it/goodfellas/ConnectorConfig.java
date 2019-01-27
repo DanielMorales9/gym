@@ -1,3 +1,5 @@
+package it.goodfellas;
+
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;
 import org.apache.tomcat.util.descriptor.web.SecurityCollection;
@@ -14,6 +16,7 @@ public class ConnectorConfig {
     @Bean
     public ServletWebServerFactory servletContainer() {
         TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
+
             @Override
             protected void postProcessContext(Context context) {
                 SecurityConstraint securityConstraint = new SecurityConstraint();
@@ -23,6 +26,7 @@ public class ConnectorConfig {
                 securityConstraint.addCollection(collection);
                 context.addConstraint(securityConstraint);
             }
+
         };
         tomcat.addAdditionalTomcatConnectors(redirectConnector());
         return tomcat;

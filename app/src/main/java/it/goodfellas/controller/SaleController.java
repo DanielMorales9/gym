@@ -19,17 +19,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.stream.Collectors;
 
 @RepositoryRestController
+@RequestMapping("/sales")
 public class SaleController {
 
     private final AdminRepository adminRepository;
@@ -63,31 +63,29 @@ public class SaleController {
         this.bundleSpecificationService = bundleSpecificationService;
     }
 
-    @GetMapping(path = "/sales/findUserSales")
+    @GetMapping(path = "/findUserSales")
     @ResponseBody
     Page<Sale> findUserSales(@RequestParam Long id, Pageable pageable) {
         return saleRepository.findUserSales(id, pageable);
     }
 
-    @GetMapping(path = "/sales/searchByDate")
+    @GetMapping(path = "/searchByDate")
     @ResponseBody
-    Page<Sale> findSalesByDate(@RequestParam Long id, @RequestParam String date, Pageable pageable) throws ParseException {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Date parsedDate = formatter.parse(date);
-        logger.info(parsedDate.toString());
-        return saleRepository.findSalesByCustomer_IdAndCreatedAtGreaterThanEqual(id, parsedDate, pageable);
+    Page<Sale> findSalesByDate(@RequestParam Long id,
+                               @DateTimeFormat(pattern="dd-MM-yyyy", iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                               Pageable pageable) {
+        return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
     }
 
-    @GetMapping(path = "/sales/searchByLastName")
+    @GetMapping(path = "/searchByLastName")
     @ResponseBody
-    Page<Sale> findSalesByCustomer_LastName(@RequestParam String lastName, Pageable pageable) {
-        return saleRepository.findSalesByCustomer_LastName(lastName, pageable);
+    Page<Sale> findSalesByCustomerLastName(@RequestParam String lastName, Pageable pageable) {
+        return saleRepository.findSalesByCustomerLastName(lastName, pageable);
     }
 
-    @GetMapping(path = "/sales/createNewSale/{adminEmail}/{customerId}")
+    @GetMapping(path = "/createNewSale/{adminEmail}/{customerId}")
     @Transactional
-    ResponseEntity<SaleResource> createNewSale(@PathVariable String adminEmail,
-                                               @PathVariable Long customerId) {
+    ResponseEntity<SaleResource> createNewSale(@PathVariable String adminEmail, @PathVariable Long customerId) {
 
         Admin admin = adminRepository.findByEmail(adminEmail);
         Customer customer = customerService.findById(customerId);
@@ -99,10 +97,11 @@ public class SaleController {
         sale.setCustomer(customer);
         sale.setPayed(false);
         sale = this.saleService.save(sale);
+
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/sales/getTotalPrice/{saleId}")
+    @GetMapping(path = "/getTotalPrice/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> getTotalPrice(@PathVariable Long saleId) {
         Sale sale = getSale(saleId);
@@ -110,14 +109,14 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/sales/addSalesLineItem/{saleId}/{bundleSpecId}")
+    @GetMapping(path = "/addSalesLineItem/{saleId}/{bundleSpecId}")
     @Transactional
-    ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId, @PathVariable Long bundleSpecId,
-                                        @RequestParam(defaultValue = "1") Integer quantity) {
+    ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
+                                                  @PathVariable Long bundleSpecId,
+                                                  @RequestParam(defaultValue = "1") Integer quantity) {
         Sale sale = getSale(saleId);
-        ATrainingBundleSpecification bundleSpec = this.bundleSpecificationService
-                .findById(bundleSpecId);
-        SalesLineItem sli = sale.addSalesLineItem(quantity, bundleSpec);
+        ATrainingBundleSpecification bundleSpec = this.bundleSpecificationService.findById(bundleSpecId);
+        sale.addSalesLineItem(quantity, bundleSpec);
         sale = this.saleService.save(sale);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
@@ -126,7 +125,7 @@ public class SaleController {
     @DeleteMapping(path = "/sales/deleteSalesLineItem/{saleId}/{salesLineItemId}")
     @Transactional
     ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
-                                           @PathVariable Long salesLineItemId) {
+                                                     @PathVariable Long salesLineItemId) {
         Sale sale = getSale(saleId);
         logger.info(sale.toString());
         SalesLineItem sli = sale.getSalesLineItems().stream()
@@ -185,7 +184,7 @@ public class SaleController {
         if (!sale.isDeletable()) {
             logger.info("sale not deletable");
             throw new InvalidSaleException("Non è possibile eliminare la vendita per il cliente: %s",
-                sale.getCustomer().getLastName());
+                    sale.getCustomer().getLastName());
         }
         else if (!sale.removeBundlesFromCustomersCurrentBundles()) {
             logger.info("sale not deletable");

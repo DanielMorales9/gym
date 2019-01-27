@@ -43,7 +43,7 @@ services:
       REDIS_HOST: redis
       BASE_HOST: https://www.goodfellas.fitness
     volumes:
-      - ~/certs/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
+      - ./app/challenge/:/app/META-INF/resources/.well-known/acme-challenge/
     deploy:
       restart_policy:
         condition: on-failure
