@@ -4,7 +4,6 @@ import it.goodfellas.exception.UserNotFoundException;
 import it.goodfellas.hateoas.AUserAssembler;
 import it.goodfellas.hateoas.AUserResource;
 import it.goodfellas.model.AUser;
-import it.goodfellas.repository.RoleRepository;
 import it.goodfellas.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

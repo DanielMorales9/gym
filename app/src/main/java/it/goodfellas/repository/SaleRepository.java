@@ -16,7 +16,9 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query(value="select s from Sale as s where s.customer.id = :id")
     Page<Sale> findUserSales(@RequestParam("id") Long id, Pageable pageable);
 
-    Page<Sale> findSalesByCustomer_IdAndCreatedAtGreaterThanEqual(@RequestParam("id") Long id, @RequestParam("date") Date date, Pageable pageable);
+    Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(@RequestParam("id") Long id,
+                                                                 @RequestParam("date") Date date,
+                                                                 Pageable pageable);
 
-    Page<Sale> findSalesByCustomer_LastName(String query, Pageable pageable);
+    Page<Sale> findSalesByCustomerLastName(String query, Pageable pageable);
 }

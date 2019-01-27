@@ -49,9 +49,10 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
 
-	@RequestMapping({ "/", "/home*", "/home/**/*", "/home/**",
-            "/profile/**/*", "/profile/*",  "/logout",
-            "/auth/**/*", "/auth/*"})
+	@Autowired @Qualifier("userAuthService")
+	UserAuthService userDetailsService;
+
+	@RequestMapping({ "/", "/home*", "/home/**/*", "/home/**", "/profile/**/*", "/profile/*",  "/logout", "/auth/**/*"})
     public String publicAPI() {
         return "forward:/index.html";
     }
@@ -68,7 +69,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		return user;
 	}
 
-
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		// @formatter:off
@@ -78,7 +78,8 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				.antMatchers("/", "/home", "/user",
                         "/logout", "/login", "/profile", "/profile/*",
 						"/verification*",  "/auth/*", "/auth/**/*",
-						"/authentication/**/*", "/authentication/*").permitAll()
+						"/.well-known/acme-challenge/*", "/authentication/**/*",
+						"/authentication/*").permitAll()
 				.anyRequest().authenticated()
 				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
 				.and().csrf()
@@ -87,7 +88,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Override
-	public void configure(WebSecurity web) throws Exception {
+	public void configure(WebSecurity web) {
 		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css", "/**/*.txt");
 
 	}
@@ -109,8 +110,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		};
 	};
 
-	@Autowired @Qualifier("userAuthService")
-	UserAuthService userDetailsService;
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder(){
@@ -122,12 +121,10 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		return super.authenticationManagerBean();
 	}
 
-
 	@Autowired
 	protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
-
 
 	@Component
 	@Order(Ordered.HIGHEST_PRECEDENCE)
@@ -148,7 +145,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		}
 	}
 
-
 	@Configuration
 	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public class TrainingTypesMapper {
@@ -164,7 +160,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 			return mapper.get(type);
 		}
 	}
-
 
 	@Component
 	public class ExposeEntityIdRestMvcConfiguration extends RepositoryRestConfigurerAdapter {

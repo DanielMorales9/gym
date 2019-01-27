@@ -27,7 +27,7 @@ baseUrl: ${BASE_HOST}
 reservationBeforeHours: 6
 
 server:
-  port: 8443
+  port: 443
   ssl:
     key-store: /app/certs/keystore.p12
     key-store-password: goodfellas

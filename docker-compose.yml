@@ -38,11 +38,11 @@ services:
       - redis
       - postgres
     ports:
-    - 443:8443
+    - 443:443
+    - 80:80
     volumes:
       - ./app/target/dependency/META-INF:/app/META-INF
-#      - ./app/keystore.p12:/app/keystore.p12
-#      - ./app/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
+#      - ./app/certs/keystore.p12:/app/certs/keystore.p12
 #      - ./app/target/dependency/BOOT-INF/lib:/app/lib
 #      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
     environment:

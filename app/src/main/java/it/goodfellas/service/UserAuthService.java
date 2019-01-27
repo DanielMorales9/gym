@@ -1,5 +1,7 @@
 package it.goodfellas.service;
 
+import it.goodfellas.exception.InvalidTokenException;
+import it.goodfellas.exception.UserRegistrationException;
 import it.goodfellas.model.AUser;
 import it.goodfellas.model.Role;
 import it.goodfellas.model.VerificationToken;
@@ -31,6 +33,7 @@ import java.util.stream.Collectors;
 public class UserAuthService implements IUserAuthService {
 
     private final static Logger logger = LoggerFactory.getLogger(UserAuthService.class);
+
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
     @Autowired
@@ -67,17 +70,19 @@ public class UserAuthService implements IUserAuthService {
         input = this.userRepository.save(input);
 
         try {
-            confirmRegistration(input);
-
+            sendEmailForConfirmation(input);
         } catch (MailException e) {
             this.userRepository.delete(input);
-            return null;
+            String message = String.format("Non è stato possibile inviare l'email a %s %s",
+                    input.getFirstName(),
+                    input.getLastName());
+            throw new UserRegistrationException(message);
         }
 
         return input;
     }
 
-    private void confirmRegistration(AUser user) {
+    private void sendEmailForConfirmation(AUser user) {
         String token = UUID.randomUUID().toString();
         createVerificationToken(user, token);
 
@@ -114,7 +119,11 @@ public class UserAuthService implements IUserAuthService {
 
     @Override
     public VerificationToken getVerificationToken(String token) {
-        return tokenRepository.findByToken(token);
+        VerificationToken vToken = tokenRepository.findByToken(token);
+        if (vToken != null) {
+            return vToken;
+        }
+        throw new InvalidTokenException("Il token è invalido.");
     }
 
     @Override
@@ -127,7 +136,7 @@ public class UserAuthService implements IUserAuthService {
     public AUser changePassword(String email, String password) {
         AUser user = this.userRepository.findByEmail(email);
         passwordValidationService.validate(password);
-        logger.info("validated");
+        logger.info("Password is validated");
         user.setPassword(passwordEncoder.encode(password));
         user.setVerified(true);
         return userRepository.save(user);

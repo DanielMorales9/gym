@@ -1,6 +1,6 @@
-package it.goodfellas.controller;
+package it.goodfellas.model;
 
-class PasswordForm {
+public class PasswordForm {
     private String oldPassword;
     private String password;
     private String confirmPassword;

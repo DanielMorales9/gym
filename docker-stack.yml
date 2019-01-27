@@ -33,7 +33,9 @@ services:
   app:
     image: 359080832247.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT
     ports:
-      - 443:8443
+      - 80:80
+#    volumes:
+#      - ./app/target/dependency/META-INF:/app/META-INF
     environment:
       POSTGRES_HOST:  postgres
       POSTGRES_PASSWORD: password#
