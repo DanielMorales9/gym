@@ -38,8 +38,8 @@ services:
       - redis
       - postgres
     ports:
-    - 443:8443
-    - 80:8080
+    - 443:443
+    - 80:80
     volumes:
       - ./app/target/dependency/META-INF:/app/META-INF
 #      - ./app/certs/keystore.p12:/app/certs/keystore.p12
