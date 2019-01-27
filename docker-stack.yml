@@ -35,6 +35,8 @@ services:
     ports:
       - 443:8443
       - 80:8080
+    volumes:
+      - ./app/target/dependency/META-INF:/app/META-INF
     environment:
       POSTGRES_HOST:  postgres
       POSTGRES_PASSWORD: password#
@@ -42,8 +44,6 @@ services:
       REDIS_PORT: 6379
       REDIS_HOST: redis
       BASE_HOST: https://www.goodfellas.fitness
-    volumes:
-      - ./app/challenge/:/app/META-INF/resources/.well-known/acme-challenge/
     deploy:
       restart_policy:
         condition: on-failure
