@@ -3,15 +3,14 @@ package it.goodfellas.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(HttpStatus.CONFLICT)
-
+@ResponseStatus(HttpStatus.NOT_FOUND)
 public class UserNotFoundException extends RuntimeException {
 
     public UserNotFoundException(Long userId) {
-        super("Could not find AUser " + userId + ".");
+        super(String.format("L'utente con id %s non è stato trovato.", userId));
     }
 
     public UserNotFoundException(String email) {
-        super("Could not find AUser with the following email" + email + ".");
+        super(String.format("L'utente con email %s non è stato trovato.", email));
     }
 }

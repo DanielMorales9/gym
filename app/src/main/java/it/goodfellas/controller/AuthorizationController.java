@@ -1,5 +1,7 @@
 package it.goodfellas.controller;
 
+import it.goodfellas.exception.ExpiredTokenException;
+import it.goodfellas.exception.InvalidPasswordException;
 import it.goodfellas.exception.InvalidTokenException;
 import it.goodfellas.exception.POJONotFoundException;
 import it.goodfellas.hateoas.*;
@@ -18,7 +20,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -64,65 +65,46 @@ public class AuthorizationController {
         this.userService = userService;
     }
 
-
     @PostMapping(path = "/customer/registration")
     ResponseEntity<CustomerResource> customerRegistration(@Valid @RequestBody Customer input) {
         logger.info("Customer is trying to register: " + input.toString());
-
         AUser c = registerUser(input);
-        ResponseEntity<CustomerResource> response;
-        if (c != null)
-            response = new ResponseEntity<>(
-                    new CustomerAssembler().toResource((Customer) c), HttpStatus.OK);
-        else
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        return response;
+        return new ResponseEntity<>(new CustomerAssembler().toResource((Customer) c), HttpStatus.OK);
+
     }
 
     @PostMapping(path = "/trainer/registration")
     ResponseEntity<TrainerResource> trainerRegistration(@Valid @RequestBody Trainer input) {
         logger.info("Trainer is trying to register: " + input.toString());
-
         AUser c = registerUser(input);
-        ResponseEntity<TrainerResource> response;
-        if (c != null)
-            response = new ResponseEntity<>(
-                    new TrainerAssembler().toResource((Trainer) c), HttpStatus.OK);
-        else
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        return response;
+        return new ResponseEntity<>(new TrainerAssembler().toResource((Trainer) c), HttpStatus.OK);
     }
 
 
     @PostMapping(path = "/admin/registration")
     ResponseEntity<AdminResource> adminRegistration(@Valid @RequestBody Admin input) {
         logger.info("Admin is trying to register: " + input.toString());
-
         AUser c = registerUser(input);
-        ResponseEntity<AdminResource> response;
-        if (c != null)
-            response = new ResponseEntity<>(
-                    new AdminAssembler().toResource((Admin) c), HttpStatus.OK);
-        else
-            response = ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        return response;
+        return new ResponseEntity<>(new AdminAssembler().toResource((Admin) c), HttpStatus.OK);
     }
 
     @PostMapping("/customer/verifyPassword")
     ResponseEntity<CustomerResource> changeCustomerPassword(@RequestBody Customer user) {
-        logger.info(user.toString());
+        logger.info("About to change password for customer");
         user = (Customer) userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new CustomerAssembler().toResource(user), HttpStatus.OK);
     }
 
     @PostMapping("/admin/verifyPassword")
     ResponseEntity<AdminResource> changeAdminPassword(@RequestBody Admin user) {
+        logger.info("About to change password for admin");
         user = (Admin) userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new AdminAssembler().toResource(user), HttpStatus.OK);
     }
 
     @PostMapping("/trainer/verifyPassword")
     ResponseEntity<TrainerResource> changeTrainerPassword(@RequestBody Trainer user) {
+        logger.info("About to change password for trainer");
         user = (Trainer) userService.changePassword(user.getEmail(), user.getPassword());
         return new ResponseEntity<>(new TrainerAssembler().toResource(user), HttpStatus.OK);
     }
@@ -151,57 +133,47 @@ public class AuthorizationController {
     @PostMapping("/changeNewPassword/{id}")
     ResponseEntity<AUserResource> changeNewPassword(@PathVariable("id") Long id,
                                                     @RequestBody PasswordForm form) {
-        AUser user = this.userRepository.findById(id)
-                .orElseThrow(() -> new POJONotFoundException("User", id));
-        logger.info(form.toString());
+        AUser user = this.userRepository.findById(id).orElseThrow(() -> new POJONotFoundException("User", id));
 
         String newPwd = passwordEncoder.encode(form.getPassword());
-        logger.info(passwordEncoder.matches(form.getOldPassword(), user.getPassword()) ?
-                "password coincidono": "password non coincidono");
-        if (passwordEncoder.matches(form.getOldPassword(), user.getPassword())
-                && form.getConfirmPassword().equals(form.getPassword())) {
+
+        boolean oldNewPwd = passwordEncoder.matches(form.getOldPassword(), user.getPassword());
+        if (oldNewPwd && form.getConfirmPassword().equals(form.getPassword())) {
             user.setPassword(newPwd);
             user.setConfirmPassword(newPwd);
             user = this.userRepository.save(user);
             return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
         }
-        logger.info(form.getConfirmPassword().equals(form.getPassword()) ? "nuove password coincidono" : "nuove password non coincidono");
-        return ResponseEntity.badRequest().body(null);
+        throw new InvalidPasswordException("Le password non coincidono.");
     }
+
     @GetMapping(path = "/verification")
     ResponseEntity<AUserResource> verify(@RequestParam String token) {
-        logger.info("About to verify...");
+        logger.info("Verification has just started");
         VerificationToken verificationToken = userService.getVerificationToken(token);
-        if (verificationToken == null) {
-            throw new InvalidTokenException();
-        }
 
         AUser user = verificationToken.getUser();
-        logger.info(user.toString());
+
         Calendar cal = Calendar.getInstance();
         if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
-            return new ResponseEntity<>(
-                    new AUserAssembler().toResource(user), HttpStatus.NOT_EXTENDED);
+            throw new ExpiredTokenException("Il token è scaduto.");
         }
-        return new ResponseEntity<>(
-                new AUserAssembler().toResource(user), HttpStatus.OK);
+
+        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/findByEmail")
-    ResponseEntity<AUserResource> findEmail(@RequestParam String email) {
-        logger.info("Authentication: Find By Email");
+    ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
+        logger.info("Authentication: Find By Email: " + email);
         AUser user = userRepository.findByEmail(email);
-        logger.info(user.toString());
 
         if (user.isVerified()) {
             String token = UUID.randomUUID().toString();
             userService.createVerificationToken(user, token);
             sendChangePasswordTokenToEmail(user, token);
-            return new ResponseEntity<>(
-                    new AUserAssembler().toResource(user), HttpStatus.OK);
+            return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
         }
-        return new ResponseEntity<>(
-                new AUserAssembler().toResource(user), HttpStatus.BAD_GATEWAY);
+        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.BAD_GATEWAY);
     }
 
     private void sendChangePasswordTokenToEmail(AUser user, String token) {

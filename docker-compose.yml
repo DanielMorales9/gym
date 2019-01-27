@@ -39,10 +39,11 @@ services:
       - postgres
     ports:
     - 443:8443
+    - 80:8080
     volumes:
       - ./app/target/dependency/META-INF:/app/META-INF
+      - ./app/certs/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
 #      - ./app/keystore.p12:/app/keystore.p12
-#      - ./app/AA22E6508A15A5F3C2425B7E6A9CF604.txt:/app/META-INF/resources/.well-known/pki-validation/AA22E6508A15A5F3C2425B7E6A9CF604.txt
 #      - ./app/target/dependency/BOOT-INF/lib:/app/lib
 #      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
     environment:
