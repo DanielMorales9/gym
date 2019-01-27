@@ -78,7 +78,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				.antMatchers("/", "/home", "/user",
                         "/logout", "/login", "/profile", "/profile/*",
 						"/verification*",  "/auth/*", "/auth/**/*",
-						"/.well_known/acme-challenge/*", "/authentication/**/*",
+						"/.well-known/acme-challenge/*", "/authentication/**/*",
 						"/authentication/*").permitAll()
 				.anyRequest().authenticated()
 				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
