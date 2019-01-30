@@ -18,6 +18,7 @@
                 <a class="nav-link dropdown-toggle active"
                    id="homeDropdown"
                    role="button"
+                   href=#
                    data-toggle="dropdown"
                    aria-haspopup="true"
                    aria-expanded="false">
@@ -25,25 +26,30 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="homeDropdown">
                     <a class="dropdown-item"
+                       href=#
                        [routerLinkActive]="['active-link']"
                        routerLink="/profile/user">
                         <i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>
                     <a class="dropdown-item"
+                       href=#
                        *ngIf="current_role_view == 1"
                        [routerLinkActive]="['active-link']"
                        routerLink="/home/sales">
                         <i class="fas fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite</a>
                     <a class="dropdown-item"
+                       href=#
                        *ngIf="current_role_view == 1"
                        [routerLinkActive]="['active-link']"
                        routerLink="/home/users">
                         <i class="fas fa-users">&nbsp;&nbsp;</i>Utenti</a>
                     <a class="dropdown-item"
+                       href=#
                        *ngIf="current_role_view == 1"
                        [routerLinkActive]="['active-link']"
                        routerLink="/home/bundles">
                         <i class="fas fa-box">&nbsp;&nbsp;</i>Pacchetti</a>
                     <a class="dropdown-item"
+                       href=#
                        *ngIf="current_role_view"
                        [routerLinkActive]="['active-link']"
                        routerLink="/home/calendar">

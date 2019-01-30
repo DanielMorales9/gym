@@ -4,7 +4,7 @@ import {User} from "../../shared/model";
 import {UserHelperService} from "../../shared/services";
 import {AuthService, NotificationService} from "../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {passwordMatchValidator} from "../../shared/directives/password-match-validator";
+import {passwordMatchValidator} from "../../shared/directives";
 
 @Component({
     templateUrl: './modify-password.component.html',
@@ -65,10 +65,10 @@ export class ModifyPasswordComponent implements OnInit {
                 class: "alert-success",
             });
             return this.router.navigateByUrl("/")
-        }, _ => {
+        }, error => {
             return this.router.navigate(['/error'],
                 {queryParams: {
-                        title: "Errore sconosciuto!",
+                        title: error.message,
                         message:  "Rivolgiti all'amministratore per risolvere il problema"
                 }});
         })
@@ -81,12 +81,7 @@ export class ModifyPasswordComponent implements OnInit {
                 class: "alert-success"
             });
             return this.router.navigateByUrl("/auth/login")
-        }, _ => {
-            this.notificationService.sendMessage({
-                text: "Qualcosa è andato storto!",
-                class: "alert-danger"
-            });
-        })
+        });
     }
 
     get password() {

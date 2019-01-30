@@ -1,6 +1,9 @@
 package it.goodfellas.controller;
 
+import it.goodfellas.exception.InvalidTimesOff;
 import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.TimesOffNotFound;
+import it.goodfellas.exception.UnAuthorizedException;
 import it.goodfellas.hateoas.TimeOffAssembler;
 import it.goodfellas.hateoas.TimeOffResource;
 import it.goodfellas.model.AUser;
@@ -13,6 +16,7 @@ import it.goodfellas.repository.TrainerRepository;
 import it.goodfellas.service.TimeOffService;
 import it.goodfellas.service.UserService;
 import it.goodfellas.utility.MailSenderUtility;
+import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +38,7 @@ import java.util.stream.Stream;
 
 @RestController
 @PropertySource("application.yml")
+@RequestMapping("/timesOff")
 public class TimeOffController {
 
     private final static Logger logger = LoggerFactory.getLogger(TimeOffController.class);
@@ -54,8 +59,7 @@ public class TimeOffController {
     private JavaMailSender mailSender;
 
 
-    @GetMapping(path = "/timesOff/checkAvailabilityAndEnablement",
-            produces = "text/plain")
+    @GetMapping(path = "/checkAvailabilityAndEnablement", produces = "text/plain")
     @Transactional
     ResponseEntity<String> checkAvailableDay(@RequestParam("startTime")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -66,28 +70,24 @@ public class TimeOffController {
                                              @RequestParam("type")
                                                      String type) {
 
-        if (checkDate(startTime)) return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
+        if (checkDate(startTime)) throw new InvalidTimesOff("Data non valida");
 
         switch (type) {
             case "admin":
                 logger.info("counting number of reservations");
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    return new ResponseEntity<>("Non è possibile chiudere la palestra " +
-                            "con delle prenotazioni attive.", HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Non è possibile chiudere la palestra con delle prenotazioni attive.");
                 logger.info("checking other timesOff");
                 if (checkingOtherAdminTimesOff(startTime, endTime))
-                    return new ResponseEntity<>("Hai già effettuato una chiusura.",
-                            HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Hai già effettuato una chiusura");
                 break;
             case "trainer":
                 logger.info("checking whether there are trainers available");
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    return new ResponseEntity<String>("Non è possibile prendere le ferie in questo orario.",
-                            HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Non è possibile prendere le ferie in questo orario.");
                 break;
             default:
-                return new ResponseEntity<String>("Non puoi prendere un giorno di ferie",
-                        HttpStatus.BAD_REQUEST);
+                throw new InvalidTimesOff("Non puoi prendere un giorno di ferie");
         }
 
         logger.info("Everything went fine");
@@ -95,8 +95,7 @@ public class TimeOffController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path = "/timesOff/checkChange",
-            produces = "text/plain")
+    @GetMapping(path = "/checkChange", produces = "text/plain")
     @Transactional
     ResponseEntity<String> checkChange(@RequestParam("startTime")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -107,24 +106,21 @@ public class TimeOffController {
                                              @RequestParam("type")
                                                      String type) {
 
-        if (checkDate(startTime)) return new ResponseEntity<>("Data non valida", HttpStatus.NOT_ACCEPTABLE);
+        if (checkDate(startTime)) throw new InvalidTimesOff("Data non valida");
 
         switch (type) {
             case "admin":
                 logger.info("counting number of reservations");
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    return new ResponseEntity<>("Non è possibile chiudere la palestra " +
-                            "con delle prenotazioni attive.", HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Non è possibile chiudere la palestra con delle prenotazioni attive.");
                 break;
             case "trainer":
                 logger.info("checking whether there are trainers available");
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    return new ResponseEntity<String>("Non è possibile prendere le ferie in questo orario.",
-                            HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Non è possibile prendere le ferie in questo orario.");
                 break;
             default:
-                return new ResponseEntity<String>("Non puoi prendere un giorno di ferie",
-                        HttpStatus.BAD_REQUEST);
+                throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
         }
 
         logger.info("Everything went fine");
@@ -132,64 +128,34 @@ public class TimeOffController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    private boolean checkDate(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam("startTime") Date startTime) {
-        logger.info("checking availability and enablement");
-        logger.info("checking whether the date is before today");
-        logger.info(startTime.toString());
-        if (checkDateBeforeToday(startTime))
-            return true;
-        return false;
-    }
-
-    private boolean checkingOtherAdminTimesOff(Date startTime, Date endTime) {
-        List<TimeOff> timesOff = this.timeRepository.findOverlappingTimesOffByType(startTime, endTime, "admin");
-        logger.info(timesOff.toString());
-        logger.info(String.valueOf(timesOff.size()));
-        return timesOff.size() > 0;
-    }
-
-    private boolean checkingAvailabilityAdminTimeOff(Date startTime, Date endTime) {
-        Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
-        return nReservations > 0;
-    }
-
-    private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
-            iso = DateTimeFormat.ISO.DATE_TIME )
-                                         @RequestParam("startTime") Date date) {
-        return date.before(new Date());
-    }
-
-
-    @GetMapping(path = "/timesOff/book/{id}")
+    @GetMapping(path = "/book/{id}")
     @Transactional
     ResponseEntity<TimeOffResource> book(@PathVariable Long id,
                                          @RequestParam("name") String name,
                                          @RequestParam("startTime")
-                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
+                                                 Date startTime,
                                          @RequestParam("endTime")
-                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
-                                         @RequestParam("type")
-                                                 String type) {
+                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
+                                                 Date endTime,
+                                         @RequestParam("type") String type) {
         logger.info("booking time off");
         logger.info(startTime.toString());
-        if (checkDateBeforeToday(startTime)) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+        if (checkDateBeforeToday(startTime)) throw new InvalidTimesOff("Data non valida");
 
         switch (type) {
             case "admin":
                 logger.info("counting number of reservations");
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive.");
                 break;
             case "trainer":
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive.");
                 break;
             default:
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+                throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
         }
-
 
         AUser user = this.userService.findById(id);
         logger.info(user.toString());
@@ -204,9 +170,100 @@ public class TimeOffController {
 
     }
 
+    @GetMapping(path = "/change/{id}")
+    @Transactional
+    ResponseEntity<TimeOffResource> change(@PathVariable Long id,
+                                           @RequestParam("name") String name,
+                                           @RequestParam("startTime")
+                                           @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                   iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                           @RequestParam("endTime")
+                                           @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                   iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
+                                           @RequestParam("type")
+                                                   String type) {
+
+        logger.info("booking time off");
+        logger.info(startTime.toString());
+        if (checkDateBeforeToday(startTime)) throw new InvalidTimesOff("Data non valida");
+
+        TimeOff time = this.timeOffService.findById(id);
+
+        switch (type) {
+            case "admin":
+                logger.info("counting number of reservations");
+                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
+                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive");
+                break;
+            case "trainer":
+                logger.info("checking whether there are trainers");
+                if (checkingAvailabilityTrainerTimeOff(Optional.of(id), startTime, endTime))
+                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive");
+                break;
+            default:
+                throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
+        }
+
+        time.setName(name);
+        time.setStartTime(startTime);
+        time.setEndTime(endTime);
+
+        time = this.timeRepository.save(time);
+        logger.info(time.toString());
+
+        return ResponseEntity.ok(new TimeOffAssembler().toResource(time));
+
+    }
+
+    @DeleteMapping(path = "/{timesId}")
+    @Transactional
+    ResponseEntity<TimeOffResource> delete(@PathVariable Long timesId,
+                                           @RequestParam(value = "type", defaultValue = "admin") String type,
+                                           Principal principal) {
+        Optional<TimeOff> res = this.timeRepository.findById(timesId);
+
+        if (!res.isPresent() )
+            throw new TimesOffNotFound(String.format("Le ferie (%d) non sono state trovate", timesId));
+
+        TimeOff time = res.get();
+        AUser user = this.userService.findByEmail(principal.getName());
+        logger.info(user.toString());
+        logger.info(time.getUser().toString());
+        if (!time.getUser().equals(user) && !(user instanceof Admin))
+            throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
+
+
+        if (!type.equals("admin")) {
+            String recipientAddress = time.getUser().getEmail();
+            String message = "Ci dispiace informarla che per questioni tecniche le sue ferie sono state eliminate. " +
+                    "La ringraziamo per la comprensione.";
+            MailSenderUtility.sendEmail(this.mailSender, "Ferie eliminate", message, recipientAddress);
+        }
+
+        this.timeRepository.delete(time);
+        return ResponseEntity.ok(new TimeOffAssembler().toResource(time));
+    }
+
+    @GetMapping
+    ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "id", required = false)
+                                                              Long id,
+                                                      @RequestParam(value = "type", required = false)
+                                                              String type,
+                                                      @RequestParam(value = "startTime")
+                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                              iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                      @RequestParam(value = "endTime")
+                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                              iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        List<TimeOff> res = this.timeOffService.findByStartTimeAndEndTimeAndIdAndType(Optional.ofNullable(id),
+                Optional.ofNullable(type), startTime, endTime);
+        logger.info("# of Times off " + res.size());
+        return ResponseEntity.ok(new TimeOffAssembler().toResources(res));
+    }
+
+
     private boolean checkingAvailabilityTrainerTimeOff(Optional<Long> id,
-                                                       @DateTimeFormat(
-                                                               pattern = "dd-MM-yyyy_HH:mm",
+                                                       @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
                                                                iso = DateTimeFormat.ISO.DATE_TIME)
                                                        @RequestParam("startTime") Date startTime,
                                                        @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
@@ -244,100 +301,31 @@ public class TimeOffController {
             if (numAvailableTrainers <= 0)
                 return true;
         }
-
         return false;
     }
 
-    @GetMapping(path = "/timesOff/change/{id}")
-    @Transactional
-    ResponseEntity<TimeOffResource> change(@PathVariable Long id,
-                                         @RequestParam("name") String name,
-                                         @RequestParam("startTime")
-                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                         @RequestParam("endTime")
-                                         @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
-                                           @RequestParam("type")
-                                                   String type) {
-
-        logger.info("booking time off");
+    private boolean checkDate(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
+                              @RequestParam("startTime") Date startTime) {
+        logger.info("checking availability and enablement");
+        logger.info("checking whether the date is before today");
         logger.info(startTime.toString());
-        if (checkDateBeforeToday(startTime)) return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-
-        TimeOff time = this.timeOffService.findById(id);
-
-        switch (type) {
-            case "admin":
-                logger.info("counting number of reservations");
-                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-                break;
-            case "trainer":
-                logger.info("checking whether there are trainers");
-                if (checkingAvailabilityTrainerTimeOff(Optional.of(id), startTime, endTime))
-                    return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-                break;
-            default:
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-
-        time.setName(name);
-        time.setStartTime(startTime);
-        time.setEndTime(endTime);
-
-        time = this.timeRepository.save(time);
-        logger.info(time.toString());
-
-        return ResponseEntity.ok(new TimeOffAssembler().toResource(time));
-
+        return checkDateBeforeToday(startTime);
     }
 
-    @DeleteMapping(path = "/timesOff/{timesId}")
-    @Transactional
-    ResponseEntity<TimeOffResource> delete(@PathVariable Long timesId,
-                                           @RequestParam(value = "type", defaultValue = "admin") String type,
-                                           Principal principal) {
-        Optional<TimeOff> res = this.timeRepository.findById(timesId);
-
-        if (!res.isPresent() )
-            throw new POJONotFoundException("TimeOff", timesId);
-
-        TimeOff time = res.get();
-        AUser user = this.userService.findByEmail(principal.getName());
-        logger.info(user.toString());
-        logger.info(time.getUser().toString());
-        logger.info((user instanceof Admin) ? "true" : "false");
-        if (!time.getUser().equals(user) && !(user instanceof Admin))
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
-
-
-        if (!type.equals("admin")) {
-            String recipientAddress = time.getUser().getEmail();
-            String message = "Ci dispiace informarla che per questioni tecniche le sue ferie sono state eliminate. " +
-                    "La ringraziamo per la comprensione.";
-            MailSenderUtility.sendEmail(this.mailSender, "Ferie eliminate", message, recipientAddress);
-        }
-
-        this.timeRepository.delete(time);
-        return ResponseEntity.ok(new TimeOffAssembler().toResource(time));
+    private boolean checkingOtherAdminTimesOff(Date startTime, Date endTime) {
+        List<TimeOff> timesOff = this.timeRepository.findOverlappingTimesOffByType(startTime, endTime, "admin");
+        logger.info(timesOff.toString());
+        logger.info(String.valueOf(timesOff.size()));
+        return timesOff.size() > 0;
     }
 
-    @GetMapping(path="/timesOff")
-    ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "id", required = false)
-                                                              Long id,
-                                                      @RequestParam(value = "type", required = false)
-                                                              String type,
-                                                      @RequestParam(value = "startTime")
-                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                              iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                      @RequestParam(value = "endTime")
-                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                              iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<TimeOff> res = this.timeOffService.findByStartTimeAndEndTimeAndIdAndType(Optional.ofNullable(id),
-                Optional.ofNullable(type), startTime, endTime);
-        logger.info("# of Times off " + res.size());
-        return ResponseEntity.ok(new TimeOffAssembler().toResources(res));
+    private boolean checkingAvailabilityAdminTimeOff(Date startTime, Date endTime) {
+        Integer nReservations = this.reservationRepository.countByInterval(startTime, endTime);
+        return nReservations > 0;
     }
 
+    private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
+            iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam("startTime") Date date) {
+        return date.before(new Date());
+    }
 }

@@ -43,7 +43,7 @@ export class SendChangePasswordTokenComponent implements OnInit {
                         }});
             }
             else this.notificationService.sendMessage({
-                text: "Qualcosa è andato storto!",
+                text: err.message,
                 class: "alert-danger"
             });
         })
