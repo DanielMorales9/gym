@@ -122,7 +122,7 @@ public class SaleController {
     }
 
 
-    @DeleteMapping(path = "/sales/deleteSalesLineItem/{saleId}/{salesLineItemId}")
+    @DeleteMapping(path = "/deleteSalesLineItem/{saleId}/{salesLineItemId}")
     @Transactional
     ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
                                                      @PathVariable Long salesLineItemId) {
@@ -138,14 +138,15 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/sales/confirmSale/{saleId}")
+    @GetMapping(path = "/confirmSale/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> confirmSale(@PathVariable Long saleId) {
         Sale sale = getSale(saleId);
         sale.confirmSale();
         if (!sale.addBundlesToCustomersCurrentBundles()) {
-            throw new InvalidSaleException("Could not add Bundles to Customer: %s",
-                    sale.getCustomer().getId());
+            String message = String.format("Impossibile confermare vendita per il cliente %s.",
+                    sale.getCustomer().getLastName());
+            throw new InvalidSaleException(message);
         }
         sale = this.saleService.save(sale);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
@@ -155,7 +156,7 @@ public class SaleController {
         return this.saleService.findById(saleId);
     }
 
-    @PostMapping(path = "/sales/pay/{saleId}")
+    @PostMapping(path = "/pay/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestBody Double amount) {
         Sale sale = getSale(saleId);
@@ -166,7 +167,7 @@ public class SaleController {
         boolean payed = amountPayed + amount == sale.getTotalPrice();
         if (!payed) {
             if (amountPayed + amount > sale.getTotalPrice())
-                throw new RuntimeException("Stai pagando più del dovuto!");
+                throw new InvalidSaleException("Stai pagando più del dovuto!");
         }
         else {
             sale.setPayed(true);
@@ -177,19 +178,19 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/sales/{saleId}")
+    @DeleteMapping(path = "/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> deleteSale(@PathVariable Long saleId) {
         Sale sale = this.getSale(saleId);
         if (!sale.isDeletable()) {
             logger.info("sale not deletable");
-            throw new InvalidSaleException("Non è possibile eliminare la vendita per il cliente: %s",
-                    sale.getCustomer().getLastName());
+            throw new InvalidSaleException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
+                    sale.getCustomer().getLastName()));
         }
         else if (!sale.removeBundlesFromCustomersCurrentBundles()) {
             logger.info("sale not deletable");
-            throw new InvalidSaleException("Non è possibile eliminare la vendita per il cliente: %s",
-                    sale.getCustomer().getLastName());
+            throw new InvalidSaleException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
+                    sale.getCustomer().getLastName()));
         }
         this.salesLineItemRepo.deleteAll(sale.getSalesLineItems());
         this.customerService.save(sale.getCustomer());

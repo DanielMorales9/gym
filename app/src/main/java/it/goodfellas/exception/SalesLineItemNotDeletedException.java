@@ -8,6 +8,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class SalesLineItemNotDeletedException extends RuntimeException {
 
     public SalesLineItemNotDeletedException(Long saleId, Long lineId) {
-        super("Unable to delete the line with id " + lineId + " of sale with id " + saleId);
+        super("Impossibile eliminate riga con id " + lineId + " della vendita con id " + saleId);
     }
 }

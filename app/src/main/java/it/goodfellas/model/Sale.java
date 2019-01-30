@@ -127,9 +127,9 @@ public class Sale {
 
     public void confirmSale() {
         if (this.salesLineItems == null)
-            throw new InvalidSaleException("Cannot Confirm Sale %s with empty Sale Lines", this.id);
+            throw new InvalidSaleException(String.format("Impossibile confermare vendita (%d) vuota.", this.id));
         if (this.salesLineItems.size() == 0)
-            throw new InvalidSaleException("Cannot Confirm Sale %s with empty Sale Lines", this.id);
+            throw new InvalidSaleException(String.format("Impossibile confermare vendita (%d) vuota.", this.id));
         this.isCompleted = true;
         this.getTotalPrice();
     }

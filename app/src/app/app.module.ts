@@ -1,5 +1,5 @@
 import { BrowserModule } from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
 import {AppComponent} from "./app.component";
@@ -11,7 +11,7 @@ import {
     AuthService,
     ExchangeBundleService,
     ExchangeSaleService,
-    ExchangeUserService,
+    ExchangeUserService, GlobalErrorHandler,
     GymConfigurationService
 } from "./services";
 import {
@@ -42,7 +42,11 @@ import {
         DateService,
         ExchangeUserService,
         ExchangeBundleService,
-        ExchangeSaleService
+        ExchangeSaleService,
+        {
+            provide: ErrorHandler,
+            useClass: GlobalErrorHandler
+        }
     ],
     bootstrap: [AppComponent]
 })

@@ -43,7 +43,7 @@ public class InitializeDatabase implements CommandLineRunner {
                             roleRepository.save(role);
                         });
 
-        String email = "admin@admin.com";
+        String email = "goodfellas.personaltraining@gmail.com";
         if (adminRepository.findByEmail(email) == null) {
             List<Role> roles = this.roleRepository.findAllById(Arrays.asList(Constants.ROLES));
             Admin admin = new Admin();

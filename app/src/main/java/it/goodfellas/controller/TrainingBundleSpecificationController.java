@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 @RepositoryRestController
+@RequestMapping("/bundleSpecs")
 public class TrainingBundleSpecificationController {
     private final static Logger logger = LoggerFactory.getLogger(TrainingBundleSpecificationController.class);
 
@@ -25,21 +26,21 @@ public class TrainingBundleSpecificationController {
     }
 
 
-    @GetMapping(path = "/bundleSpecs/search")
+    @GetMapping(path = "/search")
     @ResponseBody
     Page<ATrainingBundleSpecification> search(@RequestParam String query, Pageable pageable) {
         logger.info("Query: " + query);
         return repository.findByNameContains(query, pageable);
     }
 
-    @GetMapping(path = "/bundleSpecs/searchNotDisabled")
+    @GetMapping(path = "/searchNotDisabled")
     @ResponseBody
     Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
         logger.info("Query: " + query);
         return repository.findByNameContainsAndIsDisabled(query, false, pageable);
     }
 
-    @GetMapping(path = "/bundleSpecs/getNotDisabled")
+    @GetMapping(path = "/getNotDisabled")
     @ResponseBody
     Page<ATrainingBundleSpecification> getNotDisabled(Pageable pageable) {
         return repository.findByIsDisabled(false, pageable);

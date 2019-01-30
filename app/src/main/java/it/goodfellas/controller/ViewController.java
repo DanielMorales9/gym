@@ -14,9 +14,8 @@ public class ViewController {
 
 
     @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public void logout(HttpServletRequest rq, HttpServletResponse rs) throws ServletException {
-        SecurityContextLogoutHandler securityContextLogoutHandler =
-                new SecurityContextLogoutHandler();
+    public void logout(HttpServletRequest rq, HttpServletResponse rs) {
+        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
         securityContextLogoutHandler.logout(rq, rs, null);
     }
 

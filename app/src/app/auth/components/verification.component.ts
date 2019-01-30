@@ -5,7 +5,7 @@ import {AppService} from "../../services";
 import {UserHelperService} from "../../shared/services";
 import {AuthService, NotificationService} from "../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {passwordMatchValidator} from "../../shared/directives/password-match-validator";
+import {passwordMatchValidator} from "../../shared/directives";
 
 
 @Component({
@@ -49,7 +49,7 @@ export class VerificationComponent implements OnInit {
             else if (err.status == 500) {
                 this.toResendToken = true;
                 this.router.navigate(['/error'], {
-                    queryParams: { "message": err.error.message }
+                    queryParams: { "message": err.message }
                 })
             }
         });
