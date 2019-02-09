@@ -61,7 +61,7 @@ export class AppComponent implements OnInit {
             this.current_role_view = undefined;
             this.authenticated = false;
             this.user = undefined;
-            this.router.navigateByUrl("/auth/login")
+            return this.router.navigateByUrl("/auth/login")
         })
     }
 
@@ -99,4 +99,7 @@ export class AppComponent implements OnInit {
         return this.router.url.startsWith('/profile');
     }
 
+    isOnLogin() {
+        return this.router.url.startsWith('/auth');
+    }
 }

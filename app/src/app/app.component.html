@@ -57,7 +57,7 @@
 
         <ul class="nav navbar-nav navbar-right mr-0">
             <notifications [hidden]="!authenticated"></notifications>
-            <li class="nav-item dropdown">
+            <li class="nav-item dropdown" *ngIf="!isOnLogin()">
                 <a class="nav-link active dropdown-toggle"
                    id="accountDropdown"
                    role="button"
