@@ -130,10 +130,10 @@ public class AuthorizationController {
     @PostMapping("/changeNewPassword/{id}")
     ResponseEntity<AUserResource> changeNewPassword(@PathVariable("id") Long id,
                                                     @RequestBody PasswordForm form) {
-        AUser user = this.userRepository.findById(id).orElseThrow(() -> new NotFoundException("L'utente", id));
+        AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        if (!user.isVerified()) throw new UserIsNotVerified(id);
 
         String newPwd = passwordEncoder.encode(form.getPassword());
-
         boolean oldNewPwd = passwordEncoder.matches(form.getOldPassword(), user.getPassword());
         if (oldNewPwd && form.getConfirmPassword().equals(form.getPassword())) {
             user.setPassword(newPwd);
