@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from "@angular/router";
 import {User} from "../../shared/model";
 import {UserHelperService} from "../../shared/services";
-import {AuthService, NotificationService} from "../../services";
+import {AppService, AuthService, NotificationService} from "../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {passwordMatchValidator} from "../../shared/directives";
 
@@ -20,6 +20,7 @@ export class ModifyPasswordComponent implements OnInit {
 
     constructor(private activatedRoute: ActivatedRoute,
                 private userHelperService: UserHelperService,
+                private appService: AppService,
                 private notificationService: NotificationService,
                 private authService: AuthService,
                 private builder: FormBuilder,
@@ -59,16 +60,26 @@ export class ModifyPasswordComponent implements OnInit {
         }
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
+
         this.authService.changePassword(this.user, userType).subscribe(res => {
             this.notificationService.sendMessage({
                 text: `${this.user.firstName} la tua password è stata modificata con successo!<br>Ora puoi accedere alla tua area Personale.`,
                 class: "alert-success",
             });
-            return this.router.navigateByUrl("/")
-        }, error => {
+            let user: any = res;
+            this.appService.authenticate({username: user.email, password: this.user.password},(isAuthenticated) => {
+                    if (!isAuthenticated)
+                        return this.router.navigate(['/error'], { queryParams: {
+                                message: "Errore di Autenticazione <br>" +
+                                    "Rivolgiti all'amministratore per risolvere il problema."
+                            }});
+                    else return this.router.navigateByUrl('/');
+                });
+        }, err => {
+            console.log(err);
             return this.router.navigate(['/error'],
                 {queryParams: {
-                        title: error.message,
+                        title: err.error.message,
                         message:  "Rivolgiti all'amministratore per risolvere il problema"
                 }});
         })

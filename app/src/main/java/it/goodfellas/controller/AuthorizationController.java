@@ -176,22 +176,22 @@ public class AuthorizationController {
     ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         logger.info("Authentication: Find By Email: " + email);
         AUser user = userRepository.findByEmail(email);
+        if (user == null) throw new UserNotFoundException(email);
 
-        if (user.isVerified()) {
-            String token = UUID.randomUUID().toString();
-            userService.createVerificationToken(user, token);
-            sendChangePasswordTokenToEmail(user, token);
-            return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
-        }
-        throw new UserVerifiedException(user);
+        if (!user.isVerified()) throw new UserIsNotVerified(email);
+
+        String token = UUID.randomUUID().toString();
+        userService.createVerificationToken(user, token);
+        sendChangePasswordTokenToEmail(user, token);
+
+        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/resendToken/{id}")
     public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        if (user.isVerified()) {
-            throw new UserIsVerified(id);
-        }
+        if (user.isVerified()) throw new UserIsVerified(id);
+
         VerificationToken token = this.tokenRepository.findByUser(user);
         VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
         sendVerificationEmail(newToken, user);
@@ -209,8 +209,8 @@ public class AuthorizationController {
     @GetMapping(path = "/resendToken/")
     public ResponseEntity resendTokenAnonymous(@RequestParam("token") String existingToken) {
         VerificationToken newToken = getVerificationToken(existingToken);
-
         sendVerificationEmail(newToken, newToken.getUser());
+
         return new ResponseEntity<>(new AUserAssembler().toResource(newToken.getUser()), HttpStatus.OK);
     }
 
@@ -227,15 +227,14 @@ public class AuthorizationController {
         String subject = "Cambia la tua password";
         String confirmationUrl = this.baseUrl+ "/auth/modifyPassword?token=" + token;
         String message = "Per modificare la password usa il seguente link: ";
-
         MailSenderUtility.sendEmail(this.mailSender, subject,message+confirmationUrl, recipientAddress);
     }
 
     private VerificationToken getVerificationToken(@RequestParam("token") String existingToken) {
         VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
-        AUser user = newToken.getUser();
-        long userId = user.getId();
-        if (!this.userRepository.existsById(user.getId())) throw new UserNotFoundException(userId);
+        long userId = newToken.getUser().getId();
+        if (!this.userRepository.existsById(userId)) throw new UserNotFoundException(userId);
+
         return newToken;
     }
 
@@ -246,7 +245,6 @@ public class AuthorizationController {
         builder.usePunctuation(true);
         builder.useUpper(true);
         PasswordGenerator gen = builder.build();
-
         String password = gen.generate(30);
         input.setPassword(password);
     }
