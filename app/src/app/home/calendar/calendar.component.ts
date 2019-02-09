@@ -50,7 +50,6 @@ export class CalendarComponent implements OnInit {
 
     private initView() {
         let view = this.activatedRoute.snapshot.queryParamMap.get('view');
-        console.log(view);
         switch (view) {
             case "month":
                 this.view = CalendarView.Month;

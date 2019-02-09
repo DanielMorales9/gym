@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {BaseCalendar} from "./base-calendar";
 import {EVENT_TYPES} from "./event-types.enum";
-import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
+import {TimesOffService, TrainingService, UserHelperService, UserService} from "../../shared/services";
 import {DateService, GymConfigurationService, NotificationService} from "../../services";
 
 
@@ -12,11 +12,11 @@ import {DateService, GymConfigurationService, NotificationService} from "../../s
 })
 export class CustomerCalendarComponent extends BaseCalendar {
 
-    constructor(public userHelperService: UserHelperService,
+    constructor(public userService: UserService,
                 private trainingService: TrainingService,
                 private timesOffService: TimesOffService,
                 private notificationService: NotificationService) {
-        super(userHelperService);
+        super(userService);
     }
 
     header(action: string, event: any) {

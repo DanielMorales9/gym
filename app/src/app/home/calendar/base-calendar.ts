@@ -5,7 +5,7 @@ import {
     CalendarView,
 } from "angular-calendar";
 import {User} from "../../shared/model";
-import {UserHelperService} from "../../shared/services";
+import {UserHelperService, UserService} from "../../shared/services";
 import {EVENT_TYPES} from "./event-types.enum";
 
 const CALENDAR_COLUMNS: any = {
@@ -69,15 +69,15 @@ export abstract class BaseCalendar implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
-    constructor(public userHelperService: UserHelperService) {
+    protected constructor(public userService: UserService) {
         this.events = [];
     }
 
     ngOnInit(): void {
-        this.userHelperService.getUserByEmail(this.email, (res: User) => {
+        this.userService.findByEmail(this.email).subscribe((res: User) => {
             this.user = res;
             this.getEvents()
-        });
+        }, err => {console.error(err)});
     }
 
     abstract getEvents();

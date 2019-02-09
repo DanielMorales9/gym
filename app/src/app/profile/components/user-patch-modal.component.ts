@@ -87,8 +87,11 @@ export class UserPatchModalComponent implements OnInit {
         this.user.firstName = this.firstName.value;
         this.user.lastName = this.lastName.value;
         this.user.email = this.email.value;
-        this.user.height = this.height.value;
-        this.user.weight = this.weight.value;
+
+        if (this.height && this.weight) {
+            this.user.height = this.height.value;
+            this.user.weight = this.weight.value;
+        }
 
         this.service.patch(this.user).subscribe( _ => {
             this.messageService.sendMessage({
