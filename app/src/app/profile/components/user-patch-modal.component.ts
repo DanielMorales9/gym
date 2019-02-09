@@ -45,6 +45,7 @@ export class UserPatchModalComponent implements OnInit {
 
         config['firstName'] = [this.user.firstName, [Validators.required]];
         config['lastName'] = [this.user.lastName, [Validators.required]];
+        config['email'] = [this.user.email, [Validators.required, Validators.email]];
         if (!!this.role && this.role == 3) {
             config['height'] = [this.user.height, [
                 Validators.required,
@@ -75,35 +76,35 @@ export class UserPatchModalComponent implements OnInit {
         return this.form.get("weight")
     }
 
-    _success() {
-        return res => {
-            this.loading = false;
-            document.getElementById("patchModalClose").click();
-            let message = {
-                text: `"L'utente ${this.lastName.value} è stato modificato`,
-                class: "alert-success"
-            };
-            this.messageService.sendMessage(message);
-            this.done.emit('completed');
-        }
-    }
-
-    _error() {
-        return err => {
-            this.loading = false;
-            document.getElementById("patchModalClose").click();
-            let message = {
-                text: "Errore Interno al Sistema.",
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-        }
+    get email() {
+        return this.form.get("email")
     }
 
     editUser() {
         this.loading = true;
+
         delete this.user.roles;
-        this.service.patch(this.user).subscribe(this._success(), this._error())
+        this.user.firstName = this.firstName.value;
+        this.user.lastName = this.lastName.value;
+        this.user.email = this.email.value;
+        this.user.height = this.height.value;
+        this.user.weight = this.weight.value;
+
+        this.service.patch(this.user).subscribe( _ => {
+            this.messageService.sendMessage({
+                text: `L'utente ${this.lastName.value} è stato modificato`,
+                class: "alert-success"
+            });
+            this.done.emit('completed');
+        }, err => {
+            this.messageService.sendMessage({
+                text: err.error.message,
+                class: "alert-danger"
+            });
+        }, () => {
+            this.loading = false;
+            document.getElementById("patchModalClose").click();
+        })
     }
 
 }

@@ -32,10 +32,4 @@ public class UserController {
         logger.info("Query: " + query);
         return repository.findByLastName(query, pageable);
     }
-
-    @GetMapping(path = "/findByEmail")
-    ResponseEntity<AUserResource> search(@RequestParam String email) {
-        logger.info("Query: " + email);
-        return ResponseEntity.ok(new AUserAssembler().toResource(repository.findByEmail(email)));
-    }
 }
