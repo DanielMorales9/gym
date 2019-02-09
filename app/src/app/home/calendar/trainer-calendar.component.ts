@@ -68,10 +68,11 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 value.map(res => {
                     this.events.push(this.formatEvent(res))
                 });
-                this.timesOffService.getTimesOff(startDay, endDay, this.user.id)
-                    .subscribe((value: Object[]) => {
-                        value.map(res => {
-                            this.events.push(this.formatEvent(res))
+                this.timesOffService.getTimesOff(startDay, endDay, this.user.id).subscribe((values: Object[]) => {
+
+                        values.map(res => {
+                            let evt = this.formatEvent(res);
+                            this.events.push(evt)
                         });
                         this.refreshView();
                     })

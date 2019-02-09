@@ -37,7 +37,7 @@ export class SaleDetailsComponent implements OnInit {
     }
 
     getDate(d) {
-        return this.dateService.getDate(d)
+        return this.dateService.getStringDate(d)
     }
 
     toggle() {

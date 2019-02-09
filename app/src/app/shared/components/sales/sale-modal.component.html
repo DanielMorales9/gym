@@ -1,26 +1,24 @@
-<div class="modal" tabindex="-1" role="dialog" [id]="modalId">
+<div class="modal" tabindex="-1" role="dialog" id="payModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form #f="ngForm" role="form" novalidate (ngSubmit)="f.form.valid && submit()">
+            <form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
                 <div class="modal-header">
-                    <h5 class="modal-title">{{modalTitle}}</h5>
-                    <button type="button" class="close" [id]="modalCloseId" data-dismiss="modal" aria-label="Close">
+                    <h5 class="modal-title">Pagamento Rata</h5>
+                    <button type="button" class="close" id="payModalClose" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
                     <div class="form-group">
                         <label for="amount" class="sr-only">Somma da Pagare</label>
-                        <input type="number"
-                               placeholder="Somma da pagare"
-                               class="form-control"
-                               id="amount"
-                               name="amount"
-                               numeric="true"
-                               [(ngModel)]="sale.amount" #amount="ngModel"
-                               [ngClass]="{ 'is-invalid': f.submitted && amount.invalid }" required/>
-                        <div *ngIf="f.submitted && amount.invalid" class="error-message">
+                        <input type="number" id="amount"
+                               class="form-control" name="amount"
+                               formControlName="amount"
+                               [ngClass]="{ 'is-invalid': amount.touched && amount.invalid }"/>
+                        <div *ngIf="amount.touched && amount.invalid" class="error-message">
                             <div *ngIf="!!amount.errors?.required">Somma da pagare obbligatoria</div>
+                            <div *ngIf="!!amount.errors?.min">La rata deve essere superiore a 0</div>
+                            <div *ngIf="!!amount.errors?.max">La rata è superiore all'importo massimo dovuto</div>
                         </div>
                     </div>
 
@@ -34,10 +32,4 @@
     </div>
 </div>
 
-<div id="loader" [hidden]="!loading">
-    <div class="spinner">
-        <div class="bounce1"></div>
-        <div class="bounce2"></div>
-        <div class="bounce3"></div>
-    </div>
-</div>
+<spinner [loading]="loading"></spinner>

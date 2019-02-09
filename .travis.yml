@@ -10,7 +10,7 @@ services:
 
 env:
   global:
-  - TAG=0.0.1-SNAPSHOT
+#  - TAG=0.0.1-SNAPSHOT
   - MAVEN_OPTS="-Dmaven.repo.local=.m2"
 
 addons:
@@ -36,10 +36,9 @@ install: true
 
 script:
   - mvn package -B
-  - docker images
-  - eval $(aws ecr get-login --no-include-email --region eu-central-1)
-  - docker tag tenentedan9/app:$TAG $AWS_REGISTRY/app:$TAG
-  - docker push $AWS_REGISTRY/app:$TAG
+#  - eval $(aws ecr get-login --no-include-email --region eu-central-1)
+#  - docker tag tenentedan9/app:$TAG $AWS_REGISTRY/app:$TAG
+#  - docker push $AWS_REGISTRY/app:$TAG
 
 notifications:
   email: false

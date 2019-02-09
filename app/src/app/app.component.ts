@@ -6,6 +6,8 @@ import {User} from "./shared/model";
 import {NotificationService, ChangeViewService} from "./services";
 import {UserHelperService} from "./shared/services";
 
+
+
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
@@ -14,21 +16,19 @@ import {UserHelperService} from "./shared/services";
 export class AppComponent implements OnInit {
 
     current_role_view: number;
-    user: User;
     authenticated: boolean;
+    user: User;
 
     constructor(private appService: AppService,
                 private router: Router,
                 private userHelperService: UserHelperService,
-                private changeViewService: ChangeViewService,
-                private messageService: NotificationService) {
+                private changeViewService: ChangeViewService) {
     }
 
     ngOnInit(): void {
         this.user = new User();
         this.authOnNavigation();
 
-        this.handleMessage();
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         });
@@ -42,25 +42,10 @@ export class AppComponent implements OnInit {
                     if (this.authenticated) {
                         this.current_role_view = this.appService.current_role_view;
                         this.user = this.appService.user;
+                        this.appService.initializeWebSocketConnection()
                     }
-                }, undefined);
+                });
             }
-        });
-    }
-
-    handleMessage() {
-        this.messageService.getMessage().subscribe((mess) => {
-            let node = document.createElement("div");
-            node.className = "alert " + mess.class;
-            node.innerHTML = mess.text;
-            let delay = mess.delay || 10000;
-            node.addEventListener('click', function() {
-                node.remove()
-            }, false);
-            document.getElementById('notifications').appendChild(node);
-            setTimeout(function() {
-                node.remove()
-            }, delay);
         });
     }
 
@@ -101,6 +86,10 @@ export class AppComponent implements OnInit {
 
     isOnHome() {
         return this.router.url.startsWith('/home');
+    }
+
+    isOnProfile() {
+        return this.router.url.startsWith('/profile');
     }
 
 }

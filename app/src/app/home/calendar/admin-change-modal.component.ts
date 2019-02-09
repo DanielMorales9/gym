@@ -27,7 +27,7 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
         let startTime = this.modalData.event.newStart;
         let endTime = this.modalData.event.newEnd;
         let timeOffId = this.modalData.event.event.meta.id;
-        let startDate = this.dateService.getDate(startTime);
+        let startDate = this.dateService.getStringDate(startTime);
         this.timesOffService.change(timeOffId, startTime, endTime, this.modalData.event.event.meta.name, "admin")
             .subscribe((res) => {
                 this.message = {

@@ -43,9 +43,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         if (this.getSessions() == null) {
             return true;
         }
-        return this.getSessions().stream()
-                .map(session -> !session.getCompleted())
-                .reduce(Boolean::logicalAnd).orElse(true);
+        return this.getSessions().size() == 0;
     }
 
     @Override

@@ -26,7 +26,7 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
     submit() {
         this.loading = true;
         let currentDate = new Date(this.modalData.event.date);
-        let stringDate = this.dateService.getDate(currentDate);
+        let stringDate = this.dateService.getStringDate(currentDate);
         this.trainingService.book(currentDate, this.modalData.userId)
             .subscribe( (res) => {
                 this.message = {

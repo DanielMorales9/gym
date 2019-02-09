@@ -19,10 +19,15 @@ import {
     DateService,
     NotificationService, SaleHelperService,
 } from "./services";
+import {ErrorComponent, NotificationsComponent} from "./components";
+import {TimeAgoPipe} from "time-ago-pipe";
 
 @NgModule({
     declarations: [
         AppComponent,
+        ErrorComponent,
+        NotificationsComponent,
+        TimeAgoPipe
     ],
     imports: [
         BrowserModule,

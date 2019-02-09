@@ -1,4 +1,4 @@
-package it.goodfellas;
+package it.goodfellas.config;
 
 import org.apache.catalina.Context;
 import org.apache.catalina.connector.Connector;

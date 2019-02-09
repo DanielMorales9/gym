@@ -3,6 +3,7 @@ import {AppService} from "../services";
 import {ChangeViewService} from "../services";
 import {User} from "../shared/model";
 import {Router} from "@angular/router";
+import {UserHelperService} from "../shared/services";
 
 @Component({
     templateUrl: './home.component.html',
@@ -13,9 +14,11 @@ export class HomeComponent implements OnInit {
     user: User;
     current_role_view: number;
     authenticated: boolean = false;
+    profilePath: string;
 
     constructor(private app: AppService,
                 private router: Router,
+                private userHelper: UserHelperService,
                 private changeViewService: ChangeViewService) { }
 
     ngOnInit() :void {
@@ -29,8 +32,20 @@ export class HomeComponent implements OnInit {
         this.app.authenticate(undefined, (isAuthenticated) => {
             this.current_role_view = this.app.current_role_view;
             this.authenticated = isAuthenticated;
-            if (this.authenticated) this.user = this.app.user;
+            if (this.authenticated) {
+                let user = this.app.user;
+                this.userHelper.getUserByEmail(user.email, user => {
+                    this.user = user;
+                    this.profilePath = "/profile/" + this.user.id;
+                })
+            }
         });
     }
 
+    isOnProfile() {
+        if (this.router.url.match('/profile/(.*/)+user')) {
+            return 'active'
+        }
+        return ''
+    }
 }

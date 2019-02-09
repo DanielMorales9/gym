@@ -28,7 +28,7 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
         this.loading = true;
         let startTime = new Date(this.modalData.event.date);
         let endTime = this.dateService.addHour(startTime);
-        let startDate = this.dateService.getDate(startTime);
+        let startDate = this.dateService.getStringDate(startTime);
         this.timesOffService.book(startTime, endTime, 'admin', this.timeOffName, this.modalData.userId)
             .subscribe((res) => {
                 this.message = {

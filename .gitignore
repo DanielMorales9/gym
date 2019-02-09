@@ -5,7 +5,13 @@
 *~
 .#*
 *#
-target/
+app/target/
+app/coverage
+app/certs/
+app/node/
+app/node_modules/
+data/
+
 bin
 .classpath
 .project
@@ -28,10 +34,6 @@ nbdist/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-node/
-node_modules/
 e2e/*.js
 e2e/*.map
-app/coverage
-nginx/
-data/
+*.sh

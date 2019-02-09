@@ -70,7 +70,7 @@ export abstract class BaseCalendar implements OnInit {
     refresh: Subject<any> = new Subject();
 
     constructor(public userHelperService: UserHelperService) {
-
+        this.events = [];
     }
 
     ngOnInit(): void {
@@ -132,18 +132,15 @@ export abstract class BaseCalendar implements OnInit {
 
         switch (this.view) {
             case this.MONTH:
-                console.log("month");
                 let nextMonth = month + 1;
                 startDay = new Date(year, month, 1, hour, min, sec);
                 endDay = new Date(year, nextMonth, 0, 23, 59, 59);
                 break;
             case this.WEEK:
-                console.log("week");
                 startDay = new Date(year, month, date - dayOfWeek, hour, min, sec);
                 endDay = new Date(year, month, date + (7 - dayOfWeek), 23, 59, 59);
                 break;
             default:
-                console.log("day");
                 startDay = new Date(year, month, date, hour, min, sec);
                 endDay = new Date(year, month, date, hour + 24, 59, 59);
                 break;
@@ -152,7 +149,6 @@ export abstract class BaseCalendar implements OnInit {
     }
 
     formatEvent(event: any) : CalendarEvent {
-        console.log(event);
         let startTime = new Date(event['startTime']);
         let endTime = new Date(event['endTime']);
         let allDay = Math.abs(endTime.getTime() - startTime.getTime()) / 36e5 ;
@@ -225,7 +221,6 @@ export abstract class BaseCalendar implements OnInit {
 
 
     refreshView() {
-        console.log(this.events);
         this.refresh.next();
     }
 

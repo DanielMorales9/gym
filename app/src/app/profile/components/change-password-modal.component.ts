@@ -28,7 +28,8 @@ export class ChangePasswordModalComponent implements OnInit {
                 oldPassword: ['', [Validators.required]],
                 password: ['', [
                     Validators.required,
-                    Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^$@$!%*#?&]*[$@$!%*#?&])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
+                    Validators.minLength(8)
+                    // Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^!"#$%&'()*+,-./:;<=>?$@$\[\]^_`{|}~]*[!"#$%&'()*+,-./:;<=>?$@$\[\]^_`{|}~])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
                 ]],
                 confirmPassword: ['', Validators.required]},
             {

@@ -4,6 +4,8 @@ import {UserHelperService, UserService} from "../shared/services";
 import {Role, User} from "../shared/model";
 import {NotificationService} from "./notification.service";
 import {ChangeViewService} from "./change-view.service";
+import * as Stomp from 'stompjs';
+import * as SockJS from 'sockjs-client';
 
 @Injectable({
     providedIn: 'root'
@@ -15,11 +17,16 @@ export class AppService {
         'TRAINER' : 2,
         'CUSTOMER' : 3
     };
+    private SOCKET_PATH = '/socket';
+
 
     current_role_view: number;
-    authenticated = false;
-    user : User;
     credentials: any;
+    authenticated = false;
+    user : any;
+
+    private stompClient : Stomp;
+
 
     constructor(private http: HttpClient,
                 private userService: UserService,
@@ -52,6 +59,26 @@ export class AppService {
         });
     }
 
+    initializeWebSocketConnection() {
+        let ws = new SockJS(this.SOCKET_PATH);
+        this.stompClient = Stomp.over(ws);
+        let that = this;
+        this.stompClient.connect({}, function() {
+            // that.stompClient.subscribe("/chat", (message) => {
+            //     console.log(message);
+            // });
+            // that.stompClient.send("/app/send/message" , {}, "Hello world");
+            that.stompClient.subscribe("/notifications", (message) => {
+                let notification = JSON.parse(message.body);
+                that.messageService.sendMessage({
+                    text: notification.message,
+                    class: "alert-info"
+                })
+            });
+        });
+    }
+
+
     private getRolesAndCurrentRoleView() {
         this.current_role_view = this.userHelperService.getHighestRole(this.user);
     }
@@ -80,8 +107,6 @@ export class AppService {
         this.credentials = {};
         this.user = new User();
     }
-
-
 
     logout(callback) {
         this.http.get('/logout')
