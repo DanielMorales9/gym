@@ -1,7 +1,7 @@
 <div class="modal" tabindex="-1" role="dialog" id="patchModal">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
-            <form [formGroup]="form" role="form" novalidate (ngSubmit)="editUser()">
+            <form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && editUser()">
                 <div class="modal-header">
                     <h5 class="modal-title">Modifica i Dati</h5>
                     <button type="button" class="close" id="patchModalClose" data-dismiss="modal" aria-label="Close">
@@ -15,8 +15,8 @@
                                placeholder="Nome"
                                class="form-control"
                                id="firstNamePatchModal"
-                               [(ngModel)]="user.firstName"
                                type="text"
+                               [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
                                formControlName="firstName"/>
                         <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
                             <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
@@ -30,20 +30,34 @@
                                class="form-control"
                                id="lastNamePatchModal"
                                type="text"
+                               [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"
                                formControlName="lastName"/>
                         <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
                             <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
                         </div>
                     </div>
+                    <div class="form-group">
+                        <label for="emailPatchModal" class="sr-only">Email:</label>
+                        <input name="email"
+                               placeholder="Email"
+                               class="form-control"
+                               id="emailPatchModal"
+                               [ngClass]="{ 'is-invalid': email.touched && email.invalid }"
+                               type="text"
+                               formControlName="email"/>
+                        <div *ngIf="email.touched && email.invalid" class="error-message">
+                            <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                            <div *ngIf="!!email.errors?.email">Email non valida</div>
+                        </div>
+                    </div>
                     <div class="form-group" *ngIf="role === 3">
-                        <label for="heightPatchModal" class="sr-only">Altezza</label>
+                        <label for="heightPatchModal" class="sr-only">Altezza:</label>
                         <input type="number"
-                               [(ngModel)]="user.height"
                                placeholder="Altezza (cm)"
                                class="form-control"
                                id="heightPatchModal"
-                               numeric="true"
                                name="height"
+                               [ngClass]="{ 'is-invalid': height.touched && height.invalid }"
                                formControlName="height" />
                         <div *ngIf="height.touched && height.invalid" class="error-message">
                             <div *ngIf="!!height.errors?.required">Altezza obbligatoria</div>
@@ -51,13 +65,12 @@
                         </div>
                     </div>
                     <div class="form-group" *ngIf="role === 3">
-                        <label for="weightPatchModal" class="sr-only">Peso</label>
+                        <label for="weightPatchModal" class="sr-only">Peso:</label>
                         <input type="number"
-                               [(ngModel)]="user.weight"
+                               [ngClass]="{ 'is-invalid': weight.touched && weight.invalid }"
                                placeholder="Peso (kg)"
                                class="form-control"
                                id="weightPatchModal"
-                               numeric="true"
                                name="weight"
                                formControlName="weight"/>
                         <div *ngIf="weight.touched && weight.invalid" class="error-message">
