@@ -10,6 +10,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 export class SendChangePasswordTokenComponent implements OnInit {
 
     form: FormGroup;
+    errorMessage: string;
 
     constructor(private authService: AuthService,
                 private builder: FormBuilder,
@@ -33,19 +34,7 @@ export class SendChangePasswordTokenComponent implements OnInit {
             });
             return this.router.navigateByUrl("/home")
         }, err => {
-            if (err.status == 502) {
-                this.router.navigate(['/error'],
-                    {queryParams: {
-                            title: "Verifica prima il tuo account",
-                            message:
-                                "Controlla che nella tua posta elettronica ci sia un email di verifica."+
-                                "<br>In caso non dovessi trovare la mail, rivolgiti in segreteria."
-                        }});
-            }
-            else this.notificationService.sendMessage({
-                text: err.message,
-                class: "alert-danger"
-            });
+            this.errorMessage = err.error.message;
         })
     }
 
