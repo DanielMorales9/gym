@@ -5,7 +5,7 @@ export class DateService {
 
     constructor() {}
 
-    public getDate(d) {
+    public getStringDate(d) {
         let currentdate = new Date(d);
         return currentdate.getDate() + "/"
             + (currentdate.getMonth()+1)  + "/"

@@ -52,7 +52,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	@Autowired @Qualifier("userAuthService")
 	UserAuthService userDetailsService;
 
-	@RequestMapping({ "/", "/home*", "/home/**/*", "/home/**", "/profile/**/*", "/profile/*",  "/logout", "/auth/**/*"})
+	@RequestMapping({"/", "/logout", "/home/**", "/profile/**", "/auth/**", "/error/**"})
     public String publicAPI() {
         return "forward:/index.html";
     }
@@ -75,11 +75,13 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		http
 				.httpBasic().and()
 				.authorizeRequests()
-				.antMatchers("/", "/home", "/user",
-                        "/logout", "/login", "/profile", "/profile/*",
-						"/verification*",  "/auth/*", "/auth/**/*",
-						"/.well-known/acme-challenge/*", "/authentication/**/*",
-						"/authentication/*").permitAll()
+				.antMatchers("/", "/user", "/logout", "/login",
+						"/home/**",
+						"/profile/**",
+						"/verification/**",
+						"/authentication/**",
+						"/auth/**",
+						"/socket/**").permitAll()
 				.anyRequest().authenticated()
 				.and().exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
 				.and().csrf()
@@ -89,7 +91,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) {
-		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css", "/**/*.txt");
+		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css", "/.well-known/**");
 
 	}
 

@@ -24,10 +24,9 @@
                                    [ngClass]="{ 'is-invalid': password.touched && password.invalid }"/>
                             <div *ngIf="password.touched && password.invalid" class="error-message">
                                 <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
-                                <div *ngIf="!!password.errors?.pattern">
+                                <div *ngIf="!!password.errors?.minLength">
                                     <p>
-                                        La password deve contenere almeno 8 caratteri,
-                                        con almeno un carattere minuscolo, maiuscolo, speciale e numerico.
+                                        La password deve contenere almeno 8 caratteri.
                                     </p>
                                 </div>
                             </div>

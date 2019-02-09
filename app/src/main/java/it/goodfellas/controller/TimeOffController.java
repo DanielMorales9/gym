@@ -1,22 +1,17 @@
 package it.goodfellas.controller;
 
 import it.goodfellas.exception.InvalidTimesOff;
-import it.goodfellas.exception.POJONotFoundException;
 import it.goodfellas.exception.TimesOffNotFound;
 import it.goodfellas.exception.UnAuthorizedException;
 import it.goodfellas.hateoas.TimeOffAssembler;
 import it.goodfellas.hateoas.TimeOffResource;
-import it.goodfellas.model.AUser;
-import it.goodfellas.model.Admin;
-import it.goodfellas.model.Reservation;
-import it.goodfellas.model.TimeOff;
+import it.goodfellas.model.*;
 import it.goodfellas.repository.ReservationRepository;
 import it.goodfellas.repository.TimeOffRepository;
 import it.goodfellas.repository.TrainerRepository;
 import it.goodfellas.service.TimeOffService;
 import it.goodfellas.service.UserService;
 import it.goodfellas.utility.MailSenderUtility;
-import javassist.NotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,10 +20,13 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -43,23 +41,32 @@ public class TimeOffController {
 
     private final static Logger logger = LoggerFactory.getLogger(TimeOffController.class);
 
+    private final ReservationRepository reservationRepository;
+    private final TimeOffRepository timeRepository;
+    private final UserService userService;
+    private final TrainerRepository trainerRepository;
+    private final ReservationRepository reservationService;
+    private final TimeOffService timeOffService;
+    private final JavaMailSender mailSender;
+    private final SimpMessagingTemplate template;
+
     @Autowired
-    private ReservationRepository reservationRepository;
-    @Autowired
-    private TimeOffRepository timeRepository;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private TrainerRepository trainerRepository;
-    @Autowired
-    private ReservationRepository reservationService;
-    @Autowired
-    private TimeOffService timeOffService;
-    @Autowired
-    private JavaMailSender mailSender;
+    public TimeOffController(SimpMessagingTemplate template, JavaMailSender mailSender,
+                             ReservationRepository reservationRepository, TimeOffRepository timeRepository,
+                             UserService userService, TrainerRepository trainerRepository,
+                             ReservationRepository reservationService, TimeOffService timeOffService) {
+        this.template = template;
+        this.mailSender = mailSender;
+        this.reservationRepository = reservationRepository;
+        this.timeRepository = timeRepository;
+        this.userService = userService;
+        this.trainerRepository = trainerRepository;
+        this.reservationService = reservationService;
+        this.timeOffService = timeOffService;
+    }
 
 
-    @GetMapping(path = "/checkAvailabilityAndEnablement", produces = "text/plain")
+    @GetMapping(path = "/checkAvailabilityAndEnablement")
     @Transactional
     ResponseEntity<String> checkAvailableDay(@RequestParam("startTime")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -142,32 +149,49 @@ public class TimeOffController {
         logger.info("booking time off");
         logger.info(startTime.toString());
         if (checkDateBeforeToday(startTime)) throw new InvalidTimesOff("Data non valida");
-
+        String message;
+        DateFormat dateFormat = new SimpleDateFormat("dd-MM hh");
+        String strDate = dateFormat.format(startTime);
+        String endDate = dateFormat.format(endTime);
+        AUser user = this.userService.findById(id);
+        String channel;
         switch (type) {
             case "admin":
                 logger.info("counting number of reservations");
-                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
+                if (checkingAvailabilityAdminTimeOff(startTime, endTime)) {
                     throw new InvalidTimesOff("Ci sono delle prenotazioni attive.");
+                }
+                message = "Chiusura per " + name + " dalle " + strDate + " alle " + endDate;
                 break;
             case "trainer":
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
                     throw new InvalidTimesOff("Ci sono delle prenotazioni attive.");
+                message = "Ferie di " + user.getLastName() + "per " + name + " dalle " + strDate + " alle " + endDate;
                 break;
             default:
                 throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
         }
 
-        AUser user = this.userService.findById(id);
         logger.info(user.toString());
 
         TimeOff timeOff = new TimeOff(name, type, user, startTime, endTime);
         logger.info(timeOff.toString());
 
         timeOff = this.timeRepository.save(timeOff);
+
+        channel = "notifications";
+        dateFormat = new SimpleDateFormat("MM-dd-yyyy");
+        String action = "/home/calendar?date="+dateFormat.format(startTime)+"&view=day";
+        Notification notification = new Notification("calendar", message, action);
+        notifyChannel("/"+channel, notification);
         logger.info(timeOff.toString());
 
         return ResponseEntity.ok(new TimeOffAssembler().toResource(timeOff));
 
+    }
+
+    private void notifyChannel(String channel, Notification notification) {
+        template.convertAndSend(channel, notification);
     }
 
     @GetMapping(path = "/change/{id}")

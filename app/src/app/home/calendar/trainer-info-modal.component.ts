@@ -30,7 +30,7 @@ export class TrainerInfoModalComponent extends BaseCalendarModal implements OnIn
 
     confirm() {
         this.loading = true;
-        let stringDate = this.dateService.getDate(this.modalData.event.start);
+        let stringDate = this.dateService.getStringDate(this.modalData.event.start);
         this.trainingService.confirm(this.modalData.event.meta.id)
             .subscribe((res) => {
                 this.message = {
@@ -51,7 +51,7 @@ export class TrainerInfoModalComponent extends BaseCalendarModal implements OnIn
 
     complete() {
         this.loading = true;
-        let stringDate = this.dateService.getDate(this.modalData.event.start);
+        let stringDate = this.dateService.getStringDate(this.modalData.event.start);
         this.trainingService.complete(this.modalData.event.meta.id)
             .subscribe( (res) => {
                 this.message = {

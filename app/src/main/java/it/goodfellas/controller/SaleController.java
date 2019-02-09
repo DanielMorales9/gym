@@ -29,7 +29,6 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @RepositoryRestController
-@RequestMapping("/sales")
 public class SaleController {
 
     private final AdminRepository adminRepository;
@@ -63,13 +62,13 @@ public class SaleController {
         this.bundleSpecificationService = bundleSpecificationService;
     }
 
-    @GetMapping(path = "/findUserSales")
+    @GetMapping(path = "/sales/findUserSales")
     @ResponseBody
     Page<Sale> findUserSales(@RequestParam Long id, Pageable pageable) {
         return saleRepository.findUserSales(id, pageable);
     }
 
-    @GetMapping(path = "/searchByDate")
+    @GetMapping(path = "/sales/searchByDate")
     @ResponseBody
     Page<Sale> findSalesByDate(@RequestParam Long id,
                                @DateTimeFormat(pattern="dd-MM-yyyy", iso = DateTimeFormat.ISO.DATE_TIME) Date date,
@@ -77,13 +76,13 @@ public class SaleController {
         return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
     }
 
-    @GetMapping(path = "/searchByLastName")
+    @GetMapping(path = "/sales/searchByLastName")
     @ResponseBody
     Page<Sale> findSalesByCustomerLastName(@RequestParam String lastName, Pageable pageable) {
         return saleRepository.findSalesByCustomerLastName(lastName, pageable);
     }
 
-    @GetMapping(path = "/createNewSale/{adminEmail}/{customerId}")
+    @GetMapping(path = "/sales/createNewSale/{adminEmail}/{customerId}")
     @Transactional
     ResponseEntity<SaleResource> createNewSale(@PathVariable String adminEmail, @PathVariable Long customerId) {
 
@@ -101,7 +100,7 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/getTotalPrice/{saleId}")
+    @GetMapping(path = "/sales/getTotalPrice/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> getTotalPrice(@PathVariable Long saleId) {
         Sale sale = getSale(saleId);
@@ -109,7 +108,7 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/addSalesLineItem/{saleId}/{bundleSpecId}")
+    @GetMapping(path = "/sales/addSalesLineItem/{saleId}/{bundleSpecId}")
     @Transactional
     ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
                                                   @PathVariable Long bundleSpecId,
@@ -122,7 +121,7 @@ public class SaleController {
     }
 
 
-    @DeleteMapping(path = "/deleteSalesLineItem/{saleId}/{salesLineItemId}")
+    @DeleteMapping(path = "/sales/deleteSalesLineItem/{saleId}/{salesLineItemId}")
     @Transactional
     ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
                                                      @PathVariable Long salesLineItemId) {
@@ -138,7 +137,7 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/confirmSale/{saleId}")
+    @GetMapping(path = "/sales/confirmSale/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> confirmSale(@PathVariable Long saleId) {
         Sale sale = getSale(saleId);
@@ -152,11 +151,11 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    private Sale getSale(@PathVariable Long saleId) {
+    private Sale getSale(Long saleId) {
         return this.saleService.findById(saleId);
     }
 
-    @PostMapping(path = "/pay/{saleId}")
+    @PostMapping(path = "/sales/pay/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestBody Double amount) {
         Sale sale = getSale(saleId);
@@ -178,7 +177,7 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @DeleteMapping(path = "/{saleId}")
+    @DeleteMapping(path = "/sales/{saleId}")
     @Transactional
     ResponseEntity<SaleResource> deleteSale(@PathVariable Long saleId) {
         Sale sale = this.getSale(saleId);

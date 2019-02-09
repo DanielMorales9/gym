@@ -16,19 +16,6 @@ services:
     restart: always
     container_name: redis
     image: redis
-#  nginx:
-#    restart: always
-#    container_name: nginx
-#    image: nginx
-#    ports:
-#      - 443:443
-#      - 80:80
-#    depends_on:
-#      - app
-#    volumes:
-#      - ./nginx/proxy_ssl.conf:/etc/nginx/conf.d/default.conf
-#      - ./nginx/goodfellas.fitness/:/etc/nginx/certs/goodfellas.fitness/
-#      - ./nginx/.well_known/pki-validation/:/var/www/.well_known/pki-validation/
   app:
     restart: always
     container_name: app
@@ -42,9 +29,6 @@ services:
     - 80:80
     volumes:
       - ./app/target/dependency/META-INF:/app/META-INF
-#      - ./app/certs/keystore.p12:/app/certs/keystore.p12
-#      - ./app/target/dependency/BOOT-INF/lib:/app/lib
-#      - ./app/target/dependency/BOOT-INF/classes/*:/app/*
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: daniel

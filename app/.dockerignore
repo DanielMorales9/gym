@@ -1,17 +1,9 @@
 src
-package-lock.json
-api.iml
-pom.xml
 node
 node_modules
 etc
 e2e
-karma.conf.js
-package.json
-package-lock.json
-tsconfig.json
-tslint.json
-protractor.conf.js
+
 target/classes
 target/dependency-maven-plugin-markers
 target/docker
@@ -21,3 +13,6 @@ target/maven-status
 target/test-classes
 target/*.jar
 coverage
+*.json
+*.iml
+*.xml
