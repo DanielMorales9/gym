@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 import {BaseCalendar} from "./base-calendar";
 import {EVENT_TYPES} from "./event-types.enum";
 import {DateService, GymConfigurationService, NotificationService} from "../../services";
-import {TimesOffService, TrainingService, UserHelperService} from "../../shared/services";
+import {TimesOffService, TrainingService, UserHelperService, UserService} from "../../shared/services";
 import {User} from "../../shared/model";
 
 
@@ -13,13 +13,13 @@ import {User} from "../../shared/model";
 })
 export class AdminCalendarComponent extends BaseCalendar {
 
-    constructor(public userHelperService: UserHelperService,
+    constructor(public userService: UserService,
                 private dateService: DateService,
                 private trainingService: TrainingService,
                 private gymConf: GymConfigurationService,
                 private timesOffService: TimesOffService,
                 private notificationService: NotificationService) {
-        super(userHelperService);
+        super(userService);
     }
 
     getEvents() {

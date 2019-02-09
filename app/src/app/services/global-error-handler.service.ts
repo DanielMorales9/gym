@@ -6,15 +6,14 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     constructor(private notificationService: NotificationService) { }
 
-    handleError(error) {
-        console.error(error);
+    handleError(err) {
+        console.error(err);
 
-        if (error.hasOwnProperty("status")) {
-            if (error.status >= 400) {
-                console.log(typeof error.message);
+        if (err.hasOwnProperty("status")) {
+            if (err.status >= 400) {
                 this.notificationService.sendMessage({
-                    class: 'alert-danger',
-                    text: error.message.toString()
+                    text: err.error.message,
+                    class: 'alert-danger'
                 });
             }
         }
