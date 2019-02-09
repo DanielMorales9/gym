@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
 
     current_role_view: number;
     authenticated: boolean;
+    profilePath: string;
     user: User;
 
     constructor(private appService: AppService,
@@ -42,7 +43,10 @@ export class AppComponent implements OnInit {
                     if (this.authenticated) {
                         this.current_role_view = this.appService.current_role_view;
                         this.user = this.appService.user;
-                        this.appService.initializeWebSocketConnection()
+                        this.appService.initializeWebSocketConnection();
+                        this.userHelperService.getUserByEmail(this.user.email, u => {
+                            this.profilePath = `profile/${u.id}/user`
+                        });
                     }
                 });
             }

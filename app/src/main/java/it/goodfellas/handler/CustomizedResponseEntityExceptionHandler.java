@@ -1,6 +1,6 @@
 package it.goodfellas.handler;
 
-import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.utility.ErrorDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -29,8 +29,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
   }
 
 
-    @ExceptionHandler(POJONotFoundException.class)
-    public final ResponseEntity<ErrorDetails> handleUserNotFoundException(POJONotFoundException ex,
+    @ExceptionHandler(NotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handleUserNotFoundException(NotFoundException ex,
                                                                           WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
                 request.getDescription(false));

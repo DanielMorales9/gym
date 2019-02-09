@@ -1,6 +1,6 @@
 package it.goodfellas.service;
 
-import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.model.Admin;
 import it.goodfellas.repository.AdminRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AdminService implements ICrudService<Admin, Long> {
 
     @Override
     public Admin findById(Long var1) {
-        return this.adminRepository.findById(var1).orElseThrow(() -> new POJONotFoundException(ADMIN, var1));
+        return this.adminRepository.findById(var1).orElseThrow(() -> new NotFoundException(ADMIN, var1));
     }
 
     @Override

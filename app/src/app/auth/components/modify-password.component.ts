@@ -96,7 +96,8 @@ export class ModifyPasswordComponent implements OnInit {
         this.form = this.builder.group({
                 password: ['', [
                     Validators.required,
-                    Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^$@$!%*#?&]*[$@$!%*#?&])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
+                    Validators.minLength(8),
+                    Validators.maxLength(30)
                 ]],
                 confirmPassword: ['', Validators.required]},
             {

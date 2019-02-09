@@ -1,6 +1,6 @@
 package it.goodfellas.service;
 
-import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.model.Reservation;
 import it.goodfellas.repository.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +29,7 @@ public class ReservationService implements ICrudService<Reservation, Long> {
     @Override
     public Reservation findById(Long var1) {
         return this.reservationRepository.findById(var1)
-                .orElseThrow(() -> new POJONotFoundException("Reservation", var1));
+                .orElseThrow(() -> new NotFoundException("Reservation", var1));
     }
 
     @Override

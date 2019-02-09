@@ -1,6 +1,6 @@
 package it.goodfellas.service;
 
-import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.model.Sale;
 import it.goodfellas.repository.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class SaleService implements ICrudService<Sale, Long> {
 
     @Override
     public Sale findById(Long var1) {
-        return this.saleRepository.findById(var1).orElseThrow(() -> new POJONotFoundException(SALE, var1));
+        return this.saleRepository.findById(var1).orElseThrow(() -> new NotFoundException(SALE, var1));
     }
 
     @Override

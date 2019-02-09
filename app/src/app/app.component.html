@@ -72,27 +72,19 @@
                     <a class="dropdown-item"
                        [hidden]="!authenticated"
                        [ngClass]="{'disabled': isOnProfile()}"
-                       routerLink="/profile/user"
-                       href=#>
+                       [routerLink]="profilePath" href=#>
                         <i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>
                     <div [hidden]="!hasRoles()">
                         <h6 class="dropdown-header" >Viste</h6>
                         <a *ngFor="let r of user.roles" class="dropdown-item"
-                           [ngClass]="{'active-link': current_role_view == r.id}"
-                           (click)="switchView(r.id)">
+                           [ngClass]="{'active-link': current_role_view == r.id}" (click)="switchView(r.id)">
                             &nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}
                         </a>
                     </div>
                     <div class="dropdown-divider" [hidden]="!authenticated"></div>
-                    <a class="dropdown-item"
-                       [hidden]="hideLogin()"
-                       routerLink="/auth/login"
-                       href=#>
+                    <a class="dropdown-item" [hidden]="hideLogin()" routerLink="/auth/login" href=#>
                         <i class="fas fa-sign-in-alt">&nbsp;&nbsp;</i>Login</a>
-                    <a class="dropdown-item"
-                       [hidden]="hideLogout()"
-                       (click)="logout()"
-                       href=#>
+                    <a class="dropdown-item" [hidden]="hideLogout()" (click)="logout()" href=#>
                         <i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout</a>
                 </div>
             </li>

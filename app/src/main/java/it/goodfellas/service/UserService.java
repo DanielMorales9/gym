@@ -1,8 +1,7 @@
 package it.goodfellas.service;
 
-import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.model.AUser;
-import it.goodfellas.model.Admin;
 import it.goodfellas.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,7 +22,7 @@ public class UserService implements ICrudService<AUser, Long> {
 
     @Override
     public AUser findById(Long var1) {
-        return this.userRepository.findById(var1).orElseThrow(() -> new POJONotFoundException(USER, var1));
+        return this.userRepository.findById(var1).orElseThrow(() -> new NotFoundException(USER, var1));
     }
 
     @Override
