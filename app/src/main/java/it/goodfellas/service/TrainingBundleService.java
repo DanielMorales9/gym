@@ -1,6 +1,6 @@
 package it.goodfellas.service;
 
-import it.goodfellas.exception.POJONotFoundException;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.model.ATrainingBundle;
 import it.goodfellas.repository.TrainingBundleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
     @Override
     public ATrainingBundle findById(Long var1) {
         return this.bundle.findById(var1)
-                .orElseThrow(() -> new POJONotFoundException("TrainingBundle", var1));
+                .orElseThrow(() -> new NotFoundException("TrainingBundle", var1));
     }
 
     @Override

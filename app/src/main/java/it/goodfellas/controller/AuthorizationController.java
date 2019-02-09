@@ -130,7 +130,7 @@ public class AuthorizationController {
     @PostMapping("/changeNewPassword/{id}")
     ResponseEntity<AUserResource> changeNewPassword(@PathVariable("id") Long id,
                                                     @RequestBody PasswordForm form) {
-        AUser user = this.userRepository.findById(id).orElseThrow(() -> new POJONotFoundException("User", id));
+        AUser user = this.userRepository.findById(id).orElseThrow(() -> new NotFoundException("L'utente", id));
 
         String newPwd = passwordEncoder.encode(form.getPassword());
 

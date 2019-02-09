@@ -28,7 +28,8 @@ export class ChangePasswordModalComponent implements OnInit {
                 oldPassword: ['', [Validators.required]],
                 password: ['', [
                     Validators.required,
-                    Validators.minLength(8)
+                    Validators.minLength(8),
+                    Validators.maxLength(30)
                     // Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^!"#$%&'()*+,-./:;<=>?$@$\[\]^_`{|}~]*[!"#$%&'()*+,-./:;<=>?$@$\[\]^_`{|}~])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
                 ]],
                 confirmPassword: ['', Validators.required]},
@@ -58,19 +59,14 @@ export class ChangePasswordModalComponent implements OnInit {
         this.authService.changeNewPassword(this.user.id, model)
             .subscribe(value => {
                 document.getElementById("changePasswordModal").click();
-                let message = {
+                this.messageService.sendMessage({
                     text: `${this.user.firstName}, la tua password è stata cambiata con successo!`,
                     class: "alert-success"
-                };
-                this.messageService.sendMessage(message);
-            }, _ => {
+                });
+            }, err => {
                 this.loading = false;
                 document.getElementById("changePasswordModal").click();
-                let message ={
-                    text: "Qualcosa è andato storto",
-                    class: "alert-danger"
-                };
-                this.messageService.sendMessage(message);
+                this.messageService.sendMessage({text: err.error.message, class: "alert-danger"});
             })
     }
 }

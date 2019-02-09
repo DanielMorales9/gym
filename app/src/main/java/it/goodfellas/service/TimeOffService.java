@@ -1,9 +1,7 @@
 package it.goodfellas.service;
 
-import it.goodfellas.exception.POJONotFoundException;
-import it.goodfellas.model.Reservation;
+import it.goodfellas.exception.NotFoundException;
 import it.goodfellas.model.TimeOff;
-import it.goodfellas.repository.ReservationRepository;
 import it.goodfellas.repository.TimeOffRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,7 +29,7 @@ public class TimeOffService implements ICrudService<TimeOff, Long> {
     @Override
     public TimeOff findById(Long var1) {
         return this.timeOffRepository.findById(var1)
-                .orElseThrow(() -> new POJONotFoundException("TimeOff", var1));
+                .orElseThrow(() -> new NotFoundException("TimeOff", var1));
     }
 
     @Override

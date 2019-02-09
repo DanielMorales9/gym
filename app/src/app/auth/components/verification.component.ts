@@ -68,7 +68,8 @@ export class VerificationComponent implements OnInit {
         this.form = this.builder.group({
                 password: ['', [
                     Validators.required,
-                    Validators.minLength(8)
+                    Validators.minLength(8),
+                    Validators.maxLength(30)
                 ]],
                 confirmPassword: ['', Validators.required]},
             {

@@ -24,11 +24,8 @@
                                    [ngClass]="{ 'is-invalid': password.touched && password.invalid }"/>
                             <div *ngIf="password.touched && password.invalid" class="error-message">
                                 <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
-                                <div *ngIf="!!password.errors?.minLength">
-                                    <p>
-                                        La password deve contenere almeno 8 caratteri.
-                                    </p>
-                                </div>
+                                <div *ngIf="!!password.errors?.minlength">La password deve contenere almeno 8 caratteri.</div>
+                                <div *ngIf="!!password.errors?.maxlength">La password non può contente più di 30 caratteri.</div>
                             </div>
                         </div>
                         <div class="form-group">
