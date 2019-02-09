@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService} from "../services";
+import {AppService, AuthenticatedService} from "../services";
 import {ChangeViewService} from "../services";
 import {User} from "../shared/model";
 import {Router} from "@angular/router";
@@ -18,10 +18,15 @@ export class HomeComponent implements OnInit {
 
     constructor(private app: AppService,
                 private router: Router,
+                private authenticatedService : AuthenticatedService,
                 private userHelper: UserHelperService,
                 private changeViewService: ChangeViewService) { }
 
     ngOnInit() :void {
+        this.authenticatedService.getAuthenticated().subscribe(auth => {
+            this.authenticated = auth;
+        });
+
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         });
@@ -31,8 +36,7 @@ export class HomeComponent implements OnInit {
     authenticate() {
         this.app.authenticate(undefined, (isAuthenticated) => {
             this.current_role_view = this.app.current_role_view;
-            this.authenticated = isAuthenticated;
-            if (this.authenticated) {
+            if (isAuthenticated) {
                 let user = this.app.user;
                 this.userHelper.getUserByEmail(user.email, user => {
                     this.user = user;

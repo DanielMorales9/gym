@@ -27,14 +27,12 @@ export class LoginComponent implements OnInit {
         this.credentials.username = this.email.value;
         this.credentials.password = this.password.value;
         this.app.authenticate(this.credentials, (isAuthenticated) => {
-            if (!isAuthenticated) {
-                this.error = true;
-            }
+            if (!isAuthenticated) this.error = true;
             else {
                 this.error = false;
                 this.router.navigateByUrl('/home');
             }
-        }, (error) => {
+        }, _ => {
             this.error = true
         });
     }
