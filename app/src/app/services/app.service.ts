@@ -6,6 +6,7 @@ import {NotificationService} from "./notification.service";
 import {ChangeViewService} from "./change-view.service";
 import * as Stomp from 'stompjs';
 import * as SockJS from 'sockjs-client';
+import {AuthenticatedService} from "./authenticated.service";
 
 @Injectable({
     providedIn: 'root'
@@ -28,10 +29,33 @@ export class AppService {
     private stompClient : Stomp;
 
 
+    authenticate(credentials?, success?, error?) {
+        this.credentials = credentials !== undefined ? credentials: this.credentials;
+
+        this.http.get('/user').subscribe(res => {
+            this.authenticated = !!res && !!res['name'];
+            if (this.authenticated) {
+                this.user = new User();
+                this.getEmail(res);
+                this.userHelperService.getUserByEmail(this.user.email, user => {
+                    this.user.id = user['id'];
+                });
+                this.getRoles(res);
+                this.getRolesAndCurrentRoleView();
+            }
+            return !!success && success(this.authenticated);
+        }, err => {
+            return !!error && error(err)
+        }, () => {
+            this.authenticatedService.setAuthenticated(this.authenticated);
+        });
+    }
+
     constructor(private http: HttpClient,
                 private userService: UserService,
                 private userHelperService: UserHelperService,
                 private messageService: NotificationService,
+                private authenticatedService: AuthenticatedService,
                 private changeViewService: ChangeViewService) {
         this.user = new User();
         this.getRolesAndCurrentRoleView();
@@ -42,32 +66,11 @@ export class AppService {
         this.changeViewService.sendView(this.current_role_view)
     }
 
-    authenticate(credentials, success?, error?) {
-        this.credentials = credentials !== undefined ? credentials: this.credentials;
-
-        this.http.get('/user').subscribe(res => {
-            this.authenticated = !!res && !!res['name'];
-            if (this.authenticated) {
-                this.user = new User();
-                this.getRoles(res);
-                this.getEmail(res);
-                this.getRolesAndCurrentRoleView();
-            }
-            return !!success && success(this.authenticated);
-        }, err => {
-            return !!error && error(err)
-        });
-    }
-
     initializeWebSocketConnection() {
         let ws = new SockJS(this.SOCKET_PATH);
         this.stompClient = Stomp.over(ws);
         let that = this;
         this.stompClient.connect({}, function() {
-            // that.stompClient.subscribe("/chat", (message) => {
-            //     console.log(message);
-            // });
-            // that.stompClient.send("/app/send/message" , {}, "Hello world");
             that.stompClient.subscribe("/notifications", (message) => {
                 let notification = JSON.parse(message.body);
                 that.messageService.sendMessage({
@@ -106,18 +109,16 @@ export class AppService {
     public discardSession() {
         this.credentials = {};
         this.user = new User();
+        this.authenticatedService.setAuthenticated(false);
     }
 
     logout(callback) {
-        this.http.get('/logout')
-            .subscribe(_ => {
-                    this.discardSession()
-                },
-                undefined,
-                () => {
-                    this.authenticated = false;
-                    return !!callback && callback()
-                });
+        this.http.get('/logout').subscribe(_ => {
+                this.discardSession()
+            },
+            undefined, () => {
+                return !!callback && callback()
+            });
     }
 
 }

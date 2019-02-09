@@ -7,7 +7,7 @@ import {AppRouting} from "./app.routing";
 import {SharedModule} from "./shared";
 import {CoreModule} from "./core";
 import {
-    AppService,
+    AppService, AuthenticatedService,
     AuthService,
     ExchangeBundleService,
     ExchangeSaleService,
@@ -40,6 +40,7 @@ import {TimeAgoPipe} from "time-ago-pipe";
     providers: [
         AppService,
         AuthService,
+        AuthenticatedService,
         ChangeViewService,
         NotificationService,
         SaleHelperService,

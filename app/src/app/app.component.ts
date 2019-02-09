@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService} from "./services";
+import {AppService, AuthenticatedService} from "./services";
 import {User} from "./shared/model";
 import {NotificationService, ChangeViewService} from "./services";
 import {UserHelperService} from "./shared/services";
@@ -22,6 +22,7 @@ export class AppComponent implements OnInit {
 
     constructor(private appService: AppService,
                 private router: Router,
+                private authenticatedService: AuthenticatedService,
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService) {
     }
@@ -29,6 +30,9 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.authOnNavigation();
+        this.authenticatedService.getAuthenticated().subscribe(auth => {
+            this.authenticated = auth;
+        });
 
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
@@ -38,9 +42,8 @@ export class AppComponent implements OnInit {
     private authOnNavigation() {
         this.router.events.subscribe(event => {
             if (event instanceof NavigationStart) {
-                this.appService.authenticate(undefined, (isAuthenticated) => {
-                    this.authenticated = isAuthenticated;
-                    if (this.authenticated) {
+                this.appService.authenticate(undefined, (auth) => {
+                    if (auth) {
                         this.current_role_view = this.appService.current_role_view;
                         this.user = this.appService.user;
                         this.appService.initializeWebSocketConnection();

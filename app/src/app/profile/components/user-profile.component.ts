@@ -1,6 +1,6 @@
 import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {Role, User} from "../../shared/model";
+import {User} from "../../shared/model";
 import {UserHelperService} from "../../shared/services";
 import {AppService, ExchangeUserService} from "../../services";
 import {ChangeViewService} from "../../services";
@@ -30,7 +30,7 @@ export class UserProfileComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.sub = this.route.parent.params.subscribe(params => {
-            this.updateUser(+params['id?']);
+            this.getUserById(+params['id?']);
         });
     }
 
@@ -51,12 +51,29 @@ export class UserProfileComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user)
     }
 
-    updateUser(id) {
-        if (!!id) {
-            this.userHelperService.getUser(id, this.getUser());
-        }
-        else {
-            this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
+    private updatedUser() {
+        return (user) => {
+            if (this.appService.user.id == this.user.id)
+                return this.appService.logout(() => this.router.navigateByUrl("/auth/login"));
+            this.user = user;
+            this.userHelperService.getRoles(this.user, () => {
+                this.exchangeUserService.sendUser(this.user)
+            });
         }
     }
-}
+
+
+    updateUser(id?) {
+        if (!!id)
+            this.userHelperService.getUser(id, this.updatedUser());
+        else
+            this.userHelperService.getUserByEmail(this.appService.user.email, this.updatedUser());
+    }
+
+    private getUserById(id?: number) {
+            if (!!id)
+                this.userHelperService.getUser(id, this.getUser());
+            else
+                this.userHelperService.getUserByEmail(this.appService.user.email, this.getUser())
+        }
+    }
