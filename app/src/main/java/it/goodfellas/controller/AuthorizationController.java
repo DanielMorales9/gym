@@ -159,6 +159,17 @@ public class AuthorizationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
+    @PutMapping(path = "/users/{userId}/roles/{roleId}")
+    ResponseEntity<AUserResource> addRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
+        AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
+        Role role = this.roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
+        if (!user.getRoles().contains(role)) {
+            user.addRole(role);
+            user = this.userRepository.save(user);
+        }
+        return ResponseEntity.ok(new AUserAssembler().toResource(user));
+    }
+
     @GetMapping(path = "/findByEmail")
     ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         logger.info("Authentication: Find By Email: " + email);
@@ -173,41 +184,38 @@ public class AuthorizationController {
         throw new UserVerifiedException(user);
     }
 
-    @GetMapping(path = "/resendChangePasswordToken")
-    public ResponseEntity resendChangePasswordToken(@RequestParam("token") String existingToken) {
-        VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
-        logger.info("RESEND CHANGE PASSWORD TOKEN");
-        Long userId = newToken.getUser().getId();
-        AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-
-        sendChangePasswordTokenToEmail(user, newToken.getToken());
+    @GetMapping(path = "/resendToken/{id}")
+    public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
+        AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        if (user.isVerified()) {
+            throw new UserIsVerified(id);
+        }
+        VerificationToken token = this.tokenRepository.findByUser(user);
+        VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
+        sendVerificationEmail(newToken, user);
 
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/resendToken/{id}")
-    public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
-        AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        VerificationToken token = this.tokenRepository.findByUser(user);
-        VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
-        sendVerificationEmail(newToken, user);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+    @GetMapping(path = "/resendChangePasswordToken")
+    public ResponseEntity resendChangePasswordToken(@RequestParam("token") String existingToken) {
+        VerificationToken newToken = getVerificationToken(existingToken);
+        sendChangePasswordTokenToEmail(newToken.getUser(), newToken.getToken());
+        return new ResponseEntity<>(new AUserAssembler().toResource(newToken.getUser()), HttpStatus.OK);
     }
 
     @GetMapping(path = "/resendToken/")
     public ResponseEntity resendTokenAnonymous(@RequestParam("token") String existingToken) {
-        VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
-        Long userId = newToken.getUser().getId();
-        AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        sendVerificationEmail(newToken, user);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        VerificationToken newToken = getVerificationToken(existingToken);
+
+        sendVerificationEmail(newToken, newToken.getUser());
+        return new ResponseEntity<>(new AUserAssembler().toResource(newToken.getUser()), HttpStatus.OK);
     }
 
     private void sendVerificationEmail(VerificationToken newToken, AUser user) {
         String subject = "Verifica Account";
         String recipientAddress = user.getEmail();
-        String confirmationUrl
-                = this.baseUrl+ "/auth/verification?token=" + newToken.getToken();
+        String confirmationUrl = this.baseUrl+ "/auth/verification?token=" + newToken.getToken();
         String message = "Ti abbiamo generato un nuovo link di verifica: ";
         MailSenderUtility.sendEmail(this.mailSender, subject, message+confirmationUrl, recipientAddress);
     }
@@ -215,23 +223,18 @@ public class AuthorizationController {
     private void sendChangePasswordTokenToEmail(AUser user, String token) {
         String recipientAddress = user.getEmail();
         String subject = "Cambia la tua password";
-        String confirmationUrl
-                = this.baseUrl+ "/auth/modifyPassword?token=" + token;
+        String confirmationUrl = this.baseUrl+ "/auth/modifyPassword?token=" + token;
         String message = "Per modificare la password usa il seguente link: ";
 
         MailSenderUtility.sendEmail(this.mailSender, subject,message+confirmationUrl, recipientAddress);
     }
 
-
-    @PutMapping(path = "/users/{userId}/roles/{roleId}")
-    ResponseEntity<AUserResource> addRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
-        AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
-        Role role = this.roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
-        if (!user.getRoles().contains(role)) {
-            user.addRole(role);
-            user = this.userRepository.save(user);
-        }
-        return ResponseEntity.ok(new AUserAssembler().toResource(user));
+    private VerificationToken getVerificationToken(@RequestParam("token") String existingToken) {
+        VerificationToken newToken = userService.generateNewVerificationToken(existingToken);
+        AUser user = newToken.getUser();
+        long userId = user.getId();
+        if (!this.userRepository.existsById(user.getId())) throw new UserNotFoundException(userId);
+        return newToken;
     }
 
     private void setRandomPassword(@Valid @RequestBody AUser input) {
@@ -243,7 +246,6 @@ public class AuthorizationController {
         PasswordGenerator gen = builder.build();
 
         String password = gen.generate(30);
-        logger.info(password);
         input.setPassword(password);
     }
 

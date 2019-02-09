@@ -34,8 +34,7 @@
                             <i class="fas fa-dumbbell">&nbsp;&nbsp;</i>Allenamenti
                         </a>
                     </li>
-                    <li class="nav-item menu-item"
-                        *ngIf="current_role_view == 1 && !isAdmin()">
+                    <li class="nav-item menu-item" *ngIf="current_role_view == 1 && !isAdmin() && !user?.verified">
                         <a (click)="resendToken()">
                             <i class="fa fa-lock">&nbsp;&nbsp;</i>Re-invia Token
                         </a>
