@@ -39,7 +39,7 @@
                             <i class="fa fa-lock">&nbsp;&nbsp;</i>Re-invia Token
                         </a>
                     </li>
-                    <li class="nav-item menu-item">
+                    <li class="nav-item menu-item" *ngIf="user?.verified">
                         <a data-toggle="modal" data-target="#changePasswordModal">
                             <i class="fa fa-key">&nbsp;&nbsp;</i>Cambia Password
                         </a>
@@ -66,10 +66,10 @@
                        *ngIf="isCustomer()">
                         <i class="fa fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite
                     </a>
-                    <a (click)="resendToken()" *ngIf="current_role_view == 1 && !isAdmin()">
+                    <a (click)="resendToken()" *ngIf="current_role_view == 1 && !isAdmin() && !user?.verified">
                         <i class="fa fa-lock">&nbsp;&nbsp;</i>Re-invia Token
                     </a>
-                    <a data-toggle="modal" data-target="#changePasswordModal">
+                    <a data-toggle="modal" data-target="#changePasswordModal" *ngIf="user?.verified">
                         <i class="fa fa-key">&nbsp;&nbsp;</i>Cambia Password
                     </a>
                 </div>
