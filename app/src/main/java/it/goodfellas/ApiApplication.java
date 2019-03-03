@@ -36,6 +36,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
@@ -75,7 +76,11 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		http
 				.httpBasic().and()
 				.authorizeRequests()
-				.antMatchers("/", "/user", "/logout", "/login",
+				.antMatchers("/",
+						"/user",
+						"/logout",
+						"/login",
+						"/actuator/*",
 						"/home/**",
 						"/profile/**",
 						"/verification/**",
@@ -112,6 +117,10 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		};
 	};
 
+	@Bean
+	public static ConfigureRedisAction configureRedisAction() {
+		return ConfigureRedisAction.NO_OP;
+	}
 
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder(){

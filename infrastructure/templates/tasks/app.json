@@ -1,0 +1,32 @@
+[
+  {
+    "essential": true,
+    "image": "${image_url}",
+    "memory": 512,
+    "cpu": 256,
+    "name": "${container_name}",
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80
+      }
+    ],
+    "environment" : [
+      { "name" : "GMAIL_PASSWORD", "value" : "${gmail_password}" },
+      { "name" : "POSTGRES_HOST", "value" : "${postgres_host}" },
+      { "name" : "POSTGRES_PASSWORD", "value" : "${postgres_password}" },
+      { "name" : "POSTGRES_USER", "value" : "${postgres_username}" },
+      { "name" : "REDIS_HOST", "value" : "${redis_host}" },
+      { "name" : "BASE_HOST", "value" : "${url}" }
+    ],
+    "networkMode": "awsvpc",
+    "logConfiguration": {
+      "logDriver": "awslogs",
+      "options": {
+        "awslogs-group": "${log_group_name}",
+        "awslogs-region": "${log_group_region}",
+        "awslogs-stream-prefix": "ecs"
+      }
+    }
+  }
+]
