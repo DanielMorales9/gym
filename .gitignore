@@ -7,7 +7,6 @@
 *#
 app/target/
 app/coverage
-app/certs/
 app/node/
 app/node_modules/
 data/
@@ -37,6 +36,6 @@ nbdist/
 e2e/*.js
 e2e/*.map
 *.sh
-
+*.p12
 infrastructure/.terraform/
 *.tfvars
