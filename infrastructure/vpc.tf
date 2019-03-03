@@ -6,6 +6,8 @@ resource "aws_vpc" "default" {
 
   tags {
     Name = "vpc"
+
+    Project = "${var.app_name}"
   }
 }
 
@@ -34,6 +36,10 @@ resource "aws_vpc" "default" {
 # ============
 resource "aws_internet_gateway" "gw" {
   vpc_id = "${aws_vpc.default.id}"
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 # RDS Subnet
@@ -46,6 +52,8 @@ resource "aws_subnet" "rds_subnet" {
 
   tags {
     Name = "${element(var.availability_zones, count.index)}-rds-subnet"
+
+    Project = "${var.app_name}"
   }
 }
 
@@ -58,7 +66,8 @@ resource "aws_subnet" "cache_subnet" {
   availability_zone = "${element(var.availability_zones, var.az_count + count.index)}"
 
   tags {
-    Name = "${element(var.availability_zones, count.index)}-cache-subnet"
+    Name    = "${element(var.availability_zones, count.index)}-cache-subnet"
+    Project = "${var.app_name}"
   }
 }
 
@@ -72,7 +81,8 @@ resource "aws_subnet" "ecs_subnet" {
   map_public_ip_on_launch = true
 
   tags {
-    Name = "${element(var.availability_zones, count.index)}-ecs-subnet"
+    Name    = "${element(var.availability_zones, count.index)}-ecs-subnet"
+    Project = "${var.app_name}"
   }
 }
 

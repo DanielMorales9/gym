@@ -1,9 +1,14 @@
 resource "aws_ecr_repository" "ecr_repository" {
   name = "app"
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.app_name}_ecs_cluster"
+
 }
 
 resource "aws_ecs_task_definition" "ecs_task_definition" {
@@ -15,6 +20,10 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   network_mode             = "awsvpc"
   cpu                      = 256
   memory                   = 512
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 resource "aws_ecs_service" "ecs_service" {
@@ -43,4 +52,5 @@ resource "aws_ecs_service" "ecs_service" {
     container_name   = "app"
     container_port   = "${var.task_port}"
   }
+
 }
