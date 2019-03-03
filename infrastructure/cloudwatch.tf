@@ -1,5 +1,9 @@
 resource "aws_cloudwatch_log_group" "cloudwatch_log_group" {
   name = "${var.app_name}"
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 resource "aws_appautoscaling_target" "target" {

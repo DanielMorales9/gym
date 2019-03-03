@@ -9,20 +9,28 @@ resource "aws_alb_target_group" "alb_target_group" {
     create_before_destroy = true
   }
 
-    health_check {
-      path = "/health"
-      port = "80"
-      protocol = "HTTP"
-      healthy_threshold = 10
-      unhealthy_threshold = 10
-      matcher = "200-308"
-    }
+  health_check {
+    path                = "/health"
+    port                = "80"
+    protocol            = "HTTP"
+    healthy_threshold   = 10
+    unhealthy_threshold = 10
+    matcher             = "200-308"
+  }
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 resource "aws_alb" "alb" {
   name            = "${var.app_name}-alb-ecs"
   subnets         = ["${aws_subnet.ecs_subnet.*.id}"]
   security_groups = ["${aws_security_group.alb_security_group.id}"]
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 resource "aws_alb_listener" "alb_listener" {

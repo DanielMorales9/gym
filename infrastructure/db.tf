@@ -26,12 +26,18 @@ resource "aws_db_instance" "postgres" {
 
   tags = {
     Name = "db"
+
+    Project = "${var.app_name}"
   }
 }
 
 resource "aws_db_subnet_group" "rds_db_subnet_group" {
   name       = "${var.app_name}_db_subnet_group"
   subnet_ids = ["${aws_subnet.rds_subnet.*.id}"]
+
+  tags {
+    Project = "${var.app_name}"
+  }
 }
 
 //resource "aws_db_subnet_group" "db_subnet_group" {

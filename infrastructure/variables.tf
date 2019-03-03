@@ -6,6 +6,7 @@ variable "postgres_database_name" {}
 variable "gmail_password" {}
 variable "app_name" {}
 variable "bucket" {}
+variable "key_name" {}
 variable "app" {}
 variable "url" {}
 
@@ -14,9 +15,6 @@ variable "aws_region" {
   default     = "eu-central-1"
 }
 
-variable "key_name" {
-  description = "key_name"
-}
 
 variable "vpc_cidr" {
   description = "CIDR for the whole VPC"
