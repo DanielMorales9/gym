@@ -9,7 +9,8 @@ resource "aws_elasticache_cluster" "redis" {
   subnet_group_name  = "${aws_elasticache_subnet_group.cache_subnet_group.name}"
 
   tags = {
-    Name = "cache"
+    Name    = "cache"
+    Project = "${var.app_name}"
   }
 }
 

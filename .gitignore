@@ -35,7 +35,7 @@ nbdist/
 !.vscode/extensions.json
 e2e/*.js
 e2e/*.map
+
 *.sh
 *.p12
 infrastructure/.terraform/
-*.tfvars
