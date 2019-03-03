@@ -1,44 +1,46 @@
-dist: trusty
-sudo: false
+dist: xenial
+sudo: required
 
 language: java
 jdk:
 - openjdk8
 
 services:
-- docker
+  - docker
 
 env:
   global:
-#  - TAG=0.0.1-SNAPSHOT
-  - MAVEN_OPTS="-Dmaven.repo.local=.m2"
+    - TAG="0.0.1-SNAPSHOT"
+    - IMAGE="app"
+    - DOCKER_USER="tenentedan9"
+    - AWS_DEFAULT_REGION="eu-central-1"
+    - MAVEN_OPTS="-Dmaven.repo.local=.m2"
 
 addons:
   apt:
     sources:
-    - google-chrome
+      - google-chrome
     packages:
-    - google-chrome-stable
+      - google-chrome-stable
+  snaps:
+    - name: aws-cli
+      classic: true
+      channel: latest/edge
 
 cache:
   directories:
-  - ./ui/node_modules
-  - ./ui/node
-  - ./.m2/
-before_cache:
-- echo "listing cache directories"
-- ls -la
+    - ./app/node_modules
+    - ./app/node
+    - ./.m2/
 
 before_install:
-- pip install --user awscli
+  - sudo apt-get autoremove -y
 
 install: true
 
 script:
-  - mvn package -B
-#  - eval $(aws ecr get-login --no-include-email --region eu-central-1)
-#  - docker tag tenentedan9/app:$TAG $AWS_REGISTRY/app:$TAG
-#  - docker push $AWS_REGISTRY/app:$TAG
+  - chmod +x travis_scripts/travis_install.sh
+  - sh travis_scripts/travis_install.sh
 
 notifications:
   email: false
