@@ -3,7 +3,6 @@ resource "aws_alb_target_group" "alb_target_group" {
   vpc_id      = "${aws_vpc.default.id}"
   protocol    = "HTTP"
   port        = "80"
-  target_type = "ip"
 
   lifecycle {
     create_before_destroy = true
