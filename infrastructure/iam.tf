@@ -4,8 +4,12 @@ data "aws_iam_policy_document" "ecs_service_role" {
     actions = ["sts:AssumeRole"]
 
     principals {
-      type        = "Service"
-      identifiers = ["ecs.amazonaws.com"]
+      type = "Service"
+
+      identifiers = [
+        "ecs.amazonaws.com",
+        "ec2.amazonaws.com",
+      ]
     }
   }
 }
@@ -23,6 +27,7 @@ data "aws_iam_policy_document" "ecs_service_policy" {
     actions = [
       "elasticloadbalancing:*",
       "ec2:*",
+      "ecs:*"
     ]
   }
 }
@@ -57,4 +62,10 @@ resource "aws_iam_role_policy" "ecs_autoscale_role_policy" {
   name   = "ecs_autoscale_role_policy"
   policy = "${file("${path.module}/policies/ecs-autoscale-role-policy.json")}"
   role   = "${aws_iam_role.ecs_autoscale_role.id}"
+}
+
+resource "aws_iam_instance_profile" "ecs_instance_profile" {
+  name = "ecs-instance-profile"
+  path = "/"
+  role = "${aws_iam_role.ecs_role.id}"
 }
