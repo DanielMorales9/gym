@@ -8,18 +8,18 @@ resource "aws_ecr_repository" "ecr_repository" {
 
 resource "aws_ecs_cluster" "ecs_cluster" {
   name = "${var.app_name}_ecs_cluster"
-
 }
 
 resource "aws_ecs_task_definition" "ecs_task_definition" {
-  family                   = "${var.app_name}_ecs_task_definition"
-  container_definitions    = "${data.template_file.task_definition.rendered}"
-  execution_role_arn       = "${aws_iam_role.ecs_execution_role.arn}"
-  task_role_arn            = "${aws_iam_role.ecs_execution_role.arn}"
-  requires_compatibilities = ["FARGATE"]
-  network_mode             = "awsvpc"
-  cpu                      = 256
-  memory                   = 512
+  family                = "${var.app_name}_ecs_task_definition"
+  container_definitions = "${data.template_file.task_definition.rendered}"
+  execution_role_arn    = "${aws_iam_role.ecs_execution_role.arn}"
+  task_role_arn         = "${aws_iam_role.ecs_execution_role.arn}"
+
+  //  requires_compatibilities = ["FARGATE"]
+  //  network_mode             = "awsvpc"
+  //  cpu                      = 256
+  //  memory                   = 512
 
   tags {
     Project = "${var.app_name}"
@@ -39,18 +39,16 @@ resource "aws_ecs_service" "ecs_service" {
   cluster         = "${aws_ecs_cluster.ecs_cluster.id}"
   task_definition = "${aws_ecs_task_definition.ecs_task_definition.arn}"
   desired_count   = 1
-  launch_type     = "FARGATE"
 
-  network_configuration {
-    assign_public_ip = true
-    security_groups  = ["${aws_security_group.ecs_security_group.id}"]
-    subnets          = ["${aws_subnet.ecs_subnet.*.id}"]
-  }
+//  network_configuration {
+//    assign_public_ip = true
+//    security_groups  = ["${aws_security_group.ecs_security_group.id}"]
+//    subnets          = ["${aws_subnet.ecs_subnet.*.id}"]
+//  }
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.alb_target_group.id}"
     container_name   = "app"
     container_port   = "${var.task_port}"
   }
-
 }
