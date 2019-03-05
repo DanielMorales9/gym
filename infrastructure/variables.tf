@@ -1,12 +1,13 @@
-variable "aws_access_key" {}
-variable "aws_secret_key" {}
+variable "postgres_database_name" {}
 variable "postgres_password" {}
 variable "postgres_username" {}
-variable "postgres_database_name" {}
+variable "aws_access_key" {}
+variable "aws_secret_key" {}
 variable "gmail_password" {}
 variable "app_name" {}
-variable "bucket" {}
 variable "key_name" {}
+variable "bucket" {}
+variable "domain" {}
 variable "app" {}
 variable "url" {}
 
@@ -18,16 +19,6 @@ variable "aws_region" {
 variable "vpc_cidr" {
   description = "CIDR for the whole VPC"
   default     = "10.0.0.0/16"
-}
-
-variable "public_subnets_cidr" {
-  type    = "list"
-  default = ["10.0.0.0/24", "10.0.1.0/24"]
-}
-
-variable "private_subnets_cidr" {
-  type    = "list"
-  default = ["10.0.2.0/24", "10.0.3.0/24"]
 }
 
 variable "availability_zones" {
@@ -44,7 +35,7 @@ variable "task_port" {
   default     = "80"
 }
 
-variable postgres_port {
+variable "postgres_port" {
   description = "The postgres port"
   default     = "5432"
 }

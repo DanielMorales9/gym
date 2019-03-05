@@ -32,7 +32,7 @@ resource "aws_ecs_service" "ecs_service" {
     "aws_cloudwatch_log_group.cloudwatch_log_group",
     "aws_iam_role_policy.ecs_service_role_policy",
     "aws_alb_target_group.alb_target_group",
-    "aws_alb_listener.alb_listener",
+    "aws_alb_listener.alb_listener_https",
   ]
 
   name            = "${var.app_name}_ecs_service"
