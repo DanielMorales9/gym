@@ -8,4 +8,5 @@
 "bucket"="any"
 "key_name"="gf"
 "app"="app"
+"domain"="goodfellas.fitness"
 "url"="http://goodfellas.fitness"

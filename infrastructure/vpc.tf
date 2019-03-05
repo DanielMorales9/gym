@@ -11,27 +11,6 @@ resource "aws_vpc" "default" {
   }
 }
 
-//resource "aws_security_group" "default" {
-//  name        = "${var.app_name}-default-sg"
-//  description = "Default security group to allow inbound/outbound from the VPC"
-//  vpc_id      = "${aws_vpc.default.id}"
-//  depends_on  = ["aws_vpc.default"]
-//
-//  ingress {
-//    from_port = "0"
-//    to_port   = "0"
-//    protocol  = "-1"
-//    self      = true
-//  }
-//
-//  egress {
-//    from_port = "0"
-//    to_port   = "0"
-//    protocol  = "-1"
-//    self      = "true"
-//  }
-//}
-
 # IGW Instance
 # ============
 resource "aws_internet_gateway" "gw" {
@@ -100,6 +79,14 @@ resource "aws_security_group" "alb_security_group" {
   name        = "${var.app_name}_alb_sg"
   description = "Allow access on port 80 only to ALB"
   vpc_id      = "${aws_vpc.default.id}"
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 443
+    to_port     = 443
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
 
   ingress {
     from_port   = 80
