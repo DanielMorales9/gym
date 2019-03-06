@@ -20,7 +20,7 @@
 
 ## TODO tutorial Git Workflow
 
-# Running Development Environment
+## Running Development Environment
 ````
 docker-compose up
 ````
