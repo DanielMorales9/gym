@@ -20,6 +20,11 @@
 
 ## TODO tutorial Git Workflow
 
+## Build the project 
+````
+mvn install
+````
+
 ## Running Development Environment
 ````
 docker-compose up
