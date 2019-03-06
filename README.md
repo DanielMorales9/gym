@@ -1,22 +1,24 @@
 # Microservices ![pipeline status](https://travis-ci.org/DanielMorales9/micro.svg?branch=master) 
 
 
-Dependencies
+## Dependencies
 - java => 1.8
 - docker
 - maven
 - angular-cli
 - terraform
 
-Tools
+## Tools
 
 - GitKraken
 - IntelliJ
 
-Languages
+## Languages
 - typescript
 - java
 - hcl
 
-TODO tutorial Git Workflow
+## TODO tutorial Git Workflow
 
+# Running Development Environment
+´´´´docker-compose up´´´´
