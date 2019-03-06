@@ -18,7 +18,7 @@
 - java
 - hcl
 
-## TODO tutorial Git Workflow
+## Git Workflow
 ````
 # get latest master commits
 git pull origin master
