@@ -42,7 +42,7 @@ variable "postgres_port" {
 
 variable "multi_az" {
   description = "whether is multi az or not"
-  default     = true
+  default     = false
 }
 
 variable "rds_instance" {
@@ -62,4 +62,17 @@ variable "redis_node_type" {
 
 variable "redis_port" {
   default = "6379"
+}
+
+variable "desired_capacity" {
+  description = "the desired capacity for ec2 machines or ecs tasks"
+  default = 1
+}
+variable "max_size" {
+  description = "the max capacity for ec2 machines"
+  default = 2
+}
+variable "min_size" {
+  description = "the min capacity for ec2 machines"
+  default = 2
 }
