@@ -19,6 +19,19 @@
 - hcl
 
 ## TODO tutorial Git Workflow
+````
+# get latest master commits
+git pull origin master
+# create new feature branch
+git checkout -b <feature_branch_name>
+# write code do
+git add .
+git commit -m "#11 my fake commit referencing my fake issue"
+# if master was updated in the mean time do the rebase 
+git push origin <feature_branch_name>
+````
+
+[Rebase tutorial](https://git-scm.com/book/en/v2/Git-Branching-Rebasing)
 
 ## Build the project 
 ````
