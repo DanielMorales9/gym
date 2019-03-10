@@ -36,6 +36,5 @@ nbdist/
 e2e/*.js
 e2e/*.map
 
-*.sh
 *.p12
-infrastructure/.terraform/
+.infrastructure/.terraform/

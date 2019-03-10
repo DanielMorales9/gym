@@ -22,10 +22,6 @@ addons:
       - google-chrome
     packages:
       - google-chrome-stable
-  snaps:
-    - name: aws-cli
-      classic: true
-      channel: latest/edge
 
 cache:
   directories:
@@ -33,14 +29,17 @@ cache:
     - ./app/node
     - ./.m2/
 
-before_install:
-  - sudo apt-get autoremove -y
+install: bash .travis/install.sh
 
-install: true
+script: bash .travis/script.sh
 
-script:
-  - chmod +x travis_scripts/travis_install.sh
-  - sh travis_scripts/travis_install.sh
+deploy:
+  - provider: script
+    script: bash .travis/deploy.sh
+    skip_cleanup: true
+
+after_deploy: bash .travis/after_deploy.sh
+
 
 notifications:
   email: false
