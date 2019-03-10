@@ -3,6 +3,6 @@
 echo "========================="
 echo "|    Apply Terraform    |"
 echo "========================="
-bash terraform init .infrastructure/
-bash terraform plan .infrastructure/
-bash terraform apply .infrastructure/
+./terraform init .infrastructure/
+./terraform plan .infrastructure/
+./terraform apply .infrastructure/
