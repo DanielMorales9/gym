@@ -25,7 +25,6 @@ services:
       - redis
       - postgres
     ports:
-    - 443:443
     - 80:80
     volumes:
       - ./app/target/dependency/META-INF:/app/META-INF
