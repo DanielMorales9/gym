@@ -1,18 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-if [ "$TRAVIS_BRANCH" -ne "master" ]; then
-    exit 0
-fi
-
 # get the account number associated with the current IAM credentials
 echo "========================="
 echo "| Verify AWS account... |"
 echo "========================="
 ACCOUNT=$(aws sts get-caller-identity --query Account --output text)
 echo "+${ACCOUNT} being used"
-if [ $? -ne 0 ]
-then
+if [ $? -ne 0 ]; then
     exit 255
 fi
 
