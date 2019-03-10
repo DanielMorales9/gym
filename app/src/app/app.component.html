@@ -1,102 +1,124 @@
-<nav class="navbar navbar-expand-sm navbar-dark navbar-color" >
-    <a class="navbar-brand" href="/">GoodFellas</a>
-    <button class="navbar-toggler"
-            type="button"
-            data-toggle="collapse"
-            data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent"
-            aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+<!--<nav class="navbar navbar-expand-sm navbar-dark navbar-color" >-->
+    <!--<a class="navbar-brand" href="/">GoodFellas</a>-->
+    <!--<button class="navbar-toggler"-->
+            <!--type="button"-->
+            <!--data-toggle="collapse"-->
+            <!--data-target="#navbarSupportedContent"-->
+            <!--aria-controls="navbarSupportedContent"-->
+            <!--aria-expanded="false" aria-label="Toggle navigation">-->
+        <!--<span class="navbar-toggler-icon"></span>-->
+    <!--</button>-->
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <!--<div class="collapse navbar-collapse" id="navbarSupportedContent">-->
 
-        <ul class="nav navbar-nav navbar mr-auto">
-            <li class="nav-item dropdown home-nav"
-                [hidden]="!authenticated">
-                <a class="nav-link active dropdown-toggle"
-                   id="homeDropdown"
-                   role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false"
-                   href="#"
-                   (click)="toHome()"
-                   [ngClass]="{'disabled': !isOnHome()}">
-                    <i class="fas fa-home"></i>&nbsp;&nbsp;Home
-                </a>
-                <div class="dropdown-menu dropdown-menu-left" aria-labelledby="homeDropdown">
-                    <a class="dropdown-item"
-                       href=#
-                       *ngIf="current_role_view == 1"
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/home/sales">
-                        <i class="fas fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite</a>
-                    <a class="dropdown-item"
-                       href=#
-                       *ngIf="current_role_view == 1"
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/home/users">
-                        <i class="fas fa-users">&nbsp;&nbsp;</i>Utenti</a>
-                    <a class="dropdown-item"
-                       href=#
-                       *ngIf="current_role_view == 1"
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/home/bundles">
-                        <i class="fas fa-box">&nbsp;&nbsp;</i>Pacchetti</a>
-                    <a class="dropdown-item"
-                       href=#
-                       *ngIf="current_role_view"
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/home/calendar">
-                        <i class="fas fa-calendar-alt">&nbsp;&nbsp;</i>Calendario
-                    </a>
-                </div>
-            </li>
-        </ul>
+        <!--<ul class="nav navbar-nav navbar mr-auto">-->
+            <!--<li class="nav-item dropdown home-nav"-->
+                <!--[hidden]="!authenticated">-->
+                <!--<a class="nav-link active dropdown-toggle"-->
+                   <!--id="homeDropdown"-->
+                   <!--role="button"-->
+                   <!--data-toggle="dropdown"-->
+                   <!--aria-haspopup="true"-->
+                   <!--aria-expanded="false"-->
+                   <!--href="#"-->
+                   <!--(click)="toHome()"-->
+                   <!--[ngClass]="{'disabled': !isOnHome()}">-->
+                    <!--<i class="fas fa-home"></i>&nbsp;&nbsp;Home-->
+                <!--</a>-->
+                <!--<div class="dropdown-menu dropdown-menu-left" aria-labelledby="homeDropdown">-->
+                    <!--<a class="dropdown-item"-->
+                       <!--href=#-->
+                       <!--*ngIf="current_role_view == 1"-->
+                       <!--[routerLinkActive]="['active-link']"-->
+                       <!--routerLink="/home/sales">-->
+                        <!--<i class="fas fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite</a>-->
+                    <!--<a class="dropdown-item"-->
+                       <!--href=#-->
+                       <!--*ngIf="current_role_view == 1"-->
+                       <!--[routerLinkActive]="['active-link']"-->
+                       <!--routerLink="/home/users">-->
+                        <!--<i class="fas fa-users">&nbsp;&nbsp;</i>Utenti</a>-->
+                    <!--<a class="dropdown-item"-->
+                       <!--href=#-->
+                       <!--*ngIf="current_role_view == 1"-->
+                       <!--[routerLinkActive]="['active-link']"-->
+                       <!--routerLink="/home/bundles">-->
+                        <!--<i class="fas fa-box">&nbsp;&nbsp;</i>Pacchetti</a>-->
+                    <!--<a class="dropdown-item"-->
+                       <!--href=#-->
+                       <!--*ngIf="current_role_view"-->
+                       <!--[routerLinkActive]="['active-link']"-->
+                       <!--routerLink="/home/calendar">-->
+                        <!--<i class="fas fa-calendar-alt">&nbsp;&nbsp;</i>Calendario-->
+                    <!--</a>-->
+                <!--</div>-->
+            <!--</li>-->
+        <!--</ul>-->
 
-        <ul class="nav navbar-nav navbar-right mr-0">
-            <notifications [hidden]="!authenticated"></notifications>
-            <li class="nav-item dropdown" *ngIf="!isOnLogin()">
-                <a class="nav-link active dropdown-toggle"
-                   id="accountDropdown"
-                   role="button"
-                   data-toggle="dropdown"
-                   aria-haspopup="true"
-                   aria-expanded="false"
-                   href="#">
-                    <i class="fas fa-user">&nbsp;&nbsp;</i>Account
-                </a>
-                <div class="dropdown-menu dropdown-menu-cust-right" aria-labelledby="accountDropdown">
-                    <h6 class="dropdown-header" [hidden]="!authenticated">Account</h6>
-                    <a class="dropdown-item"
-                       [hidden]="!authenticated"
-                       [ngClass]="{'disabled': isOnProfile()}"
-                       [routerLink]="profilePath" href=#>
-                        <i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>
-                    <div [hidden]="!hasRoles()">
-                        <h6 class="dropdown-header" >Viste</h6>
-                        <a *ngFor="let r of user.roles" class="dropdown-item"
-                           [ngClass]="{'active-link': current_role_view == r.id}" (click)="switchView(r.id)">
-                            &nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}
-                        </a>
-                    </div>
-                    <div class="dropdown-divider" [hidden]="!authenticated"></div>
-                    <a class="dropdown-item" [hidden]="hideLogin()" routerLink="/auth/login" href=#>
-                        <i class="fas fa-sign-in-alt">&nbsp;&nbsp;</i>Login</a>
-                    <a class="dropdown-item" [hidden]="hideLogout()" (click)="logout()" href=#>
-                        <i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout</a>
-                </div>
-            </li>
-        </ul>
+        <!--<ul class="nav navbar-nav navbar-right mr-0">-->
+            <!--<notifications [hidden]="!authenticated"></notifications>-->
+            <!--<li class="nav-item dropdown" *ngIf="!isOnLogin()">-->
+                <!--<a class="nav-link active dropdown-toggle"-->
+                   <!--id="accountDropdown"-->
+                   <!--role="button"-->
+                   <!--data-toggle="dropdown"-->
+                   <!--aria-haspopup="true"-->
+                   <!--aria-expanded="false"-->
+                   <!--href="#">-->
+                    <!--<i class="fas fa-user">&nbsp;&nbsp;</i>Account-->
+                <!--</a>-->
+                <!--<div class="dropdown-menu dropdown-menu-cust-right" aria-labelledby="accountDropdown">-->
+                    <!--<h6 class="dropdown-header" [hidden]="!authenticated">Account</h6>-->
+                    <!--<a class="dropdown-item"-->
+                       <!--[hidden]="!authenticated"-->
+                       <!--[ngClass]="{'disabled': isOnProfile()}"-->
+                       <!--[routerLink]="profilePath" href=#>-->
+                        <!--<i class="fas fa-user">&nbsp;&nbsp;</i>Profilo</a>-->
+                    <!--<div [hidden]="!hasRoles()">-->
+                        <!--<h6 class="dropdown-header" >Viste</h6>-->
+                        <!--<a *ngFor="let r of user.roles" class="dropdown-item"-->
+                           <!--[ngClass]="{'active-link': current_role_view == r.id}" (click)="switchView(r.id)">-->
+                            <!--&nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}-->
+                        <!--</a>-->
+                    <!--</div>-->
+                    <!--<div class="dropdown-divider" [hidden]="!authenticated"></div>-->
+                    <!--<a class="dropdown-item" [hidden]="hideLogin()" routerLink="/auth/login" href=#>-->
+                        <!--<i class="fas fa-sign-in-alt">&nbsp;&nbsp;</i>Login</a>-->
+                    <!--<a class="dropdown-item" [hidden]="hideLogout()" (click)="logout()" href=#>-->
+                        <!--<i class="fas fa-sign-out-alt">&nbsp;&nbsp;</i>Logout</a>-->
+                <!--</div>-->
+            <!--</li>-->
+        <!--</ul>-->
 
-        <!--form class="form-inline my-2 my-lg-0">
-                    <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-        </form-->
-    </div>
+        <!--&lt;!&ndash;form class="form-inline my-2 my-lg-0">-->
+                    <!--<input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">-->
+                    <!--<button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>-->
+        <!--</form&ndash;&gt;-->
+    <!--</div>-->
 
-</nav>
+<!--</nav>-->
+<div class="sidenav-container" [class.example-is-mobile]="mobileQuery.matches">
+    <mat-toolbar color="primary" class="sidenav-toolbar">
+        <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+        <h1 class="example-app-name">Responsive App</h1>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="example-sidenav-container"
+                           [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+        <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'"
+                     [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+            <mat-nav-list>
+                <a mat-list-item routerLink="." *ngFor="let nav of fillerNav">{{nav}}</a>
+            </mat-nav-list>
+        </mat-sidenav>
+
+        <mat-sidenav-content>
+            <p *ngFor="let content of fillerContent">{{content}}</p>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+
+
 <div class="container-fluid">
     <router-outlet></router-outlet>
 </div>
