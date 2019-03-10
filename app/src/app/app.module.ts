@@ -21,7 +21,13 @@ import {
 } from "./services";
 import {ErrorComponent, NotificationsComponent} from "./components";
 import {TimeAgoPipe} from "time-ago-pipe";
-import {MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {
+    MatIconModule,
+    MatListModule,
+    MatProgressSpinnerModule,
+    MatSidenavModule,
+    MatToolbarModule
+} from '@angular/material';
 
 @NgModule({
     declarations: [
