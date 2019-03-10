@@ -6,6 +6,5 @@ ARG CERT_DIRECTORY=certs/
 ADD ${DEPENDENCY}/BOOT-INF/lib /app/lib
 ADD ${DEPENDENCY}/META-INF /app/META-INF
 ADD ${DEPENDENCY}/BOOT-INF/classes /app
-ADD ${CERT_DIRECTORY} /app/certs
 
 ENTRYPOINT ["java","-cp","app:app/lib/*","it.goodfellas.ApiApplication"]
