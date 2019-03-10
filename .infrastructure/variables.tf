@@ -74,5 +74,5 @@ variable "max_size" {
 }
 variable "min_size" {
   description = "the min capacity for ec2 machines"
-  default = 2
+  default = 1
 }

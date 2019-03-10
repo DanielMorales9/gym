@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -e
 
+if [ "$TRAVIS_BRANCH" -ne "master" ]; then
+    exit 0
+fi
+
 # get the account number associated with the current IAM credentials
 echo "========================="
 echo "| Verify AWS account... |"
@@ -37,12 +41,6 @@ echo "| Login to ECR service... |"
 echo "==========================="
 $(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
 
-
-# build docker image locally
-echo "========================="
-echo "| Build Docker Image... |"
-echo "========================="
-mvn install
 
 # define the full path of the docker image
 echo "============================="
