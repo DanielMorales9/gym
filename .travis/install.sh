@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-
 if [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "========================="
     echo "|  Installing AWS-CLI   |"
