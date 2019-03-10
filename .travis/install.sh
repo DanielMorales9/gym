@@ -3,7 +3,6 @@
 echo "=========================="
 echo "| Installing Dependencies |"
 echo "=========================="
-sudo apt-get autoremove -y
 
 if [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "========================="
