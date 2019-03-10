@@ -4,5 +4,5 @@ echo "========================="
 echo "|    Apply Terraform    |"
 echo "========================="
 ./terraform init .infrastructure/
-./terraform plan .infrastructure/
-./terraform apply .infrastructure/
+./terraform plan --var-file=.infrastructure/terraform.tfvars .infrastructure/
+./terraform apply --var-file=.infrastructure/terraform.tfvars .infrastructure/
