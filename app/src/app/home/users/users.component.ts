@@ -4,6 +4,8 @@ import {PagerComponent} from "../../shared/components";
 import {UserHelperService, UserService} from "../../shared/services";
 import {AppService} from "../../services";
 import {ChangeViewService} from "../../services";
+import {UserCreateModalComponent} from "./user-create-modal.component";
+import {MatDialog} from "@angular/material";
 
 @Component({
     templateUrl: './users.component.html',
@@ -26,12 +28,22 @@ export class UsersComponent implements  OnInit {
     constructor(private service: UserService,
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
-                private app: AppService) {
+                private app: AppService,
+                private dialog: MatDialog) {
         this.current_role_view = this.app.current_role_view;
         this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         })
+    }
+
+    openDialog(): void {
+        const dialogRef = this.dialog.open(UserCreateModalComponent);
+
+        dialogRef.afterClosed().subscribe(result => {
+            console.log('The dialog was closed');
+            console.log(result)
+        });
     }
 
     ngOnInit(): void {

@@ -23,6 +23,14 @@ import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from "./
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
 import localeIt from '@angular/common/locales/it';
+import {
+    MAT_DIALOG_DATA, MatAccordion, MatButtonModule,
+    MatDialogModule,
+    MatDialogRef, MatDividerModule, MatExpansionModule,
+    MatFormFieldModule, MatIconModule,
+    MatInputModule, MatListModule,
+    MatSelectModule, MatToolbarModule
+} from "@angular/material";
 
 registerLocaleData(localeIt);
 
@@ -38,8 +46,22 @@ registerLocaleData(localeIt);
         }),
         SharedModule,
         HomeRouting,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatExpansionModule,
+        MatDividerModule,
+        MatListModule
     ],
-
+    providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+    ],
+    entryComponents: [UserCreateModalComponent],
     declarations: [
         HomeComponent,
         UsersComponent,

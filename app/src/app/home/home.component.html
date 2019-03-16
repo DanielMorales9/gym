@@ -1,50 +1,5 @@
 <div *ngIf="authenticated">
-    <!--<div id="admin-menu">-->
-    <!--<ul class="nav flex-column">-->
-    <!--<li class="nav-item menu-heading menu-item">-->
-    <!--<a routerLinkActive="active" routerLink="/home">-->
-    <!--<i class="fas fa-sitemap">&nbsp;&nbsp;</i>Sezioni-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--<li class="nav-item menu-item"-->
-    <!--[ngClass]="isOnProfile()">-->
-    <!--<a [routerLink]="profilePath">-->
-    <!--<i class="fas fa-user">&nbsp;&nbsp;</i>Profilo-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--<li class="nav-item menu-item"-->
-    <!--[routerLinkActive]="['active']"-->
-    <!--*ngIf="current_role_view == 1">-->
-    <!--<a routerLink="/home/sales">-->
-    <!--<i class="fas fa-money-bill-wave">&nbsp;&nbsp;</i>Vendite-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--<li class="nav-item menu-item"-->
-    <!--[routerLinkActive]="['active']"-->
-    <!--*ngIf="current_role_view == 1">-->
-    <!--<a routerLink="/home/users">-->
-    <!--<i class="fas fa-users">&nbsp;&nbsp;</i>Utenti-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--<li class="nav-item menu-item"-->
-    <!--[routerLinkActive]="['active']"-->
-    <!--*ngIf="current_role_view == 1">-->
-    <!--<a routerLink="/home/bundles">-->
-    <!--<i class="fas fa-box">&nbsp;&nbsp;</i>Pacchetti-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--<li class="nav-item menu-item"-->
-    <!--[routerLinkActive]="['active']"-->
-    <!--*ngIf="current_role_view">-->
-    <!--<a routerLink="/home/calendar">-->
-    <!--<i class="fas fa-calendar-alt">&nbsp;&nbsp;</i>Calendario-->
-    <!--</a>-->
-    <!--</li>-->
-    <!--</ul>-->
-    <!--</div>-->
-    <div class="container">
-        <router-outlet></router-outlet>
-    </div>
+    <router-outlet></router-outlet>
 </div>
 <div *ngIf="!authenticated">
     <h1>Benvenuto</h1>

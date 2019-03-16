@@ -1,82 +1,74 @@
-<div class="modal" tabindex="-1" role="dialog" id="postModal">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && createUser()">
-                <div class="modal-header">
-                    <h5 class="modal-title">Registra Nuova Utenza</h5>
-                    <button type="button" class="close" id="postModalCloseId" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="firstNamePostModal" class="sr-only">Nome:</label>
-                        <input name="firstName"
-                               placeholder="Nome"
-                               class="form-control"
-                               id="firstNamePostModal"
-                               type="text"
-                               formControlName="firstName"
-                               [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
-                        />
-                        <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
-                            <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="lastNamePostModal" class="sr-only">Cognome:</label>
-                        <input name="lastName"
-                               placeholder="Cognome"
-                               class="form-control"
-                               id="lastNamePostModal"
-                               type="text"
-                               formControlName="lastName"
-                               [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"
-                        />
-                        <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
-                            <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="emailPostModal" class="sr-only">Email:</label>
-                        <input name="email"
-                               placeholder="Email"
-                               class="form-control"
-                               id="emailPostModal"
-                               type="text"
-                               formControlName="email"
-                               [ngClass]="{ 'is-invalid': email.touched && email.invalid }"
-                        />
-                        <div *ngIf="email.touched && email.invalid" class="error-message">
-                            <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
-                            <div *ngIf="!!email.errors?.email">Email non valida</div>
-                        </div>
-                    </div>
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && createUser()">
+    <h5  mat-dialog-title>Registra Nuova Utenza</h5>
+    <div mat-dialog-content>
+        <div>
 
-                    <div class="form-group">
-                        <label for="rolePostModal" ><b>Ruolo</b></label>
-                        <select class="form-control"
-                                name="role"
-                                id="rolePostModal"
-                                type="text"
-                                formControlName="type"
-                                [ngClass]="{ 'is-invalid': type.touched && type.invalid }"
-                        >
-                            <option value="customer">Utente</option>
-                            <option value="admin">Amministratore</option>
-                            <option value="trainer">Allenatore</option>
-                        </select>
-                        <div *ngIf="type.touched && type.invalid" class="error-message">
-                            <div *ngIf="!!type.errors?.required">Ruolo obbligatorio</div>
-                        </div>
-                    </div>
+            <mat-form-field>
+                <label for="firstNamePostModal" class="sr-only">Nome:</label>
+                <input matInput
+                       placeholder="Nome"
+                       id="firstNamePostModal"
+                       type="text"
+                       formControlName="firstName"
+                       [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
+                />
+                <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
+                    <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit"
-                            class="btn btn-lg btn-primary btn-block">Invia</button>
+            </mat-form-field>
+        </div>
+        <div>
+
+            <mat-form-field>
+                <label for="lastNamePostModal" class="sr-only">Cognome:</label>
+                <input matInput
+                       placeholder="Cognome"
+                       id="lastNamePostModal"
+                       type="text"
+                       formControlName="lastName"
+                       [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"/>
+                <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
+                    <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
                 </div>
-            </form>
+            </mat-form-field>
+        </div>
+        <div>
+
+            <mat-form-field>
+
+                <label for="emailPostModal" class="sr-only">Email:</label>
+                <input matInput
+                       placeholder="Email"
+                       id="emailPostModal"
+                       type="text"
+                       formControlName="email"
+                       [ngClass]="{ 'is-invalid': email.touched && email.invalid }"/>
+                <div *ngIf="email.touched && email.invalid" class="error-message">
+                    <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                    <div *ngIf="!!email.errors?.email">Email non valida</div>
+                </div>
+            </mat-form-field>
+        </div>
+        <div>
+
+            <mat-form-field>
+
+                <label for="rolePostModal" ><b>Ruolo</b></label>
+                <mat-select
+                        id="rolePostModal"
+                        type="text"
+                        formControlName="type"
+                        [ngClass]="{ 'is-invalid': type.touched && type.invalid }">
+                    <mat-option value="customer">Utente</mat-option>
+                    <mat-option value="trainer">Allenatore</mat-option>
+                </mat-select>
+                <div *ngIf="type.touched && type.invalid" class="error-message">
+                    <div *ngIf="!!type.errors?.required">Ruolo obbligatorio</div>
+                </div>
+            </mat-form-field>
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button	color="accent" type="submit">Invia</button>
         </div>
     </div>
-</div>
-<spinner [loading]="loading"></spinner>
+</form>

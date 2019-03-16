@@ -1,4 +1,10 @@
 
+.fab-button-add {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
+
 @media (min-width: 576px) {
 
     .container {
