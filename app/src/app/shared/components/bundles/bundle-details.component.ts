@@ -7,7 +7,7 @@ import {AppService, ChangeViewService, ExchangeBundleService} from "../../../ser
 @Component({
     selector: 'bundle-details',
     templateUrl: './bundle-details.component.html',
-    styleUrls: ['../../../app.component.css']
+    styleUrls: ['../../../root.css']
 })
 export class BundleDetailsComponent implements OnInit {
 

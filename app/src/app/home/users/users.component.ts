@@ -7,7 +7,7 @@ import {ChangeViewService} from "../../services";
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class UsersComponent implements  OnInit {
 

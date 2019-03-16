@@ -9,7 +9,7 @@ import {Sale, User} from "../../model";
 
 @Component({
     templateUrl: './sales.component.html',
-    styleUrls: ['../../../app.component.css']
+    styleUrls: ['../../../root.css']
 
 })
 export class SalesComponent implements OnInit {

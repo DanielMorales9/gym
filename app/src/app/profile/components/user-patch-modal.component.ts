@@ -8,7 +8,7 @@ import {AppService, ExchangeUserService, NotificationService} from "../../servic
 @Component({
     selector: 'user-patch-modal',
     templateUrl: './user-patch-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class UserPatchModalComponent implements OnInit {
 

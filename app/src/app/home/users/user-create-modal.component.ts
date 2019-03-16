@@ -7,7 +7,7 @@ import {AuthService, ExchangeUserService, NotificationService} from "../../servi
 @Component({
     selector: 'user-create-modal',
     templateUrl: './user-create-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class UserCreateModalComponent implements OnInit {
 

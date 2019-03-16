@@ -7,7 +7,7 @@ import {notImplemented} from "@angular/core/src/render3/util";
 @Component({
     selector: 'customer-hour-modal',
     templateUrl: './customer-hour-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
 

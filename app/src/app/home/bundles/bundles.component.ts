@@ -5,7 +5,7 @@ import {BundlesService} from "../../shared/services";
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class BundlesComponent implements OnInit {
 

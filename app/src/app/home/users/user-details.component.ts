@@ -7,7 +7,7 @@ import {UserHelperService} from "../../shared/services";
 @Component({
     selector: 'user-details',
     templateUrl: './user-details.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class UserDetailsComponent implements OnInit {
 
