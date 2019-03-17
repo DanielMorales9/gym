@@ -24,13 +24,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
 import localeIt from '@angular/common/locales/it';
 import {
-    MAT_DIALOG_DATA, MatAccordion, MatButtonModule,
+    MAT_DIALOG_DATA, MatButtonModule,
     MatDialogModule,
     MatDialogRef, MatDividerModule, MatExpansionModule,
     MatFormFieldModule, MatIconModule,
     MatInputModule, MatListModule,
     MatSelectModule, MatToolbarModule
 } from "@angular/material";
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 registerLocaleData(localeIt);
 
@@ -55,7 +56,8 @@ registerLocaleData(localeIt);
         MatToolbarModule,
         MatExpansionModule,
         MatDividerModule,
-        MatListModule
+        MatListModule,
+        ScrollingModule
     ],
     providers: [
         { provide: MatDialogRef, useValue: {} },

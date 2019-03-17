@@ -10,8 +10,43 @@ mat-toolbar>mat-form-field {
     font-weight: 200;
 }
 
+mat-toolbar.search-toolbar {
+    position: fixed;
+    right: 0;
+    width: 70%;
+    z-index: 5;
+}
+
+div.scroll-item {
+    background-color: white;
+}
+
+mat-list.no-card {
+    top: 64px;
+}
+
+cdk-virtual-scroll-viewport.scroll-viewport {
+    top: 64px;
+    height: 100%;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    height: stretch;
+}
+
 mat-panel-title>a {
     color: inherit;
+}
+
+@media (max-width: 599px) {
+    cdk-virtual-scroll-viewport.scroll-viewport {
+        top: 56px;
+    }
+    mat-toolbar.search-toolbar {
+        width: 100% !important;
+    }
+    mat-list.no-card {
+        top: 56px;
+    }
 }
 
 @media (min-width: 576px) {

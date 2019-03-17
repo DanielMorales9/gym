@@ -40,7 +40,7 @@ h1.main-app-name {
     .main-sidenav {
         top: 0 !important;
         z-index: 10;
-        width: 200px;
+        width: 80% !important;
     }
 
     .main-sidenav-container {
@@ -51,7 +51,7 @@ h1.main-app-name {
 .main-sidenav {
     /* Make sure the toolbar will stay on top of the content as it scrolls past. */
     top: 64px;
-    width: 200px;
+    width: 30%;
     position: fixed;
 }
 
