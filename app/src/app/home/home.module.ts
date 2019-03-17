@@ -19,7 +19,7 @@ import {
     TrainerInfoModalComponent
 } from "./calendar";
 import {BundleModalComponent, BundlesComponent} from "./bundles";
-import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from "./users";
+import {UserCreateModalComponent, UsersComponent} from "./users";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
 import localeIt from '@angular/common/locales/it';
@@ -66,7 +66,6 @@ registerLocaleData(localeIt);
         HomeComponent,
         UsersComponent,
         UserCreateModalComponent,
-        UserDetailsComponent,
         BundlesComponent,
         BundleModalComponent,
         CalendarComponent,

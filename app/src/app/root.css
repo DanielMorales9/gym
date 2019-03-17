@@ -5,6 +5,15 @@
     right: 24px;
 }
 
+mat-toolbar>mat-form-field {
+    width: 100%;
+    font-weight: 200;
+}
+
+mat-panel-title>a {
+    color: inherit;
+}
+
 @media (min-width: 576px) {
 
     .container {
