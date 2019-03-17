@@ -1,6 +1,5 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {User} from "../../shared/model";
-import {PagerComponent} from "../../shared/components";
 import {UserHelperService, UserService} from "../../shared/services";
 import {AppService} from "../../services";
 import {ChangeViewService} from "../../services";
@@ -8,20 +7,18 @@ import {UserCreateModalComponent} from "./user-create-modal.component";
 import {MatDialog} from "@angular/material";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {analyzeAndValidateNgModules} from "@angular/compiler";
 
 @Component({
     templateUrl: './users.component.html',
     styleUrls: ['../../root.css']
 })
-export class UsersComponent implements  OnInit {
+export class UsersComponent {
 
     SIMPLE_NO_CARD_MESSAGE = "Nessun utente registrato";
     // SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
 
     current_role_view: number;
     private pageSize: number = 5;
-    empty: boolean;
 
     query: string;
     ds: UserDataSource;
@@ -45,23 +42,6 @@ export class UsersComponent implements  OnInit {
             this.getUsers()
         });
     }
-
-    ngOnInit(): void {
-    }
-
-
-    // private _complete() {
-    //     return () => {
-    //         if (this.empty) {
-    //             if (this.query === undefined || this.query == '') {
-    //                 this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
-    //             }
-    //             else {
-    //                 this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-    //             }
-    //         }
-    //     }
-    // }
 
     getUsers() {
         this.ds.setQuery(this.query);

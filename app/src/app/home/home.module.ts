@@ -63,7 +63,10 @@ registerLocaleData(localeIt);
         { provide: MatDialogRef, useValue: {} },
         { provide: MAT_DIALOG_DATA, useValue: [] },
     ],
-    entryComponents: [UserCreateModalComponent],
+    entryComponents: [
+        UserCreateModalComponent,
+        BundleModalComponent
+    ],
     declarations: [
         HomeComponent,
         UsersComponent,

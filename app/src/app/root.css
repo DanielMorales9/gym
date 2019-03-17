@@ -5,7 +5,7 @@
     right: 24px;
 }
 
-mat-toolbar>mat-form-field {
+mat-form-field.search-input {
     width: 100%;
     font-weight: 200;
 }

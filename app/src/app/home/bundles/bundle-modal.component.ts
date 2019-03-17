@@ -1,8 +1,9 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
 import {BundlesService} from "../../shared/services";
 import {Bundle} from "../../shared/model";
 import {ExchangeBundleService, NotificationService} from "../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
     selector: 'bundle-modal',
@@ -20,18 +21,19 @@ export class BundleModalComponent implements OnInit {
     form: FormGroup;
     loading: boolean;
 
-    @Input() public modalTitle: string;
-    @Input() public modalId: string;
-    @Input() public modalCloseId: string;
-    @Input() public modalClosingMessage: string;
-    @Input() public edit: string;
+    public edit: string;
 
     constructor(private service: BundlesService,
                 private builder: FormBuilder,
                 private exchangeBundleService: ExchangeBundleService,
-                private messageService: NotificationService) {
+                private messageService: NotificationService,
+                public dialogRef: MatDialogRef<BundleModalComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: any) {
         this.loading = false;
+    }
 
+    onNoClick(): void {
+        this.dialogRef.close();
     }
 
     ngOnInit(): void {
@@ -39,12 +41,12 @@ export class BundleModalComponent implements OnInit {
 
         this.buildForm();
 
-        if (this.edit == "true")
-            this.exchangeBundleService.getBundle()
-                .subscribe(bundle => {
-                    this.bundle = bundle;
-                    this.buildForm();
-                })
+        // if (this.edit == "true")
+        //     this.exchangeBundleService.getBundle()
+        //         .subscribe(bundle => {
+        //             this.bundle = bundle;
+        //             this.buildForm();
+        //         })
     }
 
     private buildForm() {
@@ -79,34 +81,30 @@ export class BundleModalComponent implements OnInit {
     }
 
     _success() {
-        return (res) => {
-            this.loading = false;
-            document.getElementById(this.modalCloseId).click();
+        return (_) => {
             let message ={
-                text: "Il pacchetto " + this.bundle.name + this.modalClosingMessage,
+                text: "Il pacchetto " + this.bundle.name + this.data.message,
                 class: "alert-success"
             };
             this.messageService.sendMessage(message);
-            this.modalEvent.emit("update");
+            this.onNoClick()
         }
     }
 
     _error() {
         return (err) => {
-            this.loading = false;
-            document.getElementById(this.modalCloseId).click();
             let message ={
                 text: "Qualcosa è andato storto",
                 class: "alert-danger"
             };
             this.messageService.sendMessage(message);
+            this.onNoClick()
         }
     }
 
-    submitBundle() {
+    submit() {
         this.loading = true;
         this.getBundleFromForm();
-        console.log(this.bundle);
         if (this.edit == "true")
             this.service.put(this.bundle).subscribe(this._success(), this._error());
         else {
