@@ -14,12 +14,15 @@ import {
     TrainingService, UserHelperService,
     UserService
 } from "./services";
+import {MatCardModule, MatIconModule} from "@angular/material";
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        MatCardModule,
+        MatIconModule
     ],
     declarations: [
         SalesComponent,

@@ -18,7 +18,6 @@ export class AppService {
         'TRAINER' : 2,
         'CUSTOMER' : 3
     };
-    private SOCKET_PATH = '/socket';
 
 
     current_role_view: number;
@@ -26,7 +25,8 @@ export class AppService {
     authenticated = false;
     user : any;
 
-    private stompClient : Stomp;
+    // private SOCKET_PATH = '/socket';
+    // private stompClient : Stomp;
 
 
     authenticate(credentials?, success?, error?) {
@@ -66,20 +66,20 @@ export class AppService {
         this.changeViewService.sendView(this.current_role_view)
     }
 
-    initializeWebSocketConnection() {
-        let ws = new SockJS(this.SOCKET_PATH);
-        this.stompClient = Stomp.over(ws);
-        let that = this;
-        this.stompClient.connect({}, function() {
-            that.stompClient.subscribe("/notifications", (message) => {
-                let notification = JSON.parse(message.body);
-                that.messageService.sendMessage({
-                    text: notification.message,
-                    class: "alert-info"
-                })
-            });
-        });
-    }
+    // initializeWebSocketConnection() {
+    //     let ws = new SockJS(this.SOCKET_PATH);
+    //     this.stompClient = Stomp.over(ws);
+    //     let that = this;
+    //     this.stompClient.connect({}, function() {
+    //         that.stompClient.subscribe("/notifications", (message) => {
+    //             let notification = JSON.parse(message.body);
+    //             that.messageService.sendMessage({
+    //                 text: notification.message,
+    //                 class: "alert-info"
+    //             })
+    //         });
+    //     });
+    // }
 
 
     private getRolesAndCurrentRoleView() {

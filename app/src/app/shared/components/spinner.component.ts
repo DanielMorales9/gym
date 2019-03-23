@@ -9,7 +9,7 @@ import {Component, Input} from "@angular/core";
         "    <div class=\"bounce3\"></div>\n" +
         "    </div>\n" +
         "    </div>",
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class SpinnerComponent {
 

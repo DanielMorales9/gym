@@ -1,77 +1,70 @@
-<div class="modal" tabindex="-1" role="dialog" [id]="modalId">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submitBundle()">
-                <div class="modal-header">
-                    <h5 class="modal-title">{{modalTitle}}</h5>
-                    <button type="button" class="close" [id]="modalCloseId" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name" class="sr-only">Nome</label>
-                        <input type="text"
-                               placeholder="Nome"
-                               class="form-control"
-                               id="name"
-                               name="name"
-                               formControlName="name"
-                               [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
-                        <div *ngIf="name.touched && name.invalid" class="error-message">
-                            <div *ngIf="!!name.errors?.required">
-                                Nome del pacchetto obbligatorio
-                            </div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="price" class="sr-only">Prezzo</label>
-                        <input placeholder="Prezzo&nbsp;&euro;"
-                               class="form-control"
-                               id="price"
-                               name="price"
-                               formControlName="price"
-                               [ngClass]="{ 'is-invalid': price.touched && price.invalid }"
-                        />
-                        <div *ngIf="price.touched && price.invalid" class="error-message">
-                            <div *ngIf="!!price.errors?.required">Prezzo del pacchetto obbligatorio</div>
-                            <div *ngIf="!!price.errors?.pattern">Prezzo del pacchetto non valido</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="numSessions" class="sr-only">Numero di Sessioni</label>
-                        <input placeholder="Numero di sessioni"
-                               class="form-control"
-                               id="numSessions"
-                               name="numSessions"
-                               formControlName="numSessions"
-                               [ngClass]="{ 'is-invalid': numSessions.touched && numSessions.invalid }" />
-                        <div *ngIf="numSessions.touched && numSessions.invalid" class="error-message">
-                            <div *ngIf="!!numSessions.errors?.required">Numero di sessioni obbligatori</div>
-                            <div *ngIf="!!numSessions.errors?.pattern">Il numero di sessioni deve essere intero</div>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="description" class="sr-only">Descrizione</label>
-                        <textarea placeholder="Descrizione"
-                                  class="form-control"
-                                  id="description"
-                                  name="description"
-                                  formControlName="description"
-                                  [ngClass]="{ 'is-invalid': description.touched && description.invalid }">
-                        </textarea>
-                        <div *ngIf="description.touched && description.invalid" class="error-message">
-                            <div *ngIf="!!description.errors?.required">Descrizione del pacchetto obbligatoria</div>
-                        </div>
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+    <h5 mat-dialog-title>{{data.title}}</h5>
+    <div mat-dialog-content>
+        <div>
+            <mat-form-field>
+                <label for="name" class="sr-only">Nome</label>
+                <input type="text"
+                       matInput
+                       placeholder="Nome"
+                       id="name"
+                       name="name"
+                       formControlName="name"
+                       [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
+                <div *ngIf="name.touched && name.invalid" class="error-message">
+                    <div *ngIf="!!name.errors?.required">
+                        Nome del pacchetto obbligatorio
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="price" class="sr-only">Prezzo</label>
+                <input placeholder="Prezzo&nbsp;&euro;"
+                       matInput
+                       id="price"
+                       name="price"
+                       formControlName="price"
+                       [ngClass]="{ 'is-invalid': price.touched && price.invalid }"
+                />
+                <div *ngIf="price.touched && price.invalid" class="error-message">
+                    <div *ngIf="!!price.errors?.required">Prezzo del pacchetto obbligatorio</div>
+                    <div *ngIf="!!price.errors?.pattern">Prezzo del pacchetto non valido</div>
                 </div>
-
-            </form>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="numSessions" class="sr-only">Numero di Sessioni</label>
+                <input placeholder="Numero di sessioni"
+                       matInput
+                       id="numSessions"
+                       name="numSessions"
+                       formControlName="numSessions"
+                       [ngClass]="{ 'is-invalid': numSessions.touched && numSessions.invalid }" />
+                <div *ngIf="numSessions.touched && numSessions.invalid" class="error-message">
+                    <div *ngIf="!!numSessions.errors?.required">Numero di sessioni obbligatori</div>
+                    <div *ngIf="!!numSessions.errors?.pattern">Il numero di sessioni deve essere intero</div>
+                </div>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="description" class="sr-only">Descrizione</label>
+                <textarea placeholder="Descrizione"
+                          matInput
+                          id="description"
+                          name="description"
+                          formControlName="description"
+                          [ngClass]="{ 'is-invalid': description.touched && description.invalid }"></textarea>
+                <div *ngIf="description.touched && description.invalid" class="error-message">
+                    <div *ngIf="!!description.errors?.required">Descrizione del pacchetto obbligatoria</div>
+                </div>
+            </mat-form-field>
         </div>
     </div>
-</div>
-
-<spinner [loading]="loading"></spinner>
+    <div mat-dialog-actions>
+        <button type="submit" mat-flat-button color="accent">Invia</button>
+    </div>
+</form>

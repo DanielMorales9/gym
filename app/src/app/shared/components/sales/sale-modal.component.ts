@@ -7,7 +7,7 @@ import {Sale, User} from "../../model";
 @Component({
     selector: 'sale-modal',
     templateUrl: './sale-modal.component.html',
-    styleUrls: ['../../../app.component.css']
+    styleUrls: ['../../../root.css']
 })
 export class SaleModalComponent implements OnInit {
 

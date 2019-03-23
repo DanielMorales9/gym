@@ -231,7 +231,6 @@
                     <tag>${project.version}</tag>
                     <buildArgs>
                         <DEPENDENCY>target/dependency</DEPENDENCY>
-                        <CERT_DIRECTORY>certs</CERT_DIRECTORY>
                     </buildArgs>
                 </configuration>
                 <executions>

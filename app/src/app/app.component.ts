@@ -3,22 +3,24 @@ import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {AppService, AuthenticatedService} from "./services";
 import {User} from "./shared/model";
-import {NotificationService, ChangeViewService} from "./services";
+import {ChangeViewService} from "./services";
 import {UserHelperService} from "./shared/services";
-
 
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./app.component.css']
+    styleUrls: ['./root.css', './app.component.css']
 })
 export class AppComponent implements OnInit {
 
     current_role_view: number;
     authenticated: boolean;
+
     profilePath: string;
     user: User;
+    appName: string = 'Goodfellas';
+    screenWidth: number;
 
     constructor(private appService: AppService,
                 private router: Router,
@@ -26,6 +28,7 @@ export class AppComponent implements OnInit {
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService) {
     }
+
 
     ngOnInit(): void {
         this.user = new User();
@@ -37,6 +40,10 @@ export class AppComponent implements OnInit {
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         });
+        this.screenWidth = window.innerWidth;
+        window.onresize = (_) => {
+            this.screenWidth = window.innerWidth
+        }
     }
 
     private authOnNavigation() {
@@ -46,7 +53,7 @@ export class AppComponent implements OnInit {
                     if (auth) {
                         this.current_role_view = this.appService.current_role_view;
                         this.user = this.appService.user;
-                        this.appService.initializeWebSocketConnection();
+                        // this.appService.initializeWebSocketConnection();
                         this.userHelperService.getUserByEmail(this.user.email, u => {
                             this.profilePath = `profile/${u.id}/user`
                         });

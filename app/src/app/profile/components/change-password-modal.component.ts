@@ -7,7 +7,7 @@ import {passwordMatchValidator} from "../../shared/directives";
 @Component({
     selector: 'change-password-modal',
     templateUrl: 'change-password-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class ChangePasswordModalComponent implements OnInit {
 

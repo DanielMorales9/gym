@@ -7,7 +7,7 @@ import {UserHelperService} from "../shared/services";
 
 @Component({
     templateUrl: './profile.component.html',
-    styleUrls: ['../app.component.css'],
+    styleUrls: ['../root.css'],
 })
 export class ProfileComponent implements OnInit {
 

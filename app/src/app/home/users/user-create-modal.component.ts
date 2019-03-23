@@ -1,28 +1,32 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Inject, OnInit, Output} from "@angular/core";
 import {User} from "../../shared/model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserHelperService, UserService} from "../../shared/services";
-import {AuthService, ExchangeUserService, NotificationService} from "../../services";
+import {UserHelperService} from "../../shared/services";
+import {AuthService, NotificationService} from "../../services";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
     selector: 'user-create-modal',
     templateUrl: './user-create-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class UserCreateModalComponent implements OnInit {
 
     @Output() public event = new EventEmitter();
     form: FormGroup;
-    loading: boolean;
-
 
     CONSTRAINT_VIOLATION_EXCEPTION = "ConstraintViolationException";
 
     constructor(private builder: FormBuilder,
                 private authService: AuthService,
                 private userHelperService: UserHelperService,
-                private notificationService: NotificationService) {
-        this.loading = false;
+                private notificationService: NotificationService,
+                public dialogRef: MatDialogRef<UserCreateModalComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: any) {
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close();
     }
 
     ngOnInit(): void {
@@ -58,22 +62,18 @@ export class UserCreateModalComponent implements OnInit {
     }
 
     _success() {
-        return res => {
-            this.loading = false;
-            document.getElementById("postModalCloseId").click();
+        return _ => {
             let message = {
                 text: `L'utente ${this.lastName.value} è stato creato`,
                 class: "alert-success"
             };
             this.notificationService.sendMessage(message);
-            this.event.emit('completed');
+            this.onNoClick()
         }
     }
 
     _error() {
         return err => {
-            this.loading = false;
-            document.getElementById("postModalCloseId").click();
             let text = "Errore Interno al Sistema.";
             if (err.error) {
                 if (err.error.message) {
@@ -86,11 +86,11 @@ export class UserCreateModalComponent implements OnInit {
                 class: "alert-danger"
             };
             this.notificationService.sendMessage(message);
+            this.onNoClick()
         }
     }
 
     createUser() {
-        this.loading = true;
         let user = new User();
         user.firstName = this.firstName.value;
         user.lastName = this.lastName.value;
