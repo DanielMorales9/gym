@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Trainer;
+import it.gym.model.Trainer;
 import org.springframework.hateoas.Resources;
 
 public class TrainerResource extends ResourceModel<Trainer> {

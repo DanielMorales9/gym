@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Role;
+import it.gym.model.Role;
 
 public class RoleResource extends ResourceModel<Role> {
 

@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.SalesLineItem;
+import it.gym.model.SalesLineItem;
 
 public class SalesLineItemResource extends ResourceModel<SalesLineItem> {
 

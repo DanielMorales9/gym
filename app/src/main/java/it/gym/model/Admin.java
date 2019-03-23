@@ -1,13 +1,8 @@
-package it.goodfellas.model;
-
-import it.goodfellas.model.AUser;
-import it.goodfellas.utility.Constants;
+package it.gym.model;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 @Entity

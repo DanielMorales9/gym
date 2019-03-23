@@ -1,4 +1,4 @@
-package it.goodfellas.exception;
+package it.gym.exception;
 
 public class AvailabilityCheckException extends RuntimeException {
 

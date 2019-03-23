@@ -1,8 +1,8 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Admin;
-import it.goodfellas.repository.AdminRepository;
-import it.goodfellas.utility.Constants;
+import it.gym.model.Admin;
+import it.gym.repository.AdminRepository;
+import it.gym.utility.Constants;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 

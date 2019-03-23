@@ -1,4 +1,4 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.ResourceSupport;

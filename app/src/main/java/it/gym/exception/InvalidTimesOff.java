@@ -1,4 +1,4 @@
-package it.goodfellas.exception;
+package it.gym.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

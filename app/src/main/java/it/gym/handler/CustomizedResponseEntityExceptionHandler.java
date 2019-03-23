@@ -1,7 +1,7 @@
-package it.goodfellas.handler;
+package it.gym.handler;
 
-import it.goodfellas.exception.NotFoundException;
-import it.goodfellas.utility.ErrorDetails;
+import it.gym.exception.NotFoundException;
+import it.gym.utility.ErrorDetails;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

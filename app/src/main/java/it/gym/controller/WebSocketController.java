@@ -1,4 +1,4 @@
-package it.goodfellas.controller;
+package it.gym.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;

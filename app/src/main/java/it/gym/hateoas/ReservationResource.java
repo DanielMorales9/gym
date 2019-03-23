@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Reservation;
+import it.gym.model.Reservation;
 
 public class ReservationResource extends ResourceModel<Reservation> {
 

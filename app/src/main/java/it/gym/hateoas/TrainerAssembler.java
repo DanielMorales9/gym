@@ -1,8 +1,8 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Trainer;
-import it.goodfellas.repository.TrainerRepository;
-import it.goodfellas.utility.Constants;
+import it.gym.model.Trainer;
+import it.gym.repository.TrainerRepository;
+import it.gym.utility.Constants;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 

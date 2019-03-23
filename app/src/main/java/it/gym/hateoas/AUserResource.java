@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.AUser;
+import it.gym.model.AUser;
 import org.springframework.hateoas.Resources;
 
 public class AUserResource extends ResourceModel<AUser> {

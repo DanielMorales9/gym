@@ -1,8 +1,8 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.controller.TrainingReservationController;
-import it.goodfellas.model.ATrainingBundleSpecification;
-import it.goodfellas.utility.Constants;
+import it.gym.controller.TrainingReservationController;
+import it.gym.model.ATrainingBundleSpecification;
+import it.gym.utility.Constants;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

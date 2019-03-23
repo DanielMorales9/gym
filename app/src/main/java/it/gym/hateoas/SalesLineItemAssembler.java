@@ -1,7 +1,7 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.SalesLineItem;
-import it.goodfellas.utility.Constants;
+import it.gym.model.SalesLineItem;
+import it.gym.utility.Constants;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

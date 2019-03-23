@@ -1,7 +1,7 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.AUser;
-import it.goodfellas.repository.UserRepository;
+import it.gym.model.AUser;
+import it.gym.repository.UserRepository;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 

@@ -1,14 +1,14 @@
-package it.goodfellas.controller;
+package it.gym.controller;
 
-import it.goodfellas.exception.*;
-import it.goodfellas.hateoas.*;
-import it.goodfellas.model.*;
-import it.goodfellas.repository.RoleRepository;
-import it.goodfellas.repository.UserRepository;
-import it.goodfellas.repository.VerificationTokenRepository;
-import it.goodfellas.service.IUserAuthService;
-import it.goodfellas.utility.MailSenderUtility;
-import it.goodfellas.utility.PasswordGenerator;
+import it.gym.exception.*;
+import it.gym.hateoas.*;
+import it.gym.model.*;
+import it.gym.repository.RoleRepository;
+import it.gym.repository.UserRepository;
+import it.gym.repository.VerificationTokenRepository;
+import it.gym.service.IUserAuthService;
+import it.gym.utility.MailSenderUtility;
+import it.gym.utility.PasswordGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

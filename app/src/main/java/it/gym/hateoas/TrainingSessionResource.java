@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.ATrainingSession;
+import it.gym.model.ATrainingSession;
 
 public class TrainingSessionResource extends ResourceModel<ATrainingSession> {
 

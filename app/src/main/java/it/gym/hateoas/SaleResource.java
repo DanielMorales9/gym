@@ -1,6 +1,6 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Sale;
+import it.gym.model.Sale;
 import org.springframework.hateoas.Resources;
 
 public class SaleResource extends ResourceModel<Sale> {

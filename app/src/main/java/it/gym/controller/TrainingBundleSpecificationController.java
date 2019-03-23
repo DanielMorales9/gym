@@ -1,7 +1,7 @@
-package it.goodfellas.controller;
+package it.gym.controller;
 
-import it.goodfellas.model.ATrainingBundleSpecification;
-import it.goodfellas.repository.TrainingBundleSpecificationRepository;
+import it.gym.model.ATrainingBundleSpecification;
+import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

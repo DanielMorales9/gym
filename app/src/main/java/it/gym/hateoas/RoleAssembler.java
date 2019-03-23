@@ -1,8 +1,8 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.Role;
-import it.goodfellas.repository.RoleRepository;
-import it.goodfellas.utility.Constants;
+import it.gym.model.Role;
+import it.gym.repository.RoleRepository;
+import it.gym.utility.Constants;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

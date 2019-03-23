@@ -1,7 +1,7 @@
-package it.goodfellas.exception;
+package it.gym.exception;
 
 
-import it.goodfellas.model.AUser;
+import it.gym.model.AUser;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 

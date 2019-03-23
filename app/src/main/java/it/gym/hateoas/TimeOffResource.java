@@ -1,7 +1,7 @@
-package it.goodfellas.hateoas;
+package it.gym.hateoas;
 
-import it.goodfellas.model.AUser;
-import it.goodfellas.model.TimeOff;
+import it.gym.model.AUser;
+import it.gym.model.TimeOff;
 
 public class TimeOffResource extends ResourceModel<TimeOff>  {
 

@@ -1,10 +1,9 @@
-package it.goodfellas.controller;
+package it.gym.controller;
 
-import it.goodfellas.exception.UserNotFoundException;
-import it.goodfellas.hateoas.AUserAssembler;
-import it.goodfellas.hateoas.AUserResource;
-import it.goodfellas.model.AUser;
-import it.goodfellas.repository.UserRepository;
+import it.gym.hateoas.AUserAssembler;
+import it.gym.hateoas.AUserResource;
+import it.gym.model.AUser;
+import it.gym.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
