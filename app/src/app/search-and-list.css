@@ -1,0 +1,53 @@
+
+.fab-button-add {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
+
+div.page-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+form.search-form {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /*height: inherit;*/
+}
+
+mat-form-field.search-input {
+    flex-grow: 1;
+    /*width: 100%;*/
+    /*width: -webkit-fill-available;*/
+    /*width: available;*/
+    font-weight: 200;
+}
+
+mat-toolbar.search-toolbar {
+    flex: 1 0 auto;
+}
+
+div.scroll-item {
+    background-color: white;
+}
+
+mat-list.no-card {
+    flex: 1 0 auto;
+}
+
+cdk-virtual-scroll-viewport.scroll-viewport {
+    flex: 1 0 auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    height: 100%;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -ms-available;
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+}
+
+mat-panel-title>a {
+    color: inherit;
+}

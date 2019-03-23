@@ -1,61 +1,65 @@
-<mat-toolbar color="basic" class="search-toolbar">
-    <mat-form-field class="search-input">
-        <label class="sr-only" for="search-input">Search</label>
-        <input matInput
-               type="text"
-               title="Ricerca Pacchetti"
-               id="search-input"
-               name="query"
-               [(ngModel)]="query"/>
-    </mat-form-field>
-    <button type="submit"
-            mat-icon-button (click)="getBundles()">
-        <mat-icon>search</mat-icon>
-    </button>
-</mat-toolbar>
+<div class="page-container">
+    <mat-toolbar color="basic" class="search-toolbar">
+        <form class="search-form">
+            <mat-form-field class="search-input">
+                <label class="sr-only" for="search-input">Search</label>
+                <input matInput
+                       type="text"
+                       title="Ricerca Pacchetti"
+                       id="search-input"
+                       name="query"
+                       [(ngModel)]="query"/>
+            </mat-form-field>
+            <button mat-button type="submit" (click)="getBundles()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </form>
+    </mat-toolbar>
+    <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
-<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
-    <div *cdkVirtualFor="let u of ds;" class="scroll-item">
-        <mat-expansion-panel [class.mat-expansion-panel]="false">
-            <mat-expansion-panel-header>
-                <mat-panel-title>
-                    {{u.name || 'Loading...'}}
-                </mat-panel-title>
-            </mat-expansion-panel-header>
-            <!--<div>-->
-            <!--<span [hidden]="!u.verified">-->
-            <!--<mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Verificato-->
-            <!--</span>-->
-            <!--<span [hidden]="u.verified">-->
-            <!--<mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Verificato-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;-->
-            <!--<a href="mailto:user.email">{{u.email}}</a>-->
-            <!--</div>-->
-            <!--<div>-->
-            <!--<mat-icon fontSet="fa" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;-->
-            <!--<span>Membro dal {{u.createdAt | date: "dd/MM/yyyy"}}</span>-->
-            <!--</div>-->
-        </mat-expansion-panel>
-        <mat-divider></mat-divider>
-    </div>
-</cdk-virtual-scroll-viewport>
-<mat-list [hidden]="!ds.empty" class="no-card">
-    <mat-list-item>
+        <div *cdkVirtualFor="let u of ds;" class="scroll-item">
+            <mat-expansion-panel [class.mat-expansion-panel]="false">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        {{u?.name || 'Loading...'}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <!--<div>-->
+                <!--<span [hidden]="!u.verified">-->
+                <!--<mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Verificato-->
+                <!--</span>-->
+                <!--<span [hidden]="u.verified">-->
+                <!--<mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Verificato-->
+                <!--</span>-->
+                <!--</div>-->
+                <!--<div>-->
+                <!--<mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;-->
+                <!--<a href="mailto:user.email">{{u.email}}</a>-->
+                <!--</div>-->
+                <!--<div>-->
+                <!--<mat-icon fontSet="fa" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;-->
+                <!--<span>Membro dal {{u.createdAt | date: "dd/MM/yyyy"}}</span>-->
+                <!--</div>-->
+            </mat-expansion-panel>
+            <mat-divider></mat-divider>
+        </div>
+    </cdk-virtual-scroll-viewport>
+    <mat-list [hidden]="!ds.empty" class="no-card">
+        <mat-list-item>
         <span class="empty-list">
             <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;
             {{ SIMPLE_NO_CARD_MESSAGE }}
         </span>
-    </mat-list-item>
-    <mat-divider></mat-divider>
-</mat-list>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+    </mat-list>
+    <button type="button" mat-fab color="primary" class="fab-button-add"
 
-<button type="button" mat-fab color="primary" class="fab-button-add"
-        title="Aggiungi Pacchetto" (click)="openDialog()">
-    <mat-icon>add</mat-icon>
-</button>
+            title="Aggiungi Pacchetto" (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>
+
 <!--<bundle-modal-->
 <!--modalTitle="Modifica pacchetto"-->
 <!--modalId="putModal"-->

@@ -24,7 +24,6 @@ import {TimeAgoPipe} from "time-ago-pipe";
 import {
     MatIconModule,
     MatListModule,
-    MatProgressSpinnerModule,
     MatSidenavModule,
     MatToolbarModule
 } from '@angular/material';
