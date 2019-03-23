@@ -17,29 +17,30 @@
     </mat-toolbar>
     <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
-        <div *cdkVirtualFor="let u of ds;" class="scroll-item">
+        <div *cdkVirtualFor="let b of ds;" class="scroll-item">
             <mat-expansion-panel [class.mat-expansion-panel]="false">
                 <mat-expansion-panel-header>
                     <mat-panel-title>
-                        {{u?.name || 'Loading...'}}
+                        {{b?.name || 'Loading...'}}
                     </mat-panel-title>
+                    <mat-panel-description>
+                        {{b?.description || 'Loading...'}}
+                    </mat-panel-description>
                 </mat-expansion-panel-header>
-                <!--<div>-->
-                <!--<span [hidden]="!u.verified">-->
-                <!--<mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Verificato-->
-                <!--</span>-->
-                <!--<span [hidden]="u.verified">-->
-                <!--<mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Verificato-->
-                <!--</span>-->
-                <!--</div>-->
-                <!--<div>-->
-                <!--<mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;-->
-                <!--<a href="mailto:user.email">{{u.email}}</a>-->
-                <!--</div>-->
-                <!--<div>-->
-                <!--<mat-icon fontSet="fa" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;-->
-                <!--<span>Membro dal {{u.createdAt | date: "dd/MM/yyyy"}}</span>-->
-                <!--</div>-->
+                <div>
+                    <span [hidden]="!b?.disabled">
+                        <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
+                    </span>
+                    <span [hidden]="b?.disabled">
+                        <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
+                    </span>
+                </div>
+                <div>
+                    <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{b?.price}}
+                </div>
+                <div>
+                    <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{b?.numSessions}}
+                </div>
             </mat-expansion-panel>
             <mat-divider></mat-divider>
         </div>

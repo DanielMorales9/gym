@@ -68,7 +68,6 @@ export class UserDataSource extends DataSource<User | undefined> {
             const startPage = this.getPageForIndex(range.start);
             let end = (this.length < range.end-1) ? this.length : range.end - 1;
             const endPage = this.getPageForIndex(end);
-            console.log(startPage, endPage, range, end);
             for (let i = startPage; i <= endPage; i++) {
                 this.fetchPage(i);
             }

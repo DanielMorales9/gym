@@ -64,7 +64,7 @@ export class BundleDataSource extends DataSource<Bundle | undefined> {
     private fetchedPages = new Set<number>();
     private dataStream = new BehaviorSubject<(Bundle | undefined)[]>(this.cachedData);
     private subscription = new Subscription();
-    private empty: boolean = false;
+    empty: boolean = false;
 
     constructor(private service: BundlesService,
                 private pageSize: number,
