@@ -18,12 +18,12 @@ export class BundlesComponent {
     query: string;
     private pageSize: number = 10;
 
-    ds: MyDataSource;
+    ds: BundleDataSource;
 
     constructor(private service: BundlesService,
                 private dialog: MatDialog) {
 
-        this.ds = new MyDataSource(service, this.pageSize, this.query);
+        this.ds = new BundleDataSource(service, this.pageSize, this.query);
 
 
         // for(let _i= 0; _i < 50; _i++) {
@@ -58,8 +58,8 @@ export class BundlesComponent {
 
 }
 
-export class MyDataSource extends DataSource<Bundle | undefined> {
-    private length = 100;
+export class BundleDataSource extends DataSource<Bundle | undefined> {
+    private length = 1;
     private cachedData = Array.from<Bundle>({length: this.length});
     private fetchedPages = new Set<number>();
     private dataStream = new BehaviorSubject<(Bundle | undefined)[]>(this.cachedData);
@@ -75,8 +75,8 @@ export class MyDataSource extends DataSource<Bundle | undefined> {
     connect(collectionViewer: CollectionViewer): Observable<(Bundle | undefined)[]> {
         this.subscription.add(collectionViewer.viewChange.subscribe(range => {
             const startPage = this.getPageForIndex(range.start);
-            const endPage = this.getPageForIndex(range.end - 1);
-            console.log(startPage, endPage);
+            let end = (this.length < range.end-1) ? this.length : range.end - 1;
+            const endPage = this.getPageForIndex(end);
             for (let i = startPage; i <= endPage; i++) {
                 this.fetchPage(i);
             }
@@ -120,7 +120,6 @@ export class MyDataSource extends DataSource<Bundle | undefined> {
                 let bundles = res['_embedded']['aTrainingBundleSpecifications'];
                 this.empty = bundles.length == 0;
                 this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
-                console.log(this.cachedData);
                 this.dataStream.next(this.cachedData);
             })
         }
