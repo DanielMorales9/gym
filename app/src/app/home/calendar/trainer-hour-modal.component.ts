@@ -6,7 +6,7 @@ import {TimesOffService} from "../../shared/services";
 @Component({
     selector: 'trainer-hour-modal',
     templateUrl: './trainer-hour-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class TrainerHourModalComponent extends BaseCalendarModal implements OnInit {
 

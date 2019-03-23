@@ -4,7 +4,7 @@ import {
     BundleDetailsComponent, NoCardComponent,
     PagerComponent,
     SaleDetailsComponent,
-    SaleModalComponent, SalesComponent, SpinnerComponent,
+    SaleModalComponent, SalesComponent, SpinnerComponent, UserPatchModalComponent,
 } from "./components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
@@ -14,12 +14,29 @@ import {
     TrainingService, UserHelperService,
     UserService
 } from "./services";
+import {
+    MatButtonModule,
+    MatCardModule,
+    MatDialogModule,
+    MatFormFieldModule,
+    MatIconModule,
+    MatInputModule
+} from "@angular/material";
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        MatCardModule,
+        MatIconModule,
+        MatFormFieldModule,
+        MatDialogModule,
+        MatInputModule,
+        MatButtonModule
+    ],
+    entryComponents: [
+        UserPatchModalComponent
     ],
     declarations: [
         SalesComponent,
@@ -28,7 +45,9 @@ import {
         NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
-        SpinnerComponent],
+        SpinnerComponent,
+        UserPatchModalComponent
+    ],
     exports: [
         SalesComponent,
         SaleDetailsComponent,

@@ -13,7 +13,7 @@ import {ChangeViewService, NotificationService, SaleHelperService} from "../../s
 
 @Component({
     templateUrl: './sale-make.component.html',
-    styleUrls: ['../../app.component.css'],
+    styleUrls: ['../../root.css'],
 })
 export class MakeSaleComponent implements OnInit {
 

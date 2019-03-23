@@ -7,7 +7,7 @@ import {ChangeViewService} from "../../services";
 @Component({
     selector: 'training-details',
     templateUrl: './training-details.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class TrainingDetailsComponent implements OnInit {
 
