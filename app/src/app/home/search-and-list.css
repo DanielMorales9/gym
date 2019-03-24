@@ -38,6 +38,11 @@ mat-list.no-card {
     flex: 1 0 auto;
 }
 
+.panel-actions {
+    display: flex;
+    flex-direction: row;
+}
+
 cdk-virtual-scroll-viewport.scroll-viewport {
     flex: 1 0 auto;
     overflow-y: scroll;

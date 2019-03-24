@@ -67,6 +67,12 @@ export class BundlesComponent {
         this.ds.fetchPage(0);
     }
 
+    deleteBundle(b: Bundle) {
+        let confirmed = confirm(`Vuoi eliminare il pacchetto ${b.name}?`);
+        if (confirmed) {
+            this.service.delete(b.id).subscribe(_ => this.getBundles())
+        }
+    }
 }
 
 export class BundleDataSource extends DataSource<Bundle | undefined> {

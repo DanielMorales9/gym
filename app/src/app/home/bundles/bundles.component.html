@@ -41,12 +41,15 @@
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{b?.numSessions}}
                 </div>
-                <button mat-button color="primary" (click)="openDialog(b)">
-                    <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
-                </button>
-                <!--<button mat-button color="warn" (click)="delete(b)">-->
-                    <!--<mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Elimina-->
-                <!--</button>-->
+                <div class="panel-actions">
+                    <button mat-button color="primary" (click)="openDialog(b)">
+                        <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                    </button>
+                    <button mat-button color="warn" (click)="deleteBundle(b)">
+                        <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Elimina
+                    </button>
+                    <!--#TODO add disable/enable button and improve panel actions graphics-->
+                </div>
             </mat-expansion-panel>
             <mat-divider></mat-divider>
         </div>
