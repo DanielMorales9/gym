@@ -30,9 +30,9 @@ export class BundlesComponent {
         //    bundle.name= 'winter_pack_'+_i;
         //    bundle.description= 'winter_pack_'+_i;
         //    bundle.type = 'P';
-        //    bundle.price= 11;
-        //    bundle.numSessions= 11;
-        //    bundle.disabled= true;
+        //    bundle.price = 11;
+        //    bundle.numSessions = 11;
+        //    bundle.disabled = false;
         //    this.service.post(bundle).subscribe(value => console.log(value))
         // }
     }
@@ -72,6 +72,11 @@ export class BundlesComponent {
         if (confirmed) {
             this.service.delete(b.id).subscribe(_ => this.getBundles())
         }
+    }
+
+    toggleDisabled(b: Bundle) {
+        b.disabled = !b.disabled;
+        this.service.put(b);
     }
 }
 
@@ -133,8 +138,8 @@ export class BundleDataSource extends DataSource<Bundle | undefined> {
                     this.length = newLenght;
                     this.cachedData = Array.from<Bundle>({length: this.length});
                 }
-
                 let bundles = res['_embedded']['aTrainingBundleSpecifications'];
+                bundles.map(v => v.type = 'P');
                 this.empty = bundles.length == 0;
                 this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
                 this.dataStream.next(this.cachedData);
@@ -150,6 +155,7 @@ export class BundleDataSource extends DataSource<Bundle | undefined> {
                 }
 
                 let bundles = res['content'];
+                bundles.map(v => v.type = 'P');
                 this.empty = bundles.length == 0;
                 this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
                 this.dataStream.next(this.cachedData);

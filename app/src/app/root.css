@@ -1,9 +1,4 @@
-.panel-description {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: clip;
-    width: 50px;
-}
+
 
 @media (min-width: 576px) {
 

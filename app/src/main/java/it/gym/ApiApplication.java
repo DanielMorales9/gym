@@ -4,6 +4,8 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.service.UserAuthService;
 import org.slf4j.LoggerFactory;
@@ -45,9 +47,9 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	UserAuthService userDetailsService;
 
 	@RequestMapping({"/", "/logout", "/home/**", "/profile/**", "/auth/**", "/error/**"})
-    public String publicAPI() {
-        return "forward:/index.html";
-    }
+	public String publicAPI() {
+		return "forward:/index.html";
+	}
 
 	@RequestMapping("/user")
 	@ResponseBody
@@ -149,16 +151,32 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	@Configuration
 	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public class TrainingTypesMapper {
+	public class BundleSpecTypesMapper {
 
 		private Map<String, String> mapper;
 
-		public TrainingTypesMapper () {
+		public BundleSpecTypesMapper() {
+			this.mapper = new HashMap<>();
+			this.mapper.put("P", PersonalTrainingBundleSpecification.class.getSimpleName());
+		}
+
+		public String getBundleSpecClass(String type) {
+			return mapper.get(type);
+		}
+	}
+
+	@Configuration
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public class BundleTypesMapper {
+
+		private Map<String, String> mapper;
+
+		public BundleTypesMapper() {
 			this.mapper = new HashMap<>();
 			this.mapper.put("P", PersonalTrainingBundle.class.getSimpleName());
 		}
 
-		public String getTrainingClass(String type) {
+		public String getBundleClass(String type) {
 			return mapper.get(type);
 		}
 	}
@@ -178,6 +196,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 					Admin.class,
 					Customer.class,
 					Trainer.class);
+
 		}
 	}
 }
