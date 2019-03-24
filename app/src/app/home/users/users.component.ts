@@ -7,6 +7,7 @@ import {UserCreateModalComponent} from "./user-create-modal.component";
 import {MatDialog} from "@angular/material";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
+import {UserPatchModalComponent} from "../../profile/components";
 
 @Component({
     templateUrl: './users.component.html',
@@ -46,6 +47,25 @@ export class UsersComponent {
     getUsers() {
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
+    }
+
+    openEditDialog(u: User) {
+        const dialogRef = this.dialog.open(UserPatchModalComponent, {
+            data: {
+
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.getUsers()
+        });
+    }
+
+    deleteUser(u: User) {
+        let confirmed = confirm(`Vuoi eliminare l'utente ${u.firstName} ${u.lastName}?`);
+        if (confirmed) {
+            this.service.delete(u.id).subscribe(_ => this.getUsers())
+        }
     }
 }
 

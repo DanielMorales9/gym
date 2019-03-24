@@ -25,12 +25,12 @@
                     </mat-panel-title>
                 </mat-expansion-panel-header>
                 <div>
-            <span [hidden]="!u?.verified">
-                <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Verificato
-            </span>
+                    <span [hidden]="!u?.verified">
+                        <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Verificato
+                    </span>
                     <span [hidden]="u?.verified">
-                <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Verificato
-            </span>
+                        <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Verificato
+                    </span>
                 </div>
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;
@@ -39,6 +39,18 @@
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;
                     <span>Membro dal {{u?.createdAt | date: "dd/MM/yyyy"}}</span>
+                </div>
+                <div class="panel-actions">
+                    <!--<button mat-button color="primary" (click)="openEditDialog(u)">-->
+                    <!--<span>-->
+                    <!--<mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica-->
+                    <!--</span>-->
+                    <!--</button>-->
+                    <button mat-button color="warn" (click)="deleteUser(u)">
+                        <span>
+                            <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
+                        </span>
+                    </button>
                 </div>
             </mat-expansion-panel>
             <mat-divider></mat-divider>
