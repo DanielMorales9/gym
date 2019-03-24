@@ -1,11 +1,12 @@
 <div class="page-container">
     <mat-toolbar color="basic" class="search-toolbar">
         <form class="search-form">
-            <mat-form-field class="search-input">
-                <label class="sr-only" for="search-input">Search</label>
+            <mat-form-field class="search-input" appearance="standard" floatLabel="never">
+                <label class="sr-only" for="search-input">Cerca pacchetti</label>
                 <input matInput
                        type="text"
-                       title="Ricerca Pacchetti"
+                       title="Cerca pacchetti"
+                       placeholder="Cerca pacchetti"
                        id="search-input"
                        name="query"
                        [(ngModel)]="query"/>

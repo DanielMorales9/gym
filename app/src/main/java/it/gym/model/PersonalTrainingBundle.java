@@ -33,6 +33,11 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
+    public String getType() {
+        return "P";
+    }
+
+    @Override
     public Boolean isExpired() {
         Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
         return this.numSessions.equals(size);

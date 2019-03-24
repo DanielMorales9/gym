@@ -1,19 +1,12 @@
 package it.gym.controller;
 
-import it.gym.exception.TimesOffNotFound;
-import it.gym.exception.UnAuthorizedException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.exception.UserNotFoundException;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
-import it.gym.hateoas.TimeOffAssembler;
-import it.gym.hateoas.TimeOffResource;
-import it.gym.model.AUser;
-import it.gym.model.Admin;
-import it.gym.model.TimeOff;
-import it.gym.model.VerificationToken;
+import it.gym.model.*;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
-import it.gym.utility.MailSenderUtility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,22 +17,27 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Optional;
 
-@RestController
+@RepositoryRestController
 @RequestMapping("/users")
 public class UserController {
 
     private final static Logger logger = LoggerFactory.getLogger(UserController.class);
     private final UserRepository repository;
     private final VerificationTokenRepository tokenRepository;
+    private final ObjectMapper objectMapper;
+
 
     @Autowired
-    public UserController(UserRepository repository, 
-                          VerificationTokenRepository tokenRepository) {
+    public UserController(UserRepository repository,
+                          VerificationTokenRepository tokenRepository,
+                          ObjectMapper objectMapper) {
         this.repository = repository;
         this.tokenRepository = tokenRepository;
+        this.objectMapper = objectMapper;
     }
 
     @GetMapping(path = "/search")
@@ -68,6 +66,22 @@ public class UserController {
             throw new UserNotFoundException(id);
         }
         AUser u = user.get();
+        return ResponseEntity.ok(new AUserAssembler().toResource(u));
+    }
+
+    @PatchMapping(path = "/{id}")
+    ResponseEntity<AUserResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException
+    {
+        Optional<AUser> user = repository.findById(id);
+        AUser u;
+        if (user.isPresent()){
+            u = user.get();
+            u = objectMapper.readerForUpdating(u).readValue(request.getReader());
+            u = repository.saveAndFlush(u);
+        }
+        else
+            throw new UserNotFoundException(id);
+
         return ResponseEntity.ok(new AUserAssembler().toResource(u));
     }
 

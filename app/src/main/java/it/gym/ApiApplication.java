@@ -132,25 +132,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
-	@Component
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public class RelProvider extends EvoInflectorRelProvider {
-		@Override
-		public String getCollectionResourceRelFor(final Class<?> type) {
-			return super.getCollectionResourceRelFor(ATrainingBundleSpecification.class);
-		}
-
-		@Override
-		public String getItemResourceRelFor(final Class<?> type) {
-			return super.getItemResourceRelFor(ATrainingBundleSpecification.class);
-		}
-
-		@Override
-		public boolean supports(final Class<?> delimiter) {
-			return ATrainingBundleSpecification.class.isAssignableFrom(delimiter);
-		}
-	}
-
 	@Configuration
 	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
 	public class BundleSpecTypesMapper {

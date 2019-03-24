@@ -1,43 +1,46 @@
-import {Component, EventEmitter, OnInit, Output} from "@angular/core";
-import {User} from "../../shared/model";
+import {Component, EventEmitter, Inject, OnInit, Output} from "@angular/core";
+import {User} from "../../model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserService} from "../../shared/services";
-import {AppService, ExchangeUserService, NotificationService} from "../../services";
+import {UserService} from "../../services";
+import {AppService, ExchangeUserService, NotificationService} from "../../../services";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 
 @Component({
     selector: 'user-patch-modal',
     templateUrl: './user-patch-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../../root.css']
 })
 export class UserPatchModalComponent implements OnInit {
 
-    @Output() public done = new EventEmitter();
     user: User;
     role: number;
 
     form: FormGroup;
-    loading: boolean;
 
 
     constructor(private builder: FormBuilder,
                 private service: UserService,
                 private appService: AppService,
-                private exchangeUserService: ExchangeUserService,
-                private messageService: NotificationService) {
-        this.loading = false;
+                private messageService: NotificationService,
+                public dialogRef: MatDialogRef<UserPatchModalComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.user = this.data.user
     }
 
     ngOnInit(): void {
-        this.user = new User();
+        if (!this.user)
+            this.user = new User();
         this.buildForm();
-        this.exchangeUserService.getUser().subscribe(value => {
-            this.user = value;
-            this.service.getRoles(this.user.id).subscribe((res) => {
-                this.role = Math.min(...res['_embedded']['roles'].map(val => this.appService.ROLE2INDEX[val.name]));
-                this.buildForm()
-            })
-        });
+
+        this.service.getRoles(this.user.id).subscribe((res) => {
+            this.role = Math.min(...res['_embedded']['roles'].map(val => this.appService.ROLE2INDEX[val.name]));
+            this.buildForm()
+        })
+    }
+
+    onNoClick(): void {
+        this.dialogRef.close();
     }
 
     buildForm() {
@@ -80,8 +83,7 @@ export class UserPatchModalComponent implements OnInit {
         return this.form.get("email")
     }
 
-    editUser() {
-        this.loading = true;
+    submit() {
 
         delete this.user.roles;
         this.user.firstName = this.firstName.value;
@@ -98,16 +100,12 @@ export class UserPatchModalComponent implements OnInit {
                 text: `L'utente ${this.lastName.value} è stato modificato`,
                 class: "alert-success"
             });
-            this.done.emit('completed');
         }, err => {
             this.messageService.sendMessage({
-                text: err.error.message,
+                text: err.message,
                 class: "alert-danger"
             });
-        }, () => {
-            this.loading = false;
-            document.getElementById("patchModalClose").click();
-        })
+        }, () => this.onNoClick())
     }
 
 }

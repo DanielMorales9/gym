@@ -21,8 +21,10 @@ public abstract class ATrainingSession {
     @JsonIgnore
     private ATrainingBundle trainingBundle;
 
-    protected ATrainingSession() {
+    ATrainingSession() {
     }
+
+    public abstract String getType();
 
     public Long getId() {
         return id;

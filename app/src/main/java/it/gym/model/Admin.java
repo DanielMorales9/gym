@@ -16,4 +16,9 @@ public class Admin extends AUser {
                 new Role((long) 2, "TRAINER"),
                 new Role((long) 3, "CUSTOMER"));
     }
+
+    @Override
+    public String getType() {
+        return "A";
+    }
 }

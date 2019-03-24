@@ -14,9 +14,6 @@ export class BundleModalComponent implements OnInit {
 
     private DEFAULT_TYPE = "P";
 
-    @Output()
-    modalEvent = new EventEmitter();
-
     bundle: Bundle;
     form: FormGroup;
 

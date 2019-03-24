@@ -11,11 +11,11 @@
                        name="name"
                        formControlName="name"
                        [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
-                <div *ngIf="name.touched && name.invalid" class="error-message">
+                <mat-error *ngIf="name.touched && name.invalid">
                     <div *ngIf="!!name.errors?.required">
                         Nome del pacchetto obbligatorio
                     </div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -28,10 +28,10 @@
                        formControlName="price"
                        [ngClass]="{ 'is-invalid': price.touched && price.invalid }"
                 />
-                <div *ngIf="price.touched && price.invalid" class="error-message">
+                <mat-error *ngIf="price.touched && price.invalid">
                     <div *ngIf="!!price.errors?.required">Prezzo del pacchetto obbligatorio</div>
                     <div *ngIf="!!price.errors?.pattern">Prezzo del pacchetto non valido</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -43,10 +43,10 @@
                        name="numSessions"
                        formControlName="numSessions"
                        [ngClass]="{ 'is-invalid': numSessions.touched && numSessions.invalid }" />
-                <div *ngIf="numSessions.touched && numSessions.invalid" class="error-message">
+                <mat-error *ngIf="numSessions.touched && numSessions.invalid">
                     <div *ngIf="!!numSessions.errors?.required">Numero di sessioni obbligatori</div>
                     <div *ngIf="!!numSessions.errors?.pattern">Il numero di sessioni deve essere intero</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -58,9 +58,9 @@
                           name="description"
                           formControlName="description"
                           [ngClass]="{ 'is-invalid': description.touched && description.invalid }"></textarea>
-                <div *ngIf="description.touched && description.invalid" class="error-message">
+                <mat-error *ngIf="description.touched && description.invalid">
                     <div *ngIf="!!description.errors?.required">Descrizione del pacchetto obbligatoria</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
     </div>

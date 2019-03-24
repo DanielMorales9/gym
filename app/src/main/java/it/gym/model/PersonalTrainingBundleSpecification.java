@@ -32,6 +32,11 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     }
 
     @Override
+    public String getType() {
+        return "P";
+    }
+
+    @Override
     public ATrainingBundle createTrainingBundle() {
         PersonalTrainingBundle ptb = new PersonalTrainingBundle();
         ptb.setNumSessions(numSessions);

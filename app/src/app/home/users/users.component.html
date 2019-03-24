@@ -1,11 +1,12 @@
 <div class="page-container">
     <mat-toolbar color="basic" class="search-toolbar">
         <form class="search-form">
-            <mat-form-field class="search-input">
-                <label class="sr-only" for="search-input">Search</label>
+            <mat-form-field class="search-input" appearance="standard" floatLabel="never">
+                <label class="sr-only" for="search-input">Cerca utente</label>
                 <input matInput
                        type="text"
-                       title="Ricerca Utenti"
+                       title="Cerca utente"
+                       placeholder="Cerca utente"
                        id="search-input"
                        name="query"
                        [(ngModel)]="query"/>
@@ -41,11 +42,11 @@
                     <span>Membro dal {{u?.createdAt | date: "dd/MM/yyyy"}}</span>
                 </div>
                 <div class="panel-actions">
-                    <!--<button mat-button color="primary" (click)="openEditDialog(u)">-->
-                    <!--<span>-->
-                    <!--<mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica-->
-                    <!--</span>-->
-                    <!--</button>-->
+                    <button mat-button color="primary" (click)="openEditDialog(u)">
+                        <span>
+                            <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                        </span>
+                    </button>
                     <button mat-button color="warn" (click)="deleteUser(u)">
                         <span>
                             <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina

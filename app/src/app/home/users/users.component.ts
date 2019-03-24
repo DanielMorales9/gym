@@ -7,7 +7,7 @@ import {UserCreateModalComponent} from "./user-create-modal.component";
 import {MatDialog} from "@angular/material";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {UserPatchModalComponent} from "../../profile/components";
+import {UserPatchModalComponent} from "../../shared/components/users";
 
 @Component({
     templateUrl: './users.component.html',
@@ -44,21 +44,21 @@ export class UsersComponent {
         });
     }
 
-    getUsers() {
-        this.ds.setQuery(this.query);
-        this.ds.fetchPage(0);
-    }
-
     openEditDialog(u: User) {
         const dialogRef = this.dialog.open(UserPatchModalComponent, {
             data: {
-
+                user: u
             }
         });
 
         dialogRef.afterClosed().subscribe(_ => {
             this.getUsers()
         });
+    }
+
+    getUsers() {
+        this.ds.setQuery(this.query);
+        this.ds.fetchPage(0);
     }
 
     deleteUser(u: User) {

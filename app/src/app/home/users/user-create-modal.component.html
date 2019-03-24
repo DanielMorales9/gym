@@ -12,9 +12,9 @@
                        formControlName="firstName"
                        [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
                 />
-                <div *ngIf="firstName.touched && firstName.invalid" class="error-message">
+                <mat-error *ngIf="firstName.touched && firstName.invalid">
                     <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -27,9 +27,9 @@
                        type="text"
                        formControlName="lastName"
                        [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"/>
-                <div *ngIf="lastName.touched && lastName.invalid" class="error-message">
+                <mat-error *ngIf="lastName.touched && lastName.invalid">
                     <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -43,10 +43,10 @@
                        type="text"
                        formControlName="email"
                        [ngClass]="{ 'is-invalid': email.touched && email.invalid }"/>
-                <div *ngIf="email.touched && email.invalid" class="error-message">
+                <mat-error *ngIf="email.touched && email.invalid">
                     <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
                     <div *ngIf="!!email.errors?.email">Email non valida</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div>
@@ -62,9 +62,9 @@
                     <mat-option value="customer">Utente</mat-option>
                     <mat-option value="trainer">Allenatore</mat-option>
                 </mat-select>
-                <div *ngIf="type.touched && type.invalid" class="error-message">
+                <mat-error *ngIf="type.touched && type.invalid">
                     <div *ngIf="!!type.errors?.required">Ruolo obbligatorio</div>
-                </div>
+                </mat-error>
             </mat-form-field>
         </div>
         <div mat-dialog-actions>

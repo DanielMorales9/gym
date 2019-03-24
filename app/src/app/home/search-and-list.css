@@ -36,7 +36,7 @@ form.search-form {
     /*height: inherit;*/
 }
 
-mat-form-field.search-input {
+.search-input {
     flex-grow: 1;
     /*width: 100%;*/
     /*width: -webkit-fill-available;*/

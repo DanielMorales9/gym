@@ -66,4 +66,8 @@ public class Customer extends AUser {
                 new Role((long) 3, "CUSTOMER"));
     }
 
+    @Override
+    public String getType() {
+        return "C";
+    }
 }

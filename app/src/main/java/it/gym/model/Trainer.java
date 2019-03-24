@@ -14,4 +14,8 @@ public class Trainer extends AUser {
         return Collections.singletonList(new Role((long) 2, "TRAINER"));
     }
 
+    @Override
+    public String getType() {
+        return "T";
+    }
 }
