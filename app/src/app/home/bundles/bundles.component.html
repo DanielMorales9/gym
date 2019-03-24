@@ -23,7 +23,7 @@
                     <mat-panel-title>
                         {{b?.name || 'Loading...'}}
                     </mat-panel-title>
-                    <mat-panel-description>
+                    <mat-panel-description class="panel-description">
                         {{b?.description || 'Loading...'}}
                     </mat-panel-description>
                 </mat-expansion-panel-header>
@@ -41,6 +41,12 @@
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{b?.numSessions}}
                 </div>
+                <button mat-button color="primary" (click)="openDialog(b)">
+                    <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                </button>
+                <!--<button mat-button color="warn" (click)="delete(b)">-->
+                    <!--<mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Elimina-->
+                <!--</button>-->
             </mat-expansion-panel>
             <mat-divider></mat-divider>
         </div>

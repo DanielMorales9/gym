@@ -9,7 +9,7 @@ import {CollectionViewer} from "@angular/cdk/collections";
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../../search-and-list.css']
+    styleUrls: ['../search-and-list.css', '../../root.css']
 })
 export class BundlesComponent {
 
@@ -25,7 +25,6 @@ export class BundlesComponent {
 
         this.ds = new BundleDataSource(service, this.pageSize, this.query);
 
-
         // for(let _i= 0; _i < 50; _i++) {
         //    let bundle = new Bundle();
         //    bundle.name= 'winter_pack_'+_i;
@@ -38,11 +37,23 @@ export class BundlesComponent {
         // }
     }
 
-    openDialog(): void {
+    openDialog(b?: number): void {
+        let title;
+        let message;
+        if (b) {
+            title = "Modifica Pacchetto";
+            message = "è stato modificato";
+        }
+        else {
+            title = "Crea Nuovo Pacchetto";
+            message = "è stato creato";
+        }
+
         const dialogRef = this.dialog.open(BundleModalComponent, {
             data: {
-                title: 'Crea Nuovo Pacchetto',
-                message: 'è stato modificato'
+                title: title,
+                message: message,
+                bundle: b,
             }
         });
 

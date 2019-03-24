@@ -10,7 +10,7 @@ import {BehaviorSubject, Observable, Subscription} from "rxjs";
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../../search-and-list.css']
+    styleUrls: ['../search-and-list.css']
 })
 export class UsersComponent {
 
