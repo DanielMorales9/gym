@@ -1,9 +1,12 @@
 package it.gym;
 
+import java.io.IOException;
 import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.databind.MapperFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.service.UserAuthService;
 import org.slf4j.LoggerFactory;
@@ -20,6 +23,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.hateoas.core.EvoInflectorRelProvider;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -45,9 +49,9 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	UserAuthService userDetailsService;
 
 	@RequestMapping({"/", "/logout", "/home/**", "/profile/**", "/auth/**", "/error/**"})
-    public String publicAPI() {
-        return "forward:/index.html";
-    }
+	public String publicAPI() {
+		return "forward:/index.html";
+	}
 
 	@RequestMapping("/user")
 	@ResponseBody
@@ -128,37 +132,34 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
-	@Component
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public class RelProvider extends EvoInflectorRelProvider {
-		@Override
-		public String getCollectionResourceRelFor(final Class<?> type) {
-			return super.getCollectionResourceRelFor(ATrainingBundleSpecification.class);
+	@Configuration
+	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+	public class BundleSpecTypesMapper {
+
+		private Map<String, String> mapper;
+
+		public BundleSpecTypesMapper() {
+			this.mapper = new HashMap<>();
+			this.mapper.put("P", PersonalTrainingBundleSpecification.class.getSimpleName());
 		}
 
-		@Override
-		public String getItemResourceRelFor(final Class<?> type) {
-			return super.getItemResourceRelFor(ATrainingBundleSpecification.class);
-		}
-
-		@Override
-		public boolean supports(final Class<?> delimiter) {
-			return ATrainingBundleSpecification.class.isAssignableFrom(delimiter);
+		public String getBundleSpecClass(String type) {
+			return mapper.get(type);
 		}
 	}
 
 	@Configuration
 	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public class TrainingTypesMapper {
+	public class BundleTypesMapper {
 
 		private Map<String, String> mapper;
 
-		public TrainingTypesMapper () {
+		public BundleTypesMapper() {
 			this.mapper = new HashMap<>();
 			this.mapper.put("P", PersonalTrainingBundle.class.getSimpleName());
 		}
 
-		public String getTrainingClass(String type) {
+		public String getBundleClass(String type) {
 			return mapper.get(type);
 		}
 	}
@@ -178,6 +179,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 					Admin.class,
 					Customer.class,
 					Trainer.class);
+
 		}
 	}
 }

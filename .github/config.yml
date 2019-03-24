@@ -12,3 +12,6 @@ requestInfoDefaultTitles:
 
 # *OPTIONAL* Label to be added to Issues and Pull Requests with insufficient information given
 requestInfoLabelToAdd: needs-more-info
+
+todo:
+  keyword: "#TODO"

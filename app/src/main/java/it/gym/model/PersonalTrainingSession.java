@@ -24,6 +24,11 @@ public class PersonalTrainingSession extends ATrainingSession {
 
     }
 
+    @Override
+    public String getType() {
+        return "P";
+    }
+
     PersonalTrainingSession(ATrainingBundle trainingBundle, Date startTime, Date endTime, boolean isCompleted) {
         this.setTrainingBundle(trainingBundle);
         this.startTime = startTime;

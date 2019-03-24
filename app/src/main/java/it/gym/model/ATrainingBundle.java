@@ -8,10 +8,14 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME,
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
         property = "type",
-        visible = true, include = JsonTypeInfo.As.EXISTING_PROPERTY)
-@JsonSubTypes(@JsonSubTypes.Type(value = PersonalTrainingBundle.class, name = "P"))
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P")
+})
 @Entity
 @RestResource(path="bundles")
 @Table(name="bundles")
@@ -47,6 +51,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @Override
     public abstract int compareTo(ATrainingBundle aTrainingBundle);
 
+    public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
     public abstract void addSession(ATrainingSession session);

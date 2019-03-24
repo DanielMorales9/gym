@@ -14,14 +14,8 @@ export class BundleModalComponent implements OnInit {
 
     private DEFAULT_TYPE = "P";
 
-    @Output()
-    modalEvent = new EventEmitter();
-
     bundle: Bundle;
     form: FormGroup;
-    loading: boolean;
-
-    public edit: string;
 
     constructor(private service: BundlesService,
                 private builder: FormBuilder,
@@ -29,7 +23,7 @@ export class BundleModalComponent implements OnInit {
                 private messageService: NotificationService,
                 public dialogRef: MatDialogRef<BundleModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.loading = false;
+        this.bundle = this.data.bundle;
     }
 
     onNoClick(): void {
@@ -37,16 +31,11 @@ export class BundleModalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.bundle = new Bundle();
+        if (!this.bundle)
+            this.bundle = new Bundle();
 
         this.buildForm();
 
-        // if (this.edit == "true")
-        //     this.exchangeBundleService.getBundle()
-        //         .subscribe(bundle => {
-        //             this.bundle = bundle;
-        //             this.buildForm();
-        //         })
     }
 
     private buildForm() {
@@ -103,9 +92,8 @@ export class BundleModalComponent implements OnInit {
     }
 
     submit() {
-        this.loading = true;
         this.getBundleFromForm();
-        if (this.edit == "true")
+        if (this.bundle.id)
             this.service.put(this.bundle).subscribe(this._success(), this._error());
         else {
             delete this.bundle.id;

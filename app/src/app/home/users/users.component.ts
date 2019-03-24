@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from "../../shared/model";
+import {Bundle, User} from "../../shared/model";
 import {UserHelperService, UserService} from "../../shared/services";
 import {AppService} from "../../services";
 import {ChangeViewService} from "../../services";
@@ -7,10 +7,11 @@ import {UserCreateModalComponent} from "./user-create-modal.component";
 import {MatDialog} from "@angular/material";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
+import {UserPatchModalComponent} from "../../shared/components/users";
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../search-and-list.css']
 })
 export class UsersComponent {
 
@@ -18,7 +19,7 @@ export class UsersComponent {
     // SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
 
     current_role_view: number;
-    private pageSize: number = 5;
+    private pageSize: number = 10;
 
     query: string;
     ds: UserDataSource;
@@ -43,16 +44,36 @@ export class UsersComponent {
         });
     }
 
+    openEditDialog(u: User) {
+        const dialogRef = this.dialog.open(UserPatchModalComponent, {
+            data: {
+                user: u
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.getUsers()
+        });
+    }
+
     getUsers() {
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
     }
+
+    deleteUser(u: User) {
+        let confirmed = confirm(`Vuoi eliminare l'utente ${u.firstName} ${u.lastName}?`);
+        if (confirmed) {
+            this.service.delete(u.id).subscribe(_ => this.getUsers())
+        }
+    }
 }
 
-export class UserDataSource extends DataSource<User> {
+export class UserDataSource extends DataSource<User | undefined> {
+    private length = 1;
     private fetchedPages = new Set<number>();
     private subscription = new Subscription();
-    private cachedData = new Array<User>();
+    private cachedData = Array.from<User>({length: this.length});
     private dataStream = new BehaviorSubject<User[]>(this.cachedData);
     empty: boolean = false;
 
@@ -62,10 +83,11 @@ export class UserDataSource extends DataSource<User> {
         super();
     }
 
-    connect(collectionViewer: CollectionViewer): Observable<User[]> {
+    connect(collectionViewer: CollectionViewer): Observable<(User | undefined)[]> {
         this.subscription.add(collectionViewer.viewChange.subscribe(range => {
             const startPage = this.getPageForIndex(range.start);
-            const endPage = this.getPageForIndex(range.end - 1);
+            let end = (this.length < range.end-1) ? this.length : range.end - 1;
+            const endPage = this.getPageForIndex(end);
             for (let i = startPage; i <= endPage; i++) {
                 this.fetchPage(i);
             }
@@ -95,28 +117,40 @@ export class UserDataSource extends DataSource<User> {
         this.query = query;
         this.fetchedPages = new Set<number>();
         this.cachedData = [];
+        this.fetchPage(0)
     }
 
     private search(page: number) {
-        if (this.query === undefined || this.query == ''){
+        if (this.query === undefined || this.query == '') {
+            this.service.get(page, this.pageSize).subscribe(res => {
+                console.log(res);
+                let newLenght = res['page']['totalElements'];
+                if (this.length != newLenght) {
+                    this.length = newLenght;
+                    this.cachedData = Array.from<User>({length: this.length});
+                }
 
-            this.service.get(page, this.pageSize)
-                .subscribe(res => {
-                    let users = UserHelperService.wrapUsers(res);
-                    this.cachedData.splice(page * this.pageSize, ...users);
-                    this.empty = users.length == 0;
-                    this.dataStream.next(users);
-                })
+                let users = UserHelperService.wrapUsers(res);
+                console.log(users);
+                this.empty = users.length == 0;
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
+                this.dataStream.next(this.cachedData);
+            })
         }
         else {
 
-            this.service.search(this.query, page, this.pageSize)
-                .subscribe(res => {
-                    let users = res['content'];
-                    this.cachedData.splice(page * this.pageSize, ...users);
-                    this.empty = users.length == 0;
-                    this.dataStream.next(users);
-                })
+            this.service.search(this.query, page, this.pageSize).subscribe(res => {
+                let newLenght = res['totalElements'];
+                if (this.length != newLenght) {
+                    this.length = newLenght;
+                    this.cachedData = Array.from<User>({length: this.length});
+                }
+
+                let users = res['content'];
+                this.empty = users.length == 0;
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
+                this.dataStream.next(this.cachedData);
+            })
         }
     }
 }

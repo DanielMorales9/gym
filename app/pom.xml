@@ -192,16 +192,16 @@
                             <arguments>run-script build</arguments>
                         </configuration>
                     </execution>
-                    <execution>
-                        <id>npm-e2e</id>
-                        <phase>test</phase>
-                        <goals>
-                            <goal>npm</goal>
-                        </goals>
-                        <configuration>
-                            <arguments>run-script e2e</arguments>
-                        </configuration>
-                    </execution>
+                    <!--<execution>-->
+                        <!--<id>npm-e2e</id>-->
+                        <!--<phase>test</phase>-->
+                        <!--<goals>-->
+                            <!--<goal>npm</goal>-->
+                        <!--</goals>-->
+                        <!--<configuration>-->
+                            <!--<arguments>run-script e2e</arguments>-->
+                        <!--</configuration>-->
+                    <!--</execution>-->
                     <execution>
                         <id>npm-karma</id>
                         <phase>test</phase>

@@ -1,6 +1,8 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -11,6 +13,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
+        property = "type",
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = Admin.class, name = "A"),
+        @JsonSubTypes.Type(value = Customer.class, name = "C"),
+        @JsonSubTypes.Type(value = Trainer.class, name = "T")
+})
 @Entity
 @Table(name="users")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -60,6 +73,8 @@ public abstract class AUser implements DefaultRoles {
 
 
     private boolean isVerified;
+
+    public abstract String getType();
 
     @PrePersist
     protected void prePersist() {

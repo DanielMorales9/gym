@@ -6,12 +6,15 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 
+
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
+        include = JsonTypeInfo.As.PROPERTY,
         property = "type",
-        visible = true,
-        include = JsonTypeInfo.As.EXISTING_PROPERTY)
-@JsonSubTypes(@JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name = "P"))
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P")
+})
 @Entity
 @RestResource(path="bundleSpecs")
 @Table(name="bundle_specs")
@@ -36,6 +39,8 @@ public abstract class ATrainingBundleSpecification {
 
     @Column(name = "is_disabled", nullable = false)
     private Boolean isDisabled;
+
+    public abstract String getType();
 
     public Long getId() {
         return id;
@@ -81,12 +86,10 @@ public abstract class ATrainingBundleSpecification {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Nome: ");
-        builder.append(this.name);
-        builder.append(", Descrizione: ");
-        builder.append(this.description);
-        return builder.toString();
+        return "Nome: " +
+                this.name +
+                ", Descrizione: " +
+                this.description;
     }
 
     @Override

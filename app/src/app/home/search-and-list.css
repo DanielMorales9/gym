@@ -1,0 +1,87 @@
+
+.fab-button-add {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
+
+.panel-header-description {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: clip;
+    width: 50px;
+}
+
+.panel-body-description > span {
+    color: rgba(0,0,0,.54);
+    word-break: break-word;
+    overflow-wrap: break-word;
+}
+
+.panel-body-description {
+    padding-bottom: 12px;
+    overflow-x: hidden;
+}
+
+div.page-container {
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+form.search-form {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    /*height: inherit;*/
+}
+
+.search-input {
+    flex-grow: 1;
+    /*width: 100%;*/
+    /*width: -webkit-fill-available;*/
+    /*width: available;*/
+    font-weight: 200;
+}
+
+mat-toolbar.search-toolbar {
+    flex: 1 0 auto;
+}
+
+div.scroll-item {
+    background-color: white;
+}
+
+mat-list.no-card {
+    flex: 1 0 auto;
+}
+
+.panel-actions {
+    display: flex;
+    padding-top: 12px;
+    flex-direction: row;
+    justify-content: center;
+}
+
+.panel-actions > button {
+    padding: 0 8px;
+}
+
+cdk-virtual-scroll-viewport.scroll-viewport {
+    flex: 1 0 auto;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    width: 100%;
+    width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    width: -ms-available;
+    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    height: 100%;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -ms-available;
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+}
+
+
+mat-panel-title>a {
+    color: inherit;
+}

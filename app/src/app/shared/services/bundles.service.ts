@@ -36,4 +36,7 @@ export class BundlesService {
         return this.http.get(endpoint);
     }
 
+    delete(id: number) {
+        return this.http.delete(`/bundleSpecs/${id}`);
+    }
 }
