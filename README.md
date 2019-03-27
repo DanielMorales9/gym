@@ -42,3 +42,5 @@ mvn install
 ````
 docker-compose up
 ````
+
+# TODO write plan
