@@ -8,7 +8,7 @@ import {ChangeViewService} from "../../services";
 
 @Component({
     templateUrl: './user-profile.component.html',
-    styleUrls: ['../../app.component.css'],
+    styleUrls: ['../../root.css'],
 })
 export class UserProfileComponent implements OnInit {
 

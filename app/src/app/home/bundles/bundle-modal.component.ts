@@ -1,50 +1,44 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
 import {BundlesService} from "../../shared/services";
 import {Bundle} from "../../shared/model";
 import {ExchangeBundleService, NotificationService} from "../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
     selector: 'bundle-modal',
     templateUrl: './bundle-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class BundleModalComponent implements OnInit {
 
     private DEFAULT_TYPE = "P";
 
-    @Output()
-    modalEvent = new EventEmitter();
+    // TODO add spinner on modal
 
     bundle: Bundle;
     form: FormGroup;
-    loading: boolean;
-
-    @Input() public modalTitle: string;
-    @Input() public modalId: string;
-    @Input() public modalCloseId: string;
-    @Input() public modalClosingMessage: string;
-    @Input() public edit: string;
+    loading: boolean = false;
 
     constructor(private service: BundlesService,
                 private builder: FormBuilder,
                 private exchangeBundleService: ExchangeBundleService,
-                private messageService: NotificationService) {
-        this.loading = false;
+                private messageService: NotificationService,
+                public dialogRef: MatDialogRef<BundleModalComponent>,
+                @Inject(MAT_DIALOG_DATA) public data: any) {
+        this.bundle = this.data.bundle;
+    }
 
+    onNoClick(): void {
+        this.dialogRef.close();
     }
 
     ngOnInit(): void {
-        this.bundle = new Bundle();
+        if (!this.bundle)
+            this.bundle = new Bundle();
 
         this.buildForm();
 
-        if (this.edit == "true")
-            this.exchangeBundleService.getBundle()
-                .subscribe(bundle => {
-                    this.bundle = bundle;
-                    this.buildForm();
-                })
     }
 
     private buildForm() {
@@ -79,22 +73,17 @@ export class BundleModalComponent implements OnInit {
     }
 
     _success() {
-        return (res) => {
-            this.loading = false;
-            document.getElementById(this.modalCloseId).click();
+        return (_) => {
             let message ={
-                text: "Il pacchetto " + this.bundle.name + this.modalClosingMessage,
+                text: "Il pacchetto " + this.bundle.name + this.data.message,
                 class: "alert-success"
             };
             this.messageService.sendMessage(message);
-            this.modalEvent.emit("update");
         }
     }
 
     _error() {
         return (err) => {
-            this.loading = false;
-            document.getElementById(this.modalCloseId).click();
             let message ={
                 text: "Qualcosa è andato storto",
                 class: "alert-danger"
@@ -103,15 +92,19 @@ export class BundleModalComponent implements OnInit {
         }
     }
 
-    submitBundle() {
-        this.loading = true;
+    submit() {
         this.getBundleFromForm();
-        console.log(this.bundle);
-        if (this.edit == "true")
-            this.service.put(this.bundle).subscribe(this._success(), this._error());
+        if (this.bundle.id)
+            this.service.put(this.bundle).subscribe(this._success(), this._error(), () => {
+                this.onNoClick();
+                this.loading = false;
+            });
         else {
             delete this.bundle.id;
-            this.service.post(this.bundle).subscribe(this._success(), this._error());
+            this.service.post(this.bundle).subscribe(this._success(), this._error(), () => {
+                this.onNoClick();
+                this.loading = false;
+            });
         }
     }
 

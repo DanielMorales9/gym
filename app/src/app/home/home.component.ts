@@ -7,7 +7,7 @@ import {UserHelperService} from "../shared/services";
 
 @Component({
     templateUrl: './home.component.html',
-    styleUrls: ['../app.component.css']
+    styleUrls: ['../root.css']
 })
 export class HomeComponent implements OnInit {
 

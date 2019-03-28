@@ -8,7 +8,7 @@ import {passwordMatchValidator} from "../../shared/directives";
 
 @Component({
     templateUrl: './modify-password.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class ModifyPasswordComponent implements OnInit {
 
@@ -44,30 +44,15 @@ export class ModifyPasswordComponent implements OnInit {
     }
 
     modifyPassword() {
-        let userType = "";
-        switch (Math.min(...this.user.roles.map(value => value.id))) {
-            case 3:
-                userType="customer";
-                break;
-            case 2:
-                userType="trainer";
-                break;
-            case 1:
-                userType="admin";
-                break;
-            default:
-                break;
-        }
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
 
-        this.authService.changePassword(this.user, userType).subscribe(res => {
+        this.authService.changePassword(this.user).subscribe(res => {
             this.notificationService.sendMessage({
                 text: `${this.user.firstName} la tua password è stata modificata con successo!<br>Ora puoi accedere alla tua area Personale.`,
                 class: "alert-success",
             });
-            let user: any = res;
-            this.appService.authenticate({username: user.email, password: this.user.password},(isAuthenticated) => {
+            this.appService.authenticate({username: res['email'], password: this.user['password']},(isAuthenticated) => {
                     if (!isAuthenticated)
                         return this.router.navigate(['/error'], { queryParams: {
                                 message: "Errore di Autenticazione <br>" +

@@ -1,0 +1,88 @@
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+
+    <h5 mat-dialog-title>Modifica i Dati</h5>
+    <div mat-dialog-content>
+        <div>
+            <mat-form-field>
+                <label for="firstName" class="sr-only">Nome</label>
+                <input name="firstName"
+                       matInput
+                       placeholder="Nome"
+                       id="firstName"
+                       type="text"
+                       [ngClass]="{ 'is-invalid': firstName.touched && firstName.invalid }"
+                       formControlName="firstName"/>
+                <mat-error *ngIf="firstName.touched && firstName.invalid">
+                    <div *ngIf="!!firstName.errors?.required">Nome obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="lastName" class="sr-only">Cognome</label>
+                <input name="lastName"
+                       matInput
+                       placeholder="Cognome"
+                       id="lastName"
+                       type="text"
+                       [ngClass]="{ 'is-invalid': lastName.touched && lastName.invalid }"
+                       formControlName="lastName"/>
+                <mat-error *ngIf="lastName.touched && lastName.invalid">
+                    <div *ngIf="!!lastName.errors?.required">Cognome obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="email" class="sr-only">Email</label>
+                <input name="email"
+                       matInput
+                       placeholder="Email"
+                       id="email"
+                       [ngClass]="{ 'is-invalid': email.touched && email.invalid }"
+                       type="text"
+                       formControlName="email"/>
+                <mat-error *ngIf="email.touched && email.invalid">
+                    <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                    <div *ngIf="!!email.errors?.email">Email non valida</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div *ngIf="role === 3">
+            <mat-form-field>
+                <label for="height" class="sr-only">Altezza</label>
+                <input type="number"
+                       matInput
+                       placeholder="Altezza (cm)"
+                       id="height"
+                       name="height"
+                       [ngClass]="{ 'is-invalid': height.touched && height.invalid }"
+                       formControlName="height" />
+                <mat-error *ngIf="height.touched && height.invalid">
+                    <div *ngIf="!!height.errors?.required">Altezza obbligatoria</div>
+                    <div *ngIf="!!height.errors?.min || !!height.errors?.max">Altezza non valida</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div *ngIf="role === 3">
+            <mat-form-field>
+                <label for="weight" class="sr-only">Peso</label>
+                <input type="number"
+                       matInput
+                       placeholder="Peso (kg)"
+                       id="weight"
+                       name="weight"
+                       [ngClass]="{ 'is-invalid': weight.touched && weight.invalid }"
+                       formControlName="weight"/>
+                <mat-error *ngIf="weight.touched && weight.invalid">
+                    <div *ngIf="!!weight.errors?.required">Peso obbligatorio</div>
+                    <div *ngIf="!!weight.errors?.min || !!weight.errors?.max">Peso non valido</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button type="submit" mat-flat-button color="accent">Invia</button>
+    </div>
+</form>
+<mat-progress-spinner [hidden]="loading"></mat-progress-spinner>

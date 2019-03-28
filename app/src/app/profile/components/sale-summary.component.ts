@@ -6,7 +6,7 @@ import {Sale, User} from "../../shared/model";
 
 @Component({
     templateUrl: './sale-summary.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class SaleSummaryComponent implements OnInit {
 

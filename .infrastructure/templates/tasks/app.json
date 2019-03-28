@@ -11,7 +11,8 @@
       }
     ],
     "environment" : [
-      { "name" : "GMAIL_PASSWORD", "value" : "${gmail_password}" },
+      { "name" : "EMAIL_PASSWORD", "value" : "${gmail_password}" },
+      { "name" : "EMAIL_USERNAME", "value" : "${gmail_username}" },
       { "name" : "POSTGRES_HOST", "value" : "${postgres_host}" },
       { "name" : "POSTGRES_PASSWORD", "value" : "${postgres_password}" },
       { "name" : "POSTGRES_USER", "value" : "${postgres_username}" },

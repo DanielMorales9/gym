@@ -19,10 +19,19 @@ import {
     TrainerInfoModalComponent
 } from "./calendar";
 import {BundleModalComponent, BundlesComponent} from "./bundles";
-import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from "./users";
+import {UserCreateModalComponent, UsersComponent} from "./users";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {SharedModule} from "../shared";
 import localeIt from '@angular/common/locales/it';
+import {
+    MAT_DIALOG_DATA, MatButtonModule,
+    MatDialogModule,
+    MatDialogRef, MatDividerModule, MatExpansionModule,
+    MatFormFieldModule, MatIconModule,
+    MatInputModule, MatListModule, MatProgressSpinnerModule,
+    MatSelectModule, MatToolbarModule
+} from "@angular/material";
+import {ScrollingModule} from "@angular/cdk/scrolling";
 
 registerLocaleData(localeIt);
 
@@ -38,13 +47,31 @@ registerLocaleData(localeIt);
         }),
         SharedModule,
         HomeRouting,
+        MatDialogModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatSelectModule,
+        MatButtonModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatExpansionModule,
+        MatDividerModule,
+        MatListModule,
+        ScrollingModule,
+        MatProgressSpinnerModule,
     ],
-
+    providers: [
+        { provide: MatDialogRef, useValue: {} },
+        { provide: MAT_DIALOG_DATA, useValue: [] },
+    ],
+    entryComponents: [
+        UserCreateModalComponent,
+        BundleModalComponent
+    ],
     declarations: [
         HomeComponent,
         UsersComponent,
         UserCreateModalComponent,
-        UserDetailsComponent,
         BundlesComponent,
         BundleModalComponent,
         CalendarComponent,

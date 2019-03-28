@@ -1,109 +1,154 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {User} from "../../shared/model";
-import {PagerComponent} from "../../shared/components";
+import {Component, OnInit} from '@angular/core';
+import {Bundle, User} from "../../shared/model";
 import {UserHelperService, UserService} from "../../shared/services";
 import {AppService} from "../../services";
 import {ChangeViewService} from "../../services";
+import {UserCreateModalComponent} from "./user-create-modal.component";
+import {MatDialog} from "@angular/material";
+import {CollectionViewer, DataSource} from '@angular/cdk/collections';
+import {BehaviorSubject, Observable, Subscription} from "rxjs";
+import {UserPatchModalComponent} from "../../shared/components/users";
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../search-and-list.css']
 })
-export class UsersComponent implements  OnInit {
+export class UsersComponent {
 
-    @ViewChild(PagerComponent)
-    private pagerComponent: PagerComponent;
+    SIMPLE_NO_CARD_MESSAGE = "Nessun utente registrato";
+    // SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
 
-    private SIMPLE_NO_CARD_MESSAGE = "Nessun utente registrato";
-    private SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
-
-    users: User[];
-    no_card_message: string;
     current_role_view: number;
-    empty: boolean;
+    private pageSize: number = 10;
+
     query: string;
+    ds: UserDataSource;
 
     constructor(private service: UserService,
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
-                private app: AppService) {
+                private app: AppService,
+                private dialog: MatDialog) {
         this.current_role_view = this.app.current_role_view;
-        this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
-        })
+        });
+        this.ds = new UserDataSource(this.service, this.pageSize, this.query);
     }
 
-    ngOnInit(): void {
-        this.getUsersByPage();
+    openDialog(): void {
+        const dialogRef = this.dialog.open(UserCreateModalComponent);
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.getUsers()
+        });
     }
 
-    private searchByPage() {
-        this.service.search(this.query,
-            this.getPage(),
-            this.getSize()).subscribe(res => {
-                this.users = res['content'] as User[];
-                this.pagerComponent.setPageNumber(res['number']);
-                this.pagerComponent.setTotalPages(res['totalPages']);
-                this.pagerComponent.updatePages();
-                this.setEmpty()
-        }, this._error(), this._complete())
-    }
-
-    private getSize() {
-        return this.pagerComponent.getSize();
-    }
-
-    private getPage() {
-        return this.pagerComponent.getPage();
-    }
-
-    private _success () {
-        return (res) => {
-            this.users = UserHelperService.wrapUsers(res);
-            this.pagerComponent.setTotalPages(res['page']['totalPages']);
-            this.pagerComponent.updatePages();
-            this.setEmpty();
-        }
-    }
-
-    private setEmpty() {
-        this.empty = this.users == undefined || this.users.length == 0;
-    }
-
-    private _error () {
-        return (err) => {
-            this.empty = true;
-            this.pagerComponent.setTotalPages(0);
-        }
-    }
-
-    private _complete() {
-        return () => {
-            if (this.empty) {
-                if (this.query === undefined || this.query == '') {
-                    this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
-                }
-                else {
-                    this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-                }
+    openEditDialog(u: User) {
+        const dialogRef = this.dialog.open(UserPatchModalComponent, {
+            data: {
+                user: u
             }
+        });
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.getUsers()
+        });
+    }
+
+    getUsers() {
+        this.ds.setQuery(this.query);
+        this.ds.fetchPage(0);
+    }
+
+    deleteUser(u: User) {
+        let confirmed = confirm(`Vuoi eliminare l'utente ${u.firstName} ${u.lastName}?`);
+        if (confirmed) {
+            this.service.delete(u.id).subscribe(_ => this.getUsers())
         }
     }
+}
 
-    getUsersByPage() {
-        this.service.get(
-            this.getPage(),
-            this.getSize()).subscribe(this._success(), this._error(), this._complete())
+export class UserDataSource extends DataSource<User | undefined> {
+    private length = 1;
+    private fetchedPages = new Set<number>();
+    private subscription = new Subscription();
+    private cachedData = Array.from<User>({length: this.length});
+    private dataStream = new BehaviorSubject<User[]>(this.cachedData);
+    empty: boolean = false;
+
+    constructor(private service: UserService,
+                private pageSize: number,
+                private query: string) {
+        super();
     }
 
-    findUsers() {
-        if (this.query === undefined || this.query == ''){
-            this.pagerComponent.setPageNumber(0);
-            this.getUsersByPage()
+    connect(collectionViewer: CollectionViewer): Observable<(User | undefined)[]> {
+        this.subscription.add(collectionViewer.viewChange.subscribe(range => {
+            const startPage = this.getPageForIndex(range.start);
+            let end = (this.length < range.end-1) ? this.length : range.end - 1;
+            const endPage = this.getPageForIndex(end);
+            for (let i = startPage; i <= endPage; i++) {
+                this.fetchPage(i);
+            }
+        }));
+
+        this.fetchPage(0);
+        return this.dataStream;
+    }
+
+    disconnect(): void {
+        this.subscription.unsubscribe();
+    }
+
+    private getPageForIndex(index: number): number {
+        return Math.floor(index / this.pageSize);
+    }
+
+    fetchPage(page: number) {
+        if (this.fetchedPages.has(page)) {
+            return;
+        }
+        this.fetchedPages.add(page);
+        this.search(page)
+    }
+
+    setQuery(query: string) {
+        this.query = query;
+        this.fetchedPages = new Set<number>();
+        this.cachedData = [];
+        this.fetchPage(0)
+    }
+
+    private search(page: number) {
+        if (this.query === undefined || this.query == '') {
+            this.service.get(page, this.pageSize).subscribe(res => {
+                let newLenght = res['page']['totalElements'];
+                if (this.length != newLenght) {
+                    this.length = newLenght;
+                    this.cachedData = Array.from<User>({length: this.length});
+                }
+
+                let users = UserHelperService.wrapUsers(res);
+                this.empty = users.length == 0;
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
+                this.dataStream.next(this.cachedData);
+            })
         }
         else {
-            this.searchByPage();
+
+            this.service.search(this.query, page, this.pageSize).subscribe(res => {
+                let newLenght = res['totalElements'];
+                if (this.length != newLenght) {
+                    this.length = newLenght;
+                    this.cachedData = Array.from<User>({length: this.length});
+                }
+
+                let users = res['content'];
+                this.empty = users.length == 0;
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
+                this.dataStream.next(this.cachedData);
+            })
         }
     }
 }

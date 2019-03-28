@@ -3,7 +3,7 @@ import {Component, OnInit, Output, EventEmitter} from "@angular/core";
 @Component({
     selector: 'pager',
     templateUrl: './pager.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class PagerComponent implements OnInit {
 

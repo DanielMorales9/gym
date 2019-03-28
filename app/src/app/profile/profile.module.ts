@@ -5,10 +5,10 @@ import {
     ChangePasswordModalComponent,
     MakeSaleComponent,
     SaleSummaryComponent,
-    TrainingComponent, TrainingDetailsComponent, UserPatchModalComponent,
+    TrainingComponent, TrainingDetailsComponent,
     UserProfileComponent
 } from "./components";
-import {SharedModule} from "../shared";
+import {SharedModule, UserPatchModalComponent} from "../shared";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ProfileComponent} from "./profile.component";
 
@@ -18,13 +18,12 @@ import {ProfileComponent} from "./profile.component";
         FormsModule,
         ReactiveFormsModule,
         SharedModule,
-        ProfileRouting
+        ProfileRouting,
     ],
     declarations: [
         ProfileComponent,
         UserProfileComponent,
         MakeSaleComponent,
-        UserPatchModalComponent,
         SaleSummaryComponent,
         ChangePasswordModalComponent,
         TrainingComponent,

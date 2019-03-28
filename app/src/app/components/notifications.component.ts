@@ -2,7 +2,7 @@ import {Component, OnInit} from "@angular/core";
 import {NotificationService} from "../services";
 
 @Component({
-    styleUrls: ["../app.component.css"],
+    styleUrls: ["../root.css"],
     templateUrl: './notifications.component.html',
     selector: "notifications"
 })

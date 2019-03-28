@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import {BrowserModule} from '@angular/platform-browser';
 import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
@@ -21,6 +21,12 @@ import {
 } from "./services";
 import {ErrorComponent, NotificationsComponent} from "./components";
 import {TimeAgoPipe} from "time-ago-pipe";
+import {
+    MatIconModule,
+    MatListModule,
+    MatSidenavModule,
+    MatToolbarModule
+} from '@angular/material';
 
 @NgModule({
     declarations: [
@@ -36,6 +42,10 @@ import {TimeAgoPipe} from "time-ago-pipe";
         CoreModule,
         SharedModule,
         AppRouting,
+        MatSidenavModule,
+        MatIconModule,
+        MatToolbarModule,
+        MatListModule
     ],
     providers: [
         AppService,
