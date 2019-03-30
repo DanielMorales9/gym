@@ -1,15 +1,7 @@
-import {ErrorHandler, NgModule, Optional, SkipSelf} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
-import {
-    ApiPrefixInterceptor,
-    CacheInterceptor,
-    HttpCacheService,
-    HttpService,
-    XhrInterceptor
-} from "./http";
-import {GlobalErrorHandler} from "../services/global-error-handler.service";
-import {SharedModule} from "../shared";
+import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, XhrInterceptor} from "./http";
 
 
 @NgModule({

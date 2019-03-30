@@ -4,18 +4,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.exception.UserNotFoundException;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
-import it.gym.model.*;
+import it.gym.model.AUser;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -24,7 +22,6 @@ import java.util.Optional;
 @BasePathAwareController
 public class UserBaseController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserBaseController.class);
     private final UserRepository repository;
     private final VerificationTokenRepository tokenRepository;
     private final ObjectMapper objectMapper;
