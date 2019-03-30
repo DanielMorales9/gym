@@ -32,6 +32,7 @@ data "template_file" "task_definition" {
     log_group_name   = "${aws_cloudwatch_log_group.cloudwatch_log_group.name}"
 
     gmail_password    = "${var.gmail_password}"
+    gmail_username    = "${var.gmail_username}"
     postgres_host     = "${aws_db_instance.postgres.address}"
     postgres_password = "${var.postgres_password}"
     postgres_username = "${var.postgres_username}"

@@ -10,7 +10,7 @@ import {passwordMatchValidator} from "../../shared/directives";
 
 @Component({
     templateUrl: './verification.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class VerificationComponent implements OnInit {
 
@@ -77,12 +77,13 @@ export class VerificationComponent implements OnInit {
             })
     }
 
+    // TODO invlaid token redirects somewhere
+
     verifyPassword() {
-        let roleName = this.user.roles.reduce((a, b) => {return ( a.id < b.id) ? a : b;}).name.toLowerCase();
 
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
-        this.authService.verifyPassword({email: this.user.email, password: this.user.password}, roleName)
+        this.authService.verifyPassword({email: this.user.email, password: this.user.password})
             .subscribe( (response: User) => {
                 this.appService.authenticate({username: response.email, password: this.user.password},
                     (isAuthenticated) => {

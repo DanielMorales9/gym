@@ -1,104 +1,165 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component} from '@angular/core';
 import {Bundle} from "../../shared/model";
-import {PagerComponent} from "../../shared/components";
 import {BundlesService} from "../../shared/services";
+import {MatDialog} from "@angular/material";
+import {BundleModalComponent} from "./bundle-modal.component";
+import {DataSource} from "@angular/cdk/table";
+import {BehaviorSubject, Observable, Subscription} from "rxjs";
+import {CollectionViewer} from "@angular/cdk/collections";
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../search-and-list.css', '../../root.css']
 })
-export class BundlesComponent implements OnInit {
+export class BundlesComponent {
 
-    private BUNDLE_FIELD = 'aTrainingBundleSpecifications';
-    private SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
-    private SEARCH_NO_CARD_MESSAGE = "Nessun pacchetto disponibile con questo nome";
+    SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
 
     query: string;
-    empty: boolean;
-    no_card_message: string;
+    private pageSize: number = 10;
 
+    ds: BundleDataSource;
 
-    @ViewChild(PagerComponent)
-    private pagerComponent: PagerComponent;
+    constructor(private service: BundlesService,
+                private dialog: MatDialog) {
 
-    bundles: Bundle[];
+        this.ds = new BundleDataSource(service, this.pageSize, this.query);
 
-    constructor(private service: BundlesService) {
-        this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
+        // for(let _i= 0; _i < 50; _i++) {
+        //    let bundle = new Bundle();
+        //    bundle.name= 'winter_pack_'+_i;
+        //    bundle.description= 'winter_pack_'+_i;
+        //    bundle.type = 'P';
+        //    bundle.price = 11;
+        //    bundle.numSessions = 11;
+        //    bundle.disabled = false;
+        //    this.service.post(bundle).subscribe(value => console.log(value))
+        // }
     }
 
-    ngOnInit(): void {
-        this.getBundlesByPage();
-    }
-
-    private _success () {
-        return (res) => {
-            this.bundles = res['_embedded'][this.BUNDLE_FIELD] as Bundle[];
-            this.pagerComponent.setTotalPages(res['page']['totalPages']);
-            this.pagerComponent.updatePages();
-            this.setEmpty()
+    openDialog(b?: number): void {
+        let title;
+        let message;
+        if (b) {
+            title = "Modifica Pacchetto";
+            message = "è stato modificato";
         }
-    }
-
-    private _error () {
-        return (_) => {
-            this.empty = true;
-            this.pagerComponent.setTotalPages(0);
+        else {
+            title = "Crea Nuovo Pacchetto";
+            message = "è stato creato";
         }
-    }
 
-    private _complete () {
-        return () => {
-            if (this.empty) {
-                if (this.query === undefined || this.query == '') {
-                    this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
-                }
-                else {
-                    this.no_card_message = this.SEARCH_NO_CARD_MESSAGE;
-                }
+        const dialogRef = this.dialog.open(BundleModalComponent, {
+            data: {
+                title: title,
+                message: message,
+                bundle: b,
             }
+        });
+
+        dialogRef.afterClosed().subscribe(_ => {
+            this.getBundles()
+        });
+    }
+
+    getBundles() {
+        this.ds.setQuery(this.query);
+        this.ds.fetchPage(0);
+    }
+
+    deleteBundle(b: Bundle) {
+        let confirmed = confirm(`Vuoi eliminare il pacchetto ${b.name}?`);
+        if (confirmed) {
+            this.service.delete(b.id).subscribe(_ => this.getBundles())
         }
     }
 
-    delayedFindBundles() {
-        let that = this;
-        setTimeout(function() {
-            that.findBundles();
-        }, 2000)
+    toggleDisabled(b: Bundle) {
+        b.disabled = !b.disabled;
+        this.service.put(b);
+    }
+}
+
+export class BundleDataSource extends DataSource<Bundle | undefined> {
+    private length = 1;
+    private cachedData = Array.from<Bundle>({length: this.length});
+    private fetchedPages = new Set<number>();
+    private dataStream = new BehaviorSubject<(Bundle | undefined)[]>(this.cachedData);
+    private subscription = new Subscription();
+    empty: boolean = false;
+
+    constructor(private service: BundlesService,
+                private pageSize: number,
+                private query: string) {
+        super()
     }
 
-    findBundles() {
-        if (this.query === undefined || this.query == ''){
-            this.pagerComponent.setPageNumber(0);
-            this.getBundlesByPage()
+    connect(collectionViewer: CollectionViewer): Observable<(Bundle | undefined)[]> {
+        this.subscription.add(collectionViewer.viewChange.subscribe(range => {
+            const startPage = this.getPageForIndex(range.start);
+            let end = (this.length < range.end-1) ? this.length : range.end - 1;
+            const endPage = this.getPageForIndex(end);
+            for (let i = startPage; i <= endPage; i++) {
+                this.fetchPage(i);
+            }
+        }));
+        return this.dataStream;
+    }
+
+    disconnect(): void {
+        this.subscription.unsubscribe();
+    }
+
+    private getPageForIndex(index: number): number {
+        return Math.floor(index / this.pageSize);
+    }
+
+    setQuery(query: string) {
+        this.query = query;
+        this.fetchedPages = new Set<number>();
+        this.cachedData = [];
+        this.fetchPage(0)
+    }
+
+    fetchPage(page: number) {
+        if (this.fetchedPages.has(page)) {
+            return;
         }
-        else this.searchByPage();
+        this.fetchedPages.add(page);
+        this.search(page)
     }
 
-    private searchByPage() {
-        this.service.search(this.query,
-            this.pagerComponent.getPage(),
-            this.pagerComponent.getSize())
-            .subscribe( res => {
-                this.bundles = res['content'] as Bundle[];
-                this.pagerComponent.setPageNumber(res['number']);
-                this.pagerComponent.setTotalPages(res['totalPages']);
-                this.pagerComponent.updatePages();
-                this.setEmpty();
-            }, this._error(), this._complete())
-    }
 
-    private setEmpty() {
-        this.empty = this.bundles == undefined || this.bundles.length == 0;
-    }
+    private search(page: number) {
+        if (this.query === undefined || this.query == '') {
+            this.service.get(page, this.pageSize).subscribe(res => {
+                let newLenght = res['page']['totalElements'];
+                if (this.length != newLenght) {
+                    this.length = newLenght;
+                    this.cachedData = Array.from<Bundle>({length: this.length});
+                }
+                let bundles = res['_embedded']['aTrainingBundleSpecifications'];
+                bundles.map(v => v.type = 'P');
+                this.empty = bundles.length == 0;
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
+                this.dataStream.next(this.cachedData);
+            })
+        }
+        else {
 
-    getBundlesByPage() {
-        if (this.query === undefined || this.query == '')
-            this.service.get(
-                this.pagerComponent.getPage(),
-                this.pagerComponent.getSize())
-                .subscribe(this._success(), this._error(), this._complete());
-        else this.searchByPage();
-    }
+            this.service.search(this.query, page, this.pageSize).subscribe(res => {
+                let newLenght = res['totalElements'];
+                if (this.length != newLenght) {
+                    this.length = newLenght;
+                    this.cachedData = Array.from<Bundle>({length: this.length});
+                }
 
+                let bundles = res['content'];
+                bundles.map(v => v.type = 'P');
+                this.empty = bundles.length == 0;
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
+                this.dataStream.next(this.cachedData);
+            })
+        }
+    }
 }

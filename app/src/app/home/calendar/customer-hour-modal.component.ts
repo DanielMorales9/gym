@@ -1,13 +1,12 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {DateService, NotificationService} from "../../services";
 import {TrainingService} from "../../shared/services";
 import {BaseCalendarModal} from "./base-calendar-modal";
-import {notImplemented} from "@angular/core/src/render3/util";
 
 @Component({
     selector: 'customer-hour-modal',
     templateUrl: './customer-hour-modal.component.html',
-    styleUrls: ['../../app.component.css']
+    styleUrls: ['../../root.css']
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
 
@@ -28,7 +27,7 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
         let currentDate = new Date(this.modalData.event.date);
         let stringDate = this.dateService.getStringDate(currentDate);
         this.trainingService.book(currentDate, this.modalData.userId)
-            .subscribe( (res) => {
+            .subscribe( (_) => {
                 this.message = {
                     text: `Prenotazione effettuata per il ${stringDate}`,
                     class: "alert-success"

@@ -25,7 +25,6 @@ services:
       - redis
       - postgres
     ports:
-    - 443:443
     - 80:80
     volumes:
       - ./app/target/dependency/META-INF:/app/META-INF
@@ -36,3 +35,5 @@ services:
       BASE_HOST: http://localhost
       REDIS_HOST: redis
       REDIS_PORT: 6379
+      EMAIL_PASSWORD: training#
+      EMAIL_USERNAME: trainingoodfellas@gmail.com

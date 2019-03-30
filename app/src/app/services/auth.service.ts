@@ -16,13 +16,13 @@ export class AuthService {
         return this.http.get("/authentication/verification",{ params: {token: token}});
     }
 
-    verifyPassword(credentials, role) {
+    verifyPassword(credentials) {
         this.appService.credentials = undefined;
-        return this.http.post( `/authentication/${role}/verifyPassword`, credentials);
+        return this.http.post( `/authentication/verifyPassword`, credentials);
     }
 
     registration(user: User): Observable<Object> {
-        return this.http.post( `/authentication/${user.type}/registration`, user);
+        return this.http.post( `/authentication/registration`, user);
     }
 
 
@@ -31,9 +31,9 @@ export class AuthService {
         return this.http.get("/authentication/resendToken", {params: {token: token}})
     }
 
-    changePassword(user: User, userType: string) {
+    changePassword(user: User) {
         this.appService.credentials = undefined;
-        return this.http.post(`/authentication/${userType}/changePassword`, user);
+        return this.http.post(`/authentication/changePassword`, user);
     }
 
     findByEmail(email: string) {

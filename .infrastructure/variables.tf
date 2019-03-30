@@ -4,6 +4,7 @@ variable "postgres_username" {}
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
 variable "gmail_password" {}
+variable "gmail_username" {}
 variable "app_name" {}
 variable "key_name" {}
 variable "bucket" {}
