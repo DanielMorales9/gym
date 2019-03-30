@@ -96,7 +96,7 @@ export class VerificationComponent implements OnInit {
 
 
     resendToken() {
-        this.authService.resendToken(this.token).subscribe((response) => {
+        this.authService.resendToken(this.token).subscribe((_) => {
             this.notificationService.sendMessage({
                 text: `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`,
                 class: "alert-success"

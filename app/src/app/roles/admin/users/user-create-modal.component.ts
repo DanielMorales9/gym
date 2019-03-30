@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Inject, OnInit, Output} from "@angular/core";
-import {User} from "../../shared/model";
+import {User} from "../../../shared/model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserHelperService} from "../../shared/services";
-import {AuthService, NotificationService} from "../../services";
+import {UserHelperService} from "../../../shared/services";
+import {AuthService, NotificationService} from "../../../services";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
     selector: 'user-create-modal',
     templateUrl: './user-create-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../../root.css']
 })
 export class UserCreateModalComponent implements OnInit {
 

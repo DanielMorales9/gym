@@ -1,17 +1,16 @@
-import {Component, OnInit} from '@angular/core';
-import {Bundle, User} from "../../shared/model";
-import {UserHelperService, UserService} from "../../shared/services";
-import {AppService} from "../../services";
-import {ChangeViewService} from "../../services";
+import {Component} from '@angular/core';
+import {User} from "../../../shared/model";
+import {UserHelperService, UserService} from "../../../shared/services";
+import {AppService, ChangeViewService} from "../../../services";
 import {UserCreateModalComponent} from "./user-create-modal.component";
 import {MatDialog} from "@angular/material";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {UserPatchModalComponent} from "../../shared/components/users";
+import {UserPatchModalComponent} from "../../../shared/components/users";
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../search-and-list.css']
+    styleUrls: ['../../../search-and-list.css']
 })
 export class UsersComponent {
 
@@ -129,7 +128,7 @@ export class UserDataSource extends DataSource<User | undefined> {
                     this.cachedData = Array.from<User>({length: this.length});
                 }
 
-                let users = UserHelperService.wrapUsers(res);
+                let users = UserHelperService.unwrapUsers(res);
                 this.empty = users.length == 0;
                 this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
                 this.dataStream.next(this.cachedData);

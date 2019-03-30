@@ -1,17 +1,21 @@
-import { NgModule} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 import {
-    BundleDetailsComponent, NoCardComponent,
+    BundleDetailsComponent,
+    NoCardComponent,
     PagerComponent,
     SaleDetailsComponent,
-    SaleModalComponent, SalesComponent, SpinnerComponent, UserPatchModalComponent,
+    SaleModalComponent,
+    SalesComponent,
+    UserPatchModalComponent,
 } from "./components";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
     BundlesService,
     SalesService,
     TimesOffService,
-    TrainingService, UserHelperService,
+    TrainingService,
+    UserHelperService,
     UserService
 } from "./services";
 import {
@@ -45,7 +49,6 @@ import {
         NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
-        SpinnerComponent,
         UserPatchModalComponent
     ],
     exports: [
@@ -55,7 +58,6 @@ import {
         NoCardComponent,
         PagerComponent,
         BundleDetailsComponent,
-        SpinnerComponent
     ],
     providers: [
         BundlesService,

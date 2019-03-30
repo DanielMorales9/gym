@@ -1,9 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService} from "./services";
+import {AppService, AuthenticatedService, ChangeViewService} from "./services";
 import {User} from "./shared/model";
-import {ChangeViewService} from "./services";
 import {UserHelperService} from "./shared/services";
 
 
@@ -22,7 +21,7 @@ export class AppComponent implements OnInit {
     appName: string = 'Goodfellas';
     screenWidth: number;
 
-    constructor(private appService: AppService,
+    constructor(private service: AppService,
                 private router: Router,
                 private authenticatedService: AuthenticatedService,
                 private userHelperService: UserHelperService,
@@ -33,38 +32,33 @@ export class AppComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.authOnNavigation();
+
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
+
+            if (this.authenticated) {
+
+                this.current_role_view = this.service.current_role_view;
+                this.user = this.service.user;
+                this.userHelperService.getUserByEmail(this.user.email, u => {
+                    this.profilePath = `profile/${u.id}/user`
+                });
+            }
+
         });
 
         this.changeViewService.getView().subscribe(value => {
             this.current_role_view = value;
         });
+
         this.screenWidth = window.innerWidth;
         window.onresize = (_) => {
             this.screenWidth = window.innerWidth
         }
     }
 
-    private authOnNavigation() {
-        this.router.events.subscribe(event => {
-            if (event instanceof NavigationStart) {
-                this.appService.authenticate(undefined, (auth) => {
-                    if (auth) {
-                        this.current_role_view = this.appService.current_role_view;
-                        this.user = this.appService.user;
-                        // this.appService.initializeWebSocketConnection();
-                        this.userHelperService.getUserByEmail(this.user.email, u => {
-                            this.profilePath = `profile/${u.id}/user`
-                        });
-                    }
-                });
-            }
-        });
-    }
-
     logout() {
-        this.appService.logout( () => {
+        this.service.logout(() => {
             this.current_role_view = undefined;
             this.authenticated = false;
             this.user = undefined;
@@ -73,8 +67,16 @@ export class AppComponent implements OnInit {
     }
 
     switchView(role) {
-        this.appService.changeView(role);
+        this.service.changeView(role);
         this.current_role_view = role;
+    }
+
+    private authOnNavigation() {
+        this.router.events.subscribe(event => {
+            if (event instanceof NavigationStart) {
+                this.service.authenticate();
+            }
+        });
     }
 
     toHome() {

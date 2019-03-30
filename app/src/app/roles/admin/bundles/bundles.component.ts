@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {Bundle} from "../../shared/model";
-import {BundlesService} from "../../shared/services";
+import {Bundle} from "../../../shared/model";
+import {BundlesService} from "../../../shared/services";
 import {MatDialog} from "@angular/material";
 import {BundleModalComponent} from "./bundle-modal.component";
 import {DataSource} from "@angular/cdk/table";
@@ -9,7 +9,7 @@ import {CollectionViewer} from "@angular/cdk/collections";
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../search-and-list.css', '../../root.css']
+    styleUrls: ['../../../search-and-list.css', '../../../root.css']
 })
 export class BundlesComponent {
 

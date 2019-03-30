@@ -94,7 +94,7 @@ public class AuthorizationController {
     }
 
     @PostMapping("/changeNewPassword/{id}")
-    ResponseEntity<AUserResource> changeNewPassword(@PathVariable("id") Long id, @RequestBody PasswordForm form) {
+    ResponseEntity<AUserResource> changeNewPassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if (!user.isVerified())
             throw new UserIsNotVerified(id);

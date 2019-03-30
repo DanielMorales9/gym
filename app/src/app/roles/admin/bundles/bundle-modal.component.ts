@@ -1,14 +1,14 @@
 import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
-import {BundlesService} from "../../shared/services";
-import {Bundle} from "../../shared/model";
-import {ExchangeBundleService, NotificationService} from "../../services";
+import {BundlesService} from "../../../shared/services";
+import {Bundle} from "../../../shared/model";
+import {ExchangeBundleService, NotificationService} from "../../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 @Component({
     selector: 'bundle-modal',
     templateUrl: './bundle-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../../root.css']
 })
 export class BundleModalComponent implements OnInit {
 

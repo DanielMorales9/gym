@@ -1,11 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UserHelperService, UserService} from "../shared/services";
-import {Role, User} from "../shared/model";
+import {User} from "../shared/model";
 import {NotificationService} from "./notification.service";
 import {ChangeViewService} from "./change-view.service";
-import * as Stomp from 'stompjs';
-import * as SockJS from 'sockjs-client';
 import {AuthenticatedService} from "./authenticated.service";
 
 @Injectable({
@@ -13,43 +11,14 @@ import {AuthenticatedService} from "./authenticated.service";
 })
 export class AppService {
 
-    ROLE2INDEX = {
-        'ADMIN' : 1,
-        'TRAINER' : 2,
-        'CUSTOMER' : 3
-    };
-
-
     current_role_view: number;
     credentials: any;
     authenticated = false;
-    user : any;
+    user: User;
 
     // private SOCKET_PATH = '/socket';
     // private stompClient : Stomp;
 
-
-    authenticate(credentials?, success?, error?) {
-        this.credentials = credentials !== undefined ? credentials: this.credentials;
-
-        this.http.get('/user').subscribe(res => {
-            this.authenticated = !!res && !!res['name'];
-            if (this.authenticated) {
-                this.user = new User();
-                this.getEmail(res);
-                this.userHelperService.getUserByEmail(this.user.email, user => {
-                    this.user.id = user['id'];
-                });
-                this.getRoles(res);
-                this.getRolesAndCurrentRoleView();
-            }
-            return !!success && success(this.authenticated);
-        }, err => {
-            return !!error && error(err)
-        }, () => {
-            this.authenticatedService.setAuthenticated(this.authenticated);
-        });
-    }
 
     constructor(private http: HttpClient,
                 private userService: UserService,
@@ -58,7 +27,29 @@ export class AppService {
                 private authenticatedService: AuthenticatedService,
                 private changeViewService: ChangeViewService) {
         this.user = new User();
-        this.getRolesAndCurrentRoleView();
+        this.getCurrentRoleView();
+    }
+
+    authenticate(credentials?, success?, error?) {
+        this.credentials = credentials !== undefined ? credentials: this.credentials;
+
+        this.http.get('/user').subscribe(res => {
+
+            this.authenticated = !!res && !!res['name'];
+            if (this.authenticated) {
+                let email = res['principal']['username'];
+
+                this.userHelperService.getUserByEmail(email, user => {
+                    this.user = user;
+                    this.getCurrentRoleView();
+                    this.userHelperService.getRoles(this.user);
+                    this.authenticatedService.setAuthenticated(this.authenticated);
+                });
+            }
+            return !!success && success(this.authenticated);
+        }, err => {
+            return !!error && error(err)
+        });
     }
 
     changeView(role) {
@@ -82,21 +73,8 @@ export class AppService {
     // }
 
 
-    private getRolesAndCurrentRoleView() {
+    private getCurrentRoleView() {
         this.current_role_view = this.userHelperService.getHighestRole(this.user);
-    }
-
-    private getEmail(response) {
-        this.user['email'] = response['principal']['username'];
-    }
-
-    private getRoles(response) {
-        this.user.roles = response['authorities'].map((item, _) => {
-            let role = new Role(1, "ADMIN");
-            role.name = item['authority'];
-            role.id = this.ROLE2INDEX[item['authority']];
-            return role;
-        });
     }
 
     public getAuthorizationHeader() {

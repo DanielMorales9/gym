@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService, AuthenticatedService} from "../services";
-import {ChangeViewService} from "../services";
+import {AppService, AuthenticatedService, ChangeViewService} from "../services";
 import {User} from "../shared/model";
 import {Router} from "@angular/router";
 import {UserHelperService} from "../shared/services";
@@ -16,7 +15,7 @@ export class HomeComponent implements OnInit {
     authenticated: boolean = false;
     profilePath: string;
 
-    constructor(private app: AppService,
+    constructor(private service: AppService,
                 private router: Router,
                 private authenticatedService : AuthenticatedService,
                 private userHelper: UserHelperService,
@@ -25,26 +24,25 @@ export class HomeComponent implements OnInit {
     ngOnInit() :void {
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
-        });
+            if (this.authenticated) {
 
-        this.changeViewService.getView().subscribe(value => {
-            this.current_role_view = value;
-        });
-        this.authenticate()
-    }
+                let user = this.service.user;
+                this.current_role_view = this.service.current_role_view;
 
-    authenticate() {
-        this.app.authenticate(undefined, (isAuthenticated) => {
-            this.current_role_view = this.app.current_role_view;
-            if (isAuthenticated) {
-                let user = this.app.user;
                 this.userHelper.getUserByEmail(user.email, user => {
                     this.user = user;
                     this.profilePath = "/profile/" + this.user.id;
                 })
             }
         });
+
+        this.changeViewService.getView().subscribe(value => {
+            this.current_role_view = value;
+        });
+
+        this.service.authenticate();
     }
+
 
     isOnProfile() {
         if (this.router.url.match('/profile/(.*/)+user')) {

@@ -1,11 +1,8 @@
 import {Subject} from "rxjs";
 import {Injectable, Input, OnInit} from "@angular/core";
-import {
-    CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarMonthViewEventTimesChangedEvent,
-    CalendarView,
-} from "angular-calendar";
+import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView,} from "angular-calendar";
 import {User} from "../../shared/model";
-import {UserHelperService, UserService} from "../../shared/services";
+import {UserService} from "../../shared/services";
 import {EVENT_TYPES} from "./event-types.enum";
 
 const CALENDAR_COLUMNS: any = {
@@ -74,10 +71,12 @@ export abstract class BaseCalendar implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userService.findByEmail(this.email).subscribe((res: User) => {
-            this.user = res;
-            this.getEvents()
-        }, err => {console.error(err)});
+        if (this.email !== undefined) {
+            this.userService.findByEmail(this.email).subscribe((res: User) => {
+                this.user = res;
+                this.getEvents()
+            });
+        }
     }
 
     abstract getEvents();

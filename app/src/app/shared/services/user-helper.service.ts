@@ -11,20 +11,32 @@ export class UserHelperService {
         'CUSTOMER' : 3
     };
 
-    INDEX2ROLE = {
-        1 :'ADMIN',
-        2: 'TRAINER',
-        3: 'CUSTOMER'
+    TYPE2INDEX = {
+        'A': 1,
+        'T': 2,
+        'C': 3
     };
 
     constructor(private userService: UserService) {}
 
+    static unwrapUsers(res: any) {
+        let users = [];
+        if (res['_embedded']['admins']) {
+            users = users.concat(res['_embedded']['admins'])
+        }
+        if (res['_embedded']['customers']) {
+            users = users.concat(res['_embedded']['customers'])
+        }
+        if (res['_embedded']['trainers']) {
+            users = users.concat(res['_embedded']['trainers'])
+        }
+        return users;
+    }
+
     getRoles(user: User, callback?) : void {
         if (!!user.roles) {
             if (!!user.roles['_embedded']) {
-                user.roles = user.roles['_embedded']['roleResources'].map(val => {
-                    return new Role(this.ROLE2INDEX[val.name], val.name);
-                });
+                user.roles = this.unwrapRoles(user.roles);
             }
             else {
                 this._getRoles(user)
@@ -44,10 +56,10 @@ export class UserHelperService {
         });
     }
 
-    getHighestRole(user) {
-        if (!user.roles)
-            return 3;
-        return user.roles.map(role => role.id).reduce((a, b) => Math.min(a, b), 3);
+    unwrapRoles(roles: any) {
+        return roles['_embedded']['roleResources'].map(val => {
+            return new Role(this.ROLE2INDEX[val.name], val.name);
+        });
     }
 
     static getUserCreatedAt(user) {
@@ -64,18 +76,11 @@ export class UserHelperService {
         this.userService.findByEmail(email).subscribe(callback)
     }
 
-    static wrapUsers(res: any) {
-        let users = [];
-        if (res['_embedded']['admins']) {
-            users = users.concat(res['_embedded']['admins'])
-        }
-        if (res['_embedded']['customers']) {
-            users = users.concat(res['_embedded']['customers'])
-        }
-        if (res['_embedded']['trainers']) {
-            users = users.concat(res['_embedded']['trainers'])
-        }
-        return users;
+    getHighestRole(user) {
+        if (user.type)
+            return this.TYPE2INDEX[user.type];
+        else
+            return 3;
     }
 
 }

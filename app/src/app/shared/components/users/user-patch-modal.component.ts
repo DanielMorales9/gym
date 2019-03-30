@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from "@angular/core";
 import {User} from "../../model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserService} from "../../services";
-import {AppService, ExchangeUserService, NotificationService} from "../../../services";
+import {AppService, NotificationService} from "../../../services";
 import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 
 
@@ -33,7 +33,7 @@ export class UserPatchModalComponent implements OnInit {
         this.buildForm();
 
         this.service.getRoles(this.user.id).subscribe((res) => {
-            this.role = Math.min(...res['_embedded']['roles'].map(val => this.appService.ROLE2INDEX[val.name]));
+            this.role = Math.min(...res['_embedded']['roles'].map(val => val.id));
             this.buildForm()
         })
     }

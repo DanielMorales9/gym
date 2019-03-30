@@ -7,26 +7,24 @@ import {AppRouting} from "./app.routing";
 import {SharedModule} from "./shared";
 import {CoreModule} from "./core";
 import {
-    AppService, AuthenticatedService,
+    AppService,
+    AuthenticatedService,
     AuthService,
-    ExchangeBundleService,
-    ExchangeSaleService,
-    ExchangeUserService, GlobalErrorHandler,
-    GymConfigurationService
-} from "./services";
-import {
     ChangeViewService,
     DateService,
-    NotificationService, SaleHelperService,
+    ExchangeBundleService,
+    ExchangeSaleService,
+    ExchangeUserService,
+    GlobalErrorHandler,
+    GymConfigurationService,
+    NotificationService,
+    SaleHelperService
 } from "./services";
 import {ErrorComponent, NotificationsComponent} from "./components";
 import {TimeAgoPipe} from "time-ago-pipe";
-import {
-    MatIconModule,
-    MatListModule,
-    MatSidenavModule,
-    MatToolbarModule
-} from '@angular/material';
+import {MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {RoleGuardService} from "./services/role.guard.service";
+import {AuthGuardService} from "./services/auth.guard.service";
 
 @NgModule({
     declarations: [
@@ -51,6 +49,8 @@ import {
         AppService,
         AuthService,
         AuthenticatedService,
+        AuthGuardService,
+        RoleGuardService,
         ChangeViewService,
         NotificationService,
         SaleHelperService,

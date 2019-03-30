@@ -1,12 +1,5 @@
 package it.gym;
 
-import java.io.IOException;
-import java.security.Principal;
-import java.util.HashMap;
-import java.util.Map;
-
-import com.fasterxml.jackson.databind.MapperFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.service.UserAuthService;
 import org.slf4j.LoggerFactory;
@@ -18,12 +11,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
-import org.springframework.hateoas.core.EvoInflectorRelProvider;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -36,7 +25,12 @@ import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 @Controller
@@ -48,7 +42,9 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	@Autowired @Qualifier("userAuthService")
 	UserAuthService userDetailsService;
 
-	@RequestMapping({"/", "/logout", "/home/**", "/profile/**", "/auth/**", "/error/**"})
+	@RequestMapping({"/", "/logout", "/home/**",
+			"/admin/**", "/trainer/**", "/customer/**",
+			"/profile/**", "/auth/**", "/error*"})
 	public String publicAPI() {
 		return "forward:/index.html";
 	}
@@ -110,7 +106,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				logger.info(request.getUserPrincipal().toString());
 			}
 		};
-	};
+	}
 
 	@Bean
 	public static ConfigureRedisAction configureRedisAction() {
