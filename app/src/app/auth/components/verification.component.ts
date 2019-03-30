@@ -1,9 +1,8 @@
 import {ActivatedRoute, Router} from "@angular/router";
 import {Component, OnInit} from "@angular/core";
 import {User} from "../../shared/model";
-import {AppService} from "../../services";
+import {AppService, AuthService, NotificationService} from "../../services";
 import {UserHelperService} from "../../shared/services";
-import {AuthService, NotificationService} from "../../services";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {passwordMatchValidator} from "../../shared/directives";
 
@@ -77,7 +76,7 @@ export class VerificationComponent implements OnInit {
             })
     }
 
-    // TODO invlaid token redirects somewhere
+    // TODO invalid token redirects somewhere
 
     verifyPassword() {
 

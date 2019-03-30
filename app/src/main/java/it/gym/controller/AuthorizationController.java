@@ -1,8 +1,11 @@
 package it.gym.controller;
 
 import it.gym.exception.*;
-import it.gym.hateoas.*;
-import it.gym.model.*;
+import it.gym.hateoas.AUserAssembler;
+import it.gym.hateoas.AUserResource;
+import it.gym.model.AUser;
+import it.gym.model.Role;
+import it.gym.model.VerificationToken;
 import it.gym.pojo.Credentials;
 import it.gym.pojo.PasswordForm;
 import it.gym.repository.RoleRepository;
@@ -23,6 +26,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Calendar;
 import java.util.UUID;
@@ -65,6 +69,7 @@ public class AuthorizationController {
     }
 
     @PostMapping(path = "/registration")
+    @Transactional
     ResponseEntity<AUserResource> registration(@Valid @RequestBody AUser input) {
         logger.info("User is trying to register: " + input.toString());
         AUser c = registerUser(input);
@@ -73,6 +78,7 @@ public class AuthorizationController {
     }
 
     @PostMapping("/verifyPassword")
+    @Transactional
     ResponseEntity<AUserResource> changeUserPassword(@RequestBody Credentials credentials) {
         logger.info("About to verify password for user");
         AUser user = userService.changePassword(credentials.getEmail(), credentials.getPassword());
@@ -80,6 +86,7 @@ public class AuthorizationController {
     }
 
     @PostMapping("/changePassword")
+    @Transactional
     ResponseEntity<AUserResource> modifyPassword(@RequestBody Credentials credentials) {
         logger.info("About to change password for customer");
         AUser u = userService.changePassword(credentials.getEmail(), credentials.getPassword());
@@ -121,6 +128,7 @@ public class AuthorizationController {
     }
 
     @PutMapping(path = "/users/{userId}/roles/{roleId}")
+    @Transactional
     @Deprecated
     ResponseEntity<AUserResource> addRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
         AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
@@ -133,6 +141,7 @@ public class AuthorizationController {
     }
 
     @GetMapping(path = "/findByEmail")
+    @Transactional
     ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         logger.info("Authentication: Find By Email: " + email);
         AUser user = userRepository.findByEmail(email);
@@ -148,6 +157,7 @@ public class AuthorizationController {
     }
 
     @GetMapping(path = "/resendToken/{id}")
+    @Transactional
     public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if (user.isVerified()) throw new UserIsVerified(id);
@@ -160,13 +170,15 @@ public class AuthorizationController {
     }
 
     @GetMapping(path = "/resendChangePasswordToken")
+    @Transactional
     public ResponseEntity resendChangePasswordToken(@RequestParam("token") String existingToken) {
         VerificationToken newToken = getVerificationToken(existingToken);
         sendChangePasswordTokenToEmail(newToken.getUser(), newToken.getToken());
         return new ResponseEntity<>(new AUserAssembler().toResource(newToken.getUser()), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/resendToken/")
+    @GetMapping(path = "/resendToken")
+    @Transactional
     public ResponseEntity resendTokenAnonymous(@RequestParam("token") String existingToken) {
         VerificationToken newToken = getVerificationToken(existingToken);
         sendVerificationEmail(newToken, newToken.getUser());

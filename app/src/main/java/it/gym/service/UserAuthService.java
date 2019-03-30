@@ -67,7 +67,7 @@ public class UserAuthService implements IUserAuthService {
 
         input = this.userRepository.save(input);
 
-        String token = UUID.randomUUID().toString();
+        String token = createRandomToken();
 
         VerificationToken vToken = createVerificationToken(input, token);
         try {
@@ -85,6 +85,10 @@ public class UserAuthService implements IUserAuthService {
         }
 
         return input;
+    }
+
+    private String createRandomToken() {
+        return UUID.randomUUID().toString();
     }
 
     private void sendEmailForConfirmation(AUser user, String token) {
@@ -132,6 +136,7 @@ public class UserAuthService implements IUserAuthService {
     @Override
     public VerificationToken generateNewVerificationToken(String existingToken) {
         VerificationToken token = this.tokenRepository.findByToken(existingToken);
+        token.setToken(createRandomToken());
         return saveToken(token);
     }
 
@@ -142,7 +147,16 @@ public class UserAuthService implements IUserAuthService {
         logger.info("Password is validated");
         user.setPassword(passwordEncoder.encode(password));
         user.setVerified(true);
+        VerificationToken token = tokenRepository.findByUser(user);
+        invalidateToken(token);
+        tokenRepository.save(token);
         return userRepository.save(user);
+    }
+
+    private void invalidateToken(VerificationToken token) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        token.setExpiryDate(cal.getTime());
     }
 
     @Override
