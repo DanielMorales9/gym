@@ -1,4 +1,7 @@
-
+mat-card {
+    transition: none !important;
+    box-shadow: none !important;
+}
 
 @media (min-width: 576px) {
 

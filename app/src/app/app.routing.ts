@@ -1,14 +1,19 @@
 import {RouterModule, Routes} from "@angular/router";
 import {NgModule} from "@angular/core";
-import {ErrorComponent} from "./components";
+import {ErrorComponent, ProfileComponent} from "./components";
 import {RoleGuardService} from "./services/role.guard.service";
 import {AuthGuardService} from "./services/auth.guard.service";
 
 const routes: Routes = [
     { path: '', pathMatch: "full", redirectTo: "home"},
+
+    { path: 'error', component: ErrorComponent },
     { path: 'auth', loadChildren: "app/auth/auth.module#AuthModule"},
-    {path: 'error', component: ErrorComponent},
     { path: 'home', loadChildren: "app/home/home.module#HomeModule" },
+
+    { path: 'profile', component: ProfileComponent,
+        canActivate: [AuthGuardService]
+    },
     {
         path: 'admin', loadChildren: "app/roles/admin/admin.module#AdminModule",
         canActivate: [RoleGuardService],

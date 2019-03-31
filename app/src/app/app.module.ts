@@ -20,9 +20,9 @@ import {
     NotificationService,
     SaleHelperService
 } from "./services";
-import {ErrorComponent, NotificationsComponent} from "./components";
+import {ErrorComponent, NotificationsComponent, ProfileComponent} from "./components";
 import {TimeAgoPipe} from "time-ago-pipe";
-import {MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {MatCardModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
 import {RoleGuardService} from "./services/role.guard.service";
 import {AuthGuardService} from "./services/auth.guard.service";
 
@@ -31,6 +31,7 @@ import {AuthGuardService} from "./services/auth.guard.service";
         AppComponent,
         ErrorComponent,
         NotificationsComponent,
+        ProfileComponent,
         TimeAgoPipe
     ],
     imports: [
@@ -43,7 +44,8 @@ import {AuthGuardService} from "./services/auth.guard.service";
         MatSidenavModule,
         MatIconModule,
         MatToolbarModule,
-        MatListModule
+        MatListModule,
+        MatCardModule
     ],
     providers: [
         AppService,

@@ -44,7 +44,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	@RequestMapping({"/", "/logout", "/home/**",
 			"/admin/**", "/trainer/**", "/customer/**",
-			"/profile/**", "/auth/**", "/error*"})
+			"/profile/**", "/auth/**", "/error"})
 	public String publicAPI() {
 		return "forward:/index.html";
 	}

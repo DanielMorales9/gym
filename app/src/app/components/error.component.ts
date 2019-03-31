@@ -11,6 +11,8 @@ export class ErrorComponent implements OnInit {
     constructor(private router: ActivatedRoute) {
     }
 
+    // TODO write handler for Whitelabel Error Page
+
     ngOnInit(): void {
         let message = this.router.snapshot.queryParamMap.get("message");
         let title = this.router.snapshot.queryParamMap.get("title");

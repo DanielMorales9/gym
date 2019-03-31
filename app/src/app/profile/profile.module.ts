@@ -8,7 +8,7 @@ import {
     TrainingComponent, TrainingDetailsComponent,
     UserProfileComponent
 } from "./components";
-import {SharedModule, UserPatchModalComponent} from "../shared";
+import {SharedModule} from "../shared";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {ProfileComponent} from "./profile.component";
 

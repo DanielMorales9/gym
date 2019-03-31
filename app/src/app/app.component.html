@@ -18,45 +18,69 @@
             </mat-toolbar>
             <mat-nav-list>
                 <div *ngIf="authenticated">
-                    <h2 matSubheader>Home</h2>
+                    <div id="menu-account">
+                        <h2 matSubheader>Account</h2>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/profile">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>&nbsp;&nbsp;I miei dettagli
+                            </span>
+                        </a>
+                    </div>
                     <div id="menu-admin"
                          *ngIf="current_role_view == 1">
+                        <h2 matSubheader>Home</h2>
                         <a href=# mat-list-item
                            [routerLinkActive]="['active-link']"
                            routerLink="/admin/sales">
-                            <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Vendite</a>
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Vendite
+                            </span>
+                        </a>
                         <a href=# mat-list-item
                            [routerLinkActive]="['active-link']"
                            routerLink="/admin/users">
-                            <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti</a>
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
+                            </span>
+                        </a>
                         <a href=# mat-list-item
                            [routerLinkActive]="['active-link']"
                            routerLink="/admin/bundles">
-                            <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti</a>
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                        </a>
                     </div>
                     <div id="menu-customer"
                          *ngIf="current_role_view == 2">
                         <a href=# mat-list-item
                            [routerLinkActive]="['active-link']"
                            routerLink="/customer/sales">
-                            <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini</a>
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini
+                            </span>
+                        </a>
                     </div>
-                    <div id="menu-comman">
+                    <div id="menu-common">
                         <!--TODO divide calendar view in different components-->
                         <a href=# mat-list-item
                            [routerLinkActive]="['active-link']"
                            routerLink="/home/calendar">
-                            <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
                         </a>
                     </div>
-                    <mat-divider></mat-divider>
-                </div>
-                <div *ngIf="authenticated && current_role_view == 1">
-                    <h2 matSubheader> Viste </h2>
-                    <a *ngFor="let r of user.roles" mat-list-item
-                       [ngClass]="{'active-link': current_role_view == r.id}" (click)="switchView(r.id)">
-                        &nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}
-                    </a>
+                    <div id="menu-view"
+                         *ngIf="current_role_view == 1">
+                        <h2 matSubheader> Viste </h2>
+                        <a *ngFor="let r of user.roles" mat-list-item
+                           [ngClass]="{'active-link': current_role_view == r.id}" (click)="switchView(r.id)">
+                            &nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}
+                        </a>
+                    </div>
                 </div>
             </mat-nav-list>
         </mat-sidenav>
