@@ -5,6 +5,7 @@ import it.gym.exception.UserNotFoundException;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
 import it.gym.model.AUser;
+import it.gym.model.VerificationToken;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.util.Optional;
 
 @BasePathAwareController
+@Transactional
 public class UserBaseController {
 
     private final UserRepository repository;
@@ -38,18 +40,16 @@ public class UserBaseController {
 
 
     @RequestMapping(path = "users/{id}", method = RequestMethod.DELETE)
-    @Transactional
     ResponseEntity<AUserResource> delete(@PathVariable Long id) {
         Optional<AUser> user = this.repository.findById(id);
         if (user.isPresent()) {
-            this.tokenRepository.deleteByUser_Id(id);
+            AUser u = user.get();
+            VerificationToken vtk = this.tokenRepository.findByUser(u);
+            this.tokenRepository.delete(vtk);
             this.repository.deleteById(id);
+            return ResponseEntity.ok(new AUserAssembler().toResource(u));
         }
-        else {
-            throw new UserNotFoundException(id);
-        }
-        AUser u = user.get();
-        return ResponseEntity.ok(new AUserAssembler().toResource(u));
+        throw new UserNotFoundException(id);
     }
 
     @RequestMapping(path = "users/{id}", method = RequestMethod.PATCH)

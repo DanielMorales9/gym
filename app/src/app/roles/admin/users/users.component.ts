@@ -64,7 +64,7 @@ export class UsersComponent {
     }
 
     deleteUser(u: User) {
-        let confirmed = confirm(`Vuoi eliminare l'utente ${u.firstName} ${u.lastName}?`);
+        let confirmed = confirm(`Vuoi rimuovere l'utente ${u.firstName} ${u.lastName}?`);
         if (confirmed) {
             this.service.delete(u.id).subscribe(_ => this.getUsers())
         }
@@ -72,6 +72,10 @@ export class UsersComponent {
 
     goToDetails(u: User) {
         return this.router.navigate(["users", u.id], {relativeTo: this.route});
+    }
+
+    canDelete(id: number) {
+        return this.app.user.id !== id;
     }
 }
 

@@ -4,7 +4,7 @@ import {UserHelperService, UserService} from '../../../shared/services';
 import {AppService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {UserPatchModalComponent} from '../../../shared/components/users';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Route, Router} from '@angular/router';
 
 
 @Component({
@@ -16,9 +16,12 @@ export class UserDetailsComponent implements OnInit {
     user: User;
 
     mailto = undefined;
+    canDelete: boolean = false;
 
-    constructor(private userService: UserService,
+    constructor(private service: UserService,
+                private appService: AppService,
                 private route: ActivatedRoute,
+                private router: Router,
                 private dialog: MatDialog) {
     }
 
@@ -26,8 +29,9 @@ export class UserDetailsComponent implements OnInit {
         this.user = new User();
         this.route.params.subscribe(params => {
             const id = params['id'];
-            this.userService.findById(id).subscribe((user: User) => {
+            this.service.findById(id).subscribe((user: User) => {
                 this.user = user;
+                this.canDelete = this.user.id !== this.appService.user.id
             })
         })
     }
@@ -45,6 +49,13 @@ export class UserDetailsComponent implements OnInit {
         // });
     }
 
+    deleteUser() {
+        let confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
+        if (confirmed) {
+            this.service.delete(this.user.id)
+                .subscribe(_ => this.router.navigateByUrl('/admins/users'))
+        }
+    }
 
     getUserCreatedAt() {
         return UserHelperService.getUserCreatedAt(this.user)

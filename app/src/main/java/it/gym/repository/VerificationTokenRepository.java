@@ -9,8 +9,6 @@ import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 public interface VerificationTokenRepository extends JpaRepository<VerificationToken, Long> {
 
     VerificationToken findByToken(String token);
-
-    void deleteByUser_Id(Long id);
-
+    
     VerificationToken findByUser(AUser user);
 }

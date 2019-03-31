@@ -8,7 +8,7 @@
                 <a [href]="mailto">{{user?.email || 'Loading...'}}</a>
             </div>
             <div>
-                <mat-icon fontSet="fa" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;
+                <mat-icon fontSet="fa" fontIcon="fa-calendar"></mat-icon>&nbsp;&nbsp;
                 Membro dal:&nbsp;
                 <span [innerHTML]="getUserCreatedAt()"></span>
             </div>
@@ -36,6 +36,11 @@
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>
+            </button>
+            <button *ngIf="canDelete" mat-button color="warn" (click)="deleteUser()">
+                <span>
+                    <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
+                </span>
             </button>
         </mat-card-actions>
     </mat-card>
