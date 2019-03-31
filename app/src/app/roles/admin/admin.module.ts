@@ -4,7 +4,7 @@ import {CommonModule} from "@angular/common";
 import {AdminRouting} from "./admin.routing";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
-    MatButtonModule,
+    MatButtonModule, MatCardModule,
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,
@@ -14,9 +14,9 @@ import {
     MatListModule,
     MatSelectModule,
     MatToolbarModule
-} from "@angular/material";
+} from '@angular/material';
 import {ScrollingModule} from "@angular/cdk/scrolling";
-import {UserCreateModalComponent, UsersComponent} from "./users";
+import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from './users';
 import {SharedModule} from "../../shared";
 
 @NgModule({
@@ -35,6 +35,7 @@ import {SharedModule} from "../../shared";
         MatToolbarModule,
         MatExpansionModule,
         MatDividerModule,
+        MatCardModule,
         MatListModule,
         ScrollingModule
     ],
@@ -43,6 +44,7 @@ import {SharedModule} from "../../shared";
         BundlesComponent,
         BundleModalComponent,
         UsersComponent,
+        UserDetailsComponent,
         UserCreateModalComponent
     ],
     entryComponents: [

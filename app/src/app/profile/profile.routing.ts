@@ -4,7 +4,6 @@ import {
     MakeSaleComponent,
     SaleSummaryComponent,
     TrainingComponent,
-    UserProfileComponent
 } from "./components";
 import {SalesComponent} from "../shared/components/sales";
 import {ProfileComponent} from "./profile.component";
@@ -13,13 +12,13 @@ import {ProfileComponent} from "./profile.component";
 const routes = [
     { path: '', component: ProfileComponent, children: [
             { path: '', redirectTo: "user", pathMatch: "full"},
-            { path: 'user', component: UserProfileComponent },
             { path: 'makeSale', component: MakeSaleComponent },
             { path: 'sales', component: SalesComponent },
             { path: 'summarySale/:saleId', component: SaleSummaryComponent },
             { path: 'trainings', component: TrainingComponent }
         ]},
 ];
+
 @NgModule({
     imports: [RouterModule.forChild(routes)],
     exports: [RouterModule]

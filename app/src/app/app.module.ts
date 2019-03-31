@@ -22,7 +22,7 @@ import {
 } from "./services";
 import {ErrorComponent, NotificationsComponent, ProfileComponent} from "./components";
 import {TimeAgoPipe} from "time-ago-pipe";
-import {MatCardModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {MatButtonModule, MatCardModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
 import {RoleGuardService} from "./services/role.guard.service";
 import {AuthGuardService} from "./services/auth.guard.service";
 
@@ -43,6 +43,7 @@ import {AuthGuardService} from "./services/auth.guard.service";
         AppRouting,
         MatSidenavModule,
         MatIconModule,
+        MatButtonModule,
         MatToolbarModule,
         MatListModule,
         MatCardModule

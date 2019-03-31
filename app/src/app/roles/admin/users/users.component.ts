@@ -7,6 +7,7 @@ import {MatDialog} from "@angular/material";
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from "rxjs";
 import {UserPatchModalComponent} from "../../../shared/components/users";
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     templateUrl: './users.component.html',
@@ -26,6 +27,8 @@ export class UsersComponent {
     constructor(private service: UserService,
                 private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
+                private router: Router,
+                private route: ActivatedRoute,
                 private app: AppService,
                 private dialog: MatDialog) {
         this.current_role_view = this.app.current_role_view;
@@ -65,6 +68,10 @@ export class UsersComponent {
         if (confirmed) {
             this.service.delete(u.id).subscribe(_ => this.getUsers())
         }
+    }
+
+    goToDetails(u: User) {
+        return this.router.navigate(["users", u.id], {relativeTo: this.route});
     }
 }
 

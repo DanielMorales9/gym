@@ -5,8 +5,7 @@ import {
     ChangePasswordModalComponent,
     MakeSaleComponent,
     SaleSummaryComponent,
-    TrainingComponent, TrainingDetailsComponent,
-    UserProfileComponent
+    TrainingComponent, TrainingDetailsComponent
 } from "./components";
 import {SharedModule} from "../shared";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -22,7 +21,6 @@ import {ProfileComponent} from "./profile.component";
     ],
     declarations: [
         ProfileComponent,
-        UserProfileComponent,
         MakeSaleComponent,
         SaleSummaryComponent,
         ChangePasswordModalComponent,

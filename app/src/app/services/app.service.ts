@@ -12,8 +12,8 @@ import {AuthenticatedService} from "./authenticated.service";
 export class AppService {
 
     current_role_view: number;
-    credentials: any;
-    authenticated = false;
+    credentials: { username: string, password: string };
+    authenticated;
     user: User;
 
     // private SOCKET_PATH = '/socket';
@@ -26,7 +26,8 @@ export class AppService {
                 private messageService: NotificationService,
                 private authenticatedService: AuthenticatedService,
                 private changeViewService: ChangeViewService) {
-        this.user = new User();
+        this.loadSessionInfo();
+        // this.user = new User();
         this.getCurrentRoleView();
     }
 
@@ -44,6 +45,7 @@ export class AppService {
                     this.getCurrentRoleView();
                     this.userHelperService.getRoles(this.user);
                     this.authenticatedService.setAuthenticated(this.authenticated);
+                    this.saveSessionInfo()
                 });
             }
             return !!success && success(this.authenticated);
@@ -77,6 +79,17 @@ export class AppService {
         this.current_role_view = this.userHelperService.getHighestRole(this.user);
     }
 
+    private saveSessionInfo() {
+        localStorage.setItem('authenticated', JSON.stringify(this.authenticated));
+        localStorage.setItem('user', JSON.stringify(this.user));
+    }
+
+    private loadSessionInfo() {
+        this.authenticated = JSON.parse(localStorage.getItem('authenticated')) || false;
+        this.user = JSON.parse(localStorage.getItem('user')) || new User();
+    }
+
+
     public getAuthorizationHeader() {
         if (!this.credentials) {
             return 'Basic ';
@@ -85,9 +98,11 @@ export class AppService {
     }
 
     public discardSession() {
-        this.credentials = {};
+        this.authenticated = false;
+        this.credentials = undefined;
         this.user = new User();
-        this.authenticatedService.setAuthenticated(false);
+        this.saveSessionInfo();
+        this.authenticatedService.setAuthenticated(this.authenticated);
     }
 
     logout(callback) {

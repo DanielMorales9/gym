@@ -14,7 +14,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 export class UserPatchModalComponent implements OnInit {
 
     user: User;
-    role: number;
 
     form: FormGroup;
 
@@ -30,12 +29,8 @@ export class UserPatchModalComponent implements OnInit {
     ngOnInit(): void {
         if (!this.user)
             this.user = new User();
+        console.log(this.user);
         this.buildForm();
-
-        this.service.getRoles(this.user.id).subscribe((res) => {
-            this.role = Math.min(...res['_embedded']['roles'].map(val => val.id));
-            this.buildForm()
-        })
     }
 
     onNoClick(): void {
@@ -48,7 +43,7 @@ export class UserPatchModalComponent implements OnInit {
         config['firstName'] = [this.user.firstName, [Validators.required]];
         config['lastName'] = [this.user.lastName, [Validators.required]];
         config['email'] = [this.user.email, [Validators.required, Validators.email]];
-        if (!!this.role && this.role == 3) {
+        if (this.user.type == 'C') {
             config['height'] = [this.user.height, [
                 Validators.required,
                 Validators.max(300),

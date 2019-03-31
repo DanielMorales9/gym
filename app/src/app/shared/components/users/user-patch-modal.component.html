@@ -48,7 +48,7 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <div *ngIf="role === 3">
+        <div *ngIf="user?.type == 'C'">
             <mat-form-field>
                 <label for="height" class="sr-only">Altezza</label>
                 <input type="number"
@@ -64,7 +64,7 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <div *ngIf="role === 3">
+        <div *ngIf="user?.type == 'C'">
             <mat-form-field>
                 <label for="weight" class="sr-only">Peso</label>
                 <input type="number"

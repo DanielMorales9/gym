@@ -3,7 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 
 @Component({
     templateUrl: './error.component.html',
-    styleUrls: ['../root.css', 'card.component.css']
+    styleUrls: ['../root.css', '../card.css']
 })
 export class ErrorComponent implements OnInit {
     message: string;
