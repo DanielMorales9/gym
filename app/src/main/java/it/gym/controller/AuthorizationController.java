@@ -85,7 +85,7 @@ public class AuthorizationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/changePassword")
+    @PostMapping("/submit")
     @Transactional
     ResponseEntity<AUserResource> modifyPassword(@RequestBody Credentials credentials) {
         logger.info("About to change password for customer");

@@ -36,7 +36,7 @@ export class UserDetailsComponent implements OnInit {
         })
     }
 
-    openDialog(): void {
+    openEditDialog(): void {
 
         const dialogRef = this.dialog.open(UserPatchModalComponent, {
             data: {
@@ -60,4 +60,5 @@ export class UserDetailsComponent implements OnInit {
     getUserCreatedAt() {
         return UserHelperService.getUserCreatedAt(this.user)
     }
+
 }

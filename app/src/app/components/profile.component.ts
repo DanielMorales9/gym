@@ -4,6 +4,7 @@ import {AppService, ChangeViewService} from "../services";
 import {UserHelperService, UserService} from "../shared/services";
 import {MatDialog} from "@angular/material";
 import {UserPatchModalComponent} from "../shared/components/users";
+import {ChangePasswordModalComponent} from './change-password-modal.component';
 
 @Component({
     templateUrl: './profile.component.html',
@@ -42,4 +43,11 @@ export class ProfileComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user)
     }
 
+    openPasswordDialog() {
+        const dialogRef = this.dialog.open(ChangePasswordModalComponent, {
+            data: {
+                user: this.user
+            }
+        });
+    }
 }

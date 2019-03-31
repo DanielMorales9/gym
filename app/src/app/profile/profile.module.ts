@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ProfileRouting} from "./profile.routing";
 import {
-    ChangePasswordModalComponent,
     MakeSaleComponent,
     SaleSummaryComponent,
     TrainingComponent, TrainingDetailsComponent
@@ -23,7 +22,6 @@ import {ProfileComponent} from "./profile.component";
         ProfileComponent,
         MakeSaleComponent,
         SaleSummaryComponent,
-        ChangePasswordModalComponent,
         TrainingComponent,
         TrainingDetailsComponent],
     exports: [],

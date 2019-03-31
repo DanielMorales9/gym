@@ -22,13 +22,24 @@ import {
 } from "./services";
 import {ErrorComponent, NotificationsComponent, ProfileComponent} from "./components";
 import {TimeAgoPipe} from "time-ago-pipe";
-import {MatButtonModule, MatCardModule, MatIconModule, MatListModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {
+    MatButtonModule,
+    MatCardModule,
+    MatFormFieldModule,
+    MatIconModule, MatInputModule,
+    MatListModule,
+    MatSidenavModule,
+    MatToolbarModule
+} from '@angular/material';
 import {RoleGuardService} from "./services/role.guard.service";
 import {AuthGuardService} from "./services/auth.guard.service";
+import {ChangePasswordModalComponent} from './components/change-password-modal.component';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
 @NgModule({
     declarations: [
         AppComponent,
+        ChangePasswordModalComponent,
         ErrorComponent,
         NotificationsComponent,
         ProfileComponent,
@@ -36,9 +47,10 @@ import {AuthGuardService} from "./services/auth.guard.service";
     ],
     imports: [
         BrowserModule,
-        NgbModalModule,
         BrowserAnimationsModule,
         CoreModule,
+        FormsModule,
+        ReactiveFormsModule,
         SharedModule,
         AppRouting,
         MatSidenavModule,
@@ -46,7 +58,12 @@ import {AuthGuardService} from "./services/auth.guard.service";
         MatButtonModule,
         MatToolbarModule,
         MatListModule,
-        MatCardModule
+        MatCardModule,
+        MatFormFieldModule,
+        MatInputModule
+    ],
+    entryComponents: [
+        ChangePasswordModalComponent
     ],
     providers: [
         AppService,
