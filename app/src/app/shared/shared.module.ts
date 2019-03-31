@@ -2,13 +2,13 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
     BundleDetailsComponent,
-    NoCardComponent,
+    NoItemComponent,
     PagerComponent,
     SaleDetailsComponent,
     SaleModalComponent,
     SalesComponent,
     UserPatchModalComponent,
-} from "./components";
+} from './components';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
     BundlesService,
@@ -24,8 +24,8 @@ import {
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule
-} from "@angular/material";
+    MatInputModule, MatListModule
+} from '@angular/material';
 
 @NgModule({
     imports: [
@@ -37,7 +37,8 @@ import {
         MatFormFieldModule,
         MatDialogModule,
         MatInputModule,
-        MatButtonModule
+        MatButtonModule,
+        MatListModule
     ],
     entryComponents: [
         UserPatchModalComponent
@@ -46,7 +47,7 @@ import {
         SalesComponent,
         SaleDetailsComponent,
         SaleModalComponent,
-        NoCardComponent,
+        NoItemComponent,
         PagerComponent,
         BundleDetailsComponent,
         UserPatchModalComponent
@@ -55,7 +56,7 @@ import {
         SalesComponent,
         SaleDetailsComponent,
         SaleModalComponent,
-        NoCardComponent,
+        NoItemComponent,
         PagerComponent,
         BundleDetailsComponent,
     ],

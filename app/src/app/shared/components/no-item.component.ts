@@ -1,11 +1,11 @@
 import {Component, Input} from "@angular/core";
 
 @Component({
-    selector: 'no-card',
-    templateUrl: './no-card.component.html',
+    selector: 'no-item',
+    templateUrl: './no-item.component.html',
     styleUrls: ['../../root.css']
 })
-export class NoCardComponent {
+export class NoItemComponent {
 
     @Input()
     public message: string;

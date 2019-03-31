@@ -15,7 +15,7 @@
     </th>
     </thead>
     <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <no-card [(message)]="no_message_card"></no-card>
+        <no-item [(message)]="no_message_card"></no-item>
     </tr>
     <tr *ngFor="let b of bundles">
         <bundle-details [bundle]="b" mode="add" classMode="default" (event)="addBundle($event)"></bundle-details>
