@@ -1,13 +1,4 @@
-<div class="page-content container">
-    <div class="row" style="margin-top: 7%;">
-        <div class="col-lg-4 d-none d-md-inline"></div>
-        <div class="col-lg-4 col-12">
-            <div class="card">
-                <div class="card-body">
-                    <h3>{{title}}</h3>
-                    <p [innerHTML]="message"></p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+<mat-card>
+    <mat-card-title>{{title}}</mat-card-title>
+    <mat-card-content [innerHTML]="message"></mat-card-content>
+</mat-card>

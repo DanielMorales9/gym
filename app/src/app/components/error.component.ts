@@ -2,7 +2,8 @@ import {Component, OnInit} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
-    templateUrl: './error.component.html'
+    templateUrl: './error.component.html',
+    styleUrls: ['../root.css', 'card.component.css']
 })
 export class ErrorComponent implements OnInit {
     message: string;

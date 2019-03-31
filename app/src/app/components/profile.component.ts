@@ -7,7 +7,7 @@ import {UserPatchModalComponent} from "../shared/components/users";
 
 @Component({
     templateUrl: './profile.component.html',
-    styleUrls: ['../root.css', 'profile.component.css'],
+    styleUrls: ['../root.css', 'card.component.css'],
 })
 export class ProfileComponent implements OnInit {
 
