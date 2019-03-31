@@ -39,7 +39,6 @@ import {SharedModule} from "../../shared";
         MatListModule,
         ScrollingModule
     ],
-
     declarations: [
         BundlesComponent,
         BundleModalComponent,
