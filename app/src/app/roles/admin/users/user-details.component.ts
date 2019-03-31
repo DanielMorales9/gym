@@ -4,7 +4,7 @@ import {UserHelperService, UserService} from '../../../shared/services';
 import {AppService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {UserPatchModalComponent} from '../../../shared/components/users';
-import {ActivatedRoute, Route, Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({

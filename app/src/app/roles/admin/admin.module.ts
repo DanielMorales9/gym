@@ -1,5 +1,5 @@
 import {NgModule} from "@angular/core";
-import {BundleModalComponent, BundlesComponent} from "./bundles";
+import {BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
 import {CommonModule} from "@angular/common";
 import {AdminRouting} from "./admin.routing";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -16,7 +16,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from "@angular/cdk/scrolling";
-import {UserCreateModalComponent, UserDetailsComponent, UsersComponent} from './users';
+import {UserCreateModalComponent, UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
 import {SharedModule} from "../../shared";
 
 @NgModule({
@@ -41,10 +41,16 @@ import {SharedModule} from "../../shared";
     ],
     declarations: [
         BundlesComponent,
+        BundleItemComponent,
         BundleModalComponent,
         UsersComponent,
+        UserItemComponent,
         UserDetailsComponent,
         UserCreateModalComponent
+    ],
+    exports: [
+        BundleItemComponent,
+        UserItemComponent
     ],
     entryComponents: [
         BundleModalComponent,

@@ -37,23 +37,16 @@ export class BundlesComponent {
         // }
     }
 
-    openDialog(b?: number): void {
+    openDialog(): void {
         let title;
         let message;
-        if (b) {
-            title = "Modifica Pacchetto";
-            message = "è stato modificato";
-        }
-        else {
-            title = "Crea Nuovo Pacchetto";
-            message = "è stato creato";
-        }
+        title = "Crea Nuovo Pacchetto";
+        message = "è stato creato";
 
         const dialogRef = this.dialog.open(BundleModalComponent, {
             data: {
                 title: title,
                 message: message,
-                bundle: b,
             }
         });
 
@@ -65,18 +58,6 @@ export class BundlesComponent {
     getBundles() {
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
-    }
-
-    deleteBundle(b: Bundle) {
-        let confirmed = confirm(`Vuoi eliminare il pacchetto ${b.name}?`);
-        if (confirmed) {
-            this.service.delete(b.id).subscribe(_ => this.getBundles())
-        }
-    }
-
-    toggleDisabled(b: Bundle) {
-        b.disabled = !b.disabled;
-        this.service.put(b);
     }
 }
 

@@ -19,54 +19,7 @@
     <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
         <div *cdkVirtualFor="let b of ds;" class="scroll-item">
-            <mat-expansion-panel [class.mat-expansion-panel]="false">
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        {{b?.name || 'Loading...'}}
-                    </mat-panel-title>
-                    <mat-panel-description class="panel-header-description">
-                        {{b?.description || 'Loading...'}}
-                    </mat-panel-description>
-                </mat-expansion-panel-header>
-                <div class="panel-body-description">
-                    <span>{{b?.description || 'Loading...'}}</span>
-                </div>
-                <div>
-                    <span [hidden]="!b?.disabled">
-                        <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
-                    </span>
-                    <span [hidden]="b?.disabled">
-                        <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
-                    </span>
-                </div>
-                <div>
-                    <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{b?.price}}
-                </div>
-                <div>
-                    <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{b?.numSessions}}
-                </div>
-                <div class="panel-actions">
-                    <button mat-button color="primary" (click)="openDialog(b)">
-                        <span>
-                            <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
-                        </span>
-                    </button>
-                    <button mat-button color="accent" (click)="toggleDisabled(b)">
-                        <span *ngIf="b?.disabled">
-                            <mat-icon fontSet="fa" fontIcon="fa-check"></mat-icon>&nbsp;Abilita
-                        </span>
-                        <span *ngIf="!b?.disabled">
-                            <mat-icon fontSet="fa" fontIcon="fa-ban"></mat-icon>&nbsp;Disabilita
-                        </span>
-                    </button>
-                    <button mat-button color="warn" (click)="deleteBundle(b)">
-                        <span>
-                            <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
-                        </span>
-                    </button>
-                </div>
-            </mat-expansion-panel>
-            <mat-divider></mat-divider>
+            <bundle-item [bundle]="b" (done)="getBundles()"></bundle-item>
         </div>
     </cdk-virtual-scroll-viewport>
     <no-item [hidden]="!ds.empty" [(message)]="SIMPLE_NO_CARD_MESSAGE" ></no-item>

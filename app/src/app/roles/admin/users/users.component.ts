@@ -1,12 +1,11 @@
 import {Component} from '@angular/core';
-import {User} from "../../../shared/model";
-import {UserHelperService, UserService} from "../../../shared/services";
-import {AppService, ChangeViewService} from "../../../services";
-import {UserCreateModalComponent} from "./user-create-modal.component";
-import {MatDialog} from "@angular/material";
+import {User} from '../../../shared/model';
+import {UserHelperService, UserService} from '../../../shared/services';
+import {AppService, ChangeViewService} from '../../../services';
+import {UserCreateModalComponent} from './user-create-modal.component';
+import {MatDialog} from '@angular/material';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
-import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {UserPatchModalComponent} from "../../../shared/components/users";
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
@@ -25,7 +24,6 @@ export class UsersComponent {
     ds: UserDataSource;
 
     constructor(private service: UserService,
-                private userHelperService: UserHelperService,
                 private changeViewService: ChangeViewService,
                 private router: Router,
                 private route: ActivatedRoute,
@@ -46,36 +44,9 @@ export class UsersComponent {
         });
     }
 
-    openEditDialog(u: User) {
-        const dialogRef = this.dialog.open(UserPatchModalComponent, {
-            data: {
-                user: u
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(_ => {
-            this.getUsers()
-        });
-    }
-
     getUsers() {
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
-    }
-
-    deleteUser(u: User) {
-        let confirmed = confirm(`Vuoi rimuovere l'utente ${u.firstName} ${u.lastName}?`);
-        if (confirmed) {
-            this.service.delete(u.id).subscribe(_ => this.getUsers())
-        }
-    }
-
-    goToDetails(u: User) {
-        return this.router.navigate(["users", u.id], {relativeTo: this.route});
-    }
-
-    canDelete(id: number) {
-        return this.app.user.id !== id;
     }
 }
 
