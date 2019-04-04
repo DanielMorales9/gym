@@ -3,7 +3,7 @@ import {MatDialog} from '@angular/material';
 import {UserPatchModalComponent} from '../../../shared/components/users';
 import {UserService} from '../../../shared/services';
 import {User} from '../../../shared/model';
-import {AppService} from '../../../services';
+import {AppService, AuthService} from '../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
 
 
@@ -20,7 +20,6 @@ export class UserItemComponent {
 
     constructor(private dialog: MatDialog,
                 private app: AppService,
-                private router: Router,
                 private route: ActivatedRoute,
                 private service: UserService) {
     }
@@ -44,12 +43,7 @@ export class UserItemComponent {
         }
     }
 
-    goToDetails() {
-        return this.router.navigate(["users", this.user.id], { relativeTo: this.route });
-    }
-
     canDelete() {
         return this.app.user.id !== ((!this.user) ? 0 : this.user.id);
     }
-
 }

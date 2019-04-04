@@ -7,6 +7,7 @@ import {
     SendChangePasswordTokenComponent, LoginComponent, ModifyPasswordComponent,
     VerificationComponent
 } from "./components";
+import {MatDividerModule, MatFormFieldModule, MatInputModule} from '@angular/material';
 
 @NgModule({
     imports: [
@@ -15,6 +16,8 @@ import {
         ReactiveFormsModule,
         SharedModule,
         AuthRouting,
+        MatFormFieldModule,
+        MatInputModule
     ],
     declarations: [
         LoginComponent,

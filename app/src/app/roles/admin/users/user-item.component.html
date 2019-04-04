@@ -1,18 +1,18 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <a (click)="goToDetails()">
+            <a routerLink="/admin/users/{{user?.id}}">
                 {{user?.firstName || 'Loading...'}} {{user?.lastName || 'Loading...'}}
             </a>
         </mat-panel-title>
     </mat-expansion-panel-header>
     <div>
-                    <span [hidden]="!user?.verified">
-                        <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Verificato
-                    </span>
-        <span [hidden]="user?.verified">
-                        <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Verificato
-                    </span>
+        <div style="color: red;" [hidden]="user?.verified">
+            <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;&nbsp;Non Verificato
+        </div>
+        <div style="color: green" [hidden]="!user?.verified">
+            <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;&nbsp;Verificato
+        </div>
     </div>
     <div>
         <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;
@@ -24,15 +24,14 @@
     </div>
     <div class="panel-actions">
         <button mat-button color="primary" (click)="openEditDialog()">
-                        <span>
-                            <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
-                        </span>
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+            </span>
         </button>
-        <button *ngIf="canDelete()"
-                mat-button color="warn" (click)="deleteUser()">
-                        <span>
-                            <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
-                        </span>
+        <button *ngIf="canDelete()" mat-button color="warn" (click)="deleteUser()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
+            </span>
         </button>
     </div>
 </mat-expansion-panel>

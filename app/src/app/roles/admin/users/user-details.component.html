@@ -5,7 +5,7 @@
         <mat-card-content>
             <div>
                 <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;&nbsp;
-                <a [href]="mailto">{{user?.email || 'Loading...'}}</a>
+                <a href="mailto:{{user?.email}}">{{user?.email || 'Loading...'}}</a>
             </div>
             <div>
                 <mat-icon fontSet="fa" fontIcon="fa-calendar"></mat-icon>&nbsp;&nbsp;
@@ -35,6 +35,16 @@
             <button mat-button color="primary" (click)="openEditDialog()">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+            </span>
+            </button>
+            <button *ngIf="!user?.verified" mat-button color="accent" (click)="resendToken()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-key"></mat-icon>&nbsp;Re-Invia Token
+            </span>
+            </button>
+            <button *ngIf="canSell" mat-button color="basic" (click)="buy()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>&nbsp;Acquista
             </span>
             </button>
             <button *ngIf="canDelete" mat-button color="warn" (click)="deleteUser()">

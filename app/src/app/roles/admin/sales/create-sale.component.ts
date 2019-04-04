@@ -4,18 +4,18 @@ import {
     BundlesService,
     SalesService,
     UserService
-} from "../../shared/services";
-import {Bundle, Sale, User} from "../../shared/model";
-import {PagerComponent} from "../../shared/components";
-import {AppService} from "../../services";
-import {ChangeViewService, NotificationService, SaleHelperService} from "../../services";
+} from "../../../shared/services";
+import {Bundle, Sale, User} from "../../../shared/model";
+import {PagerComponent} from "../../../shared/components";
+import {AppService} from "../../../services";
+import {ChangeViewService, NotificationService, SaleHelperService} from "../../../services";
 
 
 @Component({
-    templateUrl: './sale-make.component.html',
-    styleUrls: ['../../root.css'],
+    templateUrl: './create-sale.component.html',
+    styleUrls: ['../../../root.css'],
 })
-export class MakeSaleComponent implements OnInit {
+export class CreateSaleComponent implements OnInit {
 
     @ViewChild(PagerComponent)
     private pagerComponent: PagerComponent;
@@ -54,7 +54,7 @@ export class MakeSaleComponent implements OnInit {
         this.pagerComponent.setSize(3);
         this.sub = this.route.parent.params.subscribe(params => {
             this.id = +params['id?'];
-            this.makeSale()
+            this.createSale()
         });
 
         window.onbeforeunload = (ev) => {
@@ -62,7 +62,7 @@ export class MakeSaleComponent implements OnInit {
         };
     }
 
-    private makeSale() {
+    private createSale() {
         this.saleHelperService.createNewSale(this.admin.email, this.id)
             .subscribe(res => {
                 this.sale = res as Sale;

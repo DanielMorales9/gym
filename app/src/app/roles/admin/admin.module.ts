@@ -12,12 +12,13 @@ import {
     MatIconModule,
     MatInputModule,
     MatListModule,
-    MatSelectModule,
+    MatSelectModule, MatSnackBarModule,
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from "@angular/cdk/scrolling";
 import {UserCreateModalComponent, UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
 import {SharedModule} from "../../shared";
+import {CreateSaleComponent} from './sales';
 
 @NgModule({
     imports: [
@@ -37,12 +38,14 @@ import {SharedModule} from "../../shared";
         MatDividerModule,
         MatCardModule,
         MatListModule,
+        MatSnackBarModule,
         ScrollingModule
     ],
     declarations: [
         BundlesComponent,
         BundleItemComponent,
         BundleModalComponent,
+        CreateSaleComponent,
         UsersComponent,
         UserItemComponent,
         UserDetailsComponent,

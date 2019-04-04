@@ -1,8 +1,9 @@
-import {NgModule} from '@angular/core';
+import {Component, NgModule} from '@angular/core';
 import {RouterModule} from "@angular/router";
 import {BundlesComponent} from "./bundles";
 import {UserDetailsComponent, UsersComponent} from './users';
 import {SalesComponent} from "../../shared/components/sales";
+import {CreateSaleComponent} from './sales';
 
 const routes = [
 
@@ -12,6 +13,7 @@ const routes = [
             { path: 'users', component: UsersComponent },
             { path: 'users/:id', component: UserDetailsComponent},
             { path: 'sales', component: SalesComponent },
+            { path: 'buy/:id', component: CreateSaleComponent },
             { path: '**', redirectTo: 'bundles' }
         ]},
 ];

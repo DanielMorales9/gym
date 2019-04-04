@@ -109,15 +109,6 @@ mat-card {
     }
 }
 
-
-/*.nav-pills .nav-link.active, .nav-pills .show > .nav-link{*/
-.page-content {
-    padding-top: 20px;
-}
-/*background-color: #17A2B8;*/
-/*}*/
-
-
 @media (max-width: 640px) {
 
 
@@ -138,15 +129,6 @@ mat-card {
     .message {
         font-size: 13px;
     }
-}
-
-#profileDropdown {
-    list-style: none;
-    background-color: #fff;
-    color: black;
-    margin: 2px 2px 2px 2px;
-    border: 1px solid #d1d5da;
-    border-radius: 3px;
 }
 
 .dropdown-toggle::after {
@@ -215,62 +197,6 @@ tr.empty-list {
     border-bottom: 1px solid #e1e4e8;
 }
 
-.form-header {
-    display: flex;
-    padding-bottom: 8px;
-    margin-bottom: 16px;
-    border-bottom: 1px #e1e4e8 solid;
-    flex-flow: row wrap;
-}
-
-.form-footer {
-    font-size: small;
-    display: flex;
-    padding-top: 8px;
-    margin-top: 16px;
-    border-top: 1px #e1e4e8 solid;
-    flex-flow: row wrap;
-}
-
-.form-header>a {
-    text-align: -moz-right;
-}
-
-.form-gym {
-    margin: 0 auto;
-}
-.form-gym .form-header,
-.form-gym .checkbox {
-    margin-bottom: 10px;
-}
-.form-gym .checkbox {
-    font-weight: normal;
-}
-.form-gym .form-control {
-    position: relative;
-    height: auto;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    padding: 10px;
-    font-size: 16px;
-}
-.form-gym .form-control:focus {
-    z-index: 2;
-}
-
-.error-message {
-    width: 100%;
-    margin-top: .25rem;
-    font-size: 80%;
-    color: #dc3545;
-}
-
-.error-message-final {
-    padding-bottom: .5rem;
-    text-align: center
-}
-
 .card-table {
     width: 100%;
 }
@@ -295,10 +221,6 @@ mat-list.no-card {
     background-color: #fff;
     background-clip: border-box;
     border: 1px solid white;
-}
-
-.card-details {
-    text-align: center;
 }
 
 .green-led {
@@ -359,37 +281,6 @@ a.disabled {
 #search-add:focus {
     box-shadow: none;
 }
-
-.btn-simple {
-    color: white;
-    background-color: transparent;
-    border-color: transparent;
-}
-
-#notifications {
-    position: fixed;
-    right: 0;
-    bottom: 0;
-    cursor: pointer;
-}
-
-#notifications > .alert {
-    margin-right: 10px;
-}
-#loader {
-    z-index: 1051;
-    position: fixed;
-    top: 0;
-    right: 0;
-    bottom: 0;
-    left: 0;
-    background-color: rgba(0, 0, 0, 0.25);
-}
-
-.navbar-color {
-    background-color: #4f91f9;
-}
-
 
 .active-link {
     background-color: rgba(12,13,14,0.05);

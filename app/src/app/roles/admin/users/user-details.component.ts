@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../../shared/model';
 import {UserHelperService, UserService} from '../../../shared/services';
-import {AppService} from '../../../services';
-import {MatDialog} from '@angular/material';
+import {AppService, AuthService} from '../../../services';
+import {MatDialog, MatSnackBar} from '@angular/material';
 import {UserPatchModalComponent} from '../../../shared/components/users';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -15,14 +15,16 @@ export class UserDetailsComponent implements OnInit {
 
     user: User;
 
-    mailto = undefined;
     canDelete: boolean = false;
+    canSell: boolean = false;
 
     constructor(private service: UserService,
                 private appService: AppService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private dialog: MatDialog) {
+                private authService: AuthService,
+                private dialog: MatDialog,
+                private snackBar: MatSnackBar) {
     }
 
     ngOnInit(): void {
@@ -31,7 +33,8 @@ export class UserDetailsComponent implements OnInit {
             const id = params['id'];
             this.service.findById(id).subscribe((user: User) => {
                 this.user = user;
-                this.canDelete = this.user.id !== this.appService.user.id
+                this.canDelete = this.user.id !== this.appService.user.id;
+                this.canSell = this.user.type == 'C';
             })
         })
     }
@@ -57,8 +60,28 @@ export class UserDetailsComponent implements OnInit {
         }
     }
 
+    openSnackBar(message: string, action: string) {
+        this.snackBar.open(message, action, {
+            duration: 2000,
+        });
+    }
+
+    resendToken() {
+        this.authService.resendTokenAnonymous(this.user.id)
+            .subscribe(
+                _ => {
+                    this.openSnackBar('Controlla la mail per verificare il tuo account', 'Chiudi')
+                },
+                error => {
+                    this.openSnackBar(error.error.message, 'Chiudi')
+                })
+    }
+
     getUserCreatedAt() {
         return UserHelperService.getUserCreatedAt(this.user)
     }
 
+    buy() {
+        return this.router.navigate(['admin', 'buy', this.user.id])
+    }
 }

@@ -1,48 +1,43 @@
-<div class="page-content container">
-    <div class="row" style="margin-top: 7%;">
-        <div class="col-lg-4 d-none d-md-inline"></div>
-        <div class="col-lg-4 col-12">
-            <div class="card">
-                <div class="card-body">
-                    <form [formGroup]="form" role="form" class="form-gym" (submit)="form.valid && login()">
-                        <h2 class="form-header">Login</h2>
-                        <div class="form-group">
-                            <label for="email" class="sr-only">Email</label>
-                            <input type="text" placeholder="Email"
-                                   class="form-control"
-                                   id="email"
-                                   name="email"
-                                   formControlName="email"
-                                   [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
-                            <div *ngIf="email.touched && email.invalid" class="error-message">
-                                <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
-                                <div *ngIf="!!email.errors?.email"><p>
-                                    Email non valida</p></div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="password" class="sr-only">Password</label>
-                            <input type="password" placeholder="Password"
-                                   class="form-control"
-                                   id="password"
-                                   name="password"
-                                   formControlName="password"
-                                   [ngClass]="{ 'is-invalid': password.touched && password.invalid }" required/>
-                            <div *ngIf="password.touched && password.invalid" class="error-message">
-                                <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
-                            </div>
-                        </div>
-                        <div class="error-message error-message-final" *ngIf="error">
-                            Email o password errata!
-                        </div>
-                        <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
-                    </form>
-                    <div class="form-footer">
-                        <a routerLink="/auth/sendChangePasswordToken">Password dimenticata?</a>
+<div class="container">
+    <div>
+        <div class="card">
+            <div class="card-body">
+                <form [formGroup]="form" role="form" class="form-gym" (submit)="form.valid && login()">
+                    <h2 class="form-header">Login</h2>
+                    <mat-form-field>
+                        <label for="email" class="sr-only">Email</label>
+                        <input type="text" placeholder="Email"
+                               matInput
+                               id="email"
+                               name="email"
+                               formControlName="email"
+                               [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
+                        <mat-error *ngIf="email.touched && email.invalid" class="error-message">
+                            <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                            <div *ngIf="!!email.errors?.email">Email non valida</div>
+                        </mat-error>
+                    </mat-form-field>
+                    <mat-form-field>
+                        <label for="password" class="sr-only">Password</label>
+                        <input type="password" placeholder="Password"
+                               matInput
+                               id="password"
+                               name="password"
+                               formControlName="password"
+                               [ngClass]="{ 'is-invalid': password.touched && password.invalid }" required/>
+                        <mat-error *ngIf="password.touched && password.invalid" class="error-message">
+                            <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
+                        </mat-error>
+                    </mat-form-field>
+                    <div class="error-message error-message-final" *ngIf="error">
+                        Email o password errata!
                     </div>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
+                </form>
+                <div class="form-footer">
+                    <a routerLink="/auth/sendChangePasswordToken">Password dimenticata?</a>
                 </div>
             </div>
         </div>
-        <div class="col-lg-4 d-none d-md-inline"></div>
     </div>
 </div>

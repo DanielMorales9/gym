@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     templateUrl: './login.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../root.css', './auth.css']
 })
 export class LoginComponent implements OnInit {
 

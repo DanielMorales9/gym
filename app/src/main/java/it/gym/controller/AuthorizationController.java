@@ -160,10 +160,10 @@ public class AuthorizationController {
     @Transactional
     public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        if (user.isVerified()) throw new UserIsVerified(id);
+        if (user.isVerified()) throw new UserIsVerified(user.getEmail());
 
         VerificationToken token = this.tokenRepository.findByUser(user);
-        VerificationToken newToken = userService.generateNewVerificationToken(token.getToken());
+        VerificationToken newToken = getVerificationToken(token.getToken());
         sendVerificationEmail(newToken, user);
 
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);

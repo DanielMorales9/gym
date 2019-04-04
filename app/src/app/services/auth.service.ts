@@ -25,7 +25,6 @@ export class AuthService {
         return this.http.post( `/authentication/registration`, user);
     }
 
-
     resendToken(token: string) {
         this.appService.credentials = undefined;
         return this.http.get("/authentication/resendToken", {params: {token: token}})

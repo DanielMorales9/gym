@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ProfileRouting} from "./profile.routing";
 import {
-    MakeSaleComponent,
     SaleSummaryComponent,
     TrainingComponent, TrainingDetailsComponent
 } from "./components";
@@ -20,7 +19,6 @@ import {ProfileComponent} from "./profile.component";
     ],
     declarations: [
         ProfileComponent,
-        MakeSaleComponent,
         SaleSummaryComponent,
         TrainingComponent,
         TrainingDetailsComponent],
