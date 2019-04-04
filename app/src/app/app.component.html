@@ -1,6 +1,6 @@
 <div class="main-container">
     <mat-toolbar color="primary" layout="row" class="main-toolbar">
-        <a mat-icon-button (click)="snav.toggle()" *ngIf="screenWidth <= 599">
+        <a mat-icon-button (click)="authenticated && snav.toggle()" *ngIf="screenWidth <= 599">
             <mat-icon fontSet="fa" fontIcon="fa-bars"></mat-icon>
         </a>
         <h1 class="main-app-name"> {{ appName }} </h1>
@@ -10,14 +10,14 @@
     </mat-toolbar>
 
     <mat-sidenav-container class="main-sidenav-container">
-        <mat-sidenav class="main-sidenav" #snav [opened]="screenWidth > 599" [mode]="(screenWidth <= 599) ? 'over' : 'side'">
+        <mat-sidenav class="main-sidenav" #snav [hidden]="!authenticated" [opened]="screenWidth > 599" [mode]="(screenWidth <= 599) ? 'over' : 'side'">
             <mat-toolbar *ngIf="screenWidth <= 599">
                 <mat-toolbar-row>
                     <h2> {{ appName }} </h2>
                 </mat-toolbar-row>
             </mat-toolbar>
             <mat-nav-list>
-                <div *ngIf="authenticated">
+                <div>
                     <div id="menu-admin"
                          *ngIf="current_role_view == 1">
                         <h2 matSubheader>Home</h2>
