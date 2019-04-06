@@ -2,7 +2,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
 import {AppService, AuthService, SnackBarService} from '../../services';
-import {UserHelperService} from '../../shared/services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../shared/directives';
 
@@ -18,10 +17,10 @@ export class VerificationComponent implements OnInit {
 
     token = '';
     toResendToken = false;
+    resendTokenMessage: string = '';
 
     constructor(private authService: AuthService,
                 private appService: AppService,
-                private userHelperService: UserHelperService,
                 private builder: FormBuilder,
                 private snackbar: SnackBarService,
                 private activatedRoute: ActivatedRoute,
@@ -33,24 +32,19 @@ export class VerificationComponent implements OnInit {
         this.buildForm();
 
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
-        this.authService.getUserFromVerificationToken(this.token).subscribe( (res) => {
-            let user = res as User;
-            if (user.verified) return this.router.navigateByUrl('/');
-            else {
-                this.user = user;
-                this.userHelperService.getRoles(this.user);
-            }
+        this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
+            this.user = res;
+            if (this.user.verified) return this.router.navigateByUrl('/');
         },(err) => {
-            if (err.status == 510) {
-                this.toResendToken = true;
-                this.user = err.error;
+            if (err.status == 404) {
+                this.snackbar.open(err.error.message);
+                return this.router.navigateByUrl('/auth/login')
             }
-            else if (err.status == 500) {
+            else if (err.status < 500) {
+                this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
-                this.router.navigate(['/error'], {
-                    queryParams: { "message": err.message }
-                })
             }
+            else throw err;
         });
     }
 
@@ -77,9 +71,7 @@ export class VerificationComponent implements OnInit {
     }
 
     // TODO invalid token redirects somewhere
-
     verifyPassword() {
-
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
         this.authService.verifyPassword({email: this.user.email, password: this.user.password})
@@ -97,7 +89,7 @@ export class VerificationComponent implements OnInit {
 
     resendToken() {
         this.authService.resendToken(this.token).subscribe((_) => {
-            let message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`
+            let message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`;
             this.snackbar.open(message);
             return this.router.navigateByUrl("/")
         })

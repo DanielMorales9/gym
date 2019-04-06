@@ -12,6 +12,7 @@ import it.gym.repository.RoleRepository;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
 import it.gym.service.IUserAuthService;
+import it.gym.service.PasswordValidationService;
 import it.gym.utility.MailSenderUtility;
 import it.gym.utility.PasswordGenerator;
 import org.slf4j.Logger;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 @RestController
@@ -44,6 +46,7 @@ public class AuthorizationController {
     private final VerificationTokenRepository tokenRepository;
 
     private final PasswordEncoder passwordEncoder;
+    private final PasswordValidationService passwordValidationService;
 
     @Value("${baseUrl}")
     private String baseUrl;
@@ -53,12 +56,14 @@ public class AuthorizationController {
                                    JavaMailSender mailSender,
                                    VerificationTokenRepository tokenRepository,
                                    RoleRepository roleRepository,
-                                   PasswordEncoder passwordEncoder) {
+                                   PasswordEncoder passwordEncoder,
+                                   PasswordValidationService passwordValidationService) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.tokenRepository = tokenRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
+        this.passwordValidationService = passwordValidationService;
     }
 
 
@@ -79,47 +84,43 @@ public class AuthorizationController {
 
     @PostMapping("/verifyPassword")
     @Transactional
-    ResponseEntity<AUserResource> changeUserPassword(@RequestBody Credentials credentials) {
+    ResponseEntity<AUserResource> verifyPassword(@RequestBody Credentials credentials) {
         logger.info("About to verify password for user");
         AUser user = userService.changePassword(credentials.getEmail(), credentials.getPassword());
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/submit")
+
+    @PostMapping("/changePassword/{id}")
     @Transactional
-    ResponseEntity<AUserResource> modifyPassword(@RequestBody Credentials credentials) {
-        logger.info("About to change password for customer");
-        AUser u = userService.changePassword(credentials.getEmail(), credentials.getPassword());
-        return new ResponseEntity<>(new AUserAssembler().toResource(u), HttpStatus.OK);
+    ResponseEntity<AUserResource> changePassword(@PathVariable Long id, @RequestBody PasswordForm form) {
+        this.passwordValidationService.validate(form.getPassword());
+        AUser user = getVerifiedUser(id);
+
+        validatePasswordForm(form.getConfirmPassword(), form.getPassword());
+
+        user = setNewPasswordToUser(form, user);
+        expireToken(user);
+        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    // TODO expire token once the password gets modified or entered
-    // TODO implement changePassword path
-
     @PostMapping("/changeNewPassword/{id}")
+    @Transactional
     ResponseEntity<AUserResource> changeNewPassword(@PathVariable Long id, @RequestBody PasswordForm form) {
-        AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
-        if (!user.isVerified())
-            throw new UserIsNotVerified(id);
+        AUser user = getVerifiedUser(id);
 
-        if (!passwordEncoder.matches(form.getOldPassword(), user.getPassword()))
-            throw new InvalidPasswordException("La vecchia password sbagliata.");
+        validateOldPassword(form, user);
 
-        if (!form.getConfirmPassword().equals(form.getPassword()))
-            throw new InvalidPasswordException("Le password non coincidono.");
+        validatePasswordForm(form.getConfirmPassword(), form.getPassword());
 
-        String newPwd = passwordEncoder.encode(form.getPassword());
-        user.setPassword(newPwd);
-        user.setConfirmPassword(newPwd);
-        user = this.userRepository.save(user);
+        user = setNewPasswordToUser(form, user);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/verification")
-    ResponseEntity<AUserResource> verify(@RequestParam String token) {
+    ResponseEntity<AUserResource> verification(@RequestParam String token) {
         logger.info("Verification has just started");
         VerificationToken verificationToken = userService.getVerificationToken(token);
-
         AUser user = verificationToken.getUser();
 
         Calendar cal = Calendar.getInstance();
@@ -153,7 +154,7 @@ public class AuthorizationController {
         if (!user.isVerified()) throw new UserIsNotVerified(email);
 
         String token = UUID.randomUUID().toString();
-        userService.createVerificationToken(user, token);
+        userService.createOrChangeVerificationToken(user, token);
         sendChangePasswordTokenToEmail(user, token);
 
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
@@ -165,7 +166,7 @@ public class AuthorizationController {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if (user.isVerified()) throw new UserIsVerified(user.getEmail());
 
-        VerificationToken token = this.tokenRepository.findByUser(user);
+        VerificationToken token = this.tokenRepository.findByUser(user).orElseThrow(TokenNotFoundException::new);
         VerificationToken newToken = getVerificationToken(token.getToken());
         sendVerificationEmail(newToken, user);
 
@@ -185,7 +186,6 @@ public class AuthorizationController {
     public ResponseEntity resendTokenAnonymous(@RequestParam("token") String existingToken) {
         VerificationToken newToken = getVerificationToken(existingToken);
         sendVerificationEmail(newToken, newToken.getUser());
-
         return new ResponseEntity<>(new AUserAssembler().toResource(newToken.getUser()), HttpStatus.OK);
     }
 
@@ -229,5 +229,35 @@ public class AuthorizationController {
         return userService.register(input);
     }
 
+    private AUser setNewPasswordToUser(@RequestBody PasswordForm form, AUser user) {
+        String newPwd = passwordEncoder.encode(form.getPassword());
+        user.setPassword(newPwd);
+        user.setConfirmPassword(newPwd);
+        user = this.userRepository.save(user);
+        return user;
+    }
+
+    private AUser getVerifiedUser(@PathVariable Long id) {
+        AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        if (!user.isVerified())
+            throw new UserIsNotVerified(user.getEmail());
+        return user;
+    }
+
+    private void expireToken(AUser user) {
+        VerificationToken vk = tokenRepository.findByUser(user).orElseThrow(TokenNotFoundException::new);
+        vk.setExpiryDate(new Date());
+        tokenRepository.save(vk);
+    }
+
+    private void validateOldPassword(@RequestBody PasswordForm form, AUser user) {
+        if (!passwordEncoder.matches(form.getOldPassword(), user.getPassword()))
+            throw new InvalidPasswordException("La vecchia password sbagliata.");
+    }
+
+    private void validatePasswordForm(String confirmPassword, String password) {
+        if (!confirmPassword.equals(password))
+            throw new InvalidPasswordException("Le password non coincidono.");
+    }
 
 }

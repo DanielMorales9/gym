@@ -10,7 +10,7 @@ public interface IUserAuthService extends UserDetailsService {
 
     AUser register(AUser user);
 
-    VerificationToken createVerificationToken(AUser user, String token);
+    VerificationToken createOrChangeVerificationToken(AUser user, String token);
 
     VerificationToken getVerificationToken(String token);
 

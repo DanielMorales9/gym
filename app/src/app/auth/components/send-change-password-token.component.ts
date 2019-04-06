@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from "@angular/router";
-import {AuthService, NotificationService} from "../../services";
+import {AuthService, NotificationService, SnackBarService} from '../../services';
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
@@ -14,7 +14,7 @@ export class SendChangePasswordTokenComponent implements OnInit {
 
     constructor(private authService: AuthService,
                 private builder: FormBuilder,
-                private notificationService: NotificationService,
+                private snackbar: SnackBarService,
                 private router: Router) {
     }
 
@@ -25,16 +25,11 @@ export class SendChangePasswordTokenComponent implements OnInit {
     changePassword() {
         this.authService.findByEmail(this.email.value).subscribe(_ => {
             this.buildForm();
-            let message = "Controlla la tua casella postale,<br>" +
-                "ti abbiamo inviato un link per modificare la tua password.";
-            let className = "alert-success";
-            this.notificationService.sendMessage({
-                text: message,
-                class: className
-            });
+            let message = "Ti abbiamo inviato un link per modificare la tua password.";
+            this.snackbar.open(message);
             return this.router.navigateByUrl("/home")
         }, err => {
-            this.errorMessage = err.error.message;
+            this.errorMessage = err.message;
         })
     }
 

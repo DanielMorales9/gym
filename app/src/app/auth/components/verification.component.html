@@ -3,11 +3,11 @@
         <div class="card">
             <div class="card-body">
                 <form role="form" (submit)="resendToken()" *ngIf="toResendToken">
-                    <div class="form-group">
-                        <h4>{{user.firstName}} il tuo token è scaduto</h4>
+                    <div>
+                        <h4 class="form-header">{{resendTokenMessage}}</h4>
                         <h6>Rinnovalo Subito!</h6>
                     </div>
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">Re-invia token</button>
+                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia token</button>
                 </form>
                 <form [formGroup]="form" role="form"
                       novalidate (ngSubmit)="form.valid && verifyPassword()"

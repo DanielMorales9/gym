@@ -11,14 +11,14 @@ export class AuthService {
     constructor(private http: HttpClient, private appService: AppService) {
     }
 
+    findByEmail(email: string) {
+        this.appService.credentials = undefined;
+        return this.http.get(`/authentication/findByEmail?email=${email}`)
+    }
+
     getUserFromVerificationToken(token: any) {
         this.appService.credentials = undefined;
         return this.http.get("/authentication/verification",{ params: {token: token}});
-    }
-
-    verifyPassword(credentials) {
-        this.appService.credentials = undefined;
-        return this.http.post( `/authentication/verifyPassword`, credentials);
     }
 
     registration(user: User): Observable<Object> {
@@ -30,16 +30,6 @@ export class AuthService {
         return this.http.get("/authentication/resendToken", {params: {token: token}})
     }
 
-    changePassword(user: User) {
-        this.appService.credentials = undefined;
-        return this.http.post(`/authentication/changePassword`, user);
-    }
-
-    findByEmail(email: string) {
-        this.appService.credentials = undefined;
-        return this.http.get(`/authentication/findByEmail?email=${email}`)
-    }
-
     resendChangePasswordToken(token: string) {
         this.appService.credentials = undefined;
         return this.http.get("/authentication/resendChangePasswordToken", {params: {token: token}})
@@ -49,7 +39,17 @@ export class AuthService {
         return this.http.get(`/authentication/resendToken/${id}`)
     }
 
-    changeNewPassword(id: number, model: { password: string; oldPassword: string; confirmPassword: string }) {
-        return this.http.post(`/authentication/changeNewPassword/${id}`, model);
+    changeNewPassword(id: number, form: { password: string; oldPassword: string; confirmPassword: string }) {
+        return this.http.post(`/authentication/changeNewPassword/${id}`, form);
+    }
+
+    changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
+        this.appService.credentials = undefined;
+        return this.http.post(`/authentication/changePassword/${id}`, form);
+    }
+
+    verifyPassword(credentials) {
+        this.appService.credentials = undefined;
+        return this.http.post( `/authentication/verifyPassword`, credentials);
     }
 }

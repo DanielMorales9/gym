@@ -28,7 +28,7 @@ import {
     MatIconModule,
     MatInputModule,
     MatListModule,
-    MatSidenavModule,
+    MatSidenavModule, MatSnackBarModule,
     MatToolbarModule
 } from '@angular/material';
 import {RoleGuardService} from './services/role.guard.service';
@@ -62,7 +62,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         MatListModule,
         MatCardModule,
         MatFormFieldModule,
-        MatInputModule
+        MatInputModule,
+        MatSnackBarModule
     ],
     entryComponents: [
         ChangePasswordModalComponent

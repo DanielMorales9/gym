@@ -1,6 +1,7 @@
 package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.exception.TokenNotFoundException;
 import it.gym.exception.UserNotFoundException;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
@@ -44,7 +45,7 @@ public class UserBaseController {
         Optional<AUser> user = this.repository.findById(id);
         if (user.isPresent()) {
             AUser u = user.get();
-            VerificationToken vtk = this.tokenRepository.findByUser(u);
+            VerificationToken vtk = this.tokenRepository.findByUser(u).orElseThrow(() -> new TokenNotFoundException());
             this.tokenRepository.delete(vtk);
             this.repository.deleteById(id);
             return ResponseEntity.ok(new AUserAssembler().toResource(u));

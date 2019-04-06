@@ -1,6 +1,7 @@
 package it.gym.service;
 
 import it.gym.exception.InvalidTokenException;
+import it.gym.exception.TokenNotFoundException;
 import it.gym.exception.UserRegistrationException;
 import it.gym.model.AUser;
 import it.gym.model.Role;
@@ -69,7 +70,7 @@ public class UserAuthService implements IUserAuthService {
 
         String token = createRandomToken();
 
-        VerificationToken vToken = createVerificationToken(input, token);
+        VerificationToken vToken = createOrChangeVerificationToken(input, token);
         try {
 
             sendEmailForConfirmation(input, token);
@@ -111,9 +112,12 @@ public class UserAuthService implements IUserAuthService {
     }
 
     @Override
-    public VerificationToken createVerificationToken(AUser user, String sToken) {
-        VerificationToken token = new VerificationToken(user, sToken);
-        return saveToken(token);
+    public VerificationToken createOrChangeVerificationToken(AUser user, String sToken) {
+        Optional<VerificationToken> opt = tokenRepository.findByUser(user);
+        VerificationToken vk;
+        vk = opt.orElseGet(() -> new VerificationToken(user, sToken));
+        vk.setToken(sToken);
+        return saveToken(vk);
     }
 
     private VerificationToken saveToken(VerificationToken token) {
@@ -130,7 +134,7 @@ public class UserAuthService implements IUserAuthService {
         if (vToken != null) {
             return vToken;
         }
-        throw new InvalidTokenException("Il token è invalido.");
+        throw new TokenNotFoundException();
     }
 
     @Override
@@ -147,16 +151,14 @@ public class UserAuthService implements IUserAuthService {
         logger.info("Password is validated");
         user.setPassword(passwordEncoder.encode(password));
         user.setVerified(true);
-        VerificationToken token = tokenRepository.findByUser(user);
+        VerificationToken token = tokenRepository.findByUser(user).orElseThrow(() -> new TokenNotFoundException());
         invalidateToken(token);
-        tokenRepository.save(token);
         return userRepository.save(user);
     }
 
     private void invalidateToken(VerificationToken token) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date());
-        token.setExpiryDate(cal.getTime());
+        token.setExpiryDate(new Date());
+        tokenRepository.save(token);
     }
 
     @Override
