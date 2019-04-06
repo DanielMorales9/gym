@@ -1,9 +1,9 @@
-import {Component, EventEmitter, Inject, Input, OnInit, Output} from "@angular/core";
-import {BundlesService} from "../../../shared/services";
-import {Bundle} from "../../../shared/model";
-import {ExchangeBundleService, NotificationService} from "../../../services";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {Component, Inject, OnInit} from '@angular/core';
+import {BundlesService} from '../../../shared/services';
+import {Bundle} from '../../../shared/model';
+import {SnackBarService} from '../../../services';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'bundle-modal',
@@ -22,8 +22,7 @@ export class BundleModalComponent implements OnInit {
 
     constructor(private service: BundlesService,
                 private builder: FormBuilder,
-                private exchangeBundleService: ExchangeBundleService,
-                private messageService: NotificationService,
+                private snackbar: SnackBarService,
                 public dialogRef: MatDialogRef<BundleModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.bundle = this.data.bundle;
@@ -74,38 +73,20 @@ export class BundleModalComponent implements OnInit {
 
     _success() {
         return (_) => {
-            let message ={
-                text: "Il pacchetto " + this.bundle.name + this.data.message,
-                class: "alert-success"
-            };
-            this.messageService.sendMessage(message);
-        }
-    }
-
-    _error() {
-        return (err) => {
-            let message ={
-                text: "Qualcosa è andato storto",
-                class: "alert-danger"
-            };
-            this.messageService.sendMessage(message);
-            this.onNoClick()
+            let message = "Il pacchetto " + this.bundle.name + this.data.message;
+            this.snackbar.open(message);
+            this.loading = false;
+            this.onNoClick();
         }
     }
 
     submit() {
         this.getBundleFromForm();
         if (this.bundle.id)
-            this.service.put(this.bundle).subscribe(this._success(), this._error(), () => {
-                this.onNoClick();
-                this.loading = false;
-            });
+            this.service.put(this.bundle).subscribe(this._success(), undefined);
         else {
             delete this.bundle.id;
-            this.service.post(this.bundle).subscribe(this._success(), this._error(), () => {
-                this.onNoClick();
-                this.loading = false;
-            });
+            this.service.post(this.bundle).subscribe(this._success(), undefined);
         }
     }
 

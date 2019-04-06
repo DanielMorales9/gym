@@ -39,7 +39,9 @@ export class UserItemComponent {
     deleteUser() {
         let confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
         if (confirmed) {
-            this.service.delete(this.user.id).subscribe(_ => this.done.emit())
+            this.service.delete(this.user.id).subscribe(_ => {
+                this.done.emit()
+            })
         }
     }
 

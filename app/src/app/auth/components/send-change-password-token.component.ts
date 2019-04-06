@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import {Router} from "@angular/router";
-import {AuthService, NotificationService, SnackBarService} from '../../services';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {Component, OnInit} from '@angular/core';
+import {Router} from '@angular/router';
+import {AuthService, SnackBarService} from '../../services';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
     templateUrl: './send-change-password-token.component.html',

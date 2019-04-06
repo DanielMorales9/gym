@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../../shared/model';
 import {UserHelperService, UserService} from '../../../shared/services';
-import {AppService, AuthService} from '../../../services';
-import {MatDialog, MatSnackBar} from '@angular/material';
+import {AppService, AuthService, SnackBarService} from '../../../services';
+import {MatDialog} from '@angular/material';
 import {UserPatchModalComponent} from '../../../shared/components/users';
 import {ActivatedRoute, Router} from '@angular/router';
 
@@ -24,7 +24,7 @@ export class UserDetailsComponent implements OnInit {
                 private router: Router,
                 private authService: AuthService,
                 private dialog: MatDialog,
-                private snackBar: MatSnackBar) {
+                private snackbar: SnackBarService) {
     }
 
     ngOnInit(): void {
@@ -60,20 +60,15 @@ export class UserDetailsComponent implements OnInit {
         }
     }
 
-    openSnackBar(message: string, action: string) {
-        this.snackBar.open(message, action, {
-            duration: 2000,
-        });
-    }
 
     resendToken() {
         this.authService.resendTokenAnonymous(this.user.id)
             .subscribe(
                 _ => {
-                    this.openSnackBar('Controlla la mail per verificare il tuo account', 'Chiudi')
+                    this.snackbar.open('Controlla la mail per verificare il tuo account')
                 },
                 error => {
-                    this.openSnackBar(error.error.message, 'Chiudi')
+                    this.snackbar.open(error.error.message)
                 })
     }
 

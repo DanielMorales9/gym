@@ -1,9 +1,9 @@
-import {AuthService, NotificationService} from "../services";
-import {User} from "../shared/model";
-import {Component, Inject, Input, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {passwordMatchValidator} from "../shared/directives";
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {AuthService} from '../services';
+import {User} from '../shared/model';
+import {Component, Inject, OnInit} from '@angular/core';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {passwordMatchValidator} from '../shared/directives';
+import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 
 @Component({
     templateUrl: 'change-password-modal.component.html',
@@ -15,9 +15,9 @@ export class ChangePasswordModalComponent implements OnInit {
     form: FormGroup;
 
     constructor(private authService: AuthService,
-                private messageService: NotificationService,
                 public dialogRef: MatDialogRef<ChangePasswordModalComponent>,
                 private builder: FormBuilder,
+                private snackbar: MatSnackBar,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.user = this.data.user;
     }
@@ -62,13 +62,11 @@ export class ChangePasswordModalComponent implements OnInit {
         };
         this.authService.changeNewPassword(this.user.id, model)
             .subscribe(_ => {
-                this.messageService.sendMessage({
-                    text: `${this.user.firstName}, la tua password è stata cambiata con successo!`,
-                    class: "alert-success"
-                });
+                let message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
+                this.snackbar.open(message);
                 this.onNoClick();
             }, err => {
-                this.messageService.sendMessage({text: err.error.message, class: "alert-danger"});
+                this.snackbar.open(err.error.message);
                 this.onNoClick();
             })
     }

@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {UserHelperService, UserService} from "../shared/services";
-import {User} from "../shared/model";
-import {NotificationService} from "./notification.service";
-import {ChangeViewService} from "./change-view.service";
-import {AuthenticatedService} from "./authenticated.service";
+import {UserHelperService, UserService} from '../shared/services';
+import {User} from '../shared/model';
+import {ChangeViewService} from './change-view.service';
+import {AuthenticatedService} from './authenticated.service';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +22,6 @@ export class AppService {
     constructor(private http: HttpClient,
                 private userService: UserService,
                 private userHelperService: UserHelperService,
-                private messageService: NotificationService,
                 private authenticatedService: AuthenticatedService,
                 private changeViewService: ChangeViewService) {
         this.loadSessionInfo();

@@ -1,9 +1,8 @@
-import {Component, EventEmitter, Inject, OnInit, Output} from "@angular/core";
-import {User} from "../../../shared/model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserHelperService} from "../../../shared/services";
-import {AuthService, NotificationService} from "../../../services";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {Component, EventEmitter, Inject, OnInit, Output} from '@angular/core';
+import {User} from '../../../shared/model';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthService, SnackBarService} from '../../../services';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'user-create-modal',
@@ -15,12 +14,9 @@ export class UserCreateModalComponent implements OnInit {
     @Output() public event = new EventEmitter();
     form: FormGroup;
 
-    CONSTRAINT_VIOLATION_EXCEPTION = "ConstraintViolationException";
-
     constructor(private builder: FormBuilder,
                 private authService: AuthService,
-                private userHelperService: UserHelperService,
-                private notificationService: NotificationService,
+                private snackbar: SnackBarService,
                 public dialogRef: MatDialogRef<UserCreateModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
     }
@@ -58,37 +54,25 @@ export class UserCreateModalComponent implements OnInit {
         return this.form.get("lastName")
     }
 
-
     get type() {
         return this.form.get("type")
     }
 
     _success() {
         return _ => {
-            let message = {
-                text: `L'utente ${this.lastName.value} è stato creato`,
-                class: "alert-success"
-            };
-            this.notificationService.sendMessage(message);
-            this.onNoClick()
+            let message = `L'utente ${this.lastName.value} è stato creato`;
+            this.snackbar.open(message);
+            this.onNoClick();
         }
     }
 
     _error() {
         return err => {
-            let text = "Errore Interno al Sistema.";
-            if (err.error) {
-                if (err.error.message) {
-                    if (err.error.message.indexOf(this.CONSTRAINT_VIOLATION_EXCEPTION) > -1)
-                        text = "Esiste già un utente con questa email!";
-                }
+            if (err.status == 500) {
+                this.snackbar.open(err.error.message, );
+                this.onNoClick();
             }
-            let message = {
-                text: text,
-                class: "alert-danger"
-            };
-            this.notificationService.sendMessage(message);
-            this.onNoClick()
+            else throw err;
         }
     }
 

@@ -66,11 +66,16 @@ public class UserAuthService implements IUserAuthService {
         input.setVerified(false);
         logger.info("Saving user");
 
-        input = this.userRepository.save(input);
+        AUser user = this.userRepository.findByEmail(input.getEmail());
+
+        if (user != null)
+            throw new UserRegistrationException(String.format("L'utente con l'email %s esiste già.",input.getEmail()));
+        else
+            input = this.userRepository.save(input);
 
         String token = createRandomToken();
-
         VerificationToken vToken = createOrChangeVerificationToken(input, token);
+
         try {
 
             sendEmailForConfirmation(input, token);
@@ -79,6 +84,7 @@ public class UserAuthService implements IUserAuthService {
             logger.info(e.toString());
             this.tokenRepository.delete(vToken);
             this.userRepository.deleteById(input.getId());
+
             String message = String.format("Non è stato possibile inviare l'email a %s %s",
                     input.getFirstName(),
                     input.getLastName());
