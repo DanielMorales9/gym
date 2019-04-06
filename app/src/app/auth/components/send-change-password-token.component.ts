@@ -5,7 +5,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     templateUrl: './send-change-password-token.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../root.css', './auth.css']
 })
 export class SendChangePasswordTokenComponent implements OnInit {
 

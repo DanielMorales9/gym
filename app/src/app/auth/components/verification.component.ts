@@ -1,15 +1,15 @@
-import {ActivatedRoute, Router} from "@angular/router";
-import {Component, OnInit} from "@angular/core";
-import {User} from "../../shared/model";
-import {AppService, AuthService, NotificationService} from "../../services";
-import {UserHelperService} from "../../shared/services";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {passwordMatchValidator} from "../../shared/directives";
+import {ActivatedRoute, Router} from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {User} from '../../shared/model';
+import {AppService, AuthService, SnackBarService} from '../../services';
+import {UserHelperService} from '../../shared/services';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {passwordMatchValidator} from '../../shared/directives';
 
 
 @Component({
     templateUrl: './verification.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../root.css', './auth.css']
 })
 export class VerificationComponent implements OnInit {
 
@@ -23,7 +23,7 @@ export class VerificationComponent implements OnInit {
                 private appService: AppService,
                 private userHelperService: UserHelperService,
                 private builder: FormBuilder,
-                private notificationService: NotificationService,
+                private snackbar: SnackBarService,
                 private activatedRoute: ActivatedRoute,
                 private router: Router) {
     }
@@ -97,10 +97,8 @@ export class VerificationComponent implements OnInit {
 
     resendToken() {
         this.authService.resendToken(this.token).subscribe((_) => {
-            this.notificationService.sendMessage({
-                text: `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`,
-                class: "alert-success"
-            });
+            let message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`
+            this.snackbar.open(message);
             return this.router.navigateByUrl("/")
         })
     }

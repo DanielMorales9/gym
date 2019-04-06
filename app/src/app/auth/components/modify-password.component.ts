@@ -8,7 +8,7 @@ import {passwordMatchValidator} from "../../shared/directives";
 
 @Component({
     templateUrl: './modify-password.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../root.css', './auth.css']
 })
 export class ModifyPasswordComponent implements OnInit {
 

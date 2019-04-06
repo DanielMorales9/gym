@@ -93,6 +93,9 @@ public class AuthorizationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(u), HttpStatus.OK);
     }
 
+    // TODO expire token once the password gets modified or entered
+    // TODO implement changePassword path
+
     @PostMapping("/changeNewPassword/{id}")
     ResponseEntity<AUserResource> changeNewPassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));

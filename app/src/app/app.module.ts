@@ -1,11 +1,10 @@
 import {BrowserModule} from '@angular/platform-browser';
 import {ErrorHandler, NgModule} from '@angular/core';
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {NgbModalModule} from "@ng-bootstrap/ng-bootstrap";
-import {AppComponent} from "./app.component";
-import {AppRouting} from "./app.routing";
-import {SharedModule} from "./shared";
-import {CoreModule} from "./core";
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {AppComponent} from './app.component';
+import {AppRouting} from './app.routing';
+import {SharedModule} from './shared';
+import {CoreModule} from './core';
 import {
     AppService,
     AuthenticatedService,
@@ -14,27 +13,30 @@ import {
     DateService,
     ExchangeBundleService,
     ExchangeSaleService,
-    ExchangeUserService,
     GlobalErrorHandler,
     GymConfigurationService,
     NotificationService,
-    SaleHelperService
-} from "./services";
-import {ErrorComponent, NotificationsComponent, ProfileComponent} from "./components";
-import {TimeAgoPipe} from "time-ago-pipe";
+    SaleHelperService,
+    SnackBarService
+} from './services';
+import {ErrorComponent, NotificationsComponent, ProfileComponent} from './components';
+import {TimeAgoPipe} from 'time-ago-pipe';
 import {
     MatButtonModule,
     MatCardModule,
     MatFormFieldModule,
-    MatIconModule, MatInputModule,
+    MatIconModule,
+    MatInputModule,
     MatListModule,
     MatSidenavModule,
     MatToolbarModule
 } from '@angular/material';
-import {RoleGuardService} from "./services/role.guard.service";
-import {AuthGuardService} from "./services/auth.guard.service";
+import {RoleGuardService} from './services/role.guard.service';
+import {AuthGuardService} from './services/auth.guard.service';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+
+// TODO add snackbar everywhere
 
 @NgModule({
     declarations: [
@@ -71,12 +73,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         AuthenticatedService,
         AuthGuardService,
         RoleGuardService,
-        ChangeViewService,
-        NotificationService,
         SaleHelperService,
         GymConfigurationService,
         DateService,
-        ExchangeUserService,
+        SnackBarService,
+
+        NotificationService,
+        ChangeViewService,
         ExchangeBundleService,
         ExchangeSaleService,
         {

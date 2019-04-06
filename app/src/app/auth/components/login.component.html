@@ -3,7 +3,7 @@
         <div class="card">
             <div class="card-body">
                 <form [formGroup]="form" role="form" class="form-gym" (submit)="form.valid && login()">
-                    <h2 class="form-header">Login</h2>
+                    <h3 class="form-header">Login</h3>
                     <mat-form-field>
                         <label for="email" class="sr-only">Email</label>
                         <input type="text" placeholder="Email"
@@ -12,7 +12,7 @@
                                name="email"
                                formControlName="email"
                                [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
-                        <mat-error *ngIf="email.touched && email.invalid" class="error-message">
+                        <mat-error *ngIf="email.touched && email.invalid">
                             <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
                             <div *ngIf="!!email.errors?.email">Email non valida</div>
                         </mat-error>
@@ -25,7 +25,7 @@
                                name="password"
                                formControlName="password"
                                [ngClass]="{ 'is-invalid': password.touched && password.invalid }" required/>
-                        <mat-error *ngIf="password.touched && password.invalid" class="error-message">
+                        <mat-error *ngIf="password.touched && password.invalid">
                             <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
                         </mat-error>
                     </mat-form-field>
