@@ -20,7 +20,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {UserCreateModalComponent, UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
+import {UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
 import {SharedModule} from '../../shared';
 import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, SalesSummaryComponent} from './sales';
 
@@ -54,7 +54,6 @@ import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, Sal
         UsersComponent,
         UserItemComponent,
         UserDetailsComponent,
-        UserCreateModalComponent,
         CreateSaleComponent,
         SalesSummaryComponent,
         SalesModalComponent,
@@ -68,7 +67,6 @@ import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, Sal
     ],
     entryComponents: [
         BundleModalComponent,
-        UserCreateModalComponent,
         SalesModalComponent
     ]
 })

@@ -4,11 +4,9 @@ import {
     TrainingComponent,
 } from "./components";
 import {SalesComponent} from "../shared/components/sales";
-import {ProfileComponent} from "./profile.component";
-
 
 const routes = [
-    { path: '', component: ProfileComponent, children: [
+    { path: '', children: [
             { path: '', redirectTo: "user", pathMatch: "full"},
             { path: 'sales', component: SalesComponent },
             { path: 'trainings', component: TrainingComponent }

@@ -28,7 +28,7 @@
                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>
         </button>
-        <button *ngIf="canDelete()" mat-button color="warn" (click)="deleteUser()">
+        <button *ngIf="canDelete" mat-button color="warn" (click)="deleteUser()">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
             </span>

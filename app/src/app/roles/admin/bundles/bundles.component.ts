@@ -6,6 +6,7 @@ import {BundleModalComponent} from './bundle-modal.component';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
+import {SnackBarService} from '../../../services';
 
 @Component({
     templateUrl: './bundles.component.html',
@@ -21,7 +22,8 @@ export class BundlesComponent {
     ds: BundleDataSource;
 
     constructor(private service: BundlesService,
-                private dialog: MatDialog) {
+                private dialog: MatDialog,
+                private snackbar: SnackBarService) {
 
         this.ds = new BundleDataSource(service, this.pageSize, this.query);
 
@@ -38,26 +40,69 @@ export class BundlesComponent {
     }
 
     openDialog(): void {
-        let title;
-        let message;
-        title = "Crea Nuovo Pacchetto";
-        message = "è stato creato";
+        const title = "Crea Nuovo Pacchetto";
 
         const dialogRef = this.dialog.open(BundleModalComponent, {
             data: {
                 title: title,
-                message: message,
             }
         });
 
-        dialogRef.afterClosed().subscribe(_ => {
-            this.getBundles()
+        dialogRef.afterClosed().subscribe(bundle => {
+            this.createBundle(bundle);
         });
+    }
+
+    handleEvent($event) {
+        switch ($event.type) {
+            case 'delete':
+                this.deleteBundle($event.bundle);
+                break;
+            case 'patch':
+                this.toggleDisabled($event.bundle);
+                break;
+            case 'put':
+                this.modifyBundle($event.bundle);
+                break;
+            default:
+                console.error(`Operazione non riconosciuta: ${$event.type}`);
+                break;
+        }
     }
 
     getBundles() {
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
+    }
+
+    private createBundle(bundle: Bundle) {
+        console.log(bundle);
+        delete bundle.id;
+        this.service.post(bundle).subscribe(_ => {
+            let message = `Il pacchetto ${bundle.name} è stato creato`;
+            this.snackbar.open(message);
+            this.getBundles()
+        });
+    }
+
+    private deleteBundle(bundle: Bundle) {
+        let confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
+        if (confirmed) {
+            this.service.delete(bundle.id).subscribe(_ => this.getBundles())
+        }
+    }
+
+    private toggleDisabled(bundle: Bundle) {
+        bundle.disabled = !bundle.disabled;
+        this.service.put(bundle);
+    }
+
+    private modifyBundle(bundle: Bundle) {
+        this.service.put(bundle).subscribe(_ => {
+            let message = `Il pacchetto ${bundle.name} è stato modificato`;
+            this.snackbar.open(message);
+            this.getBundles()
+        })
     }
 }
 

@@ -19,7 +19,9 @@
     </mat-toolbar>
     <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
         <div *cdkVirtualFor="let u of ds;" class="scroll-item">
-            <user-item [user]="u" (done)="getUsers()"></user-item>
+            <user-item [user]="u"
+                       [canDelete]="currentUserId !== u?.id"
+                       (done)="handleEvent($event)"></user-item>
         </div>
     </cdk-virtual-scroll-viewport>
     <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE"></no-item>

@@ -35,10 +35,10 @@ const routes: Routes = [
             expectedRole: 'C'
         }
     },
-    {
-        path: 'profile/:id?', loadChildren: "app/profile/profile.module#ProfileModule",
-        canActivate: [AuthGuardService]
-    },
+    // {
+    //     path: 'profile/:id?', loadChildren: "app/profile/profile.module#ProfileModule",
+    //     canActivate: [AuthGuardService]
+    // },
     { path: '**', redirectTo: 'home' }
 ];
 

@@ -6,7 +6,6 @@ import {
 } from "./components";
 import {SharedModule} from "../shared";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {ProfileComponent} from "./profile.component";
 
 @NgModule({
     imports: [
@@ -17,10 +16,7 @@ import {ProfileComponent} from "./profile.component";
         ProfileRouting,
     ],
     declarations: [
-        ProfileComponent,
         TrainingComponent,
         TrainingDetailsComponent],
-    exports: [],
-    entryComponents: [ProfileComponent]
 })
 export class ProfileModule { }

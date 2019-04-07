@@ -1,1 +1,1 @@
-export * from './user-patch-modal.component';
+export * from './user-modal.component';

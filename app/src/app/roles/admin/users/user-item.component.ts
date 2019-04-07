@@ -1,10 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {UserPatchModalComponent} from '../../../shared/components/users';
-import {UserService} from '../../../shared/services';
+import {UserModalComponent} from '../../../shared/components/users';
 import {User} from '../../../shared/model';
-import {AppService, AuthService} from '../../../services';
-import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -15,37 +12,29 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class UserItemComponent {
 
     @Input() user: User;
+    @Input() canDelete: boolean;
 
     @Output() done = new EventEmitter();
 
-    constructor(private dialog: MatDialog,
-                private app: AppService,
-                private route: ActivatedRoute,
-                private service: UserService) {
+    constructor(private dialog: MatDialog) {
     }
 
     openEditDialog() {
-        const dialogRef = this.dialog.open(UserPatchModalComponent, {
+        const dialogRef = this.dialog.open(UserModalComponent, {
             data: {
+                title: 'Modifica Utente',
+                method: 'patch',
                 user: this.user
             }
         });
 
-        dialogRef.afterClosed().subscribe(_ => {
-            this.done.emit()
+        dialogRef.afterClosed().subscribe(user => {
+            if (user) this.done.emit({type: 'patch', user: user})
         });
     }
 
     deleteUser() {
-        let confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
-        if (confirmed) {
-            this.service.delete(this.user.id).subscribe(_ => {
-                this.done.emit()
-            })
-        }
+        this.done.emit({type: 'delete', user: this.user})
     }
 
-    canDelete() {
-        return this.app.user.id !== ((!this.user) ? 0 : this.user.id);
-    }
 }

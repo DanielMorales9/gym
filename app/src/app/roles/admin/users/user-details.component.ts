@@ -3,7 +3,7 @@ import {User} from '../../../shared/model';
 import {UserHelperService, UserService} from '../../../shared/services';
 import {AppService, AuthService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
-import {UserPatchModalComponent} from '../../../shared/components/users';
+import {UserModalComponent} from '../../../shared/components/users';
 import {ActivatedRoute, Router} from '@angular/router';
 
 
@@ -41,15 +41,21 @@ export class UserDetailsComponent implements OnInit {
 
     openEditDialog(): void {
 
-        const dialogRef = this.dialog.open(UserPatchModalComponent, {
+        const dialogRef = this.dialog.open(UserModalComponent, {
             data: {
+                title: 'Modifica Utente',
+                method: 'patch',
                 user: this.user
             }
         });
 
-        // dialogRef.afterClosed().subscribe(_ => {
-        //     console.log('closed')
-        // });
+        dialogRef.afterClosed().subscribe(user => {
+            if (user) this.patchUser(user);
+        });
+    }
+
+    private patchUser(user: User) {
+        this.service.patch(user).subscribe((user: User) => this.user = user)
     }
 
     deleteUser() {
@@ -59,7 +65,6 @@ export class UserDetailsComponent implements OnInit {
                 .subscribe(_ => this.router.navigateByUrl('/admins/users'))
         }
     }
-
 
     resendToken() {
         this.authService.resendTokenAnonymous(this.user.id)
@@ -79,4 +84,5 @@ export class UserDetailsComponent implements OnInit {
     buy() {
         return this.router.navigate(['admin', 'sales', 'buy', this.user.id])
     }
+
 }

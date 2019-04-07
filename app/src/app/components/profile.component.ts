@@ -1,9 +1,9 @@
 import {Component, OnInit} from "@angular/core";
 import {User} from "../shared/model";
-import {AppService, ChangeViewService} from "../services";
+import {AppService, AuthService, ChangeViewService, SnackBarService} from '../services';
 import {UserHelperService, UserService} from "../shared/services";
 import {MatDialog} from "@angular/material";
-import {UserPatchModalComponent} from "../shared/components/users";
+import {UserModalComponent} from "../shared/components/users";
 import {ChangePasswordModalComponent} from './change-password-modal.component';
 
 @Component({
@@ -14,10 +14,10 @@ export class ProfileComponent implements OnInit {
 
     user: User;
 
-    mailto = undefined;
-
     constructor(private appService: AppService,
                 private userService: UserService,
+                private authService: AuthService,
+                private snackbar: SnackBarService,
                 private dialog: MatDialog) {
     }
 
@@ -27,15 +27,17 @@ export class ProfileComponent implements OnInit {
 
     openDialog(): void {
 
-        const dialogRef = this.dialog.open(UserPatchModalComponent, {
+        const dialogRef = this.dialog.open(UserModalComponent, {
             data: {
+                title: 'Modifica i tuoi Dati',
+                method: 'patch',
                 user: this.user
             }
         });
 
-        // dialogRef.afterClosed().subscribe(_ => {
-        //     console.log('closed')
-        // });
+        dialogRef.afterClosed().subscribe((user: User) => {
+            this.userService.patch(user).subscribe((user: User) => this.user = user)
+        });
     }
 
 
@@ -44,10 +46,16 @@ export class ProfileComponent implements OnInit {
     }
 
     openPasswordDialog() {
-        const dialogRef = this.dialog.open(ChangePasswordModalComponent, {
-            data: {
-                user: this.user
-            }
-        });
+        const dialogRef = this.dialog.open(ChangePasswordModalComponent);
+
+        dialogRef.afterClosed().subscribe(passwordForm => {
+            this.authService.changeNewPassword(this.user.id, passwordForm)
+                .subscribe(_ => {
+                    let message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
+                    this.snackbar.open(message);
+                }, err => {
+                    this.snackbar.open(err.error.message);
+                })
+        })
     }
 }

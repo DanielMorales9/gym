@@ -1,12 +1,12 @@
 import {Component} from '@angular/core';
 import {User} from '../../../shared/model';
 import {UserHelperService, UserService} from '../../../shared/services';
-import {AppService, ChangeViewService} from '../../../services';
-import {UserCreateModalComponent} from './user-create-modal.component';
+import {AppService, AuthService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {ActivatedRoute, Router} from '@angular/router';
+import {UserModalComponent} from '../../../shared/components/users';
 
 @Component({
     templateUrl: './users.component.html',
@@ -17,36 +17,80 @@ export class UsersComponent {
     SIMPLE_NO_CARD_MESSAGE = "Nessun utente registrato";
     // SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
 
-    current_role_view: number;
-    private pageSize: number = 10;
+    currentUserId: number;
 
     query: string;
+    private pageSize: number = 10;
     ds: UserDataSource;
 
     constructor(private service: UserService,
-                private changeViewService: ChangeViewService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private app: AppService,
+                private authService: AuthService,
+                private snackbar: SnackBarService,
                 private dialog: MatDialog) {
-        this.current_role_view = this.app.current_role_view;
-        this.changeViewService.getView().subscribe(value => {
-            this.current_role_view = value;
-        });
+        this.currentUserId = this.app.user.id;
         this.ds = new UserDataSource(this.service, this.pageSize, this.query);
     }
 
     openDialog(): void {
-        const dialogRef = this.dialog.open(UserCreateModalComponent);
+        const dialogRef = this.dialog.open(UserModalComponent, {
+            data : {
+                title: 'Registra Nuovo Utente',
+                method: 'post'
+            },
+        });
 
-        dialogRef.afterClosed().subscribe(_ => {
-            this.getUsers()
+        dialogRef.afterClosed().subscribe(user => {
+            if (user) this.createUser(user)
         });
     }
 
     getUsers() {
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
+    }
+
+    handleEvent($event: any) {
+        switch ($event.type) {
+            case 'delete':
+                this.deleteUser($event.user);
+                break;
+            case 'patch':
+                this.patchUser($event.user);
+                break;
+        }
+    }
+
+    private deleteUser(user: User) {
+        this.service.delete(user.id).subscribe(_ => {
+            this.getUsers()
+        });
+    }
+
+    private patchUser(user: User) {
+        this.service.patch(user).subscribe( _ => {
+            this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
+        }, err => {
+            this.snackbar.open(err.error.message);
+        }, () => {
+            this.getUsers()
+        })
+    }
+
+    private createUser(user: User) {
+        this.authService.registration(user).subscribe(_ => {
+            let message = `L'utente ${user.lastName} è stato creato`;
+            this.snackbar.open(message);
+        },  err => {
+            if (err.status == 500) {
+                this.snackbar.open(err.error.message, );
+            }
+            else throw err;
+        }, () => {
+            this.getUsers();
+        })
     }
 }
 
@@ -102,34 +146,34 @@ export class UserDataSource extends DataSource<User | undefined> {
     }
 
     private search(page: number) {
-        if (this.query === undefined || this.query == '') {
-            this.service.get(page, this.pageSize).subscribe(res => {
-                let newLenght = res['page']['totalElements'];
-                if (this.length != newLenght) {
-                    this.length = newLenght;
-                    this.cachedData = Array.from<User>({length: this.length});
-                }
+        console.log(page, this.query);
+        let observable;
+        if (this.query === undefined || this.query == '')
+            observable = this.service.get(page, this.pageSize);
 
-                let users = UserHelperService.unwrapUsers(res);
-                this.empty = users.length == 0;
-                this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
-                this.dataStream.next(this.cachedData);
-            })
-        }
-        else {
+        else
+            observable = this.service.search(this.query, page, this.pageSize);
 
-            this.service.search(this.query, page, this.pageSize).subscribe(res => {
-                let newLenght = res['totalElements'];
-                if (this.length != newLenght) {
-                    this.length = newLenght;
-                    this.cachedData = Array.from<User>({length: this.length});
-                }
+        observable.subscribe(res => {
+            console.log(res);
+            let newLength = UserDataSource.getLength(res);
+            if (this.length != newLength) {
+                this.length = newLength;
+                this.cachedData = Array.from<User>({length: this.length});
+            }
 
-                let users = res['content'];
-                this.empty = users.length == 0;
-                this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
-                this.dataStream.next(this.cachedData);
-            })
-        }
+            let users = UserHelperService.unwrapUsers(res);
+            this.empty = users.length == 0;
+            this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
+            this.dataStream.next(this.cachedData);
+        })
+    }
+
+    private static getLength(res) {
+        let newLength;
+        if (res['page'])
+            newLength = res['page']['totalElements'];
+        else newLength = res['totalElements'];
+        return newLength;
     }
 }

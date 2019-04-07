@@ -1,7 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {BundlesService} from '../../../shared/services';
 import {Bundle} from '../../../shared/model';
-import {SnackBarService} from '../../../services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
@@ -12,24 +10,15 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class BundleModalComponent implements OnInit {
 
-    private DEFAULT_TYPE = "P";
-
-    // TODO add spinner on modal
-
+    private DEFAULT_TYPE = 'P';
     bundle: Bundle;
-    form: FormGroup;
-    loading: boolean = false;
 
-    constructor(private service: BundlesService,
-                private builder: FormBuilder,
-                private snackbar: SnackBarService,
+    form: FormGroup;
+
+    constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<BundleModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.bundle = this.data.bundle;
-    }
-
-    onNoClick(): void {
-        this.dialogRef.close();
     }
 
     ngOnInit(): void {
@@ -41,6 +30,7 @@ export class BundleModalComponent implements OnInit {
     }
 
     private buildForm() {
+        let type = this.bundle.type || this.DEFAULT_TYPE;
         this.form = this.builder.group({
             name: [this.bundle.name, [Validators.required]],
             price: [this.bundle.price, [
@@ -52,6 +42,7 @@ export class BundleModalComponent implements OnInit {
                 Validators.pattern(/^\d+$/)
             ]],
             description: [this.bundle.description, Validators.required ],
+            type: [type, Validators.required ],
         })
     }
 
@@ -71,25 +62,15 @@ export class BundleModalComponent implements OnInit {
         return this.form.get("description")
     }
 
-    _success() {
-        return (_) => {
-            let message = "Il pacchetto " + this.bundle.name + this.data.message;
-            this.snackbar.open(message);
-            this.loading = false;
-            this.onNoClick();
-        }
+    get type() {
+        return this.form.get("type")
     }
+
 
     submit() {
         this.getBundleFromForm();
-        if (this.bundle.id)
-            this.service.put(this.bundle).subscribe(this._success(), undefined);
-        else {
-            delete this.bundle.id;
-            this.service.post(this.bundle).subscribe(this._success(), undefined);
-        }
+        this.dialogRef.close(this.bundle);
     }
-
 
     private getBundleFromForm() {
         let bundle = new Bundle();
@@ -98,8 +79,8 @@ export class BundleModalComponent implements OnInit {
         bundle.price = this.price.value;
         bundle.description = this.description.value;
         bundle.numSessions = this.numSessions.value;
+        bundle.type = this.type.value;
         bundle.disabled = (this.bundle.disabled !== undefined) ? this.bundle.disabled : false;
-        bundle.type = this.DEFAULT_TYPE;
         this.bundle = bundle;
     }
 }

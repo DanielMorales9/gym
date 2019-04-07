@@ -1,57 +1,63 @@
-import {Component, Inject, OnInit} from "@angular/core";
-import {User} from "../../model";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserService} from "../../services";
-import {AppService, NotificationService} from "../../../services";
-import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
+import {Component, Inject, OnInit} from '@angular/core';
+import {User} from '../../model';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 
 @Component({
     selector: 'user-patch-modal',
-    templateUrl: './user-patch-modal.component.html',
+    templateUrl: './user-modal.component.html',
     styleUrls: ['../../../styles/root.css']
 })
-export class UserPatchModalComponent implements OnInit {
+export class UserModalComponent implements OnInit {
+
+
+    title: string;
+    method: string;
+
+
+    canShowRole: boolean = false;
+    canShowHeightAndWeight: boolean = false;
 
     user: User;
-
     form: FormGroup;
 
     constructor(private builder: FormBuilder,
-                private service: UserService,
-                private appService: AppService,
-                private messageService: NotificationService,
-                public dialogRef: MatDialogRef<UserPatchModalComponent>,
+                public dialogRef: MatDialogRef<UserModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.user = this.data.user
+        this.user = this.data.user;
+        this.title = this.data.title;
+        this.method = this.data.method;
     }
 
     ngOnInit(): void {
         if (!this.user)
             this.user = new User();
-        console.log(this.user);
+
         this.buildForm();
     }
 
-    onNoClick(): void {
-        this.dialogRef.close();
-    }
-
     buildForm() {
-        let config = {};
+        this.canShowHeightAndWeight = this.user.type == 'C' && this.method == 'patch';
+        this.canShowRole = this.method == 'post';
 
+        let config = {};
         config['firstName'] = [this.user.firstName, [Validators.required]];
         config['lastName'] = [this.user.lastName, [Validators.required]];
         config['email'] = [this.user.email, [Validators.required, Validators.email]];
-        if (this.user.type == 'C') {
+        if (this.canShowHeightAndWeight) {
             config['height'] = [this.user.height, [
                 Validators.required,
                 Validators.max(300),
                 Validators.min(100)]];
-            config['weight'] = [this.user.height, [
+            config['weight'] = [this.user.weight, [
                 Validators.required,
                 Validators.max(1000),
                 Validators.min(20)]];
+        }
+
+        if (this.canShowRole) {
+            config['type'] = [this.user.type, [Validators.required]]
         }
 
         this.form = this.builder.group(config);
@@ -77,6 +83,10 @@ export class UserPatchModalComponent implements OnInit {
         return this.form.get("email")
     }
 
+    get type() {
+        return this.form.get("type")
+    }
+
     submit() {
 
         delete this.user.roles;
@@ -89,19 +99,11 @@ export class UserPatchModalComponent implements OnInit {
             this.user.weight = this.weight.value;
         }
 
-        this.service.patch(this.user).subscribe( _ => {
-            this.messageService.sendMessage({
-                text: `L'utente ${this.lastName.value} è stato modificato`,
-                class: "alert-success"
-            });
-        }, err => {
-            this.messageService.sendMessage({
-                text: err.message,
-                class: "alert-danger"
-            });
-        }, () => {
-            this.onNoClick()
-        })
+        if (this.type) {
+            this.user.type = this.type.value;
+        }
+
+        this.dialogRef.close(this.user);
     }
 
 }

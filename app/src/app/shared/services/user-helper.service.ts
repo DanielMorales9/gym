@@ -17,18 +17,23 @@ export class UserHelperService {
         'C': 3
     };
 
-    constructor(private userService: UserService) {}
+    constructor(private service: UserService) {}
 
     static unwrapUsers(res: any) {
         let users = [];
-        if (res['_embedded']['admins']) {
-            users = users.concat(res['_embedded']['admins'])
+        if (res['_embedded']) {
+            if (res['_embedded']['admins']) {
+                users = users.concat(res['_embedded']['admins'])
+            }
+            if (res['_embedded']['customers']) {
+                users = users.concat(res['_embedded']['customers'])
+            }
+            if (res['_embedded']['trainers']) {
+                users = users.concat(res['_embedded']['trainers'])
+            }
         }
-        if (res['_embedded']['customers']) {
-            users = users.concat(res['_embedded']['customers'])
-        }
-        if (res['_embedded']['trainers']) {
-            users = users.concat(res['_embedded']['trainers'])
+        else {
+            users = res['content']
         }
         return users;
     }
@@ -49,7 +54,7 @@ export class UserHelperService {
     }
 
     private _getRoles(user): void {
-        this.userService.getRoles(user.id).subscribe(value => {
+        this.service.getRoles(user.id).subscribe(value => {
             user.roles = value['_embedded']['roles'].map(val => {
                 return new Role(this.ROLE2INDEX[val.name], val.name);
             });
@@ -68,12 +73,12 @@ export class UserHelperService {
     }
 
     getUser(id: number, callback: (user: User) => void) {
-        this.userService.findById(id).subscribe(callback)
+        this.service.findById(id).subscribe(callback)
     }
 
 
     getUserByEmail(email: string, callback: (user) => void) {
-        this.userService.findByEmail(email).subscribe(callback)
+        this.service.findByEmail(email).subscribe(callback)
     }
 
     getHighestRole(user) {
@@ -82,5 +87,4 @@ export class UserHelperService {
         else
             return 3;
     }
-
 }

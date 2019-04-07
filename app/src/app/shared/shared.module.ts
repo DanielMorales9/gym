@@ -6,7 +6,7 @@ import {
     PagerComponent,
     SaleDetailsComponent,
     SalesComponent,
-    UserPatchModalComponent,
+    UserModalComponent,
 } from './components';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
@@ -24,7 +24,7 @@ import {
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatListModule
+    MatInputModule, MatListModule, MatOptionModule, MatSelectModule
 } from '@angular/material';
 
 @NgModule({
@@ -38,10 +38,12 @@ import {
         MatDialogModule,
         MatInputModule,
         MatButtonModule,
-        MatListModule
+        MatListModule,
+        MatOptionModule,
+        MatSelectModule
     ],
     entryComponents: [
-        UserPatchModalComponent
+        UserModalComponent
     ],
     declarations: [
         SalesComponent,
@@ -49,7 +51,7 @@ import {
         NoItemComponent,
         PagerComponent,
         BundleDetailsComponent,
-        UserPatchModalComponent
+        UserModalComponent
     ],
     exports: [
         SalesComponent,

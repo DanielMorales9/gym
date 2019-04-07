@@ -63,6 +63,21 @@
                 </mat-error>
             </mat-form-field>
         </div>
+        <div hidden>
+            <mat-form-field>
+                <label for="type"><b>Tipo</b></label>
+                <mat-select
+                        id="type"
+                        type="text"
+                        formControlName="type"
+                        [ngClass]="{ 'is-invalid': type.touched && type.invalid }">
+                    <mat-option value="P">Personale</mat-option>
+                </mat-select>
+                <mat-error *ngIf="type.touched && type.invalid">
+                    <div *ngIf="!!type.errors?.required">Tipo obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
     </div>
     <div mat-dialog-actions>
         <button type="submit" mat-flat-button color="accent">Invia</button>
