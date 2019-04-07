@@ -24,7 +24,16 @@ export class BundleHelperService extends HelperService<Bundle> {
         return resources
     }
 
-    extract(res: Bundle[]) : Bundle[] {
+    getOrSearch(query: any, page: number, size: number): Observable<Object> {
+        let observable;
+        if (query === undefined || query == '')
+            observable = this.get(page, size);
+        else
+            observable = this.search(query, page, size);
+        return observable;
+    }
+
+    extract(res: Object) : Bundle[] {
         let bundles;
         if (res['_embedded']) {
             bundles = res['_embedded']['aTrainingBundleSpecifications'];

@@ -81,7 +81,27 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        return this.service.searchByLastName(query, page, size);
+        let observable;
+        switch (query.type) {
+            case 'query':
+                observable = this.service.searchByLastName(query.value, page, size);
+                break;
+            case 'date':
+                let date : Date = query.value;
+                const value = date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-" + date.getUTCFullYear();
+                observable = this.service.searchByDate(value, page, size);
+                break;
+        }
+        return observable;
+    }
+
+    getOrSearch(query: any, page: number, size: number): Observable<Object> {
+        let observable;
+        if (query === undefined || query.type == 'query')
+            observable = this.get(page, size);
+        else
+            observable = this.search(query, page, size);
+        return observable;
     }
 
     preProcessResources(resources: Sale[]): Sale[] {
@@ -95,7 +115,7 @@ export class SaleHelperService extends HelperService<Sale> {
         return resources
     }
 
-    extract(res: Sale[]) : Sale[] {
+    extract(res: Object) : Sale[] {
         let sales;
         if (res['_embedded']) {
             sales = res['_embedded']['sales'];

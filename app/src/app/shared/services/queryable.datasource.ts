@@ -54,25 +54,19 @@ export class QueryableDatasource<T> extends DataSource<any>{
     }
 
     private search(page: number) {
-        let observable;
-        if (this.query === undefined || this.query == '')
-            observable = this.helper.get(page, this.pageSize);
-        else
-            observable = this.helper.search(this.query, page, this.pageSize);
+        this.helper.getOrSearch(this.query, page, this.pageSize)
+            .subscribe(res => {
+                let newLength = this.helper.getLength(res);
+                let resources = this.helper.preProcessResources(res);
+                if (this.length != newLength) {
+                    this.length = newLength;
+                    this.cachedData = Array.from<T | undefined>({length: this.length});
+                }
 
-        observable.subscribe(res => {
-            let newLength = this.helper.getLength(res);
-            res = this.helper.preProcessResources(res);
-            console.log(newLength);
-            if (this.length != newLength) {
-                this.length = newLength;
-                this.cachedData = Array.from<T | undefined>({length: this.length});
-            }
-
-            this.empty = (newLength == 0);
-            this.cachedData.splice(page * this.pageSize, this.pageSize, ...res);
-            this.dataStream.next(this.cachedData);
-        });
+                this.empty = (newLength == 0);
+                this.cachedData.splice(page * this.pageSize, this.pageSize, ...resources);
+                this.dataStream.next(this.cachedData);
+            });
     }
 
 }

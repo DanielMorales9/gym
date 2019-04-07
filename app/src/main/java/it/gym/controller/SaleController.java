@@ -68,12 +68,19 @@ public class SaleController {
         return saleRepository.findUserSales(id, pageable);
     }
 
-    @GetMapping(path = "/sales/searchByDate")
+    @GetMapping(path = "/sales/searchByDateAndId")
     @ResponseBody
-    Page<Sale> findSalesByDate(@RequestParam Long id,
+    Page<Sale> findSalesByDateAndId(@RequestParam Long id,
                                @DateTimeFormat(pattern="dd-MM-yyyy", iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                Pageable pageable) {
         return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
+    }
+
+    @GetMapping(path = "/sales/searchByDate")
+    @ResponseBody
+    Page<Sale> findSalesByDate(@DateTimeFormat(pattern="dd-MM-yyyy", iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                               Pageable pageable) {
+        return saleRepository.findSalesByCreatedAtGreaterThanEqual(date, pageable);
     }
 
     @GetMapping(path = "/sales/searchByLastName")

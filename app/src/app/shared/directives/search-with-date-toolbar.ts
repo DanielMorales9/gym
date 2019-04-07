@@ -17,10 +17,10 @@ export class SearchWithDateToolbar {
     emit(type, event) {
         switch (type) {
             case 'query':
-                this.done.emit({type: type, event: this.query});
+                this.done.emit({type: type, value: this.query});
                 break;
             case 'date':
-                this.done.emit({type: type, event: event});
+                this.done.emit({type: type, value: event.value});
                 break;
         }
     }

@@ -1,8 +1,7 @@
-import {Component} from "@angular/core";
-import {BaseCalendar} from "./base-calendar";
-import {EVENT_TYPES} from "./event-types.enum";
-import {TimesOffService, TrainingService, UserHelperService, UserService} from "../../shared/services";
-import {DateService, GymConfigurationService, NotificationService} from "../../services";
+import {Component} from '@angular/core';
+import {BaseCalendar} from './base-calendar';
+import {TimesOffService, TrainingService, UserService} from '../../shared/services';
+import {NotificationService} from '../../services';
 
 
 @Component({

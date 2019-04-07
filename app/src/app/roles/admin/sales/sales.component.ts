@@ -34,12 +34,8 @@ export class SalesComponent {
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
-    // TODO enable mixed queries (date or text)
-
     search($event?) {
-        if ($event)
-            this.query = $event.query;
-        this.ds.setQuery(this.query);
+        this.ds.setQuery($event);
         this.ds.fetchPage(0);
     }
 

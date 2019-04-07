@@ -20,7 +20,7 @@ export class TimesOffService {
     }
 
     private static getDateString(date: Date) {
-        return date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-"
+        return date.getUTCDay() + "-" + (date.getUTCMonth() + 1) + "-"
             + date.getUTCFullYear() + "_" +
             date.getUTCHours() + ":" + date.getUTCMinutes();
     }

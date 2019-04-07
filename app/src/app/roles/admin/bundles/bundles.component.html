@@ -1,5 +1,5 @@
 <div class="page-container">
-    <simple-search [query]="query" text="Cerca utenti" (done)="search($event)"></simple-search>
+    <simple-search [query]="query" text="Cerca pacchetti" (done)="search($event)"></simple-search>
     <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
         <div *cdkVirtualFor="let b of ds;" class="scroll-item">

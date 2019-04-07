@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 import {UserService} from "./users.service";
 import {Role, Sale, User} from '../model';
 import {HelperService} from './helper.service';
-import {Observable} from 'rxjs';
+import {observable, Observable} from 'rxjs';
 
 @Injectable()
 export class UserHelperService extends HelperService<User> {
@@ -86,7 +86,16 @@ export class UserHelperService extends HelperService<User> {
         return resources
     }
 
-    extract(res: User[]) : User[] {
+    getOrSearch(query: any, page: number, size: number): Observable<Object> {
+        let observable;
+        if (query === undefined || query == '')
+            observable = this.get(page, size);
+        else
+            observable = this.search(query, page, size);
+        return observable;
+    }
+
+    extract(res: Object) : User[] {
         let users = [];
         if (res['_embedded']) {
             if (res['_embedded']['admins']) {

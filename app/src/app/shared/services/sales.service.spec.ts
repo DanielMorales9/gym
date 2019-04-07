@@ -111,8 +111,8 @@ describe('SalesService', () => {
         req.flush([]);
     });
 
-    it("testing #searchByDate", done => {
-        salesService.searchByDate("query", 1, 1, 5)
+    it("testing #searchByDateAndId", done => {
+        salesService.searchByDateAndId("query", 1, 1, 5)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();

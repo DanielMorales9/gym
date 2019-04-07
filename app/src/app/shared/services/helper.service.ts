@@ -6,11 +6,13 @@ export abstract class HelperService<T> {
 
     abstract search(query: any, page: number, size: number): Observable<Object>;
 
-    abstract preProcessResources(resources: T[]): T[];
+    abstract getOrSearch(query: any, page: number, size: number): Observable<Object>;
 
-    abstract extract(resources: T[]): T[];
+    abstract preProcessResources(resources: Object): T[];
 
-    public getLength(resources: T[]): number {
+    abstract extract(resources: Object): T[];
+
+    public getLength(resources: Object): number {
         let length;
         if (resources['page'])
             length = resources['page']['totalElements'];

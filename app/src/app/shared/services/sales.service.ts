@@ -51,7 +51,11 @@ export class SalesService {
         return this.http.get(`/sales/searchByLastName?lastName=${query}&page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    searchByDate(query: string, id: number, page: number, size: number) : Observable<Object> {
+    searchByDateAndId(query: string, id: number, page: number, size: number) : Observable<Object> {
         return this.http.get(`/sales/searchByDate?id=${id}&date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
+    }
+
+    searchByDate(query: string, page: number, size: number) : Observable<Object> {
+        return this.http.get(`/sales/searchByDate?date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
     }
 }
