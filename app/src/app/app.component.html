@@ -8,9 +8,9 @@
         <mat-icon fontSet="fas" fontIcon="fa-sign-in-alt" routerLink="/auth/login" [hidden]="hideLogin()"></mat-icon>
         <mat-icon fontSet="fas" fontIcon="fa-sign-out-alt" (click)="logout()" [hidden]="hideLogout()"></mat-icon>
     </mat-toolbar>
-    <!--TODO fix desktop view-->
     <mat-sidenav-container class="main-sidenav-container">
-        <mat-sidenav class="main-sidenav" #snav [hidden]="!authenticated" [opened]="screenWidth > 599" [mode]="(screenWidth <= 599) ? 'over' : 'side'">
+        <mat-sidenav class="main-sidenav" #snav [opened]="screenWidth > 599 && authenticated"
+                     [mode]="(screenWidth <= 599 && authenticated) ? 'over' : 'side'">
             <mat-toolbar *ngIf="screenWidth <= 599">
                 <mat-toolbar-row>
                     <h2> {{ appName }} </h2>
