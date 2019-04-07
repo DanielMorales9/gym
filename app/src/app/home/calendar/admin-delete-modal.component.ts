@@ -6,7 +6,7 @@ import {BaseCalendarModal} from "./base-calendar-modal";
 @Component({
     selector: 'admin-delete-modal',
     templateUrl: './admin-delete-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class AdminDeleteModalComponent extends BaseCalendarModal implements OnInit {
 

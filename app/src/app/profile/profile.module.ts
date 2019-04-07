@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {ProfileRouting} from "./profile.routing";
 import {
-    SaleSummaryComponent,
     TrainingComponent, TrainingDetailsComponent
 } from "./components";
 import {SharedModule} from "../shared";
@@ -19,7 +18,6 @@ import {ProfileComponent} from "./profile.component";
     ],
     declarations: [
         ProfileComponent,
-        SaleSummaryComponent,
         TrainingComponent,
         TrainingDetailsComponent],
     exports: [],

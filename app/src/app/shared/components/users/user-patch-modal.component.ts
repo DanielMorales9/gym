@@ -9,7 +9,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from "@angular/material";
 @Component({
     selector: 'user-patch-modal',
     templateUrl: './user-patch-modal.component.html',
-    styleUrls: ['../../../root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class UserPatchModalComponent implements OnInit {
 

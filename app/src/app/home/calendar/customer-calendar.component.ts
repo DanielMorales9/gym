@@ -8,7 +8,7 @@ import {DateService, GymConfigurationService, NotificationService} from "../../s
 @Component({
     selector: "customer-calendar",
     templateUrl: './customer-calendar.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class CustomerCalendarComponent extends BaseCalendar {
 

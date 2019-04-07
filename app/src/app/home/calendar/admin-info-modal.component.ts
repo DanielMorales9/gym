@@ -6,7 +6,7 @@ import {TrainingService} from "../../shared/services";
 @Component({
     selector: 'admin-info-modal',
     templateUrl: './admin-info-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class AdminInfoModalComponent extends BaseCalendarModal implements OnInit {
 

@@ -12,10 +12,10 @@
                 Membro dal:&nbsp;<span [innerHTML]="getUserCreatedAt()"></span>
             </div>
             <div>
-                <div style="color: red;" [hidden]="user?.verified">
+                <div class="red-light" [hidden]="user?.verified">
                     <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;&nbsp;Non Verificato
                 </div>
-                <div style="color: green" [hidden]="!user?.verified">
+                <div class="green-light" [hidden]="!user?.verified">
                     <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;&nbsp;Verificato
                 </div>
             </div>

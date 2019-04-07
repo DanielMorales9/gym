@@ -6,7 +6,7 @@ import {BaseCalendarModal} from "./base-calendar-modal";
 @Component({
     selector: 'customer-hour-modal',
     templateUrl: './customer-hour-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
 

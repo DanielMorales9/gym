@@ -8,7 +8,7 @@ import {DateService} from "../../../services";
 @Component({
     selector: 'sale-details',
     templateUrl: './sale-details.component.html',
-    styleUrls: ['../../../root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class SaleDetailsComponent implements OnInit {
 

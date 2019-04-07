@@ -1,0 +1,59 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            Riepilogo Vendita #{{sale?.id}}
+        </mat-card-title>
+        <mat-card-subtitle>
+            Cliente: {{sale?.customer?.firstName}} {{sale?.customer?.lastName}}
+        </mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="summary-info">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{getDate(sale?.createdAt)}}
+            </span>
+
+            <span [hidden]="!sale?.payed">
+                <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{getDate(sale?.payedDate)}}
+            </span>
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;
+            </span>
+
+            <span [hidden]="sale?.payed">
+                <mat-icon fontSet="fab" fontIcon="fa-cc-apple-pay"></mat-icon>Da Pagare&nbsp;
+                {{sale?.totalPrice-sale?.amountPayed}}&euro;
+            </span>
+        </div>
+        <!--TODO add header to list of bundles -->
+        <mat-list *ngFor="let l of sale?.salesLineItems">
+            <mat-list-item>
+                {{l?.bundleSpecification?.name || 'Loading...'}}
+                <!--TODO add link to bundle details-->
+            </mat-list-item>
+        </mat-list>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-button (click)="pay()">
+            <span>
+                <mat-icon fontSet="fas" color="primary" fontIcon="fa-credit-card"></mat-icon>&nbsp;Paga
+            </span>
+        </button>
+        <button mat-button color="warn" (click)="delete()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
+            </span>
+        </button>
+        <button mat-button (click)="end()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-step-forward"></mat-icon>&nbsp;Fine
+            </span>
+        </button>
+
+    </mat-card-actions>
+</mat-card>
+
+
+<!--<div class="green-led" [hidden]="!sale?.payed"></div>-->
+<!--<div class="red-led" [hidden]="sale?.payed"></div>-->
+

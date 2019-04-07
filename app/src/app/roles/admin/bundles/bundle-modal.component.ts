@@ -8,7 +8,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 @Component({
     selector: 'bundle-modal',
     templateUrl: './bundle-modal.component.html',
-    styleUrls: ['../../../root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class BundleModalComponent implements OnInit {
 

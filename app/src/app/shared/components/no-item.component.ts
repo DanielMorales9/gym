@@ -3,7 +3,7 @@ import {Component, Input} from "@angular/core";
 @Component({
     selector: 'no-item',
     templateUrl: './no-item.component.html',
-    styleUrls: ['../../root.css', '../../search-and-list.css']
+    styleUrls: ['../../styles/root.css', '../../styles/search-list.css']
 })
 export class NoItemComponent {
 

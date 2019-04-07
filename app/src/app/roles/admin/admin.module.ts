@@ -1,10 +1,13 @@
-import {NgModule} from "@angular/core";
+import {NgModule} from '@angular/core';
 import {BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
-import {CommonModule} from "@angular/common";
-import {AdminRouting} from "./admin.routing";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {CommonModule} from '@angular/common';
+import {AdminRouting} from './admin.routing';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-    MatButtonModule, MatCardModule,
+    MAT_CHECKBOX_CLICK_ACTION,
+    MatButtonModule,
+    MatCardModule,
+    MatCheckboxModule,
     MatDialogModule,
     MatDividerModule,
     MatExpansionModule,
@@ -12,13 +15,14 @@ import {
     MatIconModule,
     MatInputModule,
     MatListModule,
-    MatSelectModule, MatSnackBarModule,
+    MatSelectModule,
+    MatSnackBarModule,
     MatToolbarModule
 } from '@angular/material';
-import {ScrollingModule} from "@angular/cdk/scrolling";
+import {ScrollingModule} from '@angular/cdk/scrolling';
 import {UserCreateModalComponent, UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
-import {SharedModule} from "../../shared";
-import {CreateSaleComponent} from './sales';
+import {SharedModule} from '../../shared';
+import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, SalesSummaryComponent} from './sales';
 
 @NgModule({
     imports: [
@@ -39,17 +43,24 @@ import {CreateSaleComponent} from './sales';
         MatCardModule,
         MatListModule,
         MatSnackBarModule,
-        ScrollingModule
+        ScrollingModule,
+        MatCheckboxModule
     ],
     declarations: [
         BundlesComponent,
         BundleItemComponent,
         BundleModalComponent,
-        CreateSaleComponent,
+        BundleSelectItemComponent,
         UsersComponent,
         UserItemComponent,
         UserDetailsComponent,
-        UserCreateModalComponent
+        UserCreateModalComponent,
+        CreateSaleComponent,
+        SalesSummaryComponent,
+        SalesModalComponent,
+    ],
+    providers: [
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
     ],
     exports: [
         BundleItemComponent,
@@ -57,7 +68,8 @@ import {CreateSaleComponent} from './sales';
     ],
     entryComponents: [
         BundleModalComponent,
-        UserCreateModalComponent
+        UserCreateModalComponent,
+        SalesModalComponent
     ]
 })
 export class AdminModule { }

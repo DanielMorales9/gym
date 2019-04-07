@@ -9,7 +9,7 @@ import {UserHelperService} from "./shared/services";
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./root.css', './app.component.css']
+    styleUrls: ['./styles/root.css', './app.component.css']
 })
 export class AppComponent implements OnInit {
 

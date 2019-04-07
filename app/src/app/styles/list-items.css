@@ -1,0 +1,12 @@
+.summary-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.summary-info {
+    padding: 0 16px;
+    display: flex;
+    flex-direction: column
+}

@@ -1,7 +1,6 @@
 import {NgModule} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {
-    SaleSummaryComponent,
     TrainingComponent,
 } from "./components";
 import {SalesComponent} from "../shared/components/sales";
@@ -12,7 +11,6 @@ const routes = [
     { path: '', component: ProfileComponent, children: [
             { path: '', redirectTo: "user", pathMatch: "full"},
             { path: 'sales', component: SalesComponent },
-            { path: 'summarySale/:saleId', component: SaleSummaryComponent },
             { path: 'trainings', component: TrainingComponent }
         ]},
 ];

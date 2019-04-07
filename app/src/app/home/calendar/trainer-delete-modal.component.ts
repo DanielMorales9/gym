@@ -6,7 +6,7 @@ import {BaseCalendarModal} from "./base-calendar-modal";
 @Component({
     selector: 'trainer-delete-modal',
     templateUrl: './trainer-delete-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class TrainerDeleteModalComponent extends BaseCalendarModal implements OnInit {
 

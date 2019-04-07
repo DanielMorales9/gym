@@ -71,21 +71,6 @@ describe('BundlesService', () => {
         req.flush(bundle);
     });
 
-    it("testing #searchNotDisabled", done => {
-        let query="query";
-        bundleService.searchNotDisabled(query, 1, 5)
-            .subscribe(res => {
-                expect(res).toEqual([]);
-                done();
-            });
-        let url = "/bundleSpecs/searchNotDisabled?query=query&page=1&size=5&sort=createdAt,desc&sort=name,asc";
-        let req = backend.expectOne({
-            url: url,
-            method: "GET"
-        });
-        req.flush([]);
-    });
-
     it("testing #search", done => {
         let bundle = new Bundle();
         bundle.id = 1;
@@ -96,21 +81,6 @@ describe('BundlesService', () => {
         });
         let req = backend.expectOne({
             url: "/bundleSpecs/search?query=query&page=1&size=5&sort=createdAt,desc&sort=name,asc",
-            method: "GET"
-        });
-        req.flush([bundle]);
-    });
-
-    it("testing #getNotDisabled", done => {
-        let bundle = new Bundle();
-        bundle.id = 1;
-        bundle.description = "now";
-        bundleService.getNotDisabled(1, 5).subscribe(res => {
-            expect(res).toEqual([bundle]);
-            done();
-        });
-        let req = backend.expectOne({
-            url: "/bundleSpecs/getNotDisabled?page=1&size=5&sort=createdAt,desc&sort=name,asc",
             method: "GET"
         });
         req.flush([bundle]);

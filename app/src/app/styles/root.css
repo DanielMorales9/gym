@@ -3,6 +3,19 @@ mat-card {
     box-shadow: none !important;
 }
 
+.red-light {
+    color: red;
+}
+
+.green-light {
+    color: green;
+}
+
+mat-form-field {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
 @media (min-width: 576px) {
 
     .container {
@@ -221,26 +234,6 @@ mat-list.no-card {
     background-color: #fff;
     background-clip: border-box;
     border: 1px solid white;
-}
-
-.green-led {
-    margin: 0 auto;
-    width: 10px;
-    height: 10px;
-    background-color: #ABFF00;
-    border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #304701 0 -1px 9px, #89FF00 0 2px 12px;
-    display: inline-block;
-}
-
-.red-led {
-    margin: 0 auto;
-    width: 10px;
-    height: 10px;
-    background-color: #F00;
-    border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #441313 0 -1px 9px, rgba(255, 0, 0, 0.5) 0 2px 12px;
-    display: inline-block;
 }
 
 #adv-search {

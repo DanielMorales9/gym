@@ -1,0 +1,27 @@
+<form mat-dialog-title [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+    <h5 class="modal-title">Pagamento Rata</h5>
+    <!--<button type="button" class="close" id="payModalClose" data-dismiss="modal" aria-label="Close">-->
+    <!--<span aria-hidden="true">&times;</span>-->
+    <!--</button>-->
+    <div mat-dialog-content>
+        <mat-form-field>
+            <label for="amount" class="sr-only">Somma da Pagare</label>
+            <input type="number" id="amount"
+                   name="amount"
+                   matInput
+                   formControlName="amount"
+                   [ngClass]="{ 'is-invalid': amount.touched && amount.invalid }"/>
+            <mat-error *ngIf="amount.touched && amount.invalid" class="error-message">
+                <div *ngIf="!!amount.errors?.required">Somma da pagare obbligatoria</div>
+                <div *ngIf="!!amount.errors?.min">La rata deve essere superiore a 0</div>
+                <div *ngIf="!!amount.errors?.max">La rata è superiore all'importo massimo dovuto</div>
+            </mat-error>
+        </mat-form-field>
+    </div>
+
+    <!-- TODO error message not visible when paying-->
+
+    <div mat-dialog-actions>
+        <button mat-flat-button	color="accent" type="submit">Invia</button>
+    </div>
+</form>

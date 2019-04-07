@@ -82,9 +82,9 @@ public class SaleController {
         return saleRepository.findSalesByCustomerLastName(lastName, pageable);
     }
 
-    @GetMapping(path = "/sales/createNewSale/{adminEmail}/{customerId}")
+    @GetMapping(path = "/sales/createSale/{adminEmail}/{customerId}")
     @Transactional
-    ResponseEntity<SaleResource> createNewSale(@PathVariable String adminEmail, @PathVariable Long customerId) {
+    ResponseEntity<SaleResource> createSale(@PathVariable String adminEmail, @PathVariable Long customerId) {
 
         Admin admin = adminRepository.findByEmail(adminEmail);
         Customer customer = customerService.findById(customerId);

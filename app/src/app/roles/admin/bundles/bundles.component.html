@@ -22,7 +22,7 @@
             <bundle-item [bundle]="b" (done)="getBundles()"></bundle-item>
         </div>
     </cdk-virtual-scroll-viewport>
-    <no-item [hidden]="!ds.empty" [(message)]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+    <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
     <button type="button" mat-fab color="primary" class="fab-button-add"
 
             title="Aggiungi Pacchetto" (click)="openDialog()">

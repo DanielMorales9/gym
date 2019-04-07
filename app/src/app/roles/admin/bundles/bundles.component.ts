@@ -1,15 +1,15 @@
 import {Component} from '@angular/core';
-import {Bundle} from "../../../shared/model";
-import {BundlesService} from "../../../shared/services";
-import {MatDialog} from "@angular/material";
-import {BundleModalComponent} from "./bundle-modal.component";
-import {DataSource} from "@angular/cdk/table";
-import {BehaviorSubject, Observable, Subscription} from "rxjs";
-import {CollectionViewer} from "@angular/cdk/collections";
+import {Bundle} from '../../../shared/model';
+import {ABundleService, BundlesService} from '../../../shared/services';
+import {MatDialog} from '@angular/material';
+import {BundleModalComponent} from './bundle-modal.component';
+import {DataSource} from '@angular/cdk/table';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {CollectionViewer} from '@angular/cdk/collections';
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../../../search-and-list.css', '../../../root.css']
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
 export class BundlesComponent {
 
@@ -69,7 +69,7 @@ export class BundleDataSource extends DataSource<Bundle | undefined> {
     private subscription = new Subscription();
     empty: boolean = false;
 
-    constructor(private service: BundlesService,
+    constructor(private service: ABundleService,
                 private pageSize: number,
                 private query: string) {
         super()
@@ -112,35 +112,45 @@ export class BundleDataSource extends DataSource<Bundle | undefined> {
 
 
     private search(page: number) {
-        if (this.query === undefined || this.query == '') {
-            this.service.get(page, this.pageSize).subscribe(res => {
-                let newLenght = res['page']['totalElements'];
-                if (this.length != newLenght) {
-                    this.length = newLenght;
-                    this.cachedData = Array.from<Bundle>({length: this.length});
-                }
-                let bundles = res['_embedded']['aTrainingBundleSpecifications'];
-                bundles.map(v => v.type = 'P');
-                this.empty = bundles.length == 0;
-                this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
-                this.dataStream.next(this.cachedData);
-            })
+        let observable: Observable<any>;
+
+        if (this.query === undefined || this.query == '')
+            observable = this.service.get(page, this.pageSize);
+
+        else
+            observable = this.service.search(this.query, page, this.pageSize);
+
+
+        observable.subscribe(res => {
+            let newLength = BundleDataSource.getLength(res);
+            if (this.length != newLength) {
+                this.length = newLength;
+                this.cachedData = Array.from<Bundle>({length: this.length});
+            }
+            let bundles = BundleDataSource.getBundles(res);
+            this.empty = bundles.length == 0;
+            this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
+            this.dataStream.next(this.cachedData);
+        })
+    }
+
+    private static getBundles(res) {
+        let bundles;
+        if (res['_embedded'])
+            bundles = res['_embedded']['aTrainingBundleSpecifications'];
+        else
+            bundles = res['content'];
+        return bundles;
+    }
+
+    private static getLength(res) {
+        let length;
+        if (res['page']) {
+            length = res['page']['totalElements'];
         }
         else {
-
-            this.service.search(this.query, page, this.pageSize).subscribe(res => {
-                let newLenght = res['totalElements'];
-                if (this.length != newLenght) {
-                    this.length = newLenght;
-                    this.cachedData = Array.from<Bundle>({length: this.length});
-                }
-
-                let bundles = res['content'];
-                bundles.map(v => v.type = 'P');
-                this.empty = bundles.length == 0;
-                this.cachedData.splice(page * this.pageSize, this.pageSize, ...bundles);
-                this.dataStream.next(this.cachedData);
-            })
+            length = res['totalElements']
         }
+        return length
     }
 }

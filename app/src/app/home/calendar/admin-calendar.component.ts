@@ -9,7 +9,7 @@ import {User} from "../../shared/model";
 @Component({
     selector: "admin-calendar",
     templateUrl: './admin-calendar.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class AdminCalendarComponent extends BaseCalendar {
 

@@ -2,11 +2,14 @@ import { HttpClient } from '@angular/common/http'
 import { Injectable } from '@angular/core'
 import {Observable} from "rxjs";
 import {Bundle} from "../model";
+import {ABundleService} from './abundle.service';
 
 @Injectable()
-export class BundlesService {
+export class BundlesService extends ABundleService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) {
+        super();
+    }
 
     put(bundle: Bundle) : Observable<Object> {
         return this.http.put(`/bundleSpecs/${bundle.id}`, bundle);
@@ -22,14 +25,6 @@ export class BundlesService {
 
     search(query:string, page: number, size: number) : Observable<Object> {
         return this.http.get(`/bundleSpecs/search?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
-    }
-
-    searchNotDisabled(query: string, page: number, size) : Observable<Object> {
-        return this.http.get(`/bundleSpecs/searchNotDisabled?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
-    }
-
-    getNotDisabled(page: number, size: number) : Observable<Object> {
-        return this.http.get(`/bundleSpecs/getNotDisabled?page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 
     getSessions(endpoint) : Observable<Object> {

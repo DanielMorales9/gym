@@ -8,7 +8,7 @@ import {BundlesService} from '../../../shared/services';
 @Component({
     selector: 'bundle-item',
     templateUrl: './bundle-item.component.html',
-    styleUrls: ['../../../search-and-list.css', '../../../root.css'],
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css'],
 })
 export class BundleItemComponent {
 

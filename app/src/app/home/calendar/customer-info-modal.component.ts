@@ -6,7 +6,7 @@ import {NotificationService} from "../../services";
 @Component({
     selector: 'customer-info-modal',
     templateUrl: './customer-info-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class CustomerInfoModalComponent extends BaseCalendarModal implements OnInit {
 

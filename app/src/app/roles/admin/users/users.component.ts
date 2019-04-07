@@ -10,7 +10,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../../../search-and-list.css']
+    styleUrls: ['../../../styles/search-list.css']
 })
 export class UsersComponent {
 

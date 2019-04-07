@@ -3,7 +3,7 @@ import {RouterModule} from "@angular/router";
 import {BundlesComponent} from "./bundles";
 import {UserDetailsComponent, UsersComponent} from './users';
 import {SalesComponent} from "../../shared/components/sales";
-import {CreateSaleComponent} from './sales';
+import {CreateSaleComponent, SalesSummaryComponent} from './sales';
 
 const routes = [
 
@@ -13,7 +13,8 @@ const routes = [
             { path: 'users', component: UsersComponent },
             { path: 'users/:id', component: UserDetailsComponent},
             { path: 'sales', component: SalesComponent },
-            { path: 'buy/:id', component: CreateSaleComponent },
+            { path: 'sales/buy/:id', component: CreateSaleComponent },
+            { path: 'sales/summary/:id', component: SalesSummaryComponent },
             { path: '**', redirectTo: 'bundles' }
         ]},
 ];

@@ -47,13 +47,13 @@ describe('SalesService', () => {
         req.flush([]);
     });
 
-    it("testing #createNewSale", done => {
-        salesService.createNewSale("email", 1).subscribe(res => {
+    it("testing #createSale", done => {
+        salesService.createSale("email", 1).subscribe(res => {
             expect(res).toEqual({});
             done();
         });
         let req = backend.expectOne({
-            url: "sales/createNewSale/email/1",
+            url: "sales/createSale/email/1",
             method: "GET"
         });
         req.flush({});

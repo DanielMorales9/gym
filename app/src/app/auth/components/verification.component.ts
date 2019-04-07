@@ -8,7 +8,7 @@ import {passwordMatchValidator} from '../../shared/directives';
 
 @Component({
     templateUrl: './verification.component.html',
-    styleUrls: ['../../root.css', './auth.css']
+    styleUrls: ['../../styles/root.css', './auth.css']
 })
 export class VerificationComponent implements OnInit {
 

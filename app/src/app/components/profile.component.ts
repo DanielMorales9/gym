@@ -8,7 +8,7 @@ import {ChangePasswordModalComponent} from './change-password-modal.component';
 
 @Component({
     templateUrl: './profile.component.html',
-    styleUrls: ['../root.css', '../card.css'],
+    styleUrls: ['../styles/root.css', '../styles/card.css'],
 })
 export class ProfileComponent implements OnInit {
 

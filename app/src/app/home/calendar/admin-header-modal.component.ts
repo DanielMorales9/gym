@@ -6,7 +6,7 @@ import {TimesOffService} from "../../shared/services";
 @Component({
     selector: 'admin-header-modal',
     templateUrl: './admin-header-modal.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class AdminHeaderModalComponent extends BaseCalendarModal implements OnInit {
 

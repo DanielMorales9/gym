@@ -30,8 +30,15 @@ export class SaleHelperService {
             })
     }
 
-    createNewSale(email:string, id:number) {
-        return this.saleService.createNewSale(email, id);
+    static unwrapLines(sale: Sale) {
+        if (sale.salesLineItems)
+            if (sale.salesLineItems['_embedded'])
+                sale.salesLineItems = sale.salesLineItems['_embedded']['salesLineItemResources']
+
+    }
+
+    createSale(email:string, id:number) {
+        return this.saleService.createSale(email, id);
     }
 
     delete(id: number) {
@@ -56,7 +63,6 @@ export class SaleHelperService {
 
     deleteSalesLineItem(saleId: number, adminId: any) {
         return this.saleService.deleteSalesLineItem(saleId, adminId);
-        
     }
 
     confirmSale(id: number) {

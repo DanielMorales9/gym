@@ -7,7 +7,7 @@ import {MAT_DIALOG_DATA, MatDialogRef, MatSnackBar} from '@angular/material';
 
 @Component({
     templateUrl: 'change-password-modal.component.html',
-    styleUrls: ['../root.css']
+    styleUrls: ['../styles/root.css']
 })
 export class ChangePasswordModalComponent implements OnInit {
 

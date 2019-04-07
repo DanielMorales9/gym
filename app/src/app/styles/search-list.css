@@ -46,6 +46,7 @@ form.search-form {
 
 mat-toolbar.search-toolbar {
     flex: 1 0 auto;
+    padding-bottom: 8px;
 }
 
 div.scroll-item {
@@ -71,6 +72,18 @@ cdk-virtual-scroll-viewport.scroll-viewport {
     flex: 1 0 auto;
     overflow-y: scroll;
     overflow-x: hidden;
+    width: 100%;
+    width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    width: -ms-available;
+    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    height: 100%;
+    height: -moz-available;          /* WebKit-based browsers will ignore this. */
+    height: -ms-available;
+    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+}
+
+cdk-virtual-scroll-viewport.scroll-viewport > .cdk-virtual-scroll-content-wrapper {
+    /* TODO fix virtual scroll height*/
     width: 100%;
     width: -moz-available;          /* WebKit-based browsers will ignore this. */
     width: -ms-available;

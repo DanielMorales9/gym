@@ -11,11 +11,6 @@ form {
     flex-direction: column;
 }
 
-mat-form-field {
-    margin-top: 8px;
-    margin-bottom: 8px;
-}
-
 .form-header {
     display: flex;
     padding-bottom: 8px;

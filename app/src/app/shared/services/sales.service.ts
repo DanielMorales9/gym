@@ -15,8 +15,8 @@ export class SalesService {
         return this.http.get(`/sales?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    createNewSale(email: string, id: number) : Observable<Object> {
-        return this.http.get(`sales/createNewSale/${email}/${id}`);
+    createSale(email: string, id: number) : Observable<Object> {
+        return this.http.get(`sales/createSale/${email}/${id}`);
     }
 
     delete(id: number) : Observable<Object> {

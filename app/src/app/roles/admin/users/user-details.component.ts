@@ -9,7 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     templateUrl: './user-details.component.html',
-    styleUrls: ['../../../root.css', '../../../card.css'],
+    styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
 })
 export class UserDetailsComponent implements OnInit {
 
@@ -77,6 +77,6 @@ export class UserDetailsComponent implements OnInit {
     }
 
     buy() {
-        return this.router.navigate(['admin', 'buy', this.user.id])
+        return this.router.navigate(['admin', 'sales', 'buy', this.user.id])
     }
 }

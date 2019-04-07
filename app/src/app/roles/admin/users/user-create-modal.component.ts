@@ -7,7 +7,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 @Component({
     selector: 'user-create-modal',
     templateUrl: './user-create-modal.component.html',
-    styleUrls: ['../../../root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class UserCreateModalComponent implements OnInit {
 

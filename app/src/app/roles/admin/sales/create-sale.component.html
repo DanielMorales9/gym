@@ -1,51 +1,37 @@
-<table class="card-table">
-    <thead>
-    <th>
-        <div class="input-group" id="adv-search">
-            <label class="sr-only" for="search">Search</label>
-            <input type="text" title="Ricerca Pacchetto per nome"
-                   [(ngModel)]="query"
-                   class="form-control"
-                   id="search"
-                   placeholder="Search" />
-            <button type="submit" class="btn" id="search-submit-end" (click)="findBundles()">
-                <i class="fa fa-search"></i>
+<div class="page-container">
+    <mat-toolbar color="basic" class="search-toolbar">
+        <form class="search-form">
+            <mat-form-field class="search-input" appearance="standard" floatLabel="never">
+                <label class="sr-only" for="search-input">Cerca pacchetti</label>
+                <input matInput
+                       type="text"
+                       title="Cerca pacchetti"
+                       placeholder="Cerca pacchetti"
+                       id="search-input"
+                       name="query"
+                       [(ngModel)]="query"/>
+            </mat-form-field>
+            <button mat-button type="submit" (click)="getBundles()">
+                <mat-icon>search</mat-icon>
             </button>
-        </div>
-    </th>
-    </thead>
-    <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
-        <no-item [(message)]="no_message_card"></no-item>
-    </tr>
-    <tr *ngFor="let b of bundles">
-        <bundle-details [bundle]="b" mode="add" classMode="default" (event)="addBundle($event)"></bundle-details>
-    </tr>
-</table>
-<pager #pagerComponent></pager>
+        </form>
+    </mat-toolbar>
+    <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="186" class="scroll-viewport">
 
-<table class="card-table" *ngIf="soldBundles.length > 0">
-    <thead>
-    <th>
-        <div class="card card-row">
-            <div class="card-header">
-                <div class="row">
-                    <div class="col-9 col-xs-11">
-                        <h5 class="card-text">
-                            <i class="fa fa-shopping-cart"></i>&nbsp;&nbsp;Carrello
-                        </h5>
-                    </div>
-                    <div class="col-3 col-xs-1">
-                        <a (click)="confirmSale()">
-                            <i class="fa fa-clipboard-check" title="Conferma Vendita">&nbsp;&nbsp;</i>
-                            <span class="d-none d-md-inline">Conferma</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
+        <div *cdkVirtualFor="let bundle of ds; templateCacheSize: 0" class="scroll-item">
+            <bundle-select-item [bundle]="bundle"
+                                [selected]="selected[bundle?.id]"
+                                (done)="selectBundle(bundle?.id)">
+
+            </bundle-select-item>
+
         </div>
-    </th>
-    </thead>
-    <tr *ngFor="let b of soldBundles">
-        <bundle-details [bundle]="b" mode="delete" classMode="default" (event)="deleteBundle($event)"></bundle-details>
-    </tr>
-</table>
+    </cdk-virtual-scroll-viewport>
+    <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+    <button type="button" mat-fab color="primary" class="fab-button-add"
+            title="Conferma Vendità" (click)="confirmSale()">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-check"></mat-icon>
+        </span>
+    </button>
+</div>

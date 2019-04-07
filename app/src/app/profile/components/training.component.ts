@@ -6,7 +6,7 @@ import {ChangeViewService, NotificationService} from "../../services";
 
 @Component({
     templateUrl: './training.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class TrainingComponent implements OnInit {
 

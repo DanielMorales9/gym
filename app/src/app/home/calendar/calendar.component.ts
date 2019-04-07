@@ -6,7 +6,7 @@ import {ActivatedRoute} from "@angular/router";
 
 @Component({
     templateUrl: './calendar.component.html',
-    styleUrls: ['../../root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class CalendarComponent implements OnInit {
 

@@ -5,19 +5,19 @@ import {
     NoItemComponent,
     PagerComponent,
     SaleDetailsComponent,
-    SaleModalComponent,
     SalesComponent,
     UserPatchModalComponent,
 } from './components';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
+    BundlesNotDisabledService,
     BundlesService,
     SalesService,
     TimesOffService,
     TrainingService,
     UserHelperService,
     UserService
-} from "./services";
+} from './services';
 import {
     MatButtonModule,
     MatCardModule,
@@ -46,7 +46,6 @@ import {
     declarations: [
         SalesComponent,
         SaleDetailsComponent,
-        SaleModalComponent,
         NoItemComponent,
         PagerComponent,
         BundleDetailsComponent,
@@ -55,13 +54,13 @@ import {
     exports: [
         SalesComponent,
         SaleDetailsComponent,
-        SaleModalComponent,
         NoItemComponent,
         PagerComponent,
         BundleDetailsComponent,
     ],
     providers: [
         BundlesService,
+        BundlesNotDisabledService,
         SalesService,
         TimesOffService,
         TrainingService,
