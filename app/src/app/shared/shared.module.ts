@@ -1,11 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
-    BundleDetailsComponent,
     NoItemComponent,
     PagerComponent,
-    SaleDetailsComponent,
-    SalesComponent,
     UserModalComponent,
 } from './components';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -46,19 +43,13 @@ import {
         UserModalComponent
     ],
     declarations: [
-        SalesComponent,
-        SaleDetailsComponent,
         NoItemComponent,
         PagerComponent,
-        BundleDetailsComponent,
         UserModalComponent
     ],
     exports: [
-        SalesComponent,
-        SaleDetailsComponent,
         NoItemComponent,
         PagerComponent,
-        BundleDetailsComponent,
     ],
     providers: [
         BundlesService,

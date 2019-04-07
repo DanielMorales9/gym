@@ -34,4 +34,8 @@ export class BundlesService extends ABundleService {
     delete(id: number) {
         return this.http.delete(`/bundleSpecs/${id}`);
     }
+
+    findById(id: number) {
+        return this.http.get(`/bundleSpecs/${id}`);
+    }
 }

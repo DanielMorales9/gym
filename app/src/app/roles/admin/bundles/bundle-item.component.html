@@ -1,7 +1,9 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            {{bundle?.name || 'Loading...'}}
+            <a routerLink="/admin/bundles/{{bundle?.id}}">
+                {{bundle?.name || 'Loading...'}}
+            </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">
             {{bundle?.description || 'Loading...'}}

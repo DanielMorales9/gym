@@ -6,10 +6,10 @@ import {MatDialog} from '@angular/material';
 import {SalesModalComponent} from './sales-modal.component';
 
 @Component({
-    templateUrl: './sales-summary.component.html',
-    styleUrls: ['../../../styles/list-items.css', '../../../styles/root.css']
+    templateUrl: './sale-details.component.html',
+    styleUrls: ['../../../styles/list-items.css', '../../../styles/root.css', '../../../styles/card.css'],
 })
-export class SalesSummaryComponent implements OnInit {
+export class SaleDetailsComponent implements OnInit {
 
     sale: Sale;
     hidden: boolean;
@@ -62,9 +62,5 @@ export class SalesSummaryComponent implements OnInit {
             }});
 
         dialogRef.afterClosed().subscribe(_ => this.getSale(this.sale.id));
-    }
-
-    end() {
-        return this.router.navigateByUrl("/")
     }
 }

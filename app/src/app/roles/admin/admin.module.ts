@@ -1,5 +1,5 @@
 import {NgModule} from '@angular/core';
-import {BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
+import {BundleDetailsComponent, BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
 import {CommonModule} from '@angular/common';
 import {AdminRouting} from './admin.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -22,7 +22,7 @@ import {
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
 import {SharedModule} from '../../shared';
-import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, SalesSummaryComponent} from './sales';
+import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, SaleDetailsComponent} from './sales';
 
 @NgModule({
     imports: [
@@ -50,12 +50,13 @@ import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, Sal
         BundlesComponent,
         BundleItemComponent,
         BundleModalComponent,
+        BundleDetailsComponent,
         BundleSelectItemComponent,
         UsersComponent,
         UserItemComponent,
         UserDetailsComponent,
         CreateSaleComponent,
-        SalesSummaryComponent,
+        SaleDetailsComponent,
         SalesModalComponent,
     ],
     providers: [

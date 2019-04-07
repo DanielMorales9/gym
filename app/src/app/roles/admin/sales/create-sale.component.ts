@@ -112,7 +112,7 @@ export class CreateSaleComponent implements OnInit {
         this.saleHelperService.confirmSale(this.sale.id)
             .subscribe( (res: Sale) => {
                 this.sale = res;
-                return this.router.navigate(['admin', 'sales', 'summary', this.sale.id]);
+                return this.router.navigate(['admin', 'sales', this.sale.id]);
             }, err => {
                 this.snackbar.open(err.error.message)
             })

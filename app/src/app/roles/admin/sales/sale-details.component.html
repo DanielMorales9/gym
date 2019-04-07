@@ -13,14 +13,14 @@
                 <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{getDate(sale?.createdAt)}}
             </span>
 
-            <span [hidden]="!sale?.payed">
+            <span [hidden]="!sale?.payed" class="green-light">
                 <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{getDate(sale?.payedDate)}}
             </span>
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;
             </span>
 
-            <span [hidden]="sale?.payed">
+            <span [hidden]="sale?.payed" class="red-light">
                 <mat-icon fontSet="fab" fontIcon="fa-cc-apple-pay"></mat-icon>Da Pagare&nbsp;
                 {{sale?.totalPrice-sale?.amountPayed}}&euro;
             </span>
@@ -28,8 +28,9 @@
         <!--TODO add header to list of bundles -->
         <mat-list *ngFor="let l of sale?.salesLineItems">
             <mat-list-item>
-                {{l?.bundleSpecification?.name || 'Loading...'}}
-                <!--TODO add link to bundle details-->
+                <a routerLink="/admin/bundles/{{l?.bundleSpecification?.id}}">
+                    {{l?.bundleSpecification?.name || 'Loading...'}}
+                </a>
             </mat-list-item>
         </mat-list>
     </mat-card-content>
@@ -44,16 +45,5 @@
                 <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
             </span>
         </button>
-        <button mat-button (click)="end()">
-            <span>
-                <mat-icon fontSet="fas" fontIcon="fa-step-forward"></mat-icon>&nbsp;Fine
-            </span>
-        </button>
-
     </mat-card-actions>
 </mat-card>
-
-
-<!--<div class="green-led" [hidden]="!sale?.payed"></div>-->
-<!--<div class="red-led" [hidden]="sale?.payed"></div>-->
-
