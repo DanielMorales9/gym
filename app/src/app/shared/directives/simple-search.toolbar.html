@@ -1,6 +1,6 @@
 <mat-toolbar color="basic" class="search-toolbar">
     <form class="search-form">
-        <mat-form-field class="search-input" appearance="standard" floatLabel="never">
+        <mat-form-field class="search-input" floatLabel="never">
             <label class="sr-only" for="search-input">{{text}}</label>
             <input matInput
                    type="text"
@@ -9,9 +9,9 @@
                    id="search-input"
                    name="query"
                    [(ngModel)]="query"/>
+            <button mat-button matSuffix type="submit" (click)="emit()">
+                <mat-icon>search</mat-icon>
+            </button>
         </mat-form-field>
-        <button mat-button type="submit" (click)="emit()">
-            <mat-icon>search</mat-icon>
-        </button>
     </form>
 </mat-toolbar>

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {User} from '../../../shared/model';
-import {UserHelperService, UserService} from '../../../shared/services';
+import {QueryableDatasource, UserHelperService, UserService} from '../../../shared/services';
 import {AppService, AuthService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {CollectionViewer, DataSource} from '@angular/cdk/collections';
@@ -21,9 +21,10 @@ export class UsersComponent {
 
     query: string;
     private pageSize: number = 10;
-    ds: UserDataSource;
+    ds: QueryableDatasource<User>;
 
     constructor(private service: UserService,
+                private helper: UserHelperService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private app: AppService,
@@ -31,7 +32,7 @@ export class UsersComponent {
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
         this.currentUserId = this.app.user.id;
-        this.ds = new UserDataSource(this.service, this.pageSize, this.query);
+        this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
     }
 
     openDialog(): void {
@@ -93,87 +94,5 @@ export class UsersComponent {
         }, () => {
             this.search();
         })
-    }
-}
-
-export class UserDataSource extends DataSource<User | undefined> {
-    private length = 1;
-    private fetchedPages = new Set<number>();
-    private subscription = new Subscription();
-    private cachedData = Array.from<User>({length: this.length});
-    private dataStream = new BehaviorSubject<User[]>(this.cachedData);
-    empty: boolean = false;
-
-    constructor(private service: UserService,
-                private pageSize: number,
-                private query: string) {
-        super();
-    }
-
-    connect(collectionViewer: CollectionViewer): Observable<(User | undefined)[]> {
-        this.subscription.add(collectionViewer.viewChange.subscribe(range => {
-            const startPage = this.getPageForIndex(range.start);
-            let end = (this.length < range.end-1) ? this.length : range.end - 1;
-            const endPage = this.getPageForIndex(end);
-            for (let i = startPage; i <= endPage; i++) {
-                this.fetchPage(i);
-            }
-        }));
-
-        this.fetchPage(0);
-        return this.dataStream;
-    }
-
-    disconnect(): void {
-        this.subscription.unsubscribe();
-    }
-
-    private getPageForIndex(index: number): number {
-        return Math.floor(index / this.pageSize);
-    }
-
-    fetchPage(page: number) {
-        if (this.fetchedPages.has(page)) {
-            return;
-        }
-        this.fetchedPages.add(page);
-        this.search(page)
-    }
-
-    setQuery(query: string) {
-        this.query = query;
-        this.fetchedPages = new Set<number>();
-        this.cachedData = [];
-        this.fetchPage(0)
-    }
-
-    private search(page: number) {
-        let observable;
-        if (this.query === undefined || this.query == '')
-            observable = this.service.get(page, this.pageSize);
-
-        else
-            observable = this.service.search(this.query, page, this.pageSize);
-
-        observable.subscribe(res => {
-            let newLength = UserDataSource.getLength(res);
-            if (this.length != newLength) {
-                this.length = newLength;
-                this.cachedData = Array.from<User>({length: this.length});
-            }
-
-            let users = UserHelperService.unwrapUsers(res);
-            this.empty = users.length == 0;
-            this.cachedData.splice(page * this.pageSize, this.pageSize, ...users);
-            this.dataStream.next(this.cachedData);
-        })
-    }
-
-    private static getLength(res) {
-        let newLength;
-        if (res['page'])
-            newLength = res['page']['totalElements'];
-        else newLength = res['totalElements'];
-        return newLength;
     }
 }

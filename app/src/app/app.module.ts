@@ -11,11 +11,9 @@ import {
     AuthService,
     ChangeViewService,
     DateService,
-    ExchangeSaleService,
     GlobalErrorHandler,
     GymConfigurationService,
     NotificationService,
-    SaleHelperService,
     SnackBarService
 } from './services';
 import {ErrorComponent, NotificationsComponent, ProfileComponent} from './components';
@@ -73,14 +71,12 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         AuthenticatedService,
         AuthGuardService,
         RoleGuardService,
-        SaleHelperService,
         GymConfigurationService,
         DateService,
         SnackBarService,
 
         NotificationService,
         ChangeViewService,
-        ExchangeSaleService,
         {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler

@@ -6,8 +6,9 @@ import {
 } from './components';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {
+    BundleHelperService,
     BundlesNotDisabledService,
-    BundlesService,
+    BundlesService, HelperService,
     SalesService,
     TimesOffService,
     TrainingService,
@@ -16,13 +17,14 @@ import {
 } from './services';
 import {
     MatButtonModule,
-    MatCardModule,
+    MatCardModule, MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatListModule, MatOptionModule, MatSelectModule, MatToolbarModule
+    MatInputModule, MatListModule, MatNativeDateModule, MatOptionModule, MatSelectModule, MatToolbarModule
 } from '@angular/material';
-import {SimpleSearchToolbar} from './directives';
+import {SearchWithDateToolbar, SimpleSearchToolbar} from './directives';
+import {SaleHelperService} from './services/sale-helper.service';
 
 @NgModule({
     imports: [
@@ -38,7 +40,9 @@ import {SimpleSearchToolbar} from './directives';
         MatListModule,
         MatOptionModule,
         MatSelectModule,
-        MatToolbarModule
+        MatToolbarModule,
+        MatDatepickerModule,
+        MatNativeDateModule
     ],
     entryComponents: [
         UserModalComponent
@@ -46,11 +50,13 @@ import {SimpleSearchToolbar} from './directives';
     declarations: [
         NoItemComponent,
         SimpleSearchToolbar,
+        SearchWithDateToolbar,
         UserModalComponent
     ],
     exports: [
         NoItemComponent,
-        SimpleSearchToolbar
+        SimpleSearchToolbar,
+        SearchWithDateToolbar
     ],
     providers: [
         BundlesService,
@@ -59,7 +65,9 @@ import {SimpleSearchToolbar} from './directives';
         TimesOffService,
         TrainingService,
         UserService,
-        UserHelperService
+        UserHelperService,
+        SaleHelperService,
+        BundleHelperService
     ]
 
 })

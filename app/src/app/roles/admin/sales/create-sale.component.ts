@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundlesNotDisabledService, UserService} from '../../../shared/services';
+import {BundleHelperService, BundlesNotDisabledService, QueryableDatasource, UserService} from '../../../shared/services';
 import {Bundle, Sale} from '../../../shared/model';
-import {AppService, SaleHelperService, SnackBarService} from '../../../services';
-import {BundleDataSource} from '../bundles';
+import {AppService, SnackBarService} from '../../../services';
+import {SaleHelperService} from '../../../shared/services/sale-helper.service';
 
 
 @Component({
@@ -21,27 +21,26 @@ export class CreateSaleComponent implements OnInit {
 
     id : number;
     query: string;
-    empty: boolean;
 
-    bundles: Bundle[];
     adminEmail: string;
     sale: Sale;
 
     private pageSize: number = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
-    ds: BundleDataSource;
+    ds: QueryableDatasource<Bundle>;
 
     constructor(private app: AppService,
                 private router: Router,
+                private saleHelper: SaleHelperService,
+                private helper: BundleHelperService,
                 private bundleService: BundlesNotDisabledService,
-                private saleHelperService: SaleHelperService,
                 private userService: UserService,
                 private snackbar: SnackBarService,
                 private route: ActivatedRoute) {
         this.current_role_view = this.app.current_role_view;
         this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
         this.adminEmail = this.app.user.email;
-        this.ds = new BundleDataSource(bundleService, this.pageSize, this.query);
+        this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
@@ -56,7 +55,7 @@ export class CreateSaleComponent implements OnInit {
     }
 
     private createSale() {
-        this.saleHelperService.createSale(this.adminEmail, this.id).subscribe((res: Sale) => {
+        this.saleHelper.createSale(this.adminEmail, this.id).subscribe((res: Sale) => {
             SaleHelperService.unwrapLines(res);
             this.sale = res;
         })
@@ -64,7 +63,7 @@ export class CreateSaleComponent implements OnInit {
 
     private addSalesLineItem(id: number) {
 
-        this.saleHelperService.addSalesLineItem(this.sale.id, id)
+        this.saleHelper.addSalesLineItem(this.sale.id, id)
             .subscribe( (res: Sale) =>{
                 SaleHelperService.unwrapLines(res);
                 this.sale = res;
@@ -79,7 +78,7 @@ export class CreateSaleComponent implements OnInit {
             .filter(line => line[1] == id)
             .map(line => line[0])[0];
 
-        this.saleHelperService.deleteSalesLineItem(this.sale.id, salesLineId)
+        this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId)
             .subscribe( (res: Sale) => {
                 SaleHelperService.unwrapLines(res);
                 this.sale = res;
@@ -92,7 +91,7 @@ export class CreateSaleComponent implements OnInit {
         this.sub.unsubscribe();
         if (this.sale) {
             if (!this.sale.completed) {
-                this.saleHelperService.delete(this.sale.id)
+                this.saleHelper.delete(this.sale.id)
                     .subscribe(
                         res => { console.log(res)},
                         err => {
@@ -109,7 +108,7 @@ export class CreateSaleComponent implements OnInit {
 
 
     confirmSale() {
-        this.saleHelperService.confirmSale(this.sale.id)
+        this.saleHelper.confirmSale(this.sale.id)
             .subscribe( (res: Sale) => {
                 this.sale = res;
                 return this.router.navigate(['admin', 'sales', this.sale.id]);

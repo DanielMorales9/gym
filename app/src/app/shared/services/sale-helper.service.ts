@@ -1,0 +1,107 @@
+import { Injectable } from '@angular/core'
+import {SaleLineItem, Sale, Bundle, User} from "../model";
+import {SalesService} from './sales.service';
+import {HelperService} from './helper.service';
+import {Observable} from 'rxjs';
+
+@Injectable()
+export class SaleHelperService extends HelperService<Sale> {
+
+    constructor(private service: SalesService) {
+        super()
+    }
+
+    getSaleLineItems(sale: Sale) {
+        let endpoint;
+        if (sale['_links'])
+            endpoint = sale['_links']['salesLineItems'].href;
+        else
+            endpoint = `/sales/${sale.id}/salesLineItems`;
+        if (!sale.salesLineItems)
+            sale.salesLineItems = [];
+        this.service.getEndpoint(endpoint).subscribe(res => {
+            res["_embedded"].salesLineItems
+                .map(res1 => {
+                    let endpoint = res1['_links']['bundleSpecification'].href;
+                    let line = new SaleLineItem();
+                    line.id = res1.id;
+                    this.service.getEndpoint(endpoint)
+                        .subscribe( res2 => {
+                            line.bundleSpecification = res2 as Bundle;
+                            sale.salesLineItems.push(line as SaleLineItem);
+                        });
+                });
+        })
+    }
+
+    static unwrapLines(sale: Sale) {
+        if (sale.salesLineItems)
+            if (sale.salesLineItems['_embedded'])
+                sale.salesLineItems = sale.salesLineItems['_embedded']['salesLineItemResources']
+
+    }
+
+    createSale(email:string, id:number) {
+        return this.service.createSale(email, id);
+    }
+
+    delete(id: number) {
+        return this.service.delete(id);
+    }
+
+    getCustomer(sale: Sale) {
+        let endpoint;
+        if (sale['_links'])
+            endpoint = sale['_links'].customer.href;
+        else
+            endpoint = `/sales/${sale.id}/customer`;
+        this.service.getEndpoint(endpoint).subscribe( (res: User) => {
+                sale.customer = res;
+            })
+    }
+
+    addSalesLineItem(saleId: number, bundleId: any) {
+        return this.service.addSalesLineItem(saleId, bundleId);
+    }
+
+    deleteSalesLineItem(saleId: number, adminId: any) {
+        return this.service.deleteSalesLineItem(saleId, adminId);
+    }
+
+    confirmSale(id: number) {
+        return this.service.confirmSale(id);
+    }
+
+    findById(saleId: number) {
+        return this.service.findById(saleId);
+    }
+
+    get(page: number, size: number) : Observable<Object> {
+        return this.service.get(page, size)
+    }
+
+    search(query: any, page: number, size: number): Observable<Object> {
+        return this.service.searchByLastName(query, page, size);
+    }
+
+    preProcessResources(resources: Sale[]): Sale[] {
+        resources = this.extract(resources);
+
+        resources.map(sale => {
+            if (!sale.customer) sale.customer = new User();
+            this.getCustomer(sale);
+            return sale
+        });
+        return resources
+    }
+
+    extract(res: Sale[]) : Sale[] {
+        let sales;
+        if (res['_embedded']) {
+            sales = res['_embedded']['sales'];
+        } else {
+            sales = res['content'];
+        }
+        return sales
+    }
+}

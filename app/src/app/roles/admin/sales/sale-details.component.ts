@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {DateService, SaleHelperService, SnackBarService} from '../../../services';
+import {DateService, SnackBarService} from '../../../services';
 import {Sale, User} from '../../../shared/model';
 import {MatDialog} from '@angular/material';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SalesService} from '../../../shared/services';
+import {SaleHelperService} from '../../../shared/services/sale-helper.service';
 
 @Component({
     templateUrl: './sale-details.component.html',
@@ -64,7 +65,7 @@ export class SaleDetailsComponent implements OnInit {
             }});
 
         dialogRef.afterClosed().subscribe(res => {
-            this.service.pay(res.sale.id, res.amount)
+            if (res) this.service.pay(res.sale.id, res.amount)
             .subscribe((value: Sale) => this.sale = value);
         })
     }

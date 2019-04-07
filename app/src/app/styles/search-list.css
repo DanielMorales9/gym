@@ -41,17 +41,28 @@ form.search-form {
     /*height: inherit;*/
 }
 
+.search-datepicker {
+    width: 40%;
+}
+
+.search-text {
+    width: 60%;
+}
+
+.search-input-date {
+    font-weight: 200;
+}
+
 .search-input {
-    flex-grow: 1;
-    /*width: 100%;*/
-    /*width: -webkit-fill-available;*/
-    /*width: available;*/
+    /*flex-grow: 1;*/
+    width: 100%;
+    width: -webkit-fill-available;
+    width: available;
     font-weight: 200;
 }
 
 mat-toolbar.search-toolbar {
     flex: 1 0 auto;
-    padding-bottom: 8px;
 }
 
 div.scroll-item {
