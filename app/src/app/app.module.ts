@@ -11,7 +11,6 @@ import {
     AuthService,
     ChangeViewService,
     DateService,
-    ExchangeBundleService,
     ExchangeSaleService,
     GlobalErrorHandler,
     GymConfigurationService,
@@ -81,7 +80,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 
         NotificationService,
         ChangeViewService,
-        ExchangeBundleService,
         ExchangeSaleService,
         {
             provide: ErrorHandler,

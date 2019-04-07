@@ -6,7 +6,7 @@ import {BundleModalComponent} from './bundle-modal.component';
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {SnackBarService} from '../../../services';
+import {SaleHelperService, SnackBarService} from '../../../services';
 
 @Component({
     templateUrl: './bundles.component.html',
@@ -70,7 +70,9 @@ export class BundlesComponent {
         }
     }
 
-    getBundles() {
+    search($event?) {
+        if ($event)
+            this.query = $event.query;
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
     }
@@ -81,14 +83,14 @@ export class BundlesComponent {
         this.service.post(bundle).subscribe(_ => {
             let message = `Il pacchetto ${bundle.name} è stato creato`;
             this.snackbar.open(message);
-            this.getBundles()
+            this.search()
         });
     }
 
     private deleteBundle(bundle: Bundle) {
         let confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
         if (confirmed) {
-            this.service.delete(bundle.id).subscribe(_ => this.getBundles())
+            this.service.delete(bundle.id).subscribe(_ => this.search())
         }
     }
 
@@ -101,7 +103,7 @@ export class BundlesComponent {
         this.service.put(bundle).subscribe(_ => {
             let message = `Il pacchetto ${bundle.name} è stato modificato`;
             this.snackbar.open(message);
-            this.getBundles()
+            this.search()
         })
     }
 }

@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from "@angular/router";
 import {HomeComponent} from "./home.component";
 import {CalendarComponent} from "./calendar";
-import {SalesComponent} from "../shared/components/sales";
 
 const routes = [
 

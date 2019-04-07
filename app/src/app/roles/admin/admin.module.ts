@@ -22,7 +22,14 @@ import {
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
 import {SharedModule} from '../../shared';
-import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, SaleDetailsComponent} from './sales';
+import {
+    BundleSelectItemComponent,
+    CreateSaleComponent,
+    PaySaleModalComponent,
+    SaleDetailsComponent,
+    SalesComponent,
+    SaleItemComponent
+} from './sales';
 
 @NgModule({
     imports: [
@@ -56,8 +63,10 @@ import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, Sal
         UserItemComponent,
         UserDetailsComponent,
         CreateSaleComponent,
+        SalesComponent,
+        SaleItemComponent,
         SaleDetailsComponent,
-        SalesModalComponent,
+        PaySaleModalComponent,
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
@@ -68,7 +77,7 @@ import {BundleSelectItemComponent, CreateSaleComponent, SalesModalComponent, Sal
     ],
     entryComponents: [
         BundleModalComponent,
-        SalesModalComponent
+        PaySaleModalComponent
     ]
 })
 export class AdminModule { }

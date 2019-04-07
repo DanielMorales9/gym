@@ -38,7 +38,6 @@ export class BundleDetailsComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(res => {
-            console.log(res);
             this.service.put(res).subscribe((res: Bundle) => this.bundle = res)
         });
     }

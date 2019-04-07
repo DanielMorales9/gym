@@ -23,6 +23,11 @@
     overflow-x: hidden;
 }
 
+.panel-content {
+    display: flex;
+    flex-direction: column;
+}
+
 div.page-container {
     display: flex;
     flex-direction: column;

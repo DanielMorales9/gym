@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
     NoItemComponent,
-    PagerComponent,
     UserModalComponent,
 } from './components';
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -21,8 +20,9 @@ import {
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatListModule, MatOptionModule, MatSelectModule
+    MatInputModule, MatListModule, MatOptionModule, MatSelectModule, MatToolbarModule
 } from '@angular/material';
+import {SimpleSearchToolbar} from './directives';
 
 @NgModule({
     imports: [
@@ -37,19 +37,20 @@ import {
         MatButtonModule,
         MatListModule,
         MatOptionModule,
-        MatSelectModule
+        MatSelectModule,
+        MatToolbarModule
     ],
     entryComponents: [
         UserModalComponent
     ],
     declarations: [
         NoItemComponent,
-        PagerComponent,
+        SimpleSearchToolbar,
         UserModalComponent
     ],
     exports: [
         NoItemComponent,
-        PagerComponent,
+        SimpleSearchToolbar
     ],
     providers: [
         BundlesService,

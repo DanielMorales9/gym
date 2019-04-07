@@ -3,7 +3,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {DateService, SaleHelperService, SnackBarService} from '../../../services';
 import {Sale, User} from '../../../shared/model';
 import {MatDialog} from '@angular/material';
-import {SalesModalComponent} from './sales-modal.component';
+import {PaySaleModalComponent} from './pay-sale-modal.component';
+import {SalesService} from '../../../shared/services';
 
 @Component({
     templateUrl: './sale-details.component.html',
@@ -16,7 +17,8 @@ export class SaleDetailsComponent implements OnInit {
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
-                private saleHelperService: SaleHelperService,
+                private helper: SaleHelperService,
+                private service: SalesService,
                 private dateService: DateService,
                 private dialog: MatDialog,
                 private snackbar: SnackBarService) {
@@ -33,14 +35,14 @@ export class SaleDetailsComponent implements OnInit {
     }
 
     getSale (id) {
-        this.saleHelperService.findById(id)
+        this.helper.findById(id)
             .subscribe((res: Sale) => {
                 this.sale = res;
                 console.log(res);
                 if (!this.sale.customer) this.sale.customer = new User();
                 if (!this.sale.salesLineItems) this.sale.salesLineItems = [];
-                this.saleHelperService.getCustomer(this.sale);
-                this.saleHelperService.getSaleLineItems(this.sale);
+                this.helper.getCustomer(this.sale);
+                this.helper.getSaleLineItems(this.sale);
             })
     }
 
@@ -48,7 +50,7 @@ export class SaleDetailsComponent implements OnInit {
         let confirmed = confirm("Vuoi confermare l'eliminazione della vendita per il cliente " +
             this.sale.customer.firstName + " " + this.sale.customer.lastName + "?");
         if (confirmed) {
-            this.saleHelperService.delete(this.sale.id)
+            this.helper.delete(this.sale.id)
                 .subscribe( res => {
                     this.snackbar.open("Vendita eliminata per il cliente " + this.sale.customer.lastName + "!");
                     return this.router.navigateByUrl('/')
@@ -57,10 +59,13 @@ export class SaleDetailsComponent implements OnInit {
     }
 
     pay() {
-        const dialogRef = this.dialog.open(SalesModalComponent, { data: {
+        const dialogRef = this.dialog.open(PaySaleModalComponent, { data: {
             sale: this.sale
             }});
 
-        dialogRef.afterClosed().subscribe(_ => this.getSale(this.sale.id));
+        dialogRef.afterClosed().subscribe(res => {
+            this.service.pay(res.sale.id, res.amount)
+            .subscribe((value: Sale) => this.sale = value);
+        })
     }
 }

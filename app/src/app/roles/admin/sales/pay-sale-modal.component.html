@@ -8,6 +8,7 @@
             <label for="amount" class="sr-only">Somma da Pagare</label>
             <input type="number" id="amount"
                    name="amount"
+                   placeholder="Somma"
                    matInput
                    formControlName="amount"
                    [ngClass]="{ 'is-invalid': amount.touched && amount.invalid }"/>

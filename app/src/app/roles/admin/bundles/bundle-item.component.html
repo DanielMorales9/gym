@@ -12,19 +12,22 @@
     <div class="panel-body-description">
         <span>{{bundle?.description || 'Loading...'}}</span>
     </div>
-    <div>
+    <div class="panel-content">
+
+        <div>
         <span class="green-light" [hidden]="bundle?.disabled">
             <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
         </span>
-        <span class="red-light" [hidden]="!bundle?.disabled">
+            <span class="red-light" [hidden]="!bundle?.disabled">
             <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
         </span>
-    </div>
-    <div>
-        <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
-    </div>
-    <div>
-        <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
+        </div>
+        <div>
+            <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
+        </div>
+        <div>
+            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
+        </div>
     </div>
     <div class="panel-actions">
         <button mat-button color="primary" (click)="openDialog()">

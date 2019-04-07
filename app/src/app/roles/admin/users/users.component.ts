@@ -47,7 +47,9 @@ export class UsersComponent {
         });
     }
 
-    getUsers() {
+    search($event?) {
+        if ($event)
+            this.query = $event.query;
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
     }
@@ -65,7 +67,7 @@ export class UsersComponent {
 
     private deleteUser(user: User) {
         this.service.delete(user.id).subscribe(_ => {
-            this.getUsers()
+            this.search()
         });
     }
 
@@ -75,7 +77,7 @@ export class UsersComponent {
         }, err => {
             this.snackbar.open(err.error.message);
         }, () => {
-            this.getUsers()
+            this.search()
         })
     }
 
@@ -89,7 +91,7 @@ export class UsersComponent {
             }
             else throw err;
         }, () => {
-            this.getUsers();
+            this.search();
         })
     }
 }
@@ -146,7 +148,6 @@ export class UserDataSource extends DataSource<User | undefined> {
     }
 
     private search(page: number) {
-        console.log(page, this.query);
         let observable;
         if (this.query === undefined || this.query == '')
             observable = this.service.get(page, this.pageSize);
@@ -155,7 +156,6 @@ export class UserDataSource extends DataSource<User | undefined> {
             observable = this.service.search(this.query, page, this.pageSize);
 
         observable.subscribe(res => {
-            console.log(res);
             let newLength = UserDataSource.getLength(res);
             if (this.length != newLength) {
                 this.length = newLength;
