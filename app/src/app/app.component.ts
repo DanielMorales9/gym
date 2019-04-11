@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService, ChangeViewService} from "./services";
-import {User} from "./shared/model";
-import {UserHelperService} from "./shared/services";
+import {AppService, AuthenticatedService, ChangeViewService} from './services';
+import {User} from './shared/model';
+import {UserHelperService} from './shared/services';
 
 
 @Component({
@@ -18,7 +18,7 @@ export class AppComponent implements OnInit {
 
     profilePath: string;
     user: User;
-    appName: string = 'Goodfellas';
+    appName = 'Goodfellas';
     screenWidth: number;
 
     constructor(private service: AppService,
@@ -30,6 +30,22 @@ export class AppComponent implements OnInit {
 
 
     ngOnInit(): void {
+        // const toolbarHeight = document.getElementById('main-toolbar').style.height;
+        // const sidenav = document.getElementById('main-sidenav-container');
+        // let height;
+        // const body = window.document.body;
+        // if (window.innerHeight) {
+        //     height = window.innerHeight;
+        // } else if (body.parentElement.clientHeight) {
+        //     height = body.parentElement.clientHeight;
+        // } else if (body && body.clientHeight) {
+        //     height = body.clientHeight;
+        // }
+        //
+        // const offsetTop = sidenav.offsetTop;
+        // // sidenav.style.height = ((height - offsetTop) + 'px');
+        // console.log(height, offsetTop, sidenav.style.height);
+
         this.user = new User();
         this.authOnNavigation();
 
@@ -41,7 +57,7 @@ export class AppComponent implements OnInit {
                 this.current_role_view = this.service.current_role_view;
                 this.user = this.service.user;
                 this.userHelperService.getUserByEmail(this.user.email, u => {
-                    this.profilePath = `profile/${u.id}/user`
+                    this.profilePath = `profile/${u.id}/user`;
                 });
             }
 
@@ -53,8 +69,8 @@ export class AppComponent implements OnInit {
 
         this.screenWidth = window.innerWidth;
         window.onresize = (_) => {
-            this.screenWidth = window.innerWidth
-        }
+            this.screenWidth = window.innerWidth;
+        };
     }
 
     logout() {
@@ -62,8 +78,8 @@ export class AppComponent implements OnInit {
             this.current_role_view = undefined;
             this.authenticated = false;
             this.user = undefined;
-            return this.router.navigateByUrl("/auth/login")
-        })
+            return this.router.navigateByUrl('/auth/login');
+        });
     }
 
     switchView(role) {
@@ -80,24 +96,24 @@ export class AppComponent implements OnInit {
     }
 
     toHome() {
-        if(!this.isOnHome()) {
-            this.router.navigateByUrl('/home')
+        if (!this.isOnHome()) {
+            this.router.navigateByUrl('/home');
         }
     }
 
     hasRoles() {
         if (!!this.user && !!this.user.roles) {
-            return this.user.roles && this.user.roles.length > 1
+            return this.user.roles && this.user.roles.length > 1;
         }
-        return false
+        return false;
     }
 
     hideLogin() {
-        return this.router.url.startsWith("/auth") || this.authenticated
+        return this.router.url.startsWith('/auth') || this.authenticated;
     }
 
     hideLogout() {
-        return !this.authenticated
+        return !this.authenticated;
     }
 
     isOnHome() {

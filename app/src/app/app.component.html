@@ -1,5 +1,5 @@
 <div class="main-container">
-    <mat-toolbar color="primary" layout="row" class="main-toolbar">
+    <mat-toolbar color="primary" layout="row" class="main-toolbar" id="main-toolbar">
         <a mat-icon-button (click)="authenticated && snav.toggle()" *ngIf="screenWidth <= 599">
             <mat-icon fontSet="fa" fontIcon="fa-bars"></mat-icon>
         </a>
@@ -8,7 +8,7 @@
         <mat-icon fontSet="fas" fontIcon="fa-sign-in-alt" routerLink="/auth/login" [hidden]="hideLogin()"></mat-icon>
         <mat-icon fontSet="fas" fontIcon="fa-sign-out-alt" (click)="logout()" [hidden]="hideLogout()"></mat-icon>
     </mat-toolbar>
-    <mat-sidenav-container class="main-sidenav-container">
+    <mat-sidenav-container class="main-sidenav-container" id="main-sidenav-container">
         <mat-sidenav class="main-sidenav" #snav [opened]="screenWidth > 599 && authenticated"
                      [mode]="(screenWidth <= 599 && authenticated) ? 'over' : 'side'">
             <mat-toolbar *ngIf="screenWidth <= 599">

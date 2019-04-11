@@ -16,141 +16,14 @@ mat-form-field {
     margin-bottom: 8px;
 }
 
-@media (min-width: 576px) {
-
-    .container {
-        width: 100%;
-    }
-
-    .dropdown-menu.notification-menu {
-        width: 460px;
-    }
-
-    .dropdown-menu.dropdown-menu-cust-right {
-        top: 41px;
-        right: 0;
-        left: unset;
-        box-shadow: 0 5px 7px -1px #c1c1c1;
-        border-top-color: transparent;
-    }
-
-    .dropdown-menu.dropdown-menu-cust-right:before {
-        top: -20px;
-        right: 12px;
-        position: absolute;
-        content: "";
-        border:10px solid;
-        border-color: transparent transparent white transparent;
-    }
-
-    .dropdown-menu {
-        box-shadow: 0 5px 7px -1px #c1c1c1;
-    }
-
-    .notification {
-        padding-top: 15px;
-    }
-
-    .notification-alert {
-        width: available;
-        margin-bottom: 0;
-        overflow-x: hidden;
-
-    }
-
-    .head {
-        padding:5px 15px;
-        border-radius: 3px 3px 0 0;
-    }
-
-    .footer {
-        padding:5px 15px;
-        border-radius: 0 0 3px 3px;
-    }
-
-    li.notification-box.container {
-        max-height: 300px;
-        overflow-y: scroll;
-    }
-
-    .bg-gray {
-        background-color: #eee;
-    }
-
-}
-
-
-@media (min-width: 768px) {
-    .container {
-        width: 100%;
+@media (max-width: 599px) {
+    .app-container {
+        height: calc(100vh - 56px) !important;
     }
 }
 
-@media (min-width: 992px) {
-    .container {
-        width:80%;
-    }
-
-}
-
-@media (min-width: 1200px) {
-    .container {
-        width:80%;
-    }
-
-}
-
-@media (max-width: 576px) {
-
-    .dropdown-menu {
-        color: white;
-        background-color: transparent;
-        border-color: transparent;
-    }
-
-    .dropdown-item {
-        color: white;
-    }
-
-    .dropdown-item:hover {
-        background-color: transparent;
-    }
-
-    .dropdown-header {
-        color: whitesmoke;
-        font-size: 0.925rem;
-    }
-}
-
-@media (max-width: 640px) {
-
-
-    .dropdown-menu{
-        top: 50px;
-        left: -16px;
-        width: 290px;
-    }
-
-    .nav {
-        display: block;
-    }
-
-    .nav .nav-item,.nav .nav-item a {
-        padding-left: 0;
-    }
-
-    .message {
-        font-size: 13px;
-    }
-}
-
-.dropdown-toggle::after {
-    display:none;
-}
-
-.container {
-    margin-right: auto;
-    margin-left: auto;
+.app-container {
+    height: calc(100vh - 64px);
 }
 
 #admin-menu {

@@ -28,12 +28,6 @@
     flex-direction: column;
 }
 
-div.page-container {
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-}
-
 form.search-form {
     display: flex;
     flex-direction: row;
@@ -89,28 +83,19 @@ cdk-virtual-scroll-viewport.scroll-viewport {
     overflow-y: scroll;
     overflow-x: hidden;
     width: 100%;
-    width: -moz-available;          /* WebKit-based browsers will ignore this. */
+    width: -moz-available; /* WebKit-based browsers will ignore this. */
     width: -ms-available;
-    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
-    height: 100%;
-    height: -moz-available;          /* WebKit-based browsers will ignore this. */
-    height: -ms-available;
-    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
-}
-
-cdk-virtual-scroll-viewport.scroll-viewport > .cdk-virtual-scroll-content-wrapper {
-    /* TODO fix virtual scroll height*/
-    width: 100%;
-    width: -moz-available;          /* WebKit-based browsers will ignore this. */
-    width: -ms-available;
-    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
-    height: 100%;
-    height: -moz-available;          /* WebKit-based browsers will ignore this. */
-    height: -ms-available;
-    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    width: -webkit-fill-available; /* Mozilla-based browsers will ignore this. */
+    height: calc(100vh - 128px) !important;
 }
 
 
-mat-panel-title>a {
+mat-panel-title > a {
     color: inherit;
+}
+
+@media (max-width: 599px) {
+    cdk-virtual-scroll-viewport.scroll-viewport {
+        height: calc(100vh - 112px) !important;
+    }
 }

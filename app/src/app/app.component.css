@@ -1,6 +1,6 @@
 .main-container {
     flex-direction: column;
-    position: absolute;
+    position: relative;
     top: 0;
     bottom: 0;
     left: 0;
@@ -51,7 +51,7 @@ h1.main-app-name {
 .main-sidenav {
     /* Make sure the toolbar will stay on top of the content as it scrolls past. */
     top: 64px;
-    width: 30%;
+    width: 20%;
     position: fixed;
 }
 
@@ -60,7 +60,16 @@ h1.main-app-name {
     top: 64px;
     left: 0;
     right: 0;
-    position: fixed;
+}
+
+@media (max-width: 599px) {
+    .main-sidenav-content {
+        height: calc(100vh - 56px) !important;
+    }
+}
+
+.main-sidenav-content {
+    height: calc(100vh - 64px);
 }
 
 
