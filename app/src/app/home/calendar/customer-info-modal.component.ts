@@ -1,7 +1,6 @@
-import {Component, OnInit} from "@angular/core";
-
-import {BaseCalendarModal} from "./base-calendar-modal";
-import {NotificationService} from "../../services";
+import {Component, OnInit} from '@angular/core';
+import {BaseCalendarModal} from '../../shared/components/calendar';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'customer-info-modal',
@@ -10,14 +9,11 @@ import {NotificationService} from "../../services";
 })
 export class CustomerInfoModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON: string = 'customer-info-modal-button';
-
-    constructor(public notificationService: NotificationService) {
-        super(notificationService);
+    constructor(public dialogRef: MatDialogRef<CustomerInfoModalComponent>) {
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        this.modalButton = this.MODAL_BUTTON;
     }
 
     submit() {

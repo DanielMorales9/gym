@@ -7,26 +7,26 @@ export class TrainingService {
 
     constructor(private http: HttpClient) {}
 
-    check(date: Date, id: number) : Observable<any> {
-        let dateString = TrainingService.getDateString(date);
+    check(date: Date, id: number): Observable<any> {
+        const dateString = TrainingService.getDateString(date);
         return this.http.get(`/reservations/checkAvailabilityAndEnablement?date=${dateString}&id=${id}`);
     }
 
-
     private static getDateString(date: Date) {
-        return date.getUTCDate() + "-" + (date.getUTCMonth() + 1) + "-"
-            + date.getUTCFullYear() + "_" + date.getUTCHours() + ":" + date.getUTCMinutes();
+        return date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-'
+            + date.getUTCFullYear() + '_' + date.getUTCHours() + ':' + date.getUTCMinutes();
     }
 
-    book(date: Date, id: number) : Observable<any> {
-        let dateString = TrainingService.getDateString(date);
+    book(date: Date, id: number): Observable<any> {
+        const dateString = TrainingService.getDateString(date);
         return this.http.get(`/reservations/book/${id}?date=${dateString}`);
     }
 
-    getReservations(startDay: Date, endDay: Date, id?: number) : Observable<any> {
-        let endpoint = "/reservations?";
-        if (id)
+    getReservations(startDay: Date, endDay: Date, id?: number): Observable<any> {
+        let endpoint = '/reservations?';
+        if (id) {
             endpoint += `id=${id}&`;
+        }
         endpoint += `startDay=${TrainingService.getDateString(startDay)}&`;
         endpoint += `endDay=${TrainingService.getDateString(endDay)}`;
         return this.http.get(endpoint);
@@ -34,16 +34,17 @@ export class TrainingService {
 
     delete(id: number, type?: string) {
         let endpoint = `/reservations/${id}`;
-        if (type)
+        if (type) {
             endpoint += `?type=${type}`;
+        }
         return this.http.delete(endpoint);
     }
 
-    confirm(id: number) : Observable<any> {
+    confirm(id: number): Observable<any> {
         return this.http.get(`/reservations/confirm/${id}`);
     }
 
-    complete(id: number) : Observable<any> {
+    complete(id: number): Observable<any> {
         return this.http.get(`/reservations/complete/${id}`);
     }
 }

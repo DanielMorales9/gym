@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService, AuthenticatedService, ChangeViewService} from "../services";
-import {User} from "../shared/model";
-import {Router} from "@angular/router";
-import {UserHelperService} from "../shared/services";
+import {AppService, AuthenticatedService, ChangeViewService} from '../services';
+import {User} from '../shared/model';
+import {Router} from '@angular/router';
+import {UserHelperService} from '../shared/services';
 
 @Component({
     templateUrl: './home.component.html',
@@ -12,27 +12,27 @@ export class HomeComponent implements OnInit {
 
     user: User;
     current_role_view: number;
-    authenticated: boolean = false;
+    authenticated = false;
     profilePath: string;
 
     constructor(private service: AppService,
                 private router: Router,
-                private authenticatedService : AuthenticatedService,
+                private authenticatedService: AuthenticatedService,
                 private userHelper: UserHelperService,
                 private changeViewService: ChangeViewService) { }
 
-    ngOnInit() :void {
+    ngOnInit() {
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
             if (this.authenticated) {
 
-                let user = this.service.user;
+                const user = this.service.user;
                 this.current_role_view = this.service.current_role_view;
 
-                this.userHelper.getUserByEmail(user.email, user => {
-                    this.user = user;
-                    this.profilePath = "/profile/" + this.user.id;
-                })
+                this.userHelper.getUserByEmail(user.email, (u: User)=> {
+                    this.user = u;
+                    this.profilePath = '/profile/' + this.user.id;
+                });
             }
         });
 
@@ -46,8 +46,8 @@ export class HomeComponent implements OnInit {
 
     isOnProfile() {
         if (this.router.url.match('/profile/(.*/)+user')) {
-            return 'active'
+            return 'active';
         }
-        return ''
+        return '';
     }
 }

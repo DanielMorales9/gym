@@ -1,4 +1,5 @@
 <div class="main-container">
+    <!-- TODO Draggable sidenav -->
     <mat-toolbar color="primary" layout="row" class="main-toolbar" id="main-toolbar">
         <a mat-icon-button (click)="authenticated && snav.toggle()" *ngIf="screenWidth <= 599">
             <mat-icon fontSet="fa" fontIcon="fa-bars"></mat-icon>
@@ -42,6 +43,13 @@
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
                         </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/admin/calendar">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                        </a>
                     </div>
                     <div id="menu-customer"
                          *ngIf="current_role_view == 3">
@@ -56,13 +64,13 @@
                     </div>
                     <div id="menu-common">
                         <!--TODO divide calendar view in different components-->
-                        <a href=# mat-list-item
-                           [routerLinkActive]="['active-link']"
-                           routerLink="/home/calendar">
-                            <span>
-                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
-                            </span>
-                        </a>
+<!--                        <a href=# mat-list-item-->
+<!--                           [routerLinkActive]="['active-link']"-->
+<!--                           routerLink="/home/calendar">-->
+<!--                            <span>-->
+<!--                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario-->
+<!--                            </span>-->
+<!--                        </a>-->
                     </div>
                     <div id="menu-account">
                         <h2 matSubheader>Account</h2>

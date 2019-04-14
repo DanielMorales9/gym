@@ -10,11 +10,11 @@ export class BundlesNotDisabledService extends ABundleService {
         super();
     }
 
-    search(query: string, page: number, size) : Observable<Object> {
+    search(query: string, page: number, size): Observable<Object> {
         return this.http.get(`/bundleSpecs/searchNotDisabled?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 
-    get(page: number, size: number) : Observable<Object> {
+    get(page: number, size: number): Observable<Object> {
         return this.http.get(`/bundleSpecs/getNotDisabled?page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 }

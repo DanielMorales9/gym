@@ -1,42 +1,40 @@
 <div class="container">
-    <div>
-        <div class="card">
-            <div class="card-body">
-                <form [formGroup]="form" role="form" class="form-gym" (submit)="form.valid && login()">
-                    <h3 class="form-header">Login</h3>
-                    <mat-form-field>
-                        <label for="email" class="sr-only">Email</label>
-                        <input type="text" placeholder="Email"
-                               matInput
-                               id="email"
-                               name="email"
-                               formControlName="email"
-                               [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
-                        <mat-error *ngIf="email.touched && email.invalid">
-                            <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
-                            <div *ngIf="!!email.errors?.email">Email non valida</div>
-                        </mat-error>
-                    </mat-form-field>
-                    <mat-form-field>
-                        <label for="password" class="sr-only">Password</label>
-                        <input type="password" placeholder="Password"
-                               matInput
-                               id="password"
-                               name="password"
-                               formControlName="password"
-                               [ngClass]="{ 'is-invalid': password.touched && password.invalid }" required/>
-                        <mat-error *ngIf="password.touched && password.invalid">
-                            <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
-                        </mat-error>
-                    </mat-form-field>
-                    <div class="error-message error-message-final" *ngIf="error">
-                        Email o password errata!
-                    </div>
-                    <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
-                </form>
-                <div class="form-footer">
-                    <a routerLink="/auth/sendChangePasswordToken">Password dimenticata?</a>
+    <div class="card">
+        <div class="card-body">
+            <form [formGroup]="form" role="form" class="form-gym" (submit)="form.valid && login()">
+                <h3 class="form-header">Login</h3>
+                <mat-form-field>
+                    <label for="email" class="sr-only">Email</label>
+                    <input type="text" placeholder="Email"
+                           matInput
+                           id="email"
+                           name="email"
+                           formControlName="email"
+                           [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
+                    <mat-error *ngIf="email.touched && email.invalid">
+                        <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
+                        <div *ngIf="!!email.errors?.email">Email non valida</div>
+                    </mat-error>
+                </mat-form-field>
+                <mat-form-field>
+                    <label for="password" class="sr-only">Password</label>
+                    <input type="password" placeholder="Password"
+                           matInput
+                           id="password"
+                           name="password"
+                           formControlName="password"
+                           [ngClass]="{ 'is-invalid': password.touched && password.invalid }" required/>
+                    <mat-error *ngIf="password.touched && password.invalid">
+                        <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
+                    </mat-error>
+                </mat-form-field>
+                <div class="error-message error-message-final" *ngIf="error">
+                    Email o password errata!
                 </div>
+                <button type="submit" class="btn btn-lg btn-primary btn-block">Invia</button>
+            </form>
+            <div class="form-footer">
+                <a routerLink="/auth/sendChangePasswordToken">Password dimenticata?</a>
             </div>
         </div>
     </div>

@@ -102,7 +102,7 @@ public class TimeOffController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path = "/checkChange", produces = "text/plain")
+    @GetMapping(path = "/checkTimeOffChange", produces = "text/plain")
     @Transactional
     ResponseEntity<String> checkChange(@RequestParam("startTime")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -194,7 +194,7 @@ public class TimeOffController {
         template.convertAndSend(channel, notification);
     }
 
-    @GetMapping(path = "/change/{id}")
+    @GetMapping(path = "/changeTimeOff/{id}")
     @Transactional
     ResponseEntity<TimeOffResource> change(@PathVariable Long id,
                                            @RequestParam("name") String name,

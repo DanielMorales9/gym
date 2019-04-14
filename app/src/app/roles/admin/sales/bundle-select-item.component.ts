@@ -18,7 +18,7 @@ export class BundleSelectItemComponent {
 
     selectBundle() {
         this.selected = !this.selected;
-        this.done.emit()
+        this.done.emit();
     }
 
 

@@ -1,0 +1,33 @@
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+    <h5> {{modalData?.title}}</h5>
+<!--    <button type="button" class="close" (click)="close()">-->
+<!--        <span aria-hidden="true">&times;</span>-->
+<!--    </button>-->
+    <div mat-dialog-content>
+        <div *ngIf="!!modalData?.event">
+            Vuoi chiudere la palestra dalle {{ modalData?.event.date | date : 'HH:mm a'}}
+            del giorno {{ modalData?.event?.date | date : 'dd/MM/yyyy'}} ?
+            <br>
+            <mat-form-field>
+                <label for="name" class="sr-only">Nome:</label>
+                <input name="name"
+                       matInput
+                       placeholder="Esempio: Chiusura per Festività"
+                       id="name"
+                       type="text"
+                       formControlName="name"
+                       [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
+                <mat-error *ngIf="name.touched && name.invalid">
+                    <div *ngIf="!!name.errors?.required">Nome chiusura obbligatorio</div>
+                </mat-error>
+
+            </mat-form-field>
+            <br>
+            Conferma per chiudere la palestra oppure cancella.
+        </div>
+    </div>
+    <div mat-dialog-actions>
+        <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>
+        <button mat-flat-button type="submit" color="primary">Conferma</button>
+    </div>
+</form>

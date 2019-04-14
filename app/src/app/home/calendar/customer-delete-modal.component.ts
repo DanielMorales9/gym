@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import {DateService, NotificationService} from "../../services";
-import {TrainingService} from "../../shared/services";
-import {BaseCalendarModal} from "./base-calendar-modal";
+import {Component, OnInit} from '@angular/core';
+import {BaseCalendarModal} from '../../shared/components/calendar';
+import {TrainingService} from '../../shared/services';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'customer-delete-modal',
@@ -10,47 +10,38 @@ import {BaseCalendarModal} from "./base-calendar-modal";
 })
 export class CustomerDeleteModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON = 'customer-delete-modal-button';
 
     constructor(private trainingService: TrainingService,
-                public notificationService: NotificationService) {
-        super(notificationService);
+                public dialogRef: MatDialogRef<CustomerDeleteModalComponent>) {
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        this.modalButton = this.MODAL_BUTTON;
     }
 
     submit() {
-        if (this.modalData.event.meta.type == 'reservation'){
-            this.loading = true;
+        if (this.modalData.event.meta.type === 'reservation') {
             this.trainingService.delete(this.modalData.event.meta.id)
                 .subscribe(res => {
-                    let that = this;
+                    const that = this;
                     setTimeout(function() {
-                        that.event.emit();
                     }, 1000);
                     this.message = {
-                        text: "La Prenotazione è stata eliminata!",
-                        class: "alert-warning"
+                        text: 'La Prenotazione è stata eliminata!',
+                        class: 'alert-warning'
                     };
                 }, err => {
                     this.message = {
                         text: err.error.message,
-                        class: "alert-danger"
+                        class: 'alert-danger'
                     };
-                    this.onComplete();
-                }, () => {
-                    this.onComplete();
-                })
+                });
 
-        }
-        else {
+        } else {
             this.message = {
                 text: 'Questa azione non è consentita!',
-                class: "alert-danger"
+                class: 'alert-danger'
             };
-            this.onComplete();
         }
     }
 

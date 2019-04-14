@@ -1,24 +1,23 @@
-import {Injectable} from "@angular/core";
-import {HttpClient} from "@angular/common/http";
-import {User} from "../shared/model";
-import {AppService} from "./app.service";
-import {Observable} from "rxjs";
+import {Injectable} from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {User} from '../shared/model';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class AuthService {
 
-
-    constructor(private http: HttpClient, private appService: AppService) {
-    }
+    constructor(private http: HttpClient,
+                // private appService: AppService
+    ) {}
 
     findByEmail(email: string) {
-        this.appService.credentials = undefined;
-        return this.http.get(`/authentication/findByEmail?email=${email}`)
+        // this.appService.credentials = undefined;
+        return this.http.get(`/authentication/findByEmail?email=${email}`);
     }
 
     getUserFromVerificationToken(token: any) {
-        this.appService.credentials = undefined;
-        return this.http.get("/authentication/verification",{ params: {token: token}});
+        // this.appService.credentials = undefined;
+        return this.http.get('/authentication/verification',{ params: {token: token}});
     }
 
     registration(user: User): Observable<Object> {
@@ -26,17 +25,17 @@ export class AuthService {
     }
 
     resendToken(token: string) {
-        this.appService.credentials = undefined;
-        return this.http.get("/authentication/resendToken", {params: {token: token}})
+        // this.appService.credentials = undefined;
+        return this.http.get('/authentication/resendToken', {params: {token: token}});
     }
 
     resendChangePasswordToken(token: string) {
-        this.appService.credentials = undefined;
-        return this.http.get("/authentication/resendChangePasswordToken", {params: {token: token}})
+        // this.appService.credentials = undefined;
+        return this.http.get('/authentication/resendChangePasswordToken', {params: {token: token}});
     }
 
     resendTokenAnonymous(id: number) {
-        return this.http.get(`/authentication/resendToken/${id}`)
+        return this.http.get(`/authentication/resendToken/${id}`);
     }
 
     changeNewPassword(id: number, form: { password: string; oldPassword: string; confirmPassword: string }) {
@@ -44,12 +43,12 @@ export class AuthService {
     }
 
     changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
-        this.appService.credentials = undefined;
+        // this.appService.credentials = undefined;
         return this.http.post(`/authentication/changePassword/${id}`, form);
     }
 
     verifyPassword(credentials) {
-        this.appService.credentials = undefined;
+        // this.appService.credentials = undefined;
         return this.http.post( `/authentication/verifyPassword`, credentials);
     }
 }

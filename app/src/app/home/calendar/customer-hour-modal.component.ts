@@ -1,7 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-import {DateService, NotificationService} from "../../services";
-import {TrainingService} from "../../shared/services";
-import {BaseCalendarModal} from "./base-calendar-modal";
+import {Component, OnInit} from '@angular/core';
+import {DateService} from '../../services';
+import {TrainingService} from '../../shared/services';
+import {BaseCalendarModal} from '../../shared/components/calendar';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'customer-hour-modal',
@@ -10,37 +11,30 @@ import {BaseCalendarModal} from "./base-calendar-modal";
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON: string = 'customer-hour-modal-button';
 
     constructor(private dateService: DateService,
                 private trainingService: TrainingService,
-                public notificationService: NotificationService) {
-        super(notificationService);
+                public dialogRef: MatDialogRef<CustomerHourModalComponent>) {
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        this.modalButton = this.MODAL_BUTTON
     }
 
     submit() {
-        this.loading = true;
-        let currentDate = new Date(this.modalData.event.date);
-        let stringDate = this.dateService.getStringDate(currentDate);
+        const currentDate = new Date(this.modalData.event.date);
+        const stringDate = this.dateService.getStringDate(currentDate);
         this.trainingService.book(currentDate, this.modalData.userId)
             .subscribe( (_) => {
                 this.message = {
                     text: `Prenotazione effettuata per il ${stringDate}`,
-                    class: "alert-success"
+                    class: 'alert-success'
                 };
-                this.event.emit();
             }, (err) => {
                 this.message = {
                     text: err.error.message,
-                    class: "alert-danger"
+                    class: 'alert-danger'
                 };
-                this.onComplete();
-            }, () => {
-                this.onComplete();
             });
     }
 

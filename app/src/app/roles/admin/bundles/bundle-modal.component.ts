@@ -22,15 +22,16 @@ export class BundleModalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (!this.bundle)
+        if (!this.bundle) {
             this.bundle = new Bundle();
+        }
 
         this.buildForm();
 
     }
 
     private buildForm() {
-        let type = this.bundle.type || this.DEFAULT_TYPE;
+        const type = this.bundle.type || this.DEFAULT_TYPE;
         this.form = this.builder.group({
             name: [this.bundle.name, [Validators.required]],
             price: [this.bundle.price, [
@@ -43,27 +44,27 @@ export class BundleModalComponent implements OnInit {
             ]],
             description: [this.bundle.description, Validators.required ],
             type: [type, Validators.required ],
-        })
+        });
     }
 
     get name() {
-        return this.form.get("name")
+        return this.form.get('name');
     }
 
     get price() {
-        return this.form.get("price")
+        return this.form.get('price');
     }
 
     get numSessions() {
-        return this.form.get("numSessions")
+        return this.form.get('numSessions');
     }
 
     get description() {
-        return this.form.get("description")
+        return this.form.get('description');
     }
 
     get type() {
-        return this.form.get("type")
+        return this.form.get('type');
     }
 
 
@@ -73,7 +74,7 @@ export class BundleModalComponent implements OnInit {
     }
 
     private getBundleFromForm() {
-        let bundle = new Bundle();
+        const bundle = new Bundle();
         bundle.id = this.bundle.id;
         bundle.name = this.name.value;
         bundle.price = this.price.value;

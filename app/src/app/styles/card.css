@@ -3,7 +3,10 @@ div.card-container {
 }
 
 mat-card {
-    padding: 1em;
+    padding: 2em 1em;
+    background-clip: border-box !important;
+    border: 1px solid rgba(0,0,0,.125) !important;
+    border-radius: .25rem !important;
 }
 
 mat-card-actions {

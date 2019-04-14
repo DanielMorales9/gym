@@ -6,6 +6,6 @@ export * from './sales.service';
 export * from './helper.service';
 export * from './user-helper.service';
 export * from './bundle-helper.service';
-export * from './bundles-not-disabled.service'
+export * from './bundles-not-disabled.service';
 export * from './abundle.service';
-export * from './queryable.datasource'
+export * from './queryable.datasource';

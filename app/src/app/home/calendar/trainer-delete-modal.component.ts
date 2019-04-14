@@ -1,7 +1,7 @@
-import {Component, OnInit} from "@angular/core";
-import {NotificationService} from "../../services";
-import {TimesOffService, TrainingService} from "../../shared/services";
-import {BaseCalendarModal} from "./base-calendar-modal";
+import {Component, OnInit} from '@angular/core';
+import {BaseCalendarModal} from '../../shared/components/calendar';
+import {TimesOffService, TrainingService} from '../../shared/services';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'trainer-delete-modal',
@@ -10,21 +10,18 @@ import {BaseCalendarModal} from "./base-calendar-modal";
 })
 export class TrainerDeleteModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON = 'trainer-delete-modal-button';
 
     constructor(private timesOffService: TimesOffService,
                 private trainingService: TrainingService,
-                public notificationService: NotificationService) {
-        super(notificationService);
+                public dialogRef: MatDialogRef<TrainerDeleteModalComponent>) {
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        this.modalButton = this.MODAL_BUTTON;
     }
 
     submit() {
         console.log(this.modalData.event.meta.type);
-        this.loading = true;
         switch (this.modalData.event.meta.type) {
             case 'reservation':
                 this.deleteReservation();
@@ -49,15 +46,11 @@ export class TrainerDeleteModalComponent extends BaseCalendarModal implements On
                     text: `${this.modalData.event.meta.name} eliminata con successo.`,
                     class: 'alert-warning'
                 };
-                this.event.emit();
             }, err => {
                 this.message = {
                     text: err.error,
                     class: 'alert-danger'
                 };
-                this.onComplete();
-            }, () => {
-                this.onComplete();
             });
     }
 
@@ -68,16 +61,12 @@ export class TrainerDeleteModalComponent extends BaseCalendarModal implements On
                     text: `${this.modalData.event.title} è stato eliminato.`,
                     class: 'alert-warning'
                 };
-                this.event.emit();
             }, err => {
                 console.log(err);
                 this.message = {
                     text: err.error.message,
                     class: 'alert-danger'
                 };
-                this.onComplete();
-            }, () => {
-                this.onComplete();
             });
     }
 

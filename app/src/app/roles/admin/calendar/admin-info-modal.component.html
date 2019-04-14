@@ -1,0 +1,49 @@
+<h5 mat-dialog-title>{{modalData?.title}}</h5>
+<!--    <button type="button" class="close" (click)="close()">-->
+<!--        <span aria-hidden="true">&times;</span>-->
+<!--    </button>-->
+<ng-container [ngSwitch]="modalData?.event.meta?.type">
+    <ng-container *ngSwitchCase="'reservation'">
+        <div mat-dialog-content>
+            <i class="fas fa-check" *ngIf="modalData?.event.meta?.confirmed"></i>
+            <i class="fas fa-check-double"
+               *ngIf="modalData?.event.meta?.confirmed && modalData?.event.meta.session.completed"></i>
+            <i class="fas fa-ban" *ngIf="!modalData?.event.meta.confirmed"></i>&nbsp;
+            L'allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}
+            del cliente {{modalData?.event.meta.user.lastName}}
+            <span *ngIf="!modalData?.event.meta?.confirmed"> non</span> è stato confermato e
+            <span *ngIf="!modalData?.event.meta.session.completed"> non è stato </span> completato!
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button type="button" color="basic">Ok</button>
+            <button mat-flat-button type="button" color="primary"
+                    *ngIf="!modalData?.event.meta?.confirmed">Conferma</button>
+            <button mat-flat-button type="button" color="primary"
+                    *ngIf="!modalData?.event.meta?.session.completed && modalData?.event.meta?.confirmed"
+                   >Completa</button>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'admin'">
+        <div mat-dialog-content>
+            <i class="fas fa-door-closed"></i>&nbsp;
+            La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
+            dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'trainer'">
+        <div mat-dialog-content>
+            <i class="fas fa-door-closed"></i>&nbsp;
+            {{modalData?.event.meta?.user.firstName}} è di riposo dalle
+            {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button type="button" color="basic">Ok</button>
+        </div>
+    </ng-container>
+</ng-container>

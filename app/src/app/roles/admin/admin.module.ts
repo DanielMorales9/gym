@@ -1,6 +1,6 @@
 import {NgModule} from '@angular/core';
 import {BundleDetailsComponent, BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
-import {CommonModule} from '@angular/common';
+import {CommonModule, registerLocaleData} from '@angular/common';
 import {AdminRouting} from './admin.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -30,6 +30,19 @@ import {
     SalesComponent,
     SaleItemComponent
 } from './sales';
+import {
+    AdminCalendarComponent,
+    AdminChangeModalComponent,
+    AdminDeleteModalComponent,
+    AdminHeaderModalComponent,
+    AdminInfoModalComponent
+} from './calendar';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
+import localeIt from '@angular/common/locales/it';
+import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
+
+registerLocaleData(localeIt);
 
 @NgModule({
     imports: [
@@ -38,6 +51,10 @@ import {
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory
+        }),
         MatDialogModule,
         MatFormFieldModule,
         MatInputModule,
@@ -67,6 +84,12 @@ import {
         SaleItemComponent,
         SaleDetailsComponent,
         PaySaleModalComponent,
+        AdminCalendarComponent,
+        AdminHeaderModalComponent,
+        AdminChangeModalComponent,
+        AdminHourModalComponent,
+        AdminInfoModalComponent,
+        AdminDeleteModalComponent,
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
@@ -77,7 +100,12 @@ import {
     ],
     entryComponents: [
         BundleModalComponent,
-        PaySaleModalComponent
+        PaySaleModalComponent,
+        AdminHeaderModalComponent,
+        AdminChangeModalComponent,
+        AdminHourModalComponent,
+        AdminInfoModalComponent,
+        AdminDeleteModalComponent
     ]
 })
 export class AdminModule { }

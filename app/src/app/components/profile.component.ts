@@ -1,9 +1,9 @@
-import {Component, OnInit} from "@angular/core";
-import {User} from "../shared/model";
-import {AppService, AuthService, ChangeViewService, SnackBarService} from '../services';
-import {UserHelperService, UserService} from "../shared/services";
-import {MatDialog} from "@angular/material";
-import {UserModalComponent} from "../shared/components/users";
+import {Component, OnInit} from '@angular/core';
+import {User} from '../shared/model';
+import {AppService, AuthService, SnackBarService} from '../services';
+import {UserHelperService, UserService} from '../shared/services';
+import {MatDialog} from '@angular/material';
+import {UserModalComponent} from '../shared/components/users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
 
 @Component({
@@ -22,7 +22,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.user = this.appService.user
+        this.user = this.appService.user;
     }
 
     openDialog(): void {
@@ -36,13 +36,13 @@ export class ProfileComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((user: User) => {
-            this.userService.patch(user).subscribe((user: User) => this.user = user)
+            this.userService.patch(user).subscribe((user: User) => this.user = user);
         });
     }
 
 
     getUserCreatedAt() {
-        return UserHelperService.getUserCreatedAt(this.user)
+        return UserHelperService.getUserCreatedAt(this.user);
     }
 
     openPasswordDialog() {
@@ -51,11 +51,11 @@ export class ProfileComponent implements OnInit {
         dialogRef.afterClosed().subscribe(passwordForm => {
             this.authService.changeNewPassword(this.user.id, passwordForm)
                 .subscribe(_ => {
-                    let message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
+                    const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
                     this.snackbar.open(message);
                 }, err => {
                     this.snackbar.open(err.error.message);
-                })
-        })
+                });
+        });
     }
 }

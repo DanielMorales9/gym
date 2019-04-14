@@ -1,14 +1,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {
-    NoItemComponent,
-    UserModalComponent,
-} from './components';
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NoItemComponent, SearchWithDateToolbar, SimpleSearchToolbar, UserModalComponent,} from './components';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
     BundleHelperService,
     BundlesNotDisabledService,
-    BundlesService, HelperService,
+    BundlesService,
     SalesService,
     TimesOffService,
     TrainingService,
@@ -17,20 +14,32 @@ import {
 } from './services';
 import {
     MatButtonModule,
-    MatCardModule, MatDatepickerModule,
+    MatCardModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatListModule, MatNativeDateModule, MatOptionModule, MatSelectModule, MatToolbarModule
+    MatInputModule,
+    MatListModule,
+    MatNativeDateModule,
+    MatOptionModule,
+    MatSelectModule,
+    MatToolbarModule
 } from '@angular/material';
-import {SearchWithDateToolbar, SimpleSearchToolbar} from './directives';
 import {SaleHelperService} from './services/sale-helper.service';
+import {CalendarFooterToolbar, CalendarHeaderToolbar} from './components/calendar';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
     imports: [
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
+        CalendarModule.forRoot({
+            provide: DateAdapter,
+            useFactory: adapterFactory
+        }),
         MatCardModule,
         MatIconModule,
         MatFormFieldModule,
@@ -49,12 +58,16 @@ import {SaleHelperService} from './services/sale-helper.service';
     ],
     declarations: [
         NoItemComponent,
+        CalendarHeaderToolbar,
+        CalendarFooterToolbar,
         SimpleSearchToolbar,
         SearchWithDateToolbar,
         UserModalComponent
     ],
     exports: [
         NoItemComponent,
+        CalendarHeaderToolbar,
+        CalendarFooterToolbar,
         SimpleSearchToolbar,
         SearchWithDateToolbar
     ],

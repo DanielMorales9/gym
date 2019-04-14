@@ -63,9 +63,9 @@
             [weekStartsOn]="weekStartsOn"
             [activeDayIsOpen]="activeDayIsOpen"
             [excludeDays]="excludeDays"
-            (dayClicked)="handleEvent('day', $event)"
-            (eventClicked)="handleEvent('info', $event)"
-            (eventTimesChanged)="handleEvent('change', $event)">
+            (dayClicked)="handleEvent('day',$event)"
+            (eventClicked)="handleEvent('info',$event)"
+            (eventTimesChanged)="handleEvent('changeTimeOff',$event)">
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
             *ngSwitchCase="WEEK"
@@ -79,9 +79,9 @@
             [hourSegments]="1"
             [refresh]="refresh"
             (dayHeaderClicked)="header('header', $event)"
-            (hourSegmentClicked)="handleEvent('hour', $event)"
-            (eventClicked)="handleEvent('info', $event)"
-            (eventTimesChanged)="handleEvent('change', $event)">
+            (hourSegmentClicked)="handleEvent('hour',$event)"
+            (eventClicked)="handleEvent('info',$event)"
+            (eventTimesChanged)="handleEvent('changeTimeOff',$event)">
     </mwl-calendar-week-view>
     <mwl-calendar-day-view
             *ngSwitchCase="DAY"
@@ -92,28 +92,28 @@
             [dayEndHour]="dayEndHour"
             locale="it"
             [hourSegments]="1"
-            (hourSegmentClicked)="handleEvent('hour', $event)"
-            (eventClicked)="handleEvent('info', $event)"
-            (eventTimesChanged)="handleEvent('change', $event)">
+            (hourSegmentClicked)="handleEvent('hour',$event)"
+            (eventClicked)="handleEvent('info',$event)"
+            (eventTimesChanged)="handleEvent('changeTimeOff',$event)">
     </mwl-calendar-day-view>
 </div>
 
-<trainer-header-modal (event)="getEvents()"
-                    [modalData]="modalData">
-</trainer-header-modal>
+<!--<trainer-header-modal (event)="getEvents()"-->
+<!--                    [modalData]="modalData">-->
+<!--</trainer-header-modal>-->
 
-<trainer-delete-modal (event)="getEvents()"
-                    [modalData]="modalData">
-</trainer-delete-modal>
+<!--<trainer-delete-modal (event)="getEvents()"-->
+<!--                    [modalData]="modalData">-->
+<!--</trainer-delete-modal>-->
 
-<trainer-info-modal (event)="getEvents()"
-                    [modalData]="modalData">
-</trainer-info-modal>
+<!--<trainer-info-modal (event)="getEvents()"-->
+<!--                    [modalData]="modalData">-->
+<!--</trainer-info-modal>-->
 
-<trainer-hour-modal (event)="getEvents()"
-                    [modalData]="modalData">
-</trainer-hour-modal>
+<!--<trainer-hour-modal (event)="getEvents()"-->
+<!--                    [modalData]="modalData">-->
+<!--</trainer-hour-modal>-->
 
-<trainer-change-modal (event)="getEvents()"
-                    [modalData]="modalData">
-</trainer-change-modal>
+<!--<trainer-changeTimeOff-modal (event)="getEvents()"-->
+<!--                    [modalData]="modalData">-->
+<!--</trainer-changeTimeOff-modal>-->

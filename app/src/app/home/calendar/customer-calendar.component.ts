@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
-import {BaseCalendar} from './base-calendar';
 import {TimesOffService, TrainingService, UserService} from '../../shared/services';
-import {NotificationService} from '../../services';
+import {BaseCalendar} from '../../shared/components/calendar';
+import {ActivatedRoute} from '@angular/router';
+import {CalendarFacade} from '../../services';
 
 
 @Component({
-    selector: "customer-calendar",
+    selector: 'customer-calendar',
     templateUrl: './customer-calendar.component.html',
     styleUrls: ['../../styles/root.css']
 })
@@ -14,12 +15,13 @@ export class CustomerCalendarComponent extends BaseCalendar {
     constructor(public userService: UserService,
                 private trainingService: TrainingService,
                 private timesOffService: TimesOffService,
-                private notificationService: NotificationService) {
-        super(userService);
+                public facade: CalendarFacade,
+                public activatedRoute: ActivatedRoute) {
+        super(facade, activatedRoute);
     }
 
     header(action: string, event: any) {
-        console.log(action, event)
+        console.log(action, event);
     }
 
     hour(action: string, event: any) {
@@ -28,7 +30,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 .subscribe(res => {
                     this.modalData = {
                         action: action,
-                        title: "Prenota il tuo allenamento!",
+                        title: 'Prenota il tuo allenamento!',
                         userId: this.user.id,
                         role: this.role,
                         event: event
@@ -37,9 +39,8 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 }, err => {
                     this.message = {
                         text: err.error,
-                        class: "alert-danger"
+                        class: 'alert-danger'
                     };
-                    this.notificationService.sendMessage(this.message);
                 });
         }
     }
@@ -82,29 +83,29 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     getReservations() {
-        console.log("get reservations");
-        let {startDay, endDay} = this.getStartAndEndTimeByView();
+        console.log('get reservations');
+        const {startDay, endDay} = this.getStartAndEndTimeByView();
         this.trainingService
             .getReservations(startDay, endDay, this.user.id)
             .subscribe(res => {
                 res.forEach(val => {
-                    this.events.push(this.formatEvent(val))
+                    this.events.push(this.formatEvent(val));
                 });
                 this.getTimesOff();
-            })
+            });
     }
 
 
     getTimesOff() {
-        console.log("get timesoff");
-        let {startDay, endDay} = this.getStartAndEndTimeByView();
+        console.log('get timesoff');
+        const {startDay, endDay} = this.getStartAndEndTimeByView();
         this.timesOffService.getTimesOff(startDay, endDay, undefined, 'admin')
-            .subscribe((value : Object[]) => {
+            .subscribe((value: Object[]) => {
                     value.map(res => {
-                        this.events.push(this.formatEvent(res))
+                        this.events.push(this.formatEvent(res));
                     });
                 this.refreshView();
-            })
+            });
     }
 
 }

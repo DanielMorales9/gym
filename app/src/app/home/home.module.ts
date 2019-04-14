@@ -1,17 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule, registerLocaleData} from '@angular/common';
-import {HomeRouting} from "./home.routing";
-import {HomeComponent} from "./home.component";
-import {CalendarModule, DateAdapter} from "angular-calendar";
-import {adapterFactory} from "angular-calendar/date-adapters/date-fns";
+import {HomeRouting} from './home.routing';
+import {HomeComponent} from './home.component';
+import {CalendarModule, DateAdapter} from 'angular-calendar';
+import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {
-    AdminCalendarComponent,
-    AdminChangeModalComponent,
-    AdminDeleteModalComponent,
-    AdminHeaderModalComponent,
-    AdminHourModalComponent,
-    AdminInfoModalComponent,
-    CalendarComponent,
     CustomerCalendarComponent,
     CustomerDeleteModalComponent,
     CustomerHourModalComponent,
@@ -22,8 +15,8 @@ import {
     TrainerHeaderModalComponent,
     TrainerHourModalComponent,
     TrainerInfoModalComponent
-} from "./calendar";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+} from './calendar';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import localeIt from '@angular/common/locales/it';
 
 registerLocaleData(localeIt);
@@ -42,17 +35,10 @@ registerLocaleData(localeIt);
     ],
     declarations: [
         HomeComponent,
-        CalendarComponent,
         CustomerCalendarComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
-        AdminCalendarComponent,
-        AdminHourModalComponent,
-        AdminChangeModalComponent,
-        AdminInfoModalComponent,
-        AdminHeaderModalComponent,
-        AdminDeleteModalComponent,
         TrainerCalendarComponent,
         TrainerHeaderModalComponent,
         TrainerInfoModalComponent,

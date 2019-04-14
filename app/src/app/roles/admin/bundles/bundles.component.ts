@@ -11,10 +11,10 @@ import {SnackBarService} from '../../../services';
 })
 export class BundlesComponent {
 
-    SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
+    SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
     query: string;
-    private pageSize: number = 10;
+    private pageSize = 10;
 
     ds: QueryableDatasource<Bundle>;
 
@@ -38,7 +38,7 @@ export class BundlesComponent {
     }
 
     openDialog(): void {
-        const title = "Crea Nuovo Pacchetto";
+        const title = 'Crea Nuovo Pacchetto';
 
         const dialogRef = this.dialog.open(BundleModalComponent, {
             data: {
@@ -69,8 +69,9 @@ export class BundlesComponent {
     }
 
     search($event?) {
-        if ($event)
+        if ($event) {
             this.query = $event.query;
+        }
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
     }
@@ -79,16 +80,16 @@ export class BundlesComponent {
         console.log(bundle);
         delete bundle.id;
         this.service.post(bundle).subscribe(_ => {
-            let message = `Il pacchetto ${bundle.name} è stato creato`;
+            const message = `Il pacchetto ${bundle.name} è stato creato`;
             this.snackbar.open(message);
-            this.search()
+            this.search();
         });
     }
 
     private deleteBundle(bundle: Bundle) {
-        let confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
+        const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
         if (confirmed) {
-            this.service.delete(bundle.id).subscribe(_ => this.search())
+            this.service.delete(bundle.id).subscribe(_ => this.search());
         }
     }
 
@@ -99,9 +100,9 @@ export class BundlesComponent {
 
     private modifyBundle(bundle: Bundle) {
         this.service.put(bundle).subscribe(_ => {
-            let message = `Il pacchetto ${bundle.name} è stato modificato`;
+            const message = `Il pacchetto ${bundle.name} è stato modificato`;
             this.snackbar.open(message);
-            this.search()
-        })
+            this.search();
+        });
     }
 }

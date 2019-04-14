@@ -1,7 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-import {GymConfigurationService, NotificationService} from "../../services";
-import {BaseCalendarModal} from "./base-calendar-modal";
-import {TimesOffService} from "../../shared/services";
+import {Component, OnInit} from '@angular/core';
+import {GymConfigurationService, NotificationService} from '../../services';
+import {TimesOffService} from '../../shared/services';
+import {BaseCalendarModal} from '../../shared/components/calendar';
+import {MatDialogRef} from '@angular/material';
 
 @Component({
     selector: 'trainer-header-modal',
@@ -10,39 +11,32 @@ import {TimesOffService} from "../../shared/services";
 })
 export class TrainerHeaderModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON: string = 'trainer-header-modal-button';
 
     timeOffName: string;
 
-    constructor(public notificationService: NotificationService,
-                private timesOffService: TimesOffService,
+    constructor(private timesOffService: TimesOffService,
+                public dialogRef: MatDialogRef<TrainerHeaderModalComponent>,
                 private gymConf: GymConfigurationService) {
-        super(notificationService);
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        this.modalButton = this.MODAL_BUTTON
     }
 
     submit() {
-        this.loading = true;
-        let {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(this.modalData.event.day.date));
-        let stringDate = (startTime);
+        const {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(this.modalData.event.day.date));
+        const stringDate = (startTime);
         this.timesOffService.book(startTime, endTime, 'trainer', this.timeOffName, this.modalData.userId)
             .subscribe((res) => {
                 this.message = {
                     text: `Ferie confermate per il ${stringDate}`,
-                    class: "alert-success"
+                    class: 'alert-success'
                 };
-                this.event.emit();
             }, (err) => {
                 this.message = {
                     text: err.error.message,
-                    class: "alert-danger"
+                    class: 'alert-danger'
                 };
-                this.onComplete()
-            }, () => {
-                this.onComplete();
             });
     }
 

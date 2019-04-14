@@ -1,7 +1,8 @@
-import {Component, OnInit} from "@angular/core";
-import {DateService, NotificationService} from "../../services";
-import {BaseCalendarModal} from "./base-calendar-modal";
-import {TimesOffService} from "../../shared/services";
+import {Component, OnInit} from '@angular/core';
+import {DateService} from '../../services';
+import {MatDialogRef} from '@angular/material';
+import {BaseCalendarModal} from '../../shared/components/calendar';
+import {TimesOffService} from '../../shared/services';
 
 @Component({
     selector: 'trainer-change-modal',
@@ -10,39 +11,31 @@ import {TimesOffService} from "../../shared/services";
 })
 export class TrainerChangeModalComponent extends BaseCalendarModal implements OnInit {
 
-    private MODAL_BUTTON: string = 'trainer-change-modal-button';
-
-    constructor(public notificationService: NotificationService,
+    constructor(public dialogRef: MatDialogRef<TrainerChangeModalComponent>,
                 private timesOffService: TimesOffService,
                 private dateService: DateService) {
-        super(notificationService);
+        super(dialogRef);
     }
 
     ngOnInit(): void {
-        this.modalButton = this.MODAL_BUTTON;
     }
 
     submit() {
-        this.loading = true;
-        let startTime = this.modalData.event.newStart;
-        let endTime = this.modalData.event.newEnd;
-        let timeOffId = this.modalData.event.event.meta.id;
-        let startDate = this.dateService.getStringDate(startTime);
-        this.timesOffService.change(timeOffId, startTime, endTime, this.modalData.event.event.meta.name, "trainer")
-            .subscribe((res) => {
+        const startTime = this.modalData.event.newStart;
+        const endTime = this.modalData.event.newEnd;
+        const timeOffId = this.modalData.event.event.meta.id;
+        const startDate = this.dateService.getStringDate(startTime);
+        this.timesOffService.change(timeOffId, startTime, endTime, this.modalData.event.event.meta.name, 'trainer')
+            .subscribe((_) => {
                 this.message = {
                     text: `Ferie confermate per il ${startDate}`,
-                    class: "alert-success"
+                    class: 'alert-success'
                 };
-                this.event.emit();
             }, (err) => {
                 this.message = {
                     text: err.message,
-                    class: "alert-danger"
+                    class: 'alert-danger'
                 };
-                this.onComplete()
-            }, () => {
-                this.onComplete();
             });
     }
 

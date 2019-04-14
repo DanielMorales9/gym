@@ -1,9 +1,10 @@
-import {Subject} from "rxjs";
-import {Injectable, Input, OnInit} from "@angular/core";
-import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView,} from "angular-calendar";
-import {User} from "../../shared/model";
-import {UserService} from "../../shared/services";
-import {EVENT_TYPES} from "./event-types.enum";
+import {Subject} from 'rxjs';
+import {Injectable, OnInit} from '@angular/core';
+import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView,} from 'angular-calendar';
+import {User} from '../../model';
+import {EVENT_TYPES} from './event-types.enum';
+import {ActivatedRoute} from '@angular/router';
+import {CalendarFacade} from '../../../services';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -46,17 +47,15 @@ export abstract class BaseCalendar implements OnInit {
         }
     ];
 
-    @Input() public view: CalendarView;
-    @Input() public viewDate: Date;
-    @Input() public excludeDays: number[];
-    @Input() public dayStartHour: number;
-    @Input() public dayEndHour: number;
-    @Input() public weekStartsOn: number;
-    @Input() public activeDayIsOpen: boolean;
+    public view: CalendarView;
+    public viewDate: Date;
+    public excludeDays: number[];
+    public dayStartHour: number;
+    public dayEndHour: number;
+    public weekStartsOn: number;
+    public activeDayIsOpen: boolean;
 
-    @Input() public role: number;
-    @Input() public email: string;
-
+    public role: number;
 
     user: User;
     modalData: { role: number; action: string; title: string; userId: number, event: any };
@@ -66,22 +65,24 @@ export abstract class BaseCalendar implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
-    protected constructor(public userService: UserService) {
-        this.events = [];
+    protected constructor(public facade: CalendarFacade,
+                          public activatedRoute: ActivatedRoute) {
     }
 
+
+
     ngOnInit(): void {
-        if (this.email !== undefined) {
-            this.userService.findByEmail(this.email).subscribe((res: User) => {
-                this.user = res;
-                this.getEvents()
-            });
-        }
+        this.events = [];
+        this.getUser();
+        this.initView();
+        this.initViewDate();
+        this.initCalendarConfig();
+        this.getEvents();
     }
 
     abstract getEvents();
-    abstract getReservations();
-    abstract getTimesOff();
+    getReservations() {}
+    getTimesOff() {}
 
     abstract delete(action: string, event: CalendarEvent);
     abstract info(action: string, event: CalendarEvent);
@@ -91,7 +92,47 @@ export abstract class BaseCalendar implements OnInit {
 
     abstract openModal(action: string);
 
-    handleEvent(action: string, event: CalendarEvent): void {
+    private getUser() {
+        this.user = this.facade.getUser();
+    }
+
+    private initCalendarConfig() {
+        const config = this.facade.getConfig();
+        this.dayEndHour = config.dayEndHour;
+        this.dayStartHour = config.dayStartHour;
+        this.excludeDays = config.excludeDays;
+        this.weekStartsOn = config.weekStartsOn;
+    }
+
+    private initView() {
+        const view = this.activatedRoute.snapshot.queryParamMap.get('view');
+
+        switch (view) {
+            case 'month':
+                this.view = CalendarView.Month;
+                break;
+            case 'week':
+                this.view = CalendarView.Week;
+                break;
+            case 'day':
+                this.view = CalendarView.Day;
+                break;
+            default:
+                this.view = CalendarView.Month;
+                break;
+        }
+    }
+
+    private initViewDate() {
+        const stringDate = this.activatedRoute.snapshot.queryParamMap.get('date');
+        if (stringDate) {
+            this.viewDate = new Date(stringDate.replace('-', '/'));
+        } else {
+            this.viewDate = new Date();
+        }
+    }
+
+    handleEvent(action: string, event: any): void {
         switch (action) {
             case EVENT_TYPES.DELETE:
                 this.delete(action, event);
@@ -121,17 +162,17 @@ export abstract class BaseCalendar implements OnInit {
     getStartAndEndTimeByView() {
         let startDay;
         let endDay;
-        let month = this.viewDate.getMonth();
-        let year = this.viewDate.getFullYear();
-        let date = this.viewDate.getDate();
-        let dayOfWeek = this.viewDate.getDay();
-        let hour = 0;
-        let min = 0;
-        let sec = 0;
+        const month = this.viewDate.getMonth();
+        const year = this.viewDate.getFullYear();
+        const date = this.viewDate.getDate();
+        const dayOfWeek = this.viewDate.getDay();
+        const hour = 0;
+        const min = 0;
+        const sec = 0;
 
         switch (this.view) {
             case this.MONTH:
-                let nextMonth = month + 1;
+                const nextMonth = month + 1;
                 startDay = new Date(year, month, 1, hour, min, sec);
                 endDay = new Date(year, nextMonth, 0, 23, 59, 59);
                 break;
@@ -147,51 +188,51 @@ export abstract class BaseCalendar implements OnInit {
         return {startDay, endDay};
     }
 
-    formatEvent(event: any) : CalendarEvent {
-        let startTime = new Date(event['startTime']);
-        let endTime = new Date(event['endTime']);
-        let allDay = Math.abs(endTime.getTime() - startTime.getTime()) / 36e5 ;
-        let startHour = startTime.getHours();
-        let endHour = endTime.getHours();
+    formatEvent(event: any): CalendarEvent {
+        const startTime = new Date(event['startTime']);
+        const endTime = new Date(event['endTime']);
+        const allDay = Math.abs(endTime.getTime() - startTime.getTime()) / 36e5 ;
+        const startHour = startTime.getHours();
+        const endHour = endTime.getHours();
 
         let title;
-        let isATimeOff = !!event.type;
+        const isATimeOff = !!event.type;
         if (isATimeOff) {
             title = event.name;
-            event.eventName = (event.type == "admin") ? "chiusura" : "ferie";
-        }
-        else {
-            event.type = "reservation";
-            event.eventName = "prenotazione";
-            if (this.role == 3) {
-                title = `Il tuo allenamento dalle ${startHour} alle ${endHour}`
+            event.eventName = (event.type === 'admin') ? 'chiusura' : 'ferie';
+        } else {
+            event.type = 'reservation';
+            event.eventName = 'prenotazione';
+            if (this.role === 3) {
+                title = `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
             } else {
-                title = `Allenamento ${startHour} - ${endHour} di ${event['user']['lastName']}`
+                title = `Allenamento ${startHour} - ${endHour} di ${event['user']['lastName']}`;
             }
         }
-        let isMyEvent = event.user.id == this.user.id;
-        let isDeletable = this.role == 1 || (event.type == 'reservation' && this.role < 3) || isMyEvent;
-        let isResizable = isATimeOff && isMyEvent;
+        const isMyEvent = event.user.id === this.user.id;
+        const isDeletable = this.role === 1 || (event.type === 'reservation' && this.role < 3) || isMyEvent;
+        const isResizable = isATimeOff && isMyEvent;
         return {
             start: startTime,
             end: endTime,
             title: title,
             color: (isATimeOff) ? CALENDAR_COLUMNS.RED : (event.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW,
-            actions: isDeletable ? this.ACTIONS: [],
-            allDay: allDay == (this.dayEndHour - this.dayStartHour),
+            actions: isDeletable ? this.ACTIONS : [],
+            allDay: allDay === (this.dayEndHour - this.dayStartHour),
             resizable: {
                 beforeStart: isResizable,
                 afterEnd: isResizable
             },
             draggable: false,
             meta: event
-        }
+        };
     }
 
-    onViewDateChanged(view?: CalendarView) {
-        console.log(view);
-        if (!!view) {
-            this.view = view;
+    onViewDateChanged(viewOrDate?) {
+        if (viewOrDate instanceof Date) {
+            this.viewDate = viewOrDate;
+        } else {
+            this.view = viewOrDate;
         }
         this.activeDayIsOpen = false;
         this.getEvents();
@@ -199,17 +240,16 @@ export abstract class BaseCalendar implements OnInit {
 
     day(action: string, event: any): void {
         if (this.viewDate.getTime() === event.day.date.getTime()) {
-            if (this.activeDayIsOpen || event.day.events.length == 0) {
+            if (this.activeDayIsOpen || event.day.events.length === 0) {
                 this.getEvents();
                 this.view = this.DAY;
                 this.activeDayIsOpen = true;
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
-        }
-        else {
+        } else {
             this.viewDate = event.day.date;
             if (!this.activeDayIsOpen) {
-                if (event.day.events.length == 0) {
+                if (event.day.events.length === 0) {
                     this.getEvents();
                     this.view = this.DAY;
                 }
