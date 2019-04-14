@@ -38,7 +38,7 @@
             [dayEndHour]="dayEndHour"
             locale="it"
             [hourSegments]="1"
-            (hourSegmentClicked)="handleEvent('hour', $event)"
+            (hourSegmentClicked)="handleEvent('hour',$event)"
             (eventClicked)="handleEvent('info',$event)"
             (eventTimesChanged)="handleEvent('change',$event)">
     </mwl-calendar-day-view>

@@ -1,20 +1,4 @@
-<mat-toolbar color="basic" class="search-toolbar">
-    <form class="search-form">
-        <mat-form-field class="search-input" appearance="standard" floatLabel="never">
-            <label class="sr-only" for="search-input">Cerca pacchetti</label>
-            <input matInput
-                   type="text"
-                   title="Cerca pacchetti"
-                   placeholder="Cerca pacchetti"
-                   id="search-input"
-                   name="query"
-                   [(ngModel)]="query"/>
-        </mat-form-field>
-        <button mat-button type="submit" (click)="getBundles()">
-            <mat-icon>search</mat-icon>
-        </button>
-    </form>
-</mat-toolbar>
+<simple-search [query]="query" text="Cerca pacchetti" (done)="search($event)"></simple-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="186" class="scroll-viewport">
 
     <div *cdkVirtualFor="let bundle of ds; templateCacheSize: 0" class="scroll-item">

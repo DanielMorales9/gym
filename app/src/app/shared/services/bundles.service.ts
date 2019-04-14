@@ -11,19 +11,19 @@ export class BundlesService extends ABundleService {
         super();
     }
 
-    put(bundle: Bundle) : Observable<Object> {
+    put(bundle: Bundle): Observable<Object> {
         return this.http.put(`/bundleSpecs/${bundle.id}`, bundle);
     }
 
-    post(bundle: Bundle) : Observable<Object> {
-        return this.http.post("/bundleSpecs", bundle);
+    post(bundle: Bundle): Observable<Object> {
+        return this.http.post('/bundleSpecs', bundle);
     }
 
-    get(page: number, size: number) : Observable<Object> {
+    get(page: number, size: number): Observable<Object> {
         return this.http.get(`/bundleSpecs?page=${page}&size=${size}&sort=name`);
     }
 
-    search(query:string, page: number, size: number) : Observable<Object> {
+    search(query: string, page: number, size: number): Observable<Object> {
         return this.http.get(`/bundleSpecs/search?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 

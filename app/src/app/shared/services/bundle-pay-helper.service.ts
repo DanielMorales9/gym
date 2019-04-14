@@ -3,11 +3,12 @@ import {Bundle} from '../model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
 import {BundlesService} from './bundles.service';
+import {BundlesNotDisabledService} from './bundles-not-disabled.service';
 
 @Injectable()
-export class BundleHelperService extends HelperService<Bundle> {
+export class BundlePayHelperService extends HelperService<Bundle> {
 
-    constructor(private service: BundlesService) {
+    constructor(private service: BundlesNotDisabledService) {
         super();
     }
 

@@ -26,7 +26,7 @@ export class PaySaleModalComponent implements OnInit {
     }
 
     get amount() {
-        return this.form.get("amount")
+        return this.form.get('amount');
     }
 
     buildForm() {

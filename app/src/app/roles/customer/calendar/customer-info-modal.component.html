@@ -1,0 +1,22 @@
+<h5 > {{modalData?.title}}</h5>
+<!--<button type="button" class="close" (click)="close()">-->
+<!--    <span aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<div [ngSwitch]="modalData?.event.meta?.type" mat-dialog-content>
+    <ng-container *ngSwitchCase="'admin'">
+        <i class="fas fa-door-closed"></i>
+        La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
+        dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+        alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+    </ng-container>
+    <ng-container *ngSwitchCase="'reservation'">
+        <i class="fas fa-check" *ngIf="modalData?.event.meta?.confirmed"></i>
+        <i class="fas fa-ban" *ngIf="!modalData?.event.meta?.confirmed"></i>&nbsp;
+        Il tuo allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+        alle {{ modalData?.event.end | date :  'HH:mm a'}}
+        <span *ngIf="!modalData?.event.meta.confirmed"> non</span> è stato confermato.
+    </ng-container>
+</div>
+<div mat-dialog-actions>
+    <button type="button" class="btn btn-outline-secondary" (click)="submit()">Ok</button>
+</div>

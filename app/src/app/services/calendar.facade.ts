@@ -51,8 +51,8 @@ export class CalendarFacade {
         return this.timesOffService.check(startTime, endTime, type);
     }
 
-    getReservations(startDay: any, endDay: any): Observable<Object[]> {
-        return this.trainingService.getReservations(startDay, endDay);
+    getReservations(startDay: any, endDay: any, userId?: number): Observable<Object[]> {
+        return this.trainingService.getReservations(startDay, endDay, userId);
     }
 
     getTimesOff(startDay: any, endDay: any, id: number, type: string): Observable<Object[]> {
@@ -81,5 +81,13 @@ export class CalendarFacade {
 
     changeTimeOff(id: number, start: Date, end: Date, name: string | any, type: string) {
         return this.timesOffService.change(id, start, end, name, type);
+    }
+
+    checkReservation(date: Date, id: number) {
+        return this.trainingService.check(date, id);
+    }
+
+    bookReservation(date: Date, userId: number) {
+        return this.trainingService.book(date, userId);
     }
 }

@@ -52,6 +52,7 @@ export class BundlesComponent {
     }
 
     handleEvent($event) {
+        console.log($event);
         switch ($event.type) {
             case 'delete':
                 this.deleteBundle($event.bundle);
@@ -95,7 +96,7 @@ export class BundlesComponent {
 
     private toggleDisabled(bundle: Bundle) {
         bundle.disabled = !bundle.disabled;
-        this.service.put(bundle);
+        this.service.put(bundle).subscribe(res => console.log(res));
     }
 
     private modifyBundle(bundle: Bundle) {

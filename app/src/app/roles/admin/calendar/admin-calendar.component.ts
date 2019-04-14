@@ -13,7 +13,6 @@ import {AdminHourModalComponent} from './admin-hour-modal.component';
 
 
 @Component({
-    selector: 'admin-calendar',
     templateUrl: './admin-calendar.component.html',
     styleUrls: ['../../../styles/root.css', '../../../styles/calendar.css']
 })

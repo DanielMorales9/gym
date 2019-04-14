@@ -5,10 +5,6 @@ import {HomeComponent} from './home.component';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {
-    CustomerCalendarComponent,
-    CustomerDeleteModalComponent,
-    CustomerHourModalComponent,
-    CustomerInfoModalComponent,
     TrainerCalendarComponent,
     TrainerChangeModalComponent,
     TrainerDeleteModalComponent,
@@ -35,10 +31,6 @@ registerLocaleData(localeIt);
     ],
     declarations: [
         HomeComponent,
-        CustomerCalendarComponent,
-        CustomerHourModalComponent,
-        CustomerInfoModalComponent,
-        CustomerDeleteModalComponent,
         TrainerCalendarComponent,
         TrainerHeaderModalComponent,
         TrainerInfoModalComponent,

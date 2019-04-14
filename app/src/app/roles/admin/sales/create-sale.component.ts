@@ -1,6 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundleHelperService, BundlesNotDisabledService, QueryableDatasource, UserService} from '../../../shared/services';
+import {
+    BundleHelperService,
+    BundlePayHelperService,
+    BundlesNotDisabledService,
+    QueryableDatasource,
+    UserService
+} from '../../../shared/services';
 import {Bundle, Sale} from '../../../shared/model';
 import {AppService, SnackBarService} from '../../../services';
 import {SaleHelperService} from '../../../shared/services/sale-helper.service';
@@ -10,34 +16,30 @@ import {SaleHelperService} from '../../../shared/services/sale-helper.service';
     templateUrl: './create-sale.component.html',
     styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css', '../../../styles/search-card-list.css']
 })
-export class CreateSaleComponent implements OnInit {
+export class CreateSaleComponent implements OnInit, OnDestroy {
 
-    SIMPLE_NO_CARD_MESSAGE = "Nessun pacchetto disponibile";
+    SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
     // SEARCH_NO_CARD_MESSAGE = "Nessun pacchetto disponibile con questo nome";
 
     no_message_card: string;
-    current_role_view: number;
     sub: any;
 
-    id : number;
+    id: number;
     query: string;
 
     adminEmail: string;
     sale: Sale;
 
-    private pageSize: number = 10;
+    private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
     ds: QueryableDatasource<Bundle>;
 
     constructor(private app: AppService,
                 private router: Router,
                 private saleHelper: SaleHelperService,
-                private helper: BundleHelperService,
-                private bundleService: BundlesNotDisabledService,
-                private userService: UserService,
+                private helper: BundlePayHelperService,
                 private snackbar: SnackBarService,
                 private route: ActivatedRoute) {
-        this.current_role_view = this.app.current_role_view;
         this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
         this.adminEmail = this.app.user.email;
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
@@ -46,7 +48,7 @@ export class CreateSaleComponent implements OnInit {
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(params => {
             this.id = +params['id'];
-            this.createSale()
+            this.createSale();
         });
     }
 
@@ -58,24 +60,23 @@ export class CreateSaleComponent implements OnInit {
         this.saleHelper.createSale(this.adminEmail, this.id).subscribe((res: Sale) => {
             SaleHelperService.unwrapLines(res);
             this.sale = res;
-        })
+        });
     }
 
     private addSalesLineItem(id: number) {
 
         this.saleHelper.addSalesLineItem(this.sale.id, id)
-            .subscribe( (res: Sale) =>{
+            .subscribe( (res: Sale) => {
                 SaleHelperService.unwrapLines(res);
                 this.sale = res;
-            })
+            });
     }
 
     private deleteSalesLineItem(id: number) {
-
-        let salesLineId = this.sale
+        const salesLineId = this.sale
             .salesLineItems
             .map(line => [line.id, line.bundleSpecification.id])
-            .filter(line => line[1] == id)
+            .filter(line => line[1] === id)
             .map(line => line[0])[0];
 
         this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId)
@@ -83,7 +84,7 @@ export class CreateSaleComponent implements OnInit {
                 SaleHelperService.unwrapLines(res);
                 this.sale = res;
             }, err => {
-                this.snackbar.open(err.error.message)
+                this.snackbar.open(err.error.message);
             });
     }
 
@@ -93,16 +94,16 @@ export class CreateSaleComponent implements OnInit {
             if (!this.sale.completed) {
                 this.saleHelper.delete(this.sale.id)
                     .subscribe(
-                        res => { console.log(res)},
+                        res => { console.log(res); },
                         err => {
-                            this.snackbar.open(err.error.message)
-                        })
+                            this.snackbar.open(err.error.message);
+                        });
             }
         }
     }
 
-    getBundles() {
-        this.ds.setQuery(this.query);
+    search($event) {
+        this.ds.setQuery($event.query);
         this.ds.fetchPage(0);
     }
 
@@ -113,25 +114,27 @@ export class CreateSaleComponent implements OnInit {
                 this.sale = res;
                 return this.router.navigate(['admin', 'sales', this.sale.id]);
             }, err => {
-                this.snackbar.open(err.error.message)
-            })
+                this.snackbar.open(err.error.message);
+            });
     }
 
     selectBundle(id: number) {
-        let isSelected = !this.getSelectBundle(id);
+        const isSelected = !this.getSelectBundle(id);
         this.selected[id] = isSelected;
-        if (isSelected)
+        if (isSelected) {
             this.addSalesLineItem(id);
-        else
-            this.deleteSalesLineItem(id)
+        } else {
+            this.deleteSalesLineItem(id);
+        }
 
     }
 
     getSelectBundle(id: number) {
-        let isSelected = undefined;
+        let isSelected;
         if (id) {
-            if (!this.selected[id])
+            if (!this.selected[id]) {
                 this.selected[id] = false;
+            }
             isSelected = this.selected[id];
         }
         return isSelected;

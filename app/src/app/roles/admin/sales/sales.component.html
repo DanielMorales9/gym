@@ -1,7 +1,6 @@
 <date-search [query]="query" textPlaceholder="Cognome" datePlaceholder="Cerca data"
              (done)="search($event)"></date-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
-
     <div *cdkVirtualFor="let s of ds;" class="scroll-item">
         <sale-item [sale]="s" (done)="handleEvent($event)"></sale-item>
     </div>

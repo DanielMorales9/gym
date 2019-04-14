@@ -36,7 +36,7 @@ export class ProfileComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((user: User) => {
-            this.userService.patch(user).subscribe((user: User) => this.user = user);
+            if (user) { this.userService.patch(user).subscribe((u: User) => this.user = u); }
         });
     }
 
@@ -49,13 +49,15 @@ export class ProfileComponent implements OnInit {
         const dialogRef = this.dialog.open(ChangePasswordModalComponent);
 
         dialogRef.afterClosed().subscribe(passwordForm => {
-            this.authService.changeNewPassword(this.user.id, passwordForm)
-                .subscribe(_ => {
-                    const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
-                    this.snackbar.open(message);
-                }, err => {
-                    this.snackbar.open(err.error.message);
-                });
+            if (passwordForm) {
+                this.authService.changeNewPassword(this.user.id, passwordForm)
+                    .subscribe(_ => {
+                        const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
+                        this.snackbar.open(message);
+                    }, err => {
+                        this.snackbar.open(err.error.message);
+                    });
+            }
         });
     }
 }

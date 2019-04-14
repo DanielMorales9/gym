@@ -1,7 +1,7 @@
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import {Observable} from "rxjs";
-import {User} from "../model";
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import {Observable} from 'rxjs';
+import {User} from '../model';
 
 @Injectable()
 export class UserService {
@@ -13,30 +13,30 @@ export class UserService {
     }
 
     findById(id: number): Observable<Object> {
-        return this.http.get(`/users/${id}`)
+        return this.http.get(`/users/${id}`);
     }
 
     findByEmail(email: string): Observable<Object> {
-        return this.http.get(`/users/findByEmail?email=${email}`)
+        return this.http.get(`/users/findByEmail?email=${email}`);
     }
 
-    get(page: number, size: number) : Observable<Object> {
+    get(page: number, size: number): Observable<Object> {
         return this.http.get(`/users?page=${page}&size=${size}&sort=lastName`);
     }
 
-    search(query:string, page: number, size: number): Observable<Object> {
+    search(query: string, page: number, size: number): Observable<Object> {
         return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
     }
 
-    patch(user) : Observable<Object> {
+    patch(user): Observable<Object> {
         return this.http.patch(`/users/${user.id}`, user);
     }
 
     getRoles(id: number): Observable<Object> {
-        return this.http.get(`/users/${id}/roles`)
+        return this.http.get(`/users/${id}/roles`);
     }
 
-    getCurrentTrainingBundles(id: number) : Observable<Object> {
+    getCurrentTrainingBundles(id: number): Observable<Object> {
         return this.http.get(`/customers/${id}/currentTrainingBundles`);
     }
 

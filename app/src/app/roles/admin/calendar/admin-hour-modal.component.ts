@@ -1,7 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {DateService} from '../../../services';
 import {BaseCalendarModal} from '../../../shared/components/calendar';
-import {TimesOffService} from '../../../shared/services';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 

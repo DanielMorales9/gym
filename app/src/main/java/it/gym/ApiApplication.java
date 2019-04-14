@@ -73,7 +73,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 						"/login",
 						"/actuator/*",
 						"/home/**",
-						"/profile/**",
 						"/verification/**",
 						"/authentication/**",
 						"/auth/**",
@@ -87,7 +86,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	@Override
 	public void configure(WebSecurity web) {
-		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css", "/.well-known/**");
+		web.ignoring().antMatchers("/favicon.ico", "/*.html", "/*.js", "/*.css");
 
 	}
 

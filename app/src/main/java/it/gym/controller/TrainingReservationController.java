@@ -28,6 +28,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.http.HttpStatus;
@@ -43,7 +44,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@RestController
+@RepositoryRestController
 @PropertySource("application.yml")
 @RequestMapping("/reservations")
 public class TrainingReservationController {
@@ -200,7 +201,7 @@ public class TrainingReservationController {
 
         if (!type.equals("customer")) {
             String recipientAddress = res.getUser().getEmail();
-            String message = "Ci dispiace informarla che per questioni tecniche la sua prenotazione è stata eliminata. " +
+            String message = "Ci dispiace informarla che la sua prenotazione è stata cancellata.\n" +
                     "La ringraziamo per la comprensione.";
             MailSenderUtility.sendEmail(this.mailSender, "Prenotazione eliminata", message, recipientAddress);
         }

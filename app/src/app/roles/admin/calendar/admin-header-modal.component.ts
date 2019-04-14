@@ -4,7 +4,6 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-    selector: 'admin-header-modal',
     templateUrl: './admin-header-modal.component.html',
     styleUrls: ['../../../styles/root.css']
 })

@@ -30,22 +30,6 @@ export class AppComponent implements OnInit {
 
 
     ngOnInit(): void {
-        // const toolbarHeight = document.getElementById('main-toolbar').style.height;
-        // const sidenav = document.getElementById('main-sidenav-container');
-        // let height;
-        // const body = window.document.body;
-        // if (window.innerHeight) {
-        //     height = window.innerHeight;
-        // } else if (body.parentElement.clientHeight) {
-        //     height = body.parentElement.clientHeight;
-        // } else if (body && body.clientHeight) {
-        //     height = body.clientHeight;
-        // }
-        //
-        // const offsetTop = sidenav.offsetTop;
-        // // sidenav.style.height = ((height - offsetTop) + 'px');
-        // console.log(height, offsetTop, sidenav.style.height);
-
         this.user = new User();
         this.authOnNavigation();
 
@@ -53,7 +37,6 @@ export class AppComponent implements OnInit {
             this.authenticated = auth;
 
             if (this.authenticated) {
-
                 this.current_role_view = this.service.current_role_view;
                 this.user = this.service.user;
                 this.userHelperService.getUserByEmail(this.user.email, u => {

@@ -6,16 +6,12 @@ export abstract class BaseCalendarModal {
 
     public message: {text: string, class: string};
 
-    constructor(public dialogRef: MatDialogRef<BaseCalendarModal>) {}
+    protected constructor(public dialogRef: MatDialogRef<BaseCalendarModal>) {}
 
     abstract submit();
 
     close(data?) {
         this.dialogRef.close(data);
-    }
-
-    onComplete() {
-        this.close({});
     }
 
 }

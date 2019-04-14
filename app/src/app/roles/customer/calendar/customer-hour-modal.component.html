@@ -1,0 +1,13 @@
+<h5 mat-dialog-title>{{modalData?.title}}</h5>
+<!--<button type="button" class="close" (click)="close()">-->
+<!--    <span aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<div mat-dialog-content>
+    L'ora selezionata ({{ modalData?.event.date | date :  'HH:mm a - dd/MM/yyyy'}}) è disponibile.
+    <br>
+    Conferma per prenotare oppure cancella.
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>
+    <button mat-flat-button type="button" color="accent" (click)="submit()">Conferma</button>
+</div>

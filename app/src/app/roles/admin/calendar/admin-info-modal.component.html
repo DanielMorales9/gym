@@ -16,12 +16,12 @@
             <span *ngIf="!modalData?.event.meta.session.completed"> non è stato </span> completato!
         </div>
         <div mat-dialog-actions>
-            <button mat-flat-button type="button" color="basic">Ok</button>
-            <button mat-flat-button type="button" color="primary"
+            <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
+            <button mat-flat-button type="button" color="primary" (click)="submit()"
                     *ngIf="!modalData?.event.meta?.confirmed">Conferma</button>
             <button mat-flat-button type="button" color="primary"
                     *ngIf="!modalData?.event.meta?.session.completed && modalData?.event.meta?.confirmed"
-                   >Completa</button>
+                    (click)="submit()">Completa</button>
         </div>
     </ng-container>
     <ng-container *ngSwitchCase="'admin'">
@@ -43,7 +43,7 @@
             alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
         </div>
         <div mat-dialog-actions>
-            <button mat-flat-button type="button" color="basic">Ok</button>
+            <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
         </div>
     </ng-container>
 </ng-container>

@@ -34,7 +34,6 @@ export class TrainerDeleteModalComponent extends BaseCalendarModal implements On
                     text: `${this.modalData.event.meta.type} non può essere cancellata dal trainer!`,
                     class: 'alert-danger'
                 };
-                this.onComplete();
                 break;
         }
     }

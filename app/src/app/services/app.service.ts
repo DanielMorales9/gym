@@ -36,14 +36,14 @@ export class AppService {
 
             this.authenticated = !!res && !!res['name'];
             if (this.authenticated) {
-                let email = res['principal']['username'];
+                const email = res['principal']['username'];
 
                 this.userHelperService.getUserByEmail(email, user => {
                     this.user = user;
                     this.getCurrentRoleView();
                     this.userHelperService.getRoles(this.user);
                     this.authenticatedService.setAuthenticated(this.authenticated);
-                    this.saveSessionInfo()
+                    this.saveSessionInfo();
                 });
             }
             return !!success && success(this.authenticated);

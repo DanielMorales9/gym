@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {NoItemComponent, SearchWithDateToolbar, SimpleSearchToolbar, UserModalComponent,} from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-    BundleHelperService,
+    BundleHelperService, BundlePayHelperService,
     BundlesNotDisabledService,
     BundlesService,
     SalesService,
@@ -80,7 +80,8 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
         UserService,
         UserHelperService,
         SaleHelperService,
-        BundleHelperService
+        BundleHelperService,
+        BundlePayHelperService,
     ]
 
 })
