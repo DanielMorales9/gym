@@ -1,21 +1,24 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {BaseCalendarModal} from '../../../shared/components/calendar';
+import {DateService} from '../../../services';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {BaseCalendarModal} from '../../../shared/components/calendar';
+import {TimesOffService} from '../../../shared/services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-    templateUrl: './admin-change-modal.component.html',
+    templateUrl: './trainer-change-modal.component.html',
     styleUrls: ['../../../styles/root.css']
 })
-export class AdminChangeModalComponent extends BaseCalendarModal implements OnInit {
+export class TrainerChangeModalComponent extends BaseCalendarModal implements OnInit {
 
     form: FormGroup;
 
     constructor(private builder: FormBuilder,
-                public dialogRef: MatDialogRef<AdminChangeModalComponent>,
+                public dialogRef: MatDialogRef<TrainerChangeModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = data;
+        console.log(this.modalData.event.event.meta.name);
     }
 
     ngOnInit(): void {
@@ -34,14 +37,14 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
     }
 
     submit() {
-        const startTime = this.modalData.event.newStart;
-        const endTime = this.modalData.event.newEnd;
         this.close({
+            start: this.modalData.event.newStart,
+            end: this.modalData.event.newEnd,
             eventId: this.modalData.event.event.meta.id,
-            start: startTime,
-            end: endTime,
             eventName: this.name.value,
+            type: 'trainer'
         });
+
     }
 
 }

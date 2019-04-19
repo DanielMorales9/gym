@@ -1,18 +1,21 @@
 import {Component, Inject, OnInit} from '@angular/core';
+import {DateService, } from '../../../services';
+import {TimesOffService} from '../../../shared/services';
 import {BaseCalendarModal} from '../../../shared/components/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
-    templateUrl: './admin-change-modal.component.html',
+    selector: 'trainer-hour-modal',
+    templateUrl: './trainer-hour-modal.component.html',
     styleUrls: ['../../../styles/root.css']
 })
-export class AdminChangeModalComponent extends BaseCalendarModal implements OnInit {
+export class TrainerHourModalComponent extends BaseCalendarModal implements OnInit {
 
     form: FormGroup;
 
     constructor(private builder: FormBuilder,
-                public dialogRef: MatDialogRef<AdminChangeModalComponent>,
+                public dialogRef: MatDialogRef<TrainerHourModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = data;
@@ -23,9 +26,8 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
     }
 
     private buildForm() {
-        console.log(this.modalData);
         this.form = this.builder.group({
-            name: [this.modalData.event.event.meta.name, [Validators.required]]
+            name: ['', [Validators.required]]
         });
     }
 
@@ -33,14 +35,13 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
         return this.form.get('name');
     }
 
+
     submit() {
-        const startTime = this.modalData.event.newStart;
-        const endTime = this.modalData.event.newEnd;
         this.close({
-            eventId: this.modalData.event.event.meta.id,
-            start: startTime,
-            end: endTime,
-            eventName: this.name.value,
+            start: new Date(this.modalData.event.date),
+            name: this.name.value,
+            type: 'trainer',
+            userId: this.modalData.userId
         });
     }
 

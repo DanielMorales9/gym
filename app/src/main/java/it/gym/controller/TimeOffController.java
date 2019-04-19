@@ -104,7 +104,7 @@ public class TimeOffController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @GetMapping(path = "/checkTimeOffChange", produces = "text/plain")
+    @GetMapping(path = "/checkChange")
     @Transactional
     ResponseEntity<String> checkChange(@RequestParam("startTime")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -196,7 +196,7 @@ public class TimeOffController {
         template.convertAndSend(channel, notification);
     }
 
-    @GetMapping(path = "/changeTimeOff/{id}")
+    @GetMapping(path = "/change/{id}")
     @Transactional
     ResponseEntity<TimeOffResource> change(@PathVariable Long id,
                                            @RequestParam("name") String name,
@@ -313,7 +313,7 @@ public class TimeOffController {
                 .collect(Collectors.toList());
         logger.info(timesOff.toString());
 
-        // TODO high complexity
+        // TODO high computational complexity
         long numAvailableTrainers;
         for (Reservation r: reservations) {
             numAvailableTrainers = numTrainers - 1;

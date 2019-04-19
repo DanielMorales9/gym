@@ -31,12 +31,6 @@ registerLocaleData(localeIt);
     ],
     declarations: [
         HomeComponent,
-        TrainerCalendarComponent,
-        TrainerHeaderModalComponent,
-        TrainerInfoModalComponent,
-        TrainerHourModalComponent,
-        TrainerChangeModalComponent,
-        TrainerDeleteModalComponent,
 
     ],
 })

@@ -41,7 +41,7 @@ export class TimesOffService {
     delete(id: number, type?: string): Observable<any> {
         let endpoint = `/timesOff/${id}`;
         if (type) {
-            endpoint += `&type=${type}`;
+            endpoint += `?type=${type}`;
         }
         return this.http.delete(endpoint);
     }

@@ -18,8 +18,7 @@
                 </mat-toolbar-row>
             </mat-toolbar>
             <mat-nav-list>
-                <div>
-                    <div id="menu-admin"
+                    <ng-container id="menu-admin"
                          *ngIf="current_role_view == 1">
                         <h2 matSubheader>Home</h2>
                         <a href=# mat-list-item
@@ -50,8 +49,19 @@
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
                         </a>
-                    </div>
-                    <div id="menu-customer"
+                    </ng-container>
+                    <ng-container id="menu-trainer"
+                         *ngIf="current_role_view == 2">
+                        <h2 matSubheader>Home</h2>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/trainer/calendar">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                        </a>
+                    </ng-container>
+                    <ng-container id="menu-customer"
                          *ngIf="current_role_view == 3">
                         <h2 matSubheader>Home</h2>
                         <a href=# mat-list-item
@@ -68,16 +78,9 @@
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
                         </a>
-                    </div>
+                    </ng-container>
+
                     <div id="menu-common">
-                        <!--TODO divide calendar view in different components-->
-<!--                        <a href=# mat-list-item-->
-<!--                           [routerLinkActive]="['active-link']"-->
-<!--                           routerLink="/home/calendar">-->
-<!--                            <span>-->
-<!--                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario-->
-<!--                            </span>-->
-<!--                        </a>-->
                     </div>
                     <div id="menu-account">
                         <h2 matSubheader>Account</h2>
@@ -99,7 +102,6 @@
                             &nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}
                         </a>
                     </div>
-                </div>
             </mat-nav-list>
         </mat-sidenav>
 

@@ -1,6 +1,5 @@
 package it.gym.service;
 
-import it.gym.exception.InvalidTokenException;
 import it.gym.exception.TokenNotFoundException;
 import it.gym.exception.UserRegistrationException;
 import it.gym.model.AUser;

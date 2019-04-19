@@ -170,15 +170,17 @@ export class AdminCalendarComponent extends BaseCalendar {
         });
 
         dialogRef.afterClosed().subscribe(data => {
-            switch (data.type) {
-                case 'confirm':
-                    this.confirmReservation(data);
-                    break;
-                case 'complete':
-                    this.completeReservation(data);
-                    break;
-                case 'none':
-                    return;
+            if (!!data) {
+                switch (data.type) {
+                    case 'confirm':
+                        this.confirmReservation(data);
+                        break;
+                    case 'complete':
+                        this.completeReservation(data);
+                        break;
+                    case 'none':
+                        return;
+                }
             }
         });
     }
@@ -189,19 +191,21 @@ export class AdminCalendarComponent extends BaseCalendar {
         });
 
         dialogRef.afterClosed().subscribe(data => {
-            switch (data.type) {
-                case 'admin':
-                    this.deleteAdminTimeOff(data);
-                    break;
-                case 'trainer':
-                    this.deleteTrainerTimeOff(data);
-                    break;
-                case 'reservation':
-                    this.deleteReservation(data);
-                    break;
-                case 'notAllowed':
-                    this.snackBar.open(data.message);
-                    break;
+            if (!!data) {
+                switch (data.type) {
+                    case 'admin':
+                        this.deleteAdminTimeOff(data);
+                        break;
+                    case 'trainer':
+                        this.deleteTrainerTimeOff(data);
+                        break;
+                    case 'reservation':
+                        this.deleteReservation(data);
+                        break;
+                    case 'notAllowed':
+                        this.snackBar.open(data.message);
+                        break;
+                }
             }
         });
     }
@@ -279,8 +283,8 @@ export class AdminCalendarComponent extends BaseCalendar {
     private confirmReservation(data) {
         this.facade.confirmReservation(data.eventId)
             .subscribe((_) => {
-                    this.snackBar.open('Prenotazione confermata');
-                    this.getEvents();
-            },(err) => this.snackBar.open(err.error.message));
+                this.snackBar.open('Prenotazione confermata');
+                this.getEvents();
+            }, (err) => this.snackBar.open(err.error.message));
     }
 }

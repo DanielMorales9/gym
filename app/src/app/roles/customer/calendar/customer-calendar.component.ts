@@ -16,8 +16,7 @@ import {CustomerDeleteModalComponent} from './customer-delete-modal.component';
 })
 export class CustomerCalendarComponent extends BaseCalendar {
 
-    constructor(private trainingService: TrainingService,
-                private dialog: MatDialog,
+    constructor(private dialog: MatDialog,
                 private snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public activatedRoute: ActivatedRoute) {

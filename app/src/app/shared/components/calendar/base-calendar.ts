@@ -74,15 +74,18 @@ export abstract class BaseCalendar implements OnInit {
     ngOnInit(): void {
         this.events = [];
         this.getUser();
+        this.getRole();
         this.initView();
         this.initViewDate();
         this.initCalendarConfig();
         this.getEvents();
     }
 
+    private getRole() {
+        this.role = this.facade.getRole();
+    }
+
     abstract getEvents();
-    getReservations() {}
-    getTimesOff() {}
 
     abstract delete(action: string, event: CalendarEvent);
     abstract info(action: string, event: CalendarEvent);
@@ -203,14 +206,14 @@ export abstract class BaseCalendar implements OnInit {
         } else {
             event.type = 'reservation';
             event.eventName = 'prenotazione';
-            if (this.role === 3) {
+            if (this.user.type === 'C') {
                 title = `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
             } else {
                 title = `Allenamento ${startHour} - ${endHour} di ${event['user']['lastName']}`;
             }
         }
         const isMyEvent = event.user.id === this.user.id;
-        const isDeletable = this.role === 1 || (event.type === 'reservation' && this.role < 3) || isMyEvent;
+        const isDeletable = this.user.type === 'A' || (event.type === 'reservation' && this.user.type !== 'C') || isMyEvent;
         const isResizable = isATimeOff && isMyEvent;
         return {
             start: startTime,

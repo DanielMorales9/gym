@@ -83,7 +83,7 @@ public class TrainingReservationController {
         this.mailSender = mailSender;
     }
 
-    @GetMapping(path = "/checkAvailabilityAndEnablement", produces = "text/plain")
+    @GetMapping(path = "/checkAvailabilityAndEnablement")
     @Transactional
     ResponseEntity<String> checkAvailableDay(@RequestParam("date")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
@@ -200,6 +200,7 @@ public class TrainingReservationController {
         Reservation res = deleteReservation(reservationId, principal);
 
         if (!type.equals("customer")) {
+            // TODO Send Deleted reservation information over mail
             String recipientAddress = res.getUser().getEmail();
             String message = "Ci dispiace informarla che la sua prenotazione è stata cancellata.\n" +
                     "La ringraziamo per la comprensione.";

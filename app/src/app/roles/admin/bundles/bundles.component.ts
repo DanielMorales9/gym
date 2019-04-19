@@ -47,7 +47,7 @@ export class BundlesComponent {
         });
 
         dialogRef.afterClosed().subscribe(bundle => {
-            this.createBundle(bundle);
+            if (bundle) { this.createBundle(bundle); }
         });
     }
 

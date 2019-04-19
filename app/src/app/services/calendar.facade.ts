@@ -21,6 +21,10 @@ export class CalendarFacade {
         return this.appService.user;
     }
 
+    getRole() {
+        return this.appService.current_role_view;
+    }
+
     getConfig() {
         return {
             'dayEndHour': this.gymConf.dayEndHour,
@@ -55,7 +59,7 @@ export class CalendarFacade {
         return this.trainingService.getReservations(startDay, endDay, userId);
     }
 
-    getTimesOff(startDay: any, endDay: any, id: number, type: string): Observable<Object[]> {
+    getTimesOff(startDay: any, endDay: any, id: number, type?: string): Observable<Object[]> {
         return this.timesOffService.getTimesOff(startDay,  endDay, id, type);
     }
 
