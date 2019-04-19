@@ -3,7 +3,7 @@ import {Injectable, OnInit} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView,} from 'angular-calendar';
 import {User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../../services';
 
 const CALENDAR_COLUMNS: any = {
@@ -54,18 +54,19 @@ export abstract class BaseCalendar implements OnInit {
     public dayEndHour: number;
     public weekStartsOn: number;
     public activeDayIsOpen: boolean;
-
     public role: number;
+    private queryParams: {view: CalendarView, viewDate: Date};
+
 
     user: User;
     modalData: { role: number; action: string; title: string; userId: number, event: any };
-    public message: {text: string, class: string};
 
     events: CalendarEvent[];
 
     refresh: Subject<any> = new Subject();
 
     protected constructor(public facade: CalendarFacade,
+                          public router: Router,
                           public activatedRoute: ActivatedRoute) {
     }
 
@@ -77,6 +78,7 @@ export abstract class BaseCalendar implements OnInit {
         this.getRole();
         this.initView();
         this.initViewDate();
+        this.updateQueryParams();
         this.initCalendarConfig();
         this.getEvents();
     }
@@ -124,6 +126,8 @@ export abstract class BaseCalendar implements OnInit {
                 this.view = CalendarView.Month;
                 break;
         }
+
+
     }
 
     private initViewDate() {
@@ -237,6 +241,7 @@ export abstract class BaseCalendar implements OnInit {
         } else {
             this.view = viewOrDate;
         }
+        this.updateQueryParams();
         this.activeDayIsOpen = false;
         this.getEvents();
     }
@@ -278,4 +283,14 @@ export abstract class BaseCalendar implements OnInit {
     }
 
 
+    private updateQueryParams() {
+        this.queryParams = {view: this.view, viewDate: this.viewDate};
+        this.router.navigate(
+            [],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: this.queryParams,
+                queryParamsHandling: 'merge', // remove to replace all query params by provided
+            });
+    }
 }

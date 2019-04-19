@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {EVENT_TYPES} from '../../../shared/components/calendar/event-types.enum';
 import {CalendarFacade, DateService, SnackBarService} from '../../../services';
 import {BaseCalendar} from '../../../shared/components/calendar';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {AdminHeaderModalComponent} from './admin-header-modal.component';
 import {AdminInfoModalComponent} from './admin-info-modal.component';
@@ -22,8 +22,9 @@ export class AdminCalendarComponent extends BaseCalendar {
                 private dateService: DateService,
                 private snackBar: SnackBarService,
                 public facade: CalendarFacade,
+                public router: Router,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, activatedRoute);
+        super(facade, router, activatedRoute);
     }
 
     getEvents() {

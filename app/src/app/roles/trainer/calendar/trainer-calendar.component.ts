@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {EVENT_TYPES} from '../../../shared/components/calendar/event-types.enum';
 import {CalendarFacade, DateService, SnackBarService} from '../../../services';
-import {ActivatedRoute} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {concat} from 'rxjs';
 import {TrainerInfoModalComponent} from './trainer-info-modal.component';
 import {MatDialog} from '@angular/material';
@@ -23,8 +23,9 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 private snackBar: SnackBarService,
                 private dialog: MatDialog,
+                public router: Router,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, activatedRoute);
+        super(facade, router, activatedRoute);
     }
 
     getEvents() {
