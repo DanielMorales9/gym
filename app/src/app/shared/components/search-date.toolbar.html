@@ -1,0 +1,14 @@
+<mat-toolbar color="basic" class="search-toolbar">
+    <form class="search-form">
+        <mat-form-field class="search-input-date search-fulldate" floatLabel="never">
+            <label class="sr-only"></label>
+            <input matInput
+                   [matDatepicker]="picker"
+                   [placeholder]="datePlaceholder"
+                   [max]="maxDate"
+                   (dateChange)="emit('date', $event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker color="primary"></mat-datepicker>
+        </mat-form-field>
+    </form>
+</mat-toolbar>

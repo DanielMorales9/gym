@@ -2,8 +2,9 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {BundleDetailsComponent, BundlesComponent} from './bundles';
 import {UserDetailsComponent, UsersComponent} from './users';
-import {CreateSaleComponent, SaleDetailsComponent, SalesComponent} from './sales';
+import {CreateSaleComponent, SalesComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
+import {SaleDetailsComponent} from '../../shared/components/sales';
 
 const routes = [
 

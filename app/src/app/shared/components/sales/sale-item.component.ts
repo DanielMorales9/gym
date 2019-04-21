@@ -1,8 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Sale} from '../../../shared/model';
+import {Sale} from '../../model';
 import {DateService} from '../../../services';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {MatDialog} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
 
 
 @Component({
@@ -13,9 +14,13 @@ import {MatDialog} from '@angular/material';
 export class SaleItemComponent {
 
     @Input() sale: Sale;
+    @Input() canPay: boolean;
+    @Input() canDelete: boolean;
     @Output() done = new EventEmitter();
 
     constructor(private dateService: DateService,
+                private route: ActivatedRoute,
+                private router: Router,
                 private dialog: MatDialog) {
     }
 
@@ -35,8 +40,12 @@ export class SaleItemComponent {
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
                 res['type'] = 'pay';
-                this.done.emit(res)
+                this.done.emit(res);
             }
-        })
+        });
+    }
+
+    goToDetails() {
+        this.router.navigate([this.sale.id], {relativeTo: this.route});
     }
 }

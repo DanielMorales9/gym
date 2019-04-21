@@ -1,11 +1,11 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-    selector: 'date-search',
-    templateUrl: './search-with-date.toolbar.html',
+    selector: 'mixed-search',
+    templateUrl: './search-mixed.toolbar.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class SearchWithDateToolbar {
+export class SearchMixedToolbar {
 
     @Input() query: string;
     @Input() textPlaceholder: string;

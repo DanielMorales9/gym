@@ -39,6 +39,10 @@ form.search-form {
     width: 40%;
 }
 
+.search-fulldate {
+    width: 100%;
+}
+
 .search-text {
     width: 60%;
 }

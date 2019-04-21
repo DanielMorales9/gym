@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Sale} from '../../../shared/model';
+import {Sale} from '../../model';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({

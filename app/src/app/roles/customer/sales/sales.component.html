@@ -1,0 +1,7 @@
+<search-date [query]="query" datePlaceholder="Cerca data" (done)="search($event)"></search-date>
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
+    <div *cdkVirtualFor="let s of ds;" class="scroll-item">
+        <sale-item [sale]="s" [canPay]="canPay" [canDelete]="canDelete" (done)="handleEvent($event)"></sale-item>
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="no_card_message" ></no-item>

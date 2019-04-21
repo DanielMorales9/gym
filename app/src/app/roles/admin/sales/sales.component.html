@@ -1,8 +1,12 @@
-<date-search [query]="query" textPlaceholder="Cognome" datePlaceholder="Cerca data"
-             (done)="search($event)"></date-search>
+<mixed-search [query]="query" textPlaceholder="Cognome" datePlaceholder="Cerca data"
+              (done)="search($event)"></mixed-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
     <div *cdkVirtualFor="let s of ds;" class="scroll-item">
-        <sale-item [sale]="s" (done)="handleEvent($event)"></sale-item>
+        <sale-item [sale]="s"
+                   [canPay]="true"
+                   [canDelete]="true"
+                   (done)="handleEvent($event)">
+        </sale-item>
     </div>
 </cdk-virtual-scroll-viewport>
 <no-item [hidden]="!ds.empty" [message]="no_card_message" ></no-item>

@@ -13,7 +13,7 @@ import {
     DateService,
     GlobalErrorHandler,
     GymConfigurationService,
-    NotificationService,
+    NotificationService, SaleFacade,
     SnackBarService
 } from './services';
 import {ErrorComponent, NotificationsComponent, ProfileComponent} from './components';
@@ -32,8 +32,6 @@ import {RoleGuardService} from './services/role.guard.service';
 import {AuthGuardService} from './services/auth.guard.service';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-
-// TODO add snackbar everywhere
 
 @NgModule({
     declarations: [
@@ -74,6 +72,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         GymConfigurationService,
         DateService,
         SnackBarService,
+        SaleFacade,
         CalendarFacade,
         NotificationService,
         ChangeViewService,

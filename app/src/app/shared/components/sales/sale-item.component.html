@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <a routerLink="/admin/sales/{{sale?.id}}">
+            <a (click)="goToDetails()">
                 Vendita #{{sale?.id || 'Loading...'}}
             </a>
         </mat-panel-title>
@@ -16,29 +16,33 @@
     <span>
         <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{getDate(sale?.createdAt)}}
     </span>
-    <span [hidden]="!sale?.payed" class="green-light">
+        <span [hidden]="!sale?.payed" class="green-light">
         <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{getDate(sale?.payedDate)}}
     </span>
-    <span>
+        <span>
         <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;
     </span>
 
-    <span [hidden]="sale?.payed" class="red-light">
+        <span [hidden]="sale?.payed" class="red-light">
         <mat-icon fontSet="fab" fontIcon="fa-cc-apple-pay"></mat-icon>Da Pagare&nbsp;
             {{sale?.totalPrice-sale?.amountPayed}}&euro;
     </span>
     </div>
     <div class="panel-actions">
-        <button mat-button (click)="pay()" *ngIf="!sale?.payed">
+        <ng-container *ngIf="canPay">
+            <button mat-button (click)="pay()" *ngIf="!sale?.payed">
             <span>
                 <mat-icon fontSet="fas" color="primary" fontIcon="fa-credit-card"></mat-icon>&nbsp;Paga
             </span>
-        </button>
-        <button mat-button color="warn" (click)="deleteSale()" *ngIf="!sale?.payed">
+            </button>
+        </ng-container>
+        <ng-container *ngIf="canDelete">
+            <button mat-button color="warn" (click)="deleteSale()" *ngIf="!sale?.payed">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
             </span>
-        </button>
+            </button>
+        </ng-container>
     </div>
 </mat-expansion-panel>
 <mat-divider></mat-divider>

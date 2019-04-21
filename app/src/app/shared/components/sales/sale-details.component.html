@@ -1,0 +1,63 @@
+<div class="card-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                Riepilogo Vendita #{{sale?.id}}
+            </mat-card-title>
+            <mat-card-subtitle>
+                Cliente: {{sale?.customer?.firstName}} {{sale?.customer?.lastName}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="summary-info">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{sale?.createdAt | date: 'dd-MM-yyyy HH:mm a'}}
+            </span>
+
+                <span [hidden]="!sale?.payed" class="green-light">
+                <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{sale?.payedDate | date: 'dd-MM-yyyy HH:mm a'}}
+            </span>
+                <span>
+                <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;
+            </span>
+
+                <span [hidden]="sale?.payed" class="red-light">
+                <mat-icon fontSet="fab" fontIcon="fa-cc-apple-pay"></mat-icon>Da Pagare&nbsp;
+                    {{sale?.totalPrice-sale?.amountPayed}}&euro;
+            </span>
+            </div>
+            <div class="sales-bundle-header">
+                <h6>Pacchetti Acquistati</h6>
+                <mat-list *ngFor="let l of sale?.salesLineItems; let i = index">
+                    <mat-list-item>
+                        <div class="space-between">
+                        <div>
+                            {{i+1}}.&nbsp;
+                            <a (click)="goToBundleDetails(l?.bundleSpecification?.id)">
+                            {{l?.bundleSpecification?.name || 'Loading...'}}
+                            </a>
+                        </div>
+                        <div>{{l?.bundleSpecification.price}}&euro;</div>
+                        </div>
+                    </mat-list-item>
+                </mat-list>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <ng-container *ngIf="canPay">
+                <button mat-button (click)="pay()" *ngIf="!sale?.payed">
+                    <span>
+                        <mat-icon fontSet="fas" color="primary" fontIcon="fa-credit-card"></mat-icon>&nbsp;Paga
+                    </span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="canDelete">
+                <button mat-button color="warn" (click)="delete()" *ngIf="!sale?.payed">
+                    <span>
+                        <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
+                    </span>
+                </button>
+            </ng-container>
+        </mat-card-actions>
+    </mat-card>
+</div>

@@ -1,9 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NoItemComponent, SearchWithDateToolbar, SimpleSearchToolbar, UserModalComponent,} from './components';
+import {NoItemComponent, SearchDateToolbar, SearchMixedToolbar, SimpleSearchToolbar, UserModalComponent,} from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-    BundleHelperService, BundlePayHelperService,
+    BundleHelperService,
+    BundlePayHelperService,
     BundlesNotDisabledService,
     BundlesService,
     SalesService,
@@ -14,9 +15,10 @@ import {
 } from './services';
 import {
     MatButtonModule,
-    MatCardModule,
+    MatCardModule, MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
+    MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
@@ -30,9 +32,12 @@ import {SaleHelperService} from './services/sale-helper.service';
 import {CalendarFooterToolbar, CalendarHeaderToolbar} from './components/calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
+import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
+import {RouterModule} from '@angular/router';
 
 @NgModule({
     imports: [
+        RouterModule,
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
@@ -51,25 +56,36 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
         MatSelectModule,
         MatToolbarModule,
         MatDatepickerModule,
-        MatNativeDateModule
+        MatNativeDateModule,
+        MatExpansionModule,
+        MatCheckboxModule
     ],
     entryComponents: [
-        UserModalComponent
+        UserModalComponent,
+        PaySaleModalComponent,
     ],
     declarations: [
         NoItemComponent,
         CalendarHeaderToolbar,
         CalendarFooterToolbar,
         SimpleSearchToolbar,
-        SearchWithDateToolbar,
-        UserModalComponent
+        SearchMixedToolbar,
+        UserModalComponent,
+        SaleItemComponent,
+        PaySaleModalComponent,
+        SearchDateToolbar,
+        SaleDetailsComponent
     ],
     exports: [
         NoItemComponent,
         CalendarHeaderToolbar,
         CalendarFooterToolbar,
         SimpleSearchToolbar,
-        SearchWithDateToolbar
+        SearchMixedToolbar,
+        SearchDateToolbar,
+        SaleItemComponent,
+        PaySaleModalComponent,
+        SaleDetailsComponent
     ],
     providers: [
         BundlesService,

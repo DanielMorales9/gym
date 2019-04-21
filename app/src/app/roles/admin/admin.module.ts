@@ -21,15 +21,7 @@ import {
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
-import {SharedModule} from '../../shared';
-import {
-    BundleSelectItemComponent,
-    CreateSaleComponent,
-    PaySaleModalComponent,
-    SaleDetailsComponent,
-    SalesComponent,
-    SaleItemComponent
-} from './sales';
+import {BundleSelectItemComponent, CreateSaleComponent, SalesComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -39,8 +31,9 @@ import {
 } from './calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
-import localeIt from '@angular/common/locales/it';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
+import localeIt from '@angular/common/locales/it';
+import {SharedModule} from '../../shared';
 
 registerLocaleData(localeIt);
 
@@ -81,9 +74,6 @@ registerLocaleData(localeIt);
         UserDetailsComponent,
         CreateSaleComponent,
         SalesComponent,
-        SaleItemComponent,
-        SaleDetailsComponent,
-        PaySaleModalComponent,
         AdminCalendarComponent,
         AdminHeaderModalComponent,
         AdminChangeModalComponent,
@@ -100,7 +90,6 @@ registerLocaleData(localeIt);
     ],
     entryComponents: [
         BundleModalComponent,
-        PaySaleModalComponent,
         AdminHeaderModalComponent,
         AdminChangeModalComponent,
         AdminHourModalComponent,

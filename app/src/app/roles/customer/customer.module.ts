@@ -6,15 +6,20 @@ import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {
     MAT_CHECKBOX_CLICK_ACTION,
-    MatButtonModule,
+    MatButtonModule, MatCheckboxModule,
+    MatDatepickerModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule,
+    MatTabsModule,
+    MatToolbarModule
 } from '@angular/material';
 import {CustomerRouting} from './customer.routing';
 import {CustomerCalendarComponent, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from './calendar';
 import localeIt from '@angular/common/locales/it';
+import {SalesComponent} from './sales';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 registerLocaleData(localeIt);
 
@@ -34,12 +39,16 @@ registerLocaleData(localeIt);
         MatInputModule,
         MatButtonModule,
         MatIconModule,
+        MatTabsModule,
+        ScrollingModule,
+        MatToolbarModule
     ],
     declarations: [
         CustomerCalendarComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        SalesComponent
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
