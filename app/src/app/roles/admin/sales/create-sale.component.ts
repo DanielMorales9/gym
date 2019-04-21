@@ -33,23 +33,44 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
     ds: QueryableDatasource<Bundle>;
+    private queryParams: { query: string };
 
     constructor(private app: AppService,
-                private router: Router,
                 private saleHelper: SaleHelperService,
                 private helper: BundlePayHelperService,
                 private snackbar: SnackBarService,
-                private route: ActivatedRoute) {
+                private router: Router,
+                private activatedRoute: ActivatedRoute) {
         this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
         this.adminEmail = this.app.user.email;
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(params => {
+        this.getQuery();
+        this.getId();
+    }
+
+    private getId() {
+        this.sub = this.activatedRoute.params.subscribe(params => {
             this.id = +params['id'];
             this.createSale();
         });
+    }
+
+    private getQuery() {
+        this.query = this.activatedRoute.snapshot.queryParamMap.get('query');
+    }
+
+    private updateQueryParams() {
+        this.queryParams = {query: this.query};
+        this.router.navigate(
+            [],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: this.queryParams,
+                queryParamsHandling: 'merge', // remove to replace all query params by provided
+            });
     }
 
     ngOnDestroy() {
@@ -105,6 +126,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     search($event) {
         this.ds.setQuery($event.query);
         this.ds.fetchPage(0);
+        this.updateQueryParams();
     }
 
 

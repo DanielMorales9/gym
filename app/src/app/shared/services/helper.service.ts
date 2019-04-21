@@ -14,12 +14,13 @@ export abstract class HelperService<T> {
 
     public getLength(resources: Object): number {
         let length;
-        if (resources['page'])
+        if (resources['page']) {
             length = resources['page']['totalElements'];
-        else
+        } else {
             length = resources['totalElements'];
+        }
 
-        return length
+        return length;
 
     }
 }

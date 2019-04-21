@@ -45,10 +45,12 @@ export class AppService {
                     this.authenticatedService.setAuthenticated(this.authenticated);
                     this.saveSessionInfo();
                 });
+            } else {
+                this.discardSession();
             }
             return !!success && success(this.authenticated);
         }, err => {
-            return !!error && error(err)
+            return !!error && error(err);
         });
     }
 

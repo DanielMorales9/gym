@@ -1,6 +1,6 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Sale} from '../../../shared/model';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {SaleHelperService} from '../../../shared/services/sale-helper.service';
 import {QueryableDatasource, SalesService} from '../../../shared/services';
 import {AppService, SnackBarService} from '../../../services';
@@ -10,9 +10,9 @@ import {AppService, SnackBarService} from '../../../services';
     templateUrl: './sales.component.html',
     styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
-export class SalesComponent {
+export class SalesComponent implements OnInit {
 
-    private SIMPLE_NO_CARD_MESSAGE = "Nessuna vendita disponibile";
+    private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
     // private SEARCH_NO_CARD_MESSAGE = "Nessuna vendita disponibile con questa query";
 
     query: string;
@@ -20,13 +20,15 @@ export class SalesComponent {
     current_role_view: number;
     no_card_message: string;
 
-    private pageSize: number = 10;
+    private pageSize = 10;
     ds: QueryableDatasource<Sale>;
+    private queryParams: any;
 
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
                 private app: AppService,
                 private router: Router,
+                private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
         this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
         this.current_role_view = app.current_role_view;
@@ -34,9 +36,33 @@ export class SalesComponent {
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
+    ngOnInit(): void {
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.queryParams = Object.assign({}, params);
+            if (Object.keys(params).length > 0) {
+                if (this.queryParams.type === 'date') {
+                    this.queryParams.value = new Date(this.queryParams.value);
+                }
+                this.search(this.queryParams);
+            }
+        });
+    }
+
+    private updateQueryParams(event) {
+        this.queryParams = event;
+        this.router.navigate(
+            [],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: this.queryParams,
+                queryParamsHandling: 'merge', // remove to replace all query params by provided
+            });
+    }
+
     search($event?) {
         this.ds.setQuery($event);
         this.ds.fetchPage(0);
+        this.updateQueryParams($event);
     }
 
     handleEvent($event) {
@@ -51,14 +77,14 @@ export class SalesComponent {
     }
 
     private deleteSale(sale: Sale) {
-        let confirmed = confirm("Vuoi confermare l'eliminazione della vendita per il cliente " +
-            sale.customer.firstName + " " + sale.customer.lastName + "?");
+        const confirmed = confirm('Vuoi confermare l\'eliminazione della vendita per il cliente ' +
+            sale.customer.firstName + ' ' + sale.customer.lastName + '?');
         if (confirmed) {
             this.helper.delete(sale.id)
                 .subscribe( _ => {
-                    this.snackbar.open("Vendita eliminata per il cliente " + sale.customer.lastName + "!");
-                    return this.search()
-                }, err => this.snackbar.open(err.error.message))
+                    this.snackbar.open('Vendita eliminata per il cliente ' + sale.customer.lastName + '!');
+                    return this.search();
+                }, err => this.snackbar.open(err.error.message));
         }
     }
 

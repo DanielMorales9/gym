@@ -83,10 +83,6 @@ export abstract class BaseCalendar implements OnInit {
         this.getEvents();
     }
 
-    private getRole() {
-        this.role = this.facade.getRole();
-    }
-
     abstract getEvents();
 
     abstract delete(action: string, event: CalendarEvent);
@@ -99,6 +95,10 @@ export abstract class BaseCalendar implements OnInit {
 
     private getUser() {
         this.user = this.facade.getUser();
+    }
+
+    private getRole() {
+        this.role = this.facade.getRole();
     }
 
     private initCalendarConfig() {
@@ -131,7 +131,7 @@ export abstract class BaseCalendar implements OnInit {
     }
 
     private initViewDate() {
-        const stringDate = this.activatedRoute.snapshot.queryParamMap.get('date');
+        const stringDate = this.activatedRoute.snapshot.queryParamMap.get('viewDate');
         if (stringDate) {
             this.viewDate = new Date(stringDate.replace('-', '/'));
         } else {

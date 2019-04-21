@@ -1,30 +1,33 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Bundle} from '../../../shared/model';
 import {BundleHelperService, BundlesService, QueryableDatasource} from '../../../shared/services';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from './bundle-modal.component';
 import {SnackBarService} from '../../../services';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     templateUrl: './bundles.component.html',
     styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
-export class BundlesComponent {
+export class BundlesComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
     query: string;
-    private pageSize = 10;
+    private queryParams: { query: string };
 
+    private pageSize = 10;
     ds: QueryableDatasource<Bundle>;
 
     constructor(private service: BundlesService,
-                private helper: BundleHelperService,
+                private router: Router,
                 private dialog: MatDialog,
+                private helper: BundleHelperService,
+                private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
 
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
-
         // for(let _i= 0; _i < 50; _i++) {
         //    let bundle = new Bundle();
         //    bundle.name= 'winter_pack_'+_i;
@@ -35,6 +38,22 @@ export class BundlesComponent {
         //    bundle.disabled = false;
         //    this.service.post(bundle).subscribe(value => console.log(value))
         // }
+    }
+
+    ngOnInit(): void {
+        this.query = this.activatedRoute.snapshot.queryParamMap.get('query') || undefined;
+        this.search();
+    }
+
+    private updateQueryParams() {
+        this.queryParams = {query: this.query};
+        this.router.navigate(
+            [],
+            {
+                relativeTo: this.activatedRoute,
+                queryParams: this.queryParams,
+                queryParamsHandling: 'merge', // remove to replace all query params by provided
+            });
     }
 
     openDialog(): void {
@@ -52,7 +71,6 @@ export class BundlesComponent {
     }
 
     handleEvent($event) {
-        console.log($event);
         switch ($event.type) {
             case 'delete':
                 this.deleteBundle($event.bundle);
@@ -75,6 +93,7 @@ export class BundlesComponent {
         }
         this.ds.setQuery(this.query);
         this.ds.fetchPage(0);
+        this.updateQueryParams();
     }
 
     private createBundle(bundle: Bundle) {
