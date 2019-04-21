@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Bundle} from '../../../shared/model';
 import {BundleHelperService, BundlesService, QueryableDatasource} from '../../../shared/services';
 import {MatDialog} from '@angular/material';
-import {BundleModalComponent} from './bundle-modal.component';
+import {BundleModalComponent} from '../../../shared/components/bundles';
 import {SnackBarService} from '../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
 

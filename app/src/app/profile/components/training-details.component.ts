@@ -20,7 +20,7 @@ export class TrainingDetailsComponent implements OnInit {
     constructor(private app: AppService,
                 private bundleService: BundlesService,
                 private changeViewService: ChangeViewService) {
-        this.current_role_view = this.app.current_role_view;
+        this.current_role_view = this.app.currentRole;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 

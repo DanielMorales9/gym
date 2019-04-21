@@ -14,7 +14,7 @@ export class SearchDateToolbar {
     @Output() done: EventEmitter<any> = new EventEmitter();
 
     emit(type, event) {
-        this.done.emit({type: type, value: event.value});
+        this.done.emit({type: type, date: event.value});
     }
 }
 

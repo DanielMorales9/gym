@@ -66,8 +66,6 @@ registerLocaleData(localeIt);
     declarations: [
         BundlesComponent,
         BundleItemComponent,
-        BundleModalComponent,
-        BundleDetailsComponent,
         BundleSelectItemComponent,
         UsersComponent,
         UserItemComponent,
@@ -89,7 +87,6 @@ registerLocaleData(localeIt);
         UserItemComponent
     ],
     entryComponents: [
-        BundleModalComponent,
         AdminHeaderModalComponent,
         AdminChangeModalComponent,
         AdminHourModalComponent,

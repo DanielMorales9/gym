@@ -22,7 +22,7 @@ export class CalendarFacade {
     }
 
     getRole() {
-        return this.appService.current_role_view;
+        return this.appService.currentRole;
     }
 
     getConfig() {

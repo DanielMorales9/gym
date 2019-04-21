@@ -8,7 +8,7 @@ import {CoreModule} from './core';
 import {
     AppService,
     AuthenticatedService,
-    AuthService, CalendarFacade,
+    AuthService, BundleFacade, CalendarFacade,
     ChangeViewService,
     DateService,
     GlobalErrorHandler,
@@ -74,6 +74,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         SnackBarService,
         SaleFacade,
         CalendarFacade,
+        BundleFacade,
         NotificationService,
         ChangeViewService,
         {

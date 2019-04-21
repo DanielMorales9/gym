@@ -1,6 +1,14 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NoItemComponent, SearchDateToolbar, SearchMixedToolbar, SimpleSearchToolbar, UserModalComponent,} from './components';
+import {
+    BundleDetailsComponent,
+    BundleModalComponent,
+    UserModalComponent,
+    NoItemComponent,
+    SearchDateToolbar,
+    SearchMixedToolbar,
+    SimpleSearchToolbar
+} from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
     BundleHelperService,
@@ -63,6 +71,7 @@ import {RouterModule} from '@angular/router';
     entryComponents: [
         UserModalComponent,
         PaySaleModalComponent,
+        BundleModalComponent
     ],
     declarations: [
         NoItemComponent,
@@ -74,7 +83,9 @@ import {RouterModule} from '@angular/router';
         SaleItemComponent,
         PaySaleModalComponent,
         SearchDateToolbar,
-        SaleDetailsComponent
+        SaleDetailsComponent,
+        BundleModalComponent,
+        BundleDetailsComponent
     ],
     exports: [
         NoItemComponent,
@@ -85,7 +96,9 @@ import {RouterModule} from '@angular/router';
         SearchDateToolbar,
         SaleItemComponent,
         PaySaleModalComponent,
-        SaleDetailsComponent
+        SaleDetailsComponent,
+        BundleModalComponent,
+        BundleDetailsComponent
     ],
     providers: [
         BundlesService,

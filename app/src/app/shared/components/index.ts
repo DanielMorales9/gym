@@ -1,3 +1,5 @@
+export * from './sales';
+export * from './bundles';
 export * from './users';
 export * from './no-item.component';
 export * from './simple-search.toolbar';

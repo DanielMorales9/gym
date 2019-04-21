@@ -86,15 +86,22 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        let observable;
+        let observable, date, value;
         switch (query.type) {
             case 'query':
                 observable = this.service.searchByLastName(query.value, page, size);
                 break;
             case 'date':
-                const date: Date = query.value;
-                const value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
+                date = query.value;
+                value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
                 observable = this.service.searchByDate(value, page, size);
+                break;
+            case 'customer':
+                date = query.date;
+                value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
+                observable = this.service.searchByDateAndId(value, query.id, page, size);
+                break;
+            default:
                 break;
         }
         return observable;
@@ -102,7 +109,7 @@ export class SaleHelperService extends HelperService<Sale> {
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
         let observable;
-        if (query === undefined || query.type === 'query') {
+        if (query === undefined || Object.keys(query).length > 0) {
             observable = this.get(page, size);
         } else {
             observable = this.search(query, page, size);

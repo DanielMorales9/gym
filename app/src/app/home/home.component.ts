@@ -27,7 +27,7 @@ export class HomeComponent implements OnInit {
             if (this.authenticated) {
 
                 const user = this.service.user;
-                this.current_role_view = this.service.current_role_view;
+                this.current_role_view = this.service.currentRole;
 
                 this.userHelper.getUserByEmail(user.email, (u: User)=> {
                     this.user = u;

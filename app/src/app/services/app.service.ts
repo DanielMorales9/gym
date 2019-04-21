@@ -10,7 +10,7 @@ import {AuthenticatedService} from './authenticated.service';
 })
 export class AppService {
 
-    current_role_view: number;
+    currentRole: number;
     credentials: { username: string, password: string };
     authenticated;
     user: User;
@@ -55,8 +55,8 @@ export class AppService {
     }
 
     changeView(role) {
-        this.current_role_view = role;
-        this.changeViewService.sendView(this.current_role_view)
+        this.currentRole = role;
+        this.changeViewService.sendView(this.currentRole)
     }
 
     // initializeWebSocketConnection() {
@@ -76,7 +76,7 @@ export class AppService {
 
 
     private getCurrentRoleView() {
-        this.current_role_view = this.userHelperService.getHighestRole(this.user);
+        this.currentRole = this.userHelperService.getHighestRole(this.user);
     }
 
     private saveSessionInfo() {

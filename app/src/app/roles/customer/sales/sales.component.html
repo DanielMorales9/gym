@@ -4,4 +4,4 @@
         <sale-item [sale]="s" [canPay]="canPay" [canDelete]="canDelete" (done)="handleEvent($event)"></sale-item>
     </div>
 </cdk-virtual-scroll-viewport>
-<no-item [hidden]="!ds.empty" [message]="no_card_message" ></no-item>
+<no-item [hidden]="!ds.empty" [message]="noCardMessage" ></no-item>

@@ -6,7 +6,7 @@
                    [matDatepicker]="picker"
                    [placeholder]="datePlaceholder"
                    [max]="maxDate"
-                   (dateChange)="emit('date', $event)">
+                   (dateChange)="emit('customer', $event)">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker color="primary"></mat-datepicker>
         </mat-form-field>

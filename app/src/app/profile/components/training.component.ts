@@ -27,7 +27,7 @@ export class TrainingComponent implements OnInit {
                 private router: Router,
                 private app: AppService,
                 private changeViewService: ChangeViewService) {
-        this.current_role_view = this.app.current_role_view;
+        this.current_role_view = this.app.currentRole;
         this.email = this.app.user.email;
         this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }

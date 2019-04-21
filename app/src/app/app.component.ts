@@ -37,7 +37,7 @@ export class AppComponent implements OnInit {
             this.authenticated = auth;
 
             if (this.authenticated) {
-                this.current_role_view = this.service.current_role_view;
+                this.current_role_view = this.service.currentRole;
                 this.user = this.service.user;
                 this.userHelperService.getUserByEmail(this.user.email, u => {
                     this.profilePath = `profile/${u.id}/user`;

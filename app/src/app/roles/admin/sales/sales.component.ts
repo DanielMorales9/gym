@@ -3,7 +3,7 @@ import {Sale} from '../../../shared/model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SaleHelperService} from '../../../shared/services/sale-helper.service';
 import {QueryableDatasource, SalesService} from '../../../shared/services';
-import {AppService, SnackBarService} from '../../../services';
+import {SnackBarService} from '../../../services';
 
 
 @Component({
@@ -17,8 +17,7 @@ export class SalesComponent implements OnInit {
 
     query: string;
 
-    current_role_view: number;
-    no_card_message: string;
+    noCardMessage: string;
 
     private pageSize = 10;
     ds: QueryableDatasource<Sale>;
@@ -26,12 +25,10 @@ export class SalesComponent implements OnInit {
 
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
-                private app: AppService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
-        this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
-        this.current_role_view = app.current_role_view;
+        this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
 
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }

@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {BundlesService} from '../../../shared/services';
-import {Bundle} from '../../../shared/model';
+import {BundlesService} from '../../services';
+import {Bundle} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundleModalComponent} from './bundle-modal.component';
 import {MatDialog} from '@angular/material';
-
+import {BundleModalComponent} from './bundle-modal.component';
+import {BundleFacade} from '../../../services';
 
 @Component({
     selector: 'bundle-details',
@@ -13,21 +13,28 @@ import {MatDialog} from '@angular/material';
 })
 export class BundleDetailsComponent implements OnInit {
 
-    public bundle: Bundle;
+    bundle: Bundle;
+    canDelete: boolean;
+    canDisable: boolean;
+    canEdit: boolean;
 
     constructor(private service: BundlesService,
                 private dialog: MatDialog,
                 private router: Router,
+                private facade: BundleFacade,
                 private route: ActivatedRoute) {
+        this.canDelete = facade.canDelete();
+        this.canEdit = facade.canEdit();
+        this.canDisable = facade.canDisable();
     }
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
-            this.getBundle(+params['id'])
-        })
+            this.getBundle(+params['id']);
+        });
     }
 
-    openDialog(): void {
+    editBundle(): void {
         const title = 'Modifica Pacchetto';
 
         const dialogRef = this.dialog.open(BundleModalComponent, {
@@ -38,14 +45,14 @@ export class BundleDetailsComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(res => {
-            this.service.put(res).subscribe((res: Bundle) => this.bundle = res)
+            this.service.put(res).subscribe((v: Bundle) => this.bundle = v);
         });
     }
 
     deleteBundle() {
-        let confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundle.name}?`);
+        const confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundle.name}?`);
         if (confirmed) {
-            this.service.delete(this.bundle.id).subscribe(_ => this.router.navigateByUrl('/'))
+            this.service.delete(this.bundle.id).subscribe(_ => this.router.navigateByUrl('/'));
         }
     }
 
@@ -55,8 +62,8 @@ export class BundleDetailsComponent implements OnInit {
     }
 
     private getBundle(id: number) {
-        this.service.findById(id).subscribe((res: Bundle)=> {
+        this.service.findById(id).subscribe((res: Bundle) => {
             this.bundle = res;
-        })
+        });
     }
 }

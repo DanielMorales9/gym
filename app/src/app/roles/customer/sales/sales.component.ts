@@ -15,14 +15,15 @@ export class SalesComponent implements OnInit {
     private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
     // private SEARCH_NO_CARD_MESSAGE = "Nessuna vendita disponibile con questa query";
 
-    query: string;
+    query: any;
 
-    current_role_view: number;
-    no_card_message: string;
+    noCardMessage: string;
+    id: number;
 
     private pageSize = 10;
-    ds: QueryableDatasource<Sale>;
+
     private queryParams: any;
+    ds: QueryableDatasource<Sale>;
     canDelete = false;
     canPay = false;
 
@@ -32,8 +33,8 @@ export class SalesComponent implements OnInit {
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
-        this.no_card_message = this.SIMPLE_NO_CARD_MESSAGE;
-        this.current_role_view = app.current_role_view;
+        this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
+        this.id = app.user.id;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
@@ -59,6 +60,7 @@ export class SalesComponent implements OnInit {
     }
 
     search($event?) {
+        $event.id = this.id;
         this.ds.setQuery($event);
         this.ds.fetchPage(0);
         return this.updateQueryParams($event);
