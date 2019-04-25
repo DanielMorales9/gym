@@ -7,11 +7,11 @@ export class SalesService {
 
     constructor(private http: HttpClient) {}
 
-    findUserSales(id: number, page: number, size: number) : Observable<Object> {
+    findUserSales(id: number, page: number, size: number): Observable<Object> {
         return this.http.get(`/sales/findUserSales?id=${id}&page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    get(page: number, size: number) : Observable<Object> {
+    get(page: number, size: number): Observable<Object> {
         return this.http.get(`/sales?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
@@ -39,23 +39,23 @@ export class SalesService {
         return this.http.get(`/sales/${saleId}`);
     }
 
-    getEndpoint(endpoint: string) : Observable<Object> {
+    getEndpoint(endpoint: string): Observable<Object> {
         return this.http.get(endpoint);
     }
 
-    pay(id: number, amount: number) : Observable<Object> {
+    pay(id: number, amount: number): Observable<Object> {
         return this.http.post(`/sales/pay/${id}`, amount);
     }
 
-    searchByLastName(query: string, page: number, size: number) : Observable<Object> {
+    searchByLastName(query: string, page: number, size: number): Observable<Object> {
         return this.http.get(`/sales/searchByLastName?lastName=${query}&page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    searchByDateAndId(query: string, id: number, page: number, size: number) : Observable<Object> {
-        return this.http.get(`/sales/searchByDate?id=${id}&date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
+    searchByDateAndId(query: string, id: number, page: number, size: number): Observable<Object> {
+        return this.http.get(`/sales/searchByDateAndId?id=${id}&date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
     }
 
-    searchByDate(query: string, page: number, size: number) : Observable<Object> {
+    searchByDate(query: string, page: number, size: number): Observable<Object> {
         return this.http.get(`/sales/searchByDate?date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
     }
 }

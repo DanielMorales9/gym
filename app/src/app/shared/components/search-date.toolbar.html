@@ -3,10 +3,11 @@
         <mat-form-field class="search-input-date search-fulldate" floatLabel="never">
             <label class="sr-only"></label>
             <input matInput
+                   [formControl]="date"
                    [matDatepicker]="picker"
                    [placeholder]="datePlaceholder"
                    [max]="maxDate"
-                   (dateChange)="emit('customer', $event)">
+                   (dateChange)="emit('customerDate', $event)">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker color="primary"></mat-datepicker>
         </mat-form-field>

@@ -1,6 +1,6 @@
-import {TestBed} from "@angular/core/testing";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {SalesService} from "./sales.service";
+import {TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {SalesService} from './sales.service';
 
 describe('SalesService', () => {
 
@@ -118,7 +118,7 @@ describe('SalesService', () => {
                 done();
             });
         let req = backend.expectOne({
-            url: "/sales/searchByDate?id=1&date=query&page=1&size=5&sort=createdAt,asc",
+            url: "/sales/searchByDateAndId?id=1&date=query&page=1&size=5&sort=createdAt,asc",
             method: "GET"
         });
         req.flush([]);

@@ -41,10 +41,14 @@ export class SalesComponent implements OnInit {
     ngOnInit(): void {
         this.activatedRoute.queryParams.subscribe(params => {
             this.queryParams = Object.assign({}, params);
-            if (Object.keys(params).length > 0) {
-                this.queryParams.value = new Date(this.queryParams.value);
-                return this.search(this.queryParams);
+            if (params.hasOwnProperty('date')) {
+                this.query = this.queryParams.date;
+                this.queryParams.date = new Date(this.queryParams.date);
+                this.queryParams.type = 'customerDate';
+            } else {
+                this.queryParams.type = 'customerId';
             }
+            return this.search(this.queryParams);
         });
     }
 
@@ -62,7 +66,6 @@ export class SalesComponent implements OnInit {
     search($event?) {
         $event.id = this.id;
         this.ds.setQuery($event);
-        this.ds.fetchPage(0);
         return this.updateQueryParams($event);
     }
 

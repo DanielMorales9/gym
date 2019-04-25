@@ -6,8 +6,7 @@ import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {
     MAT_CHECKBOX_CLICK_ACTION,
-    MatButtonModule, MatCheckboxModule,
-    MatDatepickerModule,
+    MatButtonModule,
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,

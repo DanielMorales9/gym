@@ -17,7 +17,6 @@ export class SaleHelperService extends HelperService<Sale> {
                 sale.salesLineItems = sale.salesLineItems['_embedded']['salesLineItemResources'];
             }
         }
-
     }
 
     getSaleLineItems(sale: Sale) {
@@ -96,20 +95,24 @@ export class SaleHelperService extends HelperService<Sale> {
                 value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
                 observable = this.service.searchByDate(value, page, size);
                 break;
-            case 'customer':
+            case 'customerDate':
                 date = query.date;
                 value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
                 observable = this.service.searchByDateAndId(value, query.id, page, size);
                 break;
-            default:
+            case 'customerId':
+                observable = this.service.findUserSales(query.id, page, size);
                 break;
+            default:
+                throw Error('Unexpected query type: ' + query);
         }
         return observable;
     }
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
+        console.log(query);
         let observable;
-        if (query === undefined || Object.keys(query).length > 0) {
+        if (query === undefined || Object.keys(query).length === 0) {
             observable = this.get(page, size);
         } else {
             observable = this.search(query, page, size);
