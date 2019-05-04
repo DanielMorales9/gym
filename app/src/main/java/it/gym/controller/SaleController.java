@@ -85,6 +85,15 @@ public class SaleController {
         return saleRepository.findSalesByCreatedAtGreaterThanEqual(date, pageable);
     }
 
+    @GetMapping(path = "/sales/searchByLastNameAndDate")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    Page<Sale> findSalesByLastNameAndDate(@RequestParam String lastName,
+                                          @RequestParam @DateTimeFormat(pattern="dd-MM-yyyy", iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                                          Pageable pageable) {
+        return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
+    }
+
     @GetMapping(path = "/sales/searchByLastName")
     @ResponseBody
     Page<Sale> findSalesByCustomerLastName(@RequestParam String lastName, Pageable pageable) {

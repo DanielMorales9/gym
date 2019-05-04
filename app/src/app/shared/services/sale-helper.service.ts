@@ -86,26 +86,22 @@ export class SaleHelperService extends HelperService<Sale> {
 
     search(query: any, page: number, size: number): Observable<Object> {
         let observable, date, value;
-        switch (query.type) {
-            case 'query':
-                observable = this.service.searchByLastName(query.value, page, size);
-                break;
-            case 'date':
-                date = query.value;
-                value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
-                observable = this.service.searchByDate(value, page, size);
-                break;
-            case 'customerDate':
-                date = query.date;
-                value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
-                observable = this.service.searchByDateAndId(value, query.id, page, size);
-                break;
-            case 'customerId':
-                observable = this.service.findUserSales(query.id, page, size);
-                break;
-            default:
-                throw Error('Unexpected query type: ' + query);
+        if (!!query.date) {
+            date = new Date(query.date);
+            value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
         }
+        if (!!query.id && value) {
+            observable = this.service.searchByDateAndId(value, query.id, page, size);
+        } else if (!!query.id) {
+            observable = this.service.findUserSales(query.id, page, size);
+        } else if (!!query.lastName && value) {
+            observable = this.service.searchByLastNameAndDate(query.lastName, value, page, size);
+        } else if (!!query.lastName) {
+            observable = this.service.searchByLastName(query.lastName, page, size);
+        } else if (value) {
+            observable = this.service.searchByDate(value, page, size);
+        }
+
         return observable;
     }
 

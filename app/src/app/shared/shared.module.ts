@@ -7,7 +7,7 @@ import {
     NoItemComponent,
     SearchDateToolbar,
     SearchMixedToolbar,
-    SimpleSearchToolbar
+    SimpleSearchToolbar, SalesComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -42,6 +42,7 @@ import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
 import {RouterModule} from '@angular/router';
+import {ScrollingModule} from '@angular/cdk/scrolling';
 
 @NgModule({
     imports: [
@@ -66,8 +67,10 @@ import {RouterModule} from '@angular/router';
         MatDatepickerModule,
         MatNativeDateModule,
         MatExpansionModule,
-        MatCheckboxModule
+        MatCheckboxModule,
+        ScrollingModule,
     ],
+
     entryComponents: [
         UserModalComponent,
         PaySaleModalComponent,
@@ -85,7 +88,8 @@ import {RouterModule} from '@angular/router';
         SearchDateToolbar,
         SaleDetailsComponent,
         BundleModalComponent,
-        BundleDetailsComponent
+        BundleDetailsComponent,
+        SalesComponent
     ],
     exports: [
         NoItemComponent,
@@ -98,7 +102,8 @@ import {RouterModule} from '@angular/router';
         PaySaleModalComponent,
         SaleDetailsComponent,
         BundleModalComponent,
-        BundleDetailsComponent
+        BundleDetailsComponent,
+        SalesComponent
     ],
     providers: [
         BundlesService,

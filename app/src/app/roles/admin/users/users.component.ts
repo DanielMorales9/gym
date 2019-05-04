@@ -86,7 +86,7 @@ export class UsersComponent implements OnInit {
 
     private deleteUser(user: User) {
         this.service.delete(user.id).subscribe(_ => {
-            this.search()
+            this.search();
         });
     }
 
@@ -96,21 +96,20 @@ export class UsersComponent implements OnInit {
         }, err => {
             this.snackbar.open(err.error.message);
         }, () => {
-            this.search()
-        })
+            this.search();
+        });
     }
 
     private createUser(user: User) {
         this.authService.registration(user).subscribe(_ => {
-            let message = `L'utente ${user.lastName} è stato creato`;
+            const message = `L'utente ${user.lastName} è stato creato`;
             this.snackbar.open(message);
         },  err => {
-            if (err.status == 500) {
+            if (err.status === 500) {
                 this.snackbar.open(err.error.message, );
-            }
-            else throw err;
+            } else { throw err; }
         }, () => {
             this.search();
-        })
+        });
     }
 }

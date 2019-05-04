@@ -21,7 +21,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
                                                                  Pageable pageable);
 
     Page<Sale> findSalesByCreatedAtGreaterThanEqual(@RequestParam("date") Date date,
-                                                                 Pageable pageable);
+                                                    Pageable pageable);
 
     Page<Sale> findSalesByCustomerLastName(String query, Pageable pageable);
+
+    Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(@RequestParam("lastName") String lastName,
+                                                                       @RequestParam("date") Date date,
+                                                                       Pageable pageable);
+
+
 }

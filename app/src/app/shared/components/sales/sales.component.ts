@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {Sale} from '../../../shared/model';
+import {Sale} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SaleHelperService} from '../../../shared/services/sale-helper.service';
-import {QueryableDatasource, SalesService} from '../../../shared/services';
+import {SaleHelperService} from '../../services/sale-helper.service';
+import {QueryableDatasource, SalesService} from '../../services';
 import {AppService, SnackBarService} from '../../../services';
 
 
@@ -16,57 +16,74 @@ export class SalesComponent implements OnInit {
     // private SEARCH_NO_CARD_MESSAGE = "Nessuna vendita disponibile con questa query";
 
     query: any;
-
     noCardMessage: string;
-    id: number;
 
     private pageSize = 10;
-
     private queryParams: any;
+    private id: number;
+
     ds: QueryableDatasource<Sale>;
-    canDelete = false;
-    canPay = false;
+    canPay: boolean;
+    canDelete: boolean;
+    mixed: boolean;
 
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
-                private app: AppService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
+                private app: AppService,
                 private snackbar: SnackBarService) {
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
-        this.id = app.user.id;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
+        const path = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
+        switch (path) {
+            case 'admin':
+                this.mixed = this.canDelete = this.canPay = true;
+                break;
+            case 'customer':
+                this.mixed = this.canDelete = this.canPay = false;
+                this.id = this.app.user.id;
+                break;
+        }
+        this.initQueryParams(this.id);
+    }
+
+    private initQueryParams(id?) {
         this.activatedRoute.queryParams.subscribe(params => {
             this.queryParams = Object.assign({}, params);
-            if (params.hasOwnProperty('date')) {
-                this.query = this.queryParams.date;
-                this.queryParams.date = new Date(this.queryParams.date);
-                this.queryParams.type = 'customerDate';
-            } else {
-                this.queryParams.type = 'customerId';
+            if (Object.keys(params).length > 0) {
+                if (!!this.queryParams.date) {
+                    this.queryParams.date = new Date(this.queryParams.date);
+                }
             }
-            return this.search(this.queryParams);
+            if (id) {
+                this.queryParams.id = id;
+            }
+            this.search(this.queryParams);
         });
     }
 
-    private updateQueryParams(event) {
-        this.queryParams = event;
-        return this.router.navigate(
+    private updateQueryParams(event?) {
+        if (!event) { event = {}; }
+        if (this.id) { event.id = this.id; }
+
+        this.queryParams = this.query = event;
+        console.log(this.queryParams);
+        this.router.navigate(
             [],
             {
                 relativeTo: this.activatedRoute,
                 queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
     }
 
     search($event?) {
-        $event.id = this.id;
         this.ds.setQuery($event);
-        return this.updateQueryParams($event);
+        this.ds.fetchPage(0);
+        this.updateQueryParams($event);
     }
 
     handleEvent($event) {

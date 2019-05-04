@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {BundleDetailsComponent, BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
 import {CommonModule, registerLocaleData} from '@angular/common';
 import {AdminRouting} from './admin.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -21,7 +20,7 @@ import {
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
-import {BundleSelectItemComponent, CreateSaleComponent, SalesComponent} from './sales';
+import {BundleSelectItemComponent, CreateSaleComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -34,6 +33,7 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../../shared';
+import {BundleItemComponent, BundlesComponent} from './bundles';
 
 registerLocaleData(localeIt);
 
@@ -71,7 +71,6 @@ registerLocaleData(localeIt);
         UserItemComponent,
         UserDetailsComponent,
         CreateSaleComponent,
-        SalesComponent,
         AdminCalendarComponent,
         AdminHeaderModalComponent,
         AdminChangeModalComponent,

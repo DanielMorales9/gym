@@ -6,6 +6,7 @@
                    [matDatepicker]="picker"
                    [placeholder]="datePlaceholder"
                    [max]="maxDate"
+                   [(value)]="date"
                    (dateChange)="emit('date', $event)">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker color="primary"></mat-datepicker>
@@ -17,9 +18,9 @@
                    title="{{textPlaceholder}}"
                    placeholder="&nbsp;{{textPlaceholder}}"
                    id="search-input"
-                   name="query"
-                   [(ngModel)]="query"/>
-            <button mat-button matSuffix type="submit" (click)="emit('query', $event)">
+                   name="lastName"
+                   [(ngModel)]="lastName"/>
+            <button mat-button matSuffix type="submit" (click)="emit('lastName', $event)">
                 <mat-icon>search</mat-icon>
             </button>
         </mat-form-field>

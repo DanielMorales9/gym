@@ -55,7 +55,7 @@ public abstract class AUser implements DefaultRoles {
     @Size(min=2, max=30)
     private String firstName;
 
-    @Column(name = "lastname", nullable = false)
+    @Column(name = "lastName", nullable = false)
     @NotNull
     @Size(min=2, max=30)
     private String lastName;

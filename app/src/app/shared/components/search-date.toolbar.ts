@@ -8,7 +8,7 @@ import {FormControl} from '@angular/forms';
 })
 export class SearchDateToolbar implements OnInit {
 
-    @Input() query: string;
+    @Input() query: any;
     @Input() datePlaceholder: string;
     @Input() maxDate: Date;
 
@@ -16,11 +16,12 @@ export class SearchDateToolbar implements OnInit {
     date: FormControl;
 
     ngOnInit(): void {
-        this.date = new FormControl(new Date(this.query));
+        this.date = new FormControl(this.query.date || undefined);
     }
 
     emit(type, event) {
-        this.done.emit({type: type, date: event.value});
+        if (event.value) { this.query.date = event.value; } else { delete this.query.date; }
+        this.done.emit(this.query);
     }
 
 }
