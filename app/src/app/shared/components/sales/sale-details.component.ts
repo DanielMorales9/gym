@@ -65,8 +65,7 @@ export class SaleDetailsComponent implements OnInit {
             }});
 
         dialogRef.afterClosed().subscribe(res => {
-            if (res) { this.service.pay(res.sale.id, res.amount)
-            .subscribe((value: Sale) => this.sale = value);
+            if (res) { this.service.pay(res.sale.id, res.amount).subscribe((value: Sale) => this.getSale(value.id));
             }
         });
     }

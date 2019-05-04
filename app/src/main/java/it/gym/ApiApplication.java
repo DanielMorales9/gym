@@ -1,5 +1,7 @@
 package it.gym;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import it.gym.model.*;
 import it.gym.service.UserAuthService;
 import org.slf4j.LoggerFactory;
@@ -11,10 +13,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
+import org.springframework.hateoas.core.EvoInflectorRelProvider;
+import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -35,6 +42,7 @@ import java.util.Map;
 @SpringBootApplication
 @Controller
 @EnableRedisHttpSession
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
@@ -42,9 +50,15 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	@Autowired @Qualifier("userAuthService")
 	UserAuthService userDetailsService;
 
-	@RequestMapping({"/", "/logout", "/home/**",
-			"/admin/**", "/trainer/**", "/customer/**",
-			"/profile/**", "/auth/**"})
+	@RequestMapping({
+			"/",
+			"/logout",
+			"/home/**",
+			"/admin/**",
+			"/trainer/**",
+			"/customer/**",
+			"/profile/**",
+			"/auth/**"})
 	public String publicAPI() {
 		return "forward:/index.html";
 	}
@@ -143,18 +157,49 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		}
 	}
 
+	@Component
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	public class RelProvider extends EvoInflectorRelProvider {
+		@Override
+		public String getCollectionResourceRelFor(final Class<?> type) {
+			return super.getCollectionResourceRelFor(ATrainingBundleSpecification.class);
+		}
+
+		@Override
+		public String getItemResourceRelFor(final Class<?> type) {
+			return super.getItemResourceRelFor(ATrainingBundleSpecification.class);
+		}
+
+		@Override
+		public boolean supports(final Class<?> delimiter) {
+			return ATrainingBundleSpecification.class.isAssignableFrom(delimiter);
+		}
+	}
+
+	@Bean
+	public Jackson2ObjectMapperBuilder objectMapperBuilder() {
+		return new Jackson2ObjectMapperBuilder() {
+			public void configure(ObjectMapper objectMapper) {
+				objectMapper.disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
+				objectMapper.registerSubtypes(PersonalTrainingBundleSpecification.class);
+				objectMapper.registerSubtypes(PersonalTrainingBundle.class);
+				super.configure(objectMapper);
+			};
+		};
+	}
+
 	@Configuration
 	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public class BundleTypesMapper {
+	public class TrainingTypesMapper {
 
 		private Map<String, String> mapper;
 
-		public BundleTypesMapper() {
+		public TrainingTypesMapper () {
 			this.mapper = new HashMap<>();
 			this.mapper.put("P", PersonalTrainingBundle.class.getSimpleName());
 		}
 
-		public String getBundleClass(String type) {
+		public String getTrainingClass(String type) {
 			return mapper.get(type);
 		}
 	}

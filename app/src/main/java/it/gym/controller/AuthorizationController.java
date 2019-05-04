@@ -24,6 +24,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -75,6 +76,7 @@ public class AuthorizationController {
 
     @PostMapping(path = "/registration")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<AUserResource> registration(@Valid @RequestBody AUser input) {
         logger.info("User is trying to register: " + input.toString());
         AUser c = registerUser(input);
@@ -84,6 +86,7 @@ public class AuthorizationController {
 
     @PostMapping("/verifyPassword")
     @Transactional
+    @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> verifyPassword(@RequestBody Credentials credentials) {
         logger.info("About to verify password for user");
         AUser user = userService.changePassword(credentials.getEmail(), credentials.getPassword());
@@ -93,6 +96,7 @@ public class AuthorizationController {
 
     @PostMapping("/changePassword/{id}")
     @Transactional
+    @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> changePassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         this.passwordValidationService.validate(form.getPassword());
         AUser user = getVerifiedUser(id);
@@ -106,6 +110,7 @@ public class AuthorizationController {
 
     @PostMapping("/changeNewPassword/{id}")
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     ResponseEntity<AUserResource> changeNewPassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = getVerifiedUser(id);
 
@@ -134,6 +139,7 @@ public class AuthorizationController {
     @PutMapping(path = "/users/{userId}/roles/{roleId}")
     @Transactional
     @Deprecated
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<AUserResource> addRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
         AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Role role = this.roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
@@ -146,6 +152,7 @@ public class AuthorizationController {
 
     @GetMapping(path = "/findByEmail")
     @Transactional
+    @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         logger.info("Authentication: Find By Email: " + email);
         AUser user = userRepository.findByEmail(email);
@@ -162,6 +169,7 @@ public class AuthorizationController {
 
     @GetMapping(path = "/resendToken/{id}")
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity resendRegistrationToken(@PathVariable("id") Long id) {
         AUser user = this.userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
         if (user.isVerified()) throw new UserIsVerified(user.getEmail());
@@ -175,6 +183,7 @@ public class AuthorizationController {
 
     @GetMapping(path = "/resendChangePasswordToken")
     @Transactional
+    @PreAuthorize("isAnonymous()")
     public ResponseEntity resendChangePasswordToken(@RequestParam("token") String existingToken) {
         VerificationToken newToken = getVerificationToken(existingToken);
         sendChangePasswordTokenToEmail(newToken.getUser(), newToken.getToken());
@@ -183,6 +192,7 @@ public class AuthorizationController {
 
     @GetMapping(path = "/resendToken")
     @Transactional
+    @PreAuthorize("isAnonymous()")
     public ResponseEntity resendTokenAnonymous(@RequestParam("token") String existingToken) {
         VerificationToken newToken = getVerificationToken(existingToken);
         sendVerificationEmail(newToken, newToken.getUser());

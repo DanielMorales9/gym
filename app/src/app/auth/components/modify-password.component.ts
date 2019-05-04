@@ -17,7 +17,7 @@ export class ModifyPasswordComponent implements OnInit {
     token: string;
     user = new User();
     toResendToken: boolean;
-    resendTokenMessage: string = '';
+    resendTokenMessage = '';
 
     constructor(private activatedRoute: ActivatedRoute,
                 private userHelperService: UserHelperService,
@@ -37,42 +37,40 @@ export class ModifyPasswordComponent implements OnInit {
             this.userHelperService.getRoles(this.user);
             this.buildForm();
         }, (err) => {
-            if (err.status == 404) {
+            if (err.status === 404) {
                 this.snackbar.open(err.error.message);
-                return this.router.navigateByUrl('/auth/login')
-            }
-            else if (err.status < 500) {
+                return this.router.navigateByUrl('/auth/login');
+            } else if (err.status < 500) {
                 this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
-            }
-            else throw err;
+            } else { throw err; }
         });
     }
 
     modifyPassword() {
-        let form = {password: this.password.value, oldPassword: '', confirmPassword: this.confirmPassword.value};
+        const form = {password: this.password.value, oldPassword: '', confirmPassword: this.confirmPassword.value};
 
         this.authService.changePassword(this.user.id, form).subscribe(_ => {
-            let message = `${this.user.firstName} la tua password è stata modificata con successo!`;
+            const message = `${this.user.firstName} la tua password è stata modificata con successo!`;
             this.snackbar.open(message);
             return this.router.navigateByUrl('/');
-        })
+        });
     }
 
     resendToken() {
         this.authService.resendChangePasswordToken(this.token).subscribe((_) => {
-            let message = 'Il tuo token è stato re-inviato';
+            const message = 'Il tuo token è stato re-inviato';
             this.snackbar.open(message);
-            return this.router.navigateByUrl("/auth/login")
+            return this.router.navigateByUrl('/auth/login');
         });
     }
 
     get password() {
-        return this.form.get("password");
+        return this.form.get('password');
     }
 
     get confirmPassword() {
-        return this.form.get("confirmPassword")
+        return this.form.get('confirmPassword');
     }
 
     private buildForm() {
@@ -85,6 +83,6 @@ export class ModifyPasswordComponent implements OnInit {
                 confirmPassword: ['', Validators.required]},
             {
                 validator: passwordMatchValidator.bind(this)
-            })
+            });
     }
 }

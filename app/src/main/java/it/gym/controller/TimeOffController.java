@@ -22,6 +22,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ import java.util.stream.Stream;
 @RepositoryRestController
 @PropertySource("application.yml")
 @RequestMapping("/timesOff")
+@PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
 public class TimeOffController {
 
     private final static Logger logger = LoggerFactory.getLogger(TimeOffController.class);
@@ -271,6 +273,7 @@ public class TimeOffController {
     }
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     ResponseEntity<List<TimeOffResource>> getTimesOff(@RequestParam(value = "id", required = false)
                                                               Long id,
                                                       @RequestParam(value = "type", required = false)

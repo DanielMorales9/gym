@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,12 +39,14 @@ public class UserExtendedController {
 
     @GetMapping(path = "/search")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
     Page<AUser> searchByLastName(@RequestParam String query, Pageable pageable) {
         logger.info("Query: " + query);
         return repository.findByLastName(query, pageable);
     }
 
     @GetMapping(path = "findByEmail")
+    @PreAuthorize("isAuthenticated()")
     ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         logger.info("Query: " + email);
         return ResponseEntity.ok(new AUserAssembler().toResource(repository.findByEmail(email)));

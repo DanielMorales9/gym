@@ -35,6 +35,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,7 @@ import java.util.stream.Stream;
 @RepositoryRestController
 @PropertySource("application.yml")
 @RequestMapping("/reservations")
+@PreAuthorize("isAuthenticated()")
 public class TrainingReservationController {
 
     private final TimeOffRepository timeRepository;
@@ -85,6 +87,7 @@ public class TrainingReservationController {
 
     @GetMapping(path = "/checkAvailabilityAndEnablement")
     @Transactional
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     ResponseEntity<String> checkAvailableDay(@RequestParam("date")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
                                                      Date startDate,
@@ -157,6 +160,7 @@ public class TrainingReservationController {
 
     @GetMapping(path = "/book/{customerId}")
     @Transactional
+    @PreAuthorize("hasAuthority('CUSTOMER')")
     ResponseEntity<ReservationResource> book(@PathVariable Long customerId,
                                              @RequestParam("date")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startTime) {
@@ -194,6 +198,7 @@ public class TrainingReservationController {
 
     @DeleteMapping(path = "/{reservationId}")
     @Transactional
+    @PreAuthorize("isAuthenticated()")
     ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
                                                @RequestParam(value = "type", defaultValue = "customer") String type,
                                                Principal principal) {
@@ -225,6 +230,7 @@ public class TrainingReservationController {
 
     @GetMapping(path="/complete/{sessionId}")
     @ResponseBody
+    @PreAuthorize("hasAuthority('TRAINER')")
     ResponseEntity<TrainingSessionResource> complete(@PathVariable(value = "sessionId") Long sessionId) {
         logger.info("completing session");
         ATrainingSession session = this.sessionRepository.findById(sessionId)
@@ -236,6 +242,7 @@ public class TrainingReservationController {
 
     @GetMapping(path="/confirm/{reservationId}")
     @ResponseBody
+    @PreAuthorize("hasAnyAuthority('TRAINER', 'ADMIN')")
     ResponseEntity<ReservationResource> confirm(@PathVariable(value = "reservationId") Long reservationId) {
         logger.info("confirming session");
         Reservation res = this.reservationService.findById(reservationId);
@@ -265,38 +272,6 @@ public class TrainingReservationController {
 
     }*/
 
-
-    @Bean
-    public Jackson2ObjectMapperBuilder objectMapperBuilder() {
-        return new Jackson2ObjectMapperBuilder() {
-            public void configure(ObjectMapper objectMapper) {
-                objectMapper.disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
-                objectMapper.registerSubtypes(PersonalTrainingBundleSpecification.class);
-                objectMapper.registerSubtypes(PersonalTrainingBundle.class);
-                super.configure(objectMapper);
-            };
-        };
-    }
-
-
-    @Component
-    @Order(Ordered.HIGHEST_PRECEDENCE)
-    public class RelProvider extends EvoInflectorRelProvider {
-        @Override
-        public String getCollectionResourceRelFor(final Class<?> type) {
-            return super.getCollectionResourceRelFor(ATrainingBundleSpecification.class);
-        }
-
-        @Override
-        public String getItemResourceRelFor(final Class<?> type) {
-            return super.getItemResourceRelFor(ATrainingBundleSpecification.class);
-        }
-
-        @Override
-        public boolean supports(final Class<?> delimiter) {
-            return ATrainingBundleSpecification.class.isAssignableFrom(delimiter);
-        }
-    }
 
     private Reservation deleteReservation(@PathVariable Long reservationId, Principal principal) {
         logger.info("Getting reservation by id");
@@ -328,21 +303,5 @@ public class TrainingReservationController {
     private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")
                                          @RequestParam("date") Date date) {
         return date.before(new Date());
-    }
-
-    @Configuration
-    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-    public class TrainingTypesMapper {
-
-        private Map<String, String> mapper;
-
-        public TrainingTypesMapper () {
-            this.mapper = new HashMap<>();
-            this.mapper.put("P", PersonalTrainingBundle.class.getSimpleName());
-        }
-
-        public String getTrainingClass(String type) {
-            return mapper.get(type);
-        }
     }
 }

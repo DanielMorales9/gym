@@ -12,6 +12,7 @@ import it.gym.repository.VerificationTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.BasePathAwareController;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -41,11 +42,12 @@ public class UserBaseController {
 
 
     @RequestMapping(path = "users/{id}", method = RequestMethod.DELETE)
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<AUserResource> delete(@PathVariable Long id) {
         Optional<AUser> user = this.repository.findById(id);
         if (user.isPresent()) {
             AUser u = user.get();
-            VerificationToken vtk = this.tokenRepository.findByUser(u).orElseThrow(() -> new TokenNotFoundException());
+            VerificationToken vtk = this.tokenRepository.findByUser(u).orElseThrow(TokenNotFoundException::new);
             this.tokenRepository.delete(vtk);
             this.repository.deleteById(id);
             return ResponseEntity.ok(new AUserAssembler().toResource(u));
@@ -54,6 +56,7 @@ public class UserBaseController {
     }
 
     @RequestMapping(path = "users/{id}", method = RequestMethod.PATCH)
+    @PreAuthorize("isAuthenticated()")
     ResponseEntity<AUserResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
         Optional<AUser> user = repository.findById(id);
         AUser u;

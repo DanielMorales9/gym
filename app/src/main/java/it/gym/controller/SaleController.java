@@ -22,6 +22,7 @@ import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +30,7 @@ import java.util.Date;
 import java.util.stream.Collectors;
 
 @RepositoryRestController
+@PreAuthorize("isAuthenticated()")
 public class SaleController {
 
     private final AdminRepository adminRepository;
@@ -91,6 +93,7 @@ public class SaleController {
 
     @GetMapping(path = "/sales/createSale/{adminEmail}/{customerId}")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> createSale(@PathVariable String adminEmail, @PathVariable Long customerId) {
 
         Admin admin = adminRepository.findByEmail(adminEmail);
@@ -117,6 +120,7 @@ public class SaleController {
 
     @GetMapping(path = "/sales/addSalesLineItem/{saleId}/{bundleSpecId}")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
                                                   @PathVariable Long bundleSpecId,
                                                   @RequestParam(defaultValue = "1") Integer quantity) {
@@ -130,6 +134,7 @@ public class SaleController {
 
     @DeleteMapping(path = "/sales/deleteSalesLineItem/{saleId}/{salesLineItemId}")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
                                                      @PathVariable Long salesLineItemId) {
         Sale sale = getSale(saleId);
@@ -146,6 +151,7 @@ public class SaleController {
 
     @GetMapping(path = "/sales/confirmSale/{saleId}")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> confirmSale(@PathVariable Long saleId) {
         Sale sale = getSale(saleId);
         sale.confirmSale();
@@ -164,6 +170,7 @@ public class SaleController {
 
     @PostMapping(path = "/sales/pay/{saleId}")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestBody Double amount) {
         Sale sale = getSale(saleId);
         if (!sale.isCompleted()) {
@@ -186,6 +193,7 @@ public class SaleController {
 
     @DeleteMapping(path = "/sales/{saleId}")
     @Transactional
+    @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> deleteSale(@PathVariable Long saleId) {
         Sale sale = this.getSale(saleId);
         if (!sale.isDeletable()) {

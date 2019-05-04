@@ -15,8 +15,8 @@ export class UserDetailsComponent implements OnInit {
 
     user: User;
 
-    canDelete: boolean = false;
-    canSell: boolean = false;
+    canDelete = false;
+    canSell = false;
 
     constructor(private service: UserService,
                 private appService: AppService,
@@ -34,9 +34,9 @@ export class UserDetailsComponent implements OnInit {
             this.service.findById(id).subscribe((user: User) => {
                 this.user = user;
                 this.canDelete = this.user.id !== this.appService.user.id;
-                this.canSell = this.user.type == 'C';
-            })
-        })
+                this.canSell = this.user.type === 'C';
+            });
+        });
     }
 
     openEditDialog(): void {
@@ -50,19 +50,19 @@ export class UserDetailsComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(user => {
-            if (user) this.patchUser(user);
+            if (user) { this.patchUser(user); }
         });
     }
 
     private patchUser(user: User) {
-        this.service.patch(user).subscribe((user: User) => this.user = user)
+        this.service.patch(user).subscribe((u: User) => this.user = u);
     }
 
     deleteUser() {
-        let confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
+        const confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
         if (confirmed) {
             this.service.delete(this.user.id)
-                .subscribe(_ => this.router.navigateByUrl('/admins/users'))
+                .subscribe(_ => this.router.navigateByUrl('/admins/users'));
         }
     }
 
@@ -70,19 +70,19 @@ export class UserDetailsComponent implements OnInit {
         this.authService.resendTokenAnonymous(this.user.id)
             .subscribe(
                 _ => {
-                    this.snackbar.open('Controlla la mail per verificare il tuo account')
+                    this.snackbar.open('Controlla la mail per verificare il tuo account');
                 },
                 error => {
-                    this.snackbar.open(error.error.message)
-                })
+                    this.snackbar.open(error.error.message);
+                });
     }
 
     getUserCreatedAt() {
-        return UserHelperService.getUserCreatedAt(this.user)
+        return UserHelperService.getUserCreatedAt(this.user);
     }
 
     buy() {
-        return this.router.navigate(['admin', 'sales', 'buy', this.user.id])
+        return this.router.navigate(['admin', 'sales', 'buy', this.user.id]);
     }
 
 }
