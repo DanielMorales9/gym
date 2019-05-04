@@ -1,35 +1,35 @@
-import {RouterModule, Routes} from "@angular/router";
-import {NgModule} from "@angular/core";
-import {ErrorComponent, ProfileComponent} from "./components";
-import {RoleGuardService} from "./services/role.guard.service";
-import {AuthGuardService} from "./services/auth.guard.service";
+import {RouterModule, Routes} from '@angular/router';
+import {NgModule} from '@angular/core';
+import {ErrorComponent, ProfileComponent} from './components';
+import {RoleGuardService} from './services/role.guard.service';
+import {AuthGuardService} from './services/auth.guard.service';
 
 const routes: Routes = [
-    { path: '', pathMatch: "full", redirectTo: "home"},
+    { path: '', pathMatch: 'full', redirectTo: 'home'},
 
     { path: 'error', component: ErrorComponent },
-    { path: 'auth', loadChildren: "app/auth/auth.module#AuthModule"},
-    { path: 'home', loadChildren: "app/home/home.module#HomeModule" },
+    { path: 'auth', loadChildren: 'app/auth/auth.module#AuthModule'},
+    { path: 'home', loadChildren: 'app/home/home.module#HomeModule' },
 
     { path: 'profile', component: ProfileComponent,
         canActivate: [AuthGuardService]
     },
     {
-        path: 'admin', loadChildren: "app/roles/admin/admin.module#AdminModule",
+        path: 'admin', loadChildren: 'app/roles/admin/admin.module#AdminModule',
         canActivate: [RoleGuardService],
         data: {
             expectedRole: 'A'
         }
     },
     {
-        path: 'trainer', loadChildren: "app/roles/trainer/trainer.module#TrainerModule",
+        path: 'trainer', loadChildren: 'app/roles/trainer/trainer.module#TrainerModule',
         canActivate: [RoleGuardService],
         data: {
             expectedRole: 'T'
         }
     },
     {
-        path: 'customer', loadChildren: "app/roles/customer/customer.module#CustomerModule",
+        path: 'customer', loadChildren: 'app/roles/customer/customer.module#CustomerModule',
         canActivate: [RoleGuardService],
         data: {
             expectedRole: 'C'

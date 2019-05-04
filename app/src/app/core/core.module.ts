@@ -1,16 +1,19 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from "@angular/common/http";
-import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, XhrInterceptor} from "./http";
+import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
+import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, LoaderInterceptor, XhrInterceptor} from './http';
+import {LoaderComponent, LoaderService} from './loader';
+import {MatProgressBarModule} from '@angular/material';
 
 
 @NgModule({
     imports: [
         CommonModule,
-        HttpClientModule
+        HttpClientModule,
+        MatProgressBarModule
     ],
-    declarations: [],
-    exports: [],
+    declarations: [LoaderComponent],
+    exports: [LoaderComponent],
     providers: [
         {
             provide: HTTP_INTERCEPTORS,
@@ -22,10 +25,11 @@ import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, X
             useClass: HttpService
         },
         HttpCacheService,
-        ApiPrefixInterceptor,
-        CacheInterceptor]
+        CacheInterceptor,
+        LoaderInterceptor,
+        LoaderService,
+        ApiPrefixInterceptor]
 })
 export class CoreModule {
 
 }
-

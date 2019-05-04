@@ -1,6 +1,6 @@
-import {HttpHandler, HttpInterceptor, HttpRequest} from "@angular/common/http";
-import {Injectable} from "@angular/core";
-import {AppService} from "../../services";
+import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {AppService} from '../../services';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {

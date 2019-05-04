@@ -1,0 +1,14 @@
+@media (max-width: 599px) {
+    .loader-overlay {
+        top: 52px !important;
+    }
+}
+
+.loader-overlay {
+    position: absolute;
+    width: 100%;
+    top: 60px;
+    left: 0;
+    opacity: 1;
+    z-index: 500000;
+}

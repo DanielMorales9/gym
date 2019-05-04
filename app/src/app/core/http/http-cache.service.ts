@@ -33,6 +33,7 @@ export class HttpCacheService {
             lastUpdated: lastUpdated || new Date(),
             data: data
         };
+        // tslint:disable-next-line:no-console
         console.debug(`Cache set for key: "${url}"`);
         this.saveCacheData();
     }
@@ -46,6 +47,7 @@ export class HttpCacheService {
         const cacheEntry = this.cachedData[url];
 
         if (cacheEntry) {
+            // tslint:disable-next-line:no-console
             console.debug(`Cache hit for key: "${url}"`);
             return cacheEntry.data;
         }
@@ -68,6 +70,7 @@ export class HttpCacheService {
      */
     clearCache(url: string): void {
         delete this.cachedData[url];
+        // tslint:disable-next-line:no-console
         console.debug(`Cache cleared for key: "${url}"`);
         this.saveCacheData();
     }
@@ -111,5 +114,4 @@ export class HttpCacheService {
         const data = this.storage ? this.storage[cachePersistenceKey] : null;
         this.cachedData = data ? JSON.parse(data) : {};
     }
-
 }

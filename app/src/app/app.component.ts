@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {AppService, AuthenticatedService} from './services';
 import {User} from './shared/model';
 import {UserHelperService} from './shared/services';
+import {MatSidenav} from '@angular/material';
 
 
 @Component({
@@ -20,6 +21,8 @@ export class AppComponent implements OnInit {
     user: User;
     appName = 'Goodfellas';
     screenWidth: number;
+    @ViewChild('snav') public snav: MatSidenav;
+
 
     constructor(private service: AppService,
                 private router: Router,
@@ -53,6 +56,7 @@ export class AppComponent implements OnInit {
 
     logout() {
         this.service.logout(() => {
+            this.snav.close();
             this.current_role_view = undefined;
             this.authenticated = false;
             this.user = undefined;
