@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService, ChangeViewService} from './services';
+import {AppService, AuthenticatedService} from './services';
 import {User} from './shared/model';
 import {UserHelperService} from './shared/services';
 
@@ -24,8 +24,7 @@ export class AppComponent implements OnInit {
     constructor(private service: AppService,
                 private router: Router,
                 private authenticatedService: AuthenticatedService,
-                private userHelperService: UserHelperService,
-                private changeViewService: ChangeViewService) {
+                private userHelperService: UserHelperService) {
     }
 
 
@@ -46,10 +45,6 @@ export class AppComponent implements OnInit {
 
         });
 
-        this.changeViewService.getView().subscribe(value => {
-            this.current_role_view = value;
-        });
-
         this.screenWidth = window.innerWidth;
         window.onresize = (_) => {
             this.screenWidth = window.innerWidth;
@@ -65,10 +60,10 @@ export class AppComponent implements OnInit {
         });
     }
 
-    switchView(role) {
-        this.service.changeView(role);
-        this.current_role_view = role;
-    }
+    // switchView(role) {
+    //     this.service.changeView(role);
+    //     this.current_role_view = role;
+    // }
 
     private authOnNavigation() {
         this.router.events.subscribe(event => {

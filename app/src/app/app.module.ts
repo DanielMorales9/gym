@@ -8,12 +8,14 @@ import {CoreModule} from './core';
 import {
     AppService,
     AuthenticatedService,
-    AuthService, BundleFacade, CalendarFacade,
-    ChangeViewService,
+    AuthService,
+    BundleFacade,
+    CalendarFacade,
     DateService,
     GlobalErrorHandler,
     GymConfigurationService,
-    NotificationService, SaleFacade,
+    NotificationService,
+    SaleFacade,
     SnackBarService
 } from './services';
 import {ErrorComponent, NotificationsComponent, ProfileComponent} from './components';
@@ -25,7 +27,8 @@ import {
     MatIconModule,
     MatInputModule,
     MatListModule,
-    MatSidenavModule, MatSnackBarModule,
+    MatSidenavModule,
+    MatSnackBarModule,
     MatToolbarModule
 } from '@angular/material';
 import {RoleGuardService} from './services/role.guard.service';
@@ -76,7 +79,6 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         CalendarFacade,
         BundleFacade,
         NotificationService,
-        ChangeViewService,
         {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler

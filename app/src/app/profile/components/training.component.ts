@@ -1,14 +1,14 @@
-import {Component, OnInit, } from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import { BundlesService, UserService} from "../../shared/services";
-import {AppService} from "../../services/app.service";
-import {ChangeViewService, NotificationService} from "../../services";
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BundlesService, UserService} from '../../shared/services';
+import {AppService} from '../../services';
+import {NotificationService} from '../../services';
 
 @Component({
     templateUrl: './training.component.html',
     styleUrls: ['../../styles/root.css']
 })
-export class TrainingComponent implements OnInit {
+export class TrainingComponent implements OnInit, OnDestroy {
 
     user: any;
     roles: string[];
@@ -25,45 +25,41 @@ export class TrainingComponent implements OnInit {
                 private bundleService: BundlesService,
                 private route: ActivatedRoute,
                 private router: Router,
-                private app: AppService,
-                private changeViewService: ChangeViewService) {
+                private app: AppService) {
         this.current_role_view = this.app.currentRole;
         this.email = this.app.user.email;
-        this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
     ngOnInit(): void {
         this.sub = this.route.parent.params.subscribe(params => {
             this.id = +params['id?'];
-            this.updateUser()
-        })
+            this.updateUser();
+        });
     }
 
     updateUser() {
-        let closure = (res => {
+        const closure = (res => {
             this.user = res;
-            this.userService.getCurrentTrainingBundles(this.user.id).subscribe( res => {
-                console.log(res);
-                    this.user.currentTrainingBundles = res["_embedded"].personalTrainingBundles;
-            }, err => this._error())
+            this.userService.getCurrentTrainingBundles(this.user.id).subscribe( r => {
+                    this.user.currentTrainingBundles = r['_embedded'].personalTrainingBundles;
+            }, err => this._error());
         });
 
         if (this.id) {
             this.userService.findById(this.id).subscribe(closure, this._error());
-        }
-        else {
+        } else {
             this.userService.findByEmail(this.email).subscribe( closure, this._error());
         }
     }
 
     _error() {
         return err => {
-            let message = {
-                text: "Qualcosa è andato storto",
-                class: "alert-danger"
+            const message = {
+                text: 'Qualcosa è andato storto',
+                class: 'alert-danger'
             };
             this.messageService.sendMessage(message);
-        }
+        };
     }
 
     ngOnDestroy() {
@@ -71,7 +67,7 @@ export class TrainingComponent implements OnInit {
     }
 
     goTo(id) {
-        this.router.navigate(["session", id])
+        this.router.navigate(['session', id]);
     }
 
 }

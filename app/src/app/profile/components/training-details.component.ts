@@ -1,8 +1,6 @@
-import {Component, EventEmitter, Input, OnInit, Output} from "@angular/core";
-import { BundlesService} from "../../shared/services";
-import {AppService} from "../../services";
-import {ChangeViewService} from "../../services";
-
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { BundlesService} from '../../shared/services';
+import {AppService} from '../../services';
 
 @Component({
     selector: 'training-details',
@@ -18,20 +16,18 @@ export class TrainingDetailsComponent implements OnInit {
     current_role_view: number;
 
     constructor(private app: AppService,
-                private bundleService: BundlesService,
-                private changeViewService: ChangeViewService) {
+                private bundleService: BundlesService) {
         this.current_role_view = this.app.currentRole;
-        this.changeViewService.getView().subscribe(value => this.current_role_view = value)
     }
 
     getDate(st, et) {
-        let startTime = new Date(st);
-        let endTime = new Date(et);
-        return startTime.getDate() + "/"
-            + (startTime.getMonth()+1)  + "/"
-            + startTime.getFullYear() + " "
-            + endTime.getHours() + "-"
-            + startTime.getHours() + " h";
+        const startTime = new Date(st);
+        const endTime = new Date(et);
+        return startTime.getDate() + '/'
+            + (startTime.getMonth() + 1)  + '/'
+            + startTime.getFullYear() + ' '
+            + endTime.getHours() + '-'
+            + startTime.getHours() + ' h';
     }
 
     ngOnInit(): void {
@@ -42,13 +38,13 @@ export class TrainingDetailsComponent implements OnInit {
         this.hidden = !this.hidden;
         if (!this.training.sessions) {
             if (this.hidden) {
-                let endpoint = this.training._links.sessions.href;
+                const endpoint = this.training._links.sessions.href;
                 this.bundleService.getSessions(endpoint)
                     .subscribe( res => {
-                        this.training.sessions = res["_embedded"].personalTrainingSessions || [];
-                        this.training.leftSessions = this.training.numSessions - this.training.sessions.length
+                        this.training.sessions = res['_embedded'].personalTrainingSessions || [];
+                        this.training.leftSessions = this.training.numSessions - this.training.sessions.length;
                     }, err => {
-                        console.log(err)
+                        console.log(err);
                     });
             }
         }

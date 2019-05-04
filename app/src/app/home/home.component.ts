@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService, AuthenticatedService, ChangeViewService} from '../services';
+import {AppService, AuthenticatedService} from '../services';
 import {User} from '../shared/model';
 import {Router} from '@angular/router';
 import {UserHelperService} from '../shared/services';
@@ -18,8 +18,7 @@ export class HomeComponent implements OnInit {
     constructor(private service: AppService,
                 private router: Router,
                 private authenticatedService: AuthenticatedService,
-                private userHelper: UserHelperService,
-                private changeViewService: ChangeViewService) { }
+                private userHelper: UserHelperService) { }
 
     ngOnInit() {
         this.authenticatedService.getAuthenticated().subscribe(auth => {
@@ -34,10 +33,6 @@ export class HomeComponent implements OnInit {
                     this.profilePath = '/profile/' + this.user.id;
                 });
             }
-        });
-
-        this.changeViewService.getView().subscribe(value => {
-            this.current_role_view = value;
         });
 
         this.service.authenticate();

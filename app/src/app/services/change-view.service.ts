@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { Subject } from 'rxjs/Subject';
 
 @Injectable({
-        providedIn: "root"
+        providedIn: 'root'
 })
 export class ChangeViewService {
     private subject = new Subject<any>();

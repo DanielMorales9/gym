@@ -92,16 +92,6 @@
                             </span>
                         </a>
                     </div>
-                    <!--TODO menu and switch view has to be deleted-->
-
-                    <div id="menu-view"
-                         *ngIf="current_role_view == 1">
-                        <h2 matSubheader> Viste </h2>
-                        <a *ngFor="let r of user.roles" mat-list-item
-                           [ngClass]="{'active-link': current_role_view == r.id}" (click)="switchView(r.id)">
-                            &nbsp;&nbsp;{{r.name.toLocaleLowerCase()}}
-                        </a>
-                    </div>
             </mat-nav-list>
         </mat-sidenav>
 

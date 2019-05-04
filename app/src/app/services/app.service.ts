@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {UserHelperService, UserService} from '../shared/services';
 import {User} from '../shared/model';
-import {ChangeViewService} from './change-view.service';
 import {AuthenticatedService} from './authenticated.service';
 
 @Injectable({
@@ -22,15 +21,13 @@ export class AppService {
     constructor(private http: HttpClient,
                 private userService: UserService,
                 private userHelperService: UserHelperService,
-                private authenticatedService: AuthenticatedService,
-                private changeViewService: ChangeViewService) {
+                private authenticatedService: AuthenticatedService) {
         this.loadSessionInfo();
-        // this.user = new User();
         this.getCurrentRoleView();
     }
 
     authenticate(credentials?, success?, error?) {
-        this.credentials = credentials !== undefined ? credentials: this.credentials;
+        this.credentials = credentials !== undefined ? credentials : this.credentials;
 
         this.http.get('/user').subscribe(res => {
 
@@ -53,11 +50,11 @@ export class AppService {
             return !!error && error(err);
         });
     }
-
-    changeView(role) {
-        this.currentRole = role;
-        this.changeViewService.sendView(this.currentRole)
-    }
+    //
+    // changeView(role) {
+    //     this.currentRole = role;
+    //     this.changeViewService.sendView(this.currentRole)
+    // }
 
     // initializeWebSocketConnection() {
     //     let ws = new SockJS(this.SOCKET_PATH);
@@ -107,10 +104,10 @@ export class AppService {
 
     logout(callback) {
         this.http.get('/logout').subscribe(_ => {
-                this.discardSession()
+                this.discardSession();
             },
             undefined, () => {
-                return !!callback && callback()
+                return !!callback && callback();
             });
     }
 
