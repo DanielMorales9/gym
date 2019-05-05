@@ -1,10 +1,10 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {BundleDetailsComponent, BundlesComponent} from './bundles';
-import {UserDetailsComponent, UsersComponent} from './users';
 import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../../shared/components/sales';
+import {UserDetailsComponent, UsersComponent} from '../../shared/components/users';
 
 const routes = [
 

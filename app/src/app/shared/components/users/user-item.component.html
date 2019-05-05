@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <a routerLink="/admin/users/{{user?.id}}">
+            <a routerLink="/{{this.root}}/users/{{user?.id}}">
                 {{user?.firstName || 'Loading...'}} {{user?.lastName || 'Loading...'}}
             </a>
         </mat-panel-title>
@@ -23,7 +23,7 @@
         <span>Membro dal {{user?.createdAt | date: "dd/MM/yyyy"}}</span>
     </div>
     <div class="panel-actions">
-        <button mat-button color="primary" (click)="openEditDialog()">
+        <button *ngIf="canPatch" mat-button color="primary" (click)="openEditDialog()">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>

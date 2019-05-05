@@ -1,7 +1,7 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {UserModalComponent} from '../../../shared/components/users';
-import {User} from '../../../shared/model';
+import {UserModalComponent} from './user-modal.component';
+import {User} from '../../model';
 
 
 @Component({
@@ -13,8 +13,11 @@ export class UserItemComponent {
 
     @Input() user: User;
     @Input() canDelete: boolean;
+    @Input() canPatch: boolean;
+    @Input() root: string;
 
     @Output() done = new EventEmitter();
+
 
     constructor(private dialog: MatDialog) {
     }
@@ -29,12 +32,12 @@ export class UserItemComponent {
         });
 
         dialogRef.afterClosed().subscribe(user => {
-            if (user) this.done.emit({type: 'patch', user: user})
+            if (user) { this.done.emit({type: 'patch', user: user}); }
         });
     }
 
     deleteUser() {
-        this.done.emit({type: 'delete', user: this.user})
+        this.done.emit({type: 'delete', user: this.user});
     }
 
 }

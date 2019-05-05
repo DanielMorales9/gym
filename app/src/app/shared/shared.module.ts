@@ -7,7 +7,7 @@ import {
     NoItemComponent,
     SearchDateToolbar,
     SearchMixedToolbar,
-    SimpleSearchToolbar, SalesComponent
+    SimpleSearchToolbar, SalesComponent, UserItemComponent, UsersComponent, UserDetailsComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -89,7 +89,10 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleDetailsComponent,
         BundleModalComponent,
         BundleDetailsComponent,
-        SalesComponent
+        SalesComponent,
+        UsersComponent,
+        UserItemComponent,
+        UserDetailsComponent
     ],
     exports: [
         NoItemComponent,

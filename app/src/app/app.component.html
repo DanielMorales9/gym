@@ -33,7 +33,7 @@
                        [routerLinkActive]="['active-link']"
                        routerLink="/admin/users">
                             <span>
-                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
+                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Clienti
                             </span>
                     </a>
                     <a href=# mat-list-item
@@ -59,6 +59,13 @@
                        routerLink="/trainer/calendar">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/trainer/users">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Clienti
                             </span>
                     </a>
                 </ng-container>
@@ -93,9 +100,9 @@
                             </span>
                     </a>
                 </div>
-                <div id="menu-settings">
+                <div id="menu-settings" *ngIf="current_role_view == 1">
                     <h2 matSubheader>Impostazioni</h2>
-                    <a href=# mat-list-item *ngIf="current_role_view == 1"
+                    <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
                        routerLink="/settings/gym">
                         <span>

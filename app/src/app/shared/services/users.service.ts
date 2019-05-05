@@ -43,4 +43,13 @@ export class UserService {
     delete(id: number) {
         return this.http.delete(`/users/${id}`);
     }
+
+    searchCustomerByLastName(query: any, page: number, size: number) {
+        return this.http.get(`/customers/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
+
+    }
+
+    getCustomers(page: number, size: number) {
+        return this.http.get(`/customers?page=${page}&size=${size}&sort=lastName`);
+    }
 }

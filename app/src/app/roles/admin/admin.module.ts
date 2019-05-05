@@ -19,7 +19,6 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {UserDetailsComponent, UserItemComponent, UsersComponent} from './users';
 import {BundleSelectItemComponent, CreateSaleComponent} from './sales';
 import {
     AdminCalendarComponent,
@@ -67,9 +66,6 @@ registerLocaleData(localeIt);
         BundlesComponent,
         BundleItemComponent,
         BundleSelectItemComponent,
-        UsersComponent,
-        UserItemComponent,
-        UserDetailsComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
         AdminHeaderModalComponent,
@@ -83,7 +79,6 @@ registerLocaleData(localeIt);
     ],
     exports: [
         BundleItemComponent,
-        UserItemComponent
     ],
     entryComponents: [
         AdminHeaderModalComponent,

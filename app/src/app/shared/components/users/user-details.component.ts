@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from '../../../shared/model';
-import {UserHelperService, UserService} from '../../../shared/services';
+import {User} from '../../model';
+import {UserHelperService, UserService} from '../../services';
 import {AppService, AuthService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
-import {UserModalComponent} from '../../../shared/components/users';
+import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 
 
@@ -15,8 +15,12 @@ export class UserDetailsComponent implements OnInit {
 
     user: User;
 
-    canDelete = false;
-    canSell = false;
+    canDelete: boolean;
+    canSell: boolean;
+    canEdit: boolean;
+    canSendToken: boolean;
+    private me: User;
+    private root: string;
 
     constructor(private service: UserService,
                 private appService: AppService,
@@ -29,12 +33,16 @@ export class UserDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = new User();
+        this.me = this.appService.user;
+        this.root = this.route.parent.parent.snapshot.routeConfig.path;
         this.route.params.subscribe(params => {
             const id = params['id'];
             this.service.findById(id).subscribe((user: User) => {
                 this.user = user;
-                this.canDelete = this.user.id !== this.appService.user.id;
-                this.canSell = this.user.type === 'C';
+                this.canDelete = this.user.id !== this.appService.user.id && this.me.type === 'A';
+                this.canSell = this.user.type !== 'A' && this.me.type === 'A';
+                this.canSendToken = this.me.type === 'A';
+                this.canEdit = this.me.type === 'A';
             });
         });
     }
@@ -62,7 +70,7 @@ export class UserDetailsComponent implements OnInit {
         const confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
         if (confirmed) {
             this.service.delete(this.user.id)
-                .subscribe(_ => this.router.navigateByUrl('/admins/users'));
+                .subscribe(_ => this.router.navigate([this.root, 'users']));
         }
     }
 
@@ -82,7 +90,7 @@ export class UserDetailsComponent implements OnInit {
     }
 
     buy() {
-        return this.router.navigate(['admin', 'sales', 'buy', this.user.id]);
+        return this.router.navigate([this.root, 'sales', 'buy', this.user.id]);
     }
 
 }

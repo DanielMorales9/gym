@@ -32,7 +32,7 @@ export class GymSettingsComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe((gym) => {
-            this.gymService.patch(gym).subscribe((g:Gym) => this.gym = g);
+            if (gym) { this.gymService.patch(gym).subscribe((g: Gym) => this.gym = g); }
         });
     }
 }

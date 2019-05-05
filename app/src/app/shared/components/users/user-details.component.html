@@ -31,12 +31,12 @@
             </div>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-button color="primary" (click)="openEditDialog()">
+            <button *ngIf="canEdit" mat-button color="primary" (click)="openEditDialog()">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>
             </button>
-            <button *ngIf="!user?.verified" mat-button color="accent" (click)="resendToken()">
+            <button *ngIf="!user?.verified && canSendToken" mat-button color="accent" (click)="resendToken()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-key"></mat-icon>&nbsp;Re-Invia Token
             </span>

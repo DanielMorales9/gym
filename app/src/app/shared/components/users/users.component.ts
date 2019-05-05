@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from '../../../shared/model';
-import {QueryableDatasource, UserHelperService, UserService} from '../../../shared/services';
+import {User} from '../../model';
+import {QueryableDatasource, UserHelperService, UserService} from '../../services';
 import {AppService, AuthService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserModalComponent} from '../../../shared/components/users';
+import {UserModalComponent} from './user-modal.component';
 
 @Component({
     templateUrl: './users.component.html',
@@ -19,8 +19,12 @@ export class UsersComponent implements OnInit {
 
     query: string;
     private pageSize = 10;
+    private queryParams: any;
     ds: QueryableDatasource<User>;
-    private queryParams: { query: string };
+    canAdd: boolean;
+    canDelete: boolean;
+    canPatch: boolean;
+    type: string;
 
     constructor(private service: UserService,
                 private helper: UserHelperService,
@@ -36,18 +40,35 @@ export class UsersComponent implements OnInit {
 
 
     ngOnInit(): void {
-        this.query = this.activatedRoute.snapshot.queryParamMap.get('query') || undefined;
-        this.search();
+        this.type = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
+        switch (this.type) {
+            case 'admin':
+                this.canPatch = this.canDelete = this.canAdd = true;
+                break;
+            case 'trainer':
+                this.canPatch = this.canDelete = this.canAdd = false;
+                break;
+        }
+        this.initQueryParams();
     }
 
-    private updateQueryParams() {
-        this.queryParams = {query: this.query};
+    private initQueryParams() {
+        this.activatedRoute.queryParams.subscribe(params => {
+            this.queryParams = Object.assign({}, params);
+            if (Object.keys(params).length > 0) {
+                this.query = this.queryParams.query || undefined;
+            }
+            this.search(this.queryParams);
+        });
+    }
+
+    private updateQueryParams($event?) {
+        this.queryParams = $event;
         this.router.navigate(
             [],
             {
                 relativeTo: this.activatedRoute,
                 queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
     }
 
@@ -65,12 +86,11 @@ export class UsersComponent implements OnInit {
     }
 
     search($event?) {
-        if ($event) {
-            this.query = $event.query;
-        }
-        this.ds.setQuery(this.query);
+        if ($event) {if (!$event.query) { $event = {}; }}
+        if (this.type === 'trainer') { $event.type = this.type; }
+        this.ds.setQuery($event);
         this.ds.fetchPage(0);
-        this.updateQueryParams();
+        this.updateQueryParams($event);
     }
 
     handleEvent($event: any) {
@@ -85,9 +105,12 @@ export class UsersComponent implements OnInit {
     }
 
     private deleteUser(user: User) {
-        this.service.delete(user.id).subscribe(_ => {
-            this.search();
-        });
+        const confirmed = confirm(`Vuoi rimuovere l'utente ${user.firstName} ${user.lastName}?`);
+        if (confirmed) {
+            this.service.delete(user.id).subscribe(_ => {
+                this.search();
+            });
+        }
     }
 
     private patchUser(user: User) {
@@ -106,10 +129,14 @@ export class UsersComponent implements OnInit {
             this.snackbar.open(message);
         },  err => {
             if (err.status === 500) {
-                this.snackbar.open(err.error.message, );
+                this.snackbar.open(err.error.message);
             } else { throw err; }
         }, () => {
             this.search();
         });
+    }
+
+    itsMe(id: any) {
+        return this.currentUserId !== id;
     }
 }

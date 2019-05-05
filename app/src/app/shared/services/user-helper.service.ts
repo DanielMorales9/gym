@@ -77,7 +77,16 @@ export class UserHelperService extends HelperService<User> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        return this.service.search(query, page, size);
+        if (query.type) {
+            if (query.query) {
+                return this.service.searchCustomerByLastName(query.query, page, size);
+            } else {
+                return this.service.getCustomers(page, size);
+            }
+
+        } else {
+            return this.service.search(query.query, page, size);
+        }
     }
 
     preProcessResources(resources: User[]): User[] {
@@ -87,7 +96,7 @@ export class UserHelperService extends HelperService<User> {
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
         let observable;
-        if (query === undefined || query === '') {
+        if (query === undefined || Object.keys(query).length === 0) {
             observable = this.get(page, size);
         } else {
             observable = this.search(query, page, size);
