@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
 import {QueryableDatasource, UserHelperService, UserService} from '../../services';
-import {AppService, AuthService, SnackBarService} from '../../../services';
+import {AppService, AuthService, GymService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
+import {GymSettingsComponent} from '../../../components';
 
 @Component({
     templateUrl: './users.component.html',
@@ -28,6 +29,7 @@ export class UsersComponent implements OnInit {
 
     constructor(private service: UserService,
                 private helper: UserHelperService,
+                private gymService: GymService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
                 private app: AppService,
@@ -124,6 +126,7 @@ export class UsersComponent implements OnInit {
     }
 
     private createUser(user: User) {
+        user.gym = this.gymService.gym;
         this.authService.registration(user).subscribe(_ => {
             const message = `L'utente ${user.lastName} è stato creato`;
             this.snackbar.open(message);

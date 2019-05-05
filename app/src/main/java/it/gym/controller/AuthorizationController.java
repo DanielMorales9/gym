@@ -4,10 +4,12 @@ import it.gym.exception.*;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
 import it.gym.model.AUser;
+import it.gym.model.Gym;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
 import it.gym.pojo.Credentials;
 import it.gym.pojo.PasswordForm;
+import it.gym.repository.GymRepository;
 import it.gym.repository.RoleRepository;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
@@ -30,8 +32,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
-import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -51,6 +53,7 @@ public class AuthorizationController {
 
     @Value("${baseUrl}")
     private String baseUrl;
+    private GymRepository gymRepository;
 
     @Autowired
     public AuthorizationController(UserRepository userRepository,
@@ -58,13 +61,14 @@ public class AuthorizationController {
                                    VerificationTokenRepository tokenRepository,
                                    RoleRepository roleRepository,
                                    PasswordEncoder passwordEncoder,
-                                   PasswordValidationService passwordValidationService) {
+                                   PasswordValidationService passwordValidationService, GymRepository gymRepository) {
         this.userRepository = userRepository;
         this.mailSender = mailSender;
         this.tokenRepository = tokenRepository;
         this.roleRepository = roleRepository;
         this.passwordEncoder = passwordEncoder;
         this.passwordValidationService = passwordValidationService;
+        this.gymRepository = gymRepository;
     }
 
 
@@ -79,6 +83,11 @@ public class AuthorizationController {
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<AUserResource> registration(@Valid @RequestBody AUser input) {
         logger.info("User is trying to register: " + input.toString());
+        Optional<Gym> optional = this.gymRepository.findById(input.getGym().getId());
+        if (!optional.isPresent())
+            throw new GymNotFoundException(input.getGym().getName());
+        Gym gym = optional.get();
+        input.setGym(gym);
         AUser c = registerUser(input);
         return ResponseEntity.ok(new AUserAssembler().toResource(c));
 

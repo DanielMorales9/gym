@@ -1,8 +1,8 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService} from './services';
-import {User} from './shared/model';
+import {AppService, AuthenticatedService, GymService} from './services';
+import {Gym, User} from './shared/model';
 import {UserHelperService} from './shared/services';
 import {MatSidenav} from '@angular/material';
 
@@ -26,6 +26,7 @@ export class AppComponent implements OnInit {
 
     constructor(private service: AppService,
                 private router: Router,
+                private gymService: GymService,
                 private authenticatedService: AuthenticatedService) {
     }
 
@@ -40,6 +41,9 @@ export class AppComponent implements OnInit {
                 this.current_role_view = this.service.currentRole;
                 this.user = this.service.user;
                 this.profilePath = `profile/${this.user.id}/user`;
+                this.gymService.getConfig(this.user.id).subscribe((gym: Gym) => {
+                   this.appName = gym.name;
+                });
             }
 
         });

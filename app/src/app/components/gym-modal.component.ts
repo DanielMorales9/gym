@@ -49,7 +49,6 @@ export class GymModalComponent implements OnInit {
         this.gym.excludeDays = this.output.selectedOptions.selected.map(v => v.value);
         this.gym.dayEndHour = this.dayEndHour.value;
         this.gym.dayStartHour = this.dayStartHour.value;
-        console.log(this.gym);
 
         this.dialogRef.close(this.gym);
     }

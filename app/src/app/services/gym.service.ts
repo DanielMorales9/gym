@@ -21,7 +21,7 @@ export class GymService {
     }
 
     getConfig(id: number) {
-        return this.http.get(`/admins/${id}/gym`).pipe(map((res: Gym) => this.gym = res));
+        return this.http.get(`/users/${id}/gym`).pipe(map((res: Gym) => this.gym = res));
     }
 
     patch(gym: any) {

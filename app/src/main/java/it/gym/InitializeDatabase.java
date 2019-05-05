@@ -4,6 +4,7 @@ import it.gym.model.Admin;
 import it.gym.model.Gym;
 import it.gym.model.Role;
 import it.gym.repository.AdminRepository;
+import it.gym.repository.GymRepository;
 import it.gym.repository.RoleRepository;
 import it.gym.utility.Constants;
 import org.slf4j.Logger;
@@ -24,15 +25,17 @@ public class InitializeDatabase implements CommandLineRunner {
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final GymRepository gymRepository;
 
     @Autowired
     public InitializeDatabase(RoleRepository roleRepository,
                               AdminRepository adminRepository,
-                              BCryptPasswordEncoder bCryptPasswordEncoder) {
+                              BCryptPasswordEncoder bCryptPasswordEncoder,
+                              GymRepository gymRepository) {
         this.roleRepository = roleRepository;
         this.adminRepository = adminRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
+        this.gymRepository = gymRepository;
     }
 
     @Override
@@ -52,6 +55,7 @@ public class InitializeDatabase implements CommandLineRunner {
             String password = bCryptPasswordEncoder.encode("password");
             Admin admin = new Admin("Admin", "Admin", email, password, true);
             Gym gym = new Gym("Goodfellas", 8, 22, Arrays.asList(0, 6), DayOfWeek.MONDAY);
+            gymRepository.save(gym);
             admin.setRoles(roles);
             admin.setGym(gym);
             adminRepository.save(admin);

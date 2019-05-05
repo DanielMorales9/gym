@@ -1,4 +1,5 @@
 import {Role} from "./role.class";
+import {Gym} from './gym.class';
 
 export class User {
     id: number;
@@ -13,6 +14,7 @@ export class User {
     height: number;
     weight: number;
     roles: Role[];
+    gym: Gym;
 
     constructor() {
         this.roles = [];

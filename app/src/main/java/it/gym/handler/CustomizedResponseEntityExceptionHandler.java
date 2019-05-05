@@ -59,6 +59,14 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(errorDetails, HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(GymNotFoundException.class)
+    public final ResponseEntity<ErrorDetails> handle(GymNotFoundException ex,
+                                                     WebRequest request) {
+        ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
+                request.getDescription(false));
+        return new ResponseEntity<>(errorDetails, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(InvalidPasswordException.class)
     public final ResponseEntity<ErrorDetails> handle(InvalidPasswordException ex,
                                                      WebRequest request) {
