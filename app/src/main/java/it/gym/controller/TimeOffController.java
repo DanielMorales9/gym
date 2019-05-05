@@ -5,7 +5,10 @@ import it.gym.exception.TimesOffNotFound;
 import it.gym.exception.UnAuthorizedException;
 import it.gym.hateoas.TimeOffAssembler;
 import it.gym.hateoas.TimeOffResource;
-import it.gym.model.*;
+import it.gym.model.AUser;
+import it.gym.model.Admin;
+import it.gym.model.Reservation;
+import it.gym.model.TimeOff;
 import it.gym.repository.ReservationRepository;
 import it.gym.repository.TimeOffRepository;
 import it.gym.repository.TrainerRepository;
@@ -21,7 +24,6 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
@@ -52,14 +54,12 @@ public class TimeOffController {
     private final ReservationRepository reservationService;
     private final TimeOffService timeOffService;
     private final JavaMailSender mailSender;
-    private final SimpMessagingTemplate template;
 
     @Autowired
-    public TimeOffController(SimpMessagingTemplate template, JavaMailSender mailSender,
+    public TimeOffController(JavaMailSender mailSender,
                              ReservationRepository reservationRepository, TimeOffRepository timeRepository,
                              UserService userService, TrainerRepository trainerRepository,
                              ReservationRepository reservationService, TimeOffService timeOffService) {
-        this.template = template;
         this.mailSender = mailSender;
         this.reservationRepository = reservationRepository;
         this.timeRepository = timeRepository;
@@ -109,13 +109,13 @@ public class TimeOffController {
     @GetMapping(path = "/checkChange")
     @Transactional
     ResponseEntity<String> checkChange(@RequestParam("startTime")
-                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                             @RequestParam("endTime")
-                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
-                                             @RequestParam("type")
-                                                     String type) {
+                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                               iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                       @RequestParam("endTime")
+                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                               iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
+                                       @RequestParam("type")
+                                               String type) {
 
         if (checkDate(startTime)) throw new InvalidTimesOff("Data non valida");
 
@@ -183,20 +183,12 @@ public class TimeOffController {
 
         timeOff = this.timeRepository.save(timeOff);
 
-        channel = "notifications";
-        dateFormat = new SimpleDateFormat("MM-dd-yyyy");
-        String action = "/home/calendar?date="+dateFormat.format(startTime)+"&view=day";
-        Notification notification = new Notification("calendar", message, action);
-        notifyChannel("/"+channel, notification);
         logger.info(timeOff.toString());
 
         return ResponseEntity.ok(new TimeOffAssembler().toResource(timeOff));
 
     }
 
-    private void notifyChannel(String channel, Notification notification) {
-        template.convertAndSend(channel, notification);
-    }
 
     @GetMapping(path = "/change/{id}")
     @Transactional

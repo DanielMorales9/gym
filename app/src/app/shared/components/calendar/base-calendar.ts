@@ -1,6 +1,6 @@
 import {Subject} from 'rxjs';
 import {Injectable, OnInit} from '@angular/core';
-import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView,} from 'angular-calendar';
+import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -56,8 +56,6 @@ export abstract class BaseCalendar implements OnInit {
     public activeDayIsOpen: boolean;
     public role: number;
     private queryParams: {view: CalendarView, viewDate: Date};
-
-
     user: User;
     modalData: { role: number; action: string; title: string; userId: number, event: any };
 
@@ -69,7 +67,6 @@ export abstract class BaseCalendar implements OnInit {
                           public router: Router,
                           public activatedRoute: ActivatedRoute) {
     }
-
 
 
     ngOnInit(): void {
@@ -102,11 +99,12 @@ export abstract class BaseCalendar implements OnInit {
     }
 
     private initCalendarConfig() {
-        const config = this.facade.getConfig();
-        this.dayEndHour = config.dayEndHour;
-        this.dayStartHour = config.dayStartHour;
-        this.excludeDays = config.excludeDays;
-        this.weekStartsOn = config.weekStartsOn;
+        this.facade.getConfig().subscribe(config => {
+            this.dayEndHour = config.dayEndHour;
+            this.dayStartHour = config.dayStartHour;
+            this.excludeDays = config.excludeDays;
+            this.weekStartsOn = config.weekStartsOn;
+        });
     }
 
     private initView() {

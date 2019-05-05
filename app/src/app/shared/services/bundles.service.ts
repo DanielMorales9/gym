@@ -27,7 +27,7 @@ export class BundlesService extends ABundleService {
         return this.http.get(`/bundleSpecs/search?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
     }
 
-    getSessions(endpoint) : Observable<Object> {
+    getSessions(endpoint): Observable<Object> {
         return this.http.get(endpoint);
     }
 

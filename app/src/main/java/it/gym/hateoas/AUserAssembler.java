@@ -11,7 +11,6 @@ public class AUserAssembler extends ResourceAssemblerSupport<AUser, AUserResourc
 
     public AUserAssembler(){
         super(AUser.class, AUserResource.class);
-
     }
 
     @Override

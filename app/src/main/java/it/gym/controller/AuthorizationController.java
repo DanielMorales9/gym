@@ -128,8 +128,7 @@ public class AuthorizationController {
         VerificationToken verificationToken = userService.getVerificationToken(token);
         AUser user = verificationToken.getUser();
 
-        Calendar cal = Calendar.getInstance();
-        if ((verificationToken.getExpiryDate().getTime() - cal.getTime().getTime()) <= 0) {
+        if (verificationToken.isExpired()) {
             throw new ExpiredTokenException("Il token è scaduto.");
         }
 

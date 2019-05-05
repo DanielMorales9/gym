@@ -58,6 +58,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 			"/trainer/**",
 			"/customer/**",
 			"/profile/**",
+			"/settings/**",
 			"/auth/**"})
 	public String publicAPI() {
 		return "forward:/index.html";
@@ -213,6 +214,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 					Sale.class,
 					SalesLineItem.class,
 					TimeOff.class,
+					Gym.class,
 					Reservation.class,
 					ATrainingBundleSpecification.class,
 					PersonalTrainingBundleSpecification.class,

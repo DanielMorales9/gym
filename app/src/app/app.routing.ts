@@ -1,6 +1,6 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
-import {ErrorComponent, ProfileComponent} from './components';
+import {ErrorComponent, GymSettingsComponent, ProfileComponent} from './components';
 import {RoleGuardService} from './services/role.guard.service';
 import {AuthGuardService} from './services/auth.guard.service';
 
@@ -13,6 +13,12 @@ const routes: Routes = [
 
     { path: 'profile', component: ProfileComponent,
         canActivate: [AuthGuardService]
+    },
+    { path: 'settings/gym', component: GymSettingsComponent,
+        canActivate: [RoleGuardService],
+        data: {
+            expectedRole: 'A'
+        }
     },
     {
         path: 'admin', loadChildren: 'app/roles/admin/admin.module#AdminModule',

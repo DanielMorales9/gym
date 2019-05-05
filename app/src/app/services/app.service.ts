@@ -30,18 +30,20 @@ export class AppService {
         this.credentials = credentials !== undefined ? credentials : this.credentials;
 
         this.http.get('/user').subscribe(res => {
-
             this.authenticated = !!res && !!res['name'];
             if (this.authenticated) {
-                const email = res['principal']['username'];
-
-                this.userHelperService.getUserByEmail(email, user => {
-                    this.user = user;
-                    this.getCurrentRoleView();
-                    this.userHelperService.getRoles(this.user);
+                if (!this.user.id) {
+                    this.userHelperService.getUserByEmail(res['principal']['username'], user => {
+                        this.user = user;
+                        this.getCurrentRoleView();
+                        this.userHelperService.getRoles(this.user);
+                        this.authenticatedService.setAuthenticated(this.authenticated);
+                        this.saveSessionInfo();
+                    });
+                } else {
                     this.authenticatedService.setAuthenticated(this.authenticated);
-                    this.saveSessionInfo();
-                });
+                }
+
             } else {
                 this.discardSession();
             }
@@ -50,26 +52,6 @@ export class AppService {
             return !!error && error(err);
         });
     }
-    //
-    // changeView(role) {
-    //     this.currentRole = role;
-    //     this.changeViewService.sendView(this.currentRole)
-    // }
-
-    // initializeWebSocketConnection() {
-    //     let ws = new SockJS(this.SOCKET_PATH);
-    //     this.stompClient = Stomp.over(ws);
-    //     let that = this;
-    //     this.stompClient.connect({}, function() {
-    //         that.stompClient.subscribe("/notifications", (message) => {
-    //             let notification = JSON.parse(message.body);
-    //             that.messageService.sendMessage({
-    //                 text: notification.message,
-    //                 class: "alert-info"
-    //             })
-    //         });
-    //     });
-    // }
 
 
     private getCurrentRoleView() {

@@ -13,20 +13,20 @@ import {
     CalendarFacade,
     DateService,
     GlobalErrorHandler,
-    GymConfigurationService,
+    GymService,
     NotificationService,
     SaleFacade,
     SnackBarService
 } from './services';
-import {ErrorComponent, NotificationsComponent, ProfileComponent} from './components';
+import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import {
     MatButtonModule,
-    MatCardModule,
+    MatCardModule, MatCheckboxModule, MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatListModule,
+    MatListModule, MatRadioModule,
     MatSidenavModule,
     MatSnackBarModule,
     MatToolbarModule
@@ -35,15 +35,18 @@ import {RoleGuardService} from './services/role.guard.service';
 import {AuthGuardService} from './services/auth.guard.service';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {Map2DayPipe} from './pipes/map2day.pipe';
 
 @NgModule({
     declarations: [
         AppComponent,
         ChangePasswordModalComponent,
         ErrorComponent,
-        NotificationsComponent,
         ProfileComponent,
-        TimeAgoPipe
+        GymSettingsComponent,
+        GymModalComponent,
+        TimeAgoPipe,
+        Map2DayPipe
     ],
     imports: [
         BrowserModule,
@@ -61,10 +64,13 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         MatCardModule,
         MatFormFieldModule,
         MatInputModule,
-        MatSnackBarModule
+        MatSnackBarModule,
+        MatRadioModule,
+        MatDialogModule
     ],
     entryComponents: [
-        ChangePasswordModalComponent
+        ChangePasswordModalComponent,
+        GymModalComponent
     ],
     providers: [
         AppService,
@@ -72,7 +78,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         AuthenticatedService,
         AuthGuardService,
         RoleGuardService,
-        GymConfigurationService,
+        GymService,
         DateService,
         SnackBarService,
         SaleFacade,

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {TimesOffService, TrainingService, UserService} from '../shared/services';
 import {AppService} from './app.service';
-import {GymConfigurationService} from './gym-configuration.service';
+import {GymService} from './gym.service';
 import {DateService} from './date.service';
 import {Observable} from 'rxjs';
 
@@ -14,7 +14,7 @@ export class CalendarFacade {
                 private trainingService: TrainingService,
                 private timesOffService: TimesOffService,
                 private dateService: DateService,
-                private gymConf: GymConfigurationService) {
+                private gymService: GymService) {
     }
 
     getUser() {
@@ -26,17 +26,12 @@ export class CalendarFacade {
     }
 
     getConfig() {
-        return {
-            'dayEndHour': this.gymConf.dayEndHour,
-            'dayStartHour': this.gymConf.dayStartHour,
-            'excludeDays': this.gymConf.excludeDays,
-            'weekStartsOn': this.gymConf.weekStartsOn,
-        };
+        return this.gymService.getConfig(this.getUser().id);
     }
 
     bookTimeOff(start: Date, name: string, type: string, userId: number, end?: Date) {
         if (!end) {
-            const {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(start);
+            const {startTime, endTime} = this.gymService.getStartAndEndTimeByGymConfiguration(start);
             start = startTime;
             end = endTime;
         }
@@ -44,7 +39,7 @@ export class CalendarFacade {
     }
 
     checkDayTimeOff(date: any, type: string) {
-        const {startTime, endTime} = this.gymConf.getStartAndEndTimeByGymConfiguration(new Date(date));
+        const {startTime, endTime} = this.gymService.getStartAndEndTimeByGymConfiguration(new Date(date));
         return this.timesOffService.check(startTime, endTime, type);
     }
 

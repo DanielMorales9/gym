@@ -1,11 +1,15 @@
-import {Injectable} from '@angular/core'
-import {UserService} from "./users.service";
-import {Role, Sale, User} from '../model';
+import {Injectable} from '@angular/core';
+import {UserService} from './users.service';
+import {Role, User} from '../model';
 import {HelperService} from './helper.service';
-import {observable, Observable} from 'rxjs';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class UserHelperService extends HelperService<User> {
+
+    constructor(private service: UserService) {
+        super();
+    }
 
     ROLE2INDEX = {
         'ADMIN' : 1,
@@ -19,23 +23,22 @@ export class UserHelperService extends HelperService<User> {
         'C': 3
     };
 
-    constructor(private service: UserService) {
-        super()
+    static getUserCreatedAt(user) {
+        const date = new Date(user.createdAt);
+        return date.toLocaleDateString();
     }
 
-    getRoles(user: User, callback?) : void {
+    getRoles(user: User, callback?): void {
         if (!!user.roles) {
             if (!!user.roles['_embedded']) {
                 user.roles = this.unwrapRoles(user.roles);
+            } else {
+                this._getRoles(user);
             }
-            else {
-                this._getRoles(user)
-            }
+        } else {
+            this._getRoles(user);
         }
-        else {
-            this._getRoles(user)
-        }
-        return !!callback && callback()
+        return !!callback && callback();
     }
 
     private _getRoles(user): void {
@@ -52,29 +55,25 @@ export class UserHelperService extends HelperService<User> {
         });
     }
 
-    static getUserCreatedAt(user) {
-        let date = new Date(user.createdAt);
-        return date.toLocaleDateString();
-    }
-
     getUser(id: number, callback: (user: User) => void) {
-        this.service.findById(id).subscribe(callback)
+        this.service.findById(id).subscribe(callback);
     }
 
 
     getUserByEmail(email: string, callback: (user) => void) {
-        this.service.findByEmail(email).subscribe(callback)
+        this.service.findByEmail(email).subscribe(callback);
     }
 
     getHighestRole(user) {
-        if (user.type)
+        if (user.type) {
             return this.TYPE2INDEX[user.type];
-        else
+        } else {
             return 3;
+        }
     }
 
-    get(page: number, size: number) : Observable<Object> {
-        return this.service.get(page, size)
+    get(page: number, size: number): Observable<Object> {
+        return this.service.get(page, size);
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
@@ -83,33 +82,33 @@ export class UserHelperService extends HelperService<User> {
 
     preProcessResources(resources: User[]): User[] {
         resources = this.extract(resources);
-        return resources
+        return resources;
     }
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
         let observable;
-        if (query === undefined || query == '')
+        if (query === undefined || query === '') {
             observable = this.get(page, size);
-        else
+        } else {
             observable = this.search(query, page, size);
+        }
         return observable;
     }
 
-    extract(res: Object) : User[] {
+    extract(res: Object): User[] {
         let users = [];
         if (res['_embedded']) {
             if (res['_embedded']['admins']) {
-                users = users.concat(res['_embedded']['admins'])
+                users = users.concat(res['_embedded']['admins']);
             }
             if (res['_embedded']['customers']) {
-                users = users.concat(res['_embedded']['customers'])
+                users = users.concat(res['_embedded']['customers']);
             }
             if (res['_embedded']['trainers']) {
-                users = users.concat(res['_embedded']['trainers'])
+                users = users.concat(res['_embedded']['trainers']);
             }
-        }
-        else {
-            users = res['content']
+        } else {
+            users = res['content'];
         }
         return users;
     }

@@ -15,9 +15,8 @@ export class UserModalComponent implements OnInit {
     title: string;
     method: string;
 
-
-    canShowRole: boolean = false;
-    canShowHeightAndWeight: boolean = false;
+    canShowRole = false;
+    canShowHeightAndWeight = false;
 
     user: User;
     form: FormGroup;
@@ -31,17 +30,18 @@ export class UserModalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (!this.user)
+        if (!this.user) {
             this.user = new User();
+        }
 
         this.buildForm();
     }
 
     buildForm() {
-        this.canShowHeightAndWeight = this.user.type == 'C' && this.method == 'patch';
-        this.canShowRole = this.method == 'post';
+        this.canShowHeightAndWeight = this.user.type === 'C' && this.method === 'patch';
+        this.canShowRole = this.method === 'post';
 
-        let config = {};
+        const config = {};
         config['firstName'] = [this.user.firstName, [Validators.required]];
         config['lastName'] = [this.user.lastName, [Validators.required]];
         config['email'] = [this.user.email, [Validators.required, Validators.email]];
@@ -57,34 +57,34 @@ export class UserModalComponent implements OnInit {
         }
 
         if (this.canShowRole) {
-            config['type'] = [this.user.type, [Validators.required]]
+            config['type'] = [this.user.type, [Validators.required]];
         }
 
         this.form = this.builder.group(config);
     }
 
     get firstName() {
-        return this.form.get("firstName")
+        return this.form.get('firstName');
     }
 
     get lastName() {
-        return this.form.get("lastName")
+        return this.form.get('lastName');
     }
 
     get height() {
-        return this.form.get("height")
+        return this.form.get('height');
     }
 
     get weight() {
-        return this.form.get("weight")
+        return this.form.get('weight');
     }
 
     get email() {
-        return this.form.get("email")
+        return this.form.get('email');
     }
 
     get type() {
-        return this.form.get("type")
+        return this.form.get('type');
     }
 
     submit() {

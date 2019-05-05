@@ -6,10 +6,10 @@
         <mat-card-subtitle class="card-list-subtitle">
             {{bundle?.description || 'Loading...'}}
         </mat-card-subtitle>
-            <mat-checkbox class="card-list-checkbox"
-                          (change)="selectBundle()"
-                          [(checked)]="selected">
-            </mat-checkbox>
+        <mat-checkbox class="card-list-checkbox"
+                      (change)="selectBundle()"
+                      [(checked)]="selected">
+        </mat-checkbox>
     </mat-card-header>
     <mat-card-content>
         <div class="card-list-content">

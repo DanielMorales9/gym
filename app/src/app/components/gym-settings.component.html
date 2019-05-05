@@ -1,0 +1,33 @@
+<div class="card-container">
+    <mat-card>
+        <mat-card-title>{{gym?.name || 'Loading...'}}</mat-card-title>
+        <mat-card-subtitle>Configurazione della tua palestra</mat-card-subtitle>
+        <mat-card-content>
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-hourglass-start"></mat-icon>
+                Orario di Apertura&nbsp;&nbsp;{{gym?.dayStartHour || 'Loading...'}}
+            </div>
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
+                Orario di Chiusura&nbsp;&nbsp;{{gym?.dayEndHour || 'Loading...'}}
+            </div>
+            <div class="card-section">
+            <ng-template [ngIf]="gym?.excludeDays.length > 0" [ngIfElse]="notClosed">
+                <h6>Giorni di chiusura settimanali</h6>
+                <mat-list dense *ngFor="let day of gym?.excludeDays">
+                    <mat-list-item>{{day | map2day}}</mat-list-item>
+                </mat-list>
+            </ng-template>
+            </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <button mat-button color="primary" (click)="openDialog()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica Configurazione
+            </span>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+
+<ng-template #notClosed><h6>Aperto tutti i giorni</h6></ng-template>

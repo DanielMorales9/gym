@@ -79,4 +79,9 @@ public class VerificationToken {
         VerificationToken u = (VerificationToken) o;
         return u.getId().equals(this.getId());
     }
+
+    public boolean isExpired() {
+        Calendar cal = Calendar.getInstance();
+        return this.expiryDate.getTime() - cal.getTime().getTime() <= 0;
+    }
 }

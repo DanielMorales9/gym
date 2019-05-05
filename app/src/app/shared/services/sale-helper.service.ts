@@ -106,7 +106,6 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
-        console.log(query);
         let observable;
         if (query === undefined || Object.keys(query).length === 0) {
             observable = this.get(page, size);

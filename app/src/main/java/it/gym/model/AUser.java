@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
         include = JsonTypeInfo.As.PROPERTY,
@@ -40,11 +39,11 @@ public abstract class AUser implements DefaultRoles {
     @Column(name = "email", nullable = false, unique = true)
     @NotEmpty(message = "Email must not be empty")
     @Email(message = "Invalid Email")
-    private String email;
+    protected String email;
 
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String password;
+    protected String password;
 
     @Column(name = "confirmPassword")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
@@ -53,12 +52,12 @@ public abstract class AUser implements DefaultRoles {
     @Column(name = "firstname", nullable = false)
     @NotNull
     @Size(min=2, max=30)
-    private String firstName;
+    protected String firstName;
 
     @Column(name = "lastName", nullable = false)
     @NotNull
     @Size(min=2, max=30)
-    private String lastName;
+    protected String lastName;
 
     @Column(name = "createdat", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
@@ -71,8 +70,7 @@ public abstract class AUser implements DefaultRoles {
             inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="role_id"))
     private List<Role> roles;
 
-
-    private boolean isVerified;
+    protected boolean isVerified;
 
     public abstract String getType();
 

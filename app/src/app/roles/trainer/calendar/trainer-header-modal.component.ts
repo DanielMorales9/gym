@@ -1,5 +1,5 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {GymConfigurationService, NotificationService} from '../../../services';
+import {GymService, NotificationService} from '../../../services';
 import {TimesOffService} from '../../../shared/services';
 import {BaseCalendarModal} from '../../../shared/components/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';

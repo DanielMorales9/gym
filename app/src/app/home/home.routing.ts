@@ -4,11 +4,9 @@ import {HomeComponent} from './home.component';
 
 const routes = [
 
-    { path: '', component: HomeComponent, children : [
-            { path: '', redirectTo: 'calendar', pathMatch: 'full'},
-            { path: '**', redirectTo: 'calendar' }
-        ]},
+    { path: '', component: HomeComponent }
 ];
+
 @NgModule({
     imports: [
         RouterModule.forChild(routes)

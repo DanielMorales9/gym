@@ -71,7 +71,6 @@ export class SalesComponent implements OnInit {
         if (this.id) { event.id = this.id; }
 
         this.queryParams = this.query = event;
-        console.log(this.queryParams);
         this.router.navigate(
             [],
             {

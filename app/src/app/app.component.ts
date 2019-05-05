@@ -26,24 +26,20 @@ export class AppComponent implements OnInit {
 
     constructor(private service: AppService,
                 private router: Router,
-                private authenticatedService: AuthenticatedService,
-                private userHelperService: UserHelperService) {
+                private authenticatedService: AuthenticatedService) {
     }
 
 
     ngOnInit(): void {
-        this.user = new User();
         this.authOnNavigation();
 
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
 
-            if (this.authenticated) {
+            if (this.authenticated && !this.user) {
                 this.current_role_view = this.service.currentRole;
                 this.user = this.service.user;
-                this.userHelperService.getUserByEmail(this.user.email, u => {
-                    this.profilePath = `profile/${u.id}/user`;
-                });
+                this.profilePath = `profile/${this.user.id}/user`;
             }
 
         });
@@ -63,11 +59,6 @@ export class AppComponent implements OnInit {
             return this.router.navigateByUrl('/auth/login');
         });
     }
-
-    // switchView(role) {
-    //     this.service.changeView(role);
-    //     this.current_role_view = role;
-    // }
 
     private authOnNavigation() {
         this.router.events.subscribe(event => {
