@@ -21,11 +21,12 @@ data "template_file" "instance_profile" {
   }
 }
 
+
 data "template_file" "task_definition" {
   template = "${file("${path.module}/templates/tasks/app.json")}"
 
   vars {
-    image_url      = "359080832247.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT"
+    image_url      = "${var.account_id}.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT"
     container_name = "app"
 
     log_group_region = "${var.aws_region}"

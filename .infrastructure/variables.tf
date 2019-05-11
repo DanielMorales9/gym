@@ -6,6 +6,7 @@ variable "aws_secret_key" {}
 variable "gmail_password" {}
 variable "gmail_username" {}
 variable "app_name" {}
+variable "account_id" {}
 variable "key_name" {}
 variable "bucket" {}
 variable "domain" {}
