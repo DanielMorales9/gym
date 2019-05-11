@@ -4,7 +4,7 @@
 "postgres_username"="goodfellas"
 "postgres_database_name"="crm"
 "gmail_password"="training#"
-"gmail_username"="training#"
+"gmail_username"="trainingoodfellas@gmail.com"
 "app_name"="goodfellas"
 "bucket"="any"
 "key_name"="gym"
