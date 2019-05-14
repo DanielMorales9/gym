@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 enum DAY_OF_WEEK {
-    Domendica = 0,
+    Domenica = 0,
     Lunedì = 1,
     Martedì = 2,
     Mercoledì = 3,

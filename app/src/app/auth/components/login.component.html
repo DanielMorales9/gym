@@ -10,10 +10,9 @@
                            id="email"
                            name="email"
                            formControlName="email"
-                           [ngClass]="{ 'is-invalid': email.touched && email.invalid }" required/>
-                    <mat-error *ngIf="email.touched && email.invalid">
+                           [ngClass]="{ 'is-invalid': email.touched }" required/>
+                    <mat-error *ngIf="email.touched">
                         <div *ngIf="!!email.errors?.required">Email obbligatoria</div>
-                        <div *ngIf="!!email.errors?.email">Email non valida</div>
                     </mat-error>
                 </mat-form-field>
                 <mat-form-field>

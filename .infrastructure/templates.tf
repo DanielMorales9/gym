@@ -3,14 +3,14 @@ data "aws_ami" "ecs-opt" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-2018.03.n-amazon-ecs-optimized"]
+    values = ["amzn2-ami-ecs-hvm-2.0.20190402-x86_64-ebs"]
   }
 
   filter {
     name   = "virtualization-type"
     values = ["hvm"]
   }
-
+  owners = []
 }
 
 data "template_file" "instance_profile" {
