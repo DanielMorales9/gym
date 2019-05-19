@@ -55,7 +55,7 @@ resource "aws_subnet" "cache_subnet" {
 resource "aws_subnet" "ecs_subnet" {
   vpc_id                  = "${aws_vpc.default.id}"
   count                   = "${length(var.availability_zones)}"
-  cidr_block              = "${cidrsubnet(aws_vpc.default.cidr_block, 8, 2*var.az_count + count.index)}"
+  cidr_block              = "${cidrsubnet(aws_vpc.default.cidr_block, 8, 2 * var.az_count + count.index)}"
   availability_zone       = "${element(var.availability_zones, count.index)}"
   map_public_ip_on_launch = true
 
@@ -126,13 +126,12 @@ resource "aws_security_group" "ecs_security_group" {
     security_groups = ["${aws_security_group.alb_security_group.id}"]
   }
 
-  ingress {
-    protocol        = "tcp"
-    from_port       = "22"
-    to_port         = "22"
-    cidr_blocks = ["0.0.0.0/0"]
-  }
-
+//  ingress {
+//    protocol        = "tcp"
+//    from_port       = "22"
+//    to_port         = "22"
+//    cidr_blocks = ["0.0.0.0/0"]
+//  }
 
   egress {
     protocol    = "-1"
@@ -140,6 +139,10 @@ resource "aws_security_group" "ecs_security_group" {
     to_port     = 0
     cidr_blocks = ["0.0.0.0/0"]
   }
+}
+
+data "http" "myip" {
+  url = "http://ipv4.icanhazip.com"
 }
 
 # ==================
@@ -156,6 +159,13 @@ resource "aws_security_group" "rds_security_group" {
     from_port       = "${var.postgres_port}"
     to_port         = "${var.postgres_port}"
     security_groups = ["${aws_security_group.ecs_security_group.id}"]
+  }
+
+  ingress {
+    protocol        = "tcp"
+    from_port       = "${var.postgres_port}"
+    to_port         = "${var.postgres_port}"
+    cidr_blocks     = ["${chomp(data.http.myip.body)}/32"]
   }
 
   egress {

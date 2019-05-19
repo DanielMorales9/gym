@@ -14,7 +14,7 @@ resource "aws_db_instance" "postgres" {
   username            = "${var.postgres_username}"
   password            = "${var.postgres_password}"
   port                = "${var.postgres_port}"
-  publicly_accessible = false
+  publicly_accessible = true
 
   allow_major_version_upgrade = false
   auto_minor_version_upgrade  = false
