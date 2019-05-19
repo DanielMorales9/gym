@@ -51,7 +51,7 @@ public class PersonalTrainingSession extends ATrainingSession {
 
     @Override
     public boolean isDeletable() {
-        return startTime.after(new Date());
+        return !this.isCompleted;
     }
 
     @Override

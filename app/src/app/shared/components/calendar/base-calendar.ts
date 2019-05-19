@@ -1,7 +1,7 @@
 import {Subject} from 'rxjs';
 import {Injectable, OnInit} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
-import {User} from '../../model';
+import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../../services';
@@ -32,6 +32,16 @@ export abstract class BaseCalendar implements OnInit {
     WEEK = CalendarView.Week;
     DAY = CalendarView.Day;
 
+    DAY_OF_WEEK = {
+        sunday : 0,
+        monday : 1,
+        tuesday : 2,
+        wednesday : 3,
+        thursday : 4,
+        friday : 5,
+        saturday : 6,
+    };
+
     ACTIONS: CalendarEventAction[] = [
         /*{
             label: '<i class="fa fa-fw fa-pencil"></i>',
@@ -55,6 +65,7 @@ export abstract class BaseCalendar implements OnInit {
     public weekStartsOn: number;
     public activeDayIsOpen: boolean;
     public role: number;
+    public gym: Gym;
     private queryParams: {view: CalendarView, viewDate: Date};
     user: User;
     modalData: { role: number; action: string; title: string; userId: number, event: any };
@@ -68,6 +79,9 @@ export abstract class BaseCalendar implements OnInit {
                           public activatedRoute: ActivatedRoute) {
     }
 
+    static isNotPast(date) {
+        return date >= new Date();
+    }
 
     ngOnInit(): void {
         this.events = [];
@@ -99,11 +113,23 @@ export abstract class BaseCalendar implements OnInit {
     }
 
     private initCalendarConfig() {
-        this.facade.getConfig().subscribe(config => {
-            this.dayEndHour = config.dayEndHour;
-            this.dayStartHour = config.dayStartHour;
-            this.excludeDays = config.excludeDays;
-            this.weekStartsOn = config.weekStartsOn;
+        this.facade.getConfig().subscribe((config: Gym) => {
+            this.gym = config;
+            this.dayStartHour = 24;
+            this.dayEndHour = 0;
+            this.excludeDays = [];
+            // tslint:disable-next-line:forin
+            for (const key in this.DAY_OF_WEEK) {
+                if (!config[key + 'Open']) {
+                    this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
+                } else {
+                    this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
+                    this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
+                }
+
+            }
+
+            this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
         });
     }
 
@@ -124,8 +150,6 @@ export abstract class BaseCalendar implements OnInit {
                 this.view = CalendarView.Month;
                 break;
         }
-
-
     }
 
     private initViewDate() {
@@ -163,6 +187,35 @@ export abstract class BaseCalendar implements OnInit {
         }
     }
 
+    isGymOpenOnDate(date) {
+        return this.facade.isGymOpenOnDate(date);
+    }
+
+    isInGymHours(start, end?) {
+        const gymStartHour = this.facade.getStartHourByDate(start);
+        const gymEndHour = this.facade.getEndHourByDate(start);
+        const startHour = start.getHours();
+        let endHour = startHour;
+        if (end) { endHour = end.getHours(); }
+        return gymStartHour <= startHour && endHour <= gymEndHour;
+    }
+
+    isValidHour(event: any) {
+        return BaseCalendar.isNotPast(event.date) && this.isGymOpenOnDate(event.date) && this.isInGymHours(event.date);
+    }
+
+    isValidChange(event: any) {
+        const start = event.event.start;
+        const end = event.event.end;
+        const isStartNotPast = BaseCalendar.isNotPast(start);
+        const isEndNotPast = BaseCalendar.isNotPast(end);
+        const isGymOpen = this.isGymOpenOnDate(start);
+        return isStartNotPast && isEndNotPast && isGymOpen && this.isInGymHours(start, end);
+    }
+
+    isValidHeader(event: any) {
+        return BaseCalendar.isNotPast(event.day.date) && this.isGymOpenOnDate(event.day.date);
+    }
 
     getStartAndEndTimeByView() {
         let startDay;
@@ -196,7 +249,7 @@ export abstract class BaseCalendar implements OnInit {
     formatEvent(event: any): CalendarEvent {
         const startTime = new Date(event['startTime']);
         const endTime = new Date(event['endTime']);
-        const allDay = Math.abs(endTime.getTime() - startTime.getTime()) / 36e5 ;
+        const isAllDay = this.facade.isDayEvent(startTime, endTime);
         const startHour = startTime.getHours();
         const endHour = endTime.getHours();
 
@@ -223,7 +276,7 @@ export abstract class BaseCalendar implements OnInit {
             title: title,
             color: (isATimeOff) ? CALENDAR_COLUMNS.RED : (event.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW,
             actions: isDeletable ? this.ACTIONS : [],
-            allDay: allDay === (this.dayEndHour - this.dayStartHour),
+            allDay: isAllDay,
             resizable: {
                 beforeStart: isResizable,
                 afterEnd: isResizable

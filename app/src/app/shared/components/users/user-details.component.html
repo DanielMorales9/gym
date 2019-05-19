@@ -36,7 +36,7 @@
                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>
             </button>
-            <button *ngIf="!user?.verified && canSendToken" mat-button color="accent" (click)="resendToken()">
+            <button *ngIf="canSendToken" mat-button color="accent" (click)="resendToken()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-key"></mat-icon>&nbsp;Re-Invia Token
             </span>

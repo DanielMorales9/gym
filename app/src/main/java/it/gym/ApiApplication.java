@@ -45,14 +45,16 @@ import java.util.Map;
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ApiApplication extends WebSecurityConfigurerAdapter {
 
-	private final static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
+	private final org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
 
 	@Autowired @Qualifier("userAuthService")
 	UserAuthService userDetailsService;
 
+
 	@RequestMapping({
 			"/",
 			"/logout",
+			"/error*",
 			"/home/**",
 			"/admin/**",
 			"/trainer/**",
@@ -64,15 +66,14 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		return "forward:/index.html";
 	}
 
+
 	@RequestMapping("/user")
 	@ResponseBody
 	public Principal user(Principal user) {
 		if (user == null){
 			logger.info("this is null");
 		}
-		else {
-			logger.info(user.toString());
-		}
+		else logger.info(user.toString());
 		return user;
 	}
 
@@ -133,6 +134,7 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	}
 
 	@Bean
+	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
@@ -180,12 +182,13 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	@Bean
 	public Jackson2ObjectMapperBuilder objectMapperBuilder() {
 		return new Jackson2ObjectMapperBuilder() {
+			@Override
 			public void configure(ObjectMapper objectMapper) {
 				objectMapper.disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
 				objectMapper.registerSubtypes(PersonalTrainingBundleSpecification.class);
 				objectMapper.registerSubtypes(PersonalTrainingBundle.class);
 				super.configure(objectMapper);
-			};
+			}
 		};
 	}
 

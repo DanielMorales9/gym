@@ -1,5 +1,4 @@
 import {Component} from '@angular/core';
-import {TrainingService} from '../../../shared/services';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade, SnackBarService} from '../../../services';
@@ -44,7 +43,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        if (event.date >= new Date()) {
+        if (this.isValidHour(event)) {
             this.facade.checkReservation(event.date, this.user.id)
                 .subscribe(_ => {
                     this.modalData = {
@@ -56,6 +55,8 @@ export class CustomerCalendarComponent extends BaseCalendar {
                     };
                     this.openModal(action);
                 }, err => { if (err.error) { this.snackBar.open(err.error.message); }});
+        } else {
+            this.snackBar.open('Orario non valido');
         }
     }
 

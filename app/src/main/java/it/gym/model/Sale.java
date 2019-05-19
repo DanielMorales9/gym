@@ -147,7 +147,7 @@ public class Sale {
             return true;
         }
         //if it has not been paid and has not been used
-        return this.getAmountPayed() == 0. && this.salesLineItems.stream()
+        return this.salesLineItems.stream()
                 .map(SalesLineItem::getTrainingBundle)
                 .map(ATrainingBundle::isDeletable)
                 .reduce(Boolean::logicalAnd).orElse(true);
@@ -179,9 +179,14 @@ public class Sale {
     }
 
     @Override
+    public int hashCode() {
+        return Math.toIntExact(this.id);
+    }
+
+    @Override
     public boolean equals(Object o) {
         Sale u = (Sale) o;
-        return u.getId().equals(this.getId());
+        return u != null && u.getId().equals(this.getId());
     }
 
     public Double getAmountPayed() {

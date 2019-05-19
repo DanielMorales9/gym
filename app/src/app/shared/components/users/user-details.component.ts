@@ -40,8 +40,8 @@ export class UserDetailsComponent implements OnInit {
             this.service.findById(id).subscribe((user: User) => {
                 this.user = user;
                 this.canDelete = this.user.id !== this.appService.user.id && this.me.type === 'A';
-                this.canSell = this.user.type !== 'A' && this.me.type === 'A';
-                this.canSendToken = this.me.type === 'A';
+                this.canSell = this.user.type === 'C' && this.me.type === 'A';
+                this.canSendToken = this.me.type === 'A' && !this.user.verified;
                 this.canEdit = this.me.type === 'A';
             });
         });

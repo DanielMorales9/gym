@@ -205,12 +205,7 @@ public class SaleController {
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> deleteSale(@PathVariable Long saleId) {
         Sale sale = this.getSale(saleId);
-        if (!sale.isDeletable()) {
-            logger.info("sale not deletable");
-            throw new InvalidSaleException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
-                    sale.getCustomer().getLastName()));
-        }
-        else if (!sale.removeBundlesFromCustomersCurrentBundles()) {
+        if (!sale.isDeletable() || !sale.removeBundlesFromCustomersCurrentBundles()) {
             logger.info("sale not deletable");
             throw new InvalidSaleException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
                     sale.getCustomer().getLastName()));

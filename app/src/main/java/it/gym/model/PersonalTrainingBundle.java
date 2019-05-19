@@ -27,9 +27,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Override
     public int compareTo(ATrainingBundle aTrainingBundle) {
-        return  this.getSessions().size() -
-                aTrainingBundle.getSessions()
-                .size();
+        return  this.getSessions().size() - aTrainingBundle.getSessions().size();
     }
 
     @Override
@@ -48,7 +46,9 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         if (this.getSessions() == null) {
             return true;
         }
-        return this.getSessions().size() == 0;
+        return this.getSessions().stream()
+                .map(ATrainingSession::isDeletable)
+                .reduce(Boolean::logicalAnd).orElse(true);
     }
 
     @Override

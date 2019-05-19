@@ -45,8 +45,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
-        if (event.day.date >= new Date()) {
-
+        if (this.isValidHeader(event)) {
             this.facade.checkDayTimeOff(event.day.date, 'admin')
                 .subscribe(_ => {
                     this.modalData = {
@@ -58,6 +57,8 @@ export class AdminCalendarComponent extends BaseCalendar {
                     };
                     this.openModal('header');
                 }, err => this.snackBar.open(err.error.message));
+        } else {
+            this.snackBar.open('Orario non valido');
         }
     }
 
@@ -73,8 +74,8 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-
-        if (event.date >= new Date()) {
+        if (this.isValidHour(event)) {
+            console.log(event);
             this.facade.checkHourTimeOff(event.date, 'admin')
                 .subscribe(res => {
                     this.modalData = {
@@ -86,6 +87,8 @@ export class AdminCalendarComponent extends BaseCalendar {
                     };
                     this.openModal('hour');
                 }, err => this.snackBar.open(err.error.message));
+        } else {
+            this.snackBar.open('Orario non valido');
         }
     }
 
@@ -102,7 +105,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        if (event.newStart >= new Date()) {
+        if (this.isValidChange(event)) {
             this.facade.checkTimeOffChange(event.newStart, event.newEnd, 'admin')
                 .subscribe(_ => {
                     this.modalData = {
@@ -114,6 +117,8 @@ export class AdminCalendarComponent extends BaseCalendar {
                     };
                     this.openModal(action);
                 }, err => this.snackBar.open(err.error.message));
+        } else {
+            this.snackBar.open('Orario non valido');
         }
     }
 

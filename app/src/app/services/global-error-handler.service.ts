@@ -15,7 +15,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     handleError(err) {
         console.error(err);
-        let message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
+        const message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
 
         // TODO decide what you want to do with errors
         // if (err.hasOwnProperty("status")) {

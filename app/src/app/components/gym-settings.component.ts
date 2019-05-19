@@ -11,16 +11,16 @@ import {GymModalComponent} from './gym-modal.component';
 export class GymSettingsComponent implements OnInit {
 
     gym: Gym;
+    canEdit: boolean;
 
-    constructor(private appService: AppService,
-                private authService: AuthService,
-                private gymService: GymService,
+    constructor(private gymService: GymService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
+        this.canEdit = this.gymService.canEdit();
     }
 
     ngOnInit(): void {
-        this.gymService.getConfig(this.appService.user.id).subscribe(res => {
+        this.gymService.getConfig().subscribe((res: Gym) => {
             this.gym = res;
         });
     }

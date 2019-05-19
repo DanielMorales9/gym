@@ -91,7 +91,7 @@
                 <div id="menu-common">
                 </div>
                 <div id="menu-account">
-                    <h2 matSubheader>Account</h2>
+                    <h2 matSubheader>Impostazioni</h2>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
                        routerLink="/profile">
@@ -100,8 +100,7 @@
                             </span>
                     </a>
                 </div>
-                <div id="menu-settings" *ngIf="current_role_view == 1">
-                    <h2 matSubheader>Impostazioni</h2>
+                <div id="menu-settings">
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
                        routerLink="/settings/gym">

@@ -1,6 +1,5 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../../shared/components/calendar';
-import {TimesOffService, TrainingService} from '../../../shared/services';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({

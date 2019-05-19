@@ -17,6 +17,19 @@ export class CalendarFacade {
                 private gymService: GymService) {
     }
 
+    private static formatDateToString(date: Date) {
+        const dateValue = date.getUTCDate();
+        const monthValue = date.getUTCMonth() + 1;
+        const yearValue = date.getUTCFullYear();
+        const hoursValue = date.getUTCHours();
+        const minutesValue = date.getUTCMinutes();
+        return `${dateValue}-${monthValue}-${yearValue}_${hoursValue}:${minutesValue}`;
+    }
+
+    /**
+     *  USER API
+     */
+
     getUser() {
         return this.appService.user;
     }
@@ -26,67 +39,124 @@ export class CalendarFacade {
     }
 
     getConfig() {
-        return this.gymService.getConfig(this.getUser().id);
+        return this.gymService.getConfig();
     }
 
+    /**
+     * TIME-OFF API
+     */
+
     bookTimeOff(start: Date, name: string, type: string, userId: number, end?: Date) {
+        const gymId = this.gymService.gym.id;
         if (!end) {
-            const {startTime, endTime} = this.gymService.getStartAndEndTimeByGymConfiguration(start);
+            const {startTime, endTime} = this.gymService.getGymStartAndEndHour(start);
             start = startTime;
             end = endTime;
         }
-        return this.timesOffService.book(start, end, type, name, userId);
+
+        const startS = CalendarFacade.formatDateToString(start);
+        const endS = CalendarFacade.formatDateToString(end);
+
+        return this.timesOffService.book(gymId, startS, endS, type, name, userId);
     }
 
     checkDayTimeOff(date: any, type: string) {
-        const {startTime, endTime} = this.gymService.getStartAndEndTimeByGymConfiguration(new Date(date));
-        return this.timesOffService.check(startTime, endTime, type);
+
+        const gymId = this.gymService.gym.id;
+        const {startTime, endTime} = this.gymService.getGymStartAndEndHour(new Date(date));
+
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+
+        return this.timesOffService.check(gymId, startS, endS, type);
     }
 
     checkHourTimeOff(date: any, type: string) {
+        const gymId = this.gymService.gym.id;
         const startTime = new Date(date);
         const endTime = this.dateService.addHour(startTime);
 
-        return this.timesOffService.check(startTime, endTime, type);
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.timesOffService.check(gymId, startS, endS, type);
     }
 
-    getReservations(startDay: any, endDay: any, userId?: number): Observable<Object[]> {
-        return this.trainingService.getReservations(startDay, endDay, userId);
-    }
-
-    getTimesOff(startDay: any, endDay: any, id: number, type?: string): Observable<Object[]> {
-        return this.timesOffService.getTimesOff(startDay,  endDay, id, type);
-    }
-
-    confirmReservation(eventId: any) {
-        return this.trainingService.confirm(eventId);
-    }
-
-    completeReservation(id: number) {
-        return this.trainingService.complete(id);
+    getTimesOff(startTime: any, endTime: any, id: number, type?: string): Observable<Object[]> {
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.timesOffService.getTimesOff(startS,  endS, id, type);
     }
 
     deleteTimeOff(id: number, type?: string) {
         return this.timesOffService.delete(id, type);
     }
 
+    changeTimeOff(id: number, startTime: Date, endTime: Date, name: string | any, type: string) {
+        const gymId = this.gymService.gym.id;
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.timesOffService.change(gymId, id, startS, endS, name, type);
+    }
+
+    checkTimeOffChange(startTime: Date, endTime: Date, type: string) {
+        const gymId = this.gymService.gym.id;
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.timesOffService.checkChange(gymId, startS, endS, type);
+    }
+
+
+    /**
+     * RESERVATION API
+     */
+
+    confirmReservation(id: number) {
+        return this.trainingService.confirm(id);
+    }
+
+    completeReservation(id: number) {
+        return this.trainingService.complete(id);
+    }
+
     deleteReservation(id: any, type?: string) {
         return this.trainingService.delete(id, type);
     }
 
-    checkTimeOffChange(newStart: Date, newEnd: Date, type: string) {
-        return this.timesOffService.checkChange(newStart, newEnd, type);
-    }
-
-    changeTimeOff(id: number, start: Date, end: Date, name: string | any, type: string) {
-        return this.timesOffService.change(id, start, end, name, type);
-    }
-
     checkReservation(date: Date, id: number) {
-        return this.trainingService.check(date, id);
+        const gymId = this.gymService.gym.id;
+        const startS = CalendarFacade.formatDateToString(date);
+        return this.trainingService.check(gymId, startS, id);
     }
 
     bookReservation(date: Date, userId: number) {
-        return this.trainingService.book(date, userId);
+        const gymId = this.gymService.gym.id;
+        const startS = CalendarFacade.formatDateToString(date);
+        return this.trainingService.book(gymId, startS, userId);
+    }
+
+    getReservations(startTime: any, endTime: any, userId?: number): Observable<Object[]> {
+        const gymId = this.gymService.gym.id;
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.trainingService.getReservations(startS, endS, userId);
+    }
+
+    /**
+     * GYM API
+     */
+    isGymOpenOnDate(date: Date) {
+        return this.gymService.isGymOpenOnDate(date);
+    }
+
+    getStartHourByDate(start: any) {
+        return this.gymService.getStartHourByDate(start);
+    }
+
+    getEndHourByDate(end: any) {
+        return this.gymService.getEndHourByDate(end);
+    }
+
+    isDayEvent(startTime: Date, endTime: Date) {
+        return this.gymService.isDayEvent(startTime, endTime);
     }
 }

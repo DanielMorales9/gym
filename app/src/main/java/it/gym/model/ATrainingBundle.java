@@ -47,9 +47,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @OneToMany(cascade = CascadeType.ALL)
     private List<ATrainingSession> sessions;
 
-    @Override
-    public abstract int compareTo(ATrainingBundle aTrainingBundle);
-
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
@@ -98,9 +95,14 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     }
 
     @Override
+    public int hashCode() {
+        return Math.toIntExact(this.id);
+    }
+
+    @Override
     public boolean equals(Object o) {
         ATrainingBundle u = (ATrainingBundle) o;
-        return u.getId().equals(this.getId());
+        return u == null || u.getId().equals(this.getId());
     }
 
 

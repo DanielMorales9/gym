@@ -1,17 +1,12 @@
 package it.gym.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import it.gym.exception.*;
 import it.gym.hateoas.ReservationAssembler;
 import it.gym.hateoas.ReservationResource;
 import it.gym.hateoas.TrainingSessionAssembler;
 import it.gym.hateoas.TrainingSessionResource;
 import it.gym.model.*;
-import it.gym.repository.TimeOffRepository;
-import it.gym.repository.TrainerRepository;
-import it.gym.repository.TrainingSessionRepository;
-import it.gym.repository.UserRepository;
+import it.gym.repository.*;
 import it.gym.service.CustomerService;
 import it.gym.service.ReservationService;
 import it.gym.service.TrainingBundleService;
@@ -21,22 +16,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.Scope;
-import org.springframework.core.Ordered;
-import org.springframework.core.annotation.Order;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
@@ -59,11 +45,12 @@ public class TrainingReservationController {
     private final TrainingSessionRepository sessionRepository;
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
+    private final GymRepository gymRepository;
+
+    private static final Logger logger = LoggerFactory.getLogger(TrainingReservationController.class);
 
     @Value("${reservationBeforeHours}")
     Integer reservationBeforeHours;
-
-    private final static Logger logger = LoggerFactory.getLogger(TrainingReservationController.class);
 
 
     @Autowired
@@ -74,7 +61,7 @@ public class TrainingReservationController {
                                          CustomerService customerService,
                                          UserRepository userRepository,
                                          JavaMailSender mailSender,
-                                         ReservationService reservationService) {
+                                         ReservationService reservationService, GymRepository gymRepository) {
         this.timeRepository = timeRepository;
         this.trainerRepository = trainerRepository;
         this.trainingBundleService = trainingBundleService;
@@ -83,32 +70,34 @@ public class TrainingReservationController {
         this.customerService = customerService;
         this.reservationService = reservationService;
         this.mailSender = mailSender;
+        this.gymRepository = gymRepository;
     }
 
     @GetMapping(path = "/checkAvailabilityAndEnablement")
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    ResponseEntity<String> checkAvailableDay(@RequestParam("date")
-                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
-                                                     Date startDate,
+    ResponseEntity<String> checkAvailableDay(@RequestParam("gymId") Long gymId,
+                                             @RequestParam("date")
+                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startTime,
                                              @RequestParam("id") Long id) {
 
-        logger.info("Checking availability and enablement");
-        logger.info("Checking whether the date is past");
-        if (checkDateBeforeToday(startDate))
-            throw new InvalidReservationException("Data non valida");
+        logger.info("checkAvailabilityAndEnablement");
+        logger.info(startTime.toString());
+        Date endTime = DateUtils.addHours(startTime, 1);
+
+        isDateValid(gymId, startTime, endTime);
 
         logger.info("Checking double booking");
-        Date endDate = DateUtils.addHours(startDate, 1);
+        Date endDate = DateUtils.addHours(startTime, 1);
         List<Reservation> reservations = this.reservationService.findByStartTimeAndEndTimeAndId(
                 Optional.of(id),
-                startDate,
+                startTime,
                 endDate);
         if (!reservations.isEmpty())
             throw new InvalidReservationException("Hai già prenotato in questo orario");
 
         logger.info("Checking whether the date is before certain amount of hours");
-        if (checkBeforeHour(startDate))
+        if (checkBeforeHour(startTime))
             throw new InvalidReservationException("E' necessario prenotare almeno " +
                     this.reservationBeforeHours + " ore prima");
 
@@ -134,7 +123,7 @@ public class TrainingReservationController {
             throw new InvalidReservationException("Non hai più pacchetti a disposizione");
 
         logger.info("Checking whether there are times off");
-        List<String> timesOff = this.timeRepository.findTimesOffTypeInBetween(startDate, endDate);
+        List<String> timesOff = this.timeRepository.findTimesOffTypeInBetween(startTime, endDate);
         Stream<String> countAdmin = timesOff
                 .parallelStream()
                 .filter(s -> s.equals("admin")).limit(1);
@@ -149,7 +138,7 @@ public class TrainingReservationController {
             throw new InvalidReservationException("Non ci sono personal trainer disponibili");
 
         logger.info("Checking whether there are trainers available");
-        reservations = this.reservationService.findByStartTime(startDate);
+        reservations = this.reservationService.findByStartTime(startTime);
         numAvailableTrainers = numAvailableTrainers - reservations.size();
 
         if (numAvailableTrainers == 0)
@@ -162,24 +151,26 @@ public class TrainingReservationController {
     @Transactional
     @PreAuthorize("hasAuthority('CUSTOMER')")
     ResponseEntity<ReservationResource> book(@PathVariable Long customerId,
+                                             @RequestParam("gymId") Long gymId,
                                              @RequestParam("date")
                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm") Date startTime) {
 
-        logger.info("Checking whether time is past");
-        if (checkDateBeforeToday(startTime)) throw new InvalidReservationException("Data non valida");
+        logger.info(startTime.toString());
+        Date endTime = DateUtils.addHours(startTime, 1);
+
+        isDateValid(gymId, startTime, endTime);
 
         logger.info("Getting customer by id");
         Customer c = this.customerService.findById(customerId);
         logger.info("Getting current training bundle");
 
         List<ATrainingBundle> currentTrainingBundles = c.getCurrentTrainingBundles();
-        if (currentTrainingBundles.size() == 0) {
+        if (currentTrainingBundles.isEmpty()) {
             throw new InvalidReservationException("Non hai più pacchetti a disposizione");
         }
 
         logger.info("Getting current training bundle");
         ATrainingBundle trainingBundle = currentTrainingBundles.get(0);
-        Date endTime = DateUtils.addHours(startTime, 1);
         logger.info("Booking training bundle.");
         Reservation res = trainingBundle.book(c, startTime, endTime);
 
@@ -205,7 +196,7 @@ public class TrainingReservationController {
         Reservation res = deleteReservation(reservationId, principal);
 
         if (!type.equals("customer")) {
-            // TODO Send Deleted reservation information over mail
+            // TODO Send Custom cancel message over mail
             String recipientAddress = res.getUser().getEmail();
             String message = "Ci dispiace informarla che la sua prenotazione è stata cancellata.\n" +
                     "La ringraziamo per la comprensione.";
@@ -217,14 +208,14 @@ public class TrainingReservationController {
 
     @GetMapping
     ResponseEntity<List<ReservationResource>> getReservations(@RequestParam(value = "id", required = false) Long id,
-                                                              @RequestParam(value = "endDay")
+                                                              @RequestParam(value = "endTime")
                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
-                                                                      Date endDay,
-                                                              @RequestParam(value = "startDay")
+                                                                      Date endTime,
+                                                              @RequestParam(value = "startTime")
                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
-                                                                      Date startDay) {
+                                                                      Date startTime) {
         List<Reservation> res = this.reservationService
-                .findByStartTimeAndEndTimeAndId(Optional.ofNullable(id), startDay, endDay);
+                .findByStartTimeAndEndTimeAndId(Optional.ofNullable(id), startTime, endTime);
         return ResponseEntity.ok(new ReservationAssembler().toResources(res));
     }
 
@@ -251,29 +242,7 @@ public class TrainingReservationController {
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }
 
-    /*
-    @GetMapping(path = "/reservation/confirm/{reservationId}")
-    ResponseEntity<ReservationResource> book(@PathVariable Long reservationId,
-                                             Principal principal) {
-        Reservation a = this.reservationService.findById(reservationId);
-
-
-        String trainerEmail = a.getTrainer().getEmail();
-        String authEmail = principal.getName();
-
-        if (!trainerEmail.equals(authEmail))
-            throw new InvalidTrainerException(trainerEmail, authEmail);
-
-        a.setConfirmed(true);
-
-        a = this.reservationService.save(a);
-
-        return ResponseEntity.ok(new ReservationAssembler().toResource(a));
-
-    }*/
-
-
-    private Reservation deleteReservation(@PathVariable Long reservationId, Principal principal) {
+    private Reservation deleteReservation(Long reservationId, Principal principal) {
         logger.info("Getting reservation by id");
         Reservation res = this.reservationService.findById(reservationId);
 
@@ -297,11 +266,14 @@ public class TrainingReservationController {
     }
 
     private boolean checkBeforeHour(Date date) {
-        return DateUtils.addHours(date, -this.reservationBeforeHours).before(new Date());
+        return DateUtils.addHours(date, - this.reservationBeforeHours).before(new Date());
     }
 
-    private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")
-                                         @RequestParam("date") Date date) {
-        return date.before(new Date());
+    private void isDateValid(Long gymId, Date start, Date end) {
+        Optional<Gym> opt = this.gymRepository.findById(gymId);
+        if (!opt.isPresent())
+            throw new GymNotFoundException(gymId);
+        Gym gym = opt.get();
+        if (!gym.isValidDate(start, end)) throw new InvalidTimesOff("Data non valida");
     }
 }

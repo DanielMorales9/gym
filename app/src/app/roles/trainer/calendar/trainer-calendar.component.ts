@@ -46,7 +46,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        if (event.newStart >= new Date()) {
+        if (this.isValidChange(event)) {
             const type = 'trainer';
             this.facade.checkTimeOffChange(event.newStart, event.newEnd, type)
                 .subscribe(_ => {
@@ -61,11 +61,13 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 }, err => {
                     this.snackBar.open(err.error.message);
                 });
+        } else {
+            this.snackBar.open('Orario non valido');
         }
     }
 
     header(action: string, event: any) {
-        if (event.day.date >= new Date()) {
+        if (this.isValidHeader(event)) {
             this.facade.checkDayTimeOff(new Date(event.day.date), 'trainer')
                 .subscribe(res => {
                 this.modalData = {
@@ -79,6 +81,8 @@ export class TrainerCalendarComponent extends BaseCalendar {
             }, err => {
                 this.snackBar.open(err.error.message);
             });
+        } else {
+            this.snackBar.open('Orario non valido');
         }
     }
 
@@ -94,8 +98,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        console.log(event);
-        if (event.date >= new Date()) {
+        if (this.isValidHour(event)) {
             this.facade.checkHourTimeOff(new Date(event.date), 'trainer')
                 .subscribe(res => {
                     this.modalData = {
@@ -109,7 +112,10 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 }, err => {
                     this.snackBar.open(err.error.message);
                 });
-        }    }
+        } else {
+            this.snackBar.open('Orario non valido');
+        }
+    }
 
     info(action: string, event: any) {
         event = event.event;

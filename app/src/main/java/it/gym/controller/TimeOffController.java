@@ -1,14 +1,13 @@
 package it.gym.controller;
 
+import it.gym.exception.GymNotFoundException;
 import it.gym.exception.InvalidTimesOff;
 import it.gym.exception.TimesOffNotFound;
 import it.gym.exception.UnAuthorizedException;
 import it.gym.hateoas.TimeOffAssembler;
 import it.gym.hateoas.TimeOffResource;
-import it.gym.model.AUser;
-import it.gym.model.Admin;
-import it.gym.model.Reservation;
-import it.gym.model.TimeOff;
+import it.gym.model.*;
+import it.gym.repository.GymRepository;
 import it.gym.repository.ReservationRepository;
 import it.gym.repository.TimeOffRepository;
 import it.gym.repository.TrainerRepository;
@@ -29,8 +28,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -45,9 +42,8 @@ import java.util.stream.Stream;
 @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
 public class TimeOffController {
 
-    private final static Logger logger = LoggerFactory.getLogger(TimeOffController.class);
-
     private final ReservationRepository reservationRepository;
+    private final GymRepository gymRepository;
     private final TimeOffRepository timeRepository;
     private final UserService userService;
     private final TrainerRepository trainerRepository;
@@ -55,13 +51,32 @@ public class TimeOffController {
     private final TimeOffService timeOffService;
     private final JavaMailSender mailSender;
 
+    private static final Logger logger = LoggerFactory.getLogger(TimeOffController.class);
+    private static final String ADMIN_TYPE = "admin";
+    private static final String TRAINER_TYPE = "trainer";
+    private static final String COUNTING_NUMBER_OF_RESERVATIONS_LOG = "Counting number of reservations";
+    private static final String CHECKING_TRAINERS_AVAILABLE_LOG = "Checking whether there are trainers available";
+    private static final String NOT_AUTHORIZED_EX = "Non è possibile chiudere la palestra con delle prenotazioni attive.";
+    private static final String ACTIVE_RESERVATION_EX_MESSAGE = "Ci sono delle prenotazioni attive.";
+    private static final String TIME_OFF_ALREADY_BOOKED_EX = "Hai già effettuato una chiusura";
+    private static final String CANNOT_TAKE_TIME_OFF_EX = "Non puoi prendere un giorno di ferie";
+    private static final String INVALID_HOUR_TIMEOFF_EX = "Non è possibile prendere le ferie in questo orario.";
+    private static final String DELETE_MAIL_MESSAGE =
+            "Ci dispiace informarla che per questioni tecniche le sue " +
+                    "ferie sono state eliminate. La ringraziamo per la comprensione.";
+
     @Autowired
     public TimeOffController(JavaMailSender mailSender,
-                             ReservationRepository reservationRepository, TimeOffRepository timeRepository,
-                             UserService userService, TrainerRepository trainerRepository,
-                             ReservationRepository reservationService, TimeOffService timeOffService) {
+                             ReservationRepository reservationRepository,
+                             GymRepository gymRepository,
+                             TimeOffRepository timeRepository,
+                             UserService userService,
+                             TrainerRepository trainerRepository,
+                             ReservationRepository reservationService,
+                             TimeOffService timeOffService) {
         this.mailSender = mailSender;
         this.reservationRepository = reservationRepository;
+        this.gymRepository = gymRepository;
         this.timeRepository = timeRepository;
         this.userService = userService;
         this.trainerRepository = trainerRepository;
@@ -72,43 +87,45 @@ public class TimeOffController {
 
     @GetMapping(path = "/checkAvailabilityAndEnablement")
     @Transactional
-    ResponseEntity<String> checkAvailableDay(@RequestParam("startTime")
-                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                             @RequestParam("endTime")
-                                             @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                     iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
-                                             @RequestParam("type")
-                                                     String type) {
+    ResponseEntity<String> checkAvailableTime(@RequestParam("gymId") Long gymId,
+                                              @RequestParam("startTime")
+                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                      iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                              @RequestParam("endTime")
+                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                      iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
+                                              @RequestParam("type")
+                                                      String type) {
+        logger.info("checkAvailabilityAndEnablement");
+        logger.info(startTime.toString());
+        logger.info(endTime.toString());
 
-        if (checkDate(startTime)) throw new InvalidTimesOff("Data non valida");
+        isDateValid(gymId, startTime, endTime);
 
         switch (type) {
-            case "admin":
-                logger.info("counting number of reservations");
+            case ADMIN_TYPE:
+                logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    throw new InvalidTimesOff("Non è possibile chiudere la palestra con delle prenotazioni attive.");
-                logger.info("checking other timesOff");
+                    throw new InvalidTimesOff(NOT_AUTHORIZED_EX);
                 if (checkingOtherAdminTimesOff(startTime, endTime))
-                    throw new InvalidTimesOff("Hai già effettuato una chiusura");
+                    throw new InvalidTimesOff(TIME_OFF_ALREADY_BOOKED_EX);
                 break;
-            case "trainer":
-                logger.info("checking whether there are trainers available");
+            case TRAINER_TYPE:
+                logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    throw new InvalidTimesOff("Non è possibile prendere le ferie in questo orario.");
+                    throw new InvalidTimesOff(INVALID_HOUR_TIMEOFF_EX);
                 break;
             default:
-                throw new InvalidTimesOff("Non puoi prendere un giorno di ferie");
+                throw new InvalidTimesOff(CANNOT_TAKE_TIME_OFF_EX);
         }
-
-        logger.info("Everything went fine");
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @GetMapping(path = "/checkChange")
     @Transactional
-    ResponseEntity<String> checkChange(@RequestParam("startTime")
+    ResponseEntity<String> checkChange(@RequestParam("gymId") Long gymId,
+                                       @RequestParam("startTime")
                                        @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                        @RequestParam("endTime")
@@ -116,22 +133,24 @@ public class TimeOffController {
                                                iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
                                        @RequestParam("type")
                                                String type) {
+        logger.info(startTime.toString());
+        logger.info(endTime.toString());
 
-        if (checkDate(startTime)) throw new InvalidTimesOff("Data non valida");
+        isDateValid(gymId, startTime, endTime);
 
         switch (type) {
-            case "admin":
-                logger.info("counting number of reservations");
+            case ADMIN_TYPE:
+                logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    throw new InvalidTimesOff("Non è possibile chiudere la palestra con delle prenotazioni attive.");
+                    throw new InvalidTimesOff(NOT_AUTHORIZED_EX);
                 break;
-            case "trainer":
-                logger.info("checking whether there are trainers available");
+            case TRAINER_TYPE:
+                logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    throw new InvalidTimesOff("Non è possibile prendere le ferie in questo orario.");
+                    throw new InvalidTimesOff(INVALID_HOUR_TIMEOFF_EX);
                 break;
             default:
-                throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
+                throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
         }
 
         logger.info("Everything went fine");
@@ -142,6 +161,7 @@ public class TimeOffController {
     @GetMapping(path = "/book/{id}")
     @Transactional
     ResponseEntity<TimeOffResource> book(@PathVariable Long id,
+                                         @RequestParam("gymId") Long gymId,
                                          @RequestParam("name") String name,
                                          @RequestParam("startTime")
                                          @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
@@ -150,30 +170,26 @@ public class TimeOffController {
                                          @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
                                                  Date endTime,
                                          @RequestParam("type") String type) {
-        logger.info("booking time off");
+        logger.info("Booking time off");
         logger.info(startTime.toString());
-        if (checkDateBeforeToday(startTime)) throw new InvalidTimesOff("Data non valida");
-        String message;
-        DateFormat dateFormat = new SimpleDateFormat("dd-MM hh");
-        String strDate = dateFormat.format(startTime);
-        String endDate = dateFormat.format(endTime);
+        logger.info(endTime.toString());
+
+        isDateValid(gymId, startTime, endTime);
+
         AUser user = this.userService.findById(id);
-        String channel;
         switch (type) {
-            case "admin":
-                logger.info("counting number of reservations");
+            case ADMIN_TYPE:
+                logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime)) {
-                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive.");
+                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
                 }
-                message = "Chiusura per " + name + " dalle " + strDate + " alle " + endDate;
                 break;
-            case "trainer":
+            case TRAINER_TYPE:
                 if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive.");
-                message = "Ferie di " + user.getLastName() + "per " + name + " dalle " + strDate + " alle " + endDate;
+                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
                 break;
             default:
-                throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
+                throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
         }
 
         logger.info(user.toString());
@@ -190,10 +206,12 @@ public class TimeOffController {
     }
 
 
+
     @GetMapping(path = "/change/{id}")
     @Transactional
     ResponseEntity<TimeOffResource> change(@PathVariable Long id,
                                            @RequestParam("name") String name,
+                                           @RequestParam("gymId") Long gymId,
                                            @RequestParam("startTime")
                                            @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                    iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
@@ -202,26 +220,26 @@ public class TimeOffController {
                                                    iso = DateTimeFormat.ISO.DATE_TIME) Date endTime,
                                            @RequestParam("type")
                                                    String type) {
-
-        logger.info("booking time off");
         logger.info(startTime.toString());
-        if (checkDateBeforeToday(startTime)) throw new InvalidTimesOff("Data non valida");
+        logger.info(endTime.toString());
+
+        isDateValid(gymId, startTime, endTime);
 
         TimeOff time = this.timeOffService.findById(id);
 
         switch (type) {
-            case "admin":
-                logger.info("counting number of reservations");
+            case ADMIN_TYPE:
+                logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
                 if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive");
+                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
                 break;
-            case "trainer":
-                logger.info("checking whether there are trainers");
+            case TRAINER_TYPE:
+                logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
                 if (checkingAvailabilityTrainerTimeOff(Optional.of(id), startTime, endTime))
-                    throw new InvalidTimesOff("Ci sono delle prenotazioni attive");
+                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
                 break;
             default:
-                throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
+                throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
         }
 
         time.setName(name);
@@ -250,14 +268,12 @@ public class TimeOffController {
         logger.info(user.toString());
         logger.info(time.getUser().toString());
         if (!time.getUser().equals(user) && !(user instanceof Admin))
-            throw new UnAuthorizedException("Non sei autorizzato a compiere questa azione.");
+            throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
 
 
-        if (!type.equals("admin")) {
+        if (!type.equals(ADMIN_TYPE)) {
             String recipientAddress = time.getUser().getEmail();
-            String message = "Ci dispiace informarla che per questioni tecniche le sue ferie sono state eliminate. " +
-                    "La ringraziamo per la comprensione.";
-            MailSenderUtility.sendEmail(this.mailSender, "Ferie eliminate", message, recipientAddress);
+            MailSenderUtility.sendEmail(this.mailSender, "Ferie eliminate", DELETE_MAIL_MESSAGE, recipientAddress);
         }
 
         this.timeRepository.delete(time);
@@ -278,19 +294,15 @@ public class TimeOffController {
                                                               iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
         List<TimeOff> res = this.timeOffService.findByStartTimeAndEndTimeAndIdAndType(Optional.ofNullable(id),
                 Optional.ofNullable(type), startTime, endTime);
-        logger.info("# of Times off " + res.size());
+        logger.info(String.format("# of Times off %d", res.size()));
         return ResponseEntity.ok(new TimeOffAssembler().toResources(res));
     }
 
 
     private boolean checkingAvailabilityTrainerTimeOff(Optional<Long> id,
-                                                       @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
-                                                               iso = DateTimeFormat.ISO.DATE_TIME)
-                                                       @RequestParam("startTime") Date startTime,
-                                                       @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
-                                                               iso = DateTimeFormat.ISO.DATE_TIME)
-                                                       @RequestParam("endTime") Date endTime) {
-        logger.info("checking whether there are trainers");
+                                                       Date startTime,
+                                                       Date endTime) {
+        logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
         // TODO non funziona, ricontrollare
         Long numTrainers = this.trainerRepository.countAllTrainer();
         List<Reservation> reservations = this.reservationService.findByInterval(startTime, endTime);
@@ -298,7 +310,7 @@ public class TimeOffController {
         logger.info(reservations.toString());
 
         Stream<TimeOff> streamTimesOff = this.timeRepository
-                .findOverlappingTimesOffByType(startTime, endTime, "trainer").parallelStream();
+                .findOverlappingTimesOffByType(startTime, endTime, TRAINER_TYPE).parallelStream();
         if (id.isPresent()) {
             Long timeId = id.get();
             streamTimesOff = streamTimesOff.filter(timeOff -> !timeOff.getId().equals(timeId));
@@ -325,19 +337,11 @@ public class TimeOffController {
         return false;
     }
 
-    private boolean checkDate(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm", iso = DateTimeFormat.ISO.DATE_TIME)
-                              @RequestParam("startTime") Date startTime) {
-        logger.info("checking availability and enablement");
-        logger.info("checking whether the date is before today");
-        logger.info(startTime.toString());
-        return checkDateBeforeToday(startTime);
-    }
-
     private boolean checkingOtherAdminTimesOff(Date startTime, Date endTime) {
-        List<TimeOff> timesOff = this.timeRepository.findOverlappingTimesOffByType(startTime, endTime, "admin");
+        List<TimeOff> timesOff = this.timeRepository.findOverlappingTimesOffByType(startTime, endTime, ADMIN_TYPE);
         logger.info(timesOff.toString());
         logger.info(String.valueOf(timesOff.size()));
-        return timesOff.size() > 0;
+        return !timesOff.isEmpty();
     }
 
     private boolean checkingAvailabilityAdminTimeOff(Date startTime, Date endTime) {
@@ -345,8 +349,12 @@ public class TimeOffController {
         return nReservations > 0;
     }
 
-    private boolean checkDateBeforeToday(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm",
-            iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam("startTime") Date date) {
-        return date.before(new Date());
+    private void isDateValid(Long gymId, Date start, Date end) {
+        Optional<Gym> opt = this.gymRepository.findById(gymId);
+        if (!opt.isPresent())
+            throw new GymNotFoundException(gymId);
+        Gym gym = opt.get();
+        if (!gym.isValidDate(start, end)) throw new InvalidTimesOff("Data non valida");
     }
+
 }

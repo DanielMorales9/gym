@@ -40,16 +40,16 @@ import java.util.UUID;
 @PropertySource("application.yml")
 @RequestMapping("/authentication")
 public class AuthorizationController {
-    private final static Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
     private IUserAuthService userService;
     private final UserRepository userRepository;
     private final JavaMailSender mailSender;
     private final RoleRepository roleRepository;
     private final VerificationTokenRepository tokenRepository;
-
     private final PasswordEncoder passwordEncoder;
     private final PasswordValidationService passwordValidationService;
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthorizationController.class);
 
     @Value("${baseUrl}")
     private String baseUrl;
@@ -82,7 +82,7 @@ public class AuthorizationController {
     @Transactional
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<AUserResource> registration(@Valid @RequestBody AUser input) {
-        logger.info("User is trying to register: " + input.toString());
+        logger.info(String.format("User is trying to register: %s", input.toString()));
         Optional<Gym> optional = this.gymRepository.findById(input.getGym().getId());
         if (!optional.isPresent())
             throw new GymNotFoundException(input.getGym().getName());
@@ -146,8 +146,8 @@ public class AuthorizationController {
 
     @PutMapping(path = "/users/{userId}/roles/{roleId}")
     @Transactional
-    @Deprecated
     @PreAuthorize("hasAuthority('ADMIN')")
+    @Deprecated
     ResponseEntity<AUserResource> addRoleToUser(@PathVariable Long userId, @PathVariable Long roleId) {
         AUser user = this.userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
         Role role = this.roleRepository.findById(roleId).orElseThrow(() -> new RoleNotFoundException(roleId));
@@ -162,7 +162,7 @@ public class AuthorizationController {
     @Transactional
     @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
-        logger.info("Authentication: Find By Email: " + email);
+        logger.info(String.format("Authentication: Find By Email: %s", email));
         AUser user = userRepository.findByEmail(email);
         if (user == null) throw new UserNotFoundException(email);
 

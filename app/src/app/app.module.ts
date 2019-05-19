@@ -26,16 +26,15 @@ import {
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatListModule, MatRadioModule,
+    MatListModule, MatRadioModule, MatSelectModule,
     MatSidenavModule,
-    MatSnackBarModule,
+    MatSnackBarModule, MatTableModule,
     MatToolbarModule
 } from '@angular/material';
 import {RoleGuardService} from './services/role.guard.service';
 import {AuthGuardService} from './services/auth.guard.service';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {Map2DayPipe} from './pipes/map2day.pipe';
 
 @NgModule({
     declarations: [
@@ -46,7 +45,6 @@ import {Map2DayPipe} from './pipes/map2day.pipe';
         GymSettingsComponent,
         GymModalComponent,
         TimeAgoPipe,
-        Map2DayPipe
     ],
     imports: [
         BrowserModule,
@@ -66,7 +64,10 @@ import {Map2DayPipe} from './pipes/map2day.pipe';
         MatInputModule,
         MatSnackBarModule,
         MatRadioModule,
-        MatDialogModule
+        MatDialogModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatSelectModule
     ],
     entryComponents: [
         ChangePasswordModalComponent,

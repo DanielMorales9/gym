@@ -15,10 +15,7 @@ const routes: Routes = [
         canActivate: [AuthGuardService]
     },
     { path: 'settings/gym', component: GymSettingsComponent,
-        canActivate: [RoleGuardService],
-        data: {
-            expectedRole: 'A'
-        }
+        canActivate: [AuthGuardService]
     },
     {
         path: 'admin', loadChildren: 'app/roles/admin/admin.module#AdminModule',

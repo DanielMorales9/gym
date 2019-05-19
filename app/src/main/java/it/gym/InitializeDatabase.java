@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 @Component
@@ -54,11 +55,39 @@ public class InitializeDatabase implements CommandLineRunner {
             List<Role> roles = this.roleRepository.findAllById(Arrays.asList(Constants.ROLES));
             String password = bCryptPasswordEncoder.encode("password");
             Admin admin = new Admin("Admin", "Admin", email, password, true);
-            Gym gym = new Gym("Goodfellas", 8, 22, Arrays.asList(0, 6), DayOfWeek.MONDAY);
+            Gym gym = initGym();
             gymRepository.save(gym);
             admin.setRoles(roles);
             admin.setGym(gym);
             adminRepository.save(admin);
         }
+    }
+
+    private Gym initGym() {
+        Gym gym = new Gym();
+        gym.setName("Goodfellas");
+        gym.setMondayStartHour(8);
+        gym.setMondayEndHour(22);
+        gym.setMondayOpen(true);
+        gym.setTuesdayStartHour(8);
+        gym.setTuesdayEndHour(22);
+        gym.setTuesdayOpen(true);
+        gym.setWednesdayStartHour(8);
+        gym.setWednesdayEndHour(22);
+        gym.setWednesdayOpen(true);
+        gym.setThursdayStartHour(8);
+        gym.setThursdayEndHour(22);
+        gym.setThursdayOpen(true);
+        gym.setFridayStartHour(8);
+        gym.setFridayEndHour(22);
+        gym.setFridayOpen(true);
+        gym.setSaturdayStartHour(8);
+        gym.setSaturdayEndHour(22);
+        gym.setSaturdayOpen(true);
+        gym.setSundayStartHour(0);
+        gym.setSundayEndHour(0);
+        gym.setSundayOpen(false);
+        gym.setWeekStartsOn(DayOfWeek.MONDAY);
+        return gym;
     }
 }

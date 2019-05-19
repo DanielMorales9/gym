@@ -17,46 +17,310 @@
             </mat-form-field>
         </div>
         <div>
+
             <mat-form-field>
-                <label for="dayStartHour" class="sr-only">Orario di Apertura</label>
-                <input name="dayStartHour"
+                <label for="mondayOpen" class="sr-only">Orario di Lunedì</label>
+                <mat-select id="mondayOpen"
+                            placeholder="Orario di Lunedì"
+                            formControlName="mondayOpen" [value]="mondayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="mondayStartHour" class="sr-only">Orario di Apertura di Lunedì</label>
+                <input name="mondayStartHour"
                        matInput
-                       placeholder="Orario di Apertura"
-                       id="dayStartHour"
+                       placeholder="Apertura di Lunedì"
+                       id="mondayStartHour"
                        type="number"
-                       [ngClass]="{ 'is-invalid': dayStartHour.touched && dayStartHour.invalid }"
-                       formControlName="dayStartHour"/>
-                <mat-error *ngIf="dayStartHour.touched && dayStartHour.invalid">
-                    <div *ngIf="!!dayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                       [ngClass]="{ 'is-invalid': mondayStartHour.touched && mondayStartHour.invalid }"
+                       formControlName="mondayStartHour"/>
+                <mat-error *ngIf="mondayStartHour.touched && mondayStartHour.invalid">
+                    <div *ngIf="!!mondayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!mondayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!mondayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="mondayEndHour" class="sr-only">Orario di Chiusura di Lunedì</label>
+                <input name="mondayEndHour"
+                       matInput
+                       placeholder="Chiusura di Lunedì"
+                       id="mondayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': mondayEndHour.touched && mondayEndHour.invalid }"
+                       formControlName="mondayEndHour"/>
+                <mat-error *ngIf="mondayEndHour.touched && mondayEndHour.invalid">
+                    <div *ngIf="!!mondayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!mondayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!mondayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!mondayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
                 </mat-error>
             </mat-form-field>
         </div>
         <div>
             <mat-form-field>
-                <label for="dayEndHour" class="sr-only">Orario di Chiusura</label>
-                <input name="dayEndHour"
+                <label for="tuesdayOpen" class="sr-only">Orario di Martedì</label>
+                <mat-select id="tuesdayOpen"
+                            placeholder="Orario di Martedì"
+                            formControlName="tuesdayOpen" [value]="tuesdayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="tuesdayStartHour" class="sr-only">Orario di Apertura di Martedì</label>
+                <input name="tuesdayStartHour"
                        matInput
-                       placeholder="Orario di Chiusura"
-                       id="dayEndHour"
+                       placeholder="Apertura di Martedì"
+                       id="tuesdayStartHour"
                        type="number"
-                       [ngClass]="{ 'is-invalid': dayEndHour.touched && dayEndHour.invalid }"
-                       formControlName="dayEndHour"/>
-                <mat-error *ngIf="dayEndHour.touched && dayEndHour.invalid">
-                    <div *ngIf="!!dayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                       [ngClass]="{ 'is-invalid': tuesdayStartHour.touched && tuesdayStartHour.invalid }"
+                       formControlName="tuesdayStartHour"/>
+                <mat-error *ngIf="tuesdayStartHour.touched && tuesdayStartHour.invalid">
+                    <div *ngIf="!!tuesdayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!tuesdayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!tuesdayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="tuesdayEndHour" class="sr-only">Orario di Chiusura di Martedì</label>
+                <input name="tuesdayEndHour"
+                       matInput
+                       placeholder="Chiusura di Martedì"
+                       id="tuesdayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': tuesdayEndHour.touched && tuesdayEndHour.invalid }"
+                       formControlName="tuesdayEndHour"/>
+                <mat-error *ngIf="tuesdayEndHour.touched && tuesdayEndHour.invalid">
+                    <div *ngIf="!!tuesdayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!tuesdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!tuesdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!tuesdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <label for="wednesdayOpen" class="sr-only">Orario di Mercoledì</label>
+                <mat-select id="wednesdayOpen"
+                            placeholder="Orario di Mercoledì"
+                            formControlName="wednesdayOpen" [value]="wednesdayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="wednesdayStartHour" class="sr-only">Orario di Apertura di Mercoledì</label>
+                <input name="wednesdayStartHour"
+                       matInput
+                       placeholder="Apertura di Mercoledì"
+                       id="wednesdayStartHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': wednesdayStartHour.touched && wednesdayStartHour.invalid }"
+                       formControlName="wednesdayStartHour"/>
+                <mat-error *ngIf="wednesdayStartHour.touched && wednesdayStartHour.invalid">
+                    <div *ngIf="!!wednesdayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!wednesdayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!wednesdayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="wednesdayEndHour" class="sr-only">Orario di Chiusura di Mercoledì</label>
+                <input name="wednesdayEndHour"
+                       matInput
+                       placeholder="Chiusura di Mercoledì"
+                       id="wednesdayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': wednesdayEndHour.touched && wednesdayEndHour.invalid }"
+                       formControlName="wednesdayEndHour"/>
+                <mat-error *ngIf="wednesdayEndHour.touched && wednesdayEndHour.invalid">
+                    <div *ngIf="!!wednesdayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!wednesdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!wednesdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!wednesdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
+        <div>
+            <mat-form-field>
+                <label for="thursdayOpen" class="sr-only">Orario di Giovedì</label>
+                <mat-select id="thursdayOpen"
+                            placeholder="Orario di Giovedì"
+                            formControlName="thursdayOpen" [value]="thursdayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="thursdayStartHour" class="sr-only">Orario di Apertura di Giovedì</label>
+                <input name="thursdayStartHour"
+                       matInput
+                       placeholder="Apertura di Giovedì"
+                       id="thursdayStartHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': thursdayStartHour.touched && thursdayStartHour.invalid }"
+                       formControlName="thursdayStartHour"/>
+                <mat-error *ngIf="thursdayStartHour.touched && thursdayStartHour.invalid">
+                    <div *ngIf="!!thursdayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!thursdayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!thursdayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="thursdayEndHour" class="sr-only">Orario di Chiusura di Giovedì</label>
+                <input name="thursdayEndHour"
+                       matInput
+                       placeholder="Chiusura di Giovedì"
+                       id="thursdayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': thursdayEndHour.touched && thursdayEndHour.invalid }"
+                       formControlName="thursdayEndHour"/>
+                <mat-error *ngIf="thursdayEndHour.touched && thursdayEndHour.invalid">
+                    <div *ngIf="!!thursdayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!thursdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!thursdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!thursdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
                 </mat-error>
             </mat-form-field>
         </div>
         <div>
-            <mat-selection-list #days>
-                <h3 mat-subheader>Giorni di Chiusura</h3>
-                <div *ngFor="let day of dayOfWeek; let c=index">
-                    <mat-list-option checkboxPosition="before"
-                                     [selected]="isSelected(c)"
-                                     [value]="c"> {{day}}
-                    </mat-list-option>
-                </div>
-            </mat-selection-list>
+            <mat-form-field>
+                <label for="fridayOpen" class="sr-only">Orario di Venerdì</label>
+                <mat-select id="fridayOpen"
+                            placeholder="Orario di Venerdì"
+                            formControlName="fridayOpen" [value]="fridayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="fridayStartHour" class="sr-only">Orario di Apertura di Venerdì</label>
+                <input name="fridayStartHour"
+                       matInput
+                       placeholder="Apertura di Venerdì"
+                       id="fridayStartHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': fridayStartHour.touched && fridayStartHour.invalid }"
+                       formControlName="fridayStartHour"/>
+                <mat-error *ngIf="fridayStartHour.touched && fridayStartHour.invalid">
+                    <div *ngIf="!!fridayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!fridayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!fridayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="fridayEndHour" class="sr-only">Orario di Chiusura di Venerdì</label>
+                <input name="fridayEndHour"
+                       matInput
+                       placeholder="Chiusura di Venerdì"
+                       id="fridayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': fridayEndHour.touched && fridayEndHour.invalid }"
+                       formControlName="fridayEndHour"/>
+                <mat-error *ngIf="fridayEndHour.touched && fridayEndHour.invalid">
+                    <div *ngIf="!!fridayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!fridayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!fridayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!fridayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
         </div>
+        <div>
+            <mat-form-field>
+                <label for="saturdayOpen" class="sr-only">Orario di Sabato</label>
+                <mat-select id="saturdayOpen"
+                            placeholder="Orario di Sabato"
+                            formControlName="saturdayOpen" [value]="saturdayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="saturdayStartHour" class="sr-only">Orario di Apertura di Sabato</label>
+                <input name="saturdayStartHour"
+                       matInput
+                       placeholder="Apertura di Sabato"
+                       id="saturdayStartHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': saturdayStartHour.touched && saturdayStartHour.invalid }"
+                       formControlName="saturdayStartHour"/>
+                <mat-error *ngIf="saturdayStartHour.touched && saturdayStartHour.invalid">
+                    <div *ngIf="!!saturdayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!saturdayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!saturdayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="saturdayEndHour" class="sr-only">Orario di Chiusura di Sabato</label>
+                <input name="saturdayEndHour"
+                       matInput
+                       placeholder="Chiusura di Sabato"
+                       id="saturdayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': saturdayEndHour.touched && saturdayEndHour.invalid }"
+                       formControlName="saturdayEndHour"/>
+                <mat-error *ngIf="saturdayEndHour.touched && saturdayEndHour.invalid">
+                    <div *ngIf="!!saturdayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!saturdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!saturdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!saturdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="sundayOpen" class="sr-only">Orario di Domenica</label>
+                <mat-select id="sundayOpen"
+                            placeholder="Orario di Domenica"
+                            formControlName="sundayOpen" [value]="sundayOpen">
+                    <mat-option [value]="true">Aperto</mat-option>
+                    <mat-option [value]="false">Chiuso</mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field>
+                <label for="sundayStartHour" class="sr-only">Orario di Apertura di Domenica</label>
+                <input name="sundayStartHour"
+                       matInput
+                       placeholder="Apertura di Domenica"
+                       id="sundayStartHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': sundayStartHour.touched && sundayStartHour.invalid }"
+                       formControlName="sundayStartHour"/>
+                <mat-error *ngIf="sundayStartHour.touched && sundayStartHour.invalid">
+                    <div *ngIf="!!sundayStartHour.errors?.required">Orario di apertura obbligatorio</div>
+                    <div *ngIf="!!sundayStartHour.errors?.min">Orario di apertura inferiore a 0</div>
+                    <div *ngIf="!!sundayStartHour.errors?.max">Orario di apertura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="sundayEndHour" class="sr-only">Orario di Chiusura di Domenica</label>
+                <input name="sundayEndHour"
+                       matInput
+                       placeholder="Chiusura di Domenica"
+                       id="sundayEndHour"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': sundayEndHour.touched && sundayEndHour.invalid }"
+                       formControlName="sundayEndHour"/>
+                <mat-error *ngIf="sundayEndHour.touched && sundayEndHour.invalid">
+                    <div *ngIf="!!sundayEndHour.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!sundayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!sundayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!sundayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
     </div>
     <div mat-dialog-actions>
         <button type="submit" mat-flat-button color="accent">Invia</button>

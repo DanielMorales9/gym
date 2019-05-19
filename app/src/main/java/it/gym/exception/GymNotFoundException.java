@@ -8,4 +8,7 @@ public class GymNotFoundException extends RuntimeException {
     public GymNotFoundException(String name) {
         super("La palestra "+name+" non esiste");
     }
+    public GymNotFoundException(Long id) {
+        super("La palestra "+id+" non esiste");
+    }
 }

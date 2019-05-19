@@ -1,6 +1,6 @@
 "aws_access_key"="AKIAJNUQRSLJ43UP7OKQ"
 "aws_secret_key"="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"
-"postgres_password"="goodfellas#"
+"postgres_password"="bWFtbWFtaWEK"
 "postgres_username"="goodfellas"
 "postgres_database_name"="crm"
 "gmail_password"="training#"
