@@ -1,6 +1,6 @@
 package it.gym.model;
 
-import it.gym.exception.InvalidSaleException;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "sales")
+@Data
 public class Sale {
 
     @Id
@@ -111,7 +112,7 @@ public class Sale {
         this.payedDate = payedDate;
     }
 
-    public SalesLineItem addSalesLineItem(int quantity, ATrainingBundleSpecification bundleSpec) {
+    public SalesLineItem addSalesLineItem(ATrainingBundleSpecification bundleSpec) {
         if (this.salesLineItems == null) {
             this.salesLineItems = new ArrayList<>();
         }
@@ -125,13 +126,14 @@ public class Sale {
         return this.salesLineItems.remove(salesLineItem);
     }
 
-    public void confirmSale() {
+    public boolean confirmSale() {
         if (this.salesLineItems == null)
-            throw new InvalidSaleException(String.format("Impossibile confermare vendita (%d) vuota.", this.id));
+            return false;
         if (this.salesLineItems.size() == 0)
-            throw new InvalidSaleException(String.format("Impossibile confermare vendita (%d) vuota.", this.id));
+            return false;
         this.isCompleted = true;
         this.getTotalPrice();
+        return true;
     }
 
     public boolean isCompleted() {
@@ -168,25 +170,6 @@ public class Sale {
         if (trainingBundles.isEmpty() || this.getCustomer().getCurrentTrainingBundles().isEmpty())
             return true;
         return this.getCustomer().getCurrentTrainingBundles().removeAll(trainingBundles);
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder build = new StringBuilder();
-        build.append(customer.toString());
-        this.salesLineItems.forEach(salesLineItem -> build.append(salesLineItem.toString()));
-        return build.toString();
-    }
-
-    @Override
-    public int hashCode() {
-        return Math.toIntExact(this.id);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        Sale u = (Sale) o;
-        return u != null && u.getId().equals(this.getId());
     }
 
     public Double getAmountPayed() {

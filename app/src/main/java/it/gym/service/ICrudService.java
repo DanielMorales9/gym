@@ -2,7 +2,7 @@ package it.gym.service;
 
 import java.util.List;
 
-public interface ICrudService<T, ID> {
+public interface ICrudService<T, I> {
 
 //    List<T> findAll();
 
@@ -10,20 +10,20 @@ public interface ICrudService<T, ID> {
 
     T save(T var1);
 
-    T findById(ID var1);
+    T findById(I var1);
 
     void delete(T var1);
 
     List<T> findAll();
 
-//    boolean existsById(ID var1);
+//    boolean existsById(I var1);
 
 
-//    Iterable<T> findAllById(Iterable<ID> var1);
+//    Iterable<T> findAllById(Iterable<I> var1);
 
 //    long count();
 
-//    void deleteById(ID var1);
+//    void deleteSaleById(I var1);
 
 //    void deleteAll(Iterable<? extends T> var1);
 

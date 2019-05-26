@@ -1,6 +1,7 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.Data;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.Column;
@@ -12,6 +13,7 @@ import java.util.Date;
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = ATrainingBundle.class)
+@Data
 public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Column(name="numSessions")
@@ -21,7 +23,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         return numSessions;
     }
 
-    void setNumSessions(Integer numSessions) {
+    public void setNumSessions(Integer numSessions) {
         this.numSessions = numSessions;
     }
 

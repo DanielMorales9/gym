@@ -18,23 +18,18 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         this.bundle = bundle;
     }
 
-    @Override
     public ATrainingBundle save(ATrainingBundle var1) {
         return this.bundle.save(var1);
     }
 
-    @Override
     public ATrainingBundle findById(Long var1) {
-        return this.bundle.findById(var1)
-                .orElseThrow(() -> new NotFoundException("TrainingBundle", var1));
+        return this.bundle.findById(var1).orElseThrow(() -> new NotFoundException("Pacchetto", var1));
     }
 
-    @Override
     public void delete(ATrainingBundle var1) {
         this.bundle.delete(var1);
     }
 
-    @Override
     public List<ATrainingBundle> findAll() {
         return this.bundle.findAll();
     }

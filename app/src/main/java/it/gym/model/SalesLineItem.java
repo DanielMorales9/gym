@@ -1,10 +1,13 @@
 package it.gym.model;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name = "sales_lines")
+@Data
 public class SalesLineItem {
     @Id
     @SequenceGenerator(name = "sales_lines_line_id_seq",
@@ -35,7 +38,7 @@ public class SalesLineItem {
         return bundleSpecification;
     }
 
-    private void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
+    public void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
         this.bundleSpecification = bundleSpecification;
     }
 
@@ -50,16 +53,5 @@ public class SalesLineItem {
 
     public void setTrainingBundle(ATrainingBundle trainingBundle) {
         this.trainingBundle = trainingBundle;
-    }
-
-    @Override
-    public String toString() {
-        return this.bundleSpecification.toString();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        SalesLineItem u = (SalesLineItem) o;
-        return u.getId().equals(this.getId());
     }
 }

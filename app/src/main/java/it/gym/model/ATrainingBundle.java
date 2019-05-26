@@ -2,6 +2,7 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Data;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ import java.util.List;
 @Table(name="bundles")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Data
 public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     @Id
@@ -50,21 +52,21 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
+
+    public abstract Reservation book(Customer c, Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
 
     public Double getPrice() {
         return price;
     }
 
-    void setPrice(Double price) {
+    public void setPrice(Double price) {
         this.price = price;
     }
 
     public String getDescription() {
         return description;
     }
-
-    public abstract Reservation book(Customer c, Date startTime, Date endTime);
 
     public void setDescription(String description) {
         this.description = description;
@@ -82,7 +84,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         return bundleSpec;
     }
 
-     void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
+    public void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
         this.bundleSpec = bundleSpec;
     }
 
@@ -93,18 +95,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public void setExpired(Boolean expired) {
         isExpired = expired;
     }
-
-    @Override
-    public int hashCode() {
-        return Math.toIntExact(this.id);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        ATrainingBundle u = (ATrainingBundle) o;
-        return u == null || u.getId().equals(this.getId());
-    }
-
 
     public List<ATrainingSession> getSessions() {
         return sessions;
@@ -121,4 +111,5 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public void setName(String name) {
         this.name = name;
     }
+
 }
