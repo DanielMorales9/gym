@@ -77,7 +77,7 @@ public class AuthenticationFacade {
 
         try {
 
-            this.sendRegistrationConfirmationEmail(user, vk, baseUrl);
+            this.sendRegistrationConfirmationEmail(user, vk);
 
         } catch (MailException e) {
 
@@ -192,27 +192,27 @@ public class AuthenticationFacade {
             throw new InvalidPasswordException("Nuova password coincide con la precedente");
     }
 
-    private void sendRegistrationConfirmationEmail(AUser user, VerificationToken token, String appUrl) {
+    private void sendRegistrationConfirmationEmail(AUser user, VerificationToken token) {
         String recipientAddress = user.getEmail();
         String subject = "Conferma la registrazione";
-        String confirmationUrl = appUrl + "/auth/verification?token=" + token;
-        String message = "Per registrare autenticati al seguente indirizzo: ";
-        this.mailService.sendSimpleMail(recipientAddress, subject, confirmationUrl, message);
+        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, token);
+        String message = String.format("Per registrare autenticati al seguente indirizzo: %s", confirmationUrl);
+        this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
 
     private void sendChangePasswordTokenToEmail(AUser user, String token) {
         String recipientAddress = user.getEmail();
         String subject = "Cambia la tua password";
-        String confirmationUrl = this.baseUrl+ "/auth/modifyPassword?token=" + token;
-        String message = "Per modificare la password usa il seguente link: ";
-        this.mailService.sendSimpleMail(recipientAddress, subject, confirmationUrl, message);
+        String confirmationUrl = String.format("%s/auth/modifyPassword?token=%s", baseUrl, token);
+        String message = String.format("Per modificare la password usa il seguente link: %s", confirmationUrl);
+        this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
 
     private void sendVerificationEmail(VerificationToken newToken, AUser user) {
         String subject = "Verifica Account";
         String recipientAddress = user.getEmail();
-        String confirmationUrl = this.baseUrl+ "/auth/verification?token=" + newToken.getToken();
-        String message = "Ti abbiamo generato un nuovo link di verifica: ";
-        this.mailService.sendSimpleMail(recipientAddress, subject, confirmationUrl, message);
+        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, newToken.getToken());
+        String message = String.format("Ti abbiamo generato un nuovo link di verifica: %s", confirmationUrl);
+        this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
 }
