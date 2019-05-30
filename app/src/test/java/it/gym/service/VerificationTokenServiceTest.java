@@ -1,15 +1,11 @@
 package it.gym.service;
 
-import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.Admin;
-import it.gym.model.Customer;
 import it.gym.model.VerificationToken;
-import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
