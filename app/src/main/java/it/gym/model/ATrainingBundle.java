@@ -3,6 +3,7 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;

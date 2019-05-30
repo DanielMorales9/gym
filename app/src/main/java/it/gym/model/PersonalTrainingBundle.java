@@ -2,6 +2,7 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.Column;
@@ -14,6 +15,7 @@ import java.util.Date;
 @JsonTypeName("P")
 @ExposesResourceFor(value = ATrainingBundle.class)
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Column(name="numSessions")

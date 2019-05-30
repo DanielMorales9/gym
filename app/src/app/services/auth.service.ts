@@ -17,29 +17,20 @@ export class AuthService {
 
     getUserFromVerificationToken(token: any) {
         this.appService.credentials = undefined;
-        return this.http.get('/authentication/verification',{params: {token: token}});
+        return this.http.get('/authentication/verification', {params: {token: token}});
     }
 
-    registration(user: User): Observable<Object> {
-        return this.http.post( `/authentication/registration`, user);
+    registration(user: User, gymId: any): Observable<Object> {
+        return this.http.post(`/authentication/registration?gymId=${gymId}`, user);
     }
 
     resendToken(token: string) {
         this.appService.credentials = undefined;
-        return this.http.get('/authentication/resendToken', {params: {token: token}});
-    }
-
-    resendChangePasswordToken(token: string) {
-        this.appService.credentials = undefined;
-        return this.http.get('/authentication/resendChangePasswordToken', {params: {token: token}});
+        return this.http.get('/authentication/resendExpiredToken', {params: {token: token}});
     }
 
     resendTokenAnonymous(id: number) {
         return this.http.get(`/authentication/resendToken/${id}`);
-    }
-
-    changeNewPassword(id: number, form: { password: string; oldPassword: string; confirmPassword: string }) {
-        return this.http.post(`/authentication/changeNewPassword/${id}`, form);
     }
 
     changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {

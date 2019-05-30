@@ -50,7 +50,7 @@ export class ProfileComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(passwordForm => {
             if (passwordForm) {
-                this.authService.changeNewPassword(this.user.id, passwordForm)
+                this.authService.changePassword(this.user.id, passwordForm)
                     .subscribe(_ => {
                         const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
                         this.snackbar.open(message);

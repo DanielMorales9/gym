@@ -58,7 +58,7 @@ export class ModifyPasswordComponent implements OnInit {
     }
 
     resendToken() {
-        this.authService.resendChangePasswordToken(this.token).subscribe((_) => {
+        this.authService.resendToken(this.token).subscribe((_) => {
             const message = 'Il tuo token è stato re-inviato';
             this.snackbar.open(message);
             return this.router.navigateByUrl('/auth/login');

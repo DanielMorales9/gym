@@ -28,19 +28,7 @@ public class VerificationToken {
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
 
-    public VerificationToken(){}
-
-    public VerificationToken(AUser user, String token) {
-        this.user = user;
-        this.token = token;
-    }
-
-    private Date calculateExpiryDate(int expiryTimeInMinutes) {
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(new Date(cal.getTime().getTime()));
-        cal.add(Calendar.MINUTE, expiryTimeInMinutes);
-        return new Date(cal.getTime().getTime());
-    }
+    public VerificationToken() {}
 
     public AUser getUser() {
         return user;
@@ -77,7 +65,7 @@ public class VerificationToken {
     @Override
     public boolean equals(Object o) {
         VerificationToken u = (VerificationToken) o;
-        return u.getId().equals(this.getId());
+        return u != null && u.getId().equals(this.getId());
     }
 
     public boolean isExpired() {

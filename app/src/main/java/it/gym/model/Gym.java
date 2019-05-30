@@ -1,5 +1,7 @@
 package it.gym.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.util.Calendar;
@@ -7,6 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Entity
+@Data
 public class Gym {
 
     private static final String LOCALE = "Europe/Rome";

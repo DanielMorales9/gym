@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @RunWith(SpringRunner.class)
-public class SaleServiceIntTest {
+public class SaleServiceTest {
     private static final String ADMIN_EMAIL = "admin@email.com";
     @MockBean private SaleRepository saleRepository;
     @MockBean private AdminService adminService;
