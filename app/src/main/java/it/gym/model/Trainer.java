@@ -11,7 +11,7 @@ public class Trainer extends AUser {
 
     @Override
     public List<Role> defaultRoles() {
-        return Collections.singletonList(new Role((long) 2, "TRAINER"));
+        return Collections.singletonList(new Role(2L, "TRAINER"));
     }
 
     @Override

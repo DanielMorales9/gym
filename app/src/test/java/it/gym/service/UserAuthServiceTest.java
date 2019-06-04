@@ -1,12 +1,10 @@
 package it.gym.service;
 
-import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.Customer;
 import it.gym.model.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -16,18 +14,15 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class UserAuthServiceTest {
 
     @MockBean private UserService userService;
-    public static final String EMAIL = "admin@admin.com";
+    private static final String EMAIL = "admin@admin.com";
 
     @TestConfiguration
     static class UserAuthServiceTestContextConfiguration {

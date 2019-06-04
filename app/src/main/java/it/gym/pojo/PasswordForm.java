@@ -8,6 +8,12 @@ public class PasswordForm {
     PasswordForm() {
     }
 
+    public PasswordForm(String oldPassword, String password, String confirmPassword) {
+        this.oldPassword = oldPassword;
+        this.password = password;
+        this.confirmPassword = confirmPassword;
+    }
+
     @Override
     public String toString() {
         return this.oldPassword + " " + this.password + " " + this.confirmPassword;

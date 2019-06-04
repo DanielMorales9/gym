@@ -1,11 +1,14 @@
 package it.gym.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.Date;
 
 @Entity
 @Table(name = "verify_token")
+@Data
 public class VerificationToken {
 
     public static final int EXPIRATION = 60 * 24;
@@ -27,8 +30,6 @@ public class VerificationToken {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
-
-    public VerificationToken() {}
 
     public AUser getUser() {
         return user;
@@ -60,12 +61,6 @@ public class VerificationToken {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        VerificationToken u = (VerificationToken) o;
-        return u != null && u.getId().equals(this.getId());
     }
 
     public boolean isExpired() {

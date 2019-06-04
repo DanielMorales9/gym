@@ -11,6 +11,7 @@ import it.gym.utility.PasswordGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
@@ -43,6 +44,7 @@ public class AuthenticationFacade {
     private RoleService roleService;
 
     @Autowired
+    @Qualifier("verificationTokenService")
     private VerificationTokenService tokenService;
 
     @Autowired private BCryptPasswordEncoder passwordEncoder;
@@ -55,6 +57,7 @@ public class AuthenticationFacade {
 
     public AUser register(AUser user, Long gymId) {
         logger.info(String.format("User is being registered: %s", user.toString()));
+
         Gym gym = this.gymService.findById(gymId);
         user.setGym(gym);
 
@@ -77,7 +80,7 @@ public class AuthenticationFacade {
 
         try {
 
-            this.sendRegistrationConfirmationEmail(user, vk);
+            this.sendRegistrationConfirmationEmail(vk);
 
         } catch (MailException e) {
 
@@ -122,10 +125,9 @@ public class AuthenticationFacade {
         if (!user.isVerified()) throw new UserIsNotVerified(email);
 
         VerificationToken vk = this.tokenService.createOrChangeVerificationToken(user);
-        sendChangePasswordTokenToEmail(user, vk.getToken());
+        sendChangePasswordTokenToEmail(vk);
         return user;
     }
-
 
     public AUser getUserFromVerificationToken(String token) {
         VerificationToken vToken = tokenService.findByToken(token);
@@ -142,7 +144,7 @@ public class AuthenticationFacade {
         if (user.isVerified()) throw new UserIsVerified(user.getEmail());
 
         VerificationToken vk = this.tokenService.createOrChangeVerificationToken(user);
-        sendVerificationEmail(vk, user);
+        sendVerificationEmail(vk);
         return user;
 
     }
@@ -152,7 +154,7 @@ public class AuthenticationFacade {
         AUser user = vk.getUser();
         this.tokenService.createOrChangeVerificationToken(user);
 
-        sendVerificationEmail(vk, user);
+        sendVerificationEmail(vk);
         return user;
     }
 
@@ -192,26 +194,26 @@ public class AuthenticationFacade {
             throw new InvalidPasswordException("Nuova password coincide con la precedente");
     }
 
-    private void sendRegistrationConfirmationEmail(AUser user, VerificationToken token) {
-        String recipientAddress = user.getEmail();
+    private void sendRegistrationConfirmationEmail(VerificationToken token) {
+        String recipientAddress = token.getUser().getEmail();
         String subject = "Conferma la registrazione";
-        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, token);
+        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, token.getToken());
         String message = String.format("Per registrare autenticati al seguente indirizzo: %s", confirmationUrl);
         this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
 
-    private void sendChangePasswordTokenToEmail(AUser user, String token) {
-        String recipientAddress = user.getEmail();
+    private void sendChangePasswordTokenToEmail(VerificationToken token) {
+        String recipientAddress = token.getUser().getEmail();
         String subject = "Cambia la tua password";
-        String confirmationUrl = String.format("%s/auth/modifyPassword?token=%s", baseUrl, token);
+        String confirmationUrl = String.format("%s/auth/modifyPassword?token=%s", baseUrl, token.getToken());
         String message = String.format("Per modificare la password usa il seguente link: %s", confirmationUrl);
         this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
 
-    private void sendVerificationEmail(VerificationToken newToken, AUser user) {
+    private void sendVerificationEmail(VerificationToken token) {
         String subject = "Verifica Account";
-        String recipientAddress = user.getEmail();
-        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, newToken.getToken());
+        String recipientAddress = token.getUser().getEmail();
+        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, token.getToken());
         String message = String.format("Ti abbiamo generato un nuovo link di verifica: %s", confirmationUrl);
         this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }

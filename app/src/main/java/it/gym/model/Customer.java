@@ -1,6 +1,7 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="C")
+@Data
 public class Customer extends AUser {
 
     @Column(name = "height")
@@ -63,7 +65,7 @@ public class Customer extends AUser {
     @Override
     public List<Role> defaultRoles() {
         return Collections.singletonList(
-                new Role((long) 3, "CUSTOMER"));
+                new Role(3L, "CUSTOMER"));
     }
 
     @Override
