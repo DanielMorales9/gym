@@ -35,7 +35,7 @@ public class SalesLineItemService implements ICrudService<SalesLineItem, Long> {
         return this.salesLineItemRepository.findAll();
     }
 
-    void deleteAll(List<SalesLineItem> salesLineItems) {
+    public void deleteAll(List<SalesLineItem> salesLineItems) {
         this.salesLineItemRepository.deleteAll(salesLineItems);
     }
 }
