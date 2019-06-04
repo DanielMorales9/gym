@@ -29,7 +29,7 @@ export class SendChangePasswordTokenComponent implements OnInit {
             this.snackbar.open(message);
             return this.router.navigateByUrl('/home');
         }, err => {
-            this.errorMessage = err.message;
+            this.errorMessage = err.error.message;
         });
     }
 
