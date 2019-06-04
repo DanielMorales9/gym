@@ -28,7 +28,7 @@ import java.util.Optional;
 @RequestMapping("/users")
 public class UserExtendedController {
 
-    private final static Logger logger = LoggerFactory.getLogger(UserExtendedController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserExtendedController.class);
     private final UserRepository repository;
 
 

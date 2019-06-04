@@ -10,9 +10,9 @@ export class AuthService {
     constructor(private http: HttpClient,
                 private appService: AppService) {}
 
-    findByEmail(email: string) {
+    forgotPassword(email: string) {
         this.appService.credentials = undefined;
-        return this.http.get(`/authentication/findByEmail?email=${email}`);
+        return this.http.get(`/authentication/forgotPassword?email=${email}`);
     }
 
     getUserFromVerificationToken(token: any) {
@@ -26,11 +26,11 @@ export class AuthService {
 
     resendToken(token: string) {
         this.appService.credentials = undefined;
-        return this.http.get('/authentication/resendExpiredToken', {params: {token: token}});
+        return this.http.get('/authentication/resendToken', {params: {token: token}});
     }
 
     resendTokenAnonymous(id: number) {
-        return this.http.get(`/authentication/resendToken/${id}`);
+        return this.http.get(`/authentication/resendAnonymousToken?id={id}`);
     }
 
     changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
@@ -38,8 +38,8 @@ export class AuthService {
         return this.http.post(`/authentication/changePassword/${id}`, form);
     }
 
-    verifyPassword(credentials) {
+    confirmRegistration(credentials) {
         this.appService.credentials = undefined;
-        return this.http.post( `/authentication/verifyPassword`, credentials);
+        return this.http.post( `/authentication/confirmRegistration`, credentials);
     }
 }

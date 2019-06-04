@@ -123,7 +123,7 @@ public class AuthenticationFacadeTest {
     public void resendExpiredToken() {
         AUser customer = createCustomer();
         Mockito.doReturn(createToken(customer)).when(tokenService).findByToken("ababa");
-        AUser user = facade.resendExpiredToken("ababa");
+        AUser user = facade.resendToken("ababa");
         assertThat(user).isEqualTo(createCustomer());
     }
 

@@ -213,7 +213,7 @@ public class SaleServiceTest {
 //        saleWithLines.setCustomer(customer);
 //        saleWithLines.setSalesLineItems(Collections.singletonList(sli));
 //        Mockito.when(saleRepository.findById(2L)).thenReturn(Optional.of(saleWithLines));
-//        Mockito.when(adminService.findByEmail(ADMIN_EMAIL)).thenReturn(admin);
+//        Mockito.when(adminService.forgotPassword(ADMIN_EMAIL)).thenReturn(admin);
 //        Mockito.when(customerService.findById(2L)).thenReturn(customer);
 //        Mockito.when(trainingBundleSpecificationService.findById(1L)).thenReturn(bundleSpecs);
 //        Mockito.when(salesLineItemService.findById(1L)).thenReturn(sli);

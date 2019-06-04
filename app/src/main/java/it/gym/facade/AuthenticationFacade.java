@@ -149,7 +149,7 @@ public class AuthenticationFacade {
 
     }
 
-    public AUser resendExpiredToken(String existingToken) {
+    public AUser resendToken(String existingToken) {
         VerificationToken vk = this.tokenService.findByToken(existingToken);
         AUser user = vk.getUser();
         this.tokenService.createOrChangeVerificationToken(user);

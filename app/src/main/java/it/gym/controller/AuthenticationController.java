@@ -33,45 +33,45 @@ public class AuthenticationController {
 
     }
 
-    @PostMapping("/verifyPassword")
+    @PostMapping("/confirmRegistration")
     @PreAuthorize("isAnonymous()")
-    ResponseEntity<AUserResource> verifyPassword(@RequestBody Credentials credentials) {
+    ResponseEntity<AUserResource> confirmRegistration(@RequestBody Credentials credentials) {
         logger.info("About to verify password for user");
         AUser user = facade.confirmRegistration(credentials.getEmail(), credentials.getPassword());
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/changePassword/{id}")
+    @PostMapping("/forgotPassword/{id}")
     @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> changePassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.facade.changePassword(id, form);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/verification")
-    ResponseEntity<AUserResource> verification(@RequestParam String token) {
+    @GetMapping(path = "/getUserFromVerificationToken")
+    ResponseEntity<AUserResource> getUserFromVerificationToken(@RequestParam String token) {
         AUser user = this.facade.getUserFromVerificationToken(token);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/findByEmail")
+    @GetMapping(path = "/forgotPassword")
     @PreAuthorize("isAnonymous()")
-    ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
+    ResponseEntity<AUserResource> forgotPassword(@RequestParam String email) {
         AUser user = facade.forgotPassword(email);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/resendToken/{id}")
+    @GetMapping(path = "/resendAnonymousToken")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity resendAnonymousToken(@PathVariable("id") Long id) {
+    public ResponseEntity resendAnonymousToken(@RequestParam("id") Long id) {
         AUser user = facade.resendAnonymousToken(id);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/resendToken")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity resendExpiredToken(@RequestParam("token") String existingToken) {
-        AUser user = facade.resendExpiredToken(existingToken);
+    public ResponseEntity resendToken(@RequestParam("token") String existingToken) {
+        AUser user = facade.resendToken(existingToken);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
