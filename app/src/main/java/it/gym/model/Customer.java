@@ -10,7 +10,6 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="C")
-@Data
 public class Customer extends AUser {
 
     @Column(name = "height")
@@ -61,6 +60,11 @@ public class Customer extends AUser {
         return this.currentTrainingBundles.remove(bundle);
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        AUser that = (Customer) obj;
+        return that != null && this.getId().equals(that.getId());
+    }
 
     @Override
     public List<Role> defaultRoles() {

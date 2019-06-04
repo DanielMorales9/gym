@@ -39,55 +39,51 @@ public class VerificationTokenServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createToken());
+        this.service.save(createToken(createUser()));
         Mockito.verify(repository).save(any(VerificationToken.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createToken()));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createToken(createUser())));
         VerificationToken vk = this.service.findById(1L);
-        assertThat(vk).isEqualTo(createToken());
+        assertThat(vk).isEqualTo(createToken(createUser()));
         Mockito.verify(repository).findById(anyLong());
     }
 
     @Test
     public void findByToken() {
-        Mockito.when(repository.findByToken("ababa")).thenAnswer(invocationOnMock -> Optional.of(createToken()));
+        Mockito.when(repository.findByToken("ababa")).thenAnswer(invocationOnMock -> Optional.of(createToken(createUser())));
         VerificationToken vk = this.service.findByToken("ababa");
-        assertThat(vk).isEqualTo(createToken());
+        assertThat(vk).isEqualTo(createToken(createUser()));
         Mockito.verify(repository).findByToken(anyString());
     }
 
 
     @Test
     public void findByUser() {
-        Mockito.when(repository.findByUser(createUser())).thenAnswer(invocationOnMock -> Optional.of(createToken()));
+        Mockito.when(repository.findByUser(createUser())).thenAnswer(invocationOnMock -> Optional.of(createToken(createUser())));
         VerificationToken vk = this.service.findByUser(createUser());
-        assertThat(vk).isEqualTo(createToken());
+        assertThat(vk).isEqualTo(createToken(createUser()));
         Mockito.verify(repository).findByUser(any(AUser.class));
     }
 
     @Test
     public void createOrChangeVerificationToken() {
-//        Mockito.when(repository.save(any(VerificationToken.class))).thenAnswer(invocationOnMock -> invocationOnMock);
         VerificationToken vk = this.service.createOrChangeVerificationToken(createUser());
-//        assertThat(vk.isExpired()).isFalse();
-//        assertThat(vk.getUser()).isEqualTo(createUser());
         Mockito.verify(repository).findByUser(any(AUser.class));
     }
     @Test
     public void invalidateToken() {
-        VerificationToken token = createToken();
+        VerificationToken token = createToken(createUser());
         service.invalidateToken(token);
         assertThat(token.isExpired()).isTrue();
     }
-    private VerificationToken createToken() {
+    private VerificationToken createToken(AUser u) {
         VerificationToken vk = new VerificationToken();
         vk.setId(1L);
         vk.setToken("ababa");
         vk.setExpiryDate(addHours(new Date(), 2));
-        AUser u = createUser();
         vk.setUser(u);
         return vk;
     }

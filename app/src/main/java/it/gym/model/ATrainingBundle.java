@@ -22,7 +22,6 @@ import java.util.List;
 @Table(name="bundles")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
-@Data
 public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     @Id

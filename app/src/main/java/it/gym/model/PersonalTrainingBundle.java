@@ -14,7 +14,6 @@ import java.util.Date;
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = ATrainingBundle.class)
-@Data
 @EqualsAndHashCode(callSuper = false)
 public class PersonalTrainingBundle extends ATrainingBundle {
 
