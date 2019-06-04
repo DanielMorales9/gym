@@ -1,16 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {User} from '../model';
 
 @Injectable()
 export class UserService {
 
     constructor(private http: HttpClient) {}
-
-    put(user: User): Observable<Object> {
-        return this.http.put(`/users/${user.id}`, user);
-    }
 
     findById(id: number): Observable<Object> {
         return this.http.get(`/users/${id}`);

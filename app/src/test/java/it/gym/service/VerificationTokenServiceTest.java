@@ -79,6 +79,7 @@ public class VerificationTokenServiceTest {
         service.invalidateToken(token);
         assertThat(token.isExpired()).isTrue();
     }
+
     private VerificationToken createToken(AUser u) {
         VerificationToken vk = new VerificationToken();
         vk.setId(1L);

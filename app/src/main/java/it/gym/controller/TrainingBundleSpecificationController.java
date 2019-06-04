@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @RequestMapping("/bundleSpecs")
 @PreAuthorize("isAuthenticated()")
 public class TrainingBundleSpecificationController {
-    private final static Logger logger = LoggerFactory.getLogger(TrainingBundleSpecificationController.class);
+    private static final Logger logger = LoggerFactory.getLogger(TrainingBundleSpecificationController.class);
 
     private final TrainingBundleSpecificationRepository repository;
 

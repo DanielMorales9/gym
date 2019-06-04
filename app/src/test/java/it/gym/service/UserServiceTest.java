@@ -1,14 +1,11 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.exception.UserNotFoundException;
-import it.gym.facade.AuthenticationFacade;
 import it.gym.model.AUser;
 import it.gym.model.Customer;
 import it.gym.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -19,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class UserServiceTest {

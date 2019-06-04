@@ -49,22 +49,6 @@ describe('UserService', () => {
         req.flush([]);
     });
 
-    it('testing #put', done => {
-        const user = new User();
-        user.id = 1;
-        userService.put(user).subscribe(res => {
-            expect(res).toEqual(user);
-            done();
-        });
-        const req = backend.expectOne({
-            url: '/users/1',
-            method: 'PUT'
-        });
-        user.createdAt = 'now';
-        req.flush(user);
-    });
-
-
     it('testing #get', done => {
         userService.get(1, 5).subscribe(res => {
             expect(res).toEqual([user]);
