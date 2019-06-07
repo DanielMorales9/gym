@@ -2,21 +2,19 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
+import java.util.Date;
 
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "type",
         visible = true)
 @JsonSubTypes({
         @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P")
 })
 @Entity
-@RestResource(path="bundleSpecs")
 @Table(name="bundle_specs")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_spec_type", discriminatorType=DiscriminatorType.STRING, length=1)
@@ -39,6 +37,10 @@ public abstract class ATrainingBundleSpecification {
 
     @Column(name = "is_disabled", nullable = false)
     private Boolean isDisabled;
+
+    @Column(name = "createdat", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
 
     public abstract String getType();
 
@@ -84,17 +86,19 @@ public abstract class ATrainingBundleSpecification {
         this.name = name;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
     @Override
     public String toString() {
         return "Nome: " +
                 this.name +
                 ", Descrizione: " +
                 this.description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        ATrainingBundleSpecification u = (ATrainingBundleSpecification) o;
-        return u.getId().equals(this.getId());
     }
 }

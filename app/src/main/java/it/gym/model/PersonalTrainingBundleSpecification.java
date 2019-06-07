@@ -14,15 +14,6 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     @Column(name="num_sessions", nullable = false)
     private Integer numSessions;
 
-    public PersonalTrainingBundleSpecification() {}
-
-    public PersonalTrainingBundleSpecification(Integer numSessions, String description, Double price) {
-        this.numSessions = numSessions;
-        this.description = description;
-        this.price = price;
-
-    }
-
     public Integer getNumSessions() {
         return numSessions;
     }
@@ -49,7 +40,13 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     }
 
     @Override
-    public String toString() {
-        return this.name;
+    public int hashCode() {
+        return getId().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        PersonalTrainingBundleSpecification u = (PersonalTrainingBundleSpecification) o;
+        return u != null && u.getId().equals(this.getId());
     }
 }

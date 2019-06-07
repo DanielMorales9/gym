@@ -115,11 +115,11 @@ export class BundlesComponent implements OnInit {
 
     private toggleDisabled(bundle: Bundle) {
         bundle.disabled = !bundle.disabled;
-        this.service.put(bundle).subscribe(res => console.log(res));
+        this.service.patch(bundle).subscribe(res => console.log(res));
     }
 
     private modifyBundle(bundle: Bundle) {
-        this.service.put(bundle).subscribe(_ => {
+        this.service.patch(bundle).subscribe(_ => {
             const message = `Il pacchetto ${bundle.name} è stato modificato`;
             this.snackbar.open(message);
             this.search();
