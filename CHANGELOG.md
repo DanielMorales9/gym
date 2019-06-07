@@ -8,8 +8,6 @@
 - **Chapter**: Hide Repositories behind Services and Controllers
    - Remove Rest API from Reservation Repository
    - Remove Rest API from Time Off Repository
-   - Remove Rest API from TrainingBundle Repository
-   - Remove Rest API from TrainingBundleSession Repository
   
 - **FR**: Schedule Training Assignment
 - **BC**: Separate API from front-end with NGINX  
@@ -35,6 +33,8 @@
    - Removed PersonalTrainingBundleSpecification Repository
    - Removed Rest API from TrainingBundleSpecification Repository
    - Added TrainingBundleSpecification Service w tests
+   - Removed Rest API from TrainingBundleSession Repository
+   - Removed Rest API from TrainingBundle Repository
    
 - **BF**: Email not valid
 - **BF**: Typo "Domendica" in gym configuration
