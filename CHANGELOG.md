@@ -1,16 +1,16 @@
 # TODO
 - **FR**: Recurring events in gym calendar
+- **BR**: Add API prefix to application   
 - **BF**: Getting "Hai già effettuato una chiusura" when booking time off one hour before a previous time off
 - **BC**: Change ecs ami to a free one
 - **BC**: Integrate with email automation service
 - **Chapter**: Hide Repositories behind Services and Controllers
-  - Remove Rest API from Gym Repository
-  - Remove Rest API from PersonalTrainingBundleSpecification Repository
-  - Remove Rest API from Reservation Repository
-  - Remove Rest API from Time Off Repository
-  - Remove Rest API from TrainingBundle Repository
-  - Remove Rest API from TrainingBundleSpecification Repository
-  - Remove Rest API from TrainingBundleSession Repository
+   - Remove Rest API from PersonalTrainingBundleSpecification Repository
+   - Remove Rest API from Reservation Repository
+   - Remove Rest API from Time Off Repository
+   - Remove Rest API from TrainingBundle Repository
+   - Remove Rest API from TrainingBundleSpecification Repository
+   - Remove Rest API from TrainingBundleSession Repository
   
 - **FR**: Schedule Training Assignment
 - **BC**: Separate API from front-end with NGINX  
@@ -31,6 +31,8 @@
    - Changed authentication endpoints names
    - Refactored User Controller w tests
    - Removed Rest API on User Repository
+   - Removed Rest API from Gym Repository
+   - Added Gym Controller
    
 - **BF**: Email not valid
 - **BF**: Typo "Domendica" in gym configuration
