@@ -7,6 +7,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "sales_lines")
+@Data
 public class SalesLineItem {
     @Id
     @SequenceGenerator(name = "sales_lines_line_id_seq",

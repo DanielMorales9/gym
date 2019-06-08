@@ -33,5 +33,4 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
     public List<ATrainingBundle> findAll() {
         return this.bundle.findAll();
     }
-
 }

@@ -7,12 +7,12 @@ export class TrainingService {
 
     constructor(private http: HttpClient) {}
 
-    check(gymId: number, date: string, id: number): Observable<any> {
-        return this.http.get(`/reservations/checkAvailabilityAndEnablement?gymId=${gymId}&date=${date}&id=${id}`);
+    isAvailable(gymId: number, id: number, startTime: string, endTime: string): Observable<any> {
+        return this.http.get(`/reservations/isAvailable?gymId=${gymId}&startTime=${startTime}&endTime=${endTime}&customerId=${id}`);
     }
 
-    book(gymId: number, date: string, id: number): Observable<any> {
-        return this.http.get(`/reservations/book/${id}?gymId=${gymId}&date=${date}`);
+    book(gymId: number, id: number, startTime: string, endTime: string): Observable<any> {
+        return this.http.get(`/reservations/book/${id}?gymId=${gymId}&startTime=${startTime}&endTime=${endTime}&customerId=${id}`);
     }
 
     getReservations(startTime: string, endTime: string, id?: number): Observable<any> {

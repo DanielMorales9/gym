@@ -43,10 +43,11 @@ public class UserFacadeTest {
     public void delete() {
         AUser customer = createCustomer();
         Mockito.doReturn(customer).when(userService).findById(1L);
-        Mockito.doReturn(createToken(customer)).when(tokenService).findByUser(customer);
+        VerificationToken token = createToken(customer);
+        Mockito.doReturn(token).when(tokenService).findByUser(customer);
 
         AUser user = userFacade.delete(1L);
-        Mockito.verify(tokenService).delete(createToken(customer));
+        Mockito.verify(tokenService).delete(token);
 
         assertThat(user).isEqualTo(customer);
     }

@@ -22,6 +22,8 @@ import java.util.List;
 @Table(name="bundles")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Data
+@EqualsAndHashCode
 public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     @Id
@@ -53,7 +55,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
 
-    public abstract Reservation book(Customer c, Date startTime, Date endTime);
+    public abstract ATrainingSession createSession(Customer c, Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
 
     public Double getPrice() {

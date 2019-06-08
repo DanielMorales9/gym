@@ -8,13 +8,16 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 @Entity
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = ATrainingBundle.class)
-@EqualsAndHashCode(callSuper = false)
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Column(name="numSessions")
@@ -55,14 +58,16 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public Reservation book(Customer c, Date startTime, Date endTime) {
-        PersonalTrainingSession session = new PersonalTrainingSession(this,
-                startTime, endTime, false);
-        return new Reservation(session, c, startTime, endTime, false);
+    public ATrainingSession createSession(Customer c, Date startTime, Date endTime) {
+        return new PersonalTrainingSession(this, startTime, endTime, false);
     }
 
     @Override
     public void addSession(ATrainingSession session) {
+        if (this.getSessions() == null) {
+            this.setSessions(new ArrayList<>());
+        }
+
         this.getSessions().add(session);
     }
 

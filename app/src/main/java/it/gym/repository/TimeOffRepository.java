@@ -16,8 +16,8 @@ public interface TimeOffRepository extends JpaRepository<TimeOff, Long> {
     List<TimeOff> findAllTimesOff(@RequestParam("starttime") Date starttime,
                                   @RequestParam("endtime") Date endtime);
 
-    @Query("select t.type from TimeOff as t where t.startTime <= :starttime and t.endTime >= :endtime")
-    List<String> findTimesOffTypeInBetween(@RequestParam("starttime") Date starttime,
+    @Query("select t from TimeOff as t where t.startTime <= :starttime and t.endTime >= :endtime")
+    List<TimeOff> findTimesOffTypeInBetween(@RequestParam("starttime") Date starttime,
                                            @RequestParam("endtime") Date endtime);
 
 //    @Query("selectBundle t from TimeOff as t where t.startTime <= :starttime and t.endTime >= :endtime and t.type = :type")

@@ -122,16 +122,20 @@ export class CalendarFacade {
         return this.trainingService.delete(id, type);
     }
 
-    checkReservation(date: Date, id: number) {
+    checkReservation(date: Date, userId: number) {
         const gymId = this.gymService.gym.id;
-        const startS = CalendarFacade.formatDateToString(date);
-        return this.trainingService.check(gymId, startS, id);
+        const startTime = CalendarFacade.formatDateToString(date);
+        const end = this.dateService.addHour(date);
+        const endTime = CalendarFacade.formatDateToString(end);
+        return this.trainingService.isAvailable(gymId, userId, startTime, endTime);
     }
 
     bookReservation(date: Date, userId: number) {
         const gymId = this.gymService.gym.id;
-        const startS = CalendarFacade.formatDateToString(date);
-        return this.trainingService.book(gymId, startS, userId);
+        const startTime = CalendarFacade.formatDateToString(date);
+        const end = this.dateService.addHour(date);
+        const endTime = CalendarFacade.formatDateToString(end);
+        return this.trainingService.book(gymId, userId, startTime, endTime);
     }
 
     getReservations(startTime: any, endTime: any, userId?: number): Observable<Object[]> {

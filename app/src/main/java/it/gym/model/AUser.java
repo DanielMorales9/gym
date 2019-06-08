@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -27,6 +28,8 @@ import java.util.List;
 @Table(name="users")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="user_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Data
+@EqualsAndHashCode
 public abstract class AUser implements DefaultRoles {
 
     @Id

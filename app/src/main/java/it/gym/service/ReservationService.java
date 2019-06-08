@@ -46,9 +46,11 @@ public class ReservationService implements ICrudService<Reservation, Long> {
         return this.reservationRepository.findByStartTime(startDate);
     }
 
-    public List<Reservation> findByStartTimeAndEndTimeAndId(Optional<Long> id, Date startDay, Date endDay) {
-        if (!id.isPresent())
-            return this.reservationRepository.findByInterval(startDay, endDay);
-        return this.reservationRepository.findByInterval(id.get(), startDay, endDay);
+    public List<Reservation> findByInterval(Long id, Date startTime, Date endTime) {
+        return this.reservationRepository.findByInterval(id, startTime, endTime);
+    }
+
+    public List<Reservation> findByInterval(Date startTime, Date endTime) {
+        return this.reservationRepository.findByInterval(startTime, endTime);
     }
 }

@@ -8,6 +8,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "verify_token")
+@Data
 public class VerificationToken {
 
     public static final int EXPIRATION = 60 * 24;
@@ -56,12 +57,6 @@ public class VerificationToken {
 
     public Long getId() {
         return id;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        VerificationToken that = (VerificationToken) obj;
-        return that != null && this.getId().equals(that.getId());
     }
 
     public void setId(Long id) {

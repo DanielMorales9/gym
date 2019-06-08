@@ -2,6 +2,7 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="C")
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Customer extends AUser {
 
     @Column(name = "height")
@@ -18,6 +21,7 @@ public class Customer extends AUser {
     @Column(name = "weight")
     private Integer weight;
 
+    //TODO check this multeplicity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="current_users_bundles",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
@@ -49,7 +53,7 @@ public class Customer extends AUser {
         this.currentTrainingBundles = currentTrainingBundles;
     }
 
-    boolean addToCurrentTrainingBundles(List<ATrainingBundle> bundles) {
+    public boolean addToCurrentTrainingBundles(List<ATrainingBundle> bundles) {
         if (this.currentTrainingBundles == null) {
             this.currentTrainingBundles = new ArrayList<>();
         }

@@ -16,26 +16,26 @@ import java.util.List;
 public class CustomerService implements ICrudService<Customer, Long> {
 
     @Autowired
-    private CustomerRepository userRepository;
+    private CustomerRepository repository;
 
 
     public Customer save(Customer var1) {
-        return userRepository.save(var1);
+        return repository.save(var1);
     }
 
     public Customer findById(Long var1) {
-        return userRepository.findById(var1).orElseThrow(() -> new NotFoundException("Cliente", var1));
+        return repository.findById(var1).orElseThrow(() -> new NotFoundException("Cliente", var1));
     }
 
     public void delete(Customer var1) {
-        this.userRepository.delete(var1);
+        this.repository.delete(var1);
     }
 
     public List<Customer> findAll() {
-        return this.userRepository.findAll();
+        return this.repository.findAll();
     }
 
     public Page<Customer> findByLastName(String query, Pageable pageable) {
-        return userRepository.findByLastName(query, pageable);
+        return repository.findByLastName(query, pageable);
     }
 }

@@ -1,6 +1,9 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 
@@ -8,6 +11,8 @@ import javax.persistence.*;
 @Table(name="sessions")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="session_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Data
+@EqualsAndHashCode
 public abstract class ATrainingSession {
 
     @Id
@@ -19,10 +24,7 @@ public abstract class ATrainingSession {
 
     @ManyToOne
     @JsonIgnore
-    private ATrainingBundle trainingBundle;
-
-    ATrainingSession() {
-    }
+    @EqualsAndHashCode.Exclude private ATrainingBundle trainingBundle;
 
     public abstract String getType();
 
@@ -37,12 +39,6 @@ public abstract class ATrainingSession {
     public abstract void deleteMeFromBundle();
     public abstract boolean isDeletable();
     public abstract void complete();
-
-    @Override
-    public boolean equals(Object o) {
-        ATrainingSession u = (ATrainingSession) o;
-        return u.getId().equals(this.getId());
-    }
 
     public ATrainingBundle getTrainingBundle() {
         return trainingBundle;

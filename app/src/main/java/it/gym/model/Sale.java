@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "sales")
+@Data
 public class Sale {
 
     @Id

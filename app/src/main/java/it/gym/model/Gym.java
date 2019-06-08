@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Entity
+@Data
 public class Gym {
 
     private static final String LOCALE = "Europe/Rome";
@@ -47,8 +48,7 @@ public class Gym {
     private DayOfWeek weekStartsOn;
 
     public boolean isValidDate(Date start, Date end) {
-        return this.isNotPast(start) &&
-                this.isGymOpenOnDate(start) && this.isGymOpenOnDate(end) &&
+        return this.isGymOpenOnDate(start) && this.isGymOpenOnDate(end) &&
                 this.isInGymHours(start, end);
     }
 
@@ -139,10 +139,6 @@ public class Gym {
                 throw new IllegalStateException("Unexpected value: " + day);
         }
         return open;
-    }
-
-    private boolean isNotPast(Date date) {
-        return !date.before(new Date());
     }
 
     public Integer getMondayStartHour() {
@@ -335,11 +331,5 @@ public class Gym {
 
     public void setSundayOpen(boolean sundayOpen) {
         this.sundayOpen = sundayOpen;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        Gym that = (Gym) obj;
-        return that != null && this.getId().equals(that.getId());
     }
 }

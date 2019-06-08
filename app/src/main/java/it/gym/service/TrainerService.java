@@ -39,4 +39,8 @@ public class TrainerService implements ICrudService<Trainer, Long> {
     public List<Trainer> findAll() {
         return this.trainerRepository.findAll();
     }
+
+    public Long countAllTrainer() {
+        return this.trainerRepository.countAllTrainer();
+    }
 }

@@ -2,6 +2,8 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -18,6 +20,8 @@ import java.util.Date;
 @Table(name="bundle_specs")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_spec_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Data
+@EqualsAndHashCode
 public abstract class ATrainingBundleSpecification {
     @Id
     @SequenceGenerator(name = "bundle_specs_spec_id_seq",
