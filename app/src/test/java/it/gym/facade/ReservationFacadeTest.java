@@ -53,54 +53,6 @@ public class ReservationFacadeTest {
     @Autowired ReservationFacade facade;
 
     @Test
-    public void isWithinWorkingHours() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
-        cal.set(2019, Calendar.JUNE, 8, 12, 0);
-        Date start = cal.getTime();
-        Date end = addHours(start, 1);
-        Mockito.doReturn(createGym()).when(gymService).findById(1L);
-        facade.isWithinWorkingHours(1L, start, end);
-    }
-
-    @Test
-    public void isValidInterval() {
-        Date start = new Date();
-        start = addHours(start, 1);
-        Date end = addHours(start, 1);
-
-        facade.isValidInterval(start, end);
-    }
-
-    @Test(expected = InvalidReservationException.class)
-    public void startAfterEndTime() {
-        Date start = new Date();
-        start = addHours(start, 1);
-        Date end = addHours(start, -1);
-
-        facade.isValidInterval(start, end);
-    }
-
-
-    @Test(expected = InvalidReservationException.class)
-    public void isIntervalPast() {
-        Date start = new Date();
-        start = addHours(start, -1);
-        Date end = addHours(start, 1);
-
-        facade.isValidInterval(start, end);
-    }
-
-    @Test(expected = InvalidTimeException.class)
-    public void isNotWithinWorkingHours() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
-        cal.set(2019, Calendar.JUNE, 8, 13, 0);
-        Date start = cal.getTime();
-        Date end = addHours(start, 1);
-        Mockito.doReturn(createGym()).when(gymService).findById(1L);
-        facade.isWithinWorkingHours(1L, start, end);
-    }
-
-    @Test
     public void isNotDoublyBooked() {
         Calendar cal = Calendar.getInstance(Locale.ITALIAN);
         cal.set(2019, Calendar.JUNE, 8, 10, 0);

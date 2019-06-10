@@ -8,8 +8,7 @@ export class TimesOffService {
     constructor(private http: HttpClient) {}
 
     check(gymId: number, start: string, end: string, type: string): Observable<any> {
-        // tslint:disable-next-line:max-line-length
-        return this.http.get(`/timesOff/checkAvailabilityAndEnablement?gymId=${gymId}&startTime=${start}&endTime=${end}&type=${type}`);
+        return this.http.get(`/timesOff/isAvailable?gymId=${gymId}&startTime=${start}&endTime=${end}&type=${type}`);
     }
 
     book(gymId: number, start: string, end: string, type: string, name: string, id: number): Observable<any> {

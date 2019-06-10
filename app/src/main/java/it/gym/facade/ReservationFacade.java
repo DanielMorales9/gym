@@ -44,9 +44,9 @@ public class ReservationFacade {
 
         logger.info(String.format("Is Reservation available on %s", startTime.toString()));
 
-        isValidInterval(startTime, endTime);
+        gymService.isValidInterval(startTime, endTime);
 
-        isWithinWorkingHours(gymId, startTime, endTime);
+        gymService.isWithinWorkingHours(gymId, startTime, endTime);
 
         isDoublyBooked(customerId, startTime, endTime);
 
@@ -69,9 +69,9 @@ public class ReservationFacade {
 
     public Reservation book(Long gymId, Long customerId, Date startTime, Date endTime) {
 
-        isValidInterval(startTime, endTime);
+        gymService.isValidInterval(startTime, endTime);
 
-        isWithinWorkingHours(gymId, startTime, endTime);
+        gymService.isWithinWorkingHours(gymId, startTime, endTime);
 
         isDoublyBooked(customerId, startTime, endTime);
 
@@ -213,20 +213,6 @@ public class ReservationFacade {
                 .filter(s -> s.getType().equals("admin")).limit(1);
         if (countAdmin.count() == 1)
             throw new InvalidReservationException("Chiusura Aziendale");
-    }
-
-    boolean isPast(Date date) {
-        return date.before(new Date());
-    }
-
-    void isValidInterval(Date startTime, Date endTime) {
-        if (startTime.after(endTime) || isPast(startTime))
-            throw new InvalidReservationException("Data Non Valida");
-    }
-
-    void isWithinWorkingHours(Long gymId, Date start, Date end) {
-        Gym gym = this.gymService.findById(gymId);
-        if (!gym.isValidDate(start, end)) throw new InvalidTimeException("Data non valida");
     }
 
     private Reservation createReservation(Date startTime, Date endTime, Customer customer, ATrainingSession session) {

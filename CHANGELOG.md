@@ -6,10 +6,7 @@
 - **FR**: Add proper Favicon.ico
 - **BF**: Check multiplicity of Current Training Bundle
 - **BF**: Solve issue related to double beans
-- **BF**: Replace admin from sale with Gym
-- **Chapter**: Hide Repositories behind Services and Controllers
-   - Remove Rest API from Time Off Repository
-   
+- **BF**: Replace admin from sale with Gym   
 - **FR**: Schedule Training Assignment
 - **BC**: Separate API from front-end with NGINX
 - **FR**: expose error path
@@ -40,6 +37,7 @@
    - Created Session Service
    - Removed Session Repositoy from Reservation Facade
    - Added @Data and @EqualsAndHashCode to each of class in model
+   - Removed Rest API from TimeOff Repository
    
 - **BF**: Email not valid
 - **BF**: Typo "Domendica" in gym configuration
