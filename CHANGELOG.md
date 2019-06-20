@@ -4,6 +4,7 @@
 - **BF**: Solve issue related to double beans
 - **BC**: Separate API from front-end with NGINX
 - **FR**: expose error path
+- **FR**: Favicon.ico is not correctly loaded
 - **Chapter II** More Features
     - Recurring events in gym calendar
     - Schedule Training Assignment
@@ -48,4 +49,3 @@
 - **BF**: Email not valid
 - **BF**: Typo in gym configuration
 - **FR**: Changed gym configuration and depending events in Calendar
-- **FR**: Add proper Favicon.ico
