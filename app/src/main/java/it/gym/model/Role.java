@@ -1,9 +1,14 @@
 package it.gym.model;
 
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
 import javax.persistence.*;
 
 @Entity
 @Table(name="roles")
+@Data
+@EqualsAndHashCode
 public class Role {
     @Id
     @SequenceGenerator(name = "roles_role_id_seq",
@@ -40,9 +45,4 @@ public class Role {
         this.name = name;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        Role u = (Role) o;
-        return u.getId().equals(this.getId());
-    }
 }

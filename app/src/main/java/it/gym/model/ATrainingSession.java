@@ -3,7 +3,6 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import org.apache.commons.lang3.builder.HashCodeExclude;
 
 import javax.persistence.*;
 
@@ -28,6 +27,12 @@ public abstract class ATrainingSession {
 
     public abstract String getType();
 
+    public abstract boolean isDeletable();
+
+    public abstract void complete();
+
+    public abstract void deleteMeFromBundle();
+
     public Long getId() {
         return id;
     }
@@ -36,10 +41,6 @@ public abstract class ATrainingSession {
         this.id = id;
     }
 
-    public abstract void deleteMeFromBundle();
-    public abstract boolean isDeletable();
-    public abstract void complete();
-
     public ATrainingBundle getTrainingBundle() {
         return trainingBundle;
     }
@@ -47,6 +48,4 @@ public abstract class ATrainingSession {
     public void setTrainingBundle(ATrainingBundle trainingBundle) {
         this.trainingBundle = trainingBundle;
     }
-
-    public abstract boolean getCompleted();
 }

@@ -1,7 +1,6 @@
 package it.gym.model;
 
 import it.gym.exception.NotAllowedException;
-import it.gym.service.TrainingSessionService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -27,11 +26,6 @@ public class PersonalTrainingSession extends ATrainingSession {
 
     public PersonalTrainingSession() {}
 
-    @Override
-    public String getType() {
-        return "P";
-    }
-
     PersonalTrainingSession(ATrainingBundle trainingBundle, Date startTime, Date endTime, boolean isCompleted) {
         this.setTrainingBundle(trainingBundle);
         this.startTime = startTime;
@@ -39,12 +33,9 @@ public class PersonalTrainingSession extends ATrainingSession {
         this.isCompleted = isCompleted;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    @Override
+    public String getType() {
+        return "P";
     }
 
     @Override
@@ -62,6 +53,14 @@ public class PersonalTrainingSession extends ATrainingSession {
         if (!this.getEndTime().before(new Date()))
             throw new NotAllowedException("Impossibile completare la sessione");
         isCompleted = true;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 
     public Date getEndTime() {

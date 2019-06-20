@@ -44,8 +44,17 @@ public class Gym {
     private Integer sundayEndHour;
     private boolean sundayOpen;
 
+    @Column(name = "createdat", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
     @Enumerated(EnumType.ORDINAL)
     private DayOfWeek weekStartsOn;
+
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = new Date();
+    }
 
     public boolean isValidDate(Date start, Date end) {
         return this.isGymOpenOnDate(start) && this.isGymOpenOnDate(end) &&
@@ -331,5 +340,13 @@ public class Gym {
 
     public void setSundayOpen(boolean sundayOpen) {
         this.sundayOpen = sundayOpen;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
     }
 }

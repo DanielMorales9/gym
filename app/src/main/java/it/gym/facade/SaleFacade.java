@@ -1,21 +1,18 @@
 package it.gym.facade;
 
 import it.gym.exception.InvalidSaleException;
-import it.gym.exception.NotFoundException;
 import it.gym.exception.SalesIsNotCompletedException;
 import it.gym.exception.SalesLineItemNotDeletedException;
 import it.gym.model.*;
-import it.gym.repository.SaleRepository;
 import it.gym.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
-import java.util.List;
 
 @Component
 @Transactional
@@ -23,13 +20,19 @@ public class SaleFacade {
 
     @Autowired
     private SaleService saleService;
+
     @Autowired
     private UserService userService;
 
     @Autowired
+    @Qualifier("trainingBundleSpecificationService")
     private TrainingBundleSpecificationService bundleSpecService;
+
     @Autowired
     private SalesLineItemService salesLineItemService;
+
+    @Autowired
+    private GymService gymService;
 
     private Sale save(Sale sale) {
         return this.saleService.save(sale);
@@ -73,13 +76,13 @@ public class SaleFacade {
         return sale;
     }
 
-    public Sale createSale(String adminEmail, Long customerId) {
-        Admin admin = (Admin) userService.findByEmail(adminEmail);
+    public Sale createSale(Long gymId, Long customerId) {
+        Gym gym = gymService.findById(gymId);
         Customer customer = (Customer) userService.findById(customerId);
 
         Sale sale = new Sale();
         sale.setCreatedAt(new Date());
-        sale.setAdmin(admin);
+        sale.setGym(gym);
         sale.setAmountPayed(0.);
         sale.setCustomer(customer);
         sale.setPayed(false);

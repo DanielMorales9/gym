@@ -3,11 +3,13 @@ import {Sale} from '../model';
 import {SalesService} from './sales.service';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
+import {GymService} from '../../services';
 
 @Injectable()
 export class SaleHelperService extends HelperService<Sale> {
 
-    constructor(private service: SalesService) {
+    constructor(private service: SalesService,
+                private gymService: GymService) {
         super();
     }
 
@@ -28,8 +30,9 @@ export class SaleHelperService extends HelperService<Sale> {
         return sale;
     }
 
-    createSale(email: string, id: number) {
-        return this.service.createSale(email, id);
+    createSale(customerId: number) {
+        const gymId = this.gymService.gym.id;
+        return this.service.createSale(gymId, customerId);
     }
 
     delete(id: number) {

@@ -54,16 +54,26 @@ public class InitializeDatabase implements CommandLineRunner {
                             Constants.ROLE_ID_TRAINER,
                             Constants.ROLE_ID_CUSTOMER));
             String password = bCryptPasswordEncoder.encode("password");
-            Admin admin = new Admin("Admin", "Admin", email, password, true);
-            Gym gym = initGym();
+            Gym gym = createGym();
             gymRepository.save(gym);
-            admin.setRoles(roles);
-            admin.setGym(gym);
+            Admin admin = createAdmin(email, password, gym, roles);
             adminRepository.save(admin);
         }
     }
 
-    private Gym initGym() {
+    private Admin createAdmin(String email, String password, Gym gym, List<Role> roles) {
+        Admin admin = new Admin();
+        admin.setEmail(email);
+        admin.setFirstName("Admin");
+        admin.setLastName("Admin");
+        admin.setPassword(password);
+        admin.setVerified(true);
+        admin.setRoles(roles);
+        admin.setGym(gym);
+        return admin;
+    }
+
+    private Gym createGym() {
         Gym gym = new Gym();
         gym.setName("Goodfellas");
         gym.setMondayStartHour(8);

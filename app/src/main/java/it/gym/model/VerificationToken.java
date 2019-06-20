@@ -1,6 +1,7 @@
 package it.gym.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -9,6 +10,7 @@ import java.util.Date;
 @Entity
 @Table(name = "verify_token")
 @Data
+@EqualsAndHashCode
 public class VerificationToken {
 
     public static final int EXPIRATION = 60 * 24;

@@ -21,12 +21,12 @@ public class Customer extends AUser {
     @Column(name = "weight")
     private Integer weight;
 
-    //TODO check this multeplicity
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="current_users_bundles",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
             inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
     @JsonProperty(value = "currentTrainingBundles")
+    @EqualsAndHashCode.Exclude
     private List<ATrainingBundle> currentTrainingBundles;
 
     public Integer getWeight() {
@@ -62,12 +62,6 @@ public class Customer extends AUser {
 
     public boolean deleteBundle(ATrainingBundle bundle) {
         return this.currentTrainingBundles.remove(bundle);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        AUser that = (Customer) obj;
-        return that != null && this.getId().equals(that.getId());
     }
 
     @Override

@@ -23,155 +23,155 @@ describe('SalesService', () => {
         backend.verify();
     });
 
-    it("testing #get", done => {
+    it('testing #get', done => {
         salesService.get(1, 5).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
-        let req = backend.expectOne({
-            url: "/sales?page=1&size=5&sort=createdAt,desc",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales?page=1&size=5&sort=createdAt,desc',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #findUserSales", done => {
+    it('testing #findUserSales', done => {
         salesService.findUserSales(1, 1, 5).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
-        let req = backend.expectOne({
-            url: "/sales/findUserSales?id=1&page=1&size=5&sort=createdAt,desc",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales/findUserSales?id=1&page=1&size=5&sort=createdAt,desc',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #createSale", done => {
-        salesService.createSale("email", 1).subscribe(res => {
+    it('testing #createSale', done => {
+        salesService.createSale(1, 1).subscribe(res => {
             expect(res).toEqual({});
             done();
         });
-        let req = backend.expectOne({
-            url: "sales/createSale/email/1",
-            method: "GET"
+        const req = backend.expectOne({
+            url: 'sales/createSale/1/1',
+            method: 'GET'
         });
         req.flush({});
     });
 
-    it("testing #delete", done => {
-        let query="query";
+    it('testing #delete', done => {
+        const query = 'query';
         salesService.delete(1)
             .subscribe(res => {
                 expect(res).toEqual({});
                 done();
             });
-        let req = backend.expectOne({
-            url: "/sales/1",
-            method: "DELETE"
+        const req = backend.expectOne({
+            url: '/sales/1',
+            method: 'DELETE'
         });
         req.flush({});
     });
 
-    it("testing #pay", done => {
+    it('testing #pay', done => {
         salesService.pay(1, 5).subscribe(res => {
             expect(res).toEqual({});
             done();
         });
-        let req = backend.expectOne({
-            url: "/sales/pay/1",
-            method: "POST"
+        const req = backend.expectOne({
+            url: '/sales/pay/1',
+            method: 'POST'
         });
         expect(req.request.body).toEqual(5);
         req.flush({});
     });
 
-    it("testing #getEndpoint", done => {
-        let endpoint = "endpoint";
+    it('testing #getEndpoint', done => {
+        const endpoint = 'endpoint';
         salesService.getEndpoint(endpoint).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
-        let req = backend.expectOne({
+        const req = backend.expectOne({
             url: endpoint,
-            method: "GET"
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #searchByLastName", done => {
-        salesService.searchByLastName("prova", 1, 5).subscribe(res => {
+    it('testing #searchByLastName', done => {
+        salesService.searchByLastName('prova', 1, 5).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
-        let req = backend.expectOne({
-            url: "/sales/searchByLastName?lastName=prova&page=1&size=5&sort=createdAt,desc",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales/searchByLastName?lastName=prova&page=1&size=5&sort=createdAt,desc',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #searchByDateAndId", done => {
-        salesService.searchByDateAndId("query", 1, 1, 5)
+    it('testing #searchByDateAndId', done => {
+        salesService.searchByDateAndId('query', 1, 1, 5)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();
             });
-        let req = backend.expectOne({
-            url: "/sales/searchByDateAndId?id=1&date=query&page=1&size=5&sort=createdAt,asc",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales/searchByDateAndId?id=1&date=query&page=1&size=5&sort=createdAt,asc',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #addSalesLineItem", done => {
+    it('testing #addSalesLineItem', done => {
         salesService.addSalesLineItem(1, 1)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();
             });
-        let req = backend.expectOne({
-            url: "/sales/addSalesLineItem/1/1",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales/addSalesLineItem/1/1',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #confirmSale", done => {
+    it('testing #confirmSale', done => {
         salesService.confirmSale(1)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();
             });
-        let req = backend.expectOne({
-            url: "/sales/confirmSale/1",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales/confirmSale/1',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #deleteSalesLineItem", done => {
+    it('testing #deleteSalesLineItem', done => {
         salesService.deleteSalesLineItem(1, 1)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();
             });
-        let req = backend.expectOne({
-            url: "/sales/deleteSalesLineItem/1/1",
-            method: "DELETE"
+        const req = backend.expectOne({
+            url: '/sales/deleteSalesLineItem/1/1',
+            method: 'DELETE'
         });
         req.flush([]);
     });
 
-    it("testing #findById", done => {
+    it('testing #findById', done => {
         salesService.findById(1)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();
             });
-        let req = backend.expectOne({
-            url: "/sales/1",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/sales/1',
+            method: 'GET'
         });
         req.flush([]);
     });

@@ -45,14 +45,16 @@ public class AuthenticationFacadeTest {
 
     @Test
     public void register() {
+        // could be made simpler
         Mockito.when(gymService.findById(1L)).thenReturn(createGym());
         Mockito.when(roleService.findAllById(Collections.singletonList(3L))).thenReturn(createCustomerRole());
-        Mockito.when(tokenService.createOrChangeVerificationToken(createCustomer()))
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(userService).save(any(AUser.class));
+        Mockito.when(tokenService.createOrChangeVerificationToken(any(AUser.class)))
                 .thenAnswer(invocationOnMock -> createToken(invocationOnMock.getArgument(0)));
         AUser user = facade.register(createCustomer(), 1L);
 
         Mockito.verify(userService).existsByEmail("admin@admin.com");
-        Mockito.verify(userService).save(createCustomer());
+        Mockito.verify(userService).save(user);
         Mockito.verify(mailService).sendSimpleMail(any(String.class), any(String.class), any(String.class));
 
         Gym gym = user.getGym();
@@ -150,6 +152,7 @@ public class AuthenticationFacadeTest {
         user.setFirstName("admin");
         user.setLastName("admin");
         user.setVerified(true);
+        user.setRoles(createCustomerRole());
         return user;
     }
 

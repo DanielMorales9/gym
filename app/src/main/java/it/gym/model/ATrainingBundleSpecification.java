@@ -23,6 +23,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 public abstract class ATrainingBundleSpecification {
+
     @Id
     @SequenceGenerator(name = "bundle_specs_spec_id_seq",
             sequenceName = "bundle_specs_spec_id_seq", allocationSize = 1)
@@ -48,6 +49,8 @@ public abstract class ATrainingBundleSpecification {
 
     public abstract String getType();
 
+    public abstract ATrainingBundle createTrainingBundle();
+
     public Long getId() {
         return id;
     }
@@ -72,8 +75,6 @@ public abstract class ATrainingBundleSpecification {
         this.price = price;
     }
 
-    public abstract ATrainingBundle createTrainingBundle();
-
     public Boolean getDisabled() {
         return isDisabled;
     }
@@ -96,6 +97,11 @@ public abstract class ATrainingBundleSpecification {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = new Date();
     }
 
     @Override

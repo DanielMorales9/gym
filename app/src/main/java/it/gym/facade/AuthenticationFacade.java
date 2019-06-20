@@ -75,14 +75,12 @@ public class AuthenticationFacade {
         if (userService.existsByEmail(user.getEmail()))
             throw new UserRegistrationException(String.format("L'utente con l'email %s esiste già.",user.getEmail()));
         else
-            this.userService.save(user);
+            user = this.userService.save(user);
 
         VerificationToken vk = tokenService.createOrChangeVerificationToken(user);
 
         try {
-
             this.sendRegistrationConfirmationEmail(vk);
-
         } catch (MailException e) {
 
             this.rollbackRegistration(vk);

@@ -1,12 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {
-    BundleHelperService,
-    BundlePayHelperService,
-    BundlesNotDisabledService,
-    QueryableDatasource,
-    UserService
-} from '../../../shared/services';
+import {BundlePayHelperService, QueryableDatasource} from '../../../shared/services';
 import {Bundle, Sale} from '../../../shared/model';
 import {AppService, SnackBarService} from '../../../services';
 import {SaleHelperService} from '../../../shared/services/sale-helper.service';
@@ -27,7 +21,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     id: number;
     query: string;
 
-    adminEmail: string;
+    gymId: number;
     sale: Sale;
 
     private pageSize = 10;
@@ -42,7 +36,6 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
         this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
-        this.adminEmail = this.app.user.email;
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
@@ -78,7 +71,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     private createSale() {
-        this.saleHelper.createSale(this.adminEmail, this.id).subscribe((res: Sale) => {
+        this.saleHelper.createSale(this.id).subscribe((res: Sale) => {
             SaleHelperService.unwrapLines(res);
             this.sale = res;
         });

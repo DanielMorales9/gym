@@ -2,12 +2,14 @@ package it.gym.model;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
 @Entity
 @Table(name = "sales_lines")
 @Data
+@EqualsAndHashCode
 public class SalesLineItem {
     @Id
     @SequenceGenerator(name = "sales_lines_line_id_seq",
@@ -30,28 +32,28 @@ public class SalesLineItem {
         this.id = id;
     }
 
-    Double getSubTotal() {
-        return this.bundleSpecification.getPrice();
-    }
-
     public ATrainingBundleSpecification getBundleSpecification() {
         return bundleSpecification;
     }
 
-    public void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
+    private void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
         this.bundleSpecification = bundleSpecification;
     }
 
-    void addBundles(ATrainingBundleSpecification bundleSpec) {
-        this.setBundleSpecification(bundleSpec);
-        this.trainingBundle = this.bundleSpecification.createTrainingBundle();
-    }
-
-    public ATrainingBundle getTrainingBundle() {
+    ATrainingBundle getTrainingBundle() {
         return trainingBundle;
     }
 
     public void setTrainingBundle(ATrainingBundle trainingBundle) {
         this.trainingBundle = trainingBundle;
+    }
+
+    Double getSubTotal() {
+        return this.bundleSpecification.getPrice();
+    }
+
+    void addBundles(ATrainingBundleSpecification bundleSpec) {
+        this.setBundleSpecification(bundleSpec);
+        this.trainingBundle = this.bundleSpecification.createTrainingBundle();
     }
 }

@@ -45,6 +45,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @Column(name = "is_expired")
     private Boolean isExpired;
 
+    @Column(name = "createdat", nullable = false, updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
     @ManyToOne
     private ATrainingBundleSpecification bundleSpec;
 
@@ -54,7 +58,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
-
     public abstract ATrainingSession createSession(Customer c, Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
 
@@ -86,7 +89,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         return bundleSpec;
     }
 
-    public void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
+    void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
         this.bundleSpec = bundleSpec;
     }
 
@@ -102,7 +105,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         return sessions;
     }
 
-    public void setSessions(List<ATrainingSession> sessions) {
+    void setSessions(List<ATrainingSession> sessions) {
         this.sessions = sessions;
     }
 
@@ -114,4 +117,16 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         this.name = name;
     }
 
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = new Date();
+    }
 }

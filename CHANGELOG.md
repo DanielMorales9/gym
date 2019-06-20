@@ -6,18 +6,23 @@
 - **FR**: expose error path
 - **FR**: Favicon.ico is not correctly loaded
 - **Chapter II** More Features
-    - Recurring events in gym calendar
+    - Recurring events in Gym Calendar
     - Schedule Training Assignment
     - Courses Bundles
-    - Replace Reservations with TrainingSessions
-    - Replace Admin with Gym in Sale
-    - Check multiplicity of CurrentTrainingBundle
-    - Divide TimeOff into Holidays and (Employee) TimeOff 
+    - Investigate better solution for Reservation
+    - Separate TimeOff into Holidays and (Employee) TimeOff 
+    
 - **Chapter III** Gym-relative calls
     - Add gymId as PathVariable to API calls
     - Set Gym during user registration (re-visit registration logic)   
 
 # DONE
+- **Chapter II** More Features
+    - Replace Admin with Gym in Sale
+    - Added CreateAt to ATrainingBundle
+    - Added CreateAt to Gym
+    - Added CreateAt to Sale
+
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests
    - Created Mail Service w tests

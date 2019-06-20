@@ -16,7 +16,6 @@ import java.util.List;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
-        include = JsonTypeInfo.As.PROPERTY,
         property = "type",
         visible = true)
 @JsonSubTypes({
@@ -62,14 +61,14 @@ public abstract class AUser implements DefaultRoles {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    private boolean isVerified;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "users_roles",
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}),
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles;
-
-    boolean isVerified;
 
     @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "gym_id")

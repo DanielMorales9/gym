@@ -1,6 +1,7 @@
 package it.gym.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.stream.Collectors;
 @Entity
 @Table(name = "sales")
 @Data
+@EqualsAndHashCode
 public class Sale {
 
     @Id
@@ -20,28 +22,27 @@ public class Sale {
     @Column(name="sale_id")
     private Long id;
 
-
-    private Double totalPrice;
-    private Double amountPayed;
-
+    @Column(name = "createdat", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date payedDate;
 
+    private Double totalPrice;
+    private Double amountPayed;
+
     private boolean isPayed;
+    private boolean isCompleted;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<SalesLineItem> salesLineItems;
 
     @ManyToOne
-    private Admin admin;
+    private Gym gym;
 
     @ManyToOne
     private Customer customer;
-
-    private boolean isCompleted;
 
     public Sale() {
         salesLineItems = new ArrayList<>();
@@ -71,11 +72,6 @@ public class Sale {
         this.createdAt = createdAt;
     }
 
-    public Double getTotalPrice() {
-        this.totalPrice = salesLineItems.stream().map(SalesLineItem::getSubTotal).reduce(Double::sum).orElse(0.);
-        return this.totalPrice;
-    }
-
     public void setTotalPrice(Double totalPrice) {
         this.totalPrice = totalPrice;
     }
@@ -86,14 +82,6 @@ public class Sale {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public void setAdmin(Admin admin) {
-        this.admin = admin;
-    }
-
-    public Admin getAdmin() {
-        return admin;
     }
 
     public Customer getCustomer() {
@@ -110,6 +98,35 @@ public class Sale {
 
     public void setPayedDate(Date payedDate) {
         this.payedDate = payedDate;
+    }
+
+    public boolean isCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(boolean completed) {
+        isCompleted = completed;
+    }
+
+    public Double getAmountPayed() {
+        return amountPayed;
+    }
+
+    public void setAmountPayed(Double amountPayed) {
+        this.amountPayed = amountPayed;
+    }
+
+    public Gym getGym() {
+        return gym;
+    }
+
+    public void setGym(Gym gym) {
+        this.gym = gym;
+    }
+
+    public Double getTotalPrice() {
+        this.totalPrice = salesLineItems.stream().map(SalesLineItem::getSubTotal).reduce(Double::sum).orElse(0.);
+        return this.totalPrice;
     }
 
     public SalesLineItem addSalesLineItem(ATrainingBundleSpecification bundleSpec) {
@@ -134,14 +151,6 @@ public class Sale {
         this.isCompleted = true;
         this.getTotalPrice();
         return true;
-    }
-
-    public boolean isCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(boolean completed) {
-        isCompleted = completed;
     }
 
     public boolean isDeletable() {
@@ -172,11 +181,8 @@ public class Sale {
         return this.getCustomer().getCurrentTrainingBundles().removeAll(trainingBundles);
     }
 
-    public Double getAmountPayed() {
-        return amountPayed;
-    }
-
-    public void setAmountPayed(Double amountPayed) {
-        this.amountPayed = amountPayed;
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = new Date();
     }
 }

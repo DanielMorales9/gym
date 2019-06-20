@@ -1,6 +1,6 @@
-import { HttpClient } from '@angular/common/http'
-import { Injectable } from '@angular/core'
-import {Observable} from "rxjs";
+import {HttpClient} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class SalesService {
@@ -15,27 +15,27 @@ export class SalesService {
         return this.http.get(`/sales?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    createSale(email: string, id: number) : Observable<Object> {
-        return this.http.get(`sales/createSale/${email}/${id}`);
+    createSale(gymId: number, customerId: number): Observable<Object> {
+        return this.http.get(`sales/createSale/${gymId}/${customerId}`);
     }
 
-    delete(id: number) : Observable<Object> {
+    delete(id: number): Observable<Object> {
         return this.http.delete(`/sales/${id}`);
     }
 
-    addSalesLineItem(saleId: number, bundleId: number) : Observable<Object> {
+    addSalesLineItem(saleId: number, bundleId: number): Observable<Object> {
         return this.http.get(`/sales/addSalesLineItem/${saleId}/${bundleId}`);
     }
 
-    deleteSalesLineItem(saleId: number, salesLineItemId: number) : Observable<Object> {
+    deleteSalesLineItem(saleId: number, salesLineItemId: number): Observable<Object> {
         return this.http.delete(`/sales/deleteSalesLineItem/${saleId}/${salesLineItemId}`);
     }
 
-    confirmSale(id: number) : Observable<Object> {
+    confirmSale(id: number): Observable<Object> {
         return this.http.get(`/sales/confirmSale/${id}`);
     }
 
-    findById(saleId: number) : Observable<Object> {
+    findById(saleId: number): Observable<Object> {
         return this.http.get(`/sales/${saleId}`);
     }
 
@@ -60,6 +60,7 @@ export class SalesService {
     }
 
     searchByLastNameAndDate(lastName: string , date: any, page: number, size: number) {
-        return this.http.get(`/sales/searchByLastNameAndDate?lastName=${lastName}&date=${date}&page=${page}&size=${size}&sort=createdAt,asc`);
+        const endpoint = `/sales/searchByLastNameAndDate?lastName=${lastName}&date=${date}&page=${page}&size=${size}&sort=createdAt,asc`;
+        return this.http.get(endpoint);
     }
 }

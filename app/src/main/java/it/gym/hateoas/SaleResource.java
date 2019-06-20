@@ -1,17 +1,19 @@
 package it.gym.hateoas;
 
 import it.gym.model.Sale;
+import lombok.Data;
 import org.springframework.hateoas.Resources;
 
+@Data
 public class SaleResource extends ResourceModel<Sale> {
 
     private Resources<SalesLineItemResource> salesLineItems;
 
     private CustomerResource customer;
-    private AdminResource admin;
 
+    private GymResource gym;
 
-    public SaleResource(Sale model) {
+    SaleResource(Sale model) {
         super(model);
     }
 
@@ -19,7 +21,7 @@ public class SaleResource extends ResourceModel<Sale> {
         return salesLineItems;
     }
 
-    public void setSalesLineItems(Resources<SalesLineItemResource> salesLineItems) {
+    void setSalesLineItems(Resources<SalesLineItemResource> salesLineItems) {
         this.salesLineItems = salesLineItems;
     }
 
@@ -31,11 +33,11 @@ public class SaleResource extends ResourceModel<Sale> {
         return customer;
     }
 
-    public AdminResource getAdmin() {
-        return admin;
+    public GymResource getGym() {
+        return gym;
     }
 
-    public void setAdmin(AdminResource admin) {
-        this.admin = admin;
+    public void setGym(GymResource gymResource) {
+        this.gym = gymResource;
     }
 }

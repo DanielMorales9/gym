@@ -7,11 +7,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.time.DayOfWeek;
 import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -22,11 +24,17 @@ public class SaleFacadeTest {
 
     @MockBean
     private SaleService saleService;
+
     @MockBean
     private UserService userService;
 
     @MockBean
+    private GymService gymService;
+
+    @MockBean
+    @Qualifier("trainingBundleSpecificationService")
     private TrainingBundleSpecificationService bundleSpecService;
+
     @MockBean
     private SalesLineItemService salesLineItemService;
 
@@ -50,17 +58,17 @@ public class SaleFacadeTest {
             return sale;
         }).when(saleService).save(any());
         Mockito.doReturn(createMockCustomer()).when(userService).findById(2L);
-        Mockito.doReturn(createMockAdmin()).when(userService).findByEmail("admin@admin.com");
-        Sale sale = saleFacade.createSale("admin@admin.com", 2L);
+        Mockito.doReturn(createMockGym()).when(gymService).findById(1L);
+        Sale sale = saleFacade.createSale(1L, 2L);
         assertThat(sale.getId()).isEqualTo(1L);
         assertThat(sale.getCustomer()).isEqualTo(createMockCustomer());
         assertThat(sale.getAmountPayed()).isEqualTo(0.);
-        assertThat(sale.getAdmin()).isEqualTo(createMockAdmin());
+        assertThat(sale.getGym()).isEqualTo(createMockGym());
     }
 
     @Test
     public void addSalesLineItem() {
-        Sale mockSale = createMockSale(createMockAdmin(), createMockCustomer());
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         ATrainingBundleSpecification mockBundleSpec = createMockBundleSpec();
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
@@ -72,7 +80,7 @@ public class SaleFacadeTest {
 
     @Test
     public void confirmSale() {
-        Sale mockSale = createMockSale(createMockAdmin(), createMockCustomer());
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         addMockSalesLineItem(mockSale, createMockBundleSpec());
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
@@ -83,7 +91,7 @@ public class SaleFacadeTest {
 
     @Test
     public void deleteSalesLineItem() {
-        Sale mockSale = createMockSale(createMockAdmin(), createMockCustomer());
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         SalesLineItem mockSalesLineItem = addMockSalesLineItem(mockSale, createMockBundleSpec());
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockSalesLineItem).when(salesLineItemService).findById(1L);
@@ -97,7 +105,7 @@ public class SaleFacadeTest {
     public void deleteSaleById() {
         Customer customer = createMockCustomer();
         customer.setCurrentTrainingBundles(Collections.emptyList());
-        Sale mockSale = createMockSale(createMockAdmin(), customer);
+        Sale mockSale = createMockSale(createMockGym(), customer);
         addMockSalesLineItem(mockSale, createMockBundleSpec());
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         saleFacade.deleteSaleById(1L);
@@ -106,7 +114,7 @@ public class SaleFacadeTest {
 
     @Test
     public void paySale() {
-        Sale mockSale = createMockSale(createMockAdmin(), createMockCustomer());
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         addMockSalesLineItem(mockSale, createMockBundleSpec());
         mockSale.setCompleted(true);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -117,7 +125,7 @@ public class SaleFacadeTest {
 
     @Test
     public void getTotalPrice() {
-        Sale mockSale = createMockSale(createMockAdmin(), createMockCustomer());
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         addMockSalesLineItem(mockSale, createMockBundleSpec());
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Sale sale = saleFacade.getTotalPriceBySaleId(1L);
@@ -126,7 +134,7 @@ public class SaleFacadeTest {
 
     @Test(expected = InvalidSaleException.class)
     public void confirmSaleThrowsExceptionWhenEmptySale() {
-        Sale mockSale = createMockSale(createMockAdmin(), createMockCustomer());
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         saleFacade.confirmSale(1L);
     }
@@ -147,25 +155,14 @@ public class SaleFacadeTest {
         return specs;
     }
 
-    private Sale createMockSale(AUser admin, AUser customer) {
+    private Sale createMockSale(Gym gym, AUser customer) {
         Sale sale = new Sale();
         sale.setId(1L);
         sale.setCustomer((Customer) customer);
-        sale.setAdmin((Admin) admin);
+        sale.setGym(gym);
         sale.setAmountPayed(0.0);
         sale.setCompleted(false);
         return sale;
-    }
-
-
-    private Admin createMockAdmin() {
-        Admin user = new Admin();
-        user.setId(1L);
-        user.setEmail("admin@admin.com");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        user.setVerified(true);
-        return user;
     }
 
     private Customer createMockCustomer() {
@@ -180,5 +177,31 @@ public class SaleFacadeTest {
 
     private SalesLineItem addMockSalesLineItem(Sale mockSale, ATrainingBundleSpecification specs) {
         return mockSale.addSalesLineItem(specs);
+    }
+
+    private Gym createMockGym() {
+        Gym gym = new Gym();
+        gym.setId(1L);
+        gym.setWeekStartsOn(DayOfWeek.MONDAY);
+        gym.setMondayOpen(true);
+        gym.setMondayStartHour(8);
+        gym.setMondayEndHour(22);
+        gym.setTuesdayStartHour(8);
+        gym.setTuesdayEndHour(22);
+        gym.setWednesdayStartHour(8);
+        gym.setWednesdayEndHour(22);
+        gym.setThursdayStartHour(8);
+        gym.setThursdayEndHour(22);
+        gym.setFridayStartHour(8);
+        gym.setFridayEndHour(22);
+        gym.setSaturdayStartHour(8);
+        gym.setSaturdayEndHour(13);
+        gym.setTuesdayOpen(true);
+        gym.setWednesdayOpen(true);
+        gym.setThursdayOpen(true);
+        gym.setFridayOpen(true);
+        gym.setSaturdayOpen(true);
+        gym.setSundayOpen(false);
+        return gym;
     }
 }
