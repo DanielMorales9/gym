@@ -1,6 +1,9 @@
 package it.gym.model;
 
 import it.gym.exception.NotAllowedException;
+import it.gym.service.TrainingSessionService;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -10,6 +13,8 @@ import java.util.Date;
 
 @Entity
 @DiscriminatorValue(value="P")
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class PersonalTrainingSession extends ATrainingSession {
 
     @Temporal(TemporalType.TIMESTAMP)
@@ -20,9 +25,7 @@ public class PersonalTrainingSession extends ATrainingSession {
 
     private Boolean isCompleted;
 
-    public PersonalTrainingSession() {
-
-    }
+    public PersonalTrainingSession() {}
 
     @Override
     public String getType() {
@@ -40,7 +43,7 @@ public class PersonalTrainingSession extends ATrainingSession {
         return startTime;
     }
 
-    void setStartTime(Date startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
@@ -65,7 +68,7 @@ public class PersonalTrainingSession extends ATrainingSession {
         return endTime;
     }
 
-    void setEndTime(Date endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -76,4 +79,5 @@ public class PersonalTrainingSession extends ATrainingSession {
     public void setCompleted(Boolean completed) {
         isCompleted = completed;
     }
+
 }

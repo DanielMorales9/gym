@@ -5,10 +5,10 @@
 *~
 .#*
 *#
-app/target/
-app/coverage
-app/node/
-app/node_modules/
+**/target/
+**/coverage
+**/node/
+**/node_modules/
 data/
 
 bin

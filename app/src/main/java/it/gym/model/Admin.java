@@ -1,11 +1,17 @@
 package it.gym.model;
 
-import javax.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import java.util.Arrays;
 import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="A")
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class Admin extends AUser {
 
     public Admin() {}
@@ -21,9 +27,9 @@ public class Admin extends AUser {
     @Override
     public List<Role> defaultRoles() {
         return Arrays.asList(
-                new Role((long) 1, "ADMIN"),
-                new Role((long) 2, "TRAINER"),
-                new Role((long) 3, "CUSTOMER"));
+                new Role(1L, "ADMIN"),
+                new Role(2L, "TRAINER"),
+                new Role(3L, "CUSTOMER"));
     }
 
     @Override

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SaleFacade, SnackBarService} from '../../../services';
-import {Sale, User} from '../../model';
+import {Sale} from '../../model';
 import {MatDialog} from '@angular/material';
 import {SalesService} from '../../services';
 import {SaleHelperService} from '../../services/sale-helper.service';
@@ -36,15 +36,9 @@ export class SaleDetailsComponent implements OnInit {
     }
 
     getSale (id) {
-        this.helper.findById(id)
-            .subscribe((res: Sale) => {
-                this.sale = res;
-                console.log(res);
-                if (!this.sale.customer) { this.sale.customer = new User(); }
-                if (!this.sale.salesLineItems) { this.sale.salesLineItems = []; }
-                this.helper.getCustomer(this.sale);
-                this.helper.getSaleLineItems(this.sale);
-            });
+        this.helper.findById(id).subscribe((res: Sale) => {
+            this.sale = SaleHelperService.extractSalesLineItem(res);
+        });
     }
 
     delete() {
@@ -52,7 +46,7 @@ export class SaleDetailsComponent implements OnInit {
             this.sale.customer.firstName + ' ' + this.sale.customer.lastName + '?');
         if (confirmed) {
             this.helper.delete(this.sale.id)
-                .subscribe( res => {
+                .subscribe(_ => {
                     this.snackbar.open('Vendita eliminata per il cliente ' + this.sale.customer.lastName + '!');
                     return this.router.navigateByUrl('/');
                 });

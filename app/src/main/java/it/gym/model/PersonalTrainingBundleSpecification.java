@@ -1,6 +1,8 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -9,19 +11,12 @@ import javax.persistence.Entity;
 @Entity
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
+@Data
+@EqualsAndHashCode(callSuper = true)
 public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecification {
 
     @Column(name="num_sessions", nullable = false)
     private Integer numSessions;
-
-    public PersonalTrainingBundleSpecification() {}
-
-    public PersonalTrainingBundleSpecification(Integer numSessions, String description, Double price) {
-        this.numSessions = numSessions;
-        this.description = description;
-        this.price = price;
-
-    }
 
     public Integer getNumSessions() {
         return numSessions;
@@ -48,8 +43,4 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
         return ptb;
     }
 
-    @Override
-    public String toString() {
-        return this.name;
-    }
 }

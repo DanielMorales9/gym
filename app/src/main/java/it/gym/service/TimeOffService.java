@@ -50,4 +50,12 @@ public class TimeOffService implements ICrudService<TimeOff, Long> {
             return this.timeOffRepository.findAllTimesOffById(id.get(), startDay, endDay);
         return this.timeOffRepository.findAllTimesOffByType(type.get(), startDay, endDay);
     }
+
+    public List<TimeOff> findTimesOffTypeInBetween(Date startTime, Date endTime) {
+        return timeOffRepository.findTimesOffTypeInBetween(startTime, endTime);
+    }
+
+    public List<TimeOff> findOverlappingTimesOffByType(Date startTime, Date endTime, String type) {
+        return timeOffRepository.findOverlappingTimesOffByType(startTime, endTime, type);
+    }
 }

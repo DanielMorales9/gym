@@ -69,10 +69,10 @@ export class VerificationComponent implements OnInit {
     }
 
     // TODO invalid token redirects somewhere
-    verifyPassword() {
+    confirmRegistration() {
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
-        this.authService.verifyPassword({email: this.user.email, password: this.user.password})
+        this.authService.confirmRegistration({email: this.user.email, password: this.user.password})
             .subscribe( (response: User) => {
                 this.appService.authenticate({username: response.email, password: this.user.password},
                     (isAuthenticated) => {

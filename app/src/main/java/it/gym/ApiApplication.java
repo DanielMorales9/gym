@@ -16,6 +16,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
+import org.springframework.data.rest.core.mapping.RepositoryDetectionStrategy;
+import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.hateoas.core.EvoInflectorRelProvider;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
@@ -47,7 +49,8 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 	private final org.slf4j.Logger logger = LoggerFactory.getLogger(ApiApplication.class);
 
-	@Autowired @Qualifier("userAuthService")
+	@Autowired
+	@Qualifier("userAuthService")
 	UserAuthService userDetailsService;
 
 
@@ -65,7 +68,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 	public String publicAPI() {
 		return "forward:/index.html";
 	}
-
 
 	@RequestMapping("/user")
 	@ResponseBody
@@ -227,4 +229,18 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 
 		}
 	}
+
+	@Bean
+	public RepositoryRestConfigurer repositoryRestConfigurer() {
+
+		return new RepositoryRestConfigurerAdapter() {
+
+			@Override
+			public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
+				config.setRepositoryDetectionStrategy(
+						RepositoryDetectionStrategy.RepositoryDetectionStrategies.ANNOTATED);
+			}
+		};
+	}
+
 }

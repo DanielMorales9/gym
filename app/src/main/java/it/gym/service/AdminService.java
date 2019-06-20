@@ -3,34 +3,33 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Admin;
 import it.gym.repository.AdminRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class AdminService implements ICrudService<Admin, Long> {
 
-    private final static String ADMIN = "Admin";
-    @Autowired
-    AdminRepository adminRepository;
+    private final AdminRepository adminRepository;
 
-    @Override
+    public AdminService(AdminRepository adminRepository) {
+        this.adminRepository = adminRepository;
+    }
+
     public Admin save(Admin var1) {
         return this.adminRepository.save(var1);
     }
 
-    @Override
     public Admin findById(Long var1) {
-        return this.adminRepository.findById(var1).orElseThrow(() -> new NotFoundException(ADMIN, var1));
+        return this.adminRepository.findById(var1).orElseThrow(() -> new NotFoundException("Admin", var1));
     }
 
-    @Override
     public void delete(Admin var1) {
         this.adminRepository.delete(var1);
     }
 
-    @Override
     public List<Admin> findAll() {
         return this.adminRepository.findAll();
     }

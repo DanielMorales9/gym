@@ -1,7 +1,7 @@
-import {TestBed} from "@angular/core/testing";
-import {HttpClientTestingModule, HttpTestingController} from "@angular/common/http/testing";
-import {BundlesService} from "./bundles.service";
-import {Bundle} from "../model";
+import {TestBed} from '@angular/core/testing';
+import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
+import {BundlesService} from './bundles.service';
+import {Bundle} from '../model';
 
 describe('BundlesService', () => {
 
@@ -24,78 +24,78 @@ describe('BundlesService', () => {
         backend.verify();
     });
 
-    it("testing #get", done => {
+    it('testing #get', done => {
         bundleService.get(1, 5).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
-        let req = backend.expectOne({
-            url: "/bundleSpecs?page=1&size=5&sort=name",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/bundleSpecs?page=1&size=5&sort=name',
+            method: 'GET'
         });
         req.flush([]);
     });
 
-    it("testing #postBundle", done => {
-        let bundle = new Bundle();
+    it('testing #postBundle', done => {
+        const bundle = new Bundle();
         bundleService.post(bundle).subscribe(res => {
-            let expected = new Bundle();
+            const expected = new Bundle();
             expected.id = 1;
             expect(res).toEqual(expected);
             done();
         });
-        let req = backend.expectOne({
-            url: "/bundleSpecs",
-            method: "POST"
+        const req = backend.expectOne({
+            url: '/bundleSpecs',
+            method: 'POST'
         });
-        let actual = new Bundle();
+        const actual = new Bundle();
         actual.id = 1;
         req.flush(actual);
     });
 
-    it("testing #put", done => {
-        let bundle = new Bundle();
+    it('testing #put', done => {
+        const bundle = new Bundle();
         bundle.id = 1;
-        bundleService.put(bundle).subscribe(res => {
-            let expected = new Bundle();
+        bundleService.patch(bundle).subscribe(res => {
+            const expected = new Bundle();
             expected.id = 1;
-            expected.description = "now";
+            expected.description = 'now';
             expect(res).toEqual(expected);
             done();
         });
-        let req = backend.expectOne({
-            url: "/bundleSpecs/1",
-            method: "PUT"
+        const req = backend.expectOne({
+            url: '/bundleSpecs/1',
+            method: 'PATCH'
         });
-        bundle.description = "now";
+        bundle.description = 'now';
         req.flush(bundle);
     });
 
-    it("testing #search", done => {
-        let bundle = new Bundle();
+    it('testing #search', done => {
+        const bundle = new Bundle();
         bundle.id = 1;
-        bundle.description = "now";
-        bundleService.search("query",1, 5).subscribe(res => {
+        bundle.description = 'now';
+        bundleService.search('query', 1, 5).subscribe(res => {
             expect(res).toEqual([bundle]);
             done();
         });
-        let req = backend.expectOne({
-            url: "/bundleSpecs/search?query=query&page=1&size=5&sort=createdAt,desc&sort=name,asc",
-            method: "GET"
+        const req = backend.expectOne({
+            url: '/bundleSpecs/search?query=query&page=1&size=5&sort=createdAt,desc&sort=name,asc',
+            method: 'GET'
         });
         req.flush([bundle]);
     });
 
-    it("testing #getSessions", done => {
-        bundleService.getSessions("endpoint").subscribe(res => {
+    it('testing #getSessions', done => {
+        bundleService.getSessions('endpoint').subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
-        let req = backend.expectOne({
-            url: "endpoint",
-            method: "GET"
+        const req = backend.expectOne({
+            url: 'endpoint',
+            method: 'GET'
         });
         req.flush([]);
     });
-    
+
 });

@@ -1,5 +1,7 @@
 package it.gym.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.time.DayOfWeek;
 import java.util.Calendar;
@@ -7,6 +9,7 @@ import java.util.Date;
 import java.util.TimeZone;
 
 @Entity
+@Data
 public class Gym {
 
     private static final String LOCALE = "Europe/Rome";
@@ -45,8 +48,7 @@ public class Gym {
     private DayOfWeek weekStartsOn;
 
     public boolean isValidDate(Date start, Date end) {
-        return this.isNotPast(start) &&
-                this.isGymOpenOnDate(start) && this.isGymOpenOnDate(end) &&
+        return this.isGymOpenOnDate(start) && this.isGymOpenOnDate(end) &&
                 this.isInGymHours(start, end);
     }
 
@@ -137,10 +139,6 @@ public class Gym {
                 throw new IllegalStateException("Unexpected value: " + day);
         }
         return open;
-    }
-
-    private boolean isNotPast(Date date) {
-        return !date.before(new Date());
     }
 
     public Integer getMondayStartHour() {

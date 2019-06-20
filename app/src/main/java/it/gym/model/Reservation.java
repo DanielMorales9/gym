@@ -1,10 +1,13 @@
 package it.gym.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "reservations")
+@Data
 public class Reservation {
 
     @Id
@@ -27,20 +30,6 @@ public class Reservation {
     private ATrainingSession session;
 
     private Boolean isConfirmed;
-
-    public Reservation() {}
-
-    Reservation(PersonalTrainingSession session,
-                Customer c,
-                Date startTime,
-                Date endTime,
-                boolean isConfirmed) {
-        this.session = session;
-        this.user = c;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.isConfirmed = isConfirmed;
-    }
 
     public ATrainingSession getSession() {
         return session;
@@ -72,12 +61,6 @@ public class Reservation {
 
     public void setConfirmed(Boolean confirmed) {
         isConfirmed = confirmed;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        Reservation u = (Reservation) o;
-        return u.getId().equals(this.getId());
     }
 
     public Date getEndTime() {

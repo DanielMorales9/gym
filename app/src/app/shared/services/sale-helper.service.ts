@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import {SaleLineItem, Sale, Bundle, User} from '../model';
+import {Injectable} from '@angular/core';
+import {Sale} from '../model';
 import {SalesService} from './sales.service';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
@@ -19,29 +19,13 @@ export class SaleHelperService extends HelperService<Sale> {
         }
     }
 
-    getSaleLineItems(sale: Sale) {
-        let endpoint;
-        if (sale['_links']) {
-            endpoint = sale['_links']['salesLineItems'].href;
-        } else {
-            endpoint = `/sales/${sale.id}/salesLineItems`;
-        }
+    static extractSalesLineItem(sale: Sale) {
         if (!sale.salesLineItems) {
             sale.salesLineItems = [];
+        } else {
+            sale.salesLineItems = sale.salesLineItems['_embedded']['salesLineItemResources'];
         }
-        this.service.getEndpoint(endpoint).subscribe(res => {
-            res['_embedded'].salesLineItems
-                .map(res1 => {
-                    const end = res1['_links']['bundleSpecification'].href;
-                    const line = new SaleLineItem();
-                    line.id = res1.id;
-                    this.service.getEndpoint(end)
-                        .subscribe( res2 => {
-                            line.bundleSpecification = res2 as Bundle;
-                            sale.salesLineItems.push(line as SaleLineItem);
-                        });
-                });
-        });
+        return sale;
     }
 
     createSale(email: string, id: number) {
@@ -50,18 +34,6 @@ export class SaleHelperService extends HelperService<Sale> {
 
     delete(id: number) {
         return this.service.delete(id);
-    }
-
-    getCustomer(sale: Sale) {
-        let endpoint;
-        if (sale['_links']) {
-            endpoint = sale['_links'].customer.href;
-        } else {
-            endpoint = `/sales/${sale.id}/customer`;
-        }
-        this.service.getEndpoint(endpoint).subscribe( (res: User) => {
-                sale.customer = res;
-            });
     }
 
     addSalesLineItem(saleId: number, bundleId: any) {
@@ -117,12 +89,6 @@ export class SaleHelperService extends HelperService<Sale> {
 
     preProcessResources(resources: Sale[]): Sale[] {
         resources = this.extract(resources);
-
-        resources.map(sale => {
-            if (!sale.customer) { sale.customer = new User(); }
-            this.getCustomer(sale);
-            return sale;
-        });
         return resources;
     }
 

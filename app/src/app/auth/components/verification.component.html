@@ -9,7 +9,7 @@
                     <button type="submit" class="btn btn-lg btn-primary btn-block">Invia token</button>
                 </form>
                 <form [formGroup]="form" role="form"
-                      novalidate (ngSubmit)="form.valid && verifyPassword()"
+                      (ngSubmit)="form.valid && confirmRegistration()" novalidate
                       *ngIf="!toResendToken">
                     <div>
                         <h4>Benvenuto {{user.firstName}} {{user.lastName}}</h4>

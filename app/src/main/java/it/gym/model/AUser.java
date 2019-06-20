@@ -3,13 +3,14 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,13 +28,15 @@ import java.util.List;
 @Table(name="users")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="user_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Data
+@EqualsAndHashCode
 public abstract class AUser implements DefaultRoles {
 
     @Id
     @SequenceGenerator(name = "users_user_id_seq",
             sequenceName = "users_user_id_seq", allocationSize = 1)
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "users_user_id_seq")
-    @Column(name="user_id")
+    @Column(name = "user_id")
     private Long id;
 
     @Column(name = "email", nullable = false, unique = true)
@@ -45,18 +48,14 @@ public abstract class AUser implements DefaultRoles {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected String password;
 
-    @Column(name = "confirmPassword")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private String confirmPassword;
-
     @Column(name = "firstname", nullable = false)
     @NotNull
-    @Size(min=2, max=30)
+    @Size(min = 2, max = 30)
     protected String firstName;
 
     @Column(name = "lastName", nullable = false)
     @NotNull
-    @Size(min=2, max=30)
+    @Size(min = 2, max = 30)
     protected String lastName;
 
     @Column(name = "createdat", nullable = false, updatable = false)
@@ -64,15 +63,15 @@ public abstract class AUser implements DefaultRoles {
     private Date createdAt;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name="users_roles",
+    @JoinTable(name = "users_roles",
             uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "role_id"}),
-            joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
-            inverseJoinColumns=@JoinColumn(name="role_id", referencedColumnName="role_id"))
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles;
 
     boolean isVerified;
 
-    @OneToOne(cascade=CascadeType.MERGE)
+    @OneToOne(cascade = CascadeType.MERGE)
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
@@ -147,13 +146,6 @@ public abstract class AUser implements DefaultRoles {
         this.roles = roles;
     }
 
-    public boolean addRole(Role role) {
-        if (this.roles == null) {
-            this.roles = new ArrayList<>();
-        }
-        return this.roles.add(role);
-    }
-
     @Override
     public String toString() {
         return "User: " +
@@ -172,17 +164,4 @@ public abstract class AUser implements DefaultRoles {
         isVerified = verified;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        AUser u = (AUser) o;
-        return u.getId().equals(this.getId());
-    }
-
-    public String getConfirmPassword() {
-        return confirmPassword;
-    }
-
-    public void setConfirmPassword(String confirmPassword) {
-        this.confirmPassword = confirmPassword;
-    }
 }

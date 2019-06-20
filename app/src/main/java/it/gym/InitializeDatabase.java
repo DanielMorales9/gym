@@ -7,8 +7,6 @@ import it.gym.repository.AdminRepository;
 import it.gym.repository.GymRepository;
 import it.gym.repository.RoleRepository;
 import it.gym.utility.Constants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,13 +14,11 @@ import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 
 @Component
 public class InitializeDatabase implements CommandLineRunner {
 
-    private final Logger logger = LoggerFactory.getLogger(InitializeDatabase.class);
     private final RoleRepository roleRepository;
     private final AdminRepository adminRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -41,10 +37,10 @@ public class InitializeDatabase implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // TODO change roles to enum
-        Arrays.asList(Constants.ROLE_NAMES)
-                .forEach(
-                        a -> {
+        Arrays.asList(Constants.ROLE_NAME_ADMIN,
+                Constants.ROLE_NAME_TRAINER,
+                Constants.ROLE_NAME_CUSTOMER)
+                .forEach(a -> {
                             Role role = new Role();
                             role.setName(a);
                             roleRepository.save(role);
@@ -52,7 +48,11 @@ public class InitializeDatabase implements CommandLineRunner {
 
         String email = "goodfellas.personaltraining@gmail.com";
         if (adminRepository.findByEmail(email) == null) {
-            List<Role> roles = this.roleRepository.findAllById(Arrays.asList(Constants.ROLES));
+            List<Role> roles = this.roleRepository.findAllById(
+                    Arrays.asList(
+                            Constants.ROLE_ID_ADMIN,
+                            Constants.ROLE_ID_TRAINER,
+                            Constants.ROLE_ID_CUSTOMER));
             String password = bCryptPasswordEncoder.encode("password");
             Admin admin = new Admin("Admin", "Admin", email, password, true);
             Gym gym = initGym();

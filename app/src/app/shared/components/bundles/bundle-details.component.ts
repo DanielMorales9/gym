@@ -45,7 +45,9 @@ export class BundleDetailsComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(res => {
-            this.service.put(res).subscribe((v: Bundle) => this.bundle = v);
+            if (res) {
+                this.service.patch(res).subscribe((v: Bundle) => this.bundle = v);
+            }
         });
     }
 
@@ -58,7 +60,7 @@ export class BundleDetailsComponent implements OnInit {
 
     toggleDisabled() {
         this.bundle.disabled = !this.bundle.disabled;
-        this.service.put(this.bundle);
+        this.service.patch(this.bundle);
     }
 
     private getBundle(id: number) {

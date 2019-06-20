@@ -4,14 +4,14 @@ import it.gym.model.ATrainingBundleSpecification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
+import org.springframework.stereotype.Repository;
 
-@RepositoryRestResource(path = "/bundleSpecs", collectionResourceRel = "bundleSpecs")
+@Repository
 public interface TrainingBundleSpecificationRepository extends JpaRepository<ATrainingBundleSpecification, Long> {
 
     Page<ATrainingBundleSpecification> findByNameContains(String name, Pageable pageable);
 
-    Page<ATrainingBundleSpecification> findByNameContainsAndIsDisabled(String name, Boolean IsDisabled, Pageable pageable);
+    Page<ATrainingBundleSpecification> findByNameContainsAndIsDisabled(String name, Boolean isDisabled, Pageable pageable);
 
-    Page<ATrainingBundleSpecification>  findByIsDisabled(Boolean IsDisabled, Pageable pageable);
+    Page<ATrainingBundleSpecification> findByIsDisabled(Boolean isDisabled, Pageable pageable);
 }

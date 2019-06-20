@@ -1,10 +1,13 @@
 package it.gym.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name="times_off")
+@Data
 public class TimeOff {
 
     @Id
@@ -94,12 +97,10 @@ public class TimeOff {
 
     @Override
     public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(" Tipo :" + this.type );
-        builder.append(" Nome :" + this.name);
-        builder.append(" User :" + this.user.toString());
-        builder.append(" Data :" + this.startTime.toString());
 
-        return builder.toString();
+        return " Tipo :" + this.type +
+                " Nome :" + this.name +
+                " User :" + this.user.toString() +
+                " Data :" + this.startTime.toString();
     }
 }
