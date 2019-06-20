@@ -3,12 +3,11 @@ package it.gym.controller;
 import it.gym.facade.TimeOffFacade;
 import it.gym.hateoas.TimeOffAssembler;
 import it.gym.hateoas.TimeOffResource;
-import it.gym.model.*;
+import it.gym.model.TimeOff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -124,7 +123,7 @@ public class TimeOffController {
                                            @RequestParam(value = "type", defaultValue = "admin") String type,
                                            Principal principal) {
         String email = principal.getName();
-        TimeOff timeOff = facade.findById(timesId, email, type);
+        TimeOff timeOff = facade.delete(timesId, email, type);
         return ResponseEntity.ok(new TimeOffAssembler().toResource(timeOff));
     }
 

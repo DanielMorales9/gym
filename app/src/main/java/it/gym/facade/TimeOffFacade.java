@@ -6,7 +6,6 @@ import it.gym.model.AUser;
 import it.gym.model.Admin;
 import it.gym.model.Reservation;
 import it.gym.model.TimeOff;
-import it.gym.repository.TimeOffRepository;
 import it.gym.service.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,12 +26,11 @@ public class TimeOffFacade {
 
     private static final String TIME_OFF_ALREADY_BOOKED_EX = "Hai già effettuato una chiusura";
     private static final String CANNOT_TAKE_TIME_OFF_EX = "Non puoi prendere un giorno di ferie";
-    private static final String ADMIN_TYPE = "admin";
-    private static final String TRAINER_TYPE = "trainer";
+    private static final String ADMIN = "admin";
+    private static final String TRAINER = "trainer";
     private static final String COUNTING_NUMBER_OF_RESERVATIONS_LOG = "Counting number of reservations";
     private static final String CHECKING_TRAINERS_AVAILABLE_LOG = "Checking whether there are trainers available";
     private static final String NOT_AUTHORIZED_EX = "Non è possibile chiudere la palestra con delle prenotazioni attive.";
-    private static final String ACTIVE_RESERVATION_EX_MESSAGE = "Ci sono delle prenotazioni attive.";
     private static final String INVALID_HOUR_TIMEOFF_EX = "Non è possibile prendere le ferie in questo orario.";
     private static final String DELETE_MAIL_MESSAGE =
             "Ci dispiace informarla che per questioni tecniche le sue " +
@@ -43,100 +41,49 @@ public class TimeOffFacade {
     @Autowired private GymService gymService;
     @Autowired private ReservationService reservationService;
     @Autowired private TrainerService trainerService;
-    @Autowired private TimeOffRepository repository;
     @Autowired private UserService userService;
     @Autowired private TimeOffService service;
     @Autowired private MailService mailService;
 
     public void isAvailable(Long gymId, Date startTime, Date endTime, String type) {
+
         gymService.isValidInterval(startTime, endTime);
 
         gymService.isWithinWorkingHours(gymId, startTime, endTime);
 
         switch (type) {
-            case ADMIN_TYPE:
+            case ADMIN:
+
                 logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
-                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    throw new InvalidTimesOff(NOT_AUTHORIZED_EX);
-                if (checkingOtherAdminTimesOff(startTime, endTime))
-                    throw new InvalidTimesOff(TIME_OFF_ALREADY_BOOKED_EX);
+                isReservationWithinInterval(startTime, endTime);
+                isDoublyBooked(startTime, endTime, ADMIN);
                 break;
-            case TRAINER_TYPE:
+
+            case TRAINER:
+
                 logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
-                if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    throw new InvalidTimesOff(INVALID_HOUR_TIMEOFF_EX);
+                checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime);
                 break;
+
             default:
                 throw new InvalidTimesOff(CANNOT_TAKE_TIME_OFF_EX);
         }
     }
 
-    private boolean checkingAvailabilityAdminTimeOff(Date startTime, Date endTime) {
-        Integer nReservations = this.reservationService.countByInterval(startTime, endTime);
-        return nReservations > 0;
-    }
-
-
-    private boolean checkingAvailabilityTrainerTimeOff(Optional<Long> id,
-                                                       Date startTime,
-                                                       Date endTime) {
-        logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
-        // TODO non funziona, ricontrollare
-        Long numTrainers = this.trainerService.countAllTrainer();
-        List<Reservation> reservations = this.reservationService.findByInterval(startTime, endTime);
-        reservations.sort(Comparator.comparing(Reservation::getStartTime));
-        logger.info(reservations.toString());
-
-        Stream<TimeOff> streamTimesOff = this.repository
-                .findOverlappingTimesOffByType(startTime, endTime, TRAINER_TYPE).parallelStream();
-        if (id.isPresent()) {
-            Long timeId = id.get();
-            streamTimesOff = streamTimesOff.filter(timeOff -> !timeOff.getId().equals(timeId));
-        }
-        List<TimeOff> timesOff = streamTimesOff
-                .sorted(Comparator.comparing(TimeOff::getStartTime))
-                .collect(Collectors.toList());
-        logger.info(timesOff.toString());
-
-        // TODO high computational complexity
-        long numAvailableTrainers;
-        for (Reservation r: reservations) {
-            numAvailableTrainers = numTrainers - 1;
-            for (TimeOff time: timesOff) {
-                if (time.getStartTime().compareTo(r.getStartTime()) <= 0
-                        && time.getEndTime().compareTo(r.getEndTime()) >= 0) {
-                    numAvailableTrainers--;
-                }
-                else break;
-            }
-            if (numAvailableTrainers <= 0)
-                return true;
-        }
-        return false;
-    }
-
-    private boolean checkingOtherAdminTimesOff(Date startTime, Date endTime) {
-        List<TimeOff> timesOff = this.repository.findOverlappingTimesOffByType(startTime, endTime, ADMIN_TYPE);
-        logger.info(timesOff.toString());
-        logger.info(String.valueOf(timesOff.size()));
-        return !timesOff.isEmpty();
-    }
-
     public void checkChange(Long gymId, Date startTime, Date endTime, String type) {
+
         gymService.isValidInterval(startTime, endTime);
 
         gymService.isWithinWorkingHours(gymId, startTime, endTime);
 
         switch (type) {
-            case ADMIN_TYPE:
+            case ADMIN:
                 logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
-                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    throw new InvalidTimesOff(NOT_AUTHORIZED_EX);
+                isReservationWithinInterval(startTime, endTime);
                 break;
-            case TRAINER_TYPE:
+            case TRAINER:
                 logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
-                if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    throw new InvalidTimesOff(INVALID_HOUR_TIMEOFF_EX);
+                checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime);
                 break;
             default:
                 throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
@@ -150,15 +97,12 @@ public class TimeOffFacade {
 
         AUser user = this.userService.findById(id);
         switch (type) {
-            case ADMIN_TYPE:
+            case ADMIN:
                 logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
-                if (checkingAvailabilityAdminTimeOff(startTime, endTime)) {
-                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
-                }
+                isReservationWithinInterval(startTime, endTime);
                 break;
-            case TRAINER_TYPE:
-                if (checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime))
-                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
+            case TRAINER:
+                checkingAvailabilityTrainerTimeOff(Optional.empty(), startTime, endTime);
                 break;
             default:
                 throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
@@ -166,7 +110,7 @@ public class TimeOffFacade {
 
         TimeOff timeOff = new TimeOff(name, type, user, startTime, endTime);
 
-        timeOff = this.repository.save(timeOff);
+        timeOff = this.service.save(timeOff);
 
         logger.info(timeOff.toString());
         return timeOff;
@@ -180,15 +124,13 @@ public class TimeOffFacade {
         TimeOff time = this.service.findById(id);
 
         switch (type) {
-            case ADMIN_TYPE:
+            case ADMIN:
                 logger.info(COUNTING_NUMBER_OF_RESERVATIONS_LOG);
-                if (checkingAvailabilityAdminTimeOff(startTime, endTime))
-                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
+                isReservationWithinInterval(startTime, endTime);
                 break;
-            case TRAINER_TYPE:
+            case TRAINER:
                 logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
-                if (checkingAvailabilityTrainerTimeOff(Optional.of(id), startTime, endTime))
-                    throw new InvalidTimesOff(ACTIVE_RESERVATION_EX_MESSAGE);
+                checkingAvailabilityTrainerTimeOff(Optional.of(id), startTime, endTime);
                 break;
             default:
                 throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
@@ -198,12 +140,12 @@ public class TimeOffFacade {
         time.setStartTime(startTime);
         time.setEndTime(endTime);
 
-        time = this.repository.save(time);
+        time = this.service.save(time);
         logger.info(time.toString());
         return time;
     }
 
-    public TimeOff findById(Long timesId, String email, String type) {
+    public TimeOff delete(Long timesId, String email, String type) {
         TimeOff time = this.service.findById(timesId);
 
         AUser user = this.userService.findByEmail(email);
@@ -211,7 +153,7 @@ public class TimeOffFacade {
         if (!time.getUser().equals(user) && !(user instanceof Admin))
             throw new UnAuthorizedException(NOT_AUTHORIZED_EX);
 
-        if (!type.equals(ADMIN_TYPE)) {
+        if (!type.equals(ADMIN)) {
             String recipientAddress = time.getUser().getEmail();
             this.mailService.sendSimpleMail(recipientAddress,"Ferie eliminate", DELETE_MAIL_MESSAGE);
         }
@@ -222,5 +164,51 @@ public class TimeOffFacade {
 
     public List<TimeOff> findByDateInterval(Optional<Long> id, Optional<String> type, Date startTime, Date endTime) {
         return this.service.findByStartTimeAndEndTimeAndIdAndType(id, type, startTime, endTime);
+    }
+
+    void checkingAvailabilityTrainerTimeOff(Optional<Long> id, Date startTime, Date endTime) {
+        logger.info(CHECKING_TRAINERS_AVAILABLE_LOG);
+        Long numTrainers = this.trainerService.countAllTrainer();
+        List<Reservation> reservations = this.reservationService.findByInterval(startTime, endTime);
+        reservations.sort(Comparator.comparing(Reservation::getStartTime));
+        logger.info(reservations.toString());
+
+        Stream<TimeOff> streamTimesOff = this.service
+                .findOverlappingTimesOffByType(startTime, endTime, TRAINER).parallelStream();
+        if (id.isPresent()) {
+            Long timeId = id.get();
+            streamTimesOff = streamTimesOff.filter(timeOff -> !timeOff.getId().equals(timeId));
+        }
+        List<TimeOff> timesOff = streamTimesOff
+                .sorted(Comparator.comparing(TimeOff::getStartTime))
+                .collect(Collectors.toList());
+        logger.info(timesOff.toString());
+
+        // TODO high computational complexity
+        long numAvailableTrainers;
+        for (Reservation r : reservations) {
+            numAvailableTrainers = numTrainers - 1;
+            for (TimeOff time : timesOff) {
+                if (time.getStartTime().compareTo(r.getStartTime()) <= 0
+                        && time.getEndTime().compareTo(r.getEndTime()) >= 0) {
+                    numAvailableTrainers--;
+                } else break;
+            }
+            if (numAvailableTrainers <= 0)
+                throw new InvalidTimesOff(INVALID_HOUR_TIMEOFF_EX);
+        }
+    }
+
+
+    void isReservationWithinInterval(Date startTime, Date endTime) {
+        Integer nReservations = this.reservationService.countByInterval(startTime, endTime);
+        if (nReservations > 0)
+            throw new InvalidTimesOff(NOT_AUTHORIZED_EX);
+    }
+
+    void isDoublyBooked(Date startTime, Date endTime, String type) {
+        List<TimeOff> timesOff = this.service.findOverlappingTimesOffByType(startTime, endTime, type);
+        if (!timesOff.isEmpty())
+            throw new InvalidTimesOff(TIME_OFF_ALREADY_BOOKED_EX);
     }
 }

@@ -1,8 +1,8 @@
 package it.gym.repository;
+
 import it.gym.model.TimeOff;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -30,7 +30,7 @@ public interface TimeOffRepository extends JpaRepository<TimeOff, Long> {
     List<TimeOff> findOverlappingTimesOff(@RequestParam("starttime") Date starttime,
                                           @RequestParam("endtime") Date endtime);
 
-    @Query("select t from TimeOff as t where not (t.startTime > :endtime or t.endTime < :starttime) and t.type = :type")
+    @Query("select t from TimeOff as t where not (t.startTime >= :endtime or t.endTime <= :starttime) and t.type = :type")
     List<TimeOff> findOverlappingTimesOffByType(@RequestParam("starttime") Date starttime,
                                                 @RequestParam("endtime") Date endtime,
                                                 @RequestParam("type") String type);
