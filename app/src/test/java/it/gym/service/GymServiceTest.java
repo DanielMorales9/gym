@@ -3,12 +3,8 @@ package it.gym.service;
 import it.gym.exception.GymNotFoundException;
 import it.gym.exception.InvalidReservationException;
 import it.gym.exception.InvalidTimeException;
-import it.gym.exception.NotFoundException;
-import it.gym.model.AUser;
-import it.gym.model.Customer;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
-import it.gym.repository.UserRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,10 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.DayOfWeek;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-import java.util.Optional;
+import java.util.*;
 
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -103,7 +96,7 @@ public class GymServiceTest {
 
     @Test
     public void isWithinWorkingHours() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 12, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
@@ -113,7 +106,7 @@ public class GymServiceTest {
 
     @Test(expected = InvalidTimeException.class)
     public void isNotWithinWorkingHours() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 13, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);

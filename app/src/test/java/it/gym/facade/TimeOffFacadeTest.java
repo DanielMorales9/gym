@@ -44,7 +44,7 @@ public class TimeOffFacadeTest {
 
     @Test(expected = InvalidTimesOff.class)
     public void isReservationWithinInterval() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 10, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
@@ -55,7 +55,7 @@ public class TimeOffFacadeTest {
 
     @Test(expected = InvalidTimesOff.class)
     public void isDoublyBooked() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 10, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
@@ -68,7 +68,7 @@ public class TimeOffFacadeTest {
 
     @Test
     public void findByDateInterval() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 10, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);

@@ -1,7 +1,6 @@
 package it.gym.facade;
 
 import it.gym.exception.InvalidReservationException;
-import it.gym.exception.InvalidTimeException;
 import it.gym.model.*;
 import it.gym.service.*;
 import org.apache.commons.lang3.time.DateUtils;
@@ -54,7 +53,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void isNotDoublyBooked() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 10, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
@@ -64,7 +63,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = InvalidReservationException.class)
     public void isDoublyBooked() {
-        Calendar cal = Calendar.getInstance(Locale.ITALIAN);
+        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 10, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
