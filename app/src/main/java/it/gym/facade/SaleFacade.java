@@ -92,8 +92,10 @@ public class SaleFacade {
     public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Integer quantity) {
         Sale sale = this.findById(saleId);
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
+        ATrainingBundle bundle = bundleSpec.createTrainingBundle();
+
         for (int i = 0; i < quantity; i++) {
-            sale.addSalesLineItem(bundleSpec);
+            sale.addSalesLineItem(bundle);
         }
         return this.save(sale);
     }

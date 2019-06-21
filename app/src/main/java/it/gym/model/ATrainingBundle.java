@@ -58,7 +58,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
-    public abstract ATrainingSession createSession(Customer c, Date startTime, Date endTime);
+
+    public abstract ATrainingSession createSession(Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
 
     public Double getPrice() {

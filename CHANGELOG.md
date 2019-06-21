@@ -8,13 +8,14 @@
 - **Chapter II** More Features
     - Recurring events in Gym Calendar
     - Schedule Training Assignment
-    - Courses Bundles
-    - Investigate better solution for Reservation
     - Separate TimeOff into Holidays and (Employee) TimeOff 
+    - Investigate better solutions for Reservation
+    - Add CourseBundleSpecs creation in UI
+    - Add CourseBundle, CourseBundleSpecs, CourseSession Tests
     
 - **Chapter III** Gym-relative calls
     - Add gymId as PathVariable to API calls
-    - Set Gym during user registration (re-visit registration logic)   
+    - Set Gym during user registration (re-visit registration logic)
 
 # DONE
 - **Chapter II** More Features
@@ -22,6 +23,7 @@
     - Added CreateAt to ATrainingBundle
     - Added CreateAt to Gym
     - Added CreateAt to Sale
+    - Added CourseBundle, CourseBundleSpecs, CourseSession
 
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

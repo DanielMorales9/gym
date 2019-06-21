@@ -272,8 +272,8 @@ public class ReservationFacadeTest {
 
     @Test
     public void complete() {
-        Date start = new Date();
-        Date end = new Date();
+        Date start = DateUtils.addHours(new Date(), -6);
+        Date end = DateUtils.addHours(start, 1);
         ATrainingBundle bundle = createBundle();
         PersonalTrainingSession session = createSession(start, end, bundle);
         bundle.addSession(session);

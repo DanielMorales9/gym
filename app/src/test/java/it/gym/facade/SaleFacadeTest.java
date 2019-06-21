@@ -176,7 +176,7 @@ public class SaleFacadeTest {
     }
 
     private SalesLineItem addMockSalesLineItem(Sale mockSale, ATrainingBundleSpecification specs) {
-        return mockSale.addSalesLineItem(specs);
+        return mockSale.addSalesLineItem(specs.createTrainingBundle());
     }
 
     private Gym createMockGym() {

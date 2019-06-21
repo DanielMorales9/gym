@@ -36,7 +36,7 @@ public class SalesLineItem {
         return bundleSpecification;
     }
 
-    private void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
+    void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
         this.bundleSpecification = bundleSpecification;
     }
 
@@ -44,16 +44,11 @@ public class SalesLineItem {
         return trainingBundle;
     }
 
-    public void setTrainingBundle(ATrainingBundle trainingBundle) {
+    void setTrainingBundle(ATrainingBundle trainingBundle) {
         this.trainingBundle = trainingBundle;
     }
 
     Double getSubTotal() {
         return this.bundleSpecification.getPrice();
-    }
-
-    void addBundles(ATrainingBundleSpecification bundleSpec) {
-        this.setBundleSpecification(bundleSpec);
-        this.trainingBundle = this.bundleSpecification.createTrainingBundle();
     }
 }

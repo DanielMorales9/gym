@@ -129,12 +129,13 @@ public class Sale {
         return this.totalPrice;
     }
 
-    public SalesLineItem addSalesLineItem(ATrainingBundleSpecification bundleSpec) {
+    public SalesLineItem addSalesLineItem(ATrainingBundle bundle) {
         if (this.salesLineItems == null) {
             this.salesLineItems = new ArrayList<>();
         }
         SalesLineItem line = new SalesLineItem();
-        line.addBundles(bundleSpec);
+        line.setBundleSpecification(bundle.getBundleSpec());
+        line.setTrainingBundle(bundle);
         this.salesLineItems.add(line);
         return line;
     }

@@ -1,6 +1,8 @@
 package it.gym.facade;
 
-import it.gym.exception.*;
+import it.gym.exception.InternalReservationException;
+import it.gym.exception.InvalidReservationException;
+import it.gym.exception.NotAllowedException;
 import it.gym.model.*;
 import it.gym.service.*;
 import org.apache.commons.lang3.time.DateUtils;
@@ -89,7 +91,7 @@ public class ReservationFacade {
         ATrainingBundle trainingBundle = currentTrainingBundles.get(0);
 
         logger.info("Booking training bundle.");
-        ATrainingSession session = trainingBundle.createSession(customer, startTime, endTime);
+        ATrainingSession session = trainingBundle.createSession(startTime, endTime);
         session = sessionService.save(session);
 
         Reservation res = createReservation(startTime, endTime, customer, session);

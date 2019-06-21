@@ -5,45 +5,59 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.ExposesResourceFor;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
 @Entity
-@DiscriminatorValue(value="P")
-@JsonTypeName("P")
+@DiscriminatorValue(value="C")
+@JsonTypeName("C")
 @ExposesResourceFor(value = ATrainingBundle.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PersonalTrainingBundle extends ATrainingBundle {
+public class CourseTrainingBundle extends ATrainingBundle {
 
-    @Column(name="numSessions")
-    private Integer numSessions;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
 
-    public Integer getNumSessions() {
-        return numSessions;
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
+
+    @Column(name="max_customers", nullable = false)
+    private Integer maxCustomers;
+
+    public Date getEndTime() {
+        return endTime;
     }
 
-    public void setNumSessions(Integer numSessions) {
-        this.numSessions = numSessions;
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
-    @Override
-    public int compareTo(ATrainingBundle aTrainingBundle) {
-        return this.getSessions().size() - aTrainingBundle.getSessions().size();
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    public Integer getMaxCustomers() {
+        return maxCustomers;
+    }
+
+    public void setMaxCustomers(Integer maxCustomers) {
+        this.maxCustomers = maxCustomers;
     }
 
     @Override
     public String getType() {
-        return "P";
+        return "C";
     }
 
     @Override
     public Boolean isExpired() {
-        Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        return this.numSessions.equals(size);
+        return new Date().after(endTime);
     }
 
     @Override
@@ -58,10 +72,10 @@ public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Override
     public ATrainingSession createSession(Date startTime, Date endTime) {
-        PersonalTrainingSession session = new PersonalTrainingSession();
-        session.setCompleted(false);
-        session.setEndTime(endTime);
+        CourseTrainingSession session = new CourseTrainingSession();
         session.setStartTime(startTime);
+        session.setEndTime(endTime);
+        session.setCompleted(false);
         session.setTrainingBundle(this);
         return session;
     }
@@ -75,4 +89,8 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         this.getSessions().add(session);
     }
 
+    @Override
+    public int compareTo(ATrainingBundle o) {
+        return  this.getSessions().size() - o.getSessions().size();
+    }
 }

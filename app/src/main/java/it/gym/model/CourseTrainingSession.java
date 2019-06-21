@@ -14,7 +14,7 @@ import java.util.Date;
 @DiscriminatorValue(value="P")
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class PersonalTrainingSession extends ATrainingSession {
+public class CourseTrainingSession extends ATrainingSession {
 
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
