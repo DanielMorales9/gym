@@ -28,7 +28,9 @@ export class BundleItemComponent {
         });
 
         dialogRef.afterClosed().subscribe(res => {
-            this.done.emit({type: 'put', bundle: res});
+            if (res) {
+                this.done.emit({type: 'put', bundle: res});
+            }
         });
     }
 

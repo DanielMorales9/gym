@@ -13,8 +13,8 @@ export class BundleModalComponent implements OnInit {
 
     bundle: any;
     form: FormGroup;
-    showPersonal = true;
-    showCourse = false;
+    showPersonal: boolean;
+    showCourse: boolean;
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<BundleModalComponent>,
@@ -23,15 +23,25 @@ export class BundleModalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        if (!this.bundle) {
+        const hasBundle = !!this.bundle;
+        if (!hasBundle) {
             this.bundle = new PersonalBundleSpecification();
         }
+        if (this.bundle.type === BundleSpecificationType.PERSONAL) {
+            this.showCourse = false;
+            this.showPersonal = true;
+        }
+        else {
+            this.showCourse = true;
+            this.showPersonal = false;
+        }
 
-        this.buildForm();
+        this.buildForm(hasBundle);
 
     }
 
-    private buildForm() {
+    private buildForm(hasBundle: boolean) {
+        console.log(this.bundle);
         this.form = new FormGroup({
             name: new FormControl(this.bundle.name, Validators.required),
             price: new FormControl(this.bundle.price, [
@@ -39,15 +49,18 @@ export class BundleModalComponent implements OnInit {
                 Validators.pattern(/^\d+\.?\d{0,2}$/)
             ]),
             description: new FormControl(this.bundle.description, Validators.required),
-            type: new FormControl(this.bundle.type, Validators.required),
+            type: new FormControl({
+                value: this.bundle.type,
+                disabled: hasBundle,
+            }, Validators.required),
             startTime: new FormControl({
-                value: this.bundle.startTime,
+                value: new Date(this.bundle.startTime),
                 disabled: this.bundle.type !== BundleSpecificationType.COURSE
             },  [
                 Validators.required
             ]),
             endTime: new FormControl({
-                value: this.bundle.endTime,
+                value: new Date(this.bundle.endTime),
                 disabled: this.bundle.type !== BundleSpecificationType.COURSE
             },  [
                 Validators.required,

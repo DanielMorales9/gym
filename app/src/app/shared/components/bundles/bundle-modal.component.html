@@ -89,10 +89,10 @@
                     <label for="endTime" class="sr-only">Data di fine</label>
                     <input id="endTime"
                            matInput
-                           [matDatepicker]="endTimePicker"
                            name="endTime"
                            formControlName="endTime"
                            placeholder="Data di fine"
+                           [matDatepicker]="endTimePicker"
                            [ngClass]="{ 'is-invalid': endTime.touched && endTime.invalid }">
                     <mat-error *ngIf="endTime.touched && endTime.invalid">
                         <div *ngIf="!!endTime.errors?.required">Data di fine obbligatoria</div>
