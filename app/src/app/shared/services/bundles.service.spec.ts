@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {BundlesService} from './bundles.service';
-import {Bundle} from '../model';
+import {PersonalBundleSpecification} from '../model';
 
 describe('BundlesService', () => {
 
@@ -37,9 +37,9 @@ describe('BundlesService', () => {
     });
 
     it('testing #postBundle', done => {
-        const bundle = new Bundle();
+        const bundle = new PersonalBundleSpecification();
         bundleService.post(bundle).subscribe(res => {
-            const expected = new Bundle();
+            const expected = new PersonalBundleSpecification();
             expected.id = 1;
             expect(res).toEqual(expected);
             done();
@@ -48,16 +48,16 @@ describe('BundlesService', () => {
             url: '/bundleSpecs',
             method: 'POST'
         });
-        const actual = new Bundle();
+        const actual = new PersonalBundleSpecification();
         actual.id = 1;
         req.flush(actual);
     });
 
     it('testing #put', done => {
-        const bundle = new Bundle();
+        const bundle = new PersonalBundleSpecification();
         bundle.id = 1;
         bundleService.patch(bundle).subscribe(res => {
-            const expected = new Bundle();
+            const expected = new PersonalBundleSpecification();
             expected.id = 1;
             expected.description = 'now';
             expect(res).toEqual(expected);
@@ -72,7 +72,7 @@ describe('BundlesService', () => {
     });
 
     it('testing #search', done => {
-        const bundle = new Bundle();
+        const bundle = new PersonalBundleSpecification();
         bundle.id = 1;
         bundle.description = 'now';
         bundleService.search('query', 1, 5).subscribe(res => {

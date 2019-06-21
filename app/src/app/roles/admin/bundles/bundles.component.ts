@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Bundle} from '../../../shared/model';
+import {BundleSpecification} from '../../../shared/model';
 import {BundleHelperService, BundlesService, QueryableDatasource} from '../../../shared/services';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from '../../../shared/components/bundles';
@@ -18,7 +18,7 @@ export class BundlesComponent implements OnInit {
     private queryParams: { query: string };
 
     private pageSize = 10;
-    ds: QueryableDatasource<Bundle>;
+    ds: QueryableDatasource<BundleSpecification>;
 
     constructor(private service: BundlesService,
                 private router: Router,
@@ -27,7 +27,7 @@ export class BundlesComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
 
-        this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
+        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
         // for(let _i= 0; _i < 50; _i++) {
         //    let bundle = new Bundle();
         //    bundle.name= 'winter_pack_'+_i;
@@ -96,7 +96,7 @@ export class BundlesComponent implements OnInit {
         this.updateQueryParams();
     }
 
-    private createBundle(bundle: Bundle) {
+    private createBundle(bundle: BundleSpecification) {
         console.log(bundle);
         delete bundle.id;
         this.service.post(bundle).subscribe(_ => {
@@ -106,19 +106,19 @@ export class BundlesComponent implements OnInit {
         });
     }
 
-    private deleteBundle(bundle: Bundle) {
+    private deleteBundle(bundle: BundleSpecification) {
         const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
         if (confirmed) {
             this.service.delete(bundle.id).subscribe(_ => this.search());
         }
     }
 
-    private toggleDisabled(bundle: Bundle) {
+    private toggleDisabled(bundle: BundleSpecification) {
         bundle.disabled = !bundle.disabled;
         this.service.patch(bundle).subscribe(res => console.log(res));
     }
 
-    private modifyBundle(bundle: Bundle) {
+    private modifyBundle(bundle: BundleSpecification) {
         this.service.patch(bundle).subscribe(_ => {
             const message = `Il pacchetto ${bundle.name} è stato modificato`;
             this.snackbar.open(message);

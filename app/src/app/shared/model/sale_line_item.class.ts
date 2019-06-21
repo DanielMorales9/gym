@@ -1,9 +1,9 @@
-import {Bundle} from "./bundle.class";
+import {BundleSpecification} from "./bundle.class";
 
 export class SaleLineItem {
 
     id: number;
-    bundleSpecification: Bundle;
+    bundleSpecification: BundleSpecification;
 
     constructor() {
 

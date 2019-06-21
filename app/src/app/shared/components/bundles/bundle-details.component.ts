@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BundlesService} from '../../services';
-import {Bundle} from '../../model';
+import {BundleSpecification} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from './bundle-modal.component';
@@ -13,7 +13,7 @@ import {BundleFacade} from '../../../services';
 })
 export class BundleDetailsComponent implements OnInit {
 
-    bundle: Bundle;
+    bundle: any;
     canDelete: boolean;
     canDisable: boolean;
     canEdit: boolean;
@@ -46,7 +46,7 @@ export class BundleDetailsComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.service.patch(res).subscribe((v: Bundle) => this.bundle = v);
+                this.service.patch(res).subscribe((v: BundleSpecification) => this.bundle = v);
             }
         });
     }
@@ -64,7 +64,7 @@ export class BundleDetailsComponent implements OnInit {
     }
 
     private getBundle(id: number) {
-        this.service.findById(id).subscribe((res: Bundle) => {
+        this.service.findById(id).subscribe((res: BundleSpecification) => {
             this.bundle = res;
         });
     }

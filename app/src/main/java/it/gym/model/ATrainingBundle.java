@@ -15,7 +15,8 @@ import java.util.List;
         property = "type",
         visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P")
+        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P"),
+        @JsonSubTypes.Type(value = CourseTrainingBundleSpecification.class, name="C")
 })
 @Entity
 @RestResource(path="bundles")

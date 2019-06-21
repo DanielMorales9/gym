@@ -1,11 +1,21 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type",
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = PersonalTrainingSession.class, name="P"),
+        @JsonSubTypes.Type(value = CourseTrainingSession.class, name="C")
+})
 @Entity
 @Table(name="sessions")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)

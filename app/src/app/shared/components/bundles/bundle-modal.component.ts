@@ -1,7 +1,8 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {Bundle} from '../../model';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {BundleSpecification, BundleSpecificationType, CourseBundleSpecification, PersonalBundleSpecification} from '../../model';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {rangeValidator, timeValidator} from '../../directives';
 
 @Component({
     selector: 'bundle-modal',
@@ -10,10 +11,10 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class BundleModalComponent implements OnInit {
 
-    private DEFAULT_TYPE = 'P';
-    bundle: Bundle;
-
+    bundle: any;
     form: FormGroup;
+    showPersonal = true;
+    showCourse = false;
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<BundleModalComponent>,
@@ -23,7 +24,7 @@ export class BundleModalComponent implements OnInit {
 
     ngOnInit(): void {
         if (!this.bundle) {
-            this.bundle = new Bundle();
+            this.bundle = new PersonalBundleSpecification();
         }
 
         this.buildForm();
@@ -31,19 +32,64 @@ export class BundleModalComponent implements OnInit {
     }
 
     private buildForm() {
-        const type = this.bundle.type || this.DEFAULT_TYPE;
-        this.form = this.builder.group({
-            name: [this.bundle.name, [Validators.required]],
-            price: [this.bundle.price, [
+        this.form = new FormGroup({
+            name: new FormControl(this.bundle.name, Validators.required),
+            price: new FormControl(this.bundle.price, [
                 Validators.required,
                 Validators.pattern(/^\d+\.?\d{0,2}$/)
-            ]],
-            numSessions: [this.bundle.numSessions, [
+            ]),
+            description: new FormControl(this.bundle.description, Validators.required),
+            type: new FormControl(this.bundle.type, Validators.required),
+            startTime: new FormControl({
+                value: this.bundle.startTime,
+                disabled: this.bundle.type !== BundleSpecificationType.COURSE
+            },  [
+                Validators.required
+            ]),
+            endTime: new FormControl({
+                value: this.bundle.endTime,
+                disabled: this.bundle.type !== BundleSpecificationType.COURSE
+            },  [
+                Validators.required,
+            ]),
+            maxCustomers: new FormControl({
+                value: this.bundle.maxCustomers,
+                disabled: this.bundle.type !== BundleSpecificationType.COURSE
+            }, [
+                Validators.required,
+                Validators.min(2)
+            ]),
+            numSessions: new FormControl({
+                value: this.bundle.numSessions,
+                disabled: this.bundle.type !== BundleSpecificationType.PERSONAL
+            }, [
                 Validators.required,
                 Validators.pattern(/^\d+$/)
-            ]],
-            description: [this.bundle.description, Validators.required ],
-            type: [type, Validators.required ],
+            ])
+        }, [
+            timeValidator('startTime', 'endTime').bind(this)
+        ]);
+
+        this.type.valueChanges.subscribe(val => {
+            if (val === BundleSpecificationType.PERSONAL) {
+                this.showCourse = false;
+                this.showPersonal = true;
+
+                this.numSessions.enable();
+                this.startTime.disable();
+                this.endTime.disable();
+                this.maxCustomers.disable();
+            }
+            else {
+                this.showCourse = true;
+                this.showPersonal = false;
+
+                this.numSessions.disable();
+                this.startTime.enable();
+                this.endTime.enable();
+                this.maxCustomers.enable();
+            }
+            this.form.updateValueAndValidity();
         });
     }
 
@@ -67,21 +113,42 @@ export class BundleModalComponent implements OnInit {
         return this.form.get('type');
     }
 
-
-    submit() {
-        this.getBundleFromForm();
-        this.dialogRef.close(this.bundle);
+    get startTime() {
+        return this.form.get('startTime');
     }
 
-    private getBundleFromForm() {
-        const bundle = new Bundle();
+    get endTime() {
+        return this.form.get('endTime');
+    }
+
+    get maxCustomers() {
+        return this.form.get('maxCustomers');
+    }
+
+    submit() {
+        const bundle = this.getBundleFromForm();
+        this.dialogRef.close(bundle);
+    }
+
+    private getBundleFromForm(): BundleSpecification {
+        let bundle;
+        if (this.type.value === BundleSpecificationType.PERSONAL) {
+            bundle = new PersonalBundleSpecification();
+            bundle.numSessions = this.numSessions.value;
+        }
+        else {
+            bundle = new CourseBundleSpecification();
+            bundle.maxCustomers = this.maxCustomers.value;
+            bundle.startTime = this.startTime.value;
+            bundle.endTime = this.endTime.value;
+        }
+
         bundle.id = this.bundle.id;
         bundle.name = this.name.value;
         bundle.price = this.price.value;
         bundle.description = this.description.value;
-        bundle.numSessions = this.numSessions.value;
         bundle.type = this.type.value;
         bundle.disabled = (this.bundle.disabled !== undefined) ? this.bundle.disabled : false;
-        this.bundle = bundle;
+        return bundle;
     }
 }

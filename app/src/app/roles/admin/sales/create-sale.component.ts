@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BundlePayHelperService, QueryableDatasource} from '../../../shared/services';
-import {Bundle, Sale} from '../../../shared/model';
+import {BundleSpecification, Sale} from '../../../shared/model';
 import {AppService, SnackBarService} from '../../../services';
 import {SaleHelperService} from '../../../shared/services/sale-helper.service';
 
@@ -26,7 +26,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
     private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
-    ds: QueryableDatasource<Bundle>;
+    ds: QueryableDatasource<BundleSpecification>;
     private queryParams: { query: string };
 
     constructor(private app: AppService,
@@ -36,7 +36,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
         this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
-        this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
+        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {

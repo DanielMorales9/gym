@@ -24,3 +24,18 @@ export function rangeValidator(start: string, end: string) {
     }
     return innerValidator;
 }
+
+export function timeValidator(start: string, end: string) {
+
+    function innerValidator(control: AbstractControl) {
+        const startC = control.get(start);
+        const endC = control.get(end);
+        const startV = new Date(startC.value);
+        const endV = new Date(endC.value);
+        // compare
+        if (startV > endV) {
+            endC.setErrors({ time: true });
+        }
+    }
+    return innerValidator;
+}

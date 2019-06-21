@@ -1,5 +1,5 @@
 import {AfterContentChecked, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Bundle} from '../../../shared/model';
+import {BundleSpecification} from '../../../shared/model';
 
 
 @Component({
@@ -9,7 +9,7 @@ import {Bundle} from '../../../shared/model';
 })
 export class BundleSelectItemComponent {
 
-    @Input() bundle: Bundle;
+    @Input() bundle: any;
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;

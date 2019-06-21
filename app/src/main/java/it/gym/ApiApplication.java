@@ -146,41 +146,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 		auth.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
 	}
 
-	@Configuration
-	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public class BundleSpecTypesMapper {
-
-		private Map<String, String> mapper;
-
-		public BundleSpecTypesMapper() {
-			this.mapper = new HashMap<>();
-			this.mapper.put("P", PersonalTrainingBundleSpecification.class.getSimpleName());
-		}
-
-		public String getBundleSpecClass(String type) {
-			return mapper.get(type);
-		}
-	}
-
-	@Component
-	@Order(Ordered.HIGHEST_PRECEDENCE)
-	public class RelProvider extends EvoInflectorRelProvider {
-		@Override
-		public String getCollectionResourceRelFor(final Class<?> type) {
-			return super.getCollectionResourceRelFor(ATrainingBundleSpecification.class);
-		}
-
-		@Override
-		public String getItemResourceRelFor(final Class<?> type) {
-			return super.getItemResourceRelFor(ATrainingBundleSpecification.class);
-		}
-
-		@Override
-		public boolean supports(final Class<?> delimiter) {
-			return ATrainingBundleSpecification.class.isAssignableFrom(delimiter);
-		}
-	}
-
 	@Bean
 	public Jackson2ObjectMapperBuilder objectMapperBuilder() {
 		return new Jackson2ObjectMapperBuilder() {
@@ -192,22 +157,6 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 				super.configure(objectMapper);
 			}
 		};
-	}
-
-	@Configuration
-	@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
-	public class TrainingTypesMapper {
-
-		private Map<String, String> mapper;
-
-		public TrainingTypesMapper () {
-			this.mapper = new HashMap<>();
-			this.mapper.put("P", PersonalTrainingBundle.class.getSimpleName());
-		}
-
-		public String getTrainingClass(String type) {
-			return mapper.get(type);
-		}
 	}
 
 	@Component
@@ -222,11 +171,11 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 					Gym.class,
 					Reservation.class,
 					ATrainingBundleSpecification.class,
-					PersonalTrainingBundleSpecification.class,
+					ATrainingBundle.class,
+					ATrainingSession.class,
 					Admin.class,
-					Customer.class,
-					Trainer.class);
-
+					Trainer.class,
+					Customer.class);
 		}
 	}
 

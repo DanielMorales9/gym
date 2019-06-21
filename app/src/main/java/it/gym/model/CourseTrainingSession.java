@@ -11,7 +11,7 @@ import javax.persistence.TemporalType;
 import java.util.Date;
 
 @Entity
-@DiscriminatorValue(value="P")
+@DiscriminatorValue(value="C")
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class CourseTrainingSession extends ATrainingSession {

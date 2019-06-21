@@ -15,7 +15,7 @@ import javax.persistence.Entity;
 @EqualsAndHashCode(callSuper = true)
 public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecification {
 
-    @Column(name="num_sessions", nullable = false)
+    @Column(name="num_sessions")
     private Integer numSessions;
 
     public Integer getNumSessions() {

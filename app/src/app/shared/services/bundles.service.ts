@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {Bundle} from '../model';
+import {BundleSpecification} from '../model';
 import {ABundleService} from './abundle.service';
 
 @Injectable()
@@ -11,11 +11,11 @@ export class BundlesService extends ABundleService {
         super();
     }
 
-    patch(bundle: Bundle): Observable<Object> {
+    patch(bundle: BundleSpecification): Observable<Object> {
         return this.http.patch(`/bundleSpecs/${bundle.id}`, bundle);
     }
 
-    post(bundle: Bundle): Observable<Object> {
+    post(bundle: BundleSpecification): Observable<Object> {
         return this.http.post('/bundleSpecs', bundle);
     }
 

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Bundle} from '../../../shared/model';
+import {BundleSpecification} from '../../../shared/model';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from '../../../shared/components/bundles';
 
@@ -11,7 +11,7 @@ import {BundleModalComponent} from '../../../shared/components/bundles';
 })
 export class BundleItemComponent {
 
-    @Input() bundle: Bundle;
+    @Input() bundle: any;
 
     @Output() done = new EventEmitter();
 

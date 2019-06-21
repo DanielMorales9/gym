@@ -24,28 +24,29 @@ export class ChangePasswordModalComponent implements OnInit {
                     Validators.required,
                     Validators.minLength(8),
                     Validators.maxLength(30)
+                    // tslint:disable-next-line:max-line-length
                     // Validators.pattern(/^(?=[^A-Z]*[A-Z])(?=[^!"#$%&'()*+,-./:;<=>?$@$\[\]^_`{|}~]*[!"#$%&'()*+,-./:;<=>?$@$\[\]^_`{|}~])(?=[^a-z]*[a-z])(?=[^0-9]*[0-9]).{8,}$/)
                 ]],
                 confirmPassword: ['', Validators.required]},
             {
                 validator: passwordMatchValidator.bind(this)
-            })
+            });
     }
 
     get oldPassword() {
-        return this.form.get("oldPassword")
+        return this.form.get('oldPassword');
     }
 
     get password() {
-        return this.form.get("password")
+        return this.form.get('password');
     }
 
     get confirmPassword() {
-        return this.form.get("confirmPassword")
+        return this.form.get('confirmPassword');
     }
 
     submit() {
-        let model = {
+        const model = {
             oldPassword: this.oldPassword.value,
             password: this.password.value,
             confirmPassword: this.confirmPassword.value

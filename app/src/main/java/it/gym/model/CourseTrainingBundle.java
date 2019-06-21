@@ -23,7 +23,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Temporal(TemporalType.TIMESTAMP)
     private Date endTime;
 
-    @Column(name="max_customers", nullable = false)
+    @Column(name="max_customers")
     private Integer maxCustomers;
 
     public Date getEndTime() {

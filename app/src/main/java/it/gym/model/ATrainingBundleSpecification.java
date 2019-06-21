@@ -14,7 +14,8 @@ import java.util.Date;
         property = "type",
         visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P")
+        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P"),
+        @JsonSubTypes.Type(value = CourseTrainingBundleSpecification.class, name="C")
 })
 @Entity
 @Table(name="bundle_specs")
