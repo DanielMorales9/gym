@@ -30,6 +30,7 @@
     - Added Tests to Sale
     - Added Development fixtures in InitDatabase
     - Fixed Issue related to the *Favicon.ico not correctly loaded*
+    - Fixed bug changePassword NotFound
 
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

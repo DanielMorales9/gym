@@ -185,7 +185,7 @@ public class InitializeDatabase implements CommandLineRunner {
 
     private Customer createCustomer(String password, Gym gym, List<Role> roles) {
         Customer customer = new Customer();
-        customer.setEmail("dnlmlrs9@gmail.com");
+        customer.setEmail("dnlmrls9@gmail.com");
         customer.setFirstName("Daniel");
         customer.setLastName("Morales");
         customer.setPassword(password);

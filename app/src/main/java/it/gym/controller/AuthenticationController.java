@@ -42,7 +42,7 @@ public class AuthenticationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/forgotPassword/{id}")
+    @PostMapping("/changePassword/{id}")
     @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> changePassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.facade.changePassword(id, form);
@@ -50,6 +50,7 @@ public class AuthenticationController {
     }
 
     @GetMapping(path = "/getUserFromVerificationToken")
+    @PreAuthorize("isAnonymous()")
     ResponseEntity<AUserResource> getUserFromVerificationToken(@RequestParam String token) {
         AUser user = this.facade.getUserFromVerificationToken(token);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
