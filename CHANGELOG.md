@@ -4,7 +4,6 @@
 - **BF**: Solve issue related to double beans
 - **BC**: Separate API from front-end with NGINX
 - **FR**: expose error path
-- **FR**: Favicon.ico is not correctly loaded
 - **FR**: Schedule Training Assignment
 - **FR**: Recurring events in Gym Calendar
 
@@ -28,6 +27,7 @@
     - Added CourseBundleSpecs modification in UI
     - Added Tests to Sale
     - Added Development fixtures in InitDatabase
+    - Fixed Issue related to the *Favicon.ico not correctly loaded*
 
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests
