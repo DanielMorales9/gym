@@ -37,7 +37,6 @@ export class BundleModalComponent implements OnInit {
         }
 
         this.buildForm(hasBundle);
-
     }
 
     private buildForm(hasBundle: boolean) {

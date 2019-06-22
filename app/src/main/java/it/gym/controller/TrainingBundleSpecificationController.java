@@ -41,7 +41,7 @@ public class TrainingBundleSpecificationController {
 
     @PostMapping
     ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
-        spec = service.createBundle(spec);
+        spec = service.save(spec);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
     }
 

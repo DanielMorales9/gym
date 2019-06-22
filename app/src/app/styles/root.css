@@ -158,3 +158,12 @@ a.disabled {
 .active-link {
     background-color: rgba(12,13,14,0.05);
 }
+
+a#main-app-name {
+    color: white;
+}
+
+a#main-app-name:hover {
+    color: white;
+    text-decoration: none;
+}

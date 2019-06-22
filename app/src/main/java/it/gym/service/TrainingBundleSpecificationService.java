@@ -1,7 +1,10 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
+import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.CourseTrainingBundleSpecification;
+import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,10 +22,6 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
     private TrainingBundleSpecificationRepository repository;
 
     public ATrainingBundleSpecification save(ATrainingBundleSpecification var1) {
-        return this.repository.save(var1);
-    }
-
-    public ATrainingBundleSpecification createBundle(ATrainingBundleSpecification var1) {
         return this.repository.save(var1);
     }
 

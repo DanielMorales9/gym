@@ -91,7 +91,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         return bundleSpec;
     }
 
-    void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
+    public void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
         this.bundleSpec = bundleSpec;
     }
 

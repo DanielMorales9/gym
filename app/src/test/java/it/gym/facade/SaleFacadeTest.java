@@ -36,6 +36,9 @@ public class SaleFacadeTest {
     private TrainingBundleSpecificationService bundleSpecService;
 
     @MockBean
+    private TrainingBundleService bundleService;
+
+    @MockBean
     private SalesLineItemService salesLineItemService;
 
     @TestConfiguration

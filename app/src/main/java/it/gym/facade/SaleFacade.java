@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Date;
+import java.util.List;
 
 @Component
 @Transactional
@@ -27,6 +28,9 @@ public class SaleFacade {
     @Autowired
     @Qualifier("trainingBundleSpecificationService")
     private TrainingBundleSpecificationService bundleSpecService;
+
+    @Autowired
+    private TrainingBundleService bundleService;
 
     @Autowired
     private SalesLineItemService salesLineItemService;
@@ -76,6 +80,18 @@ public class SaleFacade {
         return sale;
     }
 
+    public ATrainingBundle createBundle(ATrainingBundleSpecification spec) {
+        if (spec.getType().equals(CourseTrainingBundleSpecification.TYPE)) {
+            List<ATrainingBundle> l = bundleService.findBundlesBySpec(spec);
+            if (l.size() == 1) {
+                return l.get(0);
+            } else if (l.size() > 1) {
+                throw new InvalidSaleException("Sono stati creati troppi corsi");
+            }
+        }
+        return spec.createTrainingBundle();
+    }
+
     public Sale createSale(Long gymId, Long customerId) {
         Gym gym = gymService.findById(gymId);
         Customer customer = (Customer) userService.findById(customerId);
@@ -92,9 +108,9 @@ public class SaleFacade {
     public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Integer quantity) {
         Sale sale = this.findById(saleId);
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
-        ATrainingBundle bundle = bundleSpec.createTrainingBundle();
 
         for (int i = 0; i < quantity; i++) {
+            ATrainingBundle bundle = createBundle(bundleSpec);
             sale.addSalesLineItem(bundle);
         }
         return this.save(sale);

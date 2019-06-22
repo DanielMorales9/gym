@@ -173,6 +173,12 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 					ATrainingBundleSpecification.class,
 					ATrainingBundle.class,
 					ATrainingSession.class,
+					CourseTrainingBundleSpecification.class,
+					CourseTrainingBundle.class,
+					CourseTrainingSession.class,
+					PersonalTrainingBundleSpecification.class,
+					PersonalTrainingBundle.class,
+					PersonalTrainingSession.class,
 					Admin.class,
 					Trainer.class,
 					Customer.class);

@@ -14,6 +14,8 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class CourseTrainingBundleSpecification extends ATrainingBundleSpecification {
 
+    public static final String TYPE = "C";
+
     @Temporal(TemporalType.TIMESTAMP)
     private Date startTime;
 
@@ -54,8 +56,16 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Override
     public ATrainingBundle createTrainingBundle() {
-        return null;
+        CourseTrainingBundle bundle = new CourseTrainingBundle();
+        bundle.setName(name);
+        bundle.setPrice(price);
+        bundle.setDescription(description);
+        bundle.setExpired(false);
+        bundle.setBundleSpec(this);
+        bundle.setEndTime(endTime);
+        bundle.setStartTime(startTime);
+        bundle.setMaxCustomers(maxCustomers);
+
+        return bundle;
     }
-
-
 }

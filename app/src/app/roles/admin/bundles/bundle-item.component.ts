@@ -15,6 +15,9 @@ export class BundleItemComponent {
 
     @Output() done = new EventEmitter();
 
+    PERSONAL = 'P';
+    COURSE   = 'C';
+
     constructor(private dialog: MatDialog) {}
 
     openDialog(): void {

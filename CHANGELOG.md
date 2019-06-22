@@ -5,12 +5,12 @@
 - **BC**: Separate API from front-end with NGINX
 - **FR**: expose error path
 - **FR**: Favicon.ico is not correctly loaded
+- **FR**: Schedule Training Assignment
+- **FR**: Recurring events in Gym Calendar
+
 - **Chapter II** More Features
-    - Recurring events in Gym Calendar
-    - Schedule Training Assignment
     - Separate TimeOff into Holidays and (Employee) TimeOff 
     - Investigate better solutions for Reservation
-    - Add CourseBundleSpecs creation in UI
     - Add CourseBundle, CourseBundleSpecs, CourseSession Tests
     
 - **Chapter III** Gym-relative calls
@@ -24,6 +24,10 @@
     - Added CreateAt to Gym
     - Added CreateAt to Sale
     - Added CourseBundle, CourseBundleSpecs, CourseSession
+    - Added CourseBundleSpecs creation in UI
+    - Added CourseBundleSpecs modification in UI
+    - Added Tests to Sale
+    - Added Development fixtures in InitDatabase
 
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

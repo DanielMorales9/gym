@@ -25,9 +25,25 @@
         <div>
             <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
         </div>
-        <div>
-            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
-        </div>
+        <ng-container [ngSwitch]="bundle?.type">
+
+        <ng-container *ngSwitchCase="PERSONAL">
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
+            </div>
+        </ng-container>
+        <ng-container *ngSwitchCase="COURSE">
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date : 'shortDate'}}
+            </div>
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date : 'shortDate'}}
+            </div>
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.maxCustomers}}
+            </div>
+        </ng-container>
+        </ng-container>
     </div>
     <div class="panel-actions">
         <button mat-button color="primary" (click)="openDialog()">

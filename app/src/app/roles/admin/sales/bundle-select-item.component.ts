@@ -13,6 +13,8 @@ export class BundleSelectItemComponent {
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;
+    PERSONAL: 'P';
+    COURSE: 'C';
 
     constructor() {}
 
