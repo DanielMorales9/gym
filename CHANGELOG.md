@@ -7,19 +7,19 @@
 - **FR**: Schedule Training Assignment
 - **FR**: Recurring events in Gym Calendar
 
-- **Chapter II** More Features
-    - Separate TimeOff into Holidays and (Employee) TimeOff 
+- **Chapter II** Courses and Events
     - Investigate better solutions for Reservation
     - Add ATrainingBundleSpecification tests
     - Add ATrainingBundle tests
     - Add CourseTrainingBundle to SaleFacade tests
+    - Adapt Calendar to API changes
     
 - **Chapter III** Gym-relative calls
     - Add gymId as PathVariable to API calls
     - Set Gym during user registration (re-visit registration logic)
 
 # DONE
-- **Chapter II** More Features
+- **Chapter II** Courses and Events
     - Replace Admin with Gym in Sale
     - Added CreateAt to ATrainingBundle
     - Added CreateAt to Gym
@@ -31,6 +31,7 @@
     - Added Development fixtures in InitDatabase
     - Fixed Issue related to the *Favicon.ico not correctly loaded*
     - Fixed bug changePassword NotFound
+    - Separate TimeOff into Holidays and (Employee) TimeOff 
 
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

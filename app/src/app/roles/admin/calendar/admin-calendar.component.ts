@@ -33,11 +33,11 @@ export class AdminCalendarComponent extends BaseCalendar {
 
         const s1 = this.facade.getReservations(startDay, endDay);
 
-        const s2 = this.facade.getTimesOff(startDay, endDay, undefined, 'admin');
+        const s2 = this.facade.getAllEvents(startDay, endDay);
 
-        const s3 = this.facade.getTimesOff(startDay, endDay, undefined, 'trainer');
+        // const s3 = this.facade.getTimesOff(startDay, endDay, undefined, 'trainer');
 
-        concat(s1, s2, s3)
+        concat(s1, s2)
             .subscribe(rel  => {
                 this.events.push(...rel.map(value => this.formatEvent(value)));
                 this.refreshView();

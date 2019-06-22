@@ -12,7 +12,7 @@ export class CalendarFacade {
     constructor(private userService: UserService,
                 private appService: AppService,
                 private trainingService: TrainingService,
-                private timesOffService: TimesOffService,
+                private eventService: TimesOffService,
                 private dateService: DateService,
                 private gymService: GymService) {
     }
@@ -43,6 +43,16 @@ export class CalendarFacade {
     }
 
     /**
+     * EVENTS API
+     */
+
+    getAllEvents(startTime: any, endTime: any): Observable<Object[]> {
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.eventService.getAllEvents(startS, endS);
+    }
+
+    /**
      * TIME-OFF API
      */
 
@@ -57,7 +67,7 @@ export class CalendarFacade {
         const startS = CalendarFacade.formatDateToString(start);
         const endS = CalendarFacade.formatDateToString(end);
 
-        return this.timesOffService.book(gymId, startS, endS, type, name, userId);
+        return this.eventService.book(gymId, startS, endS, type, name, userId);
     }
 
     checkDayTimeOff(date: any, type: string) {
@@ -68,7 +78,7 @@ export class CalendarFacade {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
 
-        return this.timesOffService.check(gymId, startS, endS, type);
+        return this.eventService.check(gymId, startS, endS, type);
     }
 
     checkHourTimeOff(date: any, type: string) {
@@ -78,31 +88,31 @@ export class CalendarFacade {
 
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.timesOffService.check(gymId, startS, endS, type);
+        return this.eventService.check(gymId, startS, endS, type);
     }
 
     getTimesOff(startTime: any, endTime: any, id: number, type?: string): Observable<Object[]> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.timesOffService.getTimesOff(startS,  endS, id, type);
+        return this.eventService.getTimesOff(startS,  endS, id, type);
     }
 
     deleteTimeOff(id: number, type?: string) {
-        return this.timesOffService.delete(id, type);
+        return this.eventService.delete(id, type);
     }
 
     changeTimeOff(id: number, startTime: Date, endTime: Date, name: string | any, type: string) {
         const gymId = this.gymService.gym.id;
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.timesOffService.change(gymId, id, startS, endS, name, type);
+        return this.eventService.change(gymId, id, startS, endS, name, type);
     }
 
     checkTimeOffChange(startTime: Date, endTime: Date, type: string) {
         const gymId = this.gymService.gym.id;
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.timesOffService.checkChange(gymId, startS, endS, type);
+        return this.eventService.checkChange(gymId, startS, endS, type);
     }
 
 
@@ -163,4 +173,5 @@ export class CalendarFacade {
     isDayEvent(startTime: Date, endTime: Date) {
         return this.gymService.isDayEvent(startTime, endTime);
     }
+
 }

@@ -38,4 +38,8 @@ export class TimesOffService {
     checkChange(gymId: number, start: string, end: string, type: string) {
         return this.http.get(`/events/checkChange?gymId=${gymId}&startTime=${start}&endTime=${end}&type=${type}`);
     }
+
+    getAllEvents(start: string, end: string): Observable<any> {
+        return this.http.get(`/events?startTime=${start}&endTime=${end}`);
+    }
 }
