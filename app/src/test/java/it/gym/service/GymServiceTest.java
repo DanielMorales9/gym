@@ -1,8 +1,6 @@
 package it.gym.service;
 
 import it.gym.exception.GymNotFoundException;
-import it.gym.exception.InvalidReservationException;
-import it.gym.exception.InvalidTimeException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
 import org.junit.Test;
@@ -71,26 +69,26 @@ public class GymServiceTest {
         start = addHours(start, 1);
         Date end = addHours(start, 1);
 
-        service.isValidInterval(start, end);
+        assertThat(service.isInvalidInterval(start, end)).isFalse();
     }
 
-    @Test(expected = InvalidReservationException.class)
+    @Test
     public void startAfterEndTime() {
         Date start = new Date();
         start = addHours(start, 1);
         Date end = addHours(start, -1);
 
-        service.isValidInterval(start, end);
+        assertThat(service.isInvalidInterval(start, end)).isTrue();
     }
 
 
-    @Test(expected = InvalidReservationException.class)
+    @Test
     public void isIntervalPast() {
         Date start = new Date();
         start = addHours(start, -1);
         Date end = addHours(start, 1);
 
-        service.isValidInterval(start, end);
+        assertThat(service.isInvalidInterval(start, end)).isTrue();
     }
 
 
@@ -100,18 +98,17 @@ public class GymServiceTest {
         cal.set(2019, Calendar.JUNE, 8, 12, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
-        Mockito.doReturn(Optional.of(createGym())).when(repository).findById(1L);
-        service.isWithinWorkingHours(1L, start, end);
+        assertThat(service.isWithinWorkingHours(createGym(), start, end)).isTrue();
+
     }
 
-    @Test(expected = InvalidTimeException.class)
+    @Test
     public void isNotWithinWorkingHours() {
         Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
         cal.set(2019, Calendar.JUNE, 8, 13, 0);
         Date start = cal.getTime();
         Date end = addHours(start, 1);
-        Mockito.doReturn(Optional.of(createGym())).when(repository).findById(1L);
-        service.isWithinWorkingHours(1L, start, end);
+        assertThat(service.isWithinWorkingHours(createGym(), start, end)).isFalse();
     }
 
     private Gym createGym() {

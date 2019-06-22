@@ -88,8 +88,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(errorDetails, HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(InvalidTimesOff.class)
-    public final ResponseEntity<ErrorDetails> handle(InvalidTimesOff ex,
+    @ExceptionHandler(InvalidEvent.class)
+    public final ResponseEntity<ErrorDetails> handle(InvalidEvent ex,
                                                      WebRequest request) {
         logger.info(ex.getMessage());
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),

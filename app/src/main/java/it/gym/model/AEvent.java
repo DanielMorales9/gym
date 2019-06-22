@@ -20,10 +20,10 @@ import java.util.Date;
 @RestResource(path="events")
 @Table(name="events")
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="event_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @EqualsAndHashCode
-public abstract class Event {
+public abstract class AEvent {
 
     @Id
     @SequenceGenerator(name = "events_event_id_seq",
@@ -42,6 +42,10 @@ public abstract class Event {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_time")
     private Date endTime;
+
+    @ManyToOne
+    @JoinColumn(name = "gym_id")
+    private Gym gym;
 
     public abstract String getType();
 
@@ -75,5 +79,13 @@ public abstract class Event {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Gym getGym() {
+        return gym;
+    }
+
+    public void setGym(Gym gym) {
+        this.gym = gym;
     }
 }

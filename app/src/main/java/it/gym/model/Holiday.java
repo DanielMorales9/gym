@@ -6,29 +6,16 @@ import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @DiscriminatorValue(value="H")
 @JsonTypeName("H")
-@ExposesResourceFor(value = Event.class)
+@ExposesResourceFor(value = AEvent.class)
 @Data
-@EqualsAndHashCode
-public class Holiday extends Event {
+@EqualsAndHashCode(callSuper = true)
+public class Holiday extends AEvent {
 
     private static final String TYPE = "H";
-
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private Gym gym;
-
-    public Gym getGym() {
-        return gym;
-    }
-
-    public void setGym(Gym gym) {
-        this.gym = gym;
-    }
 
     @Override
     public String getType() {
@@ -40,7 +27,7 @@ public class Holiday extends Event {
 
         return " Tipo :" + this.getType() +
                 " Nome :" + this.getName() +
-                " Palestra: " + this.gym.toString() +
+                " Palestra: " + this.getGym().toString() +
                 " Data :" + this.getStartTime().toString();
     }
 }

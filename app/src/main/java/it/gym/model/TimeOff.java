@@ -6,33 +6,20 @@ import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
-@DiscriminatorValue(value="H")
-@JsonTypeName("H")
-@ExposesResourceFor(value = Event.class)
+@DiscriminatorValue(value="T")
+@JsonTypeName("T")
+@ExposesResourceFor(value = AEvent.class)
 @Data
-@EqualsAndHashCode
-public class TimeOff extends Event {
+@EqualsAndHashCode(callSuper = true)
+public class TimeOff extends AEvent {
 
-    private static final String TYPE = "T";
+    public static final String TYPE = "T";
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    //TODO change to Trainer
     private AUser user;
-
-    public TimeOff() {
-
-    }
-
-    public TimeOff(String name, String type, AUser user, Date startTime, Date endTime) {
-        this.user = user;
-        this.setName(name);
-        this.setStartTime(startTime);
-        this.setEndTime(endTime);
-    }
 
     public AUser getUser() {
         return user;

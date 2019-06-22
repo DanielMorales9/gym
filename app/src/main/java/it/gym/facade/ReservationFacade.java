@@ -32,7 +32,7 @@ public class ReservationFacade {
     @Autowired private GymService gymService;
     @Autowired private CustomerService customerService;
     @Autowired private TrainerService trainerService;
-    @Autowired private TimeOffService timeService;
+    @Autowired private EventService timeService;
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
     @Autowired private TrainingBundleService bundleService;
@@ -44,11 +44,12 @@ public class ReservationFacade {
 
     public void isAvailable(Long gymId, Long customerId, Date startTime, Date endTime) {
 
+        Gym gym = this.gymService.findById(gymId);
         logger.info(String.format("Is Reservation available on %s", startTime.toString()));
 
-        gymService.isValidInterval(startTime, endTime);
+        isValidInterval(startTime, endTime);
 
-        gymService.isWithinWorkingHours(gymId, startTime, endTime);
+        gymService.isWithinWorkingHours(gym, startTime, endTime);
 
         isDoublyBooked(customerId, startTime, endTime);
 
@@ -62,18 +63,25 @@ public class ReservationFacade {
 
         isBundleLeft(customer);
 
-        List<TimeOff> timesOff = this.timeService.findTimesOffTypeInBetween(startTime, endTime);
+        List<AEvent> timesOff = this.timeService.findTimesOffTypeInBetween(startTime, endTime);
 
         hasHolidays(timesOff);
 
         isTrainerAvailable(timesOff, startTime, endTime);
     }
 
+    private void isValidInterval(Date startTime, Date endTime) {
+        if (!gymService.isInvalidInterval(startTime, endTime))
+            throw new InvalidReservationException("Data Non Valida");
+    }
+
     public Reservation book(Long gymId, Long customerId, Date startTime, Date endTime) {
 
-        gymService.isValidInterval(startTime, endTime);
+        Gym gym = this.gymService.findById(gymId);
 
-        gymService.isWithinWorkingHours(gymId, startTime, endTime);
+        isValidInterval(startTime, endTime);
+
+        gymService.isWithinWorkingHours(gym, startTime, endTime);
 
         isDoublyBooked(customerId, startTime, endTime);
 
@@ -153,7 +161,7 @@ public class ReservationFacade {
         return res;
     }
 
-    void isTrainerAvailable(List<TimeOff> timesOff, Date startTime, Date endTime) {
+    void isTrainerAvailable(List<AEvent> timesOff, Date startTime, Date endTime) {
         logger.info("Checking whether there are trainers available");
 
         Long numTrainers = this.trainerService.countAllTrainer();
@@ -207,10 +215,10 @@ public class ReservationFacade {
             throw new InvalidReservationException("Hai già prenotato in questo orario");
     }
 
-    void hasHolidays(List<TimeOff> timesOff) {
+    void hasHolidays(List<AEvent> timesOff) {
         logger.info("Checking whether there are times off");
 
-        Stream<TimeOff> countAdmin = timesOff
+        Stream<AEvent> countAdmin = timesOff
                 .parallelStream()
                 .filter(s -> s.getType().equals("admin")).limit(1);
         if (countAdmin.count() == 1)

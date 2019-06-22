@@ -3,7 +3,6 @@ package it.gym.service;
 import it.gym.exception.GymNotFoundException;
 import it.gym.exception.InvalidReservationException;
 import it.gym.exception.InvalidTimeException;
-import it.gym.facade.ReservationFacade;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,17 +38,15 @@ public class GymService implements ICrudService<Gym, Long> {
         return this.gymRepository.findAll();
     }
 
-    public void isValidInterval(Date startTime, Date endTime) {
-        if (startTime.after(endTime) || isPast(startTime))
-            throw new InvalidReservationException("Data Non Valida");
+    public boolean isInvalidInterval(Date startTime, Date endTime) {
+        return startTime.after(endTime) || isPast(startTime);
     }
 
     boolean isPast(Date date) {
         return date.before(new Date());
     }
 
-    public void isWithinWorkingHours(Long gymId, Date start, Date end) {
-        Gym gym = findById(gymId);
-        if (!gym.isValidDate(start, end)) throw new InvalidTimeException("Data non valida");
+    public boolean isWithinWorkingHours(Gym gym, Date start, Date end) {
+        return gym.isValidDate(start, end);
     }
 }
