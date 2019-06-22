@@ -10,7 +10,9 @@
 - **Chapter II** More Features
     - Separate TimeOff into Holidays and (Employee) TimeOff 
     - Investigate better solutions for Reservation
-    - Add CourseBundle, CourseBundleSpecs, CourseSession Tests
+    - Add ATrainingBundleSpecification tests
+    - Add ATrainingBundle tests
+    - Add CourseTrainingBundle to SaleFacade tests
     
 - **Chapter III** Gym-relative calls
     - Add gymId as PathVariable to API calls

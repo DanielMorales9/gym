@@ -14,34 +14,23 @@ import java.util.Date;
 @ExposesResourceFor(value = Event.class)
 @Data
 @EqualsAndHashCode
-public class TimeOff extends Event {
+public class Holiday extends Event {
 
-    private static final String TYPE = "T";
+    private static final String TYPE = "H";
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    //TODO change to Trainer
-    private AUser user;
+    private Gym gym;
 
-    public TimeOff() {
-
+    public Gym getGym() {
+        return gym;
     }
 
-    public TimeOff(String name, String type, AUser user, Date startTime, Date endTime) {
-        this.user = user;
-        this.setName(name);
-        this.setStartTime(startTime);
-        this.setEndTime(endTime);
+    public void setGym(Gym gym) {
+        this.gym = gym;
     }
 
-    public AUser getUser() {
-        return user;
-    }
-
-    public void setUser(AUser user) {
-        this.user = user;
-    }
-
+    @Override
     public String getType() {
         return TYPE;
     }
@@ -51,7 +40,7 @@ public class TimeOff extends Event {
 
         return " Tipo :" + this.getType() +
                 " Nome :" + this.getName() +
-                " User :" + this.user.toString() +
+                " Palestra: " + this.gym.toString() +
                 " Data :" + this.getStartTime().toString();
     }
 }

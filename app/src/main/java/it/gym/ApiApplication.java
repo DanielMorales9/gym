@@ -167,6 +167,8 @@ public class ApiApplication extends WebSecurityConfigurerAdapter {
 			config.exposeIdsFor(AUser.class,
 					Sale.class,
 					SalesLineItem.class,
+					Event.class,
+					Holiday.class,
 					TimeOff.class,
 					Gym.class,
 					Reservation.class,
