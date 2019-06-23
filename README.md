@@ -1,5 +1,4 @@
-# Microservices ![pipeline status](https://travis-ci.org/DanielMorales9/micro.svg?branch=master) 
-
+# Microservices [![Build Status](https://travis-ci.com/DanielMorales9/gym.svg?token=sVEPqLmkxV1xuF2rpsmy&branch=master)](https://travis-ci.com/DanielMorales9/gym) [![Coverage Status](https://codecov.io/gh/DanielMorales9/GoodFellas/coverage.svg?branch=master)](https://codecov.io/gh/DanielMorales9/GoodFellas?branch=master)
 
 ## Dependencies
 - java => 1.8

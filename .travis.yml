@@ -40,6 +40,8 @@ deploy:
 
 after_deploy: bash .travis/after_deploy.sh
 
+after_success:
+  - bash .travis/after_success.sh
 
 notifications:
   email: false
