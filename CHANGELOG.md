@@ -12,7 +12,7 @@
     - Add ATrainingBundleSpecification tests
     - Add ATrainingBundle tests
     - Add CourseTrainingBundle to SaleFacade tests
-    - Add Tests to EventFacade and EventService
+    - Add Tests to EventService
     - Change Reservation Facade logic
     - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off* Fixed  
     
@@ -37,6 +37,7 @@
     - Adapt Calendar to API changes
     - Adapt Changes to Calendar UI
     - Fixed missing API findAllCustomers
+    - Add Tests to EventFacade
     
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

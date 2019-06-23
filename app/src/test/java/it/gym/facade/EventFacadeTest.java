@@ -69,10 +69,171 @@ public class EventFacadeTest {
     }
 
     @Test
+    public void editHoliday() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doReturn(createHoliday(gym, start, end)).when(service).findById(1L);
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+
+        Event event = new Event();
+        event.setStartTime(start);
+        Date newEnd = addHours(end, 1);
+        event.setEndTime(newEnd);
+        event.setName("holiday");
+        AEvent evt = facade.editHoliday(1L, 1L, event);
+        Mockito.verify(gymService).findById(1L);
+        assertThat(evt).isEqualTo(createHoliday(gym, start, newEnd));
+    }
+
+    @Test
+    public void canEditHoliday() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doReturn(createHoliday(gym, start, end)).when(service).findById(1L);
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+
+        Event event = new Event();
+        event.setStartTime(start);
+        Date newEnd = addHours(end, 1);
+        event.setEndTime(newEnd);
+        event.setName("holiday");
+        facade.canEditHoliday(1L, 1L, event);
+        Mockito.verify(gymService).findById(1L);
+    }
+
+    @Test
+    public void isHolidayAvailable() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doReturn(createHoliday(gym, start, end)).when(service).findById(1L);
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+
+        Event event = new Event();
+        event.setStartTime(start);
+        Date newEnd = addHours(end, 1);
+        event.setEndTime(newEnd);
+        event.setName("holiday");
+        facade.isHolidayAvailable(1L, event);
+        Mockito.verify(gymService).findById(1L);
+    }
+
+    @Test
+    public void createTimeOff() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        AUser trainer = createTrainer();
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(trainer).when(userService).findById(2L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+        Event event = new Event();
+        event.setStartTime(start);
+        event.setEndTime(end);
+        event.setName("timeOff");
+        AEvent evt = facade.createTimeOff(1L, 2L, event);
+        Mockito.verify(gymService).findById(1L);
+        assertThat(evt).isEqualTo(createTimeOff(gym, trainer, start, end));
+    }
+
+    @Test
+    public void editTimeOff() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        AUser trainer = createTrainer();
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(createTimeOff(gym, trainer, start, end)).when(service).findById(2L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+        Event event = new Event();
+        Date newEnd = addHours(end, 1);
+        event.setStartTime(start);
+        event.setEndTime(newEnd);
+        event.setName("timeOff");
+        AEvent evt = facade.editTimeOff(1L, 2L, event);
+        Mockito.verify(gymService).findById(1L);
+        assertThat(evt).isEqualTo(createTimeOff(gym, trainer, start, newEnd));
+    }
+
+    @Test
+    public void canEditTimeOff() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        AUser trainer = createTrainer();
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(createTimeOff(gym, trainer, start, end)).when(service).findById(2L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+        Event event = new Event();
+        Date newEnd = addHours(end, 1);
+        event.setStartTime(start);
+        event.setEndTime(newEnd);
+        event.setName("timeOff");
+        facade.canEditTimeOff(1L, 2L, event);
+        Mockito.verify(gymService).findById(1L);
+    }
+
+    @Test
+    public void isTimeOffAvailable() {
+        Gym gym = createGym();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        AUser trainer = createTrainer();
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(createTimeOff(gym, trainer, start, end)).when(service).findById(2L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+        Event event = new Event();
+        Date newEnd = addHours(end, 1);
+        event.setStartTime(start);
+        event.setEndTime(newEnd);
+        event.setName("timeOff");
+        facade.isTimeOffAvailable(1L, event);
+        Mockito.verify(gymService).findById(1L);
+    }
+
+    @Test
     public void deleteHoliday() {
         facade.delete(1L);
         Mockito.verify(service).findById(1L);
         Mockito.verify(service).delete(any());
+    }
+
+    private TimeOff createTimeOff(Gym gym, AUser trainer, Date start, Date end) {
+        TimeOff time = new TimeOff();
+        time.setName("timeOff");
+        time.setUser(trainer);
+        time.setGym(gym);
+        time.setStartTime(start);
+        time.setEndTime(end);
+        return time;
+    }
+
+    private Trainer createTrainer() {
+        Trainer user = new Trainer();
+        user.setId(2L);
+        user.setEmail("trainer@trainer.com");
+        user.setFirstName("trainer");
+        user.setLastName("trainer");
+        return user;
     }
 
     private static Date getNextMonday() {
