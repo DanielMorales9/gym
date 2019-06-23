@@ -9,10 +9,9 @@
 
 - **Chapter II** Courses and Events
     - Investigate better solutions for Reservation
-    - Add ATrainingBundleSpecification tests
-    - Add ATrainingBundle tests
-    - Add CourseTrainingBundle to SaleFacade tests
     - Add Tests to EventService
+    - Add Tests to ReservationService
+    - Improved Test Coverage Sale Facade
     - Change Reservation Facade logic
     - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off* Fixed  
     

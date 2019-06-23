@@ -56,8 +56,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(errorDetails, HttpStatus.METHOD_NOT_ALLOWED);
     }
 
-    @ExceptionHandler(UnauthorizedException.class)
-    public final ResponseEntity<ErrorDetails> handle(UnauthorizedException ex,
+    @ExceptionHandler(UnAuthorizedException.class)
+    public final ResponseEntity<ErrorDetails> handle(UnAuthorizedException ex,
                                                      WebRequest request) {
         ErrorDetails errorDetails = new ErrorDetails(new Date(), ex.getMessage(),
                 request.getDescription(false));

@@ -132,7 +132,7 @@ public class AuthenticationFacade {
         VerificationToken vToken = tokenService.findByToken(token);
 
         if (vToken.isExpired()) {
-            throw new UnauthorizedException("Il token è scaduto.");
+            throw new UnAuthorizedException("Il token è scaduto.");
         }
 
         return vToken.getUser();
