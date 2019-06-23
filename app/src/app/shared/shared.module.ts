@@ -16,7 +16,7 @@ import {
     BundlesNotDisabledService,
     BundlesService,
     SalesService,
-    TimesOffService,
+    EventService,
     TrainingService,
     UserHelperService,
     UserService
@@ -112,7 +112,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         BundlesService,
         BundlesNotDisabledService,
         SalesService,
-        TimesOffService,
+        EventService,
         TrainingService,
         UserService,
         UserHelperService,

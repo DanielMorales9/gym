@@ -35,18 +35,17 @@ export class AdminCalendarComponent extends BaseCalendar {
 
         const s2 = this.facade.getAllEvents(startDay, endDay);
 
-        // const s3 = this.facade.getTimesOff(startDay, endDay, undefined, 'trainer');
-
         concat(s1, s2)
             .subscribe(rel  => {
                 this.events.push(...rel.map(value => this.formatEvent(value)));
+                console.log(this.events);
                 this.refreshView();
             });
     }
 
     header(action: string, event: any) {
         if (this.isValidHeader(event)) {
-            this.facade.checkDayTimeOff(event.day.date, 'admin')
+            this.facade.isHolidayAvailableAllDay(event.day.date)
                 .subscribe(_ => {
                     this.modalData = {
                         action: EVENT_TYPES.HEADER,
@@ -55,7 +54,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                         role: this.role,
                         event: event
                     };
-                    this.openModal('header');
+                    this.openModal(action);
                 }, err => this.snackBar.open(err.error.message));
         } else {
             this.snackBar.open('Orario non valido');
@@ -76,7 +75,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     hour(action: string, event: any) {
         if (this.isValidHour(event)) {
             console.log(event);
-            this.facade.checkHourTimeOff(event.date, 'admin')
+            this.facade.isHolidayAvailable(event.date)
                 .subscribe(res => {
                     this.modalData = {
                         action: EVENT_TYPES.HOUR,
@@ -85,7 +84,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                         role: this.role,
                         event: event
                     };
-                    this.openModal('hour');
+                    this.openModal(action);
                 }, err => this.snackBar.open(err.error.message));
         } else {
             this.snackBar.open('Orario non valido');
@@ -106,7 +105,8 @@ export class AdminCalendarComponent extends BaseCalendar {
 
     change(action: string, event: any) {
         if (this.isValidChange(event)) {
-            this.facade.checkTimeOffChange(event.newStart, event.newEnd, 'admin')
+            console.log(event);
+            this.facade.canEditHoliday(event.event.meta.id, {name: event.name, startTime: event.newStart, endTime: event.newEnd})
                 .subscribe(_ => {
                     this.modalData = {
                         action: EVENT_TYPES.CHANGE,
@@ -152,7 +152,7 @@ export class AdminCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
-                this.bookTimeOff(data);
+                this.createHoliday(data);
             }
         });
     }
@@ -165,7 +165,7 @@ export class AdminCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
                 const end = this.dateService.addHour(data.start);
-                this.bookTimeOff(data, end);
+                this.createHoliday(data, end);
             }
         });
     }
@@ -200,7 +200,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             if (!!data) {
                 switch (data.type) {
                     case 'admin':
-                        this.deleteAdminTimeOff(data);
+                        this.deleteHoliday(data);
                         break;
                     case 'trainer':
                         this.deleteTrainerTimeOff(data);
@@ -223,13 +223,14 @@ export class AdminCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
-                this.changeTimeOff(data);
+                this.editHoliday(data);
             }
         });
     }
 
-    private changeTimeOff(data) {
-        this.facade.changeTimeOff(data.eventId, data.start, data.end, data.eventName, 'admin')
+    private editHoliday(data) {
+        console.log(data);
+        this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
             .subscribe((_) => {
                 this.snackBar.open('Chiusura confermata');
                 this.getEvents();
@@ -246,8 +247,8 @@ export class AdminCalendarComponent extends BaseCalendar {
             });
     }
 
-    private bookTimeOff(data, end?: Date) {
-        this.facade.bookTimeOff(data.start, data.eventName, data.type, data.userId, end)
+    private createHoliday(data, end?) {
+        this.facade.createHoliday(data.eventName, data.start, end)
             .subscribe((_) => {
                 this.snackBar.open('Chiusura confermata');
                 this.getEvents();
@@ -257,7 +258,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private deleteTrainerTimeOff(data) {
-        this.facade.deleteTimeOff(data.eventId, 'trainer')
+        this.facade.deleteTimeOff(data.eventId)
             .subscribe(res => {
                 this.snackBar.open('Ferie cancellate');
                 this.getEvents();
@@ -266,8 +267,8 @@ export class AdminCalendarComponent extends BaseCalendar {
             });
     }
 
-    private deleteAdminTimeOff(data) {
-        this.facade.deleteTimeOff(data.eventId)
+    private deleteHoliday(data) {
+        this.facade.deleteHoliday(data.eventId)
             .subscribe(res => {
                 this.snackBar.open('La chiusura è stata eliminata');
                 this.getEvents();

@@ -254,10 +254,11 @@ export abstract class BaseCalendar implements OnInit {
         const endHour = endTime.getHours();
 
         let title;
-        const isATimeOff = !!event.type;
-        if (isATimeOff) {
+        const isNotReservation = !!event.type;
+        if (isNotReservation) {
             title = event.name;
-            event.eventName = (event.type === 'admin') ? 'chiusura' : 'ferie';
+            event.eventName = (event.type === 'H') ? 'chiusura' : 'ferie';
+            event.type = (event.type === 'H') ? 'admin' : 'trainer';
         } else {
             event.type = 'reservation';
             event.eventName = 'prenotazione';
@@ -267,14 +268,15 @@ export abstract class BaseCalendar implements OnInit {
                 title = `Allenamento ${startHour} - ${endHour} di ${event['user']['lastName']}`;
             }
         }
-        const isMyEvent = event.user.id === this.user.id;
+
+        const isMyEvent = (event.user) ? event.user.id === this.user.id : false;
         const isDeletable = this.user.type === 'A' || (event.type === 'reservation' && this.user.type !== 'C') || isMyEvent;
-        const isResizable = isATimeOff && isMyEvent;
+        const isResizable = isNotReservation && (isMyEvent || this.user.type === 'A');
         return {
             start: startTime,
             end: endTime,
             title: title,
-            color: (isATimeOff) ? CALENDAR_COLUMNS.RED : (event.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW,
+            color: (isNotReservation) ? CALENDAR_COLUMNS.RED : (event.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW,
             actions: isDeletable ? this.ACTIONS : [],
             allDay: isAllDay,
             resizable: {

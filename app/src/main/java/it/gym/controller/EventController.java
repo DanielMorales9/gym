@@ -110,7 +110,7 @@ public class EventController {
     }
 
     @PatchMapping(path = "/{gymId}/timeOff/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
+    @PreAuthorize("hasAuthority('TRAINER')")
     ResponseEntity<EventResource> editTimeOff(@PathVariable Long gymId,
                                               @PathVariable Long id,
                                               @RequestBody Event event) {
@@ -156,6 +156,19 @@ public class EventController {
                                                                    @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                            iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
         List<AEvent> res = facade.findAllTimesOffByTrainerId(id, startTime, endTime);
+
+        return ResponseEntity.ok(new EventAssembler().toResources(res));
+    }
+
+    @GetMapping("/holiday")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam(value = "startTime")
+                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                                   @RequestParam(value = "endTime")
+                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        List<AEvent> res = facade.findAllHolidays(startTime, endTime);
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }

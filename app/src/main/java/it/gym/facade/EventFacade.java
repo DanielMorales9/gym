@@ -33,6 +33,10 @@ public class EventFacade {
         return this.service.findAllTimesOffById(trainerId, startTime, endTime);
     }
 
+    public List<AEvent> findAllHolidays(Date startTime, Date endTime) {
+        return this.service.findAllHolidays(startTime, endTime);
+    }
+
     public AEvent createHoliday(Long gymId, Event event) {
         Gym gym = gymService.findById(gymId);
 
@@ -62,7 +66,7 @@ public class EventFacade {
         checkNoOtherEventsExceptMe(holiday);
 
         holiday.setName(event.getName());
-        holiday.setStartTime(event.getEndTime());
+        holiday.setStartTime(event.getStartTime());
         holiday.setEndTime(event.getEndTime());
 
         return this.service.save(holiday);
@@ -94,7 +98,7 @@ public class EventFacade {
         checkNoOtherEventsExceptMe(timeOff);
 
         timeOff.setName(event.getName());
-        timeOff.setStartTime(event.getEndTime());
+        timeOff.setStartTime(event.getStartTime());
         timeOff.setEndTime(event.getEndTime());
 
         return this.service.save(timeOff);
@@ -181,11 +185,12 @@ public class EventFacade {
 
     private void checkInterval(Date startTime, Date endTime) {
         if (gymService.isInvalidInterval(startTime, endTime))
-            throw new InvalidEvent("Data Non Valida");
+            throw new InvalidEvent("Orario non valido");
     }
 
     private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
-        if (gymService.isWithinWorkingHours(gym, startTime, endTime))
-            throw new InvalidEvent("Data Non Valida");
+        boolean isOk = !gymService.isWithinWorkingHours(gym, startTime, endTime);
+        if (isOk)
+            throw new InvalidEvent("La palestra è chiusa in questo orario");
     }
 }

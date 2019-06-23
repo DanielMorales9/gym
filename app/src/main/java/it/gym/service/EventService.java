@@ -2,6 +2,7 @@ package it.gym.service;
 
 import it.gym.exception.NotFoundException;
 import it.gym.model.AEvent;
+import it.gym.model.Holiday;
 import it.gym.model.TimeOff;
 import it.gym.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,13 @@ public class EventService implements ICrudService<AEvent, Long> {
         return this.repository.findAll().stream()
                 .filter(e -> e.getType().equals(TimeOff.TYPE))
                 .filter(e -> ((TimeOff) e).getUser().getId().equals(id))
+                .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
+                .collect(Collectors.toList());
+    }
+
+    public List<AEvent> findAllHolidays(Date startTime, Date endTime) {
+        return this.repository.findAll().stream()
+                .filter(e -> e.getType().equals(Holiday.TYPE))
                 .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
                 .collect(Collectors.toList());
     }

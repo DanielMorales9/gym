@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {TimesOffService, TrainingService, UserService} from '../shared/services';
+import {EventService, TrainingService, UserService} from '../shared/services';
 import {AppService} from './app.service';
 import {GymService} from './gym.service';
 import {DateService} from './date.service';
@@ -12,7 +12,7 @@ export class CalendarFacade {
     constructor(private userService: UserService,
                 private appService: AppService,
                 private trainingService: TrainingService,
-                private eventService: TimesOffService,
+                private eventService: EventService,
                 private dateService: DateService,
                 private gymService: GymService) {
     }
@@ -53,10 +53,25 @@ export class CalendarFacade {
     }
 
     /**
-     * TIME-OFF API
+     * Holiday API
      */
 
-    bookTimeOff(start: Date, name: string, type: string, userId: number, end?: Date) {
+    isHolidayAvailable(date: any) {
+        const gymId = this.gymService.gym.id;
+        const startTime = new Date(date);
+        const endTime = this.dateService.addHour(startTime);
+
+        return this.eventService.isHolidayAvailable(gymId, {startTime: startTime, endTime: endTime});
+    }
+
+    isHolidayAvailableAllDay(date: any) {
+        const gymId = this.gymService.gym.id;
+        const {startTime, endTime} = this.gymService.getGymStartAndEndHour(new Date(date));
+
+        return this.eventService.isHolidayAvailable(gymId, {startTime: startTime, endTime: endTime});
+    }
+
+    createHoliday(eventName: any, start: Date, end: Date) {
         const gymId = this.gymService.gym.id;
         if (!end) {
             const {startTime, endTime} = this.gymService.getGymStartAndEndHour(start);
@@ -64,55 +79,81 @@ export class CalendarFacade {
             end = endTime;
         }
 
-        const startS = CalendarFacade.formatDateToString(start);
-        const endS = CalendarFacade.formatDateToString(end);
-
-        return this.eventService.book(gymId, startS, endS, type, name, userId);
+        return this.eventService.createHoliday(gymId, {name: eventName, startTime: start, endTime: end});
     }
 
-    checkDayTimeOff(date: any, type: string) {
+    deleteHoliday(id: any) {
+        return this.eventService.deleteHoliday(id);
+    }
 
+    editHoliday(id: any, event: { name: any; startTime: any; endTime: any }) {
         const gymId = this.gymService.gym.id;
-        const {startTime, endTime} = this.gymService.getGymStartAndEndHour(new Date(date));
 
+        return this.eventService.editHoliday(gymId, id, event);
+    }
+
+    canEditHoliday(id: any, event: { name: any; startTime: any; endTime: any }) {
+        const gymId = this.gymService.gym.id;
+
+        return this.eventService.canEditHoliday(gymId, id, event);
+    }
+
+
+    getHoliday(startTime: any, endTime: any): Observable<Object[]> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-
-        return this.eventService.check(gymId, startS, endS, type);
+        return this.eventService.getHolidays(startS, endS);
     }
 
-    checkHourTimeOff(date: any, type: string) {
+    /**
+     * TIME-OFF API
+     */
+
+    createTimeOff(trainerId: number, name: string, start: Date, end?: Date) {
+        const gymId = this.gymService.gym.id;
+        if (!end) {
+            const {startTime, endTime} = this.gymService.getGymStartAndEndHour(start);
+            start = startTime;
+            end = endTime;
+        }
+
+        return this.eventService.createTimeOff(gymId, trainerId, {startTime: start, endTime: end, name: name});
+    }
+
+    isTimeOffAvailable(date: any) {
         const gymId = this.gymService.gym.id;
         const startTime = new Date(date);
         const endTime = this.dateService.addHour(startTime);
 
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.check(gymId, startS, endS, type);
+        return this.eventService.isTimeOffAvailable(gymId, {startTime: startTime, endTime: endTime});
     }
 
-    getTimesOff(startTime: any, endTime: any, id: number, type?: string): Observable<Object[]> {
+    isTimeOffAvailableAllDay(date: Date) {
+        const gymId = this.gymService.gym.id;
+        const {startTime, endTime} = this.gymService.getGymStartAndEndHour(new Date(date));
+
+        return this.eventService.isTimeOffAvailable(gymId, {startTime: startTime, endTime: endTime});
+    }
+
+    getTimesOff(startTime: any, endTime: any, id: number): Observable<Object[]> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getTimesOff(startS,  endS, id, type);
+        return this.eventService.getTimesOff(startS,  endS, id);
     }
 
     deleteTimeOff(id: number, type?: string) {
-        return this.eventService.delete(id, type);
+        return this.eventService.deleteTimeOff(id);
     }
 
-    changeTimeOff(id: number, startTime: Date, endTime: Date, name: string | any, type: string) {
+    editTimeOff(id: number, startTime: Date, endTime: Date, name: string) {
         const gymId = this.gymService.gym.id;
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.change(gymId, id, startS, endS, name, type);
+
+        return this.eventService.editTimeOff(gymId, id, {startTime: startTime, endTime: endTime, name: name});
     }
 
-    checkTimeOffChange(startTime: Date, endTime: Date, type: string) {
+    canEditTimeOff(id: any, startTime: any, endTime: any ) {
         const gymId = this.gymService.gym.id;
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.checkChange(gymId, startS, endS, type);
+        return this.eventService.canEditTimeOff(gymId, id, {startTime: startTime, endTime: endTime});
     }
 
 
@@ -173,5 +214,6 @@ export class CalendarFacade {
     isDayEvent(startTime: Date, endTime: Date) {
         return this.gymService.isDayEvent(startTime, endTime);
     }
+
 
 }

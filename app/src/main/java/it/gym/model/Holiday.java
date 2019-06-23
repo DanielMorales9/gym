@@ -15,7 +15,7 @@ import javax.persistence.*;
 @EqualsAndHashCode(callSuper = true)
 public class Holiday extends AEvent {
 
-    private static final String TYPE = "H";
+    public static final String TYPE = "H";
 
     @Override
     public String getType() {

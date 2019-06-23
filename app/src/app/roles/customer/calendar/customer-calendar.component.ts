@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade, SnackBarService} from '../../../services';
-import {concat} from 'rxjs';
+import {concat, Observable} from 'rxjs';
 import {MatDialog} from '@angular/material';
 import {CustomerInfoModalComponent} from './customer-info-modal.component';
 import {CustomerHourModalComponent} from './customer-hour-modal.component';
@@ -29,7 +29,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         const s1 = this.facade.getReservations(startDay, endDay, this.user.id);
 
-        const s2 = this.facade.getTimesOff(startDay, endDay, undefined, 'admin');
+        const s2 = this.facade.getHoliday(startDay, endDay);
 
         concat(s1, s2)
             .subscribe(rel => {

@@ -34,9 +34,9 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
         const s1 = this.facade.getReservations(startDay, endDay);
 
-        const s2 = this.facade.getTimesOff(startDay, endDay, undefined, 'admin');
+        const s2 = this.facade.getTimesOff(startDay, endDay, this.user.id);
 
-        const s3 = this.facade.getTimesOff(startDay, endDay, this.user.id);
+        const s3 = this.facade.getHoliday(startDay, endDay);
 
         concat(s1, s2, s3)
             .subscribe(rel => {
@@ -47,8 +47,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     change(action: string, event: any) {
         if (this.isValidChange(event)) {
-            const type = 'trainer';
-            this.facade.checkTimeOffChange(event.newStart, event.newEnd, type)
+            this.facade.canEditTimeOff(event.event.meta.id, event.newStart, event.newEnd)
                 .subscribe(_ => {
                     this.modalData = {
                         action: EVENT_TYPES.CHANGE,
@@ -68,7 +67,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     header(action: string, event: any) {
         if (this.isValidHeader(event)) {
-            this.facade.checkDayTimeOff(new Date(event.day.date), 'trainer')
+            this.facade.isTimeOffAvailableAllDay(new Date(event.day.date))
                 .subscribe(res => {
                 this.modalData = {
                     action: EVENT_TYPES.HEADER,
@@ -99,7 +98,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     hour(action: string, event: any) {
         if (this.isValidHour(event)) {
-            this.facade.checkHourTimeOff(new Date(event.date), 'trainer')
+            this.facade.isTimeOffAvailable(new Date(event.date))
                 .subscribe(res => {
                     this.modalData = {
                         action: EVENT_TYPES.HOUR,
@@ -182,7 +181,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
                 const end = this.dateService.addHour(data.start);
-                this.bookTimeOff(data, end);
+                this.createTimeOff(data, end);
             }
         });
     }
@@ -196,7 +195,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
             if (!!data) {
                 switch (data.type) {
                     case 'trainer':
-                        this.deleteTrainerTimeOff(data);
+                        this.deleteTimeOff(data);
                         break;
                     case 'reservation':
                         this.deleteReservation(data);
@@ -215,7 +214,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
-                this.bookTimeOff(data);
+                this.createTimeOff(data);
             }
         });
     }
@@ -227,7 +226,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
-                this.changeTimeOff(data);
+                this.editTimeOff(data);
             }
         });
 
@@ -251,8 +250,8 @@ export class TrainerCalendarComponent extends BaseCalendar {
             });
     }
 
-    private bookTimeOff(data: any, end?: Date) {
-        this.facade.bookTimeOff(data.start, data.name, data.type, data.userId, end)
+    private createTimeOff(data: any, end?: Date) {
+        this.facade.createTimeOff(data.userId, data.name, data.start, end)
             .subscribe((_) => {
                 this.snackBar.open('Ferie richieste');
                 this.getEvents();
@@ -261,7 +260,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
             });
     }
 
-    private deleteTrainerTimeOff(data: any) {
+    private deleteTimeOff(data: any) {
         this.facade.deleteTimeOff(data.eventId)
             .subscribe(res => {
                 this.snackBar.open('Ferie eliminate con successo');
@@ -282,8 +281,8 @@ export class TrainerCalendarComponent extends BaseCalendar {
             });
     }
 
-    private changeTimeOff(data) {
-        this.facade.changeTimeOff(data.eventId, data.start, data.end, data.eventName, data.type)
+    private editTimeOff(data) {
+        this.facade.editTimeOff(data.eventId, data.start, data.end, data.eventName)
             .subscribe((_) => {
                 this.snackBar.open('Ferie richieste');
                 this.getEvents();
