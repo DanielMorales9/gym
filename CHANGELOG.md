@@ -3,7 +3,7 @@
 - **BC**: Integrate with email automation service
 - **BF**: Solve issue related to double beans
 - **BC**: Separate API from front-end with NGINX
-- **FR**: expose error path
+- **FR**: Expose error path
 - **FR**: Schedule Training Assignment
 - **FR**: Recurring events in Gym Calendar
 
@@ -12,7 +12,9 @@
     - Add ATrainingBundleSpecification tests
     - Add ATrainingBundle tests
     - Add CourseTrainingBundle to SaleFacade tests
-    - Adapt Calendar to API changes
+    - Add Tests to EventFacade and EventService
+    - Change Reservation Facade logic
+    - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off* Fixed  
     
 - **Chapter III** Gym-relative calls
     - Add gymId as PathVariable to API calls
@@ -32,7 +34,10 @@
     - Fixed Issue related to the *Favicon.ico not correctly loaded*
     - Fixed bug changePassword NotFound
     - Separate TimeOff into Holidays and (Employee) TimeOff 
-
+    - Adapt Calendar to API changes
+    - Adapt Changes to Calendar UI
+    - Fixed missing API findAllCustomers
+    
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests
    - Created Mail Service w tests
@@ -59,7 +64,6 @@
    - Removed Session Repository from Reservation Facade
    - Added @Data and @EqualsAndHashCode to each of class in model
    - Removed Rest API from TimeOff Repository
-   - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off* Fixed
    
 - **BF**: Email not valid
 - **BF**: Typo in gym configuration

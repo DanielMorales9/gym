@@ -38,4 +38,8 @@ public class CustomerService implements ICrudService<Customer, Long> {
     public Page<Customer> findByLastName(String query, Pageable pageable) {
         return repository.findByLastName(query, pageable);
     }
+
+    public Page<Customer> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
 }

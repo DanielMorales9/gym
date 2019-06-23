@@ -26,6 +26,13 @@ public class CustomerController {
     @Autowired
     private CustomerService service;
 
+    @GetMapping
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
+    Page<Customer> simpleSearch(Pageable pageable) {
+        return service.findAll(pageable);
+    }
+
     @GetMapping(path = "/search")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
