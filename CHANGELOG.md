@@ -11,7 +11,7 @@
     - Investigate better solutions for Reservation
     - Add Tests to EventService
     - Add Tests to ReservationService
-    - Improved Test Coverage Sale Facade
+    - Improve Test Coverage Sale Facade
     - Change Reservation Facade logic
     - Add Gym capacity
     - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off* Fixed  
@@ -37,7 +37,8 @@
     - Adapt Calendar to API changes
     - Adapt Changes to Calendar UI
     - Fixed missing API findAllCustomers
-    - Improved test coverage Event Facade
+    - Improved Test Coverage Event Facade
+    - Improved Test Coverage Event Service
         
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

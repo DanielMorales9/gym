@@ -70,7 +70,7 @@ public class ReservationFacade {
 
         isReservedOnTime(startTime);
 
-        List<AEvent> timesOff = this.eventService.findAllEventsTypeInBetween(startTime, endTime);
+        List<AEvent> timesOff = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
         hasHolidays(timesOff);
 

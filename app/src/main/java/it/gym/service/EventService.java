@@ -15,13 +15,8 @@ import java.util.stream.Collectors;
 @Service
 public class EventService implements ICrudService<AEvent, Long> {
 
-    private final EventRepository repository;
-
     @Autowired
-    public EventService(EventRepository timeOffRepository) {
-        this.repository = timeOffRepository;
-    }
-
+    private EventRepository repository;
 
     @Override
     public AEvent save(AEvent var1) {
@@ -44,7 +39,7 @@ public class EventService implements ICrudService<AEvent, Long> {
         return this.repository.findAll();
     }
 
-    public List<AEvent> findAllEventsTypeInBetween(Date startTime, Date endTime) {
+    public List<AEvent> findAllEventsLargerThanInterval(Date startTime, Date endTime) {
         return repository.findAll().stream()
                 .filter(e ->  e.getStartTime().compareTo(startTime) <= 0 && e.getEndTime().compareTo(endTime) >= 0)
                 .collect(Collectors.toList());
