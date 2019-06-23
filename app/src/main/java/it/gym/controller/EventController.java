@@ -145,27 +145,27 @@ public class EventController {
 
     }
 
-    @GetMapping("/timeOff/{id}")
+    @GetMapping("/timeOff")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@PathVariable
-                                                                           Long id,
+    ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam
+                                                                           Long trainerId,
                                                                    @RequestParam(value = "startTime")
                                                                    @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                            iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                    @RequestParam(value = "endTime")
                                                                    @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                            iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findAllTimesOffByTrainerId(id, startTime, endTime);
+        List<AEvent> res = facade.findAllTimesOffByTrainerId(trainerId, startTime, endTime);
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }
 
     @GetMapping("/holiday")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam(value = "startTime")
+    ResponseEntity<List<EventResource>> findAllHolidaysByInterval(@RequestParam(value = "startTime")
                                                                    @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                            iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                                   @RequestParam(value = "endTime")
+                                                                  @RequestParam(value = "endTime")
                                                                    @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                            iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
         List<AEvent> res = facade.findAllHolidays(startTime, endTime);
@@ -175,13 +175,13 @@ public class EventController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllEventsInInterval(@RequestParam(value = "startTime")
+    ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                 @RequestParam(value = "endTime")
                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findAllEventsInInterval(startTime, endTime);
+        List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime);
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }

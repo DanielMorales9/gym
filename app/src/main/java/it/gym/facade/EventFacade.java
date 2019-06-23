@@ -3,14 +3,16 @@ package it.gym.facade;
 import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
-import it.gym.service.*;
+import it.gym.service.EventService;
+import it.gym.service.GymService;
+import it.gym.service.ReservationService;
+import it.gym.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -25,7 +27,7 @@ public class EventFacade {
     @Autowired private UserService userService;
     @Autowired private EventService service;
 
-    public List<AEvent> findAllEventsInInterval(Date startTime, Date endTime) {
+    public List<AEvent> findAllEventsByInterval(Date startTime, Date endTime) {
         return service.findAllEvents(startTime, endTime);
     }
 
@@ -140,7 +142,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        simpleCheckGym(gym, startTime, endTime);
+        gymService.simpleGymChecks(gym, startTime, endTime);
 
     }
 
@@ -148,21 +150,15 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        simpleCheckGym(gym, startTime, endTime);
+        gymService.simpleGymChecks(gym, startTime, endTime);
 
         checkNoReservations(startTime, endTime);
-    }
-
-    private void simpleCheckGym(Gym gym, Date startTime, Date endTime) {
-        checkInterval(startTime, endTime);
-
-        checkWorkingHours(gym, startTime, endTime);
     }
 
     private void checkNoOtherEventsExceptMe(AEvent event) {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
-        List<AEvent> events = this.service.findOverlappingTimesOff(startTime, endTime)
+        List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime)
                 .stream().filter(aEvent -> !event.equals(aEvent)).collect(Collectors.toList());
         if (!events.isEmpty())
             throw new BadRequestException(PRESENT_EVENTS_EX);
@@ -171,7 +167,7 @@ public class EventFacade {
     private void checkNoOtherEvents(Event event) {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
-        List<AEvent> events = this.service.findOverlappingTimesOff(startTime, endTime);
+        List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
         if (!events.isEmpty())
             throw new BadRequestException(PRESENT_EVENTS_EX);
     }
@@ -181,16 +177,5 @@ public class EventFacade {
         Integer nReservations = this.reservationService.countByInterval(startTime, endTime);
         if (nReservations > 0)
             throw new BadRequestException(NOT_AUTHORIZED_EX);
-    }
-
-    private void checkInterval(Date startTime, Date endTime) {
-        if (gymService.isInvalidInterval(startTime, endTime))
-            throw new BadRequestException("Orario non valido");
-    }
-
-    private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
-        boolean isOk = !gymService.isWithinWorkingHours(gym, startTime, endTime);
-        if (isOk)
-            throw new BadRequestException("La palestra è chiusa in questo orario");
     }
 }

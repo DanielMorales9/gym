@@ -1,5 +1,6 @@
 package it.gym.service;
 
+import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
@@ -47,4 +48,23 @@ public class GymService implements ICrudService<Gym, Long> {
     public boolean isWithinWorkingHours(Gym gym, Date start, Date end) {
         return gym.isValidDate(start, end);
     }
+
+
+    public void simpleGymChecks(Gym gym, Date startTime, Date endTime) {
+        checkInterval(startTime, endTime);
+
+        checkWorkingHours(gym, startTime, endTime);
+    }
+
+    private void checkInterval(Date startTime, Date endTime) {
+        if (this.isInvalidInterval(startTime, endTime))
+            throw new BadRequestException("Orario non valido");
+    }
+
+    private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
+        boolean isOk = !this.isWithinWorkingHours(gym, startTime, endTime);
+        if (isOk)
+            throw new BadRequestException("La palestra è chiusa in questo orario");
+    }
+
 }

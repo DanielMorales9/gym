@@ -6,7 +6,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 @DiscriminatorValue(value="T")
@@ -33,6 +36,11 @@ public class TimeOff extends AEvent {
 
     public String getType() {
         return TYPE;
+    }
+
+    @Override
+    public boolean isReservable() {
+        return false;
     }
 
     @Override

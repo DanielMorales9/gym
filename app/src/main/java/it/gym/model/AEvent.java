@@ -90,4 +90,6 @@ public abstract class AEvent {
     public void setGym(Gym gym) {
         this.gym = gym;
     }
+
+    public abstract boolean isReservable();
 }

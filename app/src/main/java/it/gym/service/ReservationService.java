@@ -8,7 +8,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ReservationService implements ICrudService<Reservation, Long> {
@@ -46,7 +45,7 @@ public class ReservationService implements ICrudService<Reservation, Long> {
         return this.reservationRepository.findByStartTime(startDate);
     }
 
-    public List<Reservation> findByInterval(Long id, Date startTime, Date endTime) {
+    public List<Reservation> findByIntervalAndId(Long id, Date startTime, Date endTime) {
         return this.reservationRepository.findByInterval(id, startTime, endTime);
     }
 

@@ -6,7 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
-import javax.persistence.*;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value="H")
@@ -22,6 +23,11 @@ public class Holiday extends AEvent {
     @Override
     public String getType() {
         return TYPE;
+    }
+
+    @Override
+    public boolean isReservable() {
+        return false;
     }
 
     @Override

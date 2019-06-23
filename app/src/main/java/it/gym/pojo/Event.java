@@ -6,6 +6,7 @@ public class Event {
     private String name;
     private Date startTime;
     private Date endTime;
+    private Long id;
 
     public String getName() {
         return name;
@@ -28,5 +29,13 @@ public class Event {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

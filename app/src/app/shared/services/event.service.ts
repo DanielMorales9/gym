@@ -16,7 +16,7 @@ export class EventService {
     }
 
     getTimesOff(start: string, end: string, id: number): Observable<any> {
-        return this.http.get(`/events/timeOff/${id}?startTime=${start}&endTime=${end}`);
+        return this.http.get(`/events/timeOff?${id}&startTime=${start}&endTime=${end}`);
     }
 
     deleteTimeOff(id: number): Observable<any> {
