@@ -2,6 +2,7 @@ package it.gym.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.Calendar;
@@ -11,6 +12,7 @@ import java.util.Date;
 @Table(name = "verify_token")
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public class VerificationToken {
 
     public static final int EXPIRATION = 60 * 24;

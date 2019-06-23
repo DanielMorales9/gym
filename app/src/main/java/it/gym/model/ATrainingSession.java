@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 
@@ -22,6 +23,7 @@ import javax.persistence.*;
 @DiscriminatorColumn(name="session_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public abstract class ATrainingSession {
 
     @Id

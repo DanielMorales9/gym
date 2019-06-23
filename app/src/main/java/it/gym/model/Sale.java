@@ -2,6 +2,7 @@ package it.gym.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 @Table(name = "sales")
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public class Sale {
 
     @Id

@@ -3,6 +3,7 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,6 +13,7 @@ import java.util.Date;
 @JsonTypeName("C")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Generated //exclude coverage analysis on generated methods
 public class CourseTrainingBundleSpecification extends ATrainingBundleSpecification {
 
     public static final String TYPE = "C";

@@ -3,6 +3,7 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
@@ -13,6 +14,7 @@ import javax.persistence.Entity;
 @JsonTypeName("P")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecification {
 
     @Column(name="num_sessions")

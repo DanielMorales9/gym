@@ -1,9 +1,7 @@
 package it.gym.service;
 
-import it.gym.exception.GymNotFoundException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.model.Gym;
 import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.junit.Test;
@@ -15,7 +13,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.DayOfWeek;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;

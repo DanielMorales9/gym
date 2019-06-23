@@ -2,6 +2,7 @@ package it.gym.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import java.util.List;
 @DiscriminatorValue(value="A")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Generated //exclude coverage analysis on generated methods
 public class Admin extends AUser {
 
     @Override

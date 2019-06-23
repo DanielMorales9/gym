@@ -2,6 +2,7 @@ package it.gym.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -10,6 +11,7 @@ import java.util.Date;
 @Table(name = "reservations")
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public class Reservation {
 
     @Id

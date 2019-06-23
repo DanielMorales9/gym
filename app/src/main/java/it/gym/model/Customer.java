@@ -3,6 +3,7 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -13,6 +14,7 @@ import java.util.List;
 @DiscriminatorValue(value="C")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Generated //exclude coverage analysis on generated methods
 public class Customer extends AUser {
 
     @Column(name = "height")

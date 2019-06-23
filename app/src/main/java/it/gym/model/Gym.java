@@ -1,6 +1,8 @@
 package it.gym.model;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 import java.time.DayOfWeek;
@@ -10,6 +12,8 @@ import java.util.TimeZone;
 
 @Entity
 @Data
+@EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public class Gym {
 
     private static final String LOCALE = "Europe/Rome";

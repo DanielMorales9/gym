@@ -1,8 +1,5 @@
 package it.gym.service;
 
-import it.gym.exception.GymNotFoundException;
-import it.gym.model.Gym;
-import it.gym.repository.GymRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -14,9 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.time.DayOfWeek;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

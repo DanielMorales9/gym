@@ -2,6 +2,7 @@ package it.gym.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 
@@ -9,6 +10,7 @@ import javax.persistence.*;
 @Table(name="roles")
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public class Role {
     @Id
     @SequenceGenerator(name = "roles_role_id_seq",

@@ -43,6 +43,5 @@ docker-compose up
 ````
 
 # TODOs
-- TODO write plan
 - Follow this guidelines: [Angular 7 - Guidelines](https://medium.freecodecamp.org/best-practices-for-a-clean-and-performant-angular-application-288e7b39eb6f)
 

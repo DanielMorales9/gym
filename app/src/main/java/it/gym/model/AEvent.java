@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ import java.util.Date;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public abstract class AEvent {
 
     @Id

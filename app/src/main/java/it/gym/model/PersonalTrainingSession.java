@@ -3,6 +3,7 @@ package it.gym.model;
 import it.gym.exception.NotAllowedException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -14,6 +15,7 @@ import java.util.Date;
 @DiscriminatorValue(value="P")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingSession extends ATrainingSession {
 
     @Temporal(TemporalType.TIMESTAMP)

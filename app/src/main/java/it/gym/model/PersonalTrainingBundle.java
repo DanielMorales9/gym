@@ -3,6 +3,7 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.Column;
@@ -17,6 +18,7 @@ import java.util.Date;
 @ExposesResourceFor(value = ATrainingBundle.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Column(name="numSessions")

@@ -3,6 +3,7 @@ package it.gym.model;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 import javax.persistence.*;
 
@@ -10,6 +11,7 @@ import javax.persistence.*;
 @Table(name = "sales_lines")
 @Data
 @EqualsAndHashCode
+@Generated //exclude coverage analysis on generated methods
 public class SalesLineItem {
     @Id
     @SequenceGenerator(name = "sales_lines_line_id_seq",
