@@ -1,6 +1,6 @@
 package it.gym.service;
 
-import it.gym.exception.TokenNotFoundException;
+import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
 import it.gym.repository.VerificationTokenRepository;
@@ -23,7 +23,7 @@ public class VerificationTokenService implements ICrudService<VerificationToken,
 
     @Override
     public VerificationToken findById(Long var1) {
-        return this.tokenRepository.findById(var1).orElseThrow(TokenNotFoundException::new);
+        return this.tokenRepository.findById(var1).orElseThrow(() -> new NotFoundException("Il token non esiste"));
     }
 
     @Override
@@ -37,11 +37,11 @@ public class VerificationTokenService implements ICrudService<VerificationToken,
     }
 
     public VerificationToken findByUser(AUser user) {
-        return this.tokenRepository.findByUser(user).orElseThrow(TokenNotFoundException::new);
+        return this.tokenRepository.findByUser(user).orElseThrow(() -> new NotFoundException("Il token non esiste"));
     }
 
     public VerificationToken findByToken(String token) {
-        return this.tokenRepository.findByToken(token).orElseThrow(TokenNotFoundException::new);
+        return this.tokenRepository.findByToken(token).orElseThrow(() -> new NotFoundException("Il token non esiste"));
     }
 
     private Optional<VerificationToken> findOptionalByUser(AUser user) {

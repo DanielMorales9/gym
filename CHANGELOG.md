@@ -37,8 +37,8 @@
     - Adapt Calendar to API changes
     - Adapt Changes to Calendar UI
     - Fixed missing API findAllCustomers
-    - Add Tests to EventFacade
-    
+    - Improved test coverage Event Facade
+        
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests
    - Created Mail Service w tests

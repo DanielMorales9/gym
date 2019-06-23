@@ -73,7 +73,7 @@ public class AuthenticationFacade {
 
 
         if (userService.existsByEmail(user.getEmail()))
-            throw new UserRegistrationException(String.format("L'utente con l'email %s esiste già.",user.getEmail()));
+            throw new InternalServerException(String.format("L'utente con l'email %s esiste già.",user.getEmail()));
         else
             user = this.userService.save(user);
 
@@ -86,7 +86,7 @@ public class AuthenticationFacade {
             this.rollbackRegistration(vk);
 
             String message = String.format(EMAIL_REGISTRATION_EX_MESSAGE, user.getFirstName(), user.getLastName());
-            throw new UserRegistrationException(message);
+            throw new InternalServerException(message);
         }
 
         return user;
@@ -119,9 +119,9 @@ public class AuthenticationFacade {
     public AUser forgotPassword(String email) {
         logger.info(String.format("Authentication: Find By Email: %s", email));
         AUser user = userService.findByEmail(email);
-        if (user == null) throw new UserNotFoundException(email);
+        if (user == null) throw new NotFoundException(String.format("L'utente con email %s non è stato trovato.", email));
 
-        if (!user.isVerified()) throw new UserIsNotVerified(email);
+        if (!user.isVerified()) throw new BadRequestException("L'utente con email " + email + " non è stato verificato!");
 
         VerificationToken vk = this.tokenService.createOrChangeVerificationToken(user);
         sendChangePasswordTokenToEmail(vk);
@@ -132,7 +132,7 @@ public class AuthenticationFacade {
         VerificationToken vToken = tokenService.findByToken(token);
 
         if (vToken.isExpired()) {
-            throw new ExpiredTokenException("Il token è scaduto.");
+            throw new UnauthorizedException("Il token è scaduto.");
         }
 
         return vToken.getUser();
@@ -140,7 +140,7 @@ public class AuthenticationFacade {
 
     public AUser resendAnonymousToken(Long id) {
         AUser user = this.userService.findById(id);
-        if (user.isVerified()) throw new UserIsVerified(user.getEmail());
+        if (user.isVerified()) throw new BadRequestException("L'utente con email " + user.getEmail() + " è già stato verificato!");
 
         VerificationToken vk = this.tokenService.createOrChangeVerificationToken(user);
         sendVerificationEmail(vk);
@@ -185,12 +185,12 @@ public class AuthenticationFacade {
 
     private void confirmPassword(String password, String confirmPassword) {
         if (!confirmPassword.equals(password))
-            throw new InvalidPasswordException("Le password non coincidono");
+            throw new BadRequestException("Le password non coincidono");
     }
 
     private void confirmPasswordNotEqualToOld(String password, String oldPassword) {
         if (oldPassword.equals(password))
-            throw new InvalidPasswordException("Nuova password coincide con la precedente");
+            throw new BadRequestException("Nuova password coincide con la precedente");
     }
 
     private void sendRegistrationConfirmationEmail(VerificationToken token) {

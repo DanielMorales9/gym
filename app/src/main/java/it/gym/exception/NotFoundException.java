@@ -9,4 +9,8 @@ public class NotFoundException extends RuntimeException {
     public NotFoundException(String pojoName, Long pojoId) {
         super(String.format("%s con il seguente id %d non è stato trovato.", pojoName, pojoId));
     }
+
+    public NotFoundException(String message) {
+        super(message);
+    }
 }

@@ -1,6 +1,6 @@
 package it.gym.service;
 
-import it.gym.exception.GymNotFoundException;
+import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
 import org.junit.Test;
@@ -51,7 +51,7 @@ public class GymServiceTest {
         Mockito.verify(repository).findById(1L);
     }
 
-    @Test(expected = GymNotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void whenFindByIdThrowsNotFound() {
         this.service.findById(1L);
     }

@@ -1,8 +1,8 @@
 package it.gym.facade;
 
-import it.gym.exception.InternalReservationException;
-import it.gym.exception.InvalidReservationException;
-import it.gym.exception.NotAllowedException;
+import it.gym.exception.BadRequestException;
+import it.gym.exception.InternalServerException;
+import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.service.*;
 import org.apache.commons.lang3.time.DateUtils;
@@ -71,8 +71,8 @@ public class ReservationFacade {
     }
 
     private void isValidInterval(Date startTime, Date endTime) {
-        if (!gymService.isInvalidInterval(startTime, endTime))
-            throw new InvalidReservationException("Data Non Valida");
+        if (gymService.isInvalidInterval(startTime, endTime))
+            throw new BadRequestException("Data Non Valida");
     }
 
     public Reservation book(Long gymId, Long customerId, Date startTime, Date endTime) {
@@ -165,17 +165,17 @@ public class ReservationFacade {
         logger.info("Checking whether there are trainers available");
 
         Long numTrainers = this.trainerService.countAllTrainer();
-        Long numOffTrainers = timesOff.parallelStream().filter(t -> t.getType().equals("trainer")).count();
+        Long numOffTrainers = timesOff.parallelStream().filter(t -> t.getType().equals(TimeOff.TYPE)).count();
         long numAvailableTrainers = numTrainers - numOffTrainers;
         if (numAvailableTrainers <= 0) {
-            throw new InvalidReservationException("Non ci sono personal trainer disponibili");
+            throw new BadRequestException("Non ci sono personal trainer disponibili");
         }
 
         List<Reservation> reservations = this.service.findByInterval(startTime, endTime);
         numAvailableTrainers = numAvailableTrainers - reservations.size();
 
         if (numAvailableTrainers == 0)
-            throw new InvalidReservationException("Questo orario è già stato prenotato");
+            throw new BadRequestException("Questo orario è già stato prenotato");
     }
 
     void isBundleLeft(Customer customer) {
@@ -183,7 +183,7 @@ public class ReservationFacade {
         long bundleCount = customer
                 .getCurrentTrainingBundles().size();
         if (bundleCount == 0)
-            throw new InvalidReservationException("Non hai più pacchetti a disposizione");
+            throw new BadRequestException("Non hai più pacchetti a disposizione");
     }
 
     Customer deleteExpiredBundles(Customer customer) {
@@ -195,7 +195,7 @@ public class ReservationFacade {
                 .map(customer::deleteBundle)
                 .reduce(Boolean::logicalAnd).orElse(true);
 
-        if (!allDeleted) throw new InternalReservationException("Qualcosa è andato storto.");
+        if (!allDeleted) throw new InternalServerException("Qualcosa è andato storto.");
         return customerService.save(customer);
     }
 
@@ -204,7 +204,7 @@ public class ReservationFacade {
         Date date = DateUtils.addHours(startTime, -this.reservationBeforeHours);
         Date now = new Date();
         if (date.before(now))
-            throw new InvalidReservationException(
+            throw new BadRequestException(
                     String.format("E' necessario prenotare almeno %s ore prima", reservationBeforeHours ));
     }
 
@@ -212,7 +212,7 @@ public class ReservationFacade {
         List<Reservation> reservations = this.service.findByInterval(id, startTime, endTime);
 
         if (!reservations.isEmpty())
-            throw new InvalidReservationException("Hai già prenotato in questo orario");
+            throw new BadRequestException("Hai già prenotato in questo orario");
     }
 
     void hasHolidays(List<AEvent> timesOff) {
@@ -220,9 +220,9 @@ public class ReservationFacade {
 
         Stream<AEvent> countAdmin = timesOff
                 .parallelStream()
-                .filter(s -> s.getType().equals("admin")).limit(1);
+                .filter(s -> s.getType().equals(Holiday.TYPE)).limit(1);
         if (countAdmin.count() == 1)
-            throw new InvalidReservationException("Chiusura Aziendale");
+            throw new BadRequestException("Chiusura Aziendale");
     }
 
     private Reservation createReservation(Date startTime, Date endTime, Customer customer, ATrainingSession session) {
@@ -241,7 +241,7 @@ public class ReservationFacade {
         if (session.isDeletable() || (roles.contains("ADMIN") || roles.contains("TRAINER")))
             session.deleteMeFromBundle();
         else
-            throw new NotAllowedException("Non è possibile eliminare la prenotazione");
+            throw new MethodNotAllowedException("Non è possibile eliminare la prenotazione");
     }
 
 }

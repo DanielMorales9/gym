@@ -1,6 +1,6 @@
 package it.gym.facade;
 
-import it.gym.exception.InvalidSaleException;
+import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.service.*;
 import org.junit.Test;
@@ -135,7 +135,7 @@ public class SaleFacadeTest {
         assertThat(sale.getTotalPrice()).isEqualTo(111.0);
     }
 
-    @Test(expected = InvalidSaleException.class)
+    @Test(expected = BadRequestException.class)
     public void confirmSaleThrowsExceptionWhenEmptySale() {
         Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         Mockito.doReturn(mockSale).when(saleService).findById(1L);

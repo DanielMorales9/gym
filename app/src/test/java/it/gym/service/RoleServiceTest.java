@@ -1,6 +1,6 @@
 package it.gym.service;
 
-import it.gym.exception.RoleNotFoundException;
+import it.gym.exception.NotFoundException;
 import it.gym.model.Role;
 import it.gym.repository.RoleRepository;
 import org.junit.Test;
@@ -39,7 +39,7 @@ public class RoleServiceTest {
         Mockito.verify(repository).findById(1L);
     }
 
-    @Test(expected = RoleNotFoundException.class)
+    @Test(expected = NotFoundException.class)
     public void whenFindByIdThrowsNotFound() {
         this.service.findById(1L);
     }

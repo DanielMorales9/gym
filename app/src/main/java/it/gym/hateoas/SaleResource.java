@@ -4,7 +4,6 @@ import it.gym.model.Sale;
 import lombok.Data;
 import org.springframework.hateoas.Resources;
 
-@Data
 public class SaleResource extends ResourceModel<Sale> {
 
     private Resources<SalesLineItemResource> salesLineItems;

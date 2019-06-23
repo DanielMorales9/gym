@@ -1,7 +1,7 @@
 package it.gym.service;
 
 import com.google.common.base.Joiner;
-import it.gym.exception.InvalidPasswordException;
+import it.gym.exception.BadRequestException;
 import org.passay.*;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,7 @@ public class PasswordValidationService {
         RuleResult res = validator.validate(new PasswordData(password));
         if (!res.isValid()) {
             String message = Joiner.on(" ").join(validator.getMessages(res));
-            throw new InvalidPasswordException(message);
+            throw new BadRequestException(message);
         }
     }
 }

@@ -1,9 +1,6 @@
 package it.gym.service;
 
-import it.gym.exception.InvalidSaleException;
 import it.gym.exception.NotFoundException;
-import it.gym.exception.SalesIsNotCompletedException;
-import it.gym.exception.SalesLineItemNotDeletedException;
 import it.gym.model.*;
 import it.gym.repository.SaleRepository;
 import org.springframework.beans.factory.annotation.Autowired;

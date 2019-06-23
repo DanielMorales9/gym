@@ -1,8 +1,6 @@
 package it.gym.service;
 
-import it.gym.exception.GymNotFoundException;
-import it.gym.exception.InvalidReservationException;
-import it.gym.exception.InvalidTimeException;
+import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +23,7 @@ public class GymService implements ICrudService<Gym, Long> {
 
     @Override
     public Gym findById(Long var1) {
-        return this.gymRepository.findById(var1).orElseThrow(GymNotFoundException::new);
+        return this.gymRepository.findById(var1).orElseThrow(() -> new NotFoundException("La palestra non esiste"));
     }
 
     @Override

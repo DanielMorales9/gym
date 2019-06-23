@@ -1,6 +1,6 @@
 package it.gym.model;
 
-import it.gym.exception.NotAllowedException;
+import it.gym.exception.MethodNotAllowedException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -68,7 +68,7 @@ public class CourseTrainingSession extends ATrainingSession {
     @Override
     public void complete() {
         if (!this.getEndTime().before(new Date()))
-            throw new NotAllowedException("Impossibile completare la sessione");
+            throw new MethodNotAllowedException("Impossibile completare la sessione");
         isCompleted = true;
     }
 }

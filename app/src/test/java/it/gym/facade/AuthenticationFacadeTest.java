@@ -1,6 +1,6 @@
 package it.gym.facade;
 
-import it.gym.exception.UserRegistrationException;
+import it.gym.exception.InternalServerException;
 import it.gym.model.*;
 import it.gym.pojo.PasswordForm;
 import it.gym.service.*;
@@ -64,7 +64,7 @@ public class AuthenticationFacadeTest {
         assertThat(gym).isEqualTo(createGym());
     }
 
-    @Test(expected = UserRegistrationException.class)
+    @Test(expected = InternalServerException.class)
     public void whenRegisteringThrowsException() {
         Mockito.when(gymService.findById(1L)).thenReturn(createGym());
         Mockito.when(roleService.findAllById(Collections.singletonList(3L))).thenReturn(createCustomerRole());

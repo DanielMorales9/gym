@@ -1,6 +1,6 @@
 package it.gym.facade;
 
-import it.gym.exception.InvalidEvent;
+import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
@@ -165,7 +165,7 @@ public class EventFacade {
         List<AEvent> events = this.service.findOverlappingTimesOff(startTime, endTime)
                 .stream().filter(aEvent -> !event.equals(aEvent)).collect(Collectors.toList());
         if (!events.isEmpty())
-            throw new InvalidEvent(PRESENT_EVENTS_EX);
+            throw new BadRequestException(PRESENT_EVENTS_EX);
     }
 
     private void checkNoOtherEvents(Event event) {
@@ -173,24 +173,24 @@ public class EventFacade {
         Date endTime = event.getEndTime();
         List<AEvent> events = this.service.findOverlappingTimesOff(startTime, endTime);
         if (!events.isEmpty())
-            throw new InvalidEvent(PRESENT_EVENTS_EX);
+            throw new BadRequestException(PRESENT_EVENTS_EX);
     }
 
 
     private void checkNoReservations(Date startTime, Date endTime) {
         Integer nReservations = this.reservationService.countByInterval(startTime, endTime);
         if (nReservations > 0)
-            throw new InvalidEvent(NOT_AUTHORIZED_EX);
+            throw new BadRequestException(NOT_AUTHORIZED_EX);
     }
 
     private void checkInterval(Date startTime, Date endTime) {
         if (gymService.isInvalidInterval(startTime, endTime))
-            throw new InvalidEvent("Orario non valido");
+            throw new BadRequestException("Orario non valido");
     }
 
     private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
         boolean isOk = !gymService.isWithinWorkingHours(gym, startTime, endTime);
         if (isOk)
-            throw new InvalidEvent("La palestra è chiusa in questo orario");
+            throw new BadRequestException("La palestra è chiusa in questo orario");
     }
 }

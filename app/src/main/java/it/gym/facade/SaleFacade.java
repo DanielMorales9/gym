@@ -1,8 +1,7 @@
 package it.gym.facade;
 
-import it.gym.exception.InvalidSaleException;
-import it.gym.exception.SalesIsNotCompletedException;
-import it.gym.exception.SalesLineItemNotDeletedException;
+import it.gym.exception.BadRequestException;
+import it.gym.exception.ConflictException;
 import it.gym.model.*;
 import it.gym.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -86,7 +85,7 @@ public class SaleFacade {
             if (l.size() == 1) {
                 return l.get(0);
             } else if (l.size() > 1) {
-                throw new InvalidSaleException("Sono stati creati troppi corsi");
+                throw new BadRequestException("Sono stati creati troppi corsi");
             }
         }
         return spec.createTrainingBundle();
@@ -120,7 +119,7 @@ public class SaleFacade {
         Sale sale = this.findById(saleId);
         SalesLineItem sli = salesLineItemService.findById(salesLineItemId);
         if (!sale.deleteSalesLineItem(sli))
-            throw new SalesLineItemNotDeletedException(saleId, salesLineItemId);
+            throw new ConflictException("Impossibile eliminate riga con id " + saleId + " della vendita con id " + saleId);
         this.salesLineItemService.delete(sli);
         return this.save(sale);
     }
@@ -128,11 +127,11 @@ public class SaleFacade {
     public Sale confirmSale(Long saleId) {
         String messageTemplate = "Impossibile confermare vendita (#%d) vuota.";
         Sale sale = findById(saleId);
-        if (!sale.confirmSale()) throw new InvalidSaleException(String.format(messageTemplate, sale.getId()));
+        if (!sale.confirmSale()) throw new BadRequestException(String.format(messageTemplate, sale.getId()));
         if (!sale.addBundlesToCustomersCurrentBundles()) {
             String message = String.format("Impossibile confermare vendita per il cliente %s.",
                     sale.getCustomer().getLastName());
-            throw new InvalidSaleException(message);
+            throw new BadRequestException(message);
         }
         return this.save(sale);
     }
@@ -140,13 +139,13 @@ public class SaleFacade {
     public Sale paySale(Long saleId, Double amount) {
         Sale sale = this.findById(saleId);
         if (!sale.isCompleted()) {
-            throw new SalesIsNotCompletedException(saleId);
+            throw new BadRequestException(String.format("La vendita (%d) non è stata completata.", saleId));
         }
         Double amountPayed = sale.getAmountPayed();
         boolean payed = amountPayed + amount == sale.getTotalPrice();
         if (!payed) {
             if (amountPayed + amount > sale.getTotalPrice())
-                throw new InvalidSaleException("Stai pagando più del dovuto!");
+                throw new BadRequestException("Stai pagando più del dovuto!");
         } else {
             sale.setPayed(true);
             sale.setPayedDate(new Date());
@@ -158,7 +157,7 @@ public class SaleFacade {
     public Sale deleteSaleById(Long saleId) {
         Sale sale = this.findById(saleId);
         if (!sale.isDeletable() || !sale.removeBundlesFromCustomersCurrentBundles()) {
-            throw new InvalidSaleException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
+            throw new BadRequestException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
                     sale.getCustomer().getLastName()));
         }
         this.salesLineItemService.deleteAll(sale.getSalesLineItems());

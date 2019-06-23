@@ -1,6 +1,6 @@
 package it.gym.service;
 
-import it.gym.exception.RoleNotFoundException;
+import it.gym.exception.NotFoundException;
 import it.gym.model.Role;
 import it.gym.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class RoleService implements ICrudService<Role, Long>{
 
     @Override
     public Role findById(Long id) {
-        return this.roleRepository.findById(id).orElseThrow(RoleNotFoundException::new);
+        return this.roleRepository.findById(id).orElseThrow(() -> new NotFoundException("Il ruolo non è stato trovato"));
     }
 
     @Override
