@@ -40,6 +40,7 @@
     - Add Tests to EventService
     - Full Test Coverage ReservationService
     - Full Test Coverage PasswordValidationService
+    - Full Test Coverage GymService
         
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

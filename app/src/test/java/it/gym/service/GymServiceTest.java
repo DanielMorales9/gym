@@ -1,8 +1,10 @@
 package it.gym.service;
 
+import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
+import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -15,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.DayOfWeek;
 import java.util.*;
 
+import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -63,52 +66,54 @@ public class GymServiceTest {
         Mockito.verify(repository).delete(any(Gym.class));
     }
 
-    @Test
-    public void isValidInterval() {
-        Date start = new Date();
-        start = addHours(start, 1);
-        Date end = addHours(start, 1);
-
-        assertThat(service.isInvalidInterval(start, end)).isFalse();
+    private static Date getNextMonday() {
+        Calendar date = Calendar.getInstance(Locale.ITALIAN);
+        date.set(Calendar.HOUR_OF_DAY, 8);
+        int diff = Calendar.MONDAY - date.get(Calendar.DAY_OF_WEEK);
+        if (diff <= 0) {
+            diff += 7;
+        }
+        date.add(Calendar.DAY_OF_MONTH, diff);
+        return date.getTime();
     }
 
     @Test
-    public void startAfterEndTime() {
-        Date start = new Date();
-        start = addHours(start, 1);
+    public void simpleGymChecks() {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        Gym gym = createGym();
+        service.simpleGymChecks(gym, start, end);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void startTimeAfterEndTime() {
+        Date start = getNextMonday();
         Date end = addHours(start, -1);
-
-        assertThat(service.isInvalidInterval(start, end)).isTrue();
+        Gym gym = createGym();
+        service.simpleGymChecks(gym, start, end);
     }
 
-
-    @Test
-    public void isIntervalPast() {
-        Date start = new Date();
-        start = addHours(start, -1);
+    @Test(expected = BadRequestException.class)
+    public void isPast() {
+        Date start = addDays(getNextMonday(), -7);
         Date end = addHours(start, 1);
-
-        assertThat(service.isInvalidInterval(start, end)).isTrue();
+        Gym gym = createGym();
+        service.simpleGymChecks(gym, start, end);
     }
 
-
-    @Test
-    public void isWithinWorkingHours() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
-        cal.set(2019, Calendar.JUNE, 8, 12, 0);
-        Date start = cal.getTime();
-        Date end = addHours(start, 1);
-        assertThat(service.isWithinWorkingHours(createGym(), start, end)).isTrue();
-
-    }
-
-    @Test
+    @Test(expected = BadRequestException.class)
     public void isNotWithinWorkingHours() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
-        cal.set(2019, Calendar.JUNE, 8, 13, 0);
-        Date start = cal.getTime();
+        Date start = addDays(getNextMonday(), 6);
         Date end = addHours(start, 1);
-        assertThat(service.isWithinWorkingHours(createGym(), start, end)).isFalse();
+        Gym gym = createGym();
+        service.simpleGymChecks(gym, start, end);
+    }
+
+    @Test
+    public void findAll() {
+        Mockito.doReturn(Collections.emptyList()).when(repository).findAll();
+        List<Gym> list = service.findAll();
+        AssertionsForClassTypes.assertThat(list.size()).isEqualTo(0);
     }
 
     private Gym createGym() {

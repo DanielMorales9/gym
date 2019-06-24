@@ -37,10 +37,6 @@ public class GymService implements ICrudService<Gym, Long> {
         return this.gymRepository.findAll();
     }
 
-    public boolean isInvalidInterval(Date startTime, Date endTime) {
-        return startTime.after(endTime) || isPast(startTime);
-    }
-
     boolean isPast(Date date) {
         return date.before(new Date());
     }
@@ -57,12 +53,12 @@ public class GymService implements ICrudService<Gym, Long> {
     }
 
     private void checkInterval(Date startTime, Date endTime) {
-        if (this.isInvalidInterval(startTime, endTime))
+        if (startTime.after(endTime) || isPast(startTime))
             throw new BadRequestException("Orario non valido");
     }
 
     private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
-        boolean isOk = !this.isWithinWorkingHours(gym, startTime, endTime);
+        boolean isOk = !isWithinWorkingHours(gym, startTime, endTime);
         if (isOk)
             throw new BadRequestException("La palestra è chiusa in questo orario");
     }
