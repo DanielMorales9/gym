@@ -9,11 +9,10 @@
 - **FR**: Add Gym capacity
     
 - **Chapter II** Courses and Events
-    - Improve Test Coverage Sale Facade
-    - Improve Test Coverage Reservation Service
+    - Improve Test Coverage SaleFacade
     - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
     
-- **Chapter III** Gym-relative calls
+- **Chapter III** Multiple Gyms
     - Add gymId as PathVariable to API calls
     - Set Gym during user registration (re-visit registration logic)
 
@@ -39,6 +38,8 @@
     - Change Reservation Facade logic
     - Adapted Changes to Reservation UI
     - Add Tests to EventService
+    - Full Test Coverage ReservationService
+    - Full Test Coverage PasswordValidationService
         
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

@@ -13,8 +13,6 @@ import java.util.List;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    List<Reservation> findByStartTime(Date startTime);
-
     @Query("select r from Reservation as r where r.startTime >= :startTime and r.endTime <= :endTime")
     List<Reservation> findByInterval(@RequestParam Date startTime,
                                      @RequestParam Date endTime);

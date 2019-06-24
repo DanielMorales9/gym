@@ -12,13 +12,7 @@ import java.util.List;
 @Service
 public class ReservationService implements ICrudService<Reservation, Long> {
 
-    private final ReservationRepository reservationRepository;
-
-    @Autowired
-    public ReservationService(ReservationRepository reservationRepository) {
-        this.reservationRepository = reservationRepository;
-    }
-
+    @Autowired private ReservationRepository reservationRepository;
 
     @Override
     public Reservation save(Reservation var1) {
@@ -39,10 +33,6 @@ public class ReservationService implements ICrudService<Reservation, Long> {
     @Override
     public List<Reservation> findAll() {
         return this.reservationRepository.findAll();
-    }
-
-    public List<Reservation> findByStartTime(Date startDate) {
-        return this.reservationRepository.findByStartTime(startDate);
     }
 
     public List<Reservation> findByIntervalAndId(Long id, Date startTime, Date endTime) {
