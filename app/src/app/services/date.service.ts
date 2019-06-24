@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core'
+import { Injectable } from '@angular/core';
 
 @Injectable()
 export class DateService {
@@ -6,18 +6,18 @@ export class DateService {
     constructor() {}
 
     public getStringDate(d) {
-        let currentdate = new Date(d);
-        return currentdate.getDate() + "/"
-            + (currentdate.getMonth()+1)  + "/"
-            + currentdate.getFullYear() + ", "
-            + currentdate.getHours() + ":"
-            + currentdate.getMinutes();
+        const currentDate = new Date(d);
+        return currentDate.getDate() + '/'
+            + (currentDate.getMonth() + 1)  + '/'
+            + currentDate.getFullYear() + ', '
+            + currentDate.getHours() + ':'
+            + currentDate.getMinutes();
 
     }
 
     public addHour(startTime: Date) {
-       let endTime = new Date(startTime);
-       endTime.setHours(endTime.getHours()+1);
+       const endTime = new Date(startTime);
+       endTime.setHours(endTime.getHours() + 1);
        return endTime;
     }
 }

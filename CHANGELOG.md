@@ -6,15 +6,12 @@
 - **FR**: Expose error path
 - **FR**: Schedule Training Assignment
 - **FR**: Recurring events in Gym Calendar
-
+- **FR**: Add Gym capacity
+    
 - **Chapter II** Courses and Events
-    - Investigate better solutions for Reservation
-    - Add Tests to EventService
-    - Add Tests to ReservationService
     - Improve Test Coverage Sale Facade
-    - Change Reservation Facade logic
-    - Add Gym capacity
-    - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off* Fixed  
+    - Improve Test Coverage Reservation Service
+    - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
     
 - **Chapter III** Gym-relative calls
     - Add gymId as PathVariable to API calls
@@ -39,6 +36,9 @@
     - Fixed missing API findAllCustomers
     - Improved Test Coverage Event Facade
     - Improved Test Coverage Event Service
+    - Change Reservation Facade logic
+    - Adapted Changes to Reservation UI
+    - Add Tests to EventService
         
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

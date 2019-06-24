@@ -7,26 +7,13 @@ export class EventService {
 
     constructor(private http: HttpClient) {}
 
-    check(gymId: number, start: string, end: string, type: string): Observable<any> {
-        return this.http.get(`/events/isAvailable?gymId=${gymId}&startTime=${start}&endTime=${end}&type=${type}`);
-    }
-
-    book(gymId: number, start: string, end: string, type: string, name: string, id: number): Observable<any> {
-        return this.http.get(`/events/book/${id}?gymId=${gymId}&name=${name}&startTime=${start}&endTime=${end}&type=${type}`);
-    }
-
     getTimesOff(start: string, end: string, id: number): Observable<any> {
-        return this.http.get(`/events/timeOff?${id}&startTime=${start}&endTime=${end}`);
+        return this.http.get(`/events/timeOff?trainerId=${id}&startTime=${start}&endTime=${end}`);
     }
 
     deleteTimeOff(id: number): Observable<any> {
         const endpoint = `/events/timeOff/${id}`;
         return this.http.delete(endpoint);
-    }
-
-    change(gymId: number, timeOffId: any, start: string, end: string, timeOffName: string, type: string) {
-        // tslint:disable-next-line:max-line-length
-        return this.http.get(`/events/change/${timeOffId}/?gymId=${gymId}&startTime=${start}&endTime=${end}&name=${timeOffName}&type=${type}`);
     }
 
     canEditTimeOff(gymId: number, id: number, event: any) {

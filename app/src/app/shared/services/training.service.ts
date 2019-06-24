@@ -7,12 +7,8 @@ export class TrainingService {
 
     constructor(private http: HttpClient) {}
 
-    isAvailable(gymId: number, id: number, startTime: string, endTime: string): Observable<any> {
-        return this.http.get(`/reservations/isAvailable?gymId=${gymId}&startTime=${startTime}&endTime=${endTime}&customerId=${id}`);
-    }
-
-    book(gymId: number, id: number, startTime: string, endTime: string): Observable<any> {
-        return this.http.get(`/reservations/book/${id}?gymId=${gymId}&startTime=${startTime}&endTime=${endTime}&customerId=${id}`);
+    createReservation(gymId: number, userId: number, bundleId: number, event: any): Observable<any> {
+        return this.http.post(`/reservations/${gymId}?customerId=${userId}&bundleId=${bundleId}`, event);
     }
 
     getReservations(startTime: string, endTime: string, id?: number): Observable<any> {
@@ -34,10 +30,10 @@ export class TrainingService {
     }
 
     confirm(id: number): Observable<any> {
-        return this.http.get(`/reservations/confirm/${id}`);
+        return this.http.get(`/reservations/${id}/confirm`);
     }
 
     complete(id: number): Observable<any> {
-        return this.http.get(`/reservations/complete/${id}`);
+        return this.http.get(`/reservations/${id}/complete`);
     }
 }

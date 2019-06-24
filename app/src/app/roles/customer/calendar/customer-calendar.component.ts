@@ -43,21 +43,23 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        if (this.isValidHour(event)) {
-            this.facade.checkReservation(event.date, this.user.id)
-                .subscribe(_ => {
-                    this.modalData = {
-                        action: action,
-                        title: 'Prenota il tuo allenamento!',
-                        userId: this.user.id,
-                        role: this.role,
-                        event: event
-                    };
-                    this.openModal(action);
-                }, err => { if (err.error) { this.snackBar.open(err.error.message); }});
-        } else {
-            this.snackBar.open('Orario non valido');
+        if (!this.isValidHour(event)) {
+            return this.snackBar.open('Orario non valido');
         }
+
+        if (!this.user.currentTrainingBundles) {
+            return this.snackBar.open('Non hai pacchetti a disposizione');
+        }
+
+        event.bundles = this.user.currentTrainingBundles;
+        this.modalData = {
+            action: action,
+            title: 'Prenota il tuo allenamento!',
+            userId: this.user.id,
+            role: this.role,
+            event: event
+        };
+        this.openModal(action);
     }
 
     change(action: string, event: any) {}
@@ -122,7 +124,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
 
-                this.facade.bookReservation(new Date(data.start), data.userId)
+                this.facade.createReservation(data.userId, data.bundleId, { startTime: data.startTime, endTime: data.endTime })
                     .subscribe(res => {
                         this.snackBar.open('Prenotazione effettuata');
                         this.getEvents();

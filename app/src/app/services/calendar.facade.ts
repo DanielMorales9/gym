@@ -173,20 +173,9 @@ export class CalendarFacade {
         return this.trainingService.delete(id, type);
     }
 
-    checkReservation(date: Date, userId: number) {
+    createReservation(userId: number, bundleId: number, event: any) {
         const gymId = this.gymService.gym.id;
-        const startTime = CalendarFacade.formatDateToString(date);
-        const end = this.dateService.addHour(date);
-        const endTime = CalendarFacade.formatDateToString(end);
-        return this.trainingService.isAvailable(gymId, userId, startTime, endTime);
-    }
-
-    bookReservation(date: Date, userId: number) {
-        const gymId = this.gymService.gym.id;
-        const startTime = CalendarFacade.formatDateToString(date);
-        const end = this.dateService.addHour(date);
-        const endTime = CalendarFacade.formatDateToString(end);
-        return this.trainingService.book(gymId, userId, startTime, endTime);
+        return this.trainingService.createReservation(gymId, userId, bundleId, event);
     }
 
     getReservations(startTime: any, endTime: any, userId?: number): Observable<Object[]> {
