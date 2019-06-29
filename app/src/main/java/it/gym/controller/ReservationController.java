@@ -42,12 +42,24 @@ public class ReservationController {
 
     @PostMapping(path = "/{gymId}")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    ResponseEntity<ReservationResource> createReservation(@PathVariable Long gymId,
-                                                          @RequestParam("customerId") Long customerId,
-                                                          @RequestParam("bundleId") Long bundleId,
-                                                          @RequestBody Event event) {
+    ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
+                                                                    @RequestParam("customerId") Long customerId,
+                                                                    @RequestParam("bundleId") Long bundleId,
+                                                                    @RequestBody Event event) {
 
-        Reservation res = facade.createReservation(gymId, customerId, bundleId, event);
+        Reservation res = facade.createReservationFromBundle(gymId, customerId, bundleId, event);
+
+        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+
+    }
+
+    @GetMapping(path = "/{gymId}")
+    @PreAuthorize("hasAuthority('CUSTOMER')")
+    ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
+                                                                   @RequestParam("customerId") Long customerId,
+                                                                   @RequestParam("eventId") Long eventId) {
+
+        Reservation res = facade.createReservationFromEvent(gymId, customerId, eventId);
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
 

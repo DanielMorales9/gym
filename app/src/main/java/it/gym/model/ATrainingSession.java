@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -33,16 +34,29 @@ public abstract class ATrainingSession {
     @Column(name="session_id")
     private Long id;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date startTime;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date endTime;
+
     @ManyToOne
     @JsonIgnore
     @EqualsAndHashCode.Exclude private ATrainingBundle trainingBundle;
 
+    private Boolean isCompleted;
+
+    public boolean getCompleted() {
+        return isCompleted;
+    }
+
+    public void setCompleted(Boolean completed) {
+        isCompleted = completed;
+    }
+
     public abstract String getType();
-
     public abstract boolean isDeletable();
-
     public abstract void complete();
-
     public abstract void deleteMeFromBundle();
 
     public Long getId() {
@@ -59,5 +73,21 @@ public abstract class ATrainingSession {
 
     public void setTrainingBundle(ATrainingBundle trainingBundle) {
         this.trainingBundle = trainingBundle;
+    }
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
+
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
     }
 }

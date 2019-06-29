@@ -92,4 +92,6 @@ public abstract class AEvent {
     }
 
     public abstract boolean isReservable();
+
+    public abstract ATrainingSession getSession();
 }

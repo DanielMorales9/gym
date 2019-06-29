@@ -44,6 +44,11 @@ public class TimeOff extends AEvent {
     }
 
     @Override
+    public ATrainingSession getSession() {
+        return null;
+    }
+
+    @Override
     public String toString() {
 
         return " Tipo :" + this.getType() +

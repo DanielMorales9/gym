@@ -123,20 +123,20 @@ public class ReservationFacadeTest {
     @Test
     public void hasTrainers() {
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        facade.isTrainerAvailable(Collections.emptyList(), new Date(), new Date());
+        facade.isTrainerAvailable(Collections.emptyList());
     }
 
     @Test(expected = BadRequestException.class)
     public void hasNoAvailableTrainers() {
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         List<AEvent> timesOff = Collections.singletonList(createTimeOff(createTrainer()));
-        facade.isTrainerAvailable(timesOff, new Date(), new Date());
+        facade.isTrainerAvailable(timesOff);
     }
 
     @Test
     public void trainersHaveOtherReservations() {
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        facade.isTrainerAvailable(Collections.emptyList(), new Date(), new Date());
+        facade.isTrainerAvailable(Collections.emptyList());
     }
 
     @Test
@@ -194,7 +194,7 @@ public class ReservationFacadeTest {
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
-        Reservation actual = facade.createReservation(1L, 1L, 1L, event);
+        Reservation actual = facade.createReservationFromBundle(1L, 1L, 1L, event);
 
         ATrainingSession actualSession = actual.getSession();
         ATrainingBundle actualBundle = actualSession.getTrainingBundle();

@@ -47,7 +47,7 @@ public class ReservationFacade {
         Customer customer = this.customerService.findById(customerId);
         ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
 
-        simpleReservationChecks(customerId, event, gym, customer, bundle);
+        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime());
     }
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
@@ -57,16 +57,13 @@ public class ReservationFacade {
                 .orElseThrow(() -> new BadRequestException("Non possiedi questo pacchetto"));
     }
 
-    private void simpleReservationChecks(Long customerId, Event event, Gym gym, Customer customer, ATrainingBundle bundle) {
-        Date startTime = event.getStartTime();
-        Date endTime = event.getEndTime();
-
+    private void simpleReservationChecks(Gym gym, Customer customer, ATrainingBundle bundle, Date startTime, Date endTime) {
         // do all the checks
         gymService.simpleGymChecks(gym, startTime, endTime);
 
         checkBundleIsReservable(customer, bundle);
 
-        isReservationDoublyBooked(customerId, startTime, endTime);
+        isReservationDoublyBooked(customer.getId(), startTime, endTime);
 
         isReservedOnTime(startTime);
 
@@ -74,20 +71,16 @@ public class ReservationFacade {
 
         hasHolidays(timesOff);
 
-        isTrainerAvailable(timesOff, startTime, endTime);
+        isTrainerAvailable(timesOff);
 
-        isEventReservable(event.getId());
     }
 
-    public Reservation createReservation(Long gymId, Long customerId, Long bundleId, Event event) {
+    public Reservation createReservationFromBundle(Long gymId, Long customerId, Long bundleId, Event event) {
         Gym gym = this.gymService.findById(gymId);
         Customer customer = this.customerService.findById(customerId);
         ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
 
-        simpleReservationChecks(customerId, event, gym, customer, bundle);
-
-//        if (event.getId()) gets the session
-//        Add the reservation to the list of reservation of the event
+        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime());
 
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
@@ -96,17 +89,34 @@ public class ReservationFacade {
         ATrainingSession session = bundle.createSession(startTime, endTime);
         session = sessionService.save(session);
 
+        Reservation res = createReservation(customer, session);
+        bundle.addSession(session);
+        bundleService.save(bundle);
+
+        return res;
+    }
+
+    public Reservation createReservationFromEvent(Long gymId, Long customerId, Long eventId) {
+        Gym gym = this.gymService.findById(gymId);
+        Customer customer = this.customerService.findById(customerId);
+        AEvent evt = eventService.findById(eventId);
+
+        isEventReservable(evt);
+        ATrainingSession session = evt.getSession();
+        simpleReservationChecks(gym, customer, session.getTrainingBundle(), session.getStartTime(), session.getEndTime());
+
+        return createReservation(customer, session);
+    }
+
+    private Reservation createReservation(Customer customer, ATrainingSession session) {
         Reservation res = new Reservation();
         res.setUser(customer);
         res.setSession(session);
         res.setConfirmed(false);
-        res.setStartTime(startTime);
-        res.setEndTime(endTime);
+        res.setStartTime(session.getStartTime());
+        res.setEndTime(session.getEndTime());
 
         res = this.service.save(res);
-        bundle.addSession(session);
-        bundleService.save(bundle);
-
         return res;
     }
 
@@ -154,12 +164,9 @@ public class ReservationFacade {
         return res;
     }
 
-    private void isEventReservable(Long eventId) {
-        if (eventId != null) {
-            AEvent event = eventService.findById(eventId);
-            if (!event.isReservable()) {
-                throw new MethodNotAllowedException("Non è possibile prenotare questo evento");
-            }
+    private void isEventReservable(AEvent event) {
+        if (!event.isReservable()) {
+            throw new MethodNotAllowedException("Non è possibile prenotare questo evento");
         }
     }
 
@@ -170,7 +177,7 @@ public class ReservationFacade {
         }
     }
 
-    void isTrainerAvailable(List<AEvent> timesOff, Date startTime, Date endTime) {
+    void isTrainerAvailable(List<AEvent> timesOff) {
         logger.info("Checking whether there are trainers available");
 
         Long nTrainers = this.trainerService.countAllTrainer();
@@ -180,13 +187,13 @@ public class ReservationFacade {
             throw new BadRequestException("Non ci sono personal trainer disponibili");
         }
 
-        // TODO add logic for reservations or non personal reservations
-        long nReservations = this.service.findByInterval(startTime, endTime).size();
-        // TODO add Gym capacity check
-        nAvailableTrainers = nAvailableTrainers - nReservations;
-
-        if (nAvailableTrainers == 0)
-            throw new BadRequestException("Questo orario è già stato prenotato");
+        //This will be handled through the confirmation message
+        //
+        //long nReservations = this.service.findByInterval(startTime, endTime).size();
+        //nAvailableTrainers = nAvailableTrainers - nReservations;
+        //
+        //if (nAvailableTrainers == 0)
+        //    throw new BadRequestException("Questo orario è già stato prenotato");
     }
 
     void isBundleLeft(Customer customer) {

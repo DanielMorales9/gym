@@ -8,39 +8,37 @@ import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
 @Entity
-@DiscriminatorValue(value="H")
-@JsonTypeName("H")
+@DiscriminatorValue(value="C")
+@JsonTypeName("C")
 @ExposesResourceFor(value = AEvent.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
-public class Holiday extends AEvent {
+public class CourseEvent extends AEvent {
 
-    public static final String TYPE = "H";
+    @OneToOne
+    private ATrainingSession session;
 
     @Override
     public String getType() {
-        return TYPE;
+        return "C";
     }
 
     @Override
     public boolean isReservable() {
-        return false;
+        return true;
     }
 
     @Override
     public ATrainingSession getSession() {
-        return null;
+        return session;
     }
 
-    @Override
-    public String toString() {
-
-        return " Tipo :" + this.getType() +
-                " Nome :" + this.getName() +
-                " Palestra: " + this.getGym().toString() +
-                " Data :" + this.getStartTime().toString();
+    public void setSession(ATrainingSession session) {
+        this.session = session;
     }
 }

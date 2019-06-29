@@ -18,38 +18,6 @@ import java.util.Date;
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingSession extends ATrainingSession {
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
-
-    private Boolean isCompleted;
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public boolean getCompleted() {
-        return isCompleted;
-    }
-
-    public void setCompleted(Boolean completed) {
-        isCompleted = completed;
-    }
-
     @Override
     public String getType() {
         return "P";
@@ -62,13 +30,13 @@ public class PersonalTrainingSession extends ATrainingSession {
 
     @Override
     public boolean isDeletable() {
-        return !this.isCompleted;
+        return !this.getCompleted();
     }
 
     @Override
     public void complete() {
         if (!this.getEndTime().before(new Date()))
             throw new MethodNotAllowedException("Impossibile completare la sessione");
-        isCompleted = true;
+        setCompleted(true);
     }
 }
