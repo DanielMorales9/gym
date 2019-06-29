@@ -1,10 +1,10 @@
 package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.hateoas.TrainingBundleSpecificationAssembler;
 import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.service.TrainingBundleSpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,59 +22,60 @@ import java.io.IOException;
 public class TrainingBundleSpecificationController {
 
     @Autowired
-    private TrainingBundleSpecificationService service;
+    private TrainingBundleSpecificationFacade facade;
+
     @Autowired
     private ObjectMapper objectMapper;
 
     @DeleteMapping("/{id}")
     ResponseEntity<TrainingBundleSpecificationResource> delete(@PathVariable Long id) {
-        ATrainingBundleSpecification bundle = service.findById(id);
-        service.deleteById(id);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(bundle));
+        ATrainingBundleSpecification specs = facade.findById(id);
+        facade.delete(specs);
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(specs));
     }
 
     @GetMapping(path = "/{id}")
     ResponseEntity<TrainingBundleSpecificationResource> findById(@PathVariable Long id) {
-        ATrainingBundleSpecification spec = service.findById(id);
+        ATrainingBundleSpecification spec = facade.findById(id);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
     }
 
     @PostMapping
     ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
-        spec = service.save(spec);
+        spec = facade.createTrainingBundleSpecification(spec);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
     }
 
     @PatchMapping(path = "/{id}")
     ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
                                                               HttpServletRequest request) throws IOException {
-        ATrainingBundleSpecification spec = service.findById(id);
+        ATrainingBundleSpecification spec = facade.findById(id);
         spec = objectMapper.readerForUpdating(spec).readValue(request.getReader());
-        spec = service.save(spec);
+        spec = facade.save(spec);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
     }
 
     @GetMapping
     @ResponseBody
     Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
-        return service.findAll(pageable);
+        return facade.findAll(pageable);
     }
 
     @GetMapping(path = "/search")
     @ResponseBody
     Page<ATrainingBundleSpecification> search(@RequestParam String query, Pageable pageable) {
-        return service.findByNameContains(query, pageable);
+        return facade.findByNameContains(query, pageable);
     }
 
     @GetMapping(path = "/searchNotDisabled")
     @ResponseBody
     Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
-        return service.findByNameContainsAndIsDisabled(query, false, pageable);
+        return facade.findByNameContainsAndIsDisabled(query, false, pageable);
     }
 
     @GetMapping(path = "/getNotDisabled")
     @ResponseBody
     Page<ATrainingBundleSpecification> getNotDisabled(Pageable pageable) {
-        return service.findByIsDisabled(false, pageable);
+        return facade.findByIsDisabled(false, pageable);
     }
 }

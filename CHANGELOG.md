@@ -7,7 +7,7 @@
 - **FR**: Schedule Training Assignment
 - **FR**: Recurring events in Gym Calendar
 - **FR**: Add Gym capacity
-- Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
+- **BF**: Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
     
 - **Chapter II** Courses and Events
     - Increase Test Coverage SaleFacade
@@ -43,6 +43,7 @@
     - Full Test Coverage PasswordValidationService
     - Full Test Coverage GymService
     - Add CourseEvent and Reservation logic
+    - Created TrainingBundle Controller, TrainingBundleSpecification Facade, TrainingBundle Service
         
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

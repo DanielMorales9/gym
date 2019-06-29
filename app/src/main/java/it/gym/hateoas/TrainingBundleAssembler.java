@@ -8,8 +8,7 @@ import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
-public class TrainingBundleAssembler extends ResourceAssemblerSupport<ATrainingBundle,
-        TrainingBundleResource> {
+public class TrainingBundleAssembler extends ResourceAssemblerSupport<ATrainingBundle, TrainingBundleResource> {
 
     public TrainingBundleAssembler() {
         super(ATrainingBundle.class, TrainingBundleResource.class);

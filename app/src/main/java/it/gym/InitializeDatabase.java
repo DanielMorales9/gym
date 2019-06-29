@@ -1,5 +1,6 @@
 package it.gym;
 
+import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.model.*;
 import it.gym.service.*;
 import it.gym.utility.Constants;
@@ -38,8 +39,7 @@ public class InitializeDatabase implements CommandLineRunner {
     private GymService gymService;
 
     @Autowired
-    @Qualifier("trainingBundleSpecificationService")
-    private TrainingBundleSpecificationService specService;
+    private TrainingBundleSpecificationFacade specService;
 
     @Autowired
     private TrainingBundleService bundleService;
@@ -65,28 +65,17 @@ public class InitializeDatabase implements CommandLineRunner {
         if (env.getActiveProfiles()[0].equals(DEV_ENV)) {
             createAndSaveCustomer(gym, roles.subList(2, 3));
             createAndSaveTrainer(gym, roles.subList(1, 2));
-            ATrainingBundleSpecification personal = createAndSavePersonalBundleSpecification();
-            createAndSavePersonalBundle(personal);
-            ATrainingBundleSpecification course = createAndSaveCourseBundleSpecification();
-            createAndSaveCourseBundle(course);
-
+            createAndSavePersonalBundleSpecification();
+            createAndSaveCourseBundleSpecification();
         }
     }
 
-    private void createAndSaveCourseBundle(ATrainingBundleSpecification course) {
-        this.bundleService.save(createPersonalBundle(course));
+    private void createAndSaveCourseBundleSpecification() {
+        specService.createTrainingBundleSpecification(createCourseBundleSpecification(new Date()));
     }
 
-    private ATrainingBundleSpecification createAndSaveCourseBundleSpecification() {
-        return specService.save(createCourseBundleSpecification(new Date()));
-    }
-
-    private void createAndSavePersonalBundle(ATrainingBundleSpecification a) {
-        this.bundleService.save(createPersonalBundle(a));
-    }
-
-    private ATrainingBundleSpecification createAndSavePersonalBundleSpecification() {
-        return specService.save(createPersonalBundleSpecification());
+    private void createAndSavePersonalBundleSpecification() {
+        specService.createTrainingBundleSpecification(createPersonalBundleSpecification());
     }
 
     private void createAndSaveTrainer(Gym gym, List<Role> roles) {
@@ -121,23 +110,8 @@ public class InitializeDatabase implements CommandLineRunner {
         }).collect(Collectors.toList());
     }
 
-    private ATrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec) {
-        CourseTrainingBundle p = new CourseTrainingBundle();
-        p.setName("Course");
-        p.setDescription("Questo è un pacchetto Corso");
-        p.setExpired(false);
-        p.setBundleSpec(spec);
-        p.setPrice(111.0);
-        Date end = DateUtils.addDays(start, 30);
-        p.setStartTime(start);
-        p.setEndTime(end);
-        p.setMaxCustomers(11);
-        return p;
-    }
-
     private ATrainingBundleSpecification createCourseBundleSpecification(Date start) {
         CourseTrainingBundleSpecification p = new CourseTrainingBundleSpecification();
-        p.setId(1L);
         p.setName("Corso");
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
@@ -149,20 +123,8 @@ public class InitializeDatabase implements CommandLineRunner {
         return p;
     }
 
-    private ATrainingBundle createPersonalBundle(ATrainingBundleSpecification spec) {
-        PersonalTrainingBundle p = new PersonalTrainingBundle();
-        p.setName("Personal Training");
-        p.setDescription("Questo è un pacchetto di Personal Training");
-        p.setExpired(false);
-        p.setBundleSpec(spec);
-        p.setPrice(111.0);
-        p.setNumSessions(11);
-        return p;
-    }
-
     private ATrainingBundleSpecification createPersonalBundleSpecification() {
         PersonalTrainingBundleSpecification p = new PersonalTrainingBundleSpecification();
-        p.setId(1L);
         p.setName("Personal");
         p.setDescription("Questo è un pacchetto di Personal Training");
         p.setDisabled(false);
