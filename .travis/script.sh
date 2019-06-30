@@ -4,10 +4,10 @@ if [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "========================="
     echo "| Building application  |"
     echo "========================="
-    mvn -q install
+    mvn install
 else
     echo "========================="
     echo "|  Testing application  |"
     echo "========================="
-    mvn -q test
+    mvn test
 fi
