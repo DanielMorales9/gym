@@ -47,7 +47,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     change(action: string, event: any) {
         if (this.isValidChange(event)) {
-            this.facade.canEditTimeOff(event.event.meta.id, event.newStart, event.newEnd)
+            this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
                 .subscribe(_ => {
                     this.modalData = {
                         action: EVENT_TYPES.CHANGE,

@@ -18,7 +18,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.time.DayOfWeek;
 import java.util.*;
 
-import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -140,10 +139,7 @@ public class ReservationFacadeTest {
             return res;
         }).when(sessionService).save(any(ATrainingSession.class));
 
-        Mockito.doAnswer(invocationOnMock -> {
-            Reservation res = invocationOnMock.getArgument(0);
-            return res;
-        }).when(service).save(any(Reservation.class));
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.<Reservation>getArgument(0)).when(service).save(any(Reservation.class));
 
         ATrainingBundle spec = createBundle();
         customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
@@ -305,16 +301,6 @@ public class ReservationFacadeTest {
         pt.setCompleted(false);
         pt.setStartTime(new Date());
         pt.setEndTime(new Date());
-        pt.setId(1L);
-        pt.setTrainingBundle(bundleSpec);
-        return pt;
-    }
-
-    private PersonalTrainingSession createSession(Date start, Date end, ATrainingBundle bundleSpec) {
-        PersonalTrainingSession pt = new PersonalTrainingSession();
-        pt.setCompleted(false);
-        pt.setStartTime(start);
-        pt.setEndTime(end);
         pt.setId(1L);
         pt.setTrainingBundle(bundleSpec);
         return pt;

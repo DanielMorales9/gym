@@ -6,7 +6,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {AdminHeaderModalComponent} from './admin-header-modal.component';
 import {AdminInfoModalComponent} from './admin-info-modal.component';
-import {concat} from 'rxjs/internal/observable/concat';
 import {AdminDeleteModalComponent} from './admin-delete-modal.component';
 import {AdminChangeModalComponent} from './admin-change-modal.component';
 import {AdminHourModalComponent} from './admin-hour-modal.component';
@@ -102,7 +101,7 @@ export class AdminCalendarComponent extends BaseCalendar {
         if (!this.isValidChange(event)) {
             return this.snackBar.open('Orario non valido');
         }
-        this.facade.canEditHoliday(event.event.meta.id, {name: event.name, startTime: event.newStart, endTime: event.newEnd})
+        this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
             .subscribe(_ => {
                 this.modalData = {
                     action: EVENT_TYPES.CHANGE,

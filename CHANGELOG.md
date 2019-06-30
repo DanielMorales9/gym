@@ -7,16 +7,11 @@
 - **FR**: Schedule Training Assignment
 - **FR**: Recurring events in Gym Calendar
 - **FR**: Add Gym capacity
-- **BF**: Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
-    
-- **Chapter II** Courses and Events
-    - Increase Test Coverage SaleFacade
-    - Increase Test Coverage SaleService
     
 - **Chapter III** Multiple Gyms
     - Add gymId as PathVariable to API calls
     - Set Gym during user registration (re-visit registration logic)
-
+    
 # DONE
 - **Chapter II** Courses and Events
     - Replace Admin with Gym in Sale
@@ -44,9 +39,13 @@
     - Full Test Coverage GymService
     - Add CourseEvent and Reservation logic
     - Created TrainingBundle Controller, TrainingBundleSpecification Facade, TrainingBundle Service
-    - Adapted BundlesDetails View
+    - Adapted BundlesDetails View to Courses
     - Error *"Cannot read property 'id' of undefined" on calendar view becuase of gym id not retrieved*  
-        
+    - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
+    - Increased Test Coverage SaleFacade
+    - Reach 40% Test Coverage on Backend
+    - Refactored Reservations and Events
+    
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests
    - Created Mail Service w tests

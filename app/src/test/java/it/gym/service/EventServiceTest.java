@@ -5,7 +5,10 @@ import it.gym.model.AEvent;
 import it.gym.model.Holiday;
 import it.gym.model.TimeOff;
 import it.gym.model.Trainer;
+import it.gym.repository.CourseEventRepository;
 import it.gym.repository.EventRepository;
+import it.gym.repository.PersonalEventRepository;
+import it.gym.repository.TrainingEventRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -21,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.assertj.core.api.AssertionsForClassTypes.anyOf;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -30,6 +32,15 @@ public class EventServiceTest {
 
     @MockBean
     private EventRepository repository;
+
+    @MockBean
+    private PersonalEventRepository personalRepository;
+
+    @MockBean
+    private TrainingEventRepository trainingRepository;
+
+    @MockBean
+    private CourseEventRepository courseRepository;
 
     @TestConfiguration
     static class EventServiceTestContextConfiguration {
@@ -77,7 +88,8 @@ public class EventServiceTest {
     public void findAllTimesOffById() {
         Date startTime = new Date();
         Date endTime = new Date();
-        Mockito.doReturn(Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime))).when(repository).findAll();
+        List<TimeOff> toBeReturned = Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime));
+        Mockito.doReturn(toBeReturned).when(repository).findByInterval(startTime, endTime);
         List<AEvent> list = service.findAllTimesOffById(2L, startTime, endTime);
         assertThat(list.size()).isEqualTo(1);
     }
@@ -86,7 +98,8 @@ public class EventServiceTest {
     public void findAllEventsLargerThanInterval() {
         Date startTime = new Date();
         Date endTime = new Date();
-        Mockito.doReturn(Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime))).when(repository).findAll();
+        List<TimeOff> toBeReturned = Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime));
+        Mockito.doReturn(toBeReturned).when(repository).findAllEventsLargerThanInterval(startTime, endTime);
         List<AEvent> list = service.findAllEventsLargerThanInterval(startTime, endTime);
         assertThat(list.size()).isEqualTo(1);
     }
@@ -94,17 +107,29 @@ public class EventServiceTest {
     @Test
     public void findOverlappingEvents() {
         Date startTime = new Date();
-        Date endTime = new Date();
-        Mockito.doReturn(Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime))).when(repository).findAll();
+        Date endTime = addHours(startTime, 1);
+        List<TimeOff> toBeReturned = Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime));
+        Mockito.doReturn(toBeReturned).when(repository).findOverlappingEvents(startTime, endTime);
         List<AEvent> list = service.findOverlappingEvents(startTime, endTime);
         assertThat(list.size()).isEqualTo(1);
+    }
+
+    @Test
+    public void findOverlappingEventsWithContiguousEvents() {
+        Date startTime = new Date();
+        Date myStartTime = addHours(startTime, -1);
+        List<TimeOff> toBeReturned = Collections.emptyList();
+        Mockito.doReturn(toBeReturned).when(repository).findOverlappingEvents(myStartTime, startTime);
+        List<AEvent> list = service.findOverlappingEvents(myStartTime, startTime);
+        assertThat(list.size()).isEqualTo(0);
     }
 
     @Test
     public void findAllHolidaysById() {
         Date startTime = new Date();
         Date endTime = new Date();
-        Mockito.doReturn(Collections.singletonList(createHoliday(startTime, endTime))).when(repository).findAll();
+        List<AEvent> toBeReturned = Collections.singletonList(createHoliday(startTime, endTime));
+        Mockito.doReturn(toBeReturned).when(repository).findByInterval(any(), any());
         List<AEvent> list = service.findAllHolidays(startTime, endTime);
         assertThat(list.size()).isEqualTo(1);
     }
@@ -122,7 +147,8 @@ public class EventServiceTest {
     public void findAllEvents() {
         Date startTime = new Date();
         Date endTime = new Date();
-        Mockito.doReturn(Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime))).when(repository).findAll();
+        List<TimeOff> toBeReturned = Collections.singletonList(createTimeOff(createTrainer(), startTime, endTime));
+        Mockito.doReturn(toBeReturned).when(repository).findByInterval(any(), any());
         List<AEvent> list = service.findAllEvents(startTime, endTime);
         assertThat(list.size()).isEqualTo(1);
     }

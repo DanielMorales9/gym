@@ -116,10 +116,10 @@ export class CalendarFacade {
         return this.eventService.editHoliday(gymId, id, event);
     }
 
-    canEditHoliday(id: any, event: { name: any; startTime: any; endTime: any }) {
+    canEdit(event: { startTime: any; endTime: any }) {
         const gymId = this.gymService.gym.id;
 
-        return this.eventService.canEditHoliday(gymId, id, event);
+        return this.eventService.canEdit(gymId, event);
     }
 
 
@@ -173,11 +173,6 @@ export class CalendarFacade {
         const gymId = this.gymService.gym.id;
 
         return this.eventService.editTimeOff(gymId, id, {startTime: startTime, endTime: endTime, name: name});
-    }
-
-    canEditTimeOff(id: any, startTime: any, endTime: any ) {
-        const gymId = this.gymService.gym.id;
-        return this.eventService.canEditTimeOff(gymId, id, {startTime: startTime, endTime: endTime});
     }
 
 

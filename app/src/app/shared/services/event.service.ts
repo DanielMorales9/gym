@@ -16,10 +16,6 @@ export class EventService {
         return this.http.delete(endpoint);
     }
 
-    canEditTimeOff(gymId: number, id: number, event: any) {
-        return this.http.post(`/events/${gymId}/timeOff/${id}/canEdit`, event);
-    }
-
     getAllEvents(start: string, end: string): Observable<any> {
         return this.http.get(`/events?startTime=${start}&endTime=${end}`);
     }
@@ -48,8 +44,8 @@ export class EventService {
         return this.http.patch(`/events/${gymId}/holiday/${id}`, event);
     }
 
-    canEditHoliday(gymId: any, id: any, event: { name: any; startTime: any; endTime: any }) {
-        return this.http.post(`/events/${gymId}/holiday/${id}/canEdit`, event);
+    canEdit(gymId: any, event: { startTime: any; endTime: any }) {
+        return this.http.post(`/events/${gymId}/canEdit`, event);
     }
 
     getHolidays(start: any, end: any): Observable<any> {

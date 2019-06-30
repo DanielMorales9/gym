@@ -1,8 +1,13 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.*;
+import it.gym.model.AEvent;
+import it.gym.model.Holiday;
+import it.gym.model.TimeOff;
+import it.gym.repository.CourseEventRepository;
 import it.gym.repository.EventRepository;
+import it.gym.repository.PersonalEventRepository;
+import it.gym.repository.TrainingEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +20,16 @@ public class EventService implements ICrudService<AEvent, Long> {
 
     @Autowired
     private EventRepository repository;
+
+    @Autowired
+    private PersonalEventRepository personalRepository;
+
+    @Autowired
+    private TrainingEventRepository trainingRepository;
+
+
+    @Autowired
+    private CourseEventRepository courseRepository;
 
     @Override
     public AEvent save(AEvent var1) {
@@ -38,58 +53,39 @@ public class EventService implements ICrudService<AEvent, Long> {
     }
 
     public List<AEvent> findAllEventsLargerThanInterval(Date startTime, Date endTime) {
-        return repository.findAll().stream()
-                .filter(e ->  e.getStartTime().compareTo(startTime) <= 0 && e.getEndTime().compareTo(endTime) >= 0)
-                .collect(Collectors.toList());
+        return repository.findAllEventsLargerThanInterval(startTime, endTime);
     }
 
     public List<AEvent> findOverlappingEvents(Date startTime, Date endTime) {
-        return repository.findAll().stream()
-                .filter(e ->  e.getStartTime().compareTo(endTime) <= 0 && e.getEndTime().compareTo(startTime) >= 0)
-                .collect(Collectors.toList());
+        return repository.findOverlappingEvents(startTime, endTime);
     }
 
     public List<AEvent> findAllEvents(Date startTime, Date endTime) {
-        return this.repository.findAll().stream()
-                .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
-                .collect(Collectors.toList());
+        return this.repository.findByInterval(startTime, endTime);
     }
 
     public List<AEvent> findAllTimesOffById(Long id, Date startTime, Date endTime) {
-        return this.repository.findAll().stream()
+        return this.repository.findByInterval(startTime, endTime).stream()
                 .filter(e -> e.getType().equals(TimeOff.TYPE))
                 .filter(e -> ((TimeOff) e).getUser().getId().equals(id))
-                .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
                 .collect(Collectors.toList());
     }
 
     public List<AEvent> findAllHolidays(Date startTime, Date endTime) {
-        return this.repository.findAll().stream()
+        return this.repository.findByInterval(startTime, endTime).stream()
                 .filter(e -> e.getType().equals(Holiday.TYPE))
-                .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
                 .collect(Collectors.toList());
     }
 
     public List<AEvent> findAllCourseEvents(Date startTime, Date endTime) {
-        return this.repository.findAll().stream()
-                .filter(e -> e.getType().equals(CourseEvent.TYPE))
-                .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
-                .collect(Collectors.toList());
+        return this.courseRepository.findByInterval(startTime, endTime);
     }
 
     public List<AEvent> findPersonalByInterval(Long customerId, Date startTime, Date endTime) {
-        return repository.findAll().stream()
-                .filter(e -> e.getType().equals(PersonalEvent.TYPE))
-                .map(e -> (PersonalEvent) e)
-                .filter(e -> e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
-                .filter(e -> e.getReservation().getUser().getId().equals(customerId))
-                .collect(Collectors.toList());
+        return personalRepository.findByIntervalAndCustomerId(customerId, startTime, endTime);
     }
 
     public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
-        return repository.findAll().stream()
-                .filter(e -> e.getType().equals(PersonalEvent.TYPE) || e.getType().equals(CourseEvent.TYPE))
-                .filter(e -> e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
-                .collect(Collectors.toList());
+        return trainingRepository.findByInterval(startTime, endTime);
     }
 }

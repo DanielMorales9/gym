@@ -106,9 +106,8 @@ public class EventFacade {
         return service.save(timeOff);
     }
 
-    public void canEdit(Long gymId, Long id, Event event) {
+    public void canEdit(Long gymId, Event event) {
         Gym gym = gymService.findById(gymId);
-        AEvent evt = this.service.findById(id);
 
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
@@ -154,6 +153,7 @@ public class EventFacade {
 
         gymService.simpleGymChecks(gym, startTime, endTime);
         ATrainingSession session = bundle.createSession(startTime, endTime);
+        bundle.addSession(session);
 
         CourseEvent event = new CourseEvent();
         event.setStartTime(startTime);

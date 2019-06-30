@@ -74,13 +74,12 @@ public class EventController {
 
     }
 
-    @PostMapping(path = "/{gymId}/holiday/{id}/canEdit")
-    ResponseEntity<String> canEditHoliday(@PathVariable Long gymId,
-                                          @PathVariable Long id,
-                                          @RequestBody Event event) {
-        logger.info("canEdit holiday");
+    @PostMapping(path = "/{gymId}/canEdit")
+    ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
+                                        @RequestBody Event event) {
+        logger.info("canEdit event");
 
-        facade.canEdit(gymId, id, event);
+        facade.canEdit(gymId, event);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -149,18 +148,6 @@ public class EventController {
         logger.info("isAvailable timeOff");
 
         facade.isAvailable(gymId, event);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
-    @PostMapping(path = "/{gymId}/timeOff/{id}/canEdit")
-    ResponseEntity<String> canEditTimeOff(@PathVariable Long gymId,
-                                          @PathVariable Long id,
-                                          @RequestBody Event event) {
-        logger.info("canEdit timeOff");
-
-        facade.canEdit(gymId, id, event);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
