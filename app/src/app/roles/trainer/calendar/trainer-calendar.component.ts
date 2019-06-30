@@ -32,7 +32,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        const s1 = this.facade.getReservations(startDay, endDay);
+        const s1 = this.facade.getTrainingEvents(startDay, endDay);
 
         const s2 = this.facade.getTimesOff(startDay, endDay, this.user.id);
 
@@ -241,7 +241,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     private completeReservation(data: any) {
-        this.facade.completeReservation(data.eventId)
+        this.facade.completeEvent(data.eventId)
             .subscribe((_) => {
                 this.snackBar.open('Allenamento completato');
                 this.getEvents();
@@ -272,7 +272,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     private deleteReservation(data: any) {
-        this.facade.deleteReservation(data.eventId, 'trainer')
+        this.facade.deleteReservation(data, 'trainer')
             .subscribe(_ => {
                 this.snackBar.open('Prenotazione è stata eliminata');
                 this.getEvents();

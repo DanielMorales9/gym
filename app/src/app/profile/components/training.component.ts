@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundlesService, UserService} from '../../shared/services';
+import {BundleSpecsService, UserService} from '../../shared/services';
 import {AppService} from '../../services';
 import {NotificationService} from '../../services';
 
@@ -22,7 +22,7 @@ export class TrainingComponent implements OnInit, OnDestroy {
 
     constructor(private messageService: NotificationService,
                 private userService: UserService,
-                private bundleService: BundlesService,
+                private bundleService: BundleSpecsService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private app: AppService) {

@@ -5,7 +5,7 @@ import {BundleSpecification} from '../model';
 import {ABundleService} from './abundle.service';
 
 @Injectable()
-export class BundlesService extends ABundleService {
+export class BundleSpecsService extends ABundleService {
 
     constructor(private http: HttpClient) {
         super();

@@ -51,6 +51,10 @@ public abstract class AEvent {
 
     public abstract String getType();
 
+    public abstract boolean isReservable();
+
+    public abstract ATrainingSession getSession();
+
     public Long getId() {
         return id;
     }
@@ -91,7 +95,8 @@ public abstract class AEvent {
         this.gym = gym;
     }
 
-    public abstract boolean isReservable();
-
-    public abstract ATrainingSession getSession();
+    @Override
+    public String toString() {
+        return getName();
+    }
 }

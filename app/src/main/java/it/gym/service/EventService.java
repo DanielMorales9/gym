@@ -1,9 +1,7 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.AEvent;
-import it.gym.model.Holiday;
-import it.gym.model.TimeOff;
+import it.gym.model.*;
 import it.gym.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,6 +67,29 @@ public class EventService implements ICrudService<AEvent, Long> {
         return this.repository.findAll().stream()
                 .filter(e -> e.getType().equals(Holiday.TYPE))
                 .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
+                .collect(Collectors.toList());
+    }
+
+    public List<AEvent> findAllCourseEvents(Date startTime, Date endTime) {
+        return this.repository.findAll().stream()
+                .filter(e -> e.getType().equals(CourseEvent.TYPE))
+                .filter(e ->  e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
+                .collect(Collectors.toList());
+    }
+
+    public List<AEvent> findPersonalByInterval(Long customerId, Date startTime, Date endTime) {
+        return repository.findAll().stream()
+                .filter(e -> e.getType().equals(PersonalEvent.TYPE))
+                .map(e -> (PersonalEvent) e)
+                .filter(e -> e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
+                .filter(e -> e.getReservation().getUser().getId().equals(customerId))
+                .collect(Collectors.toList());
+    }
+
+    public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
+        return repository.findAll().stream()
+                .filter(e -> e.getType().equals(PersonalEvent.TYPE) || e.getType().equals(CourseEvent.TYPE))
+                .filter(e -> e.getStartTime().compareTo(startTime) >= 0 && e.getEndTime().compareTo(endTime) <= 0)
                 .collect(Collectors.toList());
     }
 }

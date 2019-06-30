@@ -24,32 +24,7 @@ public class Reservation {
     @ManyToOne
     private Customer user;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date startTime;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date endTime;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    private ATrainingSession session;
-
     private Boolean isConfirmed;
-
-    public ATrainingSession getSession() {
-        return session;
-    }
-
-    public void setSession(ATrainingSession session) {
-        this.session = session;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
 
     public Long getId() {
         return id;
@@ -65,14 +40,6 @@ public class Reservation {
 
     public void setConfirmed(Boolean confirmed) {
         isConfirmed = confirmed;
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     public Customer getUser() {

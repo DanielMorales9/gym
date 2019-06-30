@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
-import {BundlesService} from '../../services';
+import {BundleSpecsService} from '../../services';
 import {BundleSpecification} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from './bundle-modal.component';
-import {BundleFacade} from '../../../services';
+import {SpecFacade} from '../../../services';
 
 @Component({
     selector: 'bundle-details',
@@ -18,10 +18,13 @@ export class BundleDetailsComponent implements OnInit {
     canDisable: boolean;
     canEdit: boolean;
 
-    constructor(private service: BundlesService,
+    PERSONAL = 'P';
+    COURSE   = 'C';
+
+    constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
                 private router: Router,
-                private facade: BundleFacade,
+                private facade: SpecFacade,
                 private route: ActivatedRoute) {
         this.canDelete = facade.canDelete();
         this.canEdit = facade.canEdit();

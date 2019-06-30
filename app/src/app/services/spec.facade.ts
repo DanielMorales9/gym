@@ -3,7 +3,7 @@ import {AppService} from './app.service';
 
 
 @Injectable()
-export class BundleFacade {
+export class SpecFacade {
 
     constructor(private service: AppService) {
     }

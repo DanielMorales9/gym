@@ -12,16 +12,14 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = this.data;
-    }
-
-    close(data?) {
-        if (!data) {
-            data = {type: 'none'};
-        }
-        this.dialogRef.close(data);
+        console.log(this.modalData);
     }
 
     submit() {
+        console.log(this.modalData);
+        if (this.modalData.event.meta.type === 'course') {
+            return this.close(this.modalData);
+        }
         this.close();
     }
 

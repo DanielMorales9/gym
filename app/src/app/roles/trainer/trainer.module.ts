@@ -7,10 +7,10 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {
     MAT_CHECKBOX_CLICK_ACTION,
     MatButtonModule,
-    MatDialogModule,
+    MatDialogModule, MatExpansionModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule
+    MatInputModule, MatListModule
 } from '@angular/material';
 import {TrainerRouting} from './trainer.routing';
 import {
@@ -42,6 +42,8 @@ registerLocaleData(localeIt);
         MatInputModule,
         MatButtonModule,
         MatIconModule,
+        MatListModule,
+        MatExpansionModule,
     ],
     declarations: [
         TrainerCalendarComponent,

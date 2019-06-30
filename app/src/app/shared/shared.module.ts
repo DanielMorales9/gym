@@ -14,10 +14,10 @@ import {
     BundleHelperService,
     BundlePayHelperService,
     BundlesNotDisabledService,
-    BundlesService,
+    BundleSpecsService,
     SalesService,
     EventService,
-    TrainingService,
+    ReservationService,
     UserHelperService,
     UserService
 } from './services';
@@ -109,11 +109,11 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SalesComponent
     ],
     providers: [
-        BundlesService,
+        BundleSpecsService,
         BundlesNotDisabledService,
         SalesService,
         EventService,
-        TrainingService,
+        ReservationService,
         UserService,
         UserHelperService,
         SaleHelperService,

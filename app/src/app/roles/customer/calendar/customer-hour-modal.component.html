@@ -19,6 +19,7 @@
                     <mat-option [value]="b.id" *ngFor="let b of modalData.event.bundles">{{b.name}}</mat-option>
                 </mat-select>
             </mat-form-field>
+            <div *ngIf="modalData.event.bundles.length == 0" class="mat-error">Nessun pacchetto disponibile</div>
         </div>
 
     </div>

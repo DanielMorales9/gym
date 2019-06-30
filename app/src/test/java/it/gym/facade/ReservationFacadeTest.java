@@ -53,27 +53,6 @@ public class ReservationFacadeTest {
 
     @Autowired ReservationFacade facade;
 
-    @Test
-    public void isNotDoublyBooked() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
-        cal.set(2019, Calendar.JUNE, 8, 10, 0);
-        Date start = cal.getTime();
-        Date end = addHours(start, 1);
-        Mockito.doReturn(createCustomer()).when(customerService).findById(1L);
-        facade.isReservationDoublyBooked(1L, start, end);
-    }
-
-    @Test(expected = BadRequestException.class)
-    public void isDoublyBooked() {
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("Europe/Rome"), Locale.ITALY);
-        cal.set(2019, Calendar.JUNE, 8, 10, 0);
-        Date start = cal.getTime();
-        Date end = addHours(start, 1);
-        Mockito.doReturn(createCustomer()).when(customerService).findById(1L);
-        Reservation reservation = createReservation(createCustomer(), createSession(createBundle()));
-        Mockito.doReturn(Collections.singletonList(reservation)).when(service).findByIntervalAndId(1L, start, end);
-        facade.isReservationDoublyBooked(1L, start, end);
-    }
 
     @Test
     public void isOnTime() {
@@ -92,21 +71,6 @@ public class ReservationFacadeTest {
         Customer customer = createCustomer();
         customer.setCurrentTrainingBundles(Collections.emptyList());
         facade.deleteExpiredBundles(customer);
-    }
-
-    @Test(expected = BadRequestException.class)
-    public void noBundleLeft() {
-        Customer customer = createCustomer();
-        customer.setCurrentTrainingBundles(Collections.emptyList());
-        facade.isBundleLeft(customer);
-    }
-
-    @Test
-    public void someBundlesLeft() {
-        Customer customer = createCustomer();
-        ATrainingBundle spec = createBundle();
-        customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
-        facade.isBundleLeft(customer);
     }
 
     @Test
@@ -157,8 +121,6 @@ public class ReservationFacadeTest {
         facade.isAvailable(1L, 1L, 1L, event);
     }
 
-
-
     @Test
     public void book() {
         Customer customer = createCustomer();
@@ -180,8 +142,6 @@ public class ReservationFacadeTest {
 
         Mockito.doAnswer(invocationOnMock -> {
             Reservation res = invocationOnMock.getArgument(0);
-            res.setId(1L);
-            res.getSession().setId(1L);
             return res;
         }).when(service).save(any(Reservation.class));
 
@@ -196,21 +156,7 @@ public class ReservationFacadeTest {
         event.setEndTime(end);
         Reservation actual = facade.createReservationFromBundle(1L, 1L, 1L, event);
 
-        ATrainingSession actualSession = actual.getSession();
-        ATrainingBundle actualBundle = actualSession.getTrainingBundle();
-
-        assertThat(actualBundle).isEqualTo(customer.getCurrentTrainingBundles().get(0));
-
-        PersonalTrainingSession expectedSession = new PersonalTrainingSession();
-        expectedSession.setCompleted(false);
-        expectedSession.setId(1L);
-        expectedSession.setTrainingBundle(actualBundle);
-        expectedSession.setStartTime(start);
-        expectedSession.setEndTime(end);
-
-        assertThat(actual.getSession()).isEqualTo(expectedSession);
-
-        Reservation expected = createReservation(customer, (PersonalTrainingSession) actual.getSession());
+        Reservation expected = createReservation(customer);
 
         assertThat(actual).isEqualTo(expected);
     }
@@ -227,14 +173,25 @@ public class ReservationFacadeTest {
         PersonalTrainingSession session = createSession(bundle);
         bundle.addSession(session);
 
-        Reservation reservation = createReservation(customer, session);
+        Reservation reservation = createReservation(customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doReturn(customer).when(userService).findByEmail(email);
+        Mockito.doReturn(createPersonalEvent(session, createGym())).when(eventService).findById(1L);
 
-        Reservation actual = facade.deleteReservations(1L, email, "customer");
+        Reservation actual = facade.deleteReservations(1L, 1L, email, "customer");
 
         Mockito.verifyZeroInteractions(mailService);
-        assertThat(actual).isEqualTo(createReservation(customer, session));
+        assertThat(actual).isEqualTo(createReservation(customer));
+    }
+
+    private ATrainingEvent createPersonalEvent(ATrainingSession session, Gym gym) {
+        ATrainingEvent evt = new PersonalEvent();
+        evt.setSession(session);
+        evt.setEndTime(evt.getSession().getEndTime());
+        evt.setStartTime(evt.getSession().getStartTime());
+        evt.setGym(gym);
+        evt.setName("Allenamento");
+        return evt;
     }
 
     @Test
@@ -249,14 +206,15 @@ public class ReservationFacadeTest {
         PersonalTrainingSession session = createSession(bundle);
         bundle.addSession(session);
 
-        Reservation reservation = createReservation(customer, session);
+        Reservation reservation = createReservation(customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doReturn(customer).when(userService).findByEmail(email);
+        Mockito.doReturn(createPersonalEvent(session, createGym())).when(eventService).findById(1L);
 
-        Reservation actual = facade.deleteReservations(1L, email, "admin");
+        Reservation actual = facade.deleteReservations(1L, 1L, email, "admin");
 
         Mockito.verify(mailService).sendSimpleMail(anyString(), anyString(), anyString());
-        assertThat(actual).isEqualTo(createReservation(customer, session));
+        assertThat(actual).isEqualTo(createReservation(customer));
     }
 
     @Test
@@ -267,42 +225,20 @@ public class ReservationFacadeTest {
         PersonalTrainingSession session = createSession(bundle);
         bundle.addSession(session);
 
-        Reservation reservation = createReservation(customer, session);
+        Reservation reservation = createReservation(customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
         Reservation actual = facade.confirm(1L);
 
-        Reservation expected = createReservation(customer, session);
+        Reservation expected = createReservation(customer);
         expected.setConfirmed(true);
         assertThat(actual).isEqualTo(expected);
     }
 
-    @Test
-    public void complete() {
-        Date start = DateUtils.addHours(new Date(), -6);
-        Date end = DateUtils.addHours(start, 1);
-        ATrainingBundle bundle = createBundle();
-        PersonalTrainingSession session = createSession(start, end, bundle);
-        bundle.addSession(session);
-
-        Mockito.doReturn(createReservation(createCustomer(), session)).when(service).findById(1L);
-        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
-        Reservation actual = facade.complete(1L);
-
-        PersonalTrainingSession expected = createSession(start, end, bundle);
-        expected.setCompleted(true);
-
-        assertThat(actual.getSession()).isEqualTo(expected);
-    }
-
-    private Reservation createReservation(Customer customer, PersonalTrainingSession session) {
+    private Reservation createReservation(Customer customer) {
         Reservation expected = new Reservation();
-        expected.setStartTime(session.getStartTime());
-        expected.setEndTime(session.getEndTime());
         expected.setConfirmed(false);
         expected.setUser(customer);
-        expected.setId(1L);
-        expected.setSession(session);
         return expected;
     }
 

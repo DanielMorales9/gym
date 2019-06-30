@@ -59,4 +59,28 @@ export class EventService {
     editTimeOff(gymId: any, id: number, event: { name: string; startTime: Date; endTime: Date }) {
         return this.http.patch(`/events/${gymId}/timeOff/${id}`, event);
     }
+
+    createCourseEvent(gymId: any, event: { name: any; startTime: Date; id: any; endTime: Date }) {
+        return this.http.post(`/events/${gymId}/course`, event);
+    }
+
+    deleteCourseEvent(id: any) {
+        return this.http.delete(`/events/course/${id}`);
+    }
+
+    getCourseEvents(start: string, end: string): Observable<any> {
+        return this.http.get(`/events/course?startTime=${start}&endTime=${end}`);
+    }
+
+    getCustomerEvents(id: any, start: string, end: string): Observable<any> {
+        return this.http.get(`/events/personal?customerId=${id}&startTime=${start}&endTime=${end}`);
+    }
+
+    getTrainingEvents(start: string, end: string): Observable<any> {
+        return this.http.get(`/events/training?&startTime=${start}&endTime=${end}`);
+    }
+
+    complete(id: number): Observable<any> {
+        return this.http.get(`/events/${id}/complete`);
+    }
 }

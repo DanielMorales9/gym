@@ -57,7 +57,7 @@ public class EventController {
                                               @RequestBody Event event) {
         logger.info("Edit holiday");
 
-        AEvent holiday = facade.editHoliday(gymId, id, event);
+        AEvent holiday = facade.editEvent(gymId, id, event);
 
         return ResponseEntity.ok(new EventAssembler().toResource(holiday));
 
@@ -68,7 +68,7 @@ public class EventController {
                                               @RequestBody Event event) {
         logger.info("Create holiday");
 
-        facade.isHolidayAvailable(gymId, event);
+        facade.isAvailable(gymId, event);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -80,7 +80,7 @@ public class EventController {
                                           @RequestBody Event event) {
         logger.info("canEdit holiday");
 
-        facade.canEditHoliday(gymId, id, event);
+        facade.canEdit(gymId, id, event);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -94,6 +94,27 @@ public class EventController {
         logger.info("Create timeOff");
 
         AEvent timeOff = facade.createTimeOff(gymId, trainerId, event);
+
+        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+
+    }
+
+    @PostMapping(path = "/{gymId}/course")
+    ResponseEntity<EventResource> createCourseEvent(@PathVariable Long gymId,
+                                                    @RequestBody Event event) {
+        logger.info("Create course event");
+
+        AEvent timeOff = facade.createCourseEvent(gymId, event);
+
+        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+
+    }
+
+    @DeleteMapping(path = "/course/{id}")
+    ResponseEntity<EventResource> deleteCourseEvent(@PathVariable Long id) {
+        logger.info("Deleting course event");
+
+        AEvent timeOff = facade.deleteCourseEvent(id);
 
         return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
 
@@ -116,7 +137,7 @@ public class EventController {
                                               @RequestBody Event event) {
         logger.info("Edit TimeOff");
 
-        AEvent timeOff = facade.editTimeOff(gymId, id, event);
+        AEvent timeOff = facade.editEvent(gymId, id, event);
 
         return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
 
@@ -127,7 +148,7 @@ public class EventController {
                                               @RequestBody Event event) {
         logger.info("isAvailable timeOff");
 
-        facade.isTimeOffAvailable(gymId, event);
+        facade.isAvailable(gymId, event);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -139,7 +160,7 @@ public class EventController {
                                           @RequestBody Event event) {
         logger.info("canEdit timeOff");
 
-        facade.canEditTimeOff(gymId, id, event);
+        facade.canEdit(gymId, id, event);
 
         return new ResponseEntity<>(HttpStatus.OK);
 
@@ -163,12 +184,53 @@ public class EventController {
     @GetMapping("/holiday")
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<List<EventResource>> findAllHolidaysByInterval(@RequestParam(value = "startTime")
-                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                   @RequestParam(value = "endTime")
-                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
         List<AEvent> res = facade.findAllHolidays(startTime, endTime);
+
+        return ResponseEntity.ok(new EventAssembler().toResources(res));
+    }
+
+    @GetMapping("/personal")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<List<EventResource>> findPersonalByInterval(@RequestParam Long customerId,
+                                                               @RequestParam(value = "startTime")
+                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                               @RequestParam(value = "endTime")
+                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        List<AEvent> res = facade.findPersonalByInterval(customerId, startTime, endTime);
+
+        return ResponseEntity.ok(new EventAssembler().toResources(res));
+    }
+
+    @GetMapping("/training")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<List<EventResource>> findTrainingByInterval(@RequestParam(value = "startTime")
+                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                               @RequestParam(value = "endTime")
+                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        List<AEvent> res = facade.findTrainingByInterval(startTime, endTime);
+
+        return ResponseEntity.ok(new EventAssembler().toResources(res));
+    }
+
+    @GetMapping("/course")
+    @PreAuthorize("isAuthenticated()")
+    ResponseEntity<List<EventResource>> findAllCoursesByInterval(@RequestParam(value = "startTime")
+                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
+                                                                 @RequestParam(value = "endTime")
+                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
+        List<AEvent> res = facade.findAllCourseEvents(startTime, endTime);
+        logger.info(res.toString());
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }
@@ -184,6 +246,17 @@ public class EventController {
         List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime);
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
+    }
+
+    @GetMapping(path = "/{eventId}/complete")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('TRAINER')")
+    ResponseEntity<EventResource> complete(@PathVariable Long eventId) {
+
+        logger.info("completing session");
+        AEvent event = facade.complete(eventId);
+
+        return ResponseEntity.ok(new EventAssembler().toResource(event));
     }
 
 

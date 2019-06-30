@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { BundlesService} from '../../shared/services';
+import { BundleSpecsService} from '../../shared/services';
 import {AppService} from '../../services';
 
 @Component({
@@ -16,7 +16,7 @@ export class TrainingDetailsComponent implements OnInit {
     current_role_view: number;
 
     constructor(private app: AppService,
-                private bundleService: BundlesService) {
+                private bundleService: BundleSpecsService) {
         this.current_role_view = this.app.currentRole;
     }
 

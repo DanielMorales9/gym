@@ -46,4 +46,17 @@
             <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
         </div>
     </ng-container>
+    <ng-container *ngSwitchCase="'course'">
+        <div mat-dialog-content>
+            <i class="fas fa-calendar-week"></i>
+            {{modalData?.event.meta?.name}} dalle
+            {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
+            <br>
+            <i class="fas fa-user"></i>&nbsp;Ci sono {{modalData?.event.meta?.reservations.length}} prenotati.
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
+        </div>
+    </ng-container>
 </ng-container>

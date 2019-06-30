@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
@@ -17,7 +18,6 @@ import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-import java.util.TimeZone;
 
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -30,6 +30,14 @@ public class EventFacadeTest {
     private GymService gymService;
     @MockBean
     private ReservationService reservationService;
+
+    @MockBean
+    private TrainingBundleService bundleService;
+
+    @MockBean
+    @Qualifier("trainingSessionService")
+    private TrainingSessionService sessionService;
+
     @MockBean
     private UserService userService;
     @MockBean
@@ -84,7 +92,7 @@ public class EventFacadeTest {
         Date newEnd = addHours(end, 1);
         event.setEndTime(newEnd);
         event.setName("holiday");
-        AEvent evt = facade.editHoliday(1L, 1L, event);
+        AEvent evt = facade.editEvent(1L, 1L, event);
         Mockito.verify(gymService).findById(1L);
         assertThat(evt).isEqualTo(createHoliday(gym, start, newEnd));
     }
@@ -105,7 +113,7 @@ public class EventFacadeTest {
         Date newEnd = addHours(end, 1);
         event.setEndTime(newEnd);
         event.setName("holiday");
-        facade.canEditHoliday(1L, 1L, event);
+        facade.canEdit(1L, 1L, event);
         Mockito.verify(gymService).findById(1L);
     }
 
@@ -125,7 +133,7 @@ public class EventFacadeTest {
         Date newEnd = addHours(end, 1);
         event.setEndTime(newEnd);
         event.setName("holiday");
-        facade.isHolidayAvailable(1L, event);
+        facade.isAvailable(1L, event);
         Mockito.verify(gymService).findById(1L);
     }
 
@@ -165,7 +173,7 @@ public class EventFacadeTest {
         event.setStartTime(start);
         event.setEndTime(newEnd);
         event.setName("timeOff");
-        AEvent evt = facade.editTimeOff(1L, 2L, event);
+        AEvent evt = facade.editEvent(1L, 2L, event);
         Mockito.verify(gymService).findById(1L);
         assertThat(evt).isEqualTo(createTimeOff(gym, trainer, start, newEnd));
     }
@@ -186,7 +194,7 @@ public class EventFacadeTest {
         event.setStartTime(start);
         event.setEndTime(newEnd);
         event.setName("timeOff");
-        facade.canEditTimeOff(1L, 2L, event);
+        facade.canEdit(1L, 2L, event);
         Mockito.verify(gymService).findById(1L);
     }
 
@@ -206,7 +214,7 @@ public class EventFacadeTest {
         event.setStartTime(start);
         event.setEndTime(newEnd);
         event.setName("timeOff");
-        facade.isTimeOffAvailable(1L, event);
+        facade.isAvailable(1L, event);
         Mockito.verify(gymService).findById(1L);
     }
 

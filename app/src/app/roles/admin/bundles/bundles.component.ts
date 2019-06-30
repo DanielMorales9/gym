@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BundleSpecification} from '../../../shared/model';
-import {BundleHelperService, BundlesService, QueryableDatasource} from '../../../shared/services';
+import {BundleHelperService, BundleSpecsService, QueryableDatasource} from '../../../shared/services';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from '../../../shared/components/bundles';
 import {SnackBarService} from '../../../services';
@@ -20,7 +20,7 @@ export class BundlesComponent implements OnInit {
     private pageSize = 10;
     ds: QueryableDatasource<BundleSpecification>;
 
-    constructor(private service: BundlesService,
+    constructor(private service: BundleSpecsService,
                 private router: Router,
                 private dialog: MatDialog,
                 private helper: BundleHelperService,

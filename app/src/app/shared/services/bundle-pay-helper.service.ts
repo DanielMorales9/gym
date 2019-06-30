@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {BundleSpecification} from '../model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
-import {BundlesService} from './bundles.service';
 import {BundlesNotDisabledService} from './bundles-not-disabled.service';
 
 @Injectable()

@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
-import {EventService, TrainingService, UserService} from '../shared/services';
+import {EventService, ReservationService, UserService} from '../shared/services';
 import {AppService} from './app.service';
 import {GymService} from './gym.service';
 import {DateService} from './date.service';
 import {Observable} from 'rxjs';
+import {BundleService} from './bundle.service';
 
 
 @Injectable()
@@ -11,7 +12,8 @@ export class CalendarFacade {
 
     constructor(private userService: UserService,
                 private appService: AppService,
-                private trainingService: TrainingService,
+                private reservationService: ReservationService,
+                private bundleService: BundleService,
                 private eventService: EventService,
                 private dateService: DateService,
                 private gymService: GymService) {
@@ -43,6 +45,25 @@ export class CalendarFacade {
     }
 
     /**
+     * BUNDLE API
+     */
+    getCourses(startTime: Date, endTime?: Date): Observable<Object[]> {
+        if (!endTime) {
+            endTime = this.dateService.addHour(startTime);
+        }
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.bundleService.getCourses(startS, endS);
+    }
+
+
+    getCustomerEvents(startTime: any, endTime: any): Observable<Object[]> {
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.eventService.getCustomerEvents(this.getUser().id, startS, endS);
+    }
+
+    /**
      * EVENTS API
      */
 
@@ -52,18 +73,21 @@ export class CalendarFacade {
         return this.eventService.getAllEvents(startS, endS);
     }
 
+    getCourseEvents(startTime: any, endTime: any): Observable<Object[]> {
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.eventService.getCourseEvents(startS, endS);
+    }
+
+    getTrainingEvents(startTime: any, endTime: any): Observable<Object[]> {
+        const startS = CalendarFacade.formatDateToString(startTime);
+        const endS = CalendarFacade.formatDateToString(endTime);
+        return this.eventService.getTrainingEvents(startS, endS);
+    }
+
     /**
      * Holiday API
      */
-
-    isHolidayAvailable(date: any) {
-        const gymId = this.gymService.gym.id;
-        const startTime = new Date(date);
-        const endTime = this.dateService.addHour(startTime);
-
-        return this.eventService.isHolidayAvailable(gymId, {startTime: startTime, endTime: endTime});
-    }
-
     isHolidayAvailableAllDay(date: any) {
         const gymId = this.gymService.gym.id;
         const {startTime, endTime} = this.gymService.getGymStartAndEndHour(new Date(date));
@@ -162,27 +186,36 @@ export class CalendarFacade {
      */
 
     confirmReservation(id: number) {
-        return this.trainingService.confirm(id);
+        return this.reservationService.confirm(id);
     }
 
-    completeReservation(id: number) {
-        return this.trainingService.complete(id);
+    completeEvent(id: number) {
+        return this.eventService.complete(id);
     }
 
-    deleteReservation(id: any, type?: string) {
-        return this.trainingService.delete(id, type);
+    deleteReservation(data: any, type?: string) {
+        if ('reservation' in data) {
+            if (data.reservation.user.id === this.getUser().id) {
+                return this.reservationService.delete(data.id, data.reservation.id, type);
+            }
+        }
+        else if ('reservations' in data) {
+            const myReservations = data.reservations.filter(a => a.user.id === this.getUser().id);
+            if (myReservations.length > 0) {
+                return this.reservationService.delete(data.id, myReservations[0].id, type);
+            }
+        }
+        return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione '}}));
     }
 
-    createReservation(userId: number, bundleId: number, event: any) {
+    createReservationFromBundle(userId: number, bundleId: number, event: any) {
         const gymId = this.gymService.gym.id;
-        return this.trainingService.createReservation(gymId, userId, bundleId, event);
+        return this.reservationService.createReservationFromBundle(gymId, userId, bundleId, event);
     }
 
-    getReservations(startTime: any, endTime: any, userId?: number): Observable<Object[]> {
+    createReservationFromEvent(userId: number, eventId: number) {
         const gymId = this.gymService.gym.id;
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.trainingService.getReservations(startS, endS, userId);
+        return this.reservationService.createReservationFromEvent(gymId, userId, eventId);
     }
 
     /**
@@ -204,5 +237,12 @@ export class CalendarFacade {
         return this.gymService.isDayEvent(startTime, endTime);
     }
 
+    createCourseEvent(name: any, meta: any, start: Date, end: Date) {
+        const gymId = this.gymService.gym.id;
+        return this.eventService.createCourseEvent(gymId, {name: name, id: meta, startTime: start, endTime: end});
+    }
 
+    deleteCourseEvent(id: any) {
+        return this.eventService.deleteCourseEvent(id);
+    }
 }

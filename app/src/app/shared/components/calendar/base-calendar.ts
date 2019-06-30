@@ -42,6 +42,27 @@ export abstract class BaseCalendar implements OnInit {
         saturday : 6,
     };
 
+    EVENT_NAMES = {
+        H: 'chiusura',
+        T: 'ferie',
+        C: 'corso',
+        P: 'prenotazione'
+    };
+
+    EVENT_TYPES = {
+        H: 'admin',
+        T: 'trainer',
+        C: 'course',
+        P: 'reservation'
+    };
+
+    EVENT_COLOR = {
+        H: CALENDAR_COLUMNS.RED,
+        T: CALENDAR_COLUMNS.RED,
+        C: CALENDAR_COLUMNS.GREEN,
+        P: CALENDAR_COLUMNS.YELLOW,
+    };
+
     ACTIONS: CalendarEventAction[] = [
         /*{
             label: '<i class="fa fa-fw fa-pencil"></i>',
@@ -85,12 +106,12 @@ export abstract class BaseCalendar implements OnInit {
 
     ngOnInit(): void {
         this.events = [];
+        this.initCalendarConfig();
         this.getUser();
         this.getRole();
         this.initView();
         this.initViewDate();
         this.updateQueryParams();
-        this.initCalendarConfig();
         this.getEvents();
     }
 
@@ -246,37 +267,51 @@ export abstract class BaseCalendar implements OnInit {
         return {startDay, endDay};
     }
 
+
+
     formatEvent(event: any): CalendarEvent {
         const startTime = new Date(event['startTime']);
         const endTime = new Date(event['endTime']);
-        const isAllDay = this.facade.isDayEvent(startTime, endTime);
         const startHour = startTime.getHours();
         const endHour = endTime.getHours();
 
-        let title;
-        const isNotReservation = !!event.type;
-        if (isNotReservation) {
-            title = event.name;
-            event.eventName = (event.type === 'H') ? 'chiusura' : 'ferie';
-            event.type = (event.type === 'H') ? 'admin' : 'trainer';
-        } else {
-            event.type = 'reservation';
-            event.eventName = 'prenotazione';
-            if (this.user.type === 'C') {
-                title = `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
-            } else {
-                title = `Allenamento ${startHour} - ${endHour} di ${event['user']['lastName']}`;
-            }
+        const isAllDay = this.facade.isDayEvent(startTime, endTime);
+
+        let title = event.name;
+
+        let isDeletable;
+        let isResizable;
+        let color = this.EVENT_COLOR[event.type];
+
+        switch (event.type) {
+            case 'H':
+                isDeletable = isResizable = this.isAdmin();
+                break;
+            case 'T':
+                isDeletable = isResizable = this.isMyTimeOff(event);
+                break;
+            case 'C':
+                isDeletable = true;
+                isResizable = false;
+                break;
+            case 'P':
+                isDeletable = this.isMyPersonalEvent(event);
+                isResizable = false;
+                color = BaseCalendar.getPersonalEventColor(event);
+                title = this.getReservationTitle(event);
+                break;
         }
 
-        const isMyEvent = (event.user) ? event.user.id === this.user.id : false;
-        const isDeletable = this.user.type === 'A' || (event.type === 'reservation' && this.user.type !== 'C') || isMyEvent;
-        const isResizable = isNotReservation && (isMyEvent || this.user.type === 'A');
+        event.eventName = this.EVENT_NAMES[event.type];
+
+        // TODO avoid this type change
+        event.type = this.EVENT_TYPES[event.type];
+
         return {
             start: startTime,
             end: endTime,
             title: title,
-            color: (isNotReservation) ? CALENDAR_COLUMNS.RED : (event.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW,
+            color: color,
             actions: isDeletable ? this.ACTIONS : [],
             allDay: isAllDay,
             resizable: {
@@ -286,6 +321,39 @@ export abstract class BaseCalendar implements OnInit {
             draggable: false,
             meta: event
         };
+    }
+
+    static getPersonalEventColor(event: any) {
+        return (event.reservation.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+    }
+
+    private isMyPersonalEvent(event: any) {
+        return event.reservation.user.id === this.user.id;
+    }
+
+    private isMyTimeOff(event: any) {
+        return event.user.id === this.user.id && this.user.type === 'T';
+    }
+
+    private getReservationTitle(event: any) {
+        const startTime = new Date(event['startTime']);
+        const endTime = new Date(event['endTime']);
+        const startHour = startTime.getHours();
+        const endHour = endTime.getHours();
+
+        if (this.isCustomer()) {
+            return `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
+        } else {
+            return `Allenamento ${startHour} - ${endHour} di ${event['reservation']['user']['lastName']}`;
+        }
+    }
+
+    private isCustomer() {
+        return this.user.type === 'C';
+    }
+
+    private isAdmin() {
+        return this.user.type === 'A';
     }
 
     onViewDateChanged(viewOrDate?) {

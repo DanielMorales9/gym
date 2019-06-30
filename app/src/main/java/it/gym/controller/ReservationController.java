@@ -68,44 +68,16 @@ public class ReservationController {
     @DeleteMapping(path = "/{reservationId}")
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
+                                               @RequestParam Long eventId,
                                                @RequestParam(value = "type", defaultValue = "customer") String type,
                                                Principal principal) {
 
         String email = principal.getName();
-        Reservation res = facade.deleteReservations(reservationId, email, type);
+        Reservation res = facade.deleteReservations(eventId, reservationId, email, type);
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }
 
-
-    @GetMapping
-    ResponseEntity<List<ReservationResource>> getReservations(@RequestParam(value = "id", required = false) Long id,
-                                                              @RequestParam(value = "startTime")
-                                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
-                                                                      Date startTime,
-                                                              @RequestParam(value = "endTime")
-                                                              @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm")
-                                                                      Date endTime) {
-        List<Reservation> res;
-        if (id == null) {
-            res = facade.findByDateInterval(startTime, endTime);
-        } else {
-            res = facade.findByDateIntervalAndId(id, startTime, endTime);
-        }
-
-        return ResponseEntity.ok(new ReservationAssembler().toResources(res));
-    }
-
-    @GetMapping(path = "/{reservationId}/complete")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('TRAINER')")
-    ResponseEntity<ReservationResource> complete(@PathVariable Long reservationId) {
-
-        logger.info("completing session");
-        Reservation reservation = facade.complete(reservationId);
-
-        return ResponseEntity.ok(new ReservationAssembler().toResource(reservation));
-    }
 
     @GetMapping(path = "/{reservationId}/confirm")
     @ResponseBody

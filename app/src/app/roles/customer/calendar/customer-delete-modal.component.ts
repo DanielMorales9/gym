@@ -16,12 +16,7 @@ export class CustomerDeleteModalComponent extends BaseCalendarModal {
     }
 
     submit() {
-        if (this.modalData.event.meta.type === 'reservation') {
-            this.close({
-                type: 'customer',
-                eventId: this.modalData.event.meta.id
-            });
-        } else { this.close(); }
+        this.close(this.modalData.event.meta);
     }
 
 }

@@ -31,16 +31,11 @@ export class AdminCalendarComponent extends BaseCalendar {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        const s1 = this.facade.getReservations(startDay, endDay);
-
-        const s2 = this.facade.getAllEvents(startDay, endDay);
-
-        concat(s1, s2)
-            .subscribe(rel  => {
-                this.events.push(...rel.map(value => this.formatEvent(value)));
-                console.log(this.events);
-                this.refreshView();
-            });
+        this.facade.getAllEvents(startDay, endDay).subscribe(rel  => {
+            this.events.push(...rel.map(value => this.formatEvent(value)));
+            console.log(this.events);
+            this.refreshView();
+        });
     }
 
     header(action: string, event: any) {
@@ -64,7 +59,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     delete(action: string, event: any) {
         this.modalData = {
             action: EVENT_TYPES.DELETE,
-            title: `Sei sicuro di voler eliminare la ${event.meta.eventName} ?`,
+            title: `Sei sicuro di voler eliminare ${event.meta.eventName}?`,
             userId: this.user.id,
             role: this.role,
             event: event
@@ -73,22 +68,22 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        if (this.isValidHour(event)) {
-            console.log(event);
-            this.facade.isHolidayAvailable(event.date)
-                .subscribe(res => {
-                    this.modalData = {
-                        action: EVENT_TYPES.HOUR,
-                        title: 'Ora di Chiusura',
-                        userId: this.user.id,
-                        role: this.role,
-                        event: event
-                    };
-                    this.openModal(action);
-                }, err => this.snackBar.open(err.error.message));
-        } else {
-            this.snackBar.open('Orario non valido');
+        if (!this.isValidHour(event)) {
+            return this.snackBar.open('Orario non valido');
         }
+
+        this.facade.getCourses(event.date).subscribe(courses => {
+            event.courses = courses;
+            this.modalData = {
+                action: EVENT_TYPES.HOUR,
+                title: 'Crea Evento',
+                userId: this.user.id,
+                role: this.role,
+                event: event
+            };
+            this.openModal(action);
+        }, err => this.snackBar.open(err.error.message));
+
     }
 
     info(action: string, event: any) {
@@ -104,22 +99,20 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        if (this.isValidChange(event)) {
-            console.log(event);
-            this.facade.canEditHoliday(event.event.meta.id, {name: event.name, startTime: event.newStart, endTime: event.newEnd})
-                .subscribe(_ => {
-                    this.modalData = {
-                        action: EVENT_TYPES.CHANGE,
-                        title: 'Cambia chiusura',
-                        userId: this.user.id,
-                        role: this.role,
-                        event: event
-                    };
-                    this.openModal(action);
-                }, err => this.snackBar.open(err.error.message));
-        } else {
-            this.snackBar.open('Orario non valido');
+        if (!this.isValidChange(event)) {
+            return this.snackBar.open('Orario non valido');
         }
+        this.facade.canEditHoliday(event.event.meta.id, {name: event.name, startTime: event.newStart, endTime: event.newEnd})
+            .subscribe(_ => {
+                this.modalData = {
+                    action: EVENT_TYPES.CHANGE,
+                    title: 'Cambia chiusura',
+                    userId: this.user.id,
+                    role: this.role,
+                    event: event
+                };
+                this.openModal(action);
+            }, err => this.snackBar.open(err.error.message));
     }
 
     openModal(action: string) {
@@ -165,7 +158,12 @@ export class AdminCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
                 const end = this.dateService.addHour(data.start);
-                this.createHoliday(data, end);
+                if (!!data.meta) {
+                    console.log(data);
+                    this.createCourseEvent(data, end);
+                } else {
+                    this.createHoliday(data, end);
+                }
             }
         });
     }
@@ -208,8 +206,11 @@ export class AdminCalendarComponent extends BaseCalendar {
                     case 'reservation':
                         this.deleteReservation(data);
                         break;
+                    case 'course':
+                        this.deleteCourseEvent(data);
+                        break;
                     case 'notAllowed':
-                        this.snackBar.open(data.message);
+                        this.snackBar.open('Non può essere cancellata dall\'admin!');
                         break;
                 }
             }
@@ -238,7 +239,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private deleteReservation(data) {
-        this.facade.deleteReservation(data.eventId, 'admin')
+        this.facade.deleteReservation(data, 'admin')
             .subscribe(_ => {
                 this.snackBar.open('Prenotazione è stata eliminata');
                 this.getEvents();
@@ -278,7 +279,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private completeReservation(data) {
-        this.facade.completeReservation(data.eventId)
+        this.facade.completeEvent(data.eventId)
             .subscribe((_) => {
                 this.snackBar.open('Allenamento completato');
                 this.getEvents();
@@ -293,5 +294,24 @@ export class AdminCalendarComponent extends BaseCalendar {
                 this.snackBar.open('Prenotazione confermata');
                 this.getEvents();
             }, (err) => this.snackBar.open(err.error.message));
+    }
+
+    private createCourseEvent(data: any, end: Date) {
+        this.facade.createCourseEvent(data.eventName, data.meta, data.start, end)
+            .subscribe((_) => {
+                this.snackBar.open('Evento confermato');
+                this.getEvents();
+            }, (err) => {
+                this.snackBar.open(err.error.message);
+            });
+    }
+
+    private deleteCourseEvent(data: any) {
+        this.facade.deleteCourseEvent(data.eventId).subscribe( (_) => {
+            this.snackBar.open('Evento eliminato');
+            this.getEvents();
+        }, (err) => {
+            this.snackBar.open(err.error.message);
+        });
     }
 }

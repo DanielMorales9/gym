@@ -8,6 +8,10 @@ import {CalendarView} from 'angular-calendar';
 })
 export class CalendarHeaderToolbar {
 
+    MONTH = CalendarView.Month;
+    WEEK = CalendarView.Week;
+    DAY = CalendarView.Day;
+
     @Input() view: CalendarView;
     @Input() viewDate: Date;
 

@@ -1,7 +1,5 @@
 import {Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../../shared/components/calendar';
-import {DateService} from '../../../services';
-import {TrainingService} from '../../../shared/services';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
@@ -17,14 +15,14 @@ export class TrainerInfoModalComponent extends BaseCalendarModal {
     }
 
     submit() {
-        if (!this.modalData.event.meta.session.completed && this.modalData.event.meta.confirmed) {
+        if (!this.modalData.event.meta.session.completed && this.modalData.event.meta.reservation.confirmed) {
             this.complete();
         } else { this.confirm(); }
     }
 
     confirm() {
         this.close({
-            eventId: this.modalData.event.meta.id,
+            eventId: this.modalData.event.meta.reservation.id,
             start: this.modalData.event.start,
             type: 'confirm',
         });

@@ -9,4 +9,4 @@ export * from './global-error-handler.service';
 export * from './authenticated.service';
 export * from './snackbar.service';
 export * from './sale.facade';
-export * from './bundle.facade';
+export * from './spec.facade';

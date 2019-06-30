@@ -44,6 +44,8 @@
     - Full Test Coverage GymService
     - Add CourseEvent and Reservation logic
     - Created TrainingBundle Controller, TrainingBundleSpecification Facade, TrainingBundle Service
+    - Adapted BundlesDetails View
+    - Error *"Cannot read property 'id' of undefined" on calendar view becuase of gym id not retrieved*  
         
 - **Chapter I** Hide Repositories behind Services and Controllers
    - Refactoring Authentication Service w tests

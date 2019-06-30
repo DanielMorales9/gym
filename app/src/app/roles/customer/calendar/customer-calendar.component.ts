@@ -25,13 +25,17 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
     getEvents() {
         this.events = [];
+
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        const s1 = this.facade.getReservations(startDay, endDay, this.user.id);
+        const s1 = this.facade.getCustomerEvents(startDay, endDay);
 
         const s2 = this.facade.getHoliday(startDay, endDay);
 
-        concat(s1, s2)
+        const s3 = this.facade.getCourseEvents(startDay, endDay);
+
+
+        concat(s1, s2, s3)
             .subscribe(rel => {
                 this.events.push(...rel.map(value => this.formatEvent(value)));
                 this.refreshView();
@@ -51,7 +55,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
             return this.snackBar.open('Non hai pacchetti a disposizione');
         }
 
-        event.bundles = this.user.currentTrainingBundles;
+        event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
         this.modalData = {
             action: action,
             title: 'Prenota il tuo allenamento!',
@@ -67,7 +71,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     delete(action: string, event: any) {
         this.modalData = {
             action: action,
-            title: `Sei sicuro di voler eliminare la ${event.meta.eventName}?`,
+            title: `Sei sicuro di voler eliminare la prenotazione?`,
             role: this.role,
             userId: this.user.id,
             event: event
@@ -114,6 +118,19 @@ export class CustomerCalendarComponent extends BaseCalendar {
         const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
             data: this.modalData
         });
+
+        dialogRef.afterClosed().subscribe(data => {
+            if (data) {
+                this.facade.createReservationFromEvent(this.modalData.userId, this.modalData.event.meta.id).subscribe((_) => {
+                    this.snackBar.open('Prenotazione effettuata');
+                    this.getEvents();
+                }, err => {
+                    if (err.error) {
+                        this.snackBar.open(err.error.message);
+                    }
+                });
+            }
+        });
     }
 
     private openHourModal() {
@@ -124,7 +141,8 @@ export class CustomerCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
 
-                this.facade.createReservation(data.userId, data.bundleId, { startTime: data.startTime, endTime: data.endTime })
+                this.facade.createReservationFromBundle(data.userId, data.bundleId,
+                    { startTime: data.startTime, endTime: data.endTime })
                     .subscribe(res => {
                         this.snackBar.open('Prenotazione effettuata');
                         this.getEvents();
@@ -145,18 +163,17 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.facade.deleteReservation(data.eventId, data.type)
-                .subscribe(res => {
-                    this.snackBar.open('La Prenotazione è stata eliminata');
-                    this.getEvents();
-                }, err => {
-                    if (err.error) {
-                        this.snackBar.open(err.error.message);
-                    }
-                });
+                console.log(data);
+                this.facade.deleteReservation(data)
+                    .subscribe(res => {
+                        this.snackBar.open('La Prenotazione è stata eliminata');
+                        this.getEvents();
+                    }, err => {
+                        if (err.error) {
+                            this.snackBar.open(err.error.message);
+                        }
+                    });
             }
         });
     }
-
-    // TODO Draggable reservation
 }

@@ -1,21 +1,21 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {BundlesService} from './bundles.service';
+import {BundleSpecsService} from './bundle-specs.service';
 import {PersonalBundleSpecification} from '../model';
 
-describe('BundlesService', () => {
+describe('BundleSpecsService', () => {
 
-    let bundleService: BundlesService;
+    let bundleService: BundleSpecsService;
     let backend: HttpTestingController;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ HttpClientTestingModule ],
-            providers: [BundlesService]
+            providers: [BundleSpecsService]
         });
 
         // Inject the http service and test controller for each test
-        bundleService = TestBed.get(BundlesService);
+        bundleService = TestBed.get(BundleSpecsService);
         backend = TestBed.get(HttpTestingController);
     });
 

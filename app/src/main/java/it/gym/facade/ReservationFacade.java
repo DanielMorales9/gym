@@ -63,8 +63,6 @@ public class ReservationFacade {
 
         checkBundleIsReservable(customer, bundle);
 
-        isReservationDoublyBooked(customer.getId(), startTime, endTime);
-
         isReservedOnTime(startTime);
 
         List<AEvent> timesOff = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
@@ -89,7 +87,17 @@ public class ReservationFacade {
         ATrainingSession session = bundle.createSession(startTime, endTime);
         session = sessionService.save(session);
 
-        Reservation res = createReservation(customer, session);
+        ATrainingEvent evt = new PersonalEvent();
+        evt.setSession(session);
+        evt.setEndTime(endTime);
+        evt.setStartTime(startTime);
+        evt.setGym(gym);
+        evt.setName(String.format("Allenamento: %s", bundle.getName()));
+
+        Reservation res = evt.reserve(customer);
+
+        eventService.save(evt);
+
         bundle.addSession(session);
         bundleService.save(bundle);
 
@@ -99,62 +107,46 @@ public class ReservationFacade {
     public Reservation createReservationFromEvent(Long gymId, Long customerId, Long eventId) {
         Gym gym = this.gymService.findById(gymId);
         Customer customer = this.customerService.findById(customerId);
-        AEvent evt = eventService.findById(eventId);
+        ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
 
         isEventReservable(evt);
         ATrainingSession session = evt.getSession();
         simpleReservationChecks(gym, customer, session.getTrainingBundle(), session.getStartTime(), session.getEndTime());
 
-        return createReservation(customer, session);
-    }
+        Reservation res = evt.reserve(customer);
+        this.eventService.save(evt);
 
-    private Reservation createReservation(Customer customer, ATrainingSession session) {
-        Reservation res = new Reservation();
-        res.setUser(customer);
-        res.setSession(session);
-        res.setConfirmed(false);
-        res.setStartTime(session.getStartTime());
-        res.setEndTime(session.getEndTime());
-
-        res = this.service.save(res);
         return res;
     }
 
-
-    public Reservation deleteReservations(Long reservationId, String email, String type) {
+    public Reservation deleteReservations(Long eventId, Long reservationId, String email, String type) {
         logger.info("Getting reservation by id");
         Reservation res = this.service.findById(reservationId);
+        ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
+
+        event.deleteReservation(res);
 
         logger.info("Getting session from reservation");
-        ATrainingSession session = res.getSession();
+        ATrainingSession session = event.getSession();
 
         logger.info("Getting the principal user");
         AUser principal = this.userService.findByEmail(email);
 
-        deleteSessionFromBundle(res, principal);
+        deleteSessionFromBundle(res.getUser(), event.getSession(), principal);
 
         logger.info("Deleting training session from bundle and reservation");
-        this.bundleService.save(res.getSession().getTrainingBundle());
-        sessionService.delete(session);
-        this.service.delete(res);
+        this.bundleService.save(event.getSession().getTrainingBundle());
+
+        if (event.getType().equals("P")) {
+            this.eventService.delete(event);
+        }
+        else {
+            sessionService.delete(session);
+            this.service.delete(res);
+        }
 
         sendCancelEmail(res, type);
         return res;
-    }
-
-    public List<Reservation> findByDateIntervalAndId(Long id, Date startTime, Date endTime) {
-        return this.service.findByIntervalAndId(id, startTime, endTime);
-    }
-
-    public List<Reservation> findByDateInterval(Date startTime, Date endTime) {
-        return this.service.findByInterval(startTime, endTime);
-    }
-
-    public Reservation complete(Long reservationId) {
-        Reservation reservations = service.findById(reservationId);
-        ATrainingSession session = reservations.getSession();
-        session.complete();
-        return service.save(reservations);
     }
 
     public Reservation confirm(Long reservationId) {
@@ -175,6 +167,9 @@ public class ReservationFacade {
             deleteExpiredBundles(customer);
             throw new MethodNotAllowedException("Hai completato tutte le sessioni di allenamento disponibili in questo pacchetto");
         }
+        if (!customer.getCurrentTrainingBundles().contains(bundle)) {
+            throw new MethodNotAllowedException("Non hai acquistato questo pacchetto");
+        }
     }
 
     void isTrainerAvailable(List<AEvent> timesOff) {
@@ -186,22 +181,6 @@ public class ReservationFacade {
         if (nAvailableTrainers <= 0) {
             throw new BadRequestException("Non ci sono personal trainer disponibili");
         }
-
-        //This will be handled through the confirmation message
-        //
-        //long nReservations = this.service.findByInterval(startTime, endTime).size();
-        //nAvailableTrainers = nAvailableTrainers - nReservations;
-        //
-        //if (nAvailableTrainers == 0)
-        //    throw new BadRequestException("Questo orario è già stato prenotato");
-    }
-
-    void isBundleLeft(Customer customer) {
-        logger.info("Checking whether there are bundles left");
-        long bundleCount = customer
-                .getCurrentTrainingBundles().size();
-        if (bundleCount == 0)
-            throw new BadRequestException("Non hai più pacchetti a disposizione");
     }
 
     void deleteExpiredBundles(Customer customer) {
@@ -226,13 +205,6 @@ public class ReservationFacade {
                     String.format("E' necessario prenotare almeno %s ore prima", reservationBeforeHours ));
     }
 
-    void isReservationDoublyBooked(Long customer, Date startTime, Date endTime) {
-        List<Reservation> reservations = this.service.findByIntervalAndId(customer, startTime, endTime);
-
-        if (!reservations.isEmpty())
-            throw new BadRequestException("Hai già prenotato in questo orario");
-    }
-
     void hasHolidays(List<AEvent> events) {
         logger.info("Checking whether there are times off");
 
@@ -245,9 +217,7 @@ public class ReservationFacade {
             throw new BadRequestException("Chiusura Aziendale");
     }
 
-    private void deleteSessionFromBundle(Reservation reservation, AUser principal) {
-        ATrainingSession session = reservation.getSession();
-        Customer customer = reservation.getUser();
+    private void deleteSessionFromBundle(Customer customer,  ATrainingSession session, AUser principal) {
 
         List<String> roles = principal.getRoles().stream().map(Role::getName).collect(Collectors.toList());
 

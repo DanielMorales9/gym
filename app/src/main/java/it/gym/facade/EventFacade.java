@@ -1,31 +1,37 @@
 package it.gym.facade;
 
 import it.gym.exception.BadRequestException;
+import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
-import it.gym.service.EventService;
-import it.gym.service.GymService;
-import it.gym.service.ReservationService;
-import it.gym.service.UserService;
+import it.gym.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional
 public class EventFacade {
 
-    private static final String PRESENT_EVENTS_EX = "Ci sono già altri eventi";
-    private static final String NOT_AUTHORIZED_EX = "Non è possibile chiudere la palestra con delle prenotazioni attive.";
+    private static final Logger logger = LoggerFactory.getLogger(EventFacade.class);
 
-    @Autowired private GymService gymService;
-    @Autowired private ReservationService reservationService;
-    @Autowired private UserService userService;
+    private static final String PRESENT_EVENTS_EX = "Ci sono già altri eventi";
+
+
     @Autowired private EventService service;
+    @Autowired private GymService gymService;
+    @Autowired private UserService userService;
+    @Autowired private TrainingBundleService bundleService;
+    @Autowired private ReservationService reservationService;
+
+    @Qualifier("trainingSessionService")
+    @Autowired private TrainingSessionService sessionService;
 
     public List<AEvent> findAllEventsByInterval(Date startTime, Date endTime) {
         return service.findAllEvents(startTime, endTime);
@@ -42,7 +48,10 @@ public class EventFacade {
     public AEvent createHoliday(Long gymId, Event event) {
         Gym gym = gymService.findById(gymId);
 
-        simpleCheckHoliday(gym, event);
+        Date startTime = event.getStartTime();
+        Date endTime = event.getEndTime();
+
+        gymService.simpleGymChecks(gym, startTime, endTime);
         checkNoOtherEvents(event);
 
         Holiday holiday = new Holiday();
@@ -60,25 +69,31 @@ public class EventFacade {
         return event;
     }
 
-    public AEvent editHoliday(Long gymId, Long id, Event event) {
+    public AEvent editEvent(Long gymId, Long id, Event event) {
         Gym gym = gymService.findById(gymId);
-        AEvent holiday = this.service.findById(id);
+        AEvent evt = this.service.findById(id);
 
-        simpleCheckHoliday(gym, event);
-        checkNoOtherEventsExceptMe(holiday);
+        Date startTime = event.getStartTime();
+        Date endTime = event.getEndTime();
 
-        holiday.setName(event.getName());
-        holiday.setStartTime(event.getStartTime());
-        holiday.setEndTime(event.getEndTime());
+        gymService.simpleGymChecks(gym, startTime, endTime);
+        checkNoOtherEventsExceptMe(event);
 
-        return this.service.save(holiday);
+        evt.setName(event.getName());
+        evt.setStartTime(event.getStartTime());
+        evt.setEndTime(event.getEndTime());
+
+        return this.service.save(evt);
     }
 
     public AEvent createTimeOff(Long gymId, Long trainerId, Event event) {
         Gym gym = gymService.findById(gymId);
         AUser trainer = userService.findById(trainerId);
 
-        simpleCheckTimeOff(gym, event);
+        Date startTime = event.getStartTime();
+        Date endTime = event.getEndTime();
+
+        gymService.simpleGymChecks(gym, startTime, endTime);
         checkNoOtherEvents(event);
 
         TimeOff timeOff = new TimeOff();
@@ -91,76 +106,34 @@ public class EventFacade {
         return service.save(timeOff);
     }
 
-
-    public AEvent editTimeOff(Long gymId, Long id, Event event) {
+    public void canEdit(Long gymId, Long id, Event event) {
         Gym gym = gymService.findById(gymId);
-        AEvent timeOff = this.service.findById(id);
+        AEvent evt = this.service.findById(id);
 
-        simpleCheckTimeOff(gym, event);
-        checkNoOtherEventsExceptMe(timeOff);
-
-        timeOff.setName(event.getName());
-        timeOff.setStartTime(event.getStartTime());
-        timeOff.setEndTime(event.getEndTime());
-
-        return this.service.save(timeOff);
-    }
-
-    public void isTimeOffAvailable(Long gymId, Event event) {
-        Gym gym = gymService.findById(gymId);
-
-        simpleCheckTimeOff(gym, event);
-        checkNoOtherEvents(event);
-    }
-
-
-    public void canEditTimeOff(Long gymId, Long id, Event event) {
-        Gym gym = gymService.findById(gymId);
-        AEvent timeOff = this.service.findById(id);
-
-        simpleCheckTimeOff(gym, event);
-        checkNoOtherEventsExceptMe(timeOff);
-    }
-
-
-    public void isHolidayAvailable(Long gymId, Event event) {
-        Gym gym = gymService.findById(gymId);
-
-        simpleCheckHoliday(gym, event);
-        checkNoOtherEvents(event);
-    }
-
-    public void canEditHoliday(Long gymId, Long id, Event event) {
-        Gym gym = gymService.findById(gymId);
-        AEvent holiday = this.service.findById(id);
-
-        simpleCheckHoliday(gym, event);
-        checkNoOtherEventsExceptMe(holiday);
-    }
-
-    private void simpleCheckTimeOff(Gym gym, Event event) {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
         gymService.simpleGymChecks(gym, startTime, endTime);
-
+        checkNoOtherEventsExceptMe(event);
     }
 
-    private void simpleCheckHoliday(Gym gym, Event event) {
+    public void isAvailable(Long gymId, Event event) {
+        Gym gym = gymService.findById(gymId);
+
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
         gymService.simpleGymChecks(gym, startTime, endTime);
-
-        checkNoReservations(startTime, endTime);
+        checkNoOtherEvents(event);
     }
 
-    private void checkNoOtherEventsExceptMe(AEvent event) {
+    private void checkNoOtherEventsExceptMe(Event event) {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
-        List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime)
-                .stream().filter(aEvent -> !event.equals(aEvent)).collect(Collectors.toList());
-        if (!events.isEmpty())
+        List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
+        logger.info(events.toString());
+        logger.info(String.format("%s", events.size()));
+        if (events.size() > 1)
             throw new BadRequestException(PRESENT_EVENTS_EX);
     }
 
@@ -172,10 +145,64 @@ public class EventFacade {
             throw new BadRequestException(PRESENT_EVENTS_EX);
     }
 
+    public AEvent createCourseEvent(Long gymId, Event evt) {
+        Gym gym = gymService.findById(gymId);
+        ATrainingBundle bundle = this.bundleService.findById(evt.getId());
 
-    private void checkNoReservations(Date startTime, Date endTime) {
-        Integer nReservations = this.reservationService.countByInterval(startTime, endTime);
-        if (nReservations > 0)
-            throw new BadRequestException(NOT_AUTHORIZED_EX);
+        Date startTime = evt.getStartTime();
+        Date endTime = evt.getEndTime();
+
+        gymService.simpleGymChecks(gym, startTime, endTime);
+        ATrainingSession session = bundle.createSession(startTime, endTime);
+
+        CourseEvent event = new CourseEvent();
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setName(evt.getName());
+        event.setGym(gym);
+
+        session = sessionService.save(session);
+        bundleService.save(bundle);
+
+        event.setSession(session);
+
+        return service.save(event);
+    }
+
+    public AEvent deleteCourseEvent(Long id) {
+        CourseEvent event = (CourseEvent) service.findById(id);
+
+        ATrainingSession session = event.getSession();
+        if (!session.isDeletable())
+            throw new MethodNotAllowedException("Il corso non è cancellabile");
+
+        session.deleteMeFromBundle();
+        sessionService.delete(session);
+        bundleService.save(session.getTrainingBundle());
+
+        reservationService.deleteAll(event.getReservations());
+
+        service.delete(event);
+        return event;
+    }
+
+    public List<AEvent> findAllCourseEvents(Date startTime, Date endTime) {
+        return service.findAllCourseEvents(startTime, endTime);
+    }
+
+
+    public AEvent complete(Long eventId) {
+        ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
+        ATrainingSession session = event.getSession();
+        session.complete();
+        return service.save(event);
+    }
+
+    public List<AEvent> findPersonalByInterval(Long customerId, Date startTime, Date endTime) {
+        return service.findPersonalByInterval(customerId, startTime, endTime);
+    }
+
+    public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
+        return service.findTrainingByInterval(startTime, endTime);
     }
 }

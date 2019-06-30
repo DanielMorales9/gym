@@ -9,7 +9,7 @@ import {
     AppService,
     AuthenticatedService,
     AuthService,
-    BundleFacade,
+    SpecFacade,
     CalendarFacade,
     DateService,
     GlobalErrorHandler,
@@ -35,6 +35,7 @@ import {RoleGuardService} from './services/role.guard.service';
 import {AuthGuardService} from './services/auth.guard.service';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {BundleService} from './services/bundle.service';
 
 @NgModule({
     declarations: [
@@ -82,9 +83,10 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         GymService,
         DateService,
         SnackBarService,
+        BundleService,
         SaleFacade,
         CalendarFacade,
-        BundleFacade,
+        SpecFacade,
         NotificationService,
         {
             provide: ErrorHandler,

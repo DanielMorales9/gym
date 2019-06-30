@@ -2,21 +2,44 @@
 <!--<button type="button" class="close" (click)="close()">-->
 <!--    <span aria-hidden="true">&times;</span>-->
 <!--</button>-->
-<div [ngSwitch]="modalData?.event.meta?.type" mat-dialog-content>
+<div [ngSwitch]="modalData?.event.meta?.type">
     <ng-container *ngSwitchCase="'admin'">
-        <i class="fas fa-door-closed"></i>
-        La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
-        dalle {{ modalData?.event.start | date :  'HH:mm a'}}
-        alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+        <div mat-dialog-content>
+            <i class="fas fa-door-closed"></i>
+            La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
+            dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+        </div>
+        <ng-container *ngTemplateOutlet="ok">
+
+        </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="'reservation'">
-        <i class="fas fa-check" *ngIf="modalData?.event.meta?.confirmed"></i>
-        <i class="fas fa-ban" *ngIf="!modalData?.event.meta?.confirmed"></i>&nbsp;
-        Il tuo allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
-        alle {{ modalData?.event.end | date :  'HH:mm a'}}
-        <span *ngIf="!modalData?.event.meta.confirmed"> non</span> è stato confermato.
+        <div mat-dialog-content>
+            <i class="fas fa-check" *ngIf="modalData?.event.meta?.confirmed"></i>
+            <i class="fas fa-ban" *ngIf="!modalData?.event.meta?.confirmed"></i>&nbsp;
+            Il tuo allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}
+            <span *ngIf="!modalData?.event.meta.confirmed"> non</span> è stato confermato.
+        </div>
+        <ng-container *ngTemplateOutlet="ok">
+
+        </ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'course'">
+        <div mat-dialog-content>
+            Vuoi prenotare {{modalData?.event.name}} dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}?
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>
+            <button mat-flat-button type="button" color="primary" (click)="submit()">Conferma</button>
+        </div>
     </ng-container>
 </div>
-<div mat-dialog-actions>
-    <button type="button" class="btn btn-outline-secondary" (click)="submit()">Ok</button>
-</div>
+
+<ng-template #ok>
+    <div mat-dialog-actions>
+        <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
+    </div>
+</ng-template>
