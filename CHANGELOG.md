@@ -44,7 +44,7 @@
     - Error *"Cannot read property 'id' of undefined" on calendar view becuase of gym id not retrieved*  
     - Error *"Hai già effettuato una chiusura" when booking time off one hour before a previous time off*  
     - Increased Test Coverage SaleFacade
-    - Reach 40% Test Coverage on Backend
+    - Reached 40% Test Coverage on Backend
     - Refactored Reservations and Events
     
 - **Chapter I** Hide Repositories behind Services and Controllers
@@ -74,6 +74,7 @@
    - Added @Data and @EqualsAndHashCode to each of class in model
    - Removed Rest API from TimeOff Repository
    
-- **BF**: Email not valid
-- **BF**: Typo in gym configuration
-- **FR**: Changed gym configuration and depending events in Calendar
+- **Chapter 0** Create Gym Configuration
+    - Email not valid
+    - Typo in gym configuration
+    - Changed gym configuration and depending events in Calendar
