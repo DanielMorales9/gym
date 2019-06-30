@@ -27,14 +27,16 @@
         </ng-container>
     </ng-container>
     <ng-container *ngSwitchCase="'course'">
-        <div mat-dialog-content>
-            Vuoi prenotare {{modalData?.event.name}} dalle {{ modalData?.event.start | date :  'HH:mm a'}}
-            alle {{ modalData?.event.end | date :  'HH:mm a'}}?
-        </div>
-        <div mat-dialog-actions>
-            <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>
-            <button mat-flat-button type="button" color="primary" (click)="submit()">Conferma</button>
-        </div>
+        <ng-container *ngIf="!isReserved(); else reserved">
+            <div mat-dialog-content>
+                Vuoi prenotare {{modalData?.event.name}} dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+                alle {{ modalData?.event.end | date :  'HH:mm a'}}?
+            </div>
+            <div mat-dialog-actions>
+                <button (click)="close()" color="basic" mat-flat-button type="button">Cancella</button>
+                <button (click)="submit()" color="primary" mat-flat-button type="button">Conferma</button>
+            </div>
+        </ng-container>
     </ng-container>
 </div>
 
@@ -43,3 +45,21 @@
         <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
     </div>
 </ng-template>
+
+<ng-template #reserved>
+    <div mat-dialog-content>
+        <i class="fas fa-calendar-week"></i>
+        Hai prenotato {{modalData?.event.meta?.name}} dalle
+        {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm a'}}
+        alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
+        <br>
+        <i class="fas fa-user"></i>&nbsp;Ci sono {{modalData?.event.meta?.reservations.length}} prenotati.
+        <br>
+        Cancella per disdire la prenotazione.
+    </div>
+    <div mat-dialog-actions>
+        <button (click)="close()" color="basic" mat-flat-button type="button">Ok</button>
+        <button (click)="cancel()" color="primary" mat-flat-button type="button">Cancella</button>
+    </div>
+</ng-template>
+

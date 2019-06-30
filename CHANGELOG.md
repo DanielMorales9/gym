@@ -11,6 +11,7 @@
 - **Chapter III** Multiple Gyms
     - Add gymId as PathVariable to API calls
     - Set Gym during user registration (re-visit registration logic)
+    - Reach 45% Test Coverage on Backend
     
 # DONE
 - **Chapter II** Courses and Events

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../../shared/components/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
@@ -23,4 +23,18 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
         this.close();
     }
 
+    isReserved() {
+        const reservations = this.modalData.event.meta.reservations;
+        return reservations.filter(r => r.user.id === this.modalData.userId).length === 1;
+    }
+
+    cancel() {
+        console.log(this.modalData);
+        if (this.modalData.event.meta.type === 'course') {
+            const message: any = this.modalData.event.meta;
+            message.cancel = true;
+            return this.close(message);
+        }
+        this.close();
+    }
 }

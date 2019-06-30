@@ -2,7 +2,7 @@ import {Component} from '@angular/core';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade, SnackBarService} from '../../../services';
-import {concat, Observable} from 'rxjs';
+import {concat} from 'rxjs';
 import {MatDialog} from '@angular/material';
 import {CustomerInfoModalComponent} from './customer-info-modal.component';
 import {CustomerHourModalComponent} from './customer-hour-modal.component';
@@ -121,14 +121,22 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                this.facade.createReservationFromEvent(this.modalData.userId, this.modalData.event.meta.id).subscribe((_) => {
-                    this.snackBar.open('Prenotazione effettuata');
-                    this.getEvents();
-                }, err => {
-                    if (err.error) {
-                        this.snackBar.open(err.error.message);
-                    }
-                });
+                if (data.cancel) {
+                    this.deleteReservation(data);
+                } else {
+                    this.createReservation(data);
+                }
+            }
+        });
+    }
+
+    private createReservation(data) {
+        this.facade.createReservationFromEvent(data.userId, data.event.meta.id).subscribe((_) => {
+            this.snackBar.open('Prenotazione effettuata');
+            this.getEvents();
+        }, err => {
+            if (err.error) {
+                this.snackBar.open(err.error.message);
             }
         });
     }
@@ -164,16 +172,20 @@ export class CustomerCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
                 console.log(data);
-                this.facade.deleteReservation(data)
-                    .subscribe(res => {
-                        this.snackBar.open('La Prenotazione è stata eliminata');
-                        this.getEvents();
-                    }, err => {
-                        if (err.error) {
-                            this.snackBar.open(err.error.message);
-                        }
-                    });
+                this.deleteReservation(data);
             }
         });
+    }
+
+    private deleteReservation(data) {
+        this.facade.deleteReservation(data)
+            .subscribe(res => {
+                this.snackBar.open('La Prenotazione è stata eliminata');
+                this.getEvents();
+            }, err => {
+                if (err.error) {
+                    this.snackBar.open(err.error.message);
+                }
+            });
     }
 }
