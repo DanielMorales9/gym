@@ -22,9 +22,16 @@ spring:
     properties.mail.smtp:
       auth: true
       starttls.enable: true
+  main:
+    banner-mode: off
 
 baseUrl: ${BASE_HOST}
 reservationBeforeHours: 6
+
+logging:
+  level:
+    org.springframework=OFF
+    root=OFF
 
 server:
   port: 80
@@ -33,22 +40,20 @@ server:
 
 spring:
   profiles: prod
-
+  main:
+    banner-mode: log
   jpa:
     hibernate.ddl-auto: none
     show-sql: true
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
 
-logging:
-  level:
-    org.springframework.web: ERROR
-    org.springframework.security: ERROR
-
 ---
 
 spring:
   profiles: dev
+  main:
+    banner-mode: log
   jpa:
     hibernate.ddl-auto: create-drop
     show-sql: true
