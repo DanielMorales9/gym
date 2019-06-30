@@ -2,6 +2,7 @@ package it.gym.facade;
 
 import it.gym.exception.BadRequestException;
 import it.gym.model.*;
+import it.gym.repository.CourseTrainingBundleRepository;
 import it.gym.service.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,8 +15,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.DayOfWeek;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.Locale;
 
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -82,6 +87,71 @@ public class SaleFacadeTest {
     }
 
     @Test
+    public void addCourseBundleToSalesLineItem() {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
+        ATrainingBundleSpecification mockBundleSpec = createMockCourseBundleSpec(start, end);
+
+        Mockito.doReturn(mockSale).when(saleService).findById(1L);
+        Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
+        ATrainingBundle bundle = mockBundleSpec.createTrainingBundle();
+        mockSaveMethod();
+        Sale sale = saleFacade.addSalesLineItem(1L, 1L, 1);
+        assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
+        assertThat(sale.getSalesLineItems().get(0).getTrainingBundle()).isEqualTo(bundle);
+
+        assertThat(sale.getTotalPrice()).isEqualTo(100.0);
+    }
+
+    @Test
+    public void addCourseBundleToSalesLineItemAlreadyCreated() {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
+        ATrainingBundleSpecification mockBundleSpec = createMockCourseBundleSpec(start, end);
+
+        Mockito.doReturn(mockSale).when(saleService).findById(1L);
+        Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
+        ATrainingBundle bundle = mockBundleSpec.createTrainingBundle();
+        Mockito.doReturn(Collections.singletonList(bundle)).when(bundleService).findBundlesBySpec(mockBundleSpec);
+
+        mockSaveMethod();
+        Sale sale = saleFacade.addSalesLineItem(1L, 1L, 1);
+        assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
+        assertThat(sale.getSalesLineItems().get(0).getTrainingBundle()).isEqualTo(bundle);
+
+        assertThat(sale.getTotalPrice()).isEqualTo(100.0);
+    }
+
+    private static Date getNextMonday() {
+        Calendar date = Calendar.getInstance(Locale.ITALIAN);
+        date.set(Calendar.HOUR_OF_DAY, 8);
+        int diff = Calendar.MONDAY - date.get(Calendar.DAY_OF_WEEK);
+        if (diff <= 0) {
+            diff += 7;
+        }
+        date.add(Calendar.DAY_OF_MONTH, diff);
+        return date.getTime();
+    }
+
+    private ATrainingBundleSpecification createMockCourseBundleSpec(Date startTime, Date endTime) {
+        CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
+        spec.setMaxCustomers(11);
+        spec.setStartTime(startTime);
+        spec.setEndTime(endTime);
+        spec.setDescription("Description");
+        spec.setName("corso");
+        spec.setId(1L);
+        spec.setPrice(100.);
+        spec.setDisabled(false);
+        spec.setCreatedAt(new Date());
+        return spec;
+    }
+
+    @Test
     public void confirmSale() {
         Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
         addMockSalesLineItem(mockSale, createMockBundleSpec());
@@ -114,6 +184,19 @@ public class SaleFacadeTest {
         saleFacade.deleteSaleById(1L);
     }
 
+    @Test(expected = BadRequestException.class)
+    public void deleteSaleByIdNonDeletable() {
+        Customer customer = createMockCustomer();
+        customer.setCurrentTrainingBundles(Collections.emptyList());
+        Sale mockSale = createMockSale(createMockGym(), customer);
+        addMockSalesLineItem(mockSale, createMockBundleSpec());
+        ATrainingBundle trainingBundle = mockSale.getSalesLineItems().get(0).getTrainingBundle();
+        ATrainingSession session = trainingBundle.createSession(addHours(new Date(), -2), addHours(new Date(), -1));
+        trainingBundle.addSession(session);
+        session.complete();
+        Mockito.doReturn(mockSale).when(saleService).findById(1L);
+        saleFacade.deleteSaleById(1L);
+    }
 
     @Test
     public void paySale() {
@@ -124,6 +207,39 @@ public class SaleFacadeTest {
         mockSaveMethod();
         Sale sale = saleFacade.paySale(1L, 11.);
         assertThat(sale.getAmountPayed()).isEqualTo(11.0);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void paySaleNotCompleted() {
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
+        addMockSalesLineItem(mockSale, createMockBundleSpec());
+        Mockito.doReturn(mockSale).when(saleService).findById(1L);
+        mockSaveMethod();
+        Sale sale = saleFacade.paySale(1L, 11.);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void paySaleMoreThanNeeded() {
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
+        addMockSalesLineItem(mockSale, createMockBundleSpec());
+        mockSale.setCompleted(true);
+        Mockito.doReturn(mockSale).when(saleService).findById(1L);
+        mockSaveMethod();
+        Sale sale = saleFacade.paySale(1L, 200.);
+        assertThat(sale.getAmountPayed()).isEqualTo(11.0);
+    }
+
+    @Test
+    public void paySaleExactlyWhatNeeded() {
+        Sale mockSale = createMockSale(createMockGym(), createMockCustomer());
+        addMockSalesLineItem(mockSale, createMockBundleSpec());
+        mockSale.setCompleted(true);
+        Mockito.doReturn(mockSale).when(saleService).findById(1L);
+        mockSaveMethod();
+        Sale sale = saleFacade.paySale(1L, 111.);
+        assertThat(sale.getAmountPayed()).isEqualTo(111.0);
+        assertThat(sale.getPayedDate()).isNotNull();
+        assertThat(sale.isPayed()).isTrue();
     }
 
     @Test

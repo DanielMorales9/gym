@@ -42,7 +42,7 @@ public class SalesLineItem {
         this.bundleSpecification = bundleSpecification;
     }
 
-    ATrainingBundle getTrainingBundle() {
+    public ATrainingBundle getTrainingBundle() {
         return trainingBundle;
     }
 

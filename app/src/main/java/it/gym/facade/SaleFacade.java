@@ -84,8 +84,6 @@ public class SaleFacade {
             List<ATrainingBundle> l = bundleService.findBundlesBySpec(spec);
             if (l.size() == 1) {
                 return l.get(0);
-            } else if (l.size() > 1) {
-                throw new BadRequestException("Sono stati creati troppi corsi");
             }
         }
         return spec.createTrainingBundle();
