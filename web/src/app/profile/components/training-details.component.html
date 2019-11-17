@@ -1,0 +1,53 @@
+<div class="card-row card" >
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-1 d-none d-md-inline">
+            </div>
+            <div class="col-md-10 col-10">
+                <h5 class="card-title">{{training.name}}</h5>
+            </div>
+            <div class="col-md-1 col-2">
+                <a (click)="toggle()">
+                    <i [hidden]="hidden" class="fa fa-angle-down" title="Apri"></i>
+                    <i [hidden]="!hidden" class="fa fa-angle-up" title="Chiudi"></i>
+                </a>
+            </div>
+        </div>
+        <div [hidden]="!hidden" >
+            <div class="row" style="margin-bottom: .75rem">
+                <div class="col-sm-1 d-none d-md-inline">
+                </div>
+                <div class="col-sm-11 col-12">
+                    <p class="card-text">{{training.description}}</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-1 d-none d-md-inline"></div>
+                <div class="card-text col-sm-3 col-6" style="text-align: left">
+                    <b>Prezzo</b>&nbsp;&nbsp;{{training.price}}&euro;</div>
+                <div class="card-text col-sm-3 col-6">
+                    <b>Tot. Sessioni</b>&nbsp;&nbsp;{{training.numSessions}}</div>
+                <div class="card-text col-sm-3 col-6">
+                    <b>Rimanenti</b>&nbsp;&nbsp;{{training.leftSessions}}
+                </div>
+                <div class="card-text col-sm-2 d-none d-md-inline">&nbsp;&nbsp;</div>
+            </div>
+            <div class="row" *ngFor="let s of training.sessions; let i of index"
+                 style="margin-top: .75rem">
+                <div class="col-md-1 d-none d-md-inline">
+                </div>
+                <div class="col-md-1 d-none d-md-inline">
+                    <div class="green-led" [hidden]="!s.completed"></div>
+                    <div class="red-led" [hidden]="s.completed"></div>
+                </div>
+                <div class="col-md-10 col-12">
+                    <a [ngClass]="{'disabled' : current_role_view == 3}" (click)="goTo(s.id)">
+                        <i class="fas fa-dumbbell"></i>&nbsp;&nbsp;<span [innerHTML]="getDate(s.startTime, s.endTime)"></span>
+                    </a>
+                </div>
+                <div class="line" *ngIf="i < (training.sessions.length-1)"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

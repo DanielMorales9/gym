@@ -1,0 +1,19 @@
+<ng-template [ngIf]="mixed" [ngIfElse]="date">
+    <mixed-search [query]="query" textPlaceholder="Cognome" datePlaceholder="Cerca data" (done)="search($event)"></mixed-search>
+</ng-template>
+
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
+    <div *cdkVirtualFor="let s of ds;" class="scroll-item">
+        <sale-item [sale]="s"
+                   [canPay]="canPay"
+                   [canDelete]="canDelete"
+                   (done)="handleEvent($event)">
+        </sale-item>
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="noCardMessage" ></no-item>
+
+
+<ng-template #date>
+    <search-date [query]="query" datePlaceholder="Cerca data" (done)="search($event)"></search-date>
+</ng-template>

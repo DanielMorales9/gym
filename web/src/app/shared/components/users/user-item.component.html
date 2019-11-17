@@ -1,0 +1,38 @@
+<mat-expansion-panel [class.mat-expansion-panel]="false">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            <a routerLink="/{{this.root}}/users/{{user?.id}}">
+                {{user?.firstName || 'Loading...'}} {{user?.lastName || 'Loading...'}}
+            </a>
+        </mat-panel-title>
+    </mat-expansion-panel-header>
+    <div>
+        <div class="red-light" [hidden]="user?.verified">
+            <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;&nbsp;Non Verificato
+        </div>
+        <div class="green-light" [hidden]="!user?.verified">
+            <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;&nbsp;Verificato
+        </div>
+    </div>
+    <div>
+        <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;
+        <a href="mailto:{{user?.email}}">{{user?.email}}</a>
+    </div>
+    <div>
+        <mat-icon fontSet="fa" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;
+        <span>Membro dal {{user?.createdAt | date: "dd/MM/yyyy"}}</span>
+    </div>
+    <div class="panel-actions">
+        <button *ngIf="canPatch" mat-button color="primary" (click)="openEditDialog()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+            </span>
+        </button>
+        <button *ngIf="canDelete" mat-button color="warn" (click)="deleteUser()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
+            </span>
+        </button>
+    </div>
+</mat-expansion-panel>
+<mat-divider></mat-divider>

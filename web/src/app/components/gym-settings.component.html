@@ -1,0 +1,77 @@
+<div class="card-container">
+    <mat-card>
+        <mat-card-title>{{gym?.name || 'Loading...'}}</mat-card-title>
+        <mat-card-subtitle>Orario della Palestra</mat-card-subtitle>
+        <mat-card-content>
+            <table>
+                <tr>
+                    <td>Lunedì</td>
+                    <td>
+                        <span *ngIf="gym?.mondayOpen;else closed">
+                            {{gym?.mondayStartHour || 'Loading...'}} - {{gym?.mondayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Martedì</td>
+                    <td>
+                        <span *ngIf="gym?.tuesdayOpen;else closed">
+                            {{gym?.tuesdayStartHour || 'Loading...'}} - {{gym?.tuesdayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Mercoledì</td>
+                    <td>
+                        <span *ngIf="gym?.wednesdayOpen;else closed">
+                            {{gym?.wednesdayStartHour || 'Loading...'}} - {{gym?.wednesdayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Giovedì</td>
+                    <td>
+                        <span *ngIf="gym?.thursdayOpen;else closed">
+                            {{gym?.thursdayStartHour || 'Loading...'}} - {{gym?.thursdayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Venerdì</td>
+                    <td>
+                        <span *ngIf="gym?.fridayOpen;else closed">
+                            {{gym?.fridayStartHour || 'Loading...'}} - {{gym?.fridayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Sabato</td>
+                    <td>
+                        <span *ngIf="gym?.saturdayOpen;else closed">
+                            {{gym?.saturdayStartHour || 'Loading...'}} - {{gym?.saturdayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Domenica</td>
+                    <td>
+                        <span *ngIf="gym?.sundayOpen;else closed">
+                            {{gym?.sundayStartHour || 'Loading...'}} - {{gym?.sundayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                </tr>
+            </table>
+        </mat-card-content>
+        <mat-card-actions>
+            <ng-container *ngIf="canEdit">
+                <button mat-button color="primary" (click)="openDialog()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica Configurazione
+            </span>
+                </button>
+            </ng-container>
+        </mat-card-actions>
+    </mat-card>
+</div>
+
+<ng-template #closed>Chiuso</ng-template>

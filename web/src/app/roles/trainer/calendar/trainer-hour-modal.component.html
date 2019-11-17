@@ -1,0 +1,31 @@
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+    <h5 mat-dialog-title> {{modalData?.title}}</h5>
+    <!--<button type="button" class="close" (click)="close()">-->
+    <!--    <span aria-hidden="true">&times;</span>-->
+    <!--</button>-->
+
+    <div *ngIf="!!modalData?.event" mat-dialog-content>
+        Vuoi prenderti le ferie dalle {{ modalData?.event.date | date : 'HH:mm a'}}
+        del giorno {{ modalData?.event?.date | date : 'dd/MM/yyyy'}} ?
+        <br>
+        <mat-form-field>
+            <label for="name" class="sr-only">Nome:</label>
+            <input name="name"
+                   matInput
+                   placeholder="Motivo di ferie"
+                   id="name"
+                   type="text"
+                   formControlName="name"
+                   [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
+            <mat-error *ngIf="name.touched && name.invalid">
+                <div *ngIf="!!name.errors?.required">Nome ferie obbligatorio</div>
+            </mat-error>
+        </mat-form-field>
+        <br>
+        Conferma per chiudere la palestra oppure cancella.
+    </div>
+    <div mat-dialog-actions>
+        <button type="button" mat-flat-button color="basic" (click)="close()">Cancella</button>
+        <button type="submit" mat-flat-button color="primary">Conferma</button>
+    </div>
+</form>

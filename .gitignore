@@ -5,9 +5,13 @@
 *~
 .#*
 *#
-target/
+**/target/
+**/coverage
+**/node/
+**/node_modules/
+data/
+
 bin
-/data
 .classpath
 .project
 .settings
@@ -29,7 +33,9 @@ nbdist/
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-node/
-node_modules/
 e2e/*.js
 e2e/*.map
+*.sql
+.envrc
+.infrastructure/.terraform/
+.infrastructure/*.tfvars

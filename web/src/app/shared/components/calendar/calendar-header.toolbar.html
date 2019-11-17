@@ -1,0 +1,8 @@
+<mat-toolbar color="basic" class="calendar-top-toolbar">
+    <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):'it' }}</h4>
+    <button mat-stroked-button mwlCalendarToday color="primary"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="onViewDateChanged()" >
+        Oggi
+    </button>
+</mat-toolbar>

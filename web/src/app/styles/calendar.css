@@ -1,0 +1,34 @@
+.calendar-bottom-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.calendar-top-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+
+
+.main-calendar {
+    height: calc(100vh - 192px) !important;
+    top: 128px;
+    padding: 8px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+
+@media (max-width: 599px) {
+    .main-calendar {
+        top: 112px;
+        height: calc(100vh - 168px) !important;
+    }
+
+    .calendar-top-toolbar {
+        top: 56px !important;
+    }
+
+}

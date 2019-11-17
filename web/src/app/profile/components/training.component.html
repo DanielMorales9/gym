@@ -1,0 +1,13 @@
+<table class="card-table">
+    <thead>
+    <th class="card card-header">
+        <h5 class="card-text">Pacchetti di allenamento attivi</h5>
+    </th>
+    </thead>
+    <tr [hidden]="!empty" class="empty-list" style="margin-bottom: .75rem">
+        <no-item message="Nessun pacchetto attivo"></no-item>
+    </tr>
+    <tr *ngFor="let b of user.currentTrainingBundles">
+        <training-details [training]="b" ></training-details>
+    </tr>
+</table>

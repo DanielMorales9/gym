@@ -1,0 +1,70 @@
+version: "3"
+
+services:
+  postgres:
+    restart: always
+    container_name: postgres
+    # flyway does not work with postgres>10.5
+    image: postgres:10.5
+    volumes:
+      - ./data/postgres:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      PGDATA: /var/lib/postgresql/data/pgdata
+  redis:
+    restart: always
+    container_name: redis
+    image: redis
+  web:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+    build:
+      context: web
+      dockerfile: Dockerfile_dev
+    restart: always
+    container_name: web
+    image: tenentedan9/web_dev:0.0.1-SNAPSHOT
+    ports:
+      - "80:80"
+    volumes:
+      - ./web/dist:/var/www/ui
+    depends_on:
+      - app
+  app:
+    deploy:
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: 50M
+        reservations:
+          cpus: '0.25'
+          memory: 20M
+    restart: always
+    container_name: app
+    image: tenentedan9/app:0.0.1-SNAPSHOT
+    command: --spring.profiles.active=dev
+    depends_on:
+      - redis
+      - postgres
+    ports:
+    - 9090:80
+    environment:
+      POSTGRES_HOST: postgres
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_USER: ${POSTGRES_USER}
+      BASE_HOST: ${BASE_HOST}
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      EMAIL_USERNAME: ${EMAIL_USERNAME}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}

@@ -1,0 +1,28 @@
+<mat-toolbar color="basic" class="search-toolbar">
+    <form class="search-form">
+        <mat-form-field class="search-input-date search-datepicker" floatLabel="never">
+            <label class="sr-only"></label>
+            <input matInput
+                   [matDatepicker]="picker"
+                   [placeholder]="datePlaceholder"
+                   [max]="maxDate"
+                   [(value)]="date"
+                   (dateChange)="emit('date', $event)">
+            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker color="primary"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="search-input-date search-text" floatLabel="never">
+            <label class="sr-only" for="search-input">{{textPlaceholder}}</label>
+            <input matInput
+                   type="text"
+                   title="{{textPlaceholder}}"
+                   placeholder="&nbsp;{{textPlaceholder}}"
+                   id="search-input"
+                   name="lastName"
+                   [(ngModel)]="lastName"/>
+            <button mat-button matSuffix type="submit" (click)="emit('lastName', $event)">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+    </form>
+</mat-toolbar>
