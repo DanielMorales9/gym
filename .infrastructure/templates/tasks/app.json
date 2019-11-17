@@ -21,7 +21,8 @@
       { "name" : "POSTGRES_USER", "value" : "${postgres_username}" },
       { "name" : "REDIS_HOST", "value" : "${redis_host}" },
       { "name" : "REDIS_PORT", "value" : "${redis_port}" },
-      { "name" : "BASE_HOST", "value" : "${url}" }
+      { "name" : "BASE_HOST", "value" : "${url}" },
+      { "name" : "APP_NAME", "value" : "${app_name}" }
     ],
     "logConfiguration": {
       "logDriver": "awslogs",
