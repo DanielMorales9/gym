@@ -45,7 +45,6 @@
 //  }
 //}
 
-
 resource "aws_alb" "alb" {
   name            = "${var.app_name}-alb-ecs"
   subnets         = aws_subnet.ecs_subnet.*.id
@@ -107,7 +106,7 @@ resource "aws_alb_target_group" "api_alb_target_group" {
   }
 
   health_check {
-    path                = "/health"
+    path                = "/api/actuator/health"
     port                = 80
     protocol            = "HTTP"
     healthy_threshold   = 10

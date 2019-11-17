@@ -43,6 +43,10 @@ server:
   use-forward-headers: true
   servlet.context-path: /api
 
+management:
+  health:
+    mail:
+      enabled: false
 
 baseUrl: ${BASE_HOST}
 reservationBeforeHours: 2
