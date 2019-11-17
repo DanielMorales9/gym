@@ -24,7 +24,7 @@ SET default_with_oids = false;
 
 --
 -- TOC entry 196 (class 1259 OID 16402)
--- Name: bundle_specs; Type: TABLE; Schema: public; Owner: daniel
+-- Name: bundle_specs; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE bundle_specs (
@@ -42,11 +42,11 @@ CREATE TABLE bundle_specs (
 );
 
 
-ALTER TABLE bundle_specs OWNER TO daniel;
+ALTER TABLE bundle_specs OWNER TO goodfellas;
 
 --
 -- TOC entry 210 (class 1259 OID 16492)
--- Name: bundle_specs_spec_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: bundle_specs_spec_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE bundle_specs_spec_id_seq
@@ -57,11 +57,11 @@ CREATE SEQUENCE bundle_specs_spec_id_seq
     CACHE 1;
 
 
-ALTER TABLE bundle_specs_spec_id_seq OWNER TO daniel;
+ALTER TABLE bundle_specs_spec_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 197 (class 1259 OID 16410)
--- Name: bundles; Type: TABLE; Schema: public; Owner: daniel
+-- Name: bundles; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE bundles (
@@ -80,11 +80,11 @@ CREATE TABLE bundles (
 );
 
 
-ALTER TABLE bundles OWNER TO daniel;
+ALTER TABLE bundles OWNER TO goodfellas;
 
 --
 -- TOC entry 211 (class 1259 OID 16494)
--- Name: bundles_bundle_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: bundles_bundle_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE bundles_bundle_id_seq
@@ -95,11 +95,11 @@ CREATE SEQUENCE bundles_bundle_id_seq
     CACHE 1;
 
 
-ALTER TABLE bundles_bundle_id_seq OWNER TO daniel;
+ALTER TABLE bundles_bundle_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 198 (class 1259 OID 16418)
--- Name: bundles_sessions; Type: TABLE; Schema: public; Owner: daniel
+-- Name: bundles_sessions; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE bundles_sessions (
@@ -108,11 +108,11 @@ CREATE TABLE bundles_sessions (
 );
 
 
-ALTER TABLE bundles_sessions OWNER TO daniel;
+ALTER TABLE bundles_sessions OWNER TO goodfellas;
 
 --
 -- TOC entry 199 (class 1259 OID 16421)
--- Name: current_users_bundles; Type: TABLE; Schema: public; Owner: daniel
+-- Name: current_users_bundles; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE current_users_bundles (
@@ -121,11 +121,11 @@ CREATE TABLE current_users_bundles (
 );
 
 
-ALTER TABLE current_users_bundles OWNER TO daniel;
+ALTER TABLE current_users_bundles OWNER TO goodfellas;
 
 --
 -- TOC entry 220 (class 1259 OID 16625)
--- Name: events; Type: TABLE; Schema: public; Owner: daniel
+-- Name: events; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE events (
@@ -141,11 +141,11 @@ CREATE TABLE events (
 );
 
 
-ALTER TABLE events OWNER TO daniel;
+ALTER TABLE events OWNER TO goodfellas;
 
 --
 -- TOC entry 221 (class 1259 OID 16628)
--- Name: events_event_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: events_event_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE events_event_id_seq
@@ -156,11 +156,11 @@ CREATE SEQUENCE events_event_id_seq
     CACHE 1;
 
 
-ALTER TABLE events_event_id_seq OWNER TO daniel;
+ALTER TABLE events_event_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 222 (class 1259 OID 16630)
--- Name: events_reservations; Type: TABLE; Schema: public; Owner: daniel
+-- Name: events_reservations; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE events_reservations (
@@ -169,11 +169,11 @@ CREATE TABLE events_reservations (
 );
 
 
-ALTER TABLE events_reservations OWNER TO daniel;
+ALTER TABLE events_reservations OWNER TO goodfellas;
 
 --
 -- TOC entry 200 (class 1259 OID 16424)
--- Name: gym; Type: TABLE; Schema: public; Owner: daniel
+-- Name: gym; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE gym (
@@ -205,11 +205,11 @@ CREATE TABLE gym (
 );
 
 
-ALTER TABLE gym OWNER TO daniel;
+ALTER TABLE gym OWNER TO goodfellas;
 
 --
 -- TOC entry 212 (class 1259 OID 16496)
--- Name: gym_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: gym_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE gym_id_seq
@@ -220,11 +220,11 @@ CREATE SEQUENCE gym_id_seq
     CACHE 1;
 
 
-ALTER TABLE gym_id_seq OWNER TO daniel;
+ALTER TABLE gym_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 201 (class 1259 OID 16432)
--- Name: reservations; Type: TABLE; Schema: public; Owner: daniel
+-- Name: reservations; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE reservations (
@@ -234,11 +234,11 @@ CREATE TABLE reservations (
 );
 
 
-ALTER TABLE reservations OWNER TO daniel;
+ALTER TABLE reservations OWNER TO goodfellas;
 
 --
 -- TOC entry 213 (class 1259 OID 16498)
--- Name: reservations_res_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: reservations_res_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE reservations_res_id_seq
@@ -249,11 +249,11 @@ CREATE SEQUENCE reservations_res_id_seq
     CACHE 1;
 
 
-ALTER TABLE reservations_res_id_seq OWNER TO daniel;
+ALTER TABLE reservations_res_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 202 (class 1259 OID 16437)
--- Name: roles; Type: TABLE; Schema: public; Owner: daniel
+-- Name: roles; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE roles (
@@ -262,11 +262,11 @@ CREATE TABLE roles (
 );
 
 
-ALTER TABLE roles OWNER TO daniel;
+ALTER TABLE roles OWNER TO goodfellas;
 
 --
 -- TOC entry 214 (class 1259 OID 16500)
--- Name: roles_role_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: roles_role_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE roles_role_id_seq
@@ -277,11 +277,11 @@ CREATE SEQUENCE roles_role_id_seq
     CACHE 1;
 
 
-ALTER TABLE roles_role_id_seq OWNER TO daniel;
+ALTER TABLE roles_role_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 203 (class 1259 OID 16442)
--- Name: sales; Type: TABLE; Schema: public; Owner: daniel
+-- Name: sales; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE sales (
@@ -297,11 +297,11 @@ CREATE TABLE sales (
 );
 
 
-ALTER TABLE sales OWNER TO daniel;
+ALTER TABLE sales OWNER TO goodfellas;
 
 --
 -- TOC entry 204 (class 1259 OID 16447)
--- Name: sales_lines; Type: TABLE; Schema: public; Owner: daniel
+-- Name: sales_lines; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE sales_lines (
@@ -311,11 +311,11 @@ CREATE TABLE sales_lines (
 );
 
 
-ALTER TABLE sales_lines OWNER TO daniel;
+ALTER TABLE sales_lines OWNER TO goodfellas;
 
 --
 -- TOC entry 215 (class 1259 OID 16502)
--- Name: sales_lines_line_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: sales_lines_line_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE sales_lines_line_id_seq
@@ -326,11 +326,11 @@ CREATE SEQUENCE sales_lines_line_id_seq
     CACHE 1;
 
 
-ALTER TABLE sales_lines_line_id_seq OWNER TO daniel;
+ALTER TABLE sales_lines_line_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 216 (class 1259 OID 16504)
--- Name: sales_sale_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: sales_sale_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE sales_sale_id_seq
@@ -341,11 +341,11 @@ CREATE SEQUENCE sales_sale_id_seq
     CACHE 1;
 
 
-ALTER TABLE sales_sale_id_seq OWNER TO daniel;
+ALTER TABLE sales_sale_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 205 (class 1259 OID 16452)
--- Name: sales_sales_line_items; Type: TABLE; Schema: public; Owner: daniel
+-- Name: sales_sales_line_items; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE sales_sales_line_items (
@@ -354,11 +354,11 @@ CREATE TABLE sales_sales_line_items (
 );
 
 
-ALTER TABLE sales_sales_line_items OWNER TO daniel;
+ALTER TABLE sales_sales_line_items OWNER TO goodfellas;
 
 --
 -- TOC entry 206 (class 1259 OID 16455)
--- Name: sessions; Type: TABLE; Schema: public; Owner: daniel
+-- Name: sessions; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE sessions (
@@ -371,11 +371,11 @@ CREATE TABLE sessions (
 );
 
 
-ALTER TABLE sessions OWNER TO daniel;
+ALTER TABLE sessions OWNER TO goodfellas;
 
 --
 -- TOC entry 217 (class 1259 OID 16506)
--- Name: sessions_session_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: sessions_session_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE sessions_session_id_seq
@@ -386,11 +386,11 @@ CREATE SEQUENCE sessions_session_id_seq
     CACHE 1;
 
 
-ALTER TABLE sessions_session_id_seq OWNER TO daniel;
+ALTER TABLE sessions_session_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 207 (class 1259 OID 16468)
--- Name: users; Type: TABLE; Schema: public; Owner: daniel
+-- Name: users; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE users (
@@ -408,11 +408,11 @@ CREATE TABLE users (
 );
 
 
-ALTER TABLE users OWNER TO daniel;
+ALTER TABLE users OWNER TO goodfellas;
 
 --
 -- TOC entry 208 (class 1259 OID 16476)
--- Name: users_roles; Type: TABLE; Schema: public; Owner: daniel
+-- Name: users_roles; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE users_roles (
@@ -421,11 +421,11 @@ CREATE TABLE users_roles (
 );
 
 
-ALTER TABLE users_roles OWNER TO daniel;
+ALTER TABLE users_roles OWNER TO goodfellas;
 
 --
 -- TOC entry 218 (class 1259 OID 16510)
--- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE users_user_id_seq
@@ -436,11 +436,11 @@ CREATE SEQUENCE users_user_id_seq
     CACHE 1;
 
 
-ALTER TABLE users_user_id_seq OWNER TO daniel;
+ALTER TABLE users_user_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 209 (class 1259 OID 16479)
--- Name: verify_token; Type: TABLE; Schema: public; Owner: daniel
+-- Name: verify_token; Type: TABLE; Schema: public; Owner: goodfellas
 --
 
 CREATE TABLE verify_token (
@@ -451,11 +451,11 @@ CREATE TABLE verify_token (
 );
 
 
-ALTER TABLE verify_token OWNER TO daniel;
+ALTER TABLE verify_token OWNER TO goodfellas;
 
 --
 -- TOC entry 219 (class 1259 OID 16512)
--- Name: verify_token_id_seq; Type: SEQUENCE; Schema: public; Owner: daniel
+-- Name: verify_token_id_seq; Type: SEQUENCE; Schema: public; Owner: goodfellas
 --
 
 CREATE SEQUENCE verify_token_id_seq
@@ -466,11 +466,11 @@ CREATE SEQUENCE verify_token_id_seq
     CACHE 1;
 
 
-ALTER TABLE verify_token_id_seq OWNER TO daniel;
+ALTER TABLE verify_token_id_seq OWNER TO goodfellas;
 
 --
 -- TOC entry 3756 (class 2606 OID 16409)
--- Name: bundle_specs bundle_specs_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: bundle_specs bundle_specs_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY bundle_specs
@@ -479,7 +479,7 @@ ALTER TABLE ONLY bundle_specs
 
 --
 -- TOC entry 3758 (class 2606 OID 16417)
--- Name: bundles bundles_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: bundles bundles_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY bundles
@@ -488,7 +488,7 @@ ALTER TABLE ONLY bundles
 
 --
 -- TOC entry 3784 (class 2606 OID 16634)
--- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: events events_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY events
@@ -497,7 +497,7 @@ ALTER TABLE ONLY events
 
 --
 -- TOC entry 3762 (class 2606 OID 16428)
--- Name: gym gym_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: gym gym_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY gym
@@ -506,7 +506,7 @@ ALTER TABLE ONLY gym
 
 --
 -- TOC entry 3764 (class 2606 OID 16436)
--- Name: reservations reservations_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: reservations reservations_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY reservations
@@ -515,7 +515,7 @@ ALTER TABLE ONLY reservations
 
 --
 -- TOC entry 3766 (class 2606 OID 16441)
--- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: roles roles_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY roles
@@ -524,7 +524,7 @@ ALTER TABLE ONLY roles
 
 --
 -- TOC entry 3770 (class 2606 OID 16451)
--- Name: sales_lines sales_lines_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales_lines sales_lines_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales_lines
@@ -533,7 +533,7 @@ ALTER TABLE ONLY sales_lines
 
 --
 -- TOC entry 3768 (class 2606 OID 16446)
--- Name: sales sales_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales sales_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales
@@ -542,7 +542,7 @@ ALTER TABLE ONLY sales
 
 --
 -- TOC entry 3774 (class 2606 OID 16459)
--- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sessions sessions_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sessions
@@ -551,7 +551,7 @@ ALTER TABLE ONLY sessions
 
 --
 -- TOC entry 3776 (class 2606 OID 16489)
--- Name: users uk_6dotkott2kjsp8vw4d0m25fb7; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: users uk_6dotkott2kjsp8vw4d0m25fb7; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY users
@@ -560,7 +560,7 @@ ALTER TABLE ONLY users
 
 --
 -- TOC entry 3760 (class 2606 OID 16485)
--- Name: bundles_sessions uk_alolgxs9i0abooa93k36rduar; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: bundles_sessions uk_alolgxs9i0abooa93k36rduar; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY bundles_sessions
@@ -569,7 +569,7 @@ ALTER TABLE ONLY bundles_sessions
 
 --
 -- TOC entry 3786 (class 2606 OID 16636)
--- Name: events_reservations uk_n5sphwjoyxhrt0s1wq22073x5; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: events_reservations uk_n5sphwjoyxhrt0s1wq22073x5; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY events_reservations
@@ -578,7 +578,7 @@ ALTER TABLE ONLY events_reservations
 
 --
 -- TOC entry 3772 (class 2606 OID 16487)
--- Name: sales_sales_line_items uk_s02kwn9p76aguaf3ox1rlds9k; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales_sales_line_items uk_s02kwn9p76aguaf3ox1rlds9k; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales_sales_line_items
@@ -587,7 +587,7 @@ ALTER TABLE ONLY sales_sales_line_items
 
 --
 -- TOC entry 3780 (class 2606 OID 16491)
--- Name: users_roles ukq3r1u8cne2rw2hkr899xuh7vj; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: users_roles ukq3r1u8cne2rw2hkr899xuh7vj; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY users_roles
@@ -596,7 +596,7 @@ ALTER TABLE ONLY users_roles
 
 --
 -- TOC entry 3778 (class 2606 OID 16475)
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY users
@@ -605,7 +605,7 @@ ALTER TABLE ONLY users
 
 --
 -- TOC entry 3782 (class 2606 OID 16483)
--- Name: verify_token verify_token_pkey; Type: CONSTRAINT; Schema: public; Owner: daniel
+-- Name: verify_token verify_token_pkey; Type: CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY verify_token
@@ -614,7 +614,7 @@ ALTER TABLE ONLY verify_token
 
 --
 -- TOC entry 3802 (class 2606 OID 16604)
--- Name: users_roles fk2o0jvgh89lemvvo17cbqvdxaa; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: users_roles fk2o0jvgh89lemvvo17cbqvdxaa; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY users_roles
@@ -623,7 +623,7 @@ ALTER TABLE ONLY users_roles
 
 --
 -- TOC entry 3799 (class 2606 OID 16584)
--- Name: sessions fk3f84j4c4233pia83ubsbwxneb; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sessions fk3f84j4c4233pia83ubsbwxneb; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sessions
@@ -632,7 +632,7 @@ ALTER TABLE ONLY sessions
 
 --
 -- TOC entry 3803 (class 2606 OID 16609)
--- Name: verify_token fk46ew66rbycre4rp9pv9e7cc2o; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: verify_token fk46ew66rbycre4rp9pv9e7cc2o; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY verify_token
@@ -641,7 +641,7 @@ ALTER TABLE ONLY verify_token
 
 --
 -- TOC entry 3797 (class 2606 OID 16574)
--- Name: sales_sales_line_items fk4j38eabdjs1fh23r2rwj05j5h; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales_sales_line_items fk4j38eabdjs1fh23r2rwj05j5h; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales_sales_line_items
@@ -650,7 +650,7 @@ ALTER TABLE ONLY sales_sales_line_items
 
 --
 -- TOC entry 3787 (class 2606 OID 16514)
--- Name: bundles fk4l5eahkspwcmovt4r4nhwuyet; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: bundles fk4l5eahkspwcmovt4r4nhwuyet; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY bundles
@@ -659,7 +659,7 @@ ALTER TABLE ONLY bundles
 
 --
 -- TOC entry 3795 (class 2606 OID 16564)
--- Name: sales_lines fk59qbgxecsad0r3tw27sdb0u8c; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales_lines fk59qbgxecsad0r3tw27sdb0u8c; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales_lines
@@ -668,7 +668,7 @@ ALTER TABLE ONLY sales_lines
 
 --
 -- TOC entry 3790 (class 2606 OID 16529)
--- Name: current_users_bundles fkbdsx6pywcfesjltoew3rn7d7j; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: current_users_bundles fkbdsx6pywcfesjltoew3rn7d7j; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY current_users_bundles
@@ -677,7 +677,7 @@ ALTER TABLE ONLY current_users_bundles
 
 --
 -- TOC entry 3788 (class 2606 OID 16519)
--- Name: bundles_sessions fkc42lfp5ka1na8yx4wj8po29d8; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: bundles_sessions fkc42lfp5ka1na8yx4wj8po29d8; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY bundles_sessions
@@ -686,7 +686,7 @@ ALTER TABLE ONLY bundles_sessions
 
 --
 -- TOC entry 3801 (class 2606 OID 16599)
--- Name: users_roles fkj6m8fwv7oqv74fcehir1a9ffy; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: users_roles fkj6m8fwv7oqv74fcehir1a9ffy; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY users_roles
@@ -695,7 +695,7 @@ ALTER TABLE ONLY users_roles
 
 --
 -- TOC entry 3800 (class 2606 OID 16594)
--- Name: users fkj88949d0ybov2j0g2xhvoxmi7; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: users fkj88949d0ybov2j0g2xhvoxmi7; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY users
@@ -704,7 +704,7 @@ ALTER TABLE ONLY users
 
 --
 -- TOC entry 3804 (class 2606 OID 16637)
--- Name: events_reservations fkjwll74ipyt2uea892j7y89r4b; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: events_reservations fkjwll74ipyt2uea892j7y89r4b; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY events_reservations
@@ -713,7 +713,7 @@ ALTER TABLE ONLY events_reservations
 
 --
 -- TOC entry 3789 (class 2606 OID 16524)
--- Name: bundles_sessions fkkqujw22610v4nvqrhfox9g2e1; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: bundles_sessions fkkqujw22610v4nvqrhfox9g2e1; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY bundles_sessions
@@ -722,7 +722,7 @@ ALTER TABLE ONLY bundles_sessions
 
 --
 -- TOC entry 3796 (class 2606 OID 16569)
--- Name: sales_lines fkoq3rb5ssvps2eghycc4ttq8w9; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales_lines fkoq3rb5ssvps2eghycc4ttq8w9; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales_lines
@@ -731,7 +731,7 @@ ALTER TABLE ONLY sales_lines
 
 --
 -- TOC entry 3791 (class 2606 OID 16534)
--- Name: current_users_bundles fkp4mcjftlfhgl9q4cd13gdk3oi; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: current_users_bundles fkp4mcjftlfhgl9q4cd13gdk3oi; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY current_users_bundles
@@ -740,7 +740,7 @@ ALTER TABLE ONLY current_users_bundles
 
 --
 -- TOC entry 3798 (class 2606 OID 16579)
--- Name: sales_sales_line_items fkp8e6pkne2xuamdd4h6k0evopg; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales_sales_line_items fkp8e6pkne2xuamdd4h6k0evopg; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales_sales_line_items
@@ -749,7 +749,7 @@ ALTER TABLE ONLY sales_sales_line_items
 
 --
 -- TOC entry 3793 (class 2606 OID 16559)
--- Name: sales fkqqx7636pm22r20b6wlbbnpe37; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales fkqqx7636pm22r20b6wlbbnpe37; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales
@@ -758,7 +758,7 @@ ALTER TABLE ONLY sales
 
 --
 -- TOC entry 3794 (class 2606 OID 16647)
--- Name: sales fkrh7y4q7ny0ks7lly8u741wuab; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: sales fkrh7y4q7ny0ks7lly8u741wuab; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY sales
@@ -767,7 +767,7 @@ ALTER TABLE ONLY sales
 
 --
 -- TOC entry 3792 (class 2606 OID 16549)
--- Name: reservations fkro5yt7p6cw65gk9voohayycj6; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: reservations fkro5yt7p6cw65gk9voohayycj6; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY reservations
@@ -776,7 +776,7 @@ ALTER TABLE ONLY reservations
 
 --
 -- TOC entry 3805 (class 2606 OID 16642)
--- Name: events_reservations fktgmo3pi1792fxcnkg59gd5l1x; Type: FK CONSTRAINT; Schema: public; Owner: daniel
+-- Name: events_reservations fktgmo3pi1792fxcnkg59gd5l1x; Type: FK CONSTRAINT; Schema: public; Owner: goodfellas
 --
 
 ALTER TABLE ONLY events_reservations
