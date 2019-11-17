@@ -45,6 +45,17 @@
 //  }
 //}
 
+
+resource "aws_alb" "alb" {
+  name            = "${var.app_name}-alb-ecs"
+  subnets         = aws_subnet.ecs_subnet.*.id
+  security_groups = [aws_security_group.alb_security_group.id]
+
+  tags = {
+    Project = var.app_name
+  }
+}
+
 resource "aws_alb_listener" "listener" {
   load_balancer_arn = aws_alb.alb.arn
   port              = 80
@@ -56,6 +67,7 @@ resource "aws_alb_listener" "listener" {
 
 resource "aws_alb_listener_rule" "api" {
   listener_arn = aws_alb_listener.listener.arn
+  priority     = 100
 
   action {
     type             = "forward"
@@ -68,25 +80,12 @@ resource "aws_alb_listener_rule" "api" {
   }
 }
 
-resource "aws_alb_listener_rule" "web" {
-  listener_arn = aws_alb_listener.listener.arn
-  action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.web_alb_target_group.arn
-  }
-
-  condition {
-    field  = "path-pattern"
-    values = ["/*"]
-  }
-}
-
 
 resource "aws_alb_target_group" "web_alb_target_group" {
   name     = "web-alb-target-group"
   vpc_id   = aws_vpc.default.id
   protocol = "HTTP"
-  port     = "80"
+  port     = "8080"
 
   lifecycle {
     create_before_destroy = true
@@ -121,16 +120,6 @@ resource "aws_alb_target_group" "api_alb_target_group" {
   }
 }
 
-resource "aws_alb" "alb" {
-  name            = "${var.app_name}-alb-ecs"
-  subnets         = aws_subnet.ecs_subnet.*.id
-  security_groups = [aws_security_group.alb_security_group.id]
-
-  tags = {
-    Project = var.app_name
-  }
-}
-
 //resource "aws_alb_listener" "alb_listener_https" {
 //  load_balancer_arn = aws_alb.alb.arn
 //  certificate_arn   = "${aws_acm_certificate.acm_certificate.arn}"
@@ -144,24 +133,3 @@ resource "aws_alb" "alb" {
 //
 //  depends_on = [aws_alb_target_group.alb_target_group]
 //}
-
-resource "aws_alb_listener" "alb_listener_http" {
-  load_balancer_arn = aws_alb.alb.arn
-  protocol          = "HTTP"
-  port              = "80"
-
-  default_action {
-
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.web_alb_target_group.arn
-
-    //    type = "redirect"
-    //    redirect {
-    //      status_code = "HTTP_301"
-    //      protocol    = "HTTPS"
-    //      port        = "443"
-    //    }
-  }
-
-}
-

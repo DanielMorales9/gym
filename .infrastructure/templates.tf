@@ -34,6 +34,7 @@ data "template_file" "api_task_definition" {
     admin_password    = var.admin_password
     admin_email       = var.admin_email
     gmail_username    = var.gmail_username
+    app_name          = var.app_name
     postgres_host     = aws_db_instance.postgres.address
     postgres_db       = var.postgres_db
     postgres_password = var.postgres_password

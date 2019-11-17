@@ -127,12 +127,12 @@ resource "aws_security_group" "ecs_security_group" {
     security_groups = [aws_security_group.alb_security_group.id]
   }
 
-  //  ingress {
-  //    protocol        = "tcp"
-  //    from_port       = "22"
-  //    to_port         = "22"
-  //    cidr_blocks = ["0.0.0.0/0"]
-  //  }
+  ingress {
+    protocol        = "tcp"
+    from_port       = "8080"
+    to_port         = "8080"
+    security_groups = [aws_security_group.alb_security_group.id]
+  }
 
   egress {
     protocol    = "-1"

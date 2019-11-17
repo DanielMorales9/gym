@@ -4,7 +4,6 @@ import it.gym.config.TenantContext;
 import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.model.*;
 import it.gym.service.*;
-import it.gym.utility.Constants;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -16,10 +15,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @PropertySource("application.yml")
@@ -32,6 +29,9 @@ public class InitializeDatabase implements CommandLineRunner {
 
     @Value("${admin_password}")
     String ADMIN_PASSWORD;
+
+    @Value("${schema}")
+    String SCHEMA;
 
     @Autowired
     @Qualifier("roleService")
@@ -57,16 +57,17 @@ public class InitializeDatabase implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
+
+        Tenant tenant = createTenant();
+        boolean exists = tenantService.existsByTenant(tenant);
+        if (exists) {
+            tenant = tenantService.findTenantBySchemaName(tenant.getSchemaName());
+        }
+        else {
+            tenant = tenantService.createTenant(tenant);
+        }
+
         if (isDev()) {
-
-            Tenant tenant = createTenant();
-            if (tenantService.existsByTenant(tenant)) {
-                tenant = tenantService.findTenantBySchemaName(tenant.getSchemaName());
-            }
-            else {
-                tenant = tenantService.createTenant(tenant);
-            }
-
             // setting Current Tenant Schema for multi-tenant access
             TenantContext.setCurrentTenantSchema(tenant.getSchemaName());
 
@@ -88,14 +89,16 @@ public class InitializeDatabase implements CommandLineRunner {
         }
     }
 
-    boolean isDev() {
+
+
+    private boolean isDev() {
         return env.getActiveProfiles()[0].equals(DEV_ENV);
     }
 
     private Tenant createTenant() {
         Tenant tenant = new Tenant();
-        tenant.setSchemaName("tenant_dev");
-        tenant.setTenantName("dev");
+        tenant.setSchemaName(SCHEMA);
+        tenant.setTenantName(SCHEMA);
         return tenant;
     }
 
