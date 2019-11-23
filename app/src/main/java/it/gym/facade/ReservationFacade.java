@@ -101,6 +101,8 @@ public class ReservationFacade {
         bundle.addSession(session);
         bundleService.save(bundle);
 
+        service.save(res);
+
         return res;
     }
 
@@ -116,6 +118,7 @@ public class ReservationFacade {
         Reservation res = evt.reserve(customer);
         this.eventService.save(evt);
 
+        service.save(res);
         return res;
     }
 

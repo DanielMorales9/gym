@@ -15,6 +15,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Date;
 import java.util.Optional;
 
+import static it.gym.utility.Fixture.createPersonalBundle;
+import static it.gym.utility.Fixture.createPersonalTrainingSession;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -38,13 +40,13 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createSession(createBundleSpec()));
+        this.service.save(createPersonalTrainingSession(1L, createPersonalBundle(1L)));
         Mockito.verify(repository).save(any(ATrainingSession.class));
     }
 
     @Test
     public void findById() {
-        PersonalTrainingSession session = createSession(createBundleSpec());
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L));
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(session));
         ATrainingSession u = this.service.findById(1L);
         assertThat(u).isEqualTo(session);
@@ -58,28 +60,8 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        ATrainingSession u = createSession(createBundleSpec());
+        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L));
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingSession.class));
-    }
-
-    private PersonalTrainingSession createSession(ATrainingBundle bundleSpec) {
-        PersonalTrainingSession pt = new PersonalTrainingSession();
-        pt.setCompleted(false);
-        pt.setStartTime(new Date());
-        pt.setEndTime(new Date());
-        pt.setId(1L);
-        pt.setTrainingBundle(bundleSpec);
-        return pt;
-    }
-
-    private ATrainingBundle createBundleSpec() {
-        PersonalTrainingBundle pt = new PersonalTrainingBundle();
-        pt.setName("Winter Pack");
-        pt.setNumSessions(11);
-        pt.setPrice(111.0);
-        pt.setDescription("Description");
-        pt.setId(1L);
-        return pt;
     }
 }

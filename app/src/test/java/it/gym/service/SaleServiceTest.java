@@ -4,6 +4,7 @@ import it.gym.model.Customer;
 import it.gym.model.Gym;
 import it.gym.model.Sale;
 import it.gym.repository.SaleRepository;
+import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,9 +14,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.DayOfWeek;
 import java.util.Optional;
 
+import static it.gym.utility.Fixture.createGym;
+import static it.gym.utility.Fixture.createSale;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -38,7 +40,8 @@ public class SaleServiceTest {
 
     @Test
     public void findById() {
-        Sale mockSale = createSale(createCustomer(createGym()));
+        Gym gym = createGym(1L);
+        Sale mockSale = createSale(1L, createCustomer(gym), gym);
         Mockito.doReturn(Optional.of(mockSale)).when(saleRepository).findById(1L);
         Sale actual = saleService.findById(1L);
         assertThat(actual).isEqualTo(mockSale);
@@ -46,7 +49,8 @@ public class SaleServiceTest {
 
     @Test
     public void save() {
-        Sale mockSale = createSale(createCustomer(createGym()));
+        Gym gym = createGym(1L);
+        Sale mockSale = createSale(1L, createCustomer(gym), gym);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(saleRepository).save(mockSale);
         Sale actual = saleService.save(mockSale);
@@ -55,40 +59,14 @@ public class SaleServiceTest {
 
     @Test
     public void delete() {
-        Sale mockSale = createSale(createCustomer(createGym()));
+        Gym gym = createGym(1L);
+        Sale mockSale = createSale(1L, createCustomer(gym), gym);
         saleService.delete(mockSale);
         Mockito.verify(saleRepository).delete(mockSale);
     }
 
-    private Sale createSale(Customer user) {
-        Sale sale = new Sale();
-        sale.setId(1L);
-        sale.setCustomer(user);
-        return sale;
-    }
-
     private Customer createCustomer(Gym gym) {
-        Customer customer = new Customer();
-        customer.setFirstName("pippo");
-        customer.setLastName("pluto");
-        customer.setEmail("pippo@pluto.com");
-        customer.setGym(gym);
-        customer.setVerified(true);
-        return customer;
-    }
-
-    private Gym createGym() {
-        Gym gym = new Gym();
-        gym.setId(1L);
-        gym.setWeekStartsOn(DayOfWeek.MONDAY);
-        gym.setMondayOpen(true);
-        gym.setTuesdayOpen(false);
-        gym.setWednesdayOpen(false);
-        gym.setThursdayOpen(false);
-        gym.setFridayOpen(false);
-        gym.setSaturdayOpen(false);
-        gym.setSundayOpen(false);
-        return gym;
+        return (Customer) Fixture.createCustomer(1L, "pippo", "", "pippo", "pluto", true, null, gym);
     }
 
 }

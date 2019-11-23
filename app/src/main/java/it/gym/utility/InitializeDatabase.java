@@ -1,4 +1,4 @@
-package it.gym;
+package it.gym.utility;
 
 import it.gym.config.TenantContext;
 import it.gym.facade.TrainingBundleSpecificationFacade;

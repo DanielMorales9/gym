@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Optional;
 
+import static it.gym.utility.Fixture.createPersonalBundleSpec;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -38,15 +39,15 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPTBundleSpec());
+        this.service.save(createPersonalBundleSpec(1L));
         Mockito.verify(repository).save(any(ATrainingBundleSpecification.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPTBundleSpec()));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L)));
         ATrainingBundleSpecification u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createPTBundleSpec());
+        assertThat(u).isEqualTo(createPersonalBundleSpec(1L));
         Mockito.verify(repository).findById(1L);
     }
 
@@ -57,19 +58,9 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void delete() {
-        ATrainingBundleSpecification u = createPTBundleSpec();
+        ATrainingBundleSpecification u = createPersonalBundleSpec(1L);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));
     }
 
-    private ATrainingBundleSpecification createPTBundleSpec() {
-        PersonalTrainingBundleSpecification pt = new PersonalTrainingBundleSpecification();
-        pt.setName("Winter Pack");
-        pt.setNumSessions(11);
-        pt.setPrice(111.0);
-        pt.setDescription("Description");
-        pt.setDisabled(true);
-        pt.setId(1L);
-        return pt;
-    }
 }

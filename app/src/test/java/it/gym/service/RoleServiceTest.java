@@ -3,6 +3,7 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Role;
 import it.gym.repository.RoleRepository;
+import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -27,15 +28,15 @@ public class RoleServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createRole());
+        this.service.save(Fixture.createAdminRole());
         Mockito.verify(repository).save(any(Role.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createRole()));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(Fixture.createAdminRole()));
         Role u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createRole());
+        assertThat(u).isEqualTo(Fixture.createAdminRole());
         Mockito.verify(repository).findById(1L);
     }
 
@@ -46,16 +47,9 @@ public class RoleServiceTest {
 
     @Test
     public void delete() {
-        Role u = createRole();
+        Role u = Fixture.createAdminRole();
         this.service.delete(u);
         Mockito.verify(repository).delete(any(Role.class));
-    }
-
-    private Role createRole() {
-        Role role = new Role();
-        role.setName("ADMIN");
-        role.setId(1L);
-        return role;
     }
 
     @TestConfiguration

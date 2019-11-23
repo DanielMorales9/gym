@@ -13,10 +13,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static it.gym.utility.Fixture.createReservation;
 import static org.assertj.core.api.AssertionsForClassTypes.anyOf;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -41,7 +41,7 @@ public class ReservationServiceTest {
 
     @Test
     public void save() {
-        Reservation reservation = createReservation();
+        Reservation reservation = createReservation(1L, null);
         service.save(reservation);
         Mockito.verify(repository).save(reservation);
     }
@@ -54,7 +54,7 @@ public class ReservationServiceTest {
 
     @Test
     public void findById() {
-        Reservation reservation = createReservation();
+        Reservation reservation = createReservation(1L, null);
         Mockito.doReturn(Optional.of(reservation)).when(repository).findById(1L);
         assertThat(service.findById(1L)).isNotNull();
         Mockito.verify(repository).findById(1L);
@@ -62,7 +62,7 @@ public class ReservationServiceTest {
 
     @Test
     public void delete() {
-        service.delete(createReservation());
+        service.delete(createReservation(1L, null));
         Mockito.verify(repository).delete(any());
     }
 
@@ -108,17 +108,9 @@ public class ReservationServiceTest {
 
     @Test
     public void findAll() {
-        List<Reservation> toBeReturned = Collections.singletonList(createReservation());
+        List<Reservation> toBeReturned = Collections.singletonList(createReservation(1L, null));
         Mockito.doReturn(toBeReturned).when(repository).findAll();
         List<Reservation> list = service.findAll();
         assertThat(list.size()).isEqualTo(1);
     }
-
-    private Reservation createReservation() {
-        Reservation reservation = new Reservation();
-        reservation.setId(1L);
-        return reservation;
-    }
-
-
 }

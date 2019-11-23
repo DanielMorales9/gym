@@ -4,6 +4,7 @@ import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.Customer;
 import it.gym.repository.CustomerRepository;
+import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -37,15 +38,15 @@ public class CustomerServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createCustomer());
+        this.service.save((Customer) Fixture.createCustomer(1L, "email", "", "name", "surname", true, null, null));
         Mockito.verify(repository).save(any(Customer.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createCustomer()));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(Fixture.createCustomer(1L, "email", "", "name", "surname", true, null, null)));
         AUser u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createCustomer());
+        assertThat(u).isEqualTo(Fixture.createCustomer(1L, "email", "", "name", "surname", true, null, null));
         Mockito.verify(repository).findById(1L);
     }
 
@@ -56,17 +57,9 @@ public class CustomerServiceTest {
 
     @Test
     public void delete() {
-        Customer u = createCustomer();
+        Customer u = (Customer) Fixture.createCustomer(1L, "email", "", "name", "surname", true, null, null);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(Customer.class));
     }
 
-    private Customer createCustomer() {
-        Customer user = new Customer();
-        user.setId(1L);
-        user.setEmail("admin@admin.com");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        return user;
-    }
 }
