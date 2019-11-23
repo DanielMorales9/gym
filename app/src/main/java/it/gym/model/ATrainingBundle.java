@@ -56,7 +56,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @JoinColumn(name = "bundle_spec_bundle_spec_id")
     private ATrainingBundleSpecification bundleSpec;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingBundle")
     private List<ATrainingSession> sessions;
 
     public abstract String getType();

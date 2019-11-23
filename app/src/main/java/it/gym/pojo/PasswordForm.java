@@ -5,8 +5,7 @@ public class PasswordForm {
     private String password;
     private String confirmPassword;
 
-    PasswordForm() {
-    }
+    PasswordForm() {}
 
     public PasswordForm(String oldPassword, String password, String confirmPassword) {
         this.oldPassword = oldPassword;

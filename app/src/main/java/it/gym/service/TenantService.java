@@ -1,10 +1,14 @@
 package it.gym.service;
 
+import it.gym.config.FlywayConfig;
 import it.gym.exception.ConflictException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Tenant;
 import it.gym.repository.TenantRepository;
+import lombok.extern.flogger.Flogger;
 import org.flywaydb.core.Flyway;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,11 +21,16 @@ import javax.sql.DataSource;
 @Transactional
 public class TenantService {
 
+    private Logger logger = LoggerFactory.getLogger(getClass());
+
     @Autowired
     private TenantRepository repository;
 
     @Autowired
     private DataSource dataSource;
+
+    @Autowired
+    private Flyway flyway;
 
     public Boolean existsByTenant(Tenant tenant) {
         return repository.existsBySchemaName(tenant.getSchemaName());
@@ -47,11 +56,9 @@ public class TenantService {
 
     public Tenant createTenant(Tenant tenant) {
         tenant = this.setTenantSchema(tenant);
-
         tenant = repository.save(tenant);
         String schema = tenant.getSchemaName();
-        Flyway flyway = new Flyway();
-        flyway.setLocations("db/migration/tenants");
+        flyway.setLocations(FlywayConfig.DB_MIGRATION_TENANTS);
         flyway.setDataSource(dataSource);
         flyway.setSchemas(schema);
         flyway.migrate();

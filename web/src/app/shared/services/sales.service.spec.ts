@@ -53,7 +53,7 @@ describe('SalesService', () => {
             done();
         });
         const req = backend.expectOne({
-            url: 'sales/createSale/1/1',
+            url: '/sales/createSale/1/1',
             method: 'GET'
         });
         req.flush({});

@@ -39,6 +39,7 @@ export class AppComponent implements OnInit {
             if (this.authenticated && !this.user) {
                 this.current_role_view = this.service.currentRole;
                 this.user = this.service.user;
+                // TODO check whether profilePath is used
                 this.profilePath = `profile/${this.user.id}/user`;
                 this.gymService.getConfig(this.user.id).subscribe((gym: Gym) => {
                    this.appName = gym.name;

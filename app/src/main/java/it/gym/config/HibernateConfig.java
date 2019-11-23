@@ -1,6 +1,6 @@
 package it.gym.config;
 
-import it.gym.ApiApplication;
+import it.gym.Application;
 import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
@@ -35,7 +35,7 @@ public class HibernateConfig {
         properties.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolverImpl);
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource);
-        em.setPackagesToScan(ApiApplication.class.getPackage().getName());
+        em.setPackagesToScan(Application.class.getPackage().getName());
         em.setJpaVendorAdapter(jpaVendorAdapter());
         em.setJpaPropertyMap(properties);
         return em;

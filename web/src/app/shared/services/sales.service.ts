@@ -16,7 +16,7 @@ export class SalesService {
     }
 
     createSale(gymId: number, customerId: number): Observable<Object> {
-        return this.http.get(`sales/createSale/${gymId}/${customerId}`);
+        return this.http.get(`/sales/createSale/${gymId}/${customerId}`);
     }
 
     delete(id: number): Observable<Object> {

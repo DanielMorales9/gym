@@ -18,14 +18,6 @@ services:
     container_name: redis
     image: redis
   web:
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 50M
-        reservations:
-          cpus: '0.25'
-          memory: 20M
     build:
       context: web
       dockerfile: Dockerfile_dev
@@ -39,14 +31,6 @@ services:
     depends_on:
       - app
   app:
-    deploy:
-      resources:
-        limits:
-          cpus: '0.50'
-          memory: 50M
-        reservations:
-          cpus: '0.25'
-          memory: 20M
     restart: always
     container_name: app
     image: tenentedan9/app:0.0.1-SNAPSHOT
@@ -55,7 +39,7 @@ services:
       - redis
       - postgres
     ports:
-    - 9090:80
+    - "9090:80"
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

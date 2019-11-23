@@ -44,6 +44,7 @@ public class Sale {
     private boolean isCompleted;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sale_id")
     private List<SalesLineItem> salesLineItems;
 
     @ManyToOne

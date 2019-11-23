@@ -31,6 +31,7 @@ public class Customer extends AUser {
     @EqualsAndHashCode.Exclude
     private List<ATrainingBundle> currentTrainingBundles;
 
+
     public Integer getWeight() {
         return weight;
     }

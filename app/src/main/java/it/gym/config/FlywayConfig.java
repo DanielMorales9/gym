@@ -15,7 +15,7 @@ public class FlywayConfig {
 
     public static final String DEFAULT_SCHEMA = "default_schema";
     private static final String DB_MIGRATION_DEFAULT = "db/migration/default";
-    private static final String DB_MIGRATION_TENANTS = "db/migration/tenants";
+    public static final String DB_MIGRATION_TENANTS = "db/migration/tenants";
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 

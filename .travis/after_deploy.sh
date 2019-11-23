@@ -81,6 +81,5 @@ echo "+success"
 echo "==================================="
 echo "|  Taint and Deploy Latest Version|"
 echo "==================================="
-pushd .infrastructure
-./terraform destroy --target=aws_ecs_cluster.ecs_cluster --auto-approve
-./terraform apply --auto-approve
+./terraform destroy --target=aws_ecs_cluster.ecs_cluster --auto-approve .infrastructure/
+./terraform apply --auto-approve .infrastructure/
