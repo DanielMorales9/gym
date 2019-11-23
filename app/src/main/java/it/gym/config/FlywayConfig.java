@@ -4,13 +4,20 @@ import it.gym.repository.TenantRepository;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
+import org.springframework.scheduling.annotation.EnableScheduling;
 
 import javax.sql.DataSource;
 
 @Configuration
+@EnableScheduling
+@ConditionalOnProperty(
+        name = "it.gym.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class FlywayConfig {
 
     public static final String DEFAULT_SCHEMA = "default_schema";

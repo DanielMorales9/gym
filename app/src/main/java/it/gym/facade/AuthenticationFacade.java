@@ -1,6 +1,9 @@
 package it.gym.facade;
 
-import it.gym.exception.*;
+import it.gym.exception.BadRequestException;
+import it.gym.exception.InternalServerException;
+import it.gym.exception.NotFoundException;
+import it.gym.exception.UnAuthorizedException;
 import it.gym.model.AUser;
 import it.gym.model.Gym;
 import it.gym.model.Role;
@@ -15,7 +18,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -47,7 +50,7 @@ public class AuthenticationFacade {
     @Qualifier("verificationTokenService")
     private VerificationTokenService tokenService;
 
-    @Autowired private BCryptPasswordEncoder passwordEncoder;
+    @Autowired private PasswordEncoder passwordEncoder;
 
     @Autowired
     private UserService userService;
