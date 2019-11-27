@@ -2,7 +2,6 @@ package it.gym.hateoas;
 
 import it.gym.model.Trainer;
 import it.gym.repository.TrainerRepository;
-import it.gym.utility.Constants;
 import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -21,7 +20,7 @@ public class TrainerAssembler extends ResourceAssemblerSupport<Trainer, TrainerR
     public TrainerResource toResource(Trainer trainer) {
         TrainerResource resource = new TrainerResource(trainer);
         resource.setRole(new Resources<>(new RoleAssembler().toResources(trainer.getRoles())));
-        resource.add(linkTo(TrainerRepository.class).slash(Constants.TRAINER_BASE_PATH)
+        resource.add(linkTo(TrainerRepository.class).slash("trainers")
                 .slash(trainer.getId()).withSelfRel());
         return resource;
     }

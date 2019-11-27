@@ -77,10 +77,6 @@ public abstract class AUser implements DefaultRoles {
     @JoinColumn(name = "gym_id")
     private Gym gym;
 
-    AUser() {
-
-    }
-
     public abstract String getType();
 
     public Gym getGym() {

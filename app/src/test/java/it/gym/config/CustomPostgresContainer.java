@@ -9,7 +9,7 @@ import java.io.IOException;
 
 public class CustomPostgresContainer extends PostgreSQLContainer<CustomPostgresContainer> {
 
-    private static final String IMAGE_VERSION = "postgres:10.5";
+    private static final String IMAGE_VERSION = "postgres:10-alpine";
     private static CustomPostgresContainer container;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

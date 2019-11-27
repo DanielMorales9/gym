@@ -28,7 +28,7 @@ logging:
   level:
     root: info
 
-
 it.gym.enabled: false
 baseUrl: "http://localhost"
 reservationBeforeHours: 2
+

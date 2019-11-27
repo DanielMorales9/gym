@@ -1,7 +1,6 @@
 package it.gym.service;
 
 import it.gym.model.AUser;
-import it.gym.model.Admin;
 import it.gym.model.VerificationToken;
 import it.gym.repository.VerificationTokenRepository;
 import org.junit.Test;

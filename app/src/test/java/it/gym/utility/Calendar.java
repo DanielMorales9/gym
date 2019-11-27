@@ -1,5 +1,6 @@
 package it.gym.utility;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -15,4 +16,5 @@ public class Calendar {
         date.add(java.util.Calendar.DAY_OF_MONTH, diff);
         return date.getTime();
     }
+
 }

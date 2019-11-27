@@ -26,10 +26,10 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
         matchIfMissing = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired
     MultiTenancyInterceptor tenancyInterceptor;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("userAuthService")
