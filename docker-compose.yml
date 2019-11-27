@@ -5,7 +5,7 @@ services:
     restart: always
     container_name: postgres
     # flyway does not work with postgres>10.5
-    image: postgres:10.5
+    image: postgres:10-alpine
     volumes:
       - ./data/postgres:/var/lib/postgresql/data/pgdata
     environment:
@@ -18,7 +18,7 @@ services:
   redis:
     restart: always
     container_name: redis
-    image: redis
+    image: redis:alpine
   web:
     build:
       context: web
