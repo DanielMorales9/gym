@@ -41,7 +41,7 @@ data "template_file" "api_task_definition" {
     postgres_username = var.postgres_username
     redis_host        = aws_elasticache_cluster.redis.cache_nodes[0].address
     redis_port        = aws_elasticache_cluster.redis.cache_nodes[0].port
-    url               = var.url
+    url               = "http://${aws_alb.alb.dns_name}"
   }
 }
 
