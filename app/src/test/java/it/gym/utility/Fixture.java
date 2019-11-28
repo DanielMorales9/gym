@@ -3,6 +3,7 @@ package it.gym.utility;
 import it.gym.model.*;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -107,12 +108,14 @@ public class Fixture {
         return pt;
     }
 
-    public static Admin createAdmin(long id) {
+    public static Admin createAdmin(long id, String email, Gym gym, List<Role> roles) {
         Admin user = new Admin();
         user.setId(id);
-        user.setEmail("admin@admin.com");
+        user.setEmail(email);
         user.setFirstName("admin");
         user.setLastName("admin");
+        user.setGym(gym);
+        user.setRoles(roles);
         return user;
     }
 
@@ -178,10 +181,25 @@ public class Fixture {
         return role;
     }
 
+    private static Role createTrainerRole() {
+        Role role = new Role();
+        role.setName("TRAINER");
+        role.setId(2L);
+        return role;
+    }
+
     public static Role createAdminRole() {
         Role role = new Role();
         role.setName("ADMIN");
         role.setId(1L);
         return role;
+    }
+
+    public static List<Role> createAdminRoles() {
+        List<Role> list = new ArrayList<>();
+        list.add(createCustomerRole());
+        list.add(createTrainerRole());
+        list.add(createAdminRole());
+        return list;
     }
 }
