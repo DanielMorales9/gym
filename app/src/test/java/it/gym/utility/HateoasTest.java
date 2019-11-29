@@ -1,8 +1,6 @@
 package it.gym.utility;
 
-import it.gym.model.Admin;
-import it.gym.model.Gym;
-import it.gym.model.Role;
+import it.gym.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -11,7 +9,7 @@ import java.util.StringJoiner;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
-public class HateoasValidation {
+public class HateoasTest {
 
     public static ResultActions expectAdmin(ResultActions result, Admin admin, String prefix) throws Exception {
         prefix = handlePrefix(prefix);
@@ -80,4 +78,39 @@ public class HateoasValidation {
         return prefix;
     }
 
+    public static ResultActions expectPersonalBundleSpec(ResultActions result,
+                                                         PersonalTrainingBundleSpecification bundle) throws Exception {
+        return expectPersonalBundleSpec(result, bundle, null);
+    }
+
+    private static ResultActions expectPersonalBundleSpec(ResultActions result,
+                                                          PersonalTrainingBundleSpecification bundle,
+                                                          String prefix) throws Exception {
+        prefix = handlePrefix(prefix, false);
+        return result
+                .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(bundle.getName()))
+                .andExpect(jsonPath("$"+prefix+"price").value(bundle.getPrice()))
+                .andExpect(jsonPath("$"+prefix+"disabled").value(bundle.getDisabled()))
+                .andExpect(jsonPath("$"+prefix+"numSessions").value(bundle.getNumSessions()))
+                .andExpect(jsonPath("$"+prefix+"description").value(bundle.getDescription()));
+    }
+
+    public static ResultActions expectCourseBundleSpec(ResultActions result,
+                                                       CourseTrainingBundleSpecification bundle) throws Exception {
+        return expectCourseBundleSpec(result, bundle, null);
+    }
+
+    private static ResultActions expectCourseBundleSpec(ResultActions result,
+                                                        CourseTrainingBundleSpecification bundle,
+                                                        String prefix) throws Exception {
+        prefix = handlePrefix(prefix, false);
+        return result
+                .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(bundle.getName()))
+                .andExpect(jsonPath("$"+prefix+"price").value(bundle.getPrice()))
+                .andExpect(jsonPath("$"+prefix+"disabled").value(bundle.getDisabled()))
+                .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()))
+                .andExpect(jsonPath("$"+prefix+"description").value(bundle.getDescription()));
+    }
 }

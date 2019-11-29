@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasValidation.*;
+import static it.gym.utility.HateoasTest.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

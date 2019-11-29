@@ -79,12 +79,13 @@ public class Fixture {
     }
 
     public static ATrainingBundleSpecification createPersonalBundleSpec(long id) {
-        ATrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
-        specs.setDisabled(false);
-        specs.setDescription("Description");
+        PersonalTrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
         specs.setId(id);
         specs.setName("Bundle");
+        specs.setDescription("Description");
+        specs.setNumSessions(11);
         specs.setPrice(111.0);
+        specs.setDisabled(false);
         return specs;
     }
 
@@ -201,5 +202,18 @@ public class Fixture {
         list.add(createTrainerRole());
         list.add(createAdminRole());
         return list;
+    }
+
+    public static ATrainingBundleSpecification createCourseBundleSpec(long l, Date startTime, Date endTime) {
+        CourseTrainingBundleSpecification specs = new CourseTrainingBundleSpecification();
+        specs.setDisabled(false);
+        specs.setDescription("Description");
+        specs.setId(l);
+        specs.setName("Bundle");
+        specs.setPrice(111.0);
+        specs.setMaxCustomers(1);
+        specs.setStartTime(startTime);
+        specs.setEndTime(endTime);
+        return specs;
     }
 }
