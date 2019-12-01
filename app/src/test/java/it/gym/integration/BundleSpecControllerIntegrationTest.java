@@ -14,7 +14,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -55,14 +54,14 @@ public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest
         ResultActions result = mockMvc.perform(get("/bundleSpecs/" + personalBundle.getId()))
                 .andExpect(status().isOk());
         logger.info(bundleRepository.findAll().toString());
-        expectPersonalBundleSpec(result, (PersonalTrainingBundleSpecification) personalBundle).andReturn();
+        expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification) personalBundle).andReturn();
     }
 
     @Test
     public void findCourseBundleSpecId_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isOk());
-        expectCourseBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle).andReturn();
+        HateoasTest.expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle).andReturn();
     }
 
     @Test
@@ -113,7 +112,7 @@ public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest
                 .get(0)
                 .getId();
         expected.setId(id);
-        expectPersonalBundleSpec(result, expected);
+        expectTrainingBundleSpec(result, expected);
     }
 
     @Test
@@ -153,6 +152,6 @@ public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest
                 .getId();
         expected.setId(id);
         bundleRepository.deleteAll();
-        expectCourseBundleSpec(result, expected);
+        HateoasTest.expectTrainingBundleSpec(result, expected);
     }
 }

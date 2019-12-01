@@ -16,7 +16,6 @@ public class AUserAssembler extends ResourceAssemblerSupport<AUser, AUserResourc
     @Override
     public AUserResource toResource(AUser user) {
         AUserResource resource = new AUserResource(user);
-        resource.setRoles(new Resources<>(new RoleAssembler().toResources(user.getRoles())));
         resource.add(linkTo(UserRepository.class).slash("users")
                 .slash(user.getId()).withSelfRel());
         return resource;

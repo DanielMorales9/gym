@@ -3,6 +3,8 @@ package it.gym.controller;
 import it.gym.facade.SaleFacade;
 import it.gym.hateoas.*;
 import it.gym.model.Sale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,6 +24,8 @@ public class SaleController {
 
     @Autowired
     private SaleFacade facade;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @GetMapping
     @ResponseBody
@@ -98,9 +102,7 @@ public class SaleController {
     @GetMapping(path = "/createSale/{gymId}/{customerId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> createSale(@PathVariable Long gymId, @PathVariable Long customerId) {
-
         Sale sale = this.facade.createSale(gymId, customerId);
-
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 

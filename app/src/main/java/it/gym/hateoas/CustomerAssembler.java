@@ -16,10 +16,9 @@ public class CustomerAssembler extends ResourceAssemblerSupport<Customer, Custom
     @Override
     public CustomerResource toResource(Customer custom) {
         CustomerResource resource = new CustomerResource(custom);
-        resource.setRoles(new Resources<>(new RoleAssembler().toResources(custom.getRoles())));
-        resource.add(linkTo(CustomerRepository.class).slash("customers")
+        resource.add(linkTo(CustomerRepository.class).slash("customer")
                 .slash(custom.getId()).withSelfRel());
-        resource.add(linkTo(CustomerRepository.class).slash("customers")
+        resource.add(linkTo(CustomerRepository.class).slash("customer")
                 .slash(custom.getId()).slash("currentTrainingBundles").withRel("currentTrainingBundles"));
         return resource;
     }

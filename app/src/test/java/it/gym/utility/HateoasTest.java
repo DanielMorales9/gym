@@ -1,11 +1,9 @@
 package it.gym.utility;
 
 import it.gym.model.*;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
-import java.util.StringJoiner;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -13,12 +11,7 @@ public class HateoasTest {
 
     public static ResultActions expectAdmin(ResultActions result, Admin admin, String prefix) throws Exception {
         prefix = handlePrefix(prefix);
-        return result
-                .andExpect(jsonPath("$"+prefix+"id").value(admin.getId()))
-                .andExpect(jsonPath("$"+prefix+"email").value(admin.getEmail()))
-                .andExpect(jsonPath("$"+prefix+"firstName").value(admin.getFirstName()))
-                .andExpect(jsonPath("$"+prefix+"lastName").value(admin.getLastName()))
-                .andExpect(jsonPath("$"+prefix+"verified").value(admin.isVerified()));
+        return expectUser(result, admin, prefix);
     }
 
     public static ResultActions expectAdmin(ResultActions result, Admin admin) throws Exception {
@@ -78,14 +71,14 @@ public class HateoasTest {
         return prefix;
     }
 
-    public static ResultActions expectPersonalBundleSpec(ResultActions result,
+    public static ResultActions expectTrainingBundleSpec(ResultActions result,
                                                          PersonalTrainingBundleSpecification bundle) throws Exception {
-        return expectPersonalBundleSpec(result, bundle, null);
+        return expectTrainingBundleSpec(result, bundle, null);
     }
 
-    private static ResultActions expectPersonalBundleSpec(ResultActions result,
-                                                          PersonalTrainingBundleSpecification bundle,
-                                                          String prefix) throws Exception {
+    public static ResultActions expectTrainingBundleSpec(ResultActions result,
+                                                         PersonalTrainingBundleSpecification bundle,
+                                                         String prefix) throws Exception {
         prefix = handlePrefix(prefix, false);
         return result
                 .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
@@ -96,14 +89,14 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"description").value(bundle.getDescription()));
     }
 
-    public static ResultActions expectCourseBundleSpec(ResultActions result,
-                                                       CourseTrainingBundleSpecification bundle) throws Exception {
-        return expectCourseBundleSpec(result, bundle, null);
+    public static ResultActions expectTrainingBundleSpec(ResultActions result,
+                                                         CourseTrainingBundleSpecification bundle) throws Exception {
+        return expectTrainingBundleSpec(result, bundle, null);
     }
 
-    private static ResultActions expectCourseBundleSpec(ResultActions result,
-                                                        CourseTrainingBundleSpecification bundle,
-                                                        String prefix) throws Exception {
+    private static ResultActions expectTrainingBundleSpec(ResultActions result,
+                                                          CourseTrainingBundleSpecification bundle,
+                                                          String prefix) throws Exception {
         prefix = handlePrefix(prefix, false);
         return result
                 .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
@@ -112,5 +105,64 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"disabled").value(bundle.getDisabled()))
                 .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()))
                 .andExpect(jsonPath("$"+prefix+"description").value(bundle.getDescription()));
+    }
+
+    public static ResultActions expectSale(ResultActions result, Sale sale) throws Exception {
+        return expectSale(result, sale, null);
+    }
+
+    public static ResultActions expectSale(ResultActions result,
+                                           Sale sale,
+                                           String prefix) throws Exception {
+        prefix = handlePrefix(prefix, false);
+        return result
+                .andExpect(jsonPath("$"+prefix+"id").value(sale.getId()))
+                .andExpect(jsonPath("$"+prefix+"amountPayed").value(sale.getAmountPayed()))
+                .andExpect(jsonPath("$"+prefix+"totalPrice").value(sale.getTotalPrice()));
+
+    }
+
+    public static ResultActions expectCustomer(ResultActions result, Customer customer, String prefix) throws Exception {
+        prefix = handlePrefix(prefix, false);
+        result = expectUser(result, customer, prefix);
+        return result
+                .andExpect(jsonPath("$"+prefix+"height").value(customer.getHeight()))
+                .andExpect(jsonPath("$"+prefix+"weight").value(customer.getWeight()));
+    }
+
+    public static ResultActions expectCustomer(ResultActions result, Customer customer) throws Exception {
+        return expectCustomer(result, customer, null);
+    }
+
+    public static ResultActions expectUser(ResultActions result, AUser user, String prefix) throws Exception {
+        return result
+                .andExpect(jsonPath("$"+prefix+"id").value(user.getId()))
+                .andExpect(jsonPath("$"+prefix+"email").value(user.getEmail()))
+                .andExpect(jsonPath("$"+prefix+"firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$"+prefix+"lastName").value(user.getLastName()))
+                .andExpect(jsonPath("$"+prefix+"verified")  .value(user.isVerified()));
+    }
+
+    public static ResultActions expectedSalesLineItem(ResultActions result, SalesLineItem expected) throws Exception {
+        return expectedSalesLineItem(result, expected, null);
+    }
+
+    public static ResultActions expectedSalesLineItem(ResultActions result,
+                                                      SalesLineItem expected,
+                                                      String prefix) throws Exception {
+        prefix = handlePrefix(prefix);
+        result = result.andExpect(jsonPath("$"+prefix+"id").value(expected.getId()));
+        return result;
+    }
+
+    public static ResultActions expectTrainingBundle(ResultActions result,
+                                                     PersonalTrainingBundle trainingBundle,
+                                                     String prefix) throws Exception {
+        prefix = handlePrefix(prefix);
+        return result.andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
+                .andExpect(jsonPath("$"+prefix+"numSessions").value(trainingBundle.getNumSessions()))
+                .andExpect(jsonPath("$"+prefix+"price").value(trainingBundle.getPrice()))
+                .andExpect(jsonPath("$"+prefix+"description").value(trainingBundle.getDescription()))
+                .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
     }
 }

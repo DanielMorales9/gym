@@ -40,7 +40,7 @@ public class SalesLineItem {
         return bundleSpecification;
     }
 
-    void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
+    public void setBundleSpecification(ATrainingBundleSpecification bundleSpecification) {
         this.bundleSpecification = bundleSpecification;
     }
 
@@ -48,7 +48,7 @@ public class SalesLineItem {
         return trainingBundle;
     }
 
-    void setTrainingBundle(ATrainingBundle trainingBundle) {
+    public void setTrainingBundle(ATrainingBundle trainingBundle) {
         this.trainingBundle = trainingBundle;
     }
 

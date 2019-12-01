@@ -23,12 +23,6 @@ public class SaleAssembler  extends ResourceAssemblerSupport<Sale, SaleResource>
         resource.add(linkTo(SaleController.class).slash("sales")
                 .slash(sale.getId()).withSelfRel());
 
-        resource.setCustomer(new CustomerAssembler().toResource(sale.getCustomer()));
-        resource.setGym(new GymAssembler().toResource(sale.getGym()));
-
-        List<SalesLineItemResource> slines = new SalesLineItemAssembler()
-                .toResources(sale.getSalesLineItems());
-        resource.setSalesLineItems(new Resources<>(slines));
         return resource;
     }
 }

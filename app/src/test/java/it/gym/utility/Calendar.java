@@ -17,4 +17,27 @@ public class Calendar {
         return date.getTime();
     }
 
+    public static String today(String pattern) {
+        Date date = new Date();
+        return format(date, pattern);
+    }
+
+    public static String yesterday(String pattern) {
+        java.util.Calendar date = java.util.Calendar.getInstance(Locale.ITALIAN);
+        int diff = date.get(java.util.Calendar.HOUR_OF_DAY);
+        if (diff % 24 == 0) {
+            diff = 23;
+        }
+        else {
+            diff = 24;
+        }
+        date.add(java.util.Calendar.HOUR_OF_DAY, -diff);
+
+        return format(date.getTime(), pattern);
+    }
+
+    public static String format(Date date, String pattern) {
+        SimpleDateFormat format = new SimpleDateFormat(pattern);
+        return format.format(date);
+    }
 }

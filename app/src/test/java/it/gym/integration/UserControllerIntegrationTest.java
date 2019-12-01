@@ -63,6 +63,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users/" + admin.getId()))
                 .andExpect(status().isOk());
         result = expectAdmin(result, admin);
+        result = expectAdminRoles(result, roles, "roles");
         expectGym(result, gym, "gym").andReturn();
     }
 
@@ -85,6 +86,8 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users/findByEmail?email=" + admin.getEmail()))
                 .andExpect(status().isOk());
         result = expectAdmin(result, admin);
+        roles.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
+        result = expectAdminRoles(result, roles, "roles");
         expectGym(result, gym, "gym").andReturn();
     }
 
