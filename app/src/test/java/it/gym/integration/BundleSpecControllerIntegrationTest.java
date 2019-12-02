@@ -38,8 +38,8 @@ public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest
 
     @Before
     public void before() {
-        personalBundle = createPersonalBundleSpec(1L);
-        courseBundle = createCourseBundleSpec(1L, new Date(), new Date());
+        personalBundle = createPersonalBundleSpec(1L, "personal");
+        courseBundle = createCourseBundleSpec(1L, "course", new Date(), new Date());
         personalBundle = repository.save(personalBundle);
         courseBundle = repository.save(courseBundle);
     }
@@ -114,6 +114,40 @@ public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest
         expected.setId(id);
         expectTrainingBundleSpec(result, expected);
     }
+
+    @Test
+    public void whenFindAll_OK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs"))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification) personalBundle, "content["+0+"]");
+        expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle, "content["+1+"]").andReturn();
+    }
+
+    @Test
+    public void whenSearch_OK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/search?query="+courseBundle.getName()))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle, "content["+0+"]").andReturn();
+    }
+
+    @Test
+    public void whenSearchNotDisabled_OK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/searchNotDisabled?query="+courseBundle.getName()))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle, "content["+0+"]").andReturn();    }
+
+    @Test
+    public void whenGetNotDisabled_OK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/getNotDisabled"))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification) personalBundle, "content["+0+"]");
+        expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle, "content["+1+"]").andReturn();
+    }
+
 
     @Test
     public void postCourseBundleSpec_OK() throws Exception {

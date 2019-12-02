@@ -78,7 +78,7 @@ public class Fixture {
         return sale;
     }
 
-    public static ATrainingBundleSpecification createPersonalBundleSpec(long id) {
+    public static ATrainingBundleSpecification createPersonalBundleSpec(long id, String name) {
         PersonalTrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
         specs.setId(id);
         specs.setName("Bundle");
@@ -204,12 +204,12 @@ public class Fixture {
         return list;
     }
 
-    public static ATrainingBundleSpecification createCourseBundleSpec(long l, Date startTime, Date endTime) {
+    public static ATrainingBundleSpecification createCourseBundleSpec(long l, String name, Date startTime, Date endTime) {
         CourseTrainingBundleSpecification specs = new CourseTrainingBundleSpecification();
         specs.setDisabled(false);
         specs.setDescription("Description");
         specs.setId(l);
-        specs.setName("Bundle");
+        specs.setName(name);
         specs.setPrice(111.0);
         specs.setMaxCustomers(1);
         specs.setStartTime(startTime);

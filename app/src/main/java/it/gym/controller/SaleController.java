@@ -69,6 +69,7 @@ public class SaleController {
     @GetMapping(path = "/searchByDateAndId")
     @ResponseBody
     Page<Sale> findSalesByDateAndId(@RequestParam Long id,
+                                    @RequestParam
                                     @DateTimeFormat(pattern = "dd-MM-yyyy",
                                             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                     Pageable pageable) {
@@ -77,7 +78,7 @@ public class SaleController {
 
     @GetMapping(path = "/searchByDate")
     @ResponseBody
-    Page<Sale> findSalesByDate(@DateTimeFormat(pattern = "dd-MM-yyyy",
+    Page<Sale> findSalesByDate(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                Pageable pageable) {
         return facade.findSalesByCreatedAtGreaterThanEqual(date, pageable);

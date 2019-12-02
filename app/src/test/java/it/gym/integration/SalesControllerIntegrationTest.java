@@ -1,7 +1,6 @@
 package it.gym.integration;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
 import it.gym.utility.Calendar;
@@ -12,7 +11,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
@@ -61,7 +59,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 gym);
         customer = userRepository.save(customer);
         sale = createSale(1L, customer, gym);
-        personal = createPersonalBundleSpec(1L);
+        personal = createPersonalBundleSpec(1L, "personal");
         personal = bundleSpecRepository.save(personal);
         bundle = personal.createTrainingBundle();
         bundleRepository.save(bundle);
@@ -263,6 +261,35 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     }
 
+    @Test
+    public void whenSearchByDateAndId_OK() throws Exception {
+        String path = "/sales/searchByDateAndId?id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    private void expectSales(ResultActions result) throws Exception {
+        List<SalesLineItem> sli = sliRepository.findAll();
+        for (int i = 0; i < 1; i++) {
+
+            Sale expected = new Sale();
+            expected.setId(sale.getId());
+            expected.setAmountPayed(0.);
+            expected.setCompleted(true);
+            expected.setGym(gym);
+            expected.setCustomer((Customer) customer);
+            expected.setSalesLineItems(sli);
+
+            result = expectSale(result, expected, "content[" + i + "]");
+            result = expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
+            result = expectGym(result, gym, "content[" + i + "].gym");
+            result = expectCustomer(result, (Customer) customer, "content[" + i + "].customer");
+        }
+    }
+
 //    @Test
 //    public void whenPay_OK() throws Exception {
 //        String path = "/sales/pay/"+sale.getId();
@@ -319,22 +346,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        for (int i = 0; i < 1; i++) {
-            List<SalesLineItem> sli = sliRepository.findAll();
-
-            Sale expected = new Sale();
-            expected.setId(sale.getId());
-            expected.setAmountPayed(0.);
-            expected.setCompleted(true);
-            expected.setGym(gym);
-            expected.setCustomer((Customer) customer);
-            expected.setSalesLineItems(sli);
-
-            result = expectSale(result, expected, "content["+i+"]");
-            result = expectSalesLineItems(result, sli, "content["+i+"].salesLineItems");
-            result = expectGym(result, gym, "content["+i+"].gym");
-            result = expectCustomer(result, (Customer) customer, "content["+i+"].customer");
-        }
+        expectSales(result);
     }
 
     @Test
@@ -344,22 +356,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        for (int i = 0; i < 1; i++) {
-            List<SalesLineItem> sli = sliRepository.findAll();
-
-            Sale expected = new Sale();
-            expected.setId(sale.getId());
-            expected.setAmountPayed(0.);
-            expected.setCompleted(true);
-            expected.setGym(gym);
-            expected.setCustomer((Customer) customer);
-            expected.setSalesLineItems(sli);
-
-            result = expectSale(result, expected, "content["+i+"]");
-            result = expectSalesLineItems(result, sli, "content["+i+"].salesLineItems");
-            result = expectGym(result, gym, "content["+i+"].gym");
-            result = expectCustomer(result, (Customer) customer, "content["+i+"].customer");
-        }
+        expectSales(result);
     }
 
     @Test
@@ -369,22 +366,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        for (int i = 0; i < 1; i++) {
-            List<SalesLineItem> sli = sliRepository.findAll();
-
-            Sale expected = new Sale();
-            expected.setId(sale.getId());
-            expected.setAmountPayed(0.);
-            expected.setCompleted(true);
-            expected.setGym(gym);
-            expected.setCustomer((Customer) customer);
-            expected.setSalesLineItems(sli);
-
-            result = expectSale(result, expected, "content["+i+"]");
-            result = expectSalesLineItems(result, sli, "content["+i+"].salesLineItems");
-            result = expectGym(result, gym, "content["+i+"].gym");
-            result = expectCustomer(result, (Customer) customer, "content["+i+"].customer");
-        }
+        expectSales(result);
     }
 
     @Test
@@ -395,22 +377,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        for (int i = 0; i < 1; i++) {
-            List<SalesLineItem> sli = sliRepository.findAll();
-
-            Sale expected = new Sale();
-            expected.setId(sale.getId());
-            expected.setAmountPayed(0.);
-            expected.setCompleted(true);
-            expected.setGym(gym);
-            expected.setCustomer((Customer) customer);
-            expected.setSalesLineItems(sli);
-
-            result = expectSale(result, expected, "content["+i+"]");
-            result = expectSalesLineItems(result, sli, "content["+i+"].salesLineItems");
-            result = expectGym(result, gym, "content["+i+"].gym");
-            result = expectCustomer(result, (Customer) customer, "content["+i+"].customer");
-        }
+        expectSales(result);
     }
 
     @Test
@@ -420,22 +387,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        for (int i = 0; i < 1; i++) {
-            List<SalesLineItem> sli = sliRepository.findAll();
-
-            Sale expected = new Sale();
-            expected.setId(sale.getId());
-            expected.setAmountPayed(0.);
-            expected.setCompleted(true);
-            expected.setGym(gym);
-            expected.setCustomer((Customer) customer);
-            expected.setSalesLineItems(sli);
-
-            result = expectSale(result, expected, "content["+i+"]");
-            result = expectSalesLineItems(result, sli, "content["+i+"].salesLineItems");
-            result = expectGym(result, gym, "content["+i+"].gym");
-            result = expectCustomer(result, (Customer) customer, "content["+i+"].customer");
-        }
+        expectSales(result);
     }
 
 

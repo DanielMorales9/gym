@@ -24,13 +24,14 @@ public class HateoasTest {
 
     public static ResultActions expectAdminRoles(ResultActions result, List<Role> roles, String prefix) throws Exception {
         prefix = handlePrefixForArray(prefix);
-        return result
-                .andExpect(jsonPath("$"+prefix+"[0].id").value(roles.get(0).getId()))
-                .andExpect(jsonPath("$"+prefix+"[0].name").value(roles.get(0).getName()))
-                .andExpect(jsonPath("$"+prefix+"[1].id").value(roles.get(1).getId()))
-                .andExpect(jsonPath("$"+prefix+"[1].name").value(roles.get(1).getName()))
-                .andExpect(jsonPath("$"+prefix+"[2].id").value(roles.get(2).getId()))
-                .andExpect(jsonPath("$"+prefix+"[2].name").value(roles.get(2).getName()));
+
+        for (int i = 0; i < 3; i++) {
+            result = result
+                    .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
+                    .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
+        }
+
+        return result;
     }
 
 
@@ -94,9 +95,9 @@ public class HateoasTest {
         return expectTrainingBundleSpec(result, bundle, null);
     }
 
-    private static ResultActions expectTrainingBundleSpec(ResultActions result,
-                                                          CourseTrainingBundleSpecification bundle,
-                                                          String prefix) throws Exception {
+    public static ResultActions expectTrainingBundleSpec(ResultActions result,
+                                                         CourseTrainingBundleSpecification bundle,
+                                                         String prefix) throws Exception {
         prefix = handlePrefix(prefix, false);
         return result
                 .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))

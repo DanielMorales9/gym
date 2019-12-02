@@ -2,7 +2,6 @@ package it.gym.service;
 
 import it.gym.exception.NotFoundException;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,15 +38,15 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPersonalBundleSpec(1L));
+        this.service.save(createPersonalBundleSpec(1L, "personal"));
         Mockito.verify(repository).save(any(ATrainingBundleSpecification.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L)));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L, "personal")));
         ATrainingBundleSpecification u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createPersonalBundleSpec(1L));
+        assertThat(u).isEqualTo(createPersonalBundleSpec(1L, "personal"));
         Mockito.verify(repository).findById(1L);
     }
 
@@ -58,7 +57,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void delete() {
-        ATrainingBundleSpecification u = createPersonalBundleSpec(1L);
+        ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal");
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));
     }
