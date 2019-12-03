@@ -298,10 +298,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         sale.setCompleted(true);
         sale = repository.save(sale);
-        logger.info(sale.toString());
-        logger.info(sale.getSalesLineItems().toString());
-
-
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
@@ -385,7 +381,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
 
-    private ResultActions expectSalesLineItems(ResultActions result, List<SalesLineItem> sli, String prefix) throws Exception {
+    private void expectSalesLineItems(ResultActions result, List<SalesLineItem> sli, String prefix) throws Exception {
         for (int i = 0; i < sli.size(); i++) {
             SalesLineItem sl = sli.get(i);
             expectedSalesLineItem(result, sl, prefix+"[" + i + "]");
@@ -396,7 +392,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                     (PersonalTrainingBundle) sl.getTrainingBundle(),
                     prefix+"[" + i + "].trainingBundle");
         }
-        return result;
     }
 
 }

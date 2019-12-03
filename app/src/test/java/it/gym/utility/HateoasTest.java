@@ -33,11 +33,32 @@ public class HateoasTest {
 
     }
 
-
     public static void expectGym(ResultActions result, Gym gym, String prefix) throws Exception {
         prefix = handlePrefix(prefix);
-        result.andExpect(jsonPath("$"+prefix+"id").value(gym.getId()));
-
+        result.andExpect(jsonPath("$"+prefix+"id").value(gym.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(gym.getName()))
+//                .andExpect(jsonPath("$"+prefix+"weekStartsOn").value(gym.getWeekStartsOn()))
+                .andExpect(jsonPath("$"+prefix+"mondayStartHour").value(gym.getMondayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"tuesdayStartHour").value(gym.getTuesdayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"wednesdayStartHour").value(gym.getWednesdayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"thursdayStartHour").value(gym.getThursdayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"fridayStartHour").value(gym.getFridayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"saturdayStartHour").value(gym.getSaturdayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"sundayStartHour").value(gym.getSundayStartHour()))
+                .andExpect(jsonPath("$"+prefix+"mondayEndHour").value(gym.getMondayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"tuesdayEndHour").value(gym.getTuesdayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"wednesdayEndHour").value(gym.getWednesdayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"thursdayEndHour").value(gym.getThursdayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"fridayEndHour").value(gym.getFridayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"saturdayEndHour").value(gym.getSaturdayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"sundayEndHour").value(gym.getSundayEndHour()))
+                .andExpect(jsonPath("$"+prefix+"mondayOpen").value(gym.isMondayOpen()))
+                .andExpect(jsonPath("$"+prefix+"tuesdayOpen").value(gym.isTuesdayOpen()))
+                .andExpect(jsonPath("$"+prefix+"wednesdayOpen").value(gym.isWednesdayOpen()))
+                .andExpect(jsonPath("$"+prefix+"thursdayOpen").value(gym.isThursdayOpen()))
+                .andExpect(jsonPath("$"+prefix+"fridayOpen").value(gym.isFridayOpen()))
+                .andExpect(jsonPath("$"+prefix+"saturdayOpen").value(gym.isSaturdayOpen()))
+                .andExpect(jsonPath("$"+prefix+"sundayOpen").value(gym.isSundayOpen()));
     }
 
     public static void expectGym(ResultActions result, Gym gym) throws Exception {
@@ -135,6 +156,7 @@ public class HateoasTest {
     }
 
     public static void expectUser(ResultActions result, AUser user, String prefix) throws Exception {
+        prefix = handlePrefix(prefix);
         result
                 .andExpect(jsonPath("$"+prefix+"id").value(user.getId()))
                 .andExpect(jsonPath("$"+prefix+"email").value(user.getEmail()))
@@ -176,5 +198,15 @@ public class HateoasTest {
                     .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
         }
 
+    }
+
+    public static void expectEvent(ResultActions result, AEvent event) throws Exception {
+        expectEvent(result, event, null);
+    }
+
+    private static void expectEvent(ResultActions result, AEvent event, String prefix) throws Exception {
+        prefix = handlePrefix(prefix);
+        result.andExpect(jsonPath("$"+prefix+"id").value(event.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(event.getName()));
     }
 }
