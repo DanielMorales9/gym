@@ -79,10 +79,9 @@ describe('SalesService', () => {
             done();
         });
         const req = backend.expectOne({
-            url: '/sales/pay/1',
-            method: 'POST'
+            url: '/sales/pay/1?amount=5',
+            method: 'GET'
         });
-        expect(req.request.body).toEqual(5);
         req.flush({});
     });
 
