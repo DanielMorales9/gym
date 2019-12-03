@@ -73,12 +73,12 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void whenSearchCustomers_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/customers")).andExpect(status().isOk());
-        result = expectCustomer(result, customer, "content[0]");
-        result = expectCustomerRoles(result, roles, "content[0].roles");
-        expectGym(result, gym, "content[0].gym").andReturn();
+        expectCustomer(result, customer, "content[0]");
+        expectCustomerRoles(result, roles, "content[0].roles");
+        expectGym(result, gym, "content[0].gym");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
-            result = expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
+            expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
                     "content[0].currentTrainingBundles["+i+"]");
         }
     }
@@ -87,12 +87,12 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenSearchCustomersByLastName_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/customers/search?query="+customer.getLastName()))
                 .andExpect(status().isOk());
-        result = expectCustomer(result, customer, "content[0]");
-        result = expectCustomerRoles(result, roles, "content[0].roles");
-        expectGym(result, gym, "content[0].gym").andReturn();
+        expectCustomer(result, customer, "content[0]");
+        expectCustomerRoles(result, roles, "content[0].roles");
+        expectGym(result, gym, "content[0].gym");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
-            result = expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
+            expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
                     "content[0].currentTrainingBundles["+i+"]");
         }
 
@@ -102,12 +102,12 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenSearch_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/customers/search?query="+customer.getLastName()))
                 .andExpect(status().isOk());
-        result = expectCustomer(result, customer, "content[0]");
-        result = HateoasTest.expectCustomerRoles(result, roles, "content[0].roles");
-        expectGym(result, gym, "content[0].gym").andReturn();
+        expectCustomer(result, customer, "content[0]");
+        expectCustomerRoles(result, roles, "content[0].roles");
+        expectGym(result, gym, "content[0].gym");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
-            result = expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
+            expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
                     "content[0].currentTrainingBundles["+i+"]");
         }
 

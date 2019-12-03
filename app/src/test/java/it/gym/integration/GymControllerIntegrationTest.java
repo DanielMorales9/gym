@@ -42,7 +42,7 @@ public class GymControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenFindById_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/gyms/"+gym.getId()))
                 .andExpect(status().isOk());
-        expectGym(result, gym).andReturn();
+        expectGym(result, gym);
     }
 
     @Test
@@ -53,7 +53,7 @@ public class GymControllerIntegrationTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(gym)))
                 .andExpect(status().isOk());
-        expectGym(result, gym).andReturn();
+        expectGym(result, gym);
     }
 
 }

@@ -64,10 +64,9 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users"))
                 .andExpect(status().isOk());
         for (int i = 0; i < 1; i++) {
-            result = expectAdmin(result, admin, "content["+i+"]");
-            result = expectAdminRoles(result, roles, "content["+i+"].roles");
-            expectGym(result, gym, "content["+i+"].gym").andReturn();
-
+            expectAdmin(result, admin, "content["+i+"]");
+            expectAdminRoles(result, roles, "content["+i+"].roles");
+            expectGym(result, gym, "content["+i+"].gym");
         }
     }
 
@@ -75,9 +74,9 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     public void findUserId_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/" + admin.getId()))
                 .andExpect(status().isOk());
-        result = expectAdmin(result, admin);
-        result = expectAdminRoles(result, roles, "roles");
-        expectGym(result, gym, "gym").andReturn();
+        expectAdmin(result, admin);
+        expectAdminRoles(result, roles, "roles");
+        expectGym(result, gym, "gym");
     }
 
     @Test
@@ -85,34 +84,34 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users/search?query=" + admin.getLastName()))
                 .andExpect(status().isOk());
 
-        result = expectAdmin(result, admin, "content["+0+"]");
+        expectAdmin(result, admin, "content["+0+"]");
+        expectAdmin(result, admin, "content["+0+"]");
         logger.info(roles.toString());
-        result = expectAdminRoles(result, roles, "content["+0+"].roles");
-        expectGym(result, gym, "content["+0+"].gym").andReturn();
+        expectAdminRoles(result, roles, "content["+0+"].roles");
+        expectGym(result, gym, "content["+0+"].gym");
     }
 
     @Test
     public void getRolesByUserId_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/" + admin.getId() + "/roles"))
                 .andExpect(status().isOk());
-        expectAdminRoles(result, roles).andReturn();
+        expectAdminRoles(result, roles);
     }
 
     @Test
     public void getGymByUserId_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/" + admin.getId() + "/gym"))
                 .andExpect(status().isOk());
-        expectGym(result, gym).andReturn();
+        expectGym(result, gym);
     }
 
     @Test
     public void findByEmail_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/findByEmail?email=" + admin.getEmail()))
                 .andExpect(status().isOk());
-        result = expectAdmin(result, admin);
-        roles.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
-        result = expectAdminRoles(result, roles, "roles");
-        expectGym(result, gym, "gym").andReturn();
+        expectAdmin(result, admin);
+        expectAdminRoles(result, roles, "roles");
+        expectGym(result, gym, "gym");
     }
 
     @Test
@@ -123,7 +122,9 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(admin)))
                 .andExpect(status().isOk());
-        expectGym(result, gym).andReturn();
+        expectAdmin(result, admin);
+        expectAdminRoles(result, roles, "roles");
+        expectGym(result, gym, "gym");
     }
 
     @Test

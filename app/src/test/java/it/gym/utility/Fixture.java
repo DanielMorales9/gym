@@ -198,9 +198,9 @@ public class Fixture {
 
     public static List<Role> createAdminRoles() {
         List<Role> list = new ArrayList<>();
-        list.add(createCustomerRole());
-        list.add(createTrainerRole());
         list.add(createAdminRole());
+        list.add(createTrainerRole());
+        list.add(createCustomerRole());
         return list;
     }
 
