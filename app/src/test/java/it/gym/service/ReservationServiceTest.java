@@ -16,6 +16,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
+import static it.gym.utility.Fixture.createCustomer;
 import static it.gym.utility.Fixture.createReservation;
 import static org.assertj.core.api.AssertionsForClassTypes.anyOf;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -64,6 +65,14 @@ public class ReservationServiceTest {
     public void delete() {
         service.delete(createReservation(1L, null));
         Mockito.verify(repository).delete(any());
+    }
+
+    @Test
+    public void deleteAll() {
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        List<Reservation> list = Collections.singletonList(createReservation(1L, customer));
+        service.deleteAll(list);
+        Mockito.verify(repository).deleteAll(list);
     }
 
 

@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static it.gym.utility.Fixture.createAdmin;
@@ -49,6 +51,15 @@ public class VerificationTokenServiceTest {
         VerificationToken vk = this.service.findById(1L);
         assertThat(vk).isEqualTo(token);
         Mockito.verify(repository).findById(anyLong());
+    }
+
+    @Test
+    public void findAll() {
+        VerificationToken token = createToken(1L, "ababa", createAdmin(1L, "admin@admin.com", null, null));
+        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(token));
+        List<VerificationToken> vk = this.service.findAll();
+        assertThat(vk).isEqualTo(Collections.singletonList(token));
+        Mockito.verify(repository).findAll();
     }
 
     @Test

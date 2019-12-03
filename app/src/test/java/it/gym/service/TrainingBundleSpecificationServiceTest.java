@@ -12,6 +12,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static it.gym.utility.Fixture.createPersonalBundleSpec;
@@ -50,6 +52,15 @@ public class TrainingBundleSpecificationServiceTest {
         Mockito.verify(repository).findById(1L);
     }
 
+    @Test
+    public void findAll() {
+        ATrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal");
+        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(pe));
+        List<ATrainingBundleSpecification> u = this.service.findAll();
+        assertThat(u).isEqualTo(Collections.singletonList(pe));
+        Mockito.verify(repository).findAll();
+    }
+
     @Test(expected = NotFoundException.class)
     public void whenFindByIdThrowsNotFound() {
         this.service.findById(1L);
@@ -60,6 +71,12 @@ public class TrainingBundleSpecificationServiceTest {
         ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal");
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));
+    }
+
+    @Test
+    public void deleteById() {
+        this.service.deleteById(1L);
+        Mockito.verify(repository).deleteById(1L);
     }
 
 }

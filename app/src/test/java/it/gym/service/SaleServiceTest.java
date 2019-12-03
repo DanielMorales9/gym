@@ -14,6 +14,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static it.gym.utility.Fixture.createGym;
@@ -45,6 +47,15 @@ public class SaleServiceTest {
         Mockito.doReturn(Optional.of(mockSale)).when(saleRepository).findById(1L);
         Sale actual = saleService.findById(1L);
         assertThat(actual).isEqualTo(mockSale);
+    }
+
+    @Test
+    public void findAll() {
+        Gym gym = createGym(1L);
+        Sale mockSale = createSale(1L, createCustomer(gym), gym);
+        Mockito.doReturn(Collections.singletonList(mockSale)).when(saleRepository).findAll();
+        List<Sale> actual = saleService.findAll();
+        assertThat(actual).isEqualTo(Collections.singletonList(mockSale));
     }
 
     @Test

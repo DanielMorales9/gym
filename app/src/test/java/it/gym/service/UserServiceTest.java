@@ -13,6 +13,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static it.gym.utility.Fixture.createCustomer;
@@ -50,6 +52,15 @@ public class UserServiceTest {
         AUser u = this.service.findById(1L);
         assertThat(u).isEqualTo(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null));
         Mockito.verify(repository).findById(1L);
+    }
+
+    @Test
+    public void findAll() {
+        AUser customer = createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null);
+        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(customer) );
+        List<AUser> u = this.service.findAll();
+        assertThat(u).isEqualTo(Collections.singletonList(customer));
+        Mockito.verify(repository).findAll();
     }
 
     @Test(expected = NotFoundException.class)

@@ -12,7 +12,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static it.gym.utility.Fixture.createPersonalBundle;
@@ -51,6 +53,15 @@ public class TrainingSessionServiceTest {
         ATrainingSession u = this.service.findById(1L);
         assertThat(u).isEqualTo(session);
         Mockito.verify(repository).findById(1L);
+    }
+
+    @Test
+    public void findAll() {
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L));
+        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(session));
+        List<ATrainingSession> u = this.service.findAll();
+        assertThat(u).isEqualTo(Collections.singletonList(session));
+        Mockito.verify(repository).findAll();
     }
 
     @Test(expected = NotFoundException.class)

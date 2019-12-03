@@ -10,6 +10,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
@@ -46,6 +47,12 @@ public class UserAuthServiceTest {
         assertThat(u.getPassword()).isEqualTo("password");
         assertThat(u.getAuthorities()).isEqualTo(Collections.singleton(new SimpleGrantedAuthority("CUSTOMER")));
         Mockito.verify(userService).findByEmail(EMAIL);
+    }
+
+    @Test(expected = UsernameNotFoundException.class)
+    public void loadUserByUsernameWithUserNull() {
+        Mockito.when(userService.findByEmail(EMAIL)).thenAnswer(invocationOnMock -> null);
+        UserDetails u = auth.loadUserByUsername(EMAIL);
     }
 
 }
