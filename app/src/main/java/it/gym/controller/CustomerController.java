@@ -41,6 +41,7 @@ public class CustomerController {
         return service.findByLastName(query, pageable);
     }
 
+    @Deprecated
     @GetMapping(path = "/customers/{id}/currentTrainingBundles")
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<List<TrainingBundleResource>> getCurrentTrainingBundles(@PathVariable Long id) {

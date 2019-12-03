@@ -166,4 +166,18 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"description").value(trainingBundle.getDescription()))
                 .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
     }
+
+    public static ResultActions expectCustomerRoles(ResultActions result,
+                                                    List<Role> roles,
+                                                    String prefix) throws Exception {
+        prefix = handlePrefixForArray(prefix);
+
+        for (int i = 0; i < 1; i++) {
+            result = result
+                    .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
+                    .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
+        }
+
+        return result;
+    }
 }
