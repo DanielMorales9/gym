@@ -1,6 +1,7 @@
 package it.gym.integration;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
 import it.gym.utility.Calendar;
@@ -11,6 +12,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
@@ -290,44 +292,36 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         }
     }
 
-//    @Test
-//    public void whenPay_OK() throws Exception {
-//        String path = "/sales/pay/"+sale.getId();
-//
-//        sale.setCompleted(true);
-//        sale = repository.save(sale);
-//
-//        logger.info(sale.toString());
-//        Object randomObj = new Object() {
-//            public final double amount = 11.0;
-//        };
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String json = objectMapper.writeValueAsString(randomObj);
-//        logger.info(json);
-//
-//
-//        ResultActions result = mockMvc.perform(post(path)
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(json))
-//                .andExpect(status().isOk());
-//
-//        List<SalesLineItem> sli = sliRepository.findAll();
-//
-//        Sale expected = new Sale();
-//        expected.setId(sale.getId());
-//        expected.setAmountPayed(111.);
-//        expected.setCompleted(true);
-//        expected.setPayed(true);
-//        expected.setGym(gym);
-//        expected.setCustomer((Customer) customer);
-//        expected.setSalesLineItems(sli);
-//
-//        expectSalesLineItems(result, sli, "salesLineItems");
-//        expectGym(result, gym, "gym");
-//        expectCustomer(result, (Customer) customer, "customer");
-//
-//    }
+    @Test
+    public void whenPay_OK() throws Exception {
+        String path = "/sales/pay/"+sale.getId()+"?amount="+11.0;
+
+        sale.setCompleted(true);
+        sale = repository.save(sale);
+        logger.info(sale.toString());
+        logger.info(sale.getSalesLineItems().toString());
+
+
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        List<SalesLineItem> sli = sliRepository.findAll();
+
+        Sale expected = new Sale();
+        expected.setId(sale.getId());
+        expected.setAmountPayed(111.);
+        expected.setCompleted(true);
+        expected.setPayed(true);
+        expected.setGym(gym);
+        expected.setCustomer((Customer) customer);
+        expected.setSalesLineItems(sli);
+
+        expectSalesLineItems(result, sli, "salesLineItems");
+        expectGym(result, gym, "gym");
+        expectCustomer(result, (Customer) customer, "customer");
+
+    }
 
     @Test
     public void whenFindCustomerBySale_OK() throws Exception {

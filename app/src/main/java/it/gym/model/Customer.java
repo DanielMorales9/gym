@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class Customer extends AUser {
             inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
     @JsonProperty(value = "currentTrainingBundles")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     private List<ATrainingBundle> currentTrainingBundles;
 
 

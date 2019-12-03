@@ -138,9 +138,9 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/pay/{saleId}")
+    @GetMapping(path = "/pay/{saleId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestBody Double amount) {
+    ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestParam Double amount) {
         Sale sale = this.facade.paySale(saleId, amount);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }

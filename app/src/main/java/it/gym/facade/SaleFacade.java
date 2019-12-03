@@ -4,6 +4,8 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.ConflictException;
 import it.gym.model.*;
 import it.gym.service.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -17,6 +19,7 @@ import java.util.List;
 @Component
 @Transactional
 public class SaleFacade {
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private SaleService saleService;
@@ -136,14 +139,21 @@ public class SaleFacade {
 
     public Sale paySale(Long saleId, Double amount) {
         Sale sale = this.findById(saleId);
+        logger.debug("Paying");
+        logger.debug(sale.toString());
         if (!sale.isCompleted()) {
-            throw new BadRequestException(String.format("La vendita (%d) non è stata completata.", saleId));
+            String message = String.format("La vendita (%d) non è stata completata.", saleId);
+            logger.debug(message);
+            throw new BadRequestException(message);
         }
         Double amountPayed = sale.getAmountPayed();
         boolean payed = amountPayed + amount == sale.getTotalPrice();
         if (!payed) {
-            if (amountPayed + amount > sale.getTotalPrice())
-                throw new BadRequestException("Stai pagando più del dovuto!");
+            if (amountPayed + amount > sale.getTotalPrice()) {
+                String message = "Stai pagando più del dovuto!";
+                logger.debug(message);
+                throw new BadRequestException(message);
+            }
         } else {
             sale.setPayed(true);
             sale.setPayedDate(new Date());
