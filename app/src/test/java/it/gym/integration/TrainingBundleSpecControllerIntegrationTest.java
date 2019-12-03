@@ -27,7 +27,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest {
+public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegrationTest {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -54,6 +54,17 @@ public class BundleSpecControllerIntegrationTest extends AbstractIntegrationTest
         ResultActions result = mockMvc.perform(get("/bundleSpecs/" + personalBundle.getId()))
                 .andExpect(status().isOk());
         logger.info(bundleRepository.findAll().toString());
+        expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification) personalBundle).andReturn();
+    }
+
+    @Test
+    public void whenPatch_OK() throws Exception {
+        personalBundle.setDescription("desco");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResultActions result = mockMvc.perform(patch("/bundleSpecs/"+personalBundle.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(personalBundle)))
+                .andExpect(status().isOk());
         expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification) personalBundle).andReturn();
     }
 

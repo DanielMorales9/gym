@@ -1,5 +1,6 @@
 package it.gym.integration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.Admin;
 import it.gym.model.Gym;
 import it.gym.model.Role;
@@ -12,6 +13,7 @@ import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.List;
@@ -20,8 +22,7 @@ import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 public class UserControllerIntegrationTest extends AbstractIntegrationTest {
@@ -112,6 +113,17 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         roles.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
         result = expectAdminRoles(result, roles, "roles");
         expectGym(result, gym, "gym").andReturn();
+    }
+
+    @Test
+    public void whenPatch_OK() throws Exception {
+        admin.setFirstName("noAdmin");
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResultActions result = mockMvc.perform(patch("/users/"+admin.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(admin)))
+                .andExpect(status().isOk());
+        expectGym(result, gym).andReturn();
     }
 
     @Test
