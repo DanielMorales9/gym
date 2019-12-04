@@ -44,11 +44,11 @@ public class SaleController {
 
     @GetMapping(path = "/{id}/customer")
     @ResponseBody
-    ResponseEntity<CustomerResource> findUserBySaleId(@PathVariable Long id) {
+    ResponseEntity<AUserResource> findUserBySaleId(@PathVariable Long id) {
 
         Sale sale = facade.findById(id);
 
-        return new ResponseEntity<>(new CustomerAssembler().toResource(sale.getCustomer()), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toResource(sale.getCustomer()), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}/salesLineItems")
