@@ -36,7 +36,6 @@ export class AppService {
                     this.userHelperService.getUserByEmail(res['principal']['username'], user => {
                         this.user = user;
                         this.getCurrentRoleView();
-                        this.userHelperService.getRoles(this.user);
                         this.authenticatedService.setAuthenticated(this.authenticated);
                         this.saveSessionInfo();
                     });

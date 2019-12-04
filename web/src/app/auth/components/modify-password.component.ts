@@ -34,7 +34,6 @@ export class ModifyPasswordComponent implements OnInit {
         this.buildForm();
         this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
             this.user = res;
-            this.userHelperService.getRoles(this.user);
             this.buildForm();
         }, (err) => {
             if (err.status === 404) {
