@@ -1,0 +1,21 @@
+div.card-container {
+    margin: 1em;
+}
+
+mat-card {
+    padding: 2em;
+    background-clip: border-box !important;
+    border: 1px solid rgba(0,0,0,.125) !important;
+    border-radius: .25rem !important;
+}
+
+mat-card-actions {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.card-section {
+    padding: 16px 16px 0px 16px;
+}

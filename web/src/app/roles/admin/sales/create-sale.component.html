@@ -1,0 +1,19 @@
+<simple-search [query]="query" text="Cerca pacchetti" (done)="search($event)"></simple-search>
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="186" class="scroll-viewport">
+
+    <div *cdkVirtualFor="let bundle of ds; templateCacheSize: 0" class="scroll-item">
+        <bundle-select-item [bundle]="bundle"
+                            [selected]="selected[bundle?.id]"
+                            (done)="selectBundle(bundle?.id)">
+
+        </bundle-select-item>
+
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+<button type="button" mat-fab color="primary" class="fab-button-add"
+        title="Conferma Vendità" (click)="confirmSale()">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-check"></mat-icon>
+        </span>
+</button>

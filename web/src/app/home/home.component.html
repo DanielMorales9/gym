@@ -1,0 +1,7 @@
+<div *ngIf="authenticated">
+    <router-outlet></router-outlet>
+</div>
+<div *ngIf="!authenticated">
+    <h1>Benvenuto</h1>
+    <p>Fai login per accedere alla tua area personale</p>
+</div>

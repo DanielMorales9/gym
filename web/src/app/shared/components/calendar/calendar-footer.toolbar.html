@@ -1,0 +1,29 @@
+<mat-toolbar color="primary" class="calendar-bottom-toolbar">
+    <button mat-icon-button mwlCalendarPreviousView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="onViewDateChanged()">
+        <mat-icon fontSet="fas" fontIcon="fa-backward"></mat-icon>
+    </button>
+    <button mat-button
+            (click)="onViewDateChanged(MONTH)"
+            [class.active]="view === MONTH">
+        Mese
+    </button>
+    <button mat-button
+            (click)="onViewDateChanged(WEEK)"
+            [class.active]="view === WEEK">
+        Settimana
+    </button>
+    <button mat-button
+            (click)="onViewDateChanged(DAY)"
+            [class.active]="view === DAY">
+        Giorno
+    </button>
+    <button mat-icon-button mwlCalendarNextView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="onViewDateChanged()">
+        <mat-icon fontSet="fas" fontIcon="fa-forward"></mat-icon>
+    </button >
+</mat-toolbar>

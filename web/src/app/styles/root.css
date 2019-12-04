@@ -1,0 +1,169 @@
+mat-card {
+    transition: none !important;
+    box-shadow: none !important;
+}
+
+.red-light {
+    color: red;
+}
+
+.green-light {
+    color: green;
+}
+
+.space-between {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+mat-form-field {
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 599px) {
+    .app-container {
+        height: calc(100vh - 56px) !important;
+    }
+}
+
+.app-container {
+    height: calc(100vh - 64px);
+}
+
+#admin-menu {
+    margin-bottom: 15px;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+}
+
+.menu-item {
+    position: relative;
+    display: block;
+    padding: 8px 10px;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.nav-item.menu-item.active  {
+    border-right: 3px solid #F48024;
+    background-color: rgba(12,13,14,0.05);
+}
+
+.nav-item.menu-item.active > a {
+    color: black;
+}
+
+.menu-heading:first-child {
+    border-top-left-radius: 2px;
+    border-top-right-radius: 2px;
+}
+
+tr.empty-list {
+    text-align: center;
+}
+
+.menu-item.nav-item.menu-heading:hover > a{
+    text-decoration: none;
+    color: black;
+}
+
+.menu-item>a {
+    text-decoration: none;
+    color: darkgray;
+}
+
+.menu-item:hover > a {
+    text-decoration: none;
+    color: grey;
+}
+
+.menu-heading > a{
+    color: black;
+}
+.menu-heading  {
+    padding: 10px 10px;
+    background-color: #f8f9fa!important;
+    border-bottom: 1px solid #e1e4e8;
+}
+
+.card-table {
+    width: 100%;
+}
+
+.card-row {
+    width: 100%;
+    margin: 2px 1px 2px 2px;
+}
+
+.line {
+    height:1px;
+    max-width:95%;
+    background-color: rgba(0,0,0,.125);
+}
+
+mat-list.no-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid white;
+}
+
+#adv-search {
+    margin: 1px;
+}
+
+#search {
+    border-top-left-radius: .25rem;
+    border-bottom-left-radius: .25em;
+}
+#search:focus {
+    box-shadow: none;
+}
+
+#search-add {
+    border-radius: 0 .25rem .25em 0;
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}
+
+#search-submit-end {
+    border-radius: 0 .25rem .25em 0;
+    background-color: #ced4da;
+}
+
+#search-submit {
+    border-radius: 0;
+    background-color: #ced4da;
+}
+
+#search-submit:focus {
+    box-shadow: none;
+}
+
+#search-add:focus {
+    box-shadow: none;
+}
+
+.active-link {
+    background-color: rgba(12,13,14,0.05);
+}
+
+a#main-app-name {
+    color: white;
+}
+
+a#main-app-name:hover {
+    color: white;
+    text-decoration: none;
+}

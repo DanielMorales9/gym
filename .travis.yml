@@ -1,8 +1,54 @@
+dist: xenial
+sudo: required
+
 language: java
 jdk:
-- oraclejdk8
-script:
-- mvn install
+- openjdk8
+
+services:
+  - docker
+
+env:
+  global:
+    - TAG="0.0.1-SNAPSHOT"
+    - DOCKER_USER="tenentedan9"
+    - AWS_DEFAULT_REGION="eu-central-1"
+    - MAVEN_OPTS="-Dmaven.repo.local=.m2"
+    - TF_VERSION="0.12.13"
+
+addons:
+  apt:
+    sources:
+      - google-chrome
+    packages:
+      - google-chrome-stable
+
+cache:
+  directories:
+    - ./web/node_modules
+    - ./web/node
+    - ./.m2/
+
+before_install:
+  - wget https://archive.apache.org/dist/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.zip
+  - unzip -qq apache-maven-3.6.1-bin.zip
+  - export M2_HOME="$PWD/apache-maven-3.6.1"
+  - export PATH="$M2_HOME/bin:$PATH"
+
+install: bash .travis/install.sh
+
+script: bash .travis/script.sh
+
+deploy:
+  - provider: script
+    script: bash .travis/deploy.sh
+    skip_cleanup: true
+
+after_deploy:
+  - bash .travis/after_deploy.sh -i="app" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash .travis/after_deploy.sh -i="web" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+
+after_success: bash .travis/after_success.sh
+
 notifications:
-  slack:
-    secure: PQfJGH7pGWjWURxh3yj2O6Ct1n0a7WGeZEqgJbm45+eWe0476OucPTS5BPvyUssuaLMXVRy87C3+WGhoGV9LHhljlC275MbTWp5khI7H/4jFXQ9CHPRKAB9/6i/2uqbBmQpPWHXLDDaOUB4NqrIhqUvf1SQF9g3TTVrHXKf2hv4=
+  email: false

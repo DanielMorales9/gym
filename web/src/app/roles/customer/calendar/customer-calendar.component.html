@@ -1,0 +1,46 @@
+<calendar-header [view]="view" [viewDate]="viewDate" (done)="onViewDateChanged($event)"></calendar-header>
+<div [ngSwitch]="view" class="main-calendar">
+    <mwl-calendar-month-view
+            *ngSwitchCase="MONTH"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            locale="it"
+            [weekStartsOn]="weekStartsOn"
+            [activeDayIsOpen]="activeDayIsOpen"
+            [excludeDays]="excludeDays"
+            (dayClicked)="handleEvent('day',$event)"
+            (eventClicked)="handleEvent('info',$event)"
+            (eventTimesChanged)="handleEvent('change',$event)">
+    </mwl-calendar-month-view>
+    <mwl-calendar-week-view
+            *ngSwitchCase="WEEK"
+            [viewDate]="viewDate"
+            [dayStartHour]="dayStartHour"
+            [dayEndHour]="dayEndHour"
+            [events]="events"
+            [excludeDays]="excludeDays"
+            [weekStartsOn]="weekStartsOn"
+            locale="it"
+            [hourSegments]="1"
+            [refresh]="refresh"
+            (dayHeaderClicked)="header('header', $event)"
+            (hourSegmentClicked)="handleEvent('hour',$event)"
+            (eventClicked)="handleEvent('info',$event)"
+            (eventTimesChanged)="handleEvent('change',$event)">
+    </mwl-calendar-week-view>
+    <mwl-calendar-day-view
+            *ngSwitchCase="DAY"
+            [viewDate]="viewDate"
+            [events]="events"
+            [refresh]="refresh"
+            [dayStartHour]="dayStartHour"
+            [dayEndHour]="dayEndHour"
+            locale="it"
+            [hourSegments]="1"
+            (hourSegmentClicked)="handleEvent('hour',$event)"
+            (eventClicked)="handleEvent('info',$event)"
+            (eventTimesChanged)="handleEvent('change',$event)">
+    </mwl-calendar-day-view>
+</div>
+<calendar-footer [view]="view" [viewDate]="viewDate" (done)="onViewDateChanged($event)"></calendar-footer>

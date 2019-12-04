@@ -1,0 +1,62 @@
+.container {
+    width: 80%;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+#admin-menu {
+    margin-bottom: 15px;
+    list-style: none;
+    background-color: #fff;
+    border: 1px solid #d1d5da;
+    border-radius: 3px;
+}
+
+
+.form-header {
+    display: flex;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+    border-bottom: 1px #e1e4e8 solid;
+    flex-flow: row wrap;
+}
+.form-gym {
+    width: 55%;
+    margin: 0 auto;
+}
+.form-gym .form-header,
+.form-gym .checkbox {
+    margin-bottom: 10px;
+}
+.form-gym .checkbox {
+    font-weight: normal;
+}
+.form-gym .form-control {
+    position: relative;
+    height: auto;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    padding: 10px;
+    font-size: 16px;
+}
+.form-gym .form-control:focus {
+    z-index: 2;
+}
+.form-gym input[type="email"] {
+    margin-bottom: -1px;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+}
+.form-gym input[type="password"] {
+    margin-bottom: 10px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.error-message {
+    width: 100%;
+    margin-top: .25rem;
+    font-size: 80%;
+    color: #dc3545;
+}
