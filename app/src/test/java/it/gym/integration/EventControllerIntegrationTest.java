@@ -1,20 +1,15 @@
 package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.facade.UserFacadeTest;
 import it.gym.model.*;
 import it.gym.pojo.Event;
-import it.gym.repository.EventRepository;
-import it.gym.repository.GymRepository;
-import it.gym.repository.UserRepository;
-import it.gym.utility.HateoasTest;
+import it.gym.repository.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -23,6 +18,7 @@ import java.util.Date;
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,10 +30,14 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     @Autowired private GymRepository gymRepository;
     @Autowired private EventRepository eventRepository;
     @Autowired private UserRepository userRepository;
+    @Autowired private TrainingBundleSpecificationRepository specRepository;
+    @Autowired private TrainingBundleRepository bundleRepository;
 
     private Gym gym;
     private AEvent event;
     private Trainer trainer;
+    private ATrainingBundleSpecification courseSpec;
+    private ATrainingBundle courseBundle;
 
     @Before
     public void before() {
@@ -49,6 +49,10 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         event = eventRepository.save(event);
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
+        courseSpec = createCourseBundleSpec(1L, "course", start, end);
+        courseSpec = specRepository.save(courseSpec);
+        courseBundle = courseSpec.createTrainingBundle();
+        courseBundle = bundleRepository.save(courseBundle);
     }
 
     @After
@@ -56,13 +60,15 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         eventRepository.deleteAll();
         userRepository.deleteAll();
         gymRepository.deleteAll();
+        bundleRepository.deleteAll();
+        specRepository.deleteAll();
     }
 
     @Test
     public void whenCreateHoliday_OK() throws Exception {
-        Event e = new Event();
         Date start = getNextMonday();
         Date end = addHours(start, 1);
+        Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);
         e.setName("closed1");
@@ -104,6 +110,39 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenEditTimeOff_OK() throws Exception {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed",  start, end, trainer, gym);
+        timeOff = eventRepository.save(timeOff);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        timeOff.setName("off1");
+        String json = objectMapper.writeValueAsString(timeOff);
+        ResultActions result = mockMvc.perform(patch("/events/"+gym.getId()+"/timeOff/"+timeOff.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
+
+        expectEvent(result, timeOff);
+        expectGym(result, timeOff.getGym(), "gym");
+    }
+
+    @Test
+    public void whenDeleteTimeOff_OK() throws Exception {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed",  start, end, trainer, gym);
+        timeOff = eventRepository.save(timeOff);
+
+        ResultActions result = mockMvc.perform(delete("/events/timeOff/"+timeOff.getId()))
+                .andExpect(status().isOk());
+
+        expectEvent(result, timeOff);
+        expectGym(result, timeOff.getGym(), "gym");
+    }
+
+    @Test
     public void whenIsAvailable_OK() throws Exception {
         Event e = new Event();
         Date start = getNextMonday();
@@ -116,6 +155,24 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         String json = objectMapper.writeValueAsString(e);
 
         mockMvc.perform(post("/events/" + gym.getId() + "/holiday/isAvailable")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void whenTimeOffIsAvailable_OK() throws Exception {
+        Event e = new Event();
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        e.setStartTime(start);
+        e.setEndTime(end);
+        e.setName("closed1");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(e);
+
+        mockMvc.perform(post("/events/" + gym.getId() + "/timeOff/isAvailable")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk());
@@ -161,28 +218,85 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setUser(trainer);
         expected.setName("closed1");
         expected.setStartTime(start);
-        expected.setEndTime(start);
+        expected.setEndTime(end);
         expected.setId(h.getId());
         expectEvent(result, expected);
         expectUser(result, trainer, "user");
     }
 
-//    @Test
-//    public void whenCreateCourseEvent_OK() throws Exception {
-//        Event e = new Event();
-//        Date start = getNextMonday();
-//        Date end = addHours(start, 1);
-//        e.setStartTime(start);
-//        e.setEndTime(end);
-//        e.setName("closed1");
-//
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String json = objectMapper.writeValueAsString(e);
-//
-//        mockMvc.perform(post("/events/" + gym.getId() + "/course")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(json))
-//                .andExpect(status().isOk());
-//
-//    }
+    @Test
+    public void whenCreateCourseEvent_OK() throws Exception {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        Event e = new Event();
+        e.setStartTime(start);
+        e.setEndTime(end);
+        e.setId(courseBundle.getId());
+        e.setName("course");
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(e);
+
+        ResultActions result = mockMvc.perform(post("/events/" + gym.getId() + "/course")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
+
+        AEvent h = eventRepository.findAll().get(1);
+        CourseEvent expected = new CourseEvent();
+        expected.setName("course");
+        expected.setStartTime(start);
+        expected.setEndTime(end);
+        expected.setId(h.getId());
+        expectEvent(result, expected);
+        // TODO expectTrainingSession
+    }
+
+    @Test
+    public void whenDeleteCourseEvent_OK() throws Exception {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+
+        ATrainingSession session = courseBundle.createSession(start, end);
+        courseBundle.addSession(session);
+
+        event = createCourseEvent(1L, "course",  session, gym);
+        event = eventRepository.save(event);
+
+
+        ResultActions result = mockMvc.perform(delete("/events/course/" + event.getId()))
+                .andExpect(status().isOk());
+
+        CourseEvent expected = new CourseEvent();
+        expected.setName("course");
+        expected.setStartTime(start);
+        expected.setEndTime(end);
+        expected.setId(event.getId());
+        expectEvent(result, expected);
+        // TODO expectTrainingSession
+    }
+
+    @Test
+    public void whenComplete_OK() throws Exception {
+        Date start = addDays(getNextMonday(), -30);
+        Date end = addHours(start, 1);
+
+        ATrainingSession session = courseBundle.createSession(start, end);
+        courseBundle.addSession(session);
+
+        event = createCourseEvent(1L, "course",  session, gym);
+        event = eventRepository.save(event);
+
+        ResultActions result = mockMvc.perform(get("/events/" + event.getId()+"/complete"))
+                .andExpect(status().isOk());
+
+        CourseEvent expected = new CourseEvent();
+        expected.setName("course");
+        expected.setStartTime(start);
+        expected.setEndTime(end);
+        expected.setId(event.getId());
+        expectEvent(result, expected);
+        // TODO expectTrainingSession
+    }
 }
