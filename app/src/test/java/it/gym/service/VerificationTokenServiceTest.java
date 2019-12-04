@@ -82,6 +82,15 @@ public class VerificationTokenServiceTest {
     }
 
     @Test
+    public void existsByUser() {
+        VerificationToken token = createToken(1L, "ababa", createAdmin(1L, "admin@admin.com", null, null));
+        Mockito.when(repository.findByUser(createAdmin(1L, "admin@admin.com", null, null))).thenAnswer(invocationOnMock -> Optional.of(token));
+        boolean exists = this.service.existsByUser(createAdmin(1L, "admin@admin.com", null, null));
+        assertThat(exists).isTrue();
+        Mockito.verify(repository).findByUser(any(AUser.class));
+    }
+
+    @Test
     public void createOrChangeVerificationToken() {
         VerificationToken vk = this.service.createOrChangeVerificationToken(createAdmin(1L, "admin@admin.com", null, null));
         Mockito.verify(repository).findByUser(any(AUser.class));

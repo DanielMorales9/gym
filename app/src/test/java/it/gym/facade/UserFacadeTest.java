@@ -43,6 +43,7 @@ public class UserFacadeTest {
         Mockito.doReturn(customer).when(userService).findById(1L);
         VerificationToken token = Fixture.createToken(1L, "ababa", customer);
         Mockito.doReturn(token).when(tokenService).findByUser(customer);
+        Mockito.doReturn(true).when(tokenService).existsByUser(customer);
 
         AUser user = userFacade.delete(1L);
         Mockito.verify(tokenService).delete(token);

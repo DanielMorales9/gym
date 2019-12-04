@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
 import it.gym.service.UserService;
@@ -26,8 +27,10 @@ public class UserFacade {
 
     public AUser delete(Long id) {
         AUser user = this.service.findById(id);
-        VerificationToken vtk = this.tokenService.findByUser(user);
-        this.tokenService.delete(vtk);
+        if (tokenService.existsByUser(user)) {
+            VerificationToken vtk = this.tokenService.findByUser(user);
+            this.tokenService.delete(vtk);
+        }
         this.service.deleteById(id);
         return user;
     }
