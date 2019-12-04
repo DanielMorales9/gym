@@ -44,7 +44,7 @@ export class SalesService {
     }
 
     pay(id: number, amount: number): Observable<Object> {
-        return this.http.post(`/sales/pay/${id}`, amount);
+        return this.http.get(`/sales/pay/${id}?amount=${amount}`);
     }
 
     searchByLastName(query: string, page: number, size: number): Observable<Object> {

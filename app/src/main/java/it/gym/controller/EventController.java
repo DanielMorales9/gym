@@ -66,7 +66,7 @@ public class EventController {
     @PostMapping(path = "/{gymId}/holiday/isAvailable")
     ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
                                               @RequestBody Event event) {
-        logger.info("Create holiday");
+        logger.info("is holiday available");
 
         facade.isAvailable(gymId, event);
 

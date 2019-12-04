@@ -4,6 +4,7 @@ import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
+import it.gym.utility.Fixture;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.DayOfWeek;
 import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -29,8 +29,7 @@ public class ReservationFacadeTest {
     @MockBean private GymService gymService;
     @MockBean private CustomerService customerService;
     @MockBean private TrainerService trainerService;
-    @MockBean
-    private EventService eventService;
+    @MockBean private EventService eventService;
     @MockBean private TrainingBundleService trainingBundleService;
     @Qualifier("trainingSessionService")
     @MockBean private TrainingSessionService sessionService;
@@ -55,7 +54,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void isOnTime() {
-        Date start = getNextMonday();
+        Date start = it.gym.utility.Calendar.getNextMonday();
         facade.isReservedOnTime(start);
     }
 
@@ -67,7 +66,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void deleteExpiredBundles() {
-        Customer customer = createCustomer();
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         facade.deleteExpiredBundles(customer);
     }
@@ -79,7 +78,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void hasHolidays() {
-        List<AEvent> holidays = Collections.singletonList(createHoliday(createAdmin()));
+        List<AEvent> holidays = Collections.singletonList(Fixture.createHoliday(1L, "'holiday", new Date(), new Date(), null));
         facade.hasHolidays(holidays);
     }
 
@@ -92,7 +91,7 @@ public class ReservationFacadeTest {
     @Test(expected = BadRequestException.class)
     public void hasNoAvailableTrainers() {
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        List<AEvent> timesOff = Collections.singletonList(createTimeOff(createTrainer()));
+        List<AEvent> timesOff = Collections.singletonList(Fixture.createTimeOff(2L, "my time", new Date(), new Date(), Fixture.createTrainer(2L), null));
         facade.isTrainerAvailable(timesOff);
     }
 
@@ -104,15 +103,15 @@ public class ReservationFacadeTest {
 
     @Test
     public void isAvailable() {
-        Customer customer = createCustomer();
-        Mockito.doReturn(createGym()).when(gymService).findById(1L);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Mockito.doReturn(Fixture.createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
-        ATrainingBundle spec = createBundle();
+        ATrainingBundle spec = Fixture.createPersonalBundle(1L);
         customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
-        Date start = getNextMonday();
+        Date start = it.gym.utility.Calendar.getNextMonday();
         Date end = DateUtils.addHours(start, 1);
         Event event = new Event();
         event.setStartTime(start);
@@ -122,9 +121,9 @@ public class ReservationFacadeTest {
 
     @Test
     public void book() {
-        Customer customer = createCustomer();
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
 
-        Mockito.doReturn(createGym()).when(gymService).findById(1L);
+        Mockito.doReturn(Fixture.createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
@@ -139,12 +138,16 @@ public class ReservationFacadeTest {
             return res;
         }).when(sessionService).save(any(ATrainingSession.class));
 
-        Mockito.doAnswer(invocationOnMock -> invocationOnMock.<Reservation>getArgument(0)).when(service).save(any(Reservation.class));
+        Mockito.doAnswer(invocationOnMock -> {
+            Reservation var = invocationOnMock.<Reservation>getArgument(0);
+            var.setId(1L);
+            return var;
+        }).when(service).save(any(Reservation.class));
 
-        ATrainingBundle spec = createBundle();
+        ATrainingBundle spec = Fixture.createPersonalBundle(1L);
         customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
 
-        Date start = getNextMonday();
+        Date start = it.gym.utility.Calendar.getNextMonday();
         Date end = DateUtils.addHours(start, 1);
 
         Event event = new Event();
@@ -152,32 +155,32 @@ public class ReservationFacadeTest {
         event.setEndTime(end);
         Reservation actual = facade.createReservationFromBundle(1L, 1L, 1L, event);
 
-        Reservation expected = createReservation(customer);
+        Reservation expected = Fixture.createReservation(1L, customer);
 
         assertThat(actual).isEqualTo(expected);
     }
 
     @Test
     public void customerDeleteReservation() {
-        Customer customer = createCustomer();
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
         Role role = new Role();
         role.setId(1L);
         role.setName("CUSTOMER");
         customer.setRoles(Collections.singletonList(role));
         String email = "customer@customer.com";
-        ATrainingBundle bundle = createBundle();
-        PersonalTrainingSession session = createSession(bundle);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L);
+        PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
-        Reservation reservation = createReservation(customer);
+        Reservation reservation = Fixture.createReservation(1L, customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doReturn(customer).when(userService).findByEmail(email);
-        Mockito.doReturn(createPersonalEvent(session, createGym())).when(eventService).findById(1L);
+        Mockito.doReturn(createPersonalEvent(session, Fixture.createGym(1L))).when(eventService).findById(1L);
 
         Reservation actual = facade.deleteReservations(1L, 1L, email, "customer");
 
         Mockito.verifyZeroInteractions(mailService);
-        assertThat(actual).isEqualTo(createReservation(customer));
+        assertThat(actual).isEqualTo(Fixture.createReservation(1L, customer));
     }
 
     private ATrainingEvent createPersonalEvent(ATrainingSession session, Gym gym) {
@@ -192,154 +195,43 @@ public class ReservationFacadeTest {
 
     @Test
     public void adminDeleteReservation() {
-        Customer customer = createCustomer();
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
         Role role = new Role();
         role.setId(1L);
         role.setName("CUSTOMER");
         customer.setRoles(Collections.singletonList(role));
         String email = "customer@customer.com";
-        ATrainingBundle bundle = createBundle();
-        PersonalTrainingSession session = createSession(bundle);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L);
+        PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
-        Reservation reservation = createReservation(customer);
+        Reservation reservation = Fixture.createReservation(1L, customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doReturn(customer).when(userService).findByEmail(email);
-        Mockito.doReturn(createPersonalEvent(session, createGym())).when(eventService).findById(1L);
+        Mockito.doReturn(createPersonalEvent(session, Fixture.createGym(1L))).when(eventService).findById(1L);
 
         Reservation actual = facade.deleteReservations(1L, 1L, email, "admin");
 
         Mockito.verify(mailService).sendSimpleMail(anyString(), anyString(), anyString());
-        assertThat(actual).isEqualTo(createReservation(customer));
+        assertThat(actual).isEqualTo(Fixture.createReservation(1L, customer));
     }
 
     @Test
     public void confirm() {
-        Customer customer = createCustomer();
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
 
-        ATrainingBundle bundle = createBundle();
-        PersonalTrainingSession session = createSession(bundle);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L);
+        PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
-        Reservation reservation = createReservation(customer);
+        Reservation reservation = Fixture.createReservation(1L, customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
         Reservation actual = facade.confirm(1L);
 
-        Reservation expected = createReservation(customer);
+        Reservation expected = Fixture.createReservation(1L, customer);
         expected.setConfirmed(true);
         assertThat(actual).isEqualTo(expected);
-    }
-
-    private Reservation createReservation(Customer customer) {
-        Reservation expected = new Reservation();
-        expected.setConfirmed(false);
-        expected.setUser(customer);
-        return expected;
-    }
-
-    private static Date getNextMonday() {
-        Calendar date = Calendar.getInstance(Locale.ITALIAN);
-        date.set(Calendar.HOUR_OF_DAY, 8);
-        int diff = Calendar.MONDAY - date.get(Calendar.DAY_OF_WEEK);
-        if (diff <= 0) {
-            diff += 7;
-        }
-        date.add(Calendar.DAY_OF_MONTH, diff);
-        return date.getTime();
-    }
-
-    private AEvent createTimeOff(Trainer trainer) {
-        TimeOff time = new TimeOff();
-        time.setId(2L);
-        time.setName("my time");
-        time.setStartTime(new Date());
-        time.setEndTime(new Date());
-        time.setUser(trainer);
-        return time;
-    }
-
-    private Trainer createTrainer() {
-        Trainer user = new Trainer();
-        user.setId(2L);
-        user.setEmail("trainer@trainer.com");
-        user.setFirstName("trainer");
-        user.setLastName("trainer");
-        return user;
-    }
-
-
-    private Admin createAdmin() {
-        Admin user = new Admin();
-        user.setId(2L);
-        user.setEmail("admin@admin.com");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        return user;
-    }
-
-    private AEvent createHoliday(Admin admin) {
-        AEvent time = new Holiday();
-        time.setId(1L);
-        time.setName("my time");
-        time.setStartTime(new Date());
-        time.setEndTime(new Date());
-        return time;
-    }
-
-    private Customer createCustomer() {
-        Customer user = new Customer();
-        user.setId(1L);
-        user.setEmail("customer@customer.com");
-        user.setFirstName("customer");
-        user.setLastName("customer");
-        return user;
-    }
-
-    private PersonalTrainingSession createSession(ATrainingBundle bundleSpec) {
-        PersonalTrainingSession pt = new PersonalTrainingSession();
-        pt.setCompleted(false);
-        pt.setStartTime(new Date());
-        pt.setEndTime(new Date());
-        pt.setId(1L);
-        pt.setTrainingBundle(bundleSpec);
-        return pt;
-    }
-
-    private ATrainingBundle createBundle() {
-        PersonalTrainingBundle pt = new PersonalTrainingBundle();
-        pt.setName("Winter Pack");
-        pt.setNumSessions(11);
-        pt.setPrice(111.0);
-        pt.setDescription("Description");
-        pt.setId(1L);
-        return pt;
-    }
-
-    private Gym createGym() {
-        Gym gym = new Gym();
-        gym.setId(1L);
-        gym.setWeekStartsOn(DayOfWeek.MONDAY);
-        gym.setMondayOpen(true);
-        gym.setMondayStartHour(8);
-        gym.setMondayEndHour(22);
-        gym.setTuesdayStartHour(8);
-        gym.setTuesdayEndHour(22);
-        gym.setWednesdayStartHour(8);
-        gym.setWednesdayEndHour(22);
-        gym.setThursdayStartHour(8);
-        gym.setThursdayEndHour(22);
-        gym.setFridayStartHour(8);
-        gym.setFridayEndHour(22);
-        gym.setSaturdayStartHour(8);
-        gym.setSaturdayEndHour(13);
-        gym.setTuesdayOpen(true);
-        gym.setWednesdayOpen(true);
-        gym.setThursdayOpen(true);
-        gym.setFridayOpen(true);
-        gym.setSaturdayOpen(true);
-        gym.setSundayOpen(false);
-        return gym;
     }
 
 }

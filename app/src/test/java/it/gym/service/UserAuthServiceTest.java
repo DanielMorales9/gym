@@ -1,8 +1,6 @@
 package it.gym.service;
 
 import it.gym.model.AUser;
-import it.gym.model.Customer;
-import it.gym.model.Role;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -12,10 +10,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 
+import static it.gym.utility.Fixture.createCustomer;
+import static it.gym.utility.Fixture.createCustomerRoles;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -38,7 +39,8 @@ public class UserAuthServiceTest {
 
     @Test
     public void loadUserByUsername() {
-        Mockito.when(userService.findByEmail(EMAIL)).thenAnswer(invocationOnMock -> createCustomer());
+        AUser customer = createCustomer(1L, EMAIL, "password", "admin", "admin", true, createCustomerRoles(), null);
+        Mockito.when(userService.findByEmail(EMAIL)).thenAnswer(invocationOnMock -> customer);
         UserDetails u = auth.loadUserByUsername(EMAIL);
         assertThat(u.isEnabled()).isTrue();
         assertThat(u.getUsername()).isEqualTo(EMAIL);
@@ -47,18 +49,10 @@ public class UserAuthServiceTest {
         Mockito.verify(userService).findByEmail(EMAIL);
     }
 
-    private AUser createCustomer() {
-        AUser user = new Customer();
-        user.setId(1L);
-        user.setEmail("admin@admin.com");
-        user.setPassword("password");
-        user.setFirstName("admin");
-        user.setLastName("admin");
-        user.setVerified(true);
-        Role r = new Role();
-        r.setId(1L);
-        r.setName("CUSTOMER");
-        user.setRoles(Collections.singletonList(r));
-        return user;
+    @Test(expected = UsernameNotFoundException.class)
+    public void loadUserByUsernameWithUserNull() {
+        Mockito.when(userService.findByEmail(EMAIL)).thenAnswer(invocationOnMock -> null);
+        UserDetails u = auth.loadUserByUsername(EMAIL);
     }
+
 }

@@ -72,7 +72,6 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
     private createSale() {
         this.saleHelper.createSale(this.id).subscribe((res: Sale) => {
-            SaleHelperService.unwrapLines(res);
             this.sale = res;
         });
     }
@@ -81,7 +80,6 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
         this.saleHelper.addSalesLineItem(this.sale.id, id)
             .subscribe( (res: Sale) => {
-                SaleHelperService.unwrapLines(res);
                 this.sale = res;
             });
     }
@@ -95,7 +93,6 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
         this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId)
             .subscribe( (res: Sale) => {
-                SaleHelperService.unwrapLines(res);
                 this.sale = res;
             }, err => {
                 this.snackbar.open(err.error.message);

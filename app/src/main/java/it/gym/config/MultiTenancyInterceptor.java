@@ -3,6 +3,8 @@ package it.gym.config;
 import it.gym.model.Tenant;
 import it.gym.repository.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -15,6 +17,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Component
+@EnableScheduling
+@ConditionalOnProperty(
+        name = "it.gym.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class MultiTenancyInterceptor extends OncePerRequestFilter {
 
     @Autowired

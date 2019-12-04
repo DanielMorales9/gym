@@ -1,9 +1,30 @@
-resource "aws_ecr_repository" "ecr_repository" {
+resource "aws_ecr_repository" "app_repo" {
   name = "app"
 
   tags = {
     Project = var.app_name
   }
+}
+
+resource "aws_ecr_repository" "web_repo" {
+  name = "web"
+
+  tags = {
+    Project = var.app_name
+  }
+}
+
+
+resource "aws_ecr_lifecycle_policy" "app_policy" {
+  repository = aws_ecr_repository.app_repo.name
+
+  policy = file("${path.module}/policies/ecr-lifecycle-policy.json")
+}
+
+resource "aws_ecr_lifecycle_policy" "web_policy" {
+  repository = aws_ecr_repository.web_repo.name
+
+  policy = file("${path.module}/policies/ecr-lifecycle-policy.json")
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {

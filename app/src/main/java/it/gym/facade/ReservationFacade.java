@@ -31,8 +31,7 @@ public class ReservationFacade {
     @Autowired private GymService gymService;
     @Autowired private CustomerService customerService;
     @Autowired private TrainerService trainerService;
-    @Autowired
-    private EventService eventService;
+    @Autowired private EventService eventService;
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
     @Autowired private TrainingBundleService bundleService;
@@ -101,6 +100,8 @@ public class ReservationFacade {
         bundle.addSession(session);
         bundleService.save(bundle);
 
+        service.save(res);
+
         return res;
     }
 
@@ -116,6 +117,7 @@ public class ReservationFacade {
         Reservation res = evt.reserve(customer);
         this.eventService.save(evt);
 
+        service.save(res);
         return res;
     }
 

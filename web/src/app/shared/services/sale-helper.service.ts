@@ -13,23 +13,6 @@ export class SaleHelperService extends HelperService<Sale> {
         super();
     }
 
-    static unwrapLines(sale: Sale) {
-        if (sale.salesLineItems) {
-            if (sale.salesLineItems['_embedded']) {
-                sale.salesLineItems = sale.salesLineItems['_embedded']['salesLineItemResources'];
-            }
-        }
-    }
-
-    static extractSalesLineItem(sale: Sale) {
-        if (!sale.salesLineItems) {
-            sale.salesLineItems = [];
-        } else {
-            sale.salesLineItems = sale.salesLineItems['_embedded']['salesLineItemResources'];
-        }
-        return sale;
-    }
-
     createSale(customerId: number) {
         const gymId = this.gymService.gym.id;
         return this.service.createSale(gymId, customerId);

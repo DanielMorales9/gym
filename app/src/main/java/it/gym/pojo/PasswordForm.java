@@ -13,11 +13,6 @@ public class PasswordForm {
         this.confirmPassword = confirmPassword;
     }
 
-    @Override
-    public String toString() {
-        return this.oldPassword + " " + this.password + " " + this.confirmPassword;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -29,7 +24,6 @@ public class PasswordForm {
     public String getOldPassword() {
         return oldPassword;
     }
-
 
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;

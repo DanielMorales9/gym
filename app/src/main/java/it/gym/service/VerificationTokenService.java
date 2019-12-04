@@ -74,4 +74,8 @@ public class VerificationTokenService implements ICrudService<VerificationToken,
     private String createRandomToken() {
         return UUID.randomUUID().toString();
     }
+
+    public boolean existsByUser(AUser user) {
+        return this.tokenRepository.findByUser(user).isPresent();
+    }
 }

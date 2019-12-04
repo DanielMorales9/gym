@@ -3,6 +3,8 @@ package it.gym.config;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
 
 import javax.sql.DataSource;
@@ -10,6 +12,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 @Component
+@EnableScheduling
+@ConditionalOnProperty(
+        name = "it.gym.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
     private static Logger logger = LoggerFactory.getLogger(TenantConnectionProvider.class);

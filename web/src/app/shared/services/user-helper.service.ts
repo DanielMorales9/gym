@@ -28,33 +28,6 @@ export class UserHelperService extends HelperService<User> {
         return date.toLocaleDateString();
     }
 
-    getRoles(user: User, callback?): void {
-        if (!!user.roles) {
-            if (!!user.roles['_embedded']) {
-                user.roles = this.unwrapRoles(user.roles);
-            } else {
-                this._getRoles(user);
-            }
-        } else {
-            this._getRoles(user);
-        }
-        return !!callback && callback();
-    }
-
-    private _getRoles(user): void {
-        this.service.getRoles(user.id).subscribe(value => {
-            user.roles = value['_embedded']['roles'].map(val => {
-                return new Role(this.ROLE2INDEX[val.name], val.name);
-            });
-        });
-    }
-
-    unwrapRoles(roles: any) {
-        return roles['_embedded']['roleResources'].map(val => {
-            return new Role(this.ROLE2INDEX[val.name], val.name);
-        });
-    }
-
     getUser(id: number, callback: (user: User) => void) {
         this.service.findById(id).subscribe(callback);
     }

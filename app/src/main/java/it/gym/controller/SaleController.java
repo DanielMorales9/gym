@@ -3,6 +3,8 @@ package it.gym.controller;
 import it.gym.facade.SaleFacade;
 import it.gym.hateoas.*;
 import it.gym.model.Sale;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +25,8 @@ public class SaleController {
     @Autowired
     private SaleFacade facade;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @GetMapping
     @ResponseBody
     Page<Sale> findAll(Pageable pageable) {
@@ -40,11 +44,11 @@ public class SaleController {
 
     @GetMapping(path = "/{id}/customer")
     @ResponseBody
-    ResponseEntity<CustomerResource> findUserBySaleId(@PathVariable Long id) {
+    ResponseEntity<AUserResource> findUserBySaleId(@PathVariable Long id) {
 
         Sale sale = facade.findById(id);
 
-        return new ResponseEntity<>(new CustomerAssembler().toResource(sale.getCustomer()), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toResource(sale.getCustomer()), HttpStatus.OK);
     }
 
     @GetMapping(path = "/{id}/salesLineItems")
@@ -65,6 +69,7 @@ public class SaleController {
     @GetMapping(path = "/searchByDateAndId")
     @ResponseBody
     Page<Sale> findSalesByDateAndId(@RequestParam Long id,
+                                    @RequestParam
                                     @DateTimeFormat(pattern = "dd-MM-yyyy",
                                             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                     Pageable pageable) {
@@ -73,7 +78,7 @@ public class SaleController {
 
     @GetMapping(path = "/searchByDate")
     @ResponseBody
-    Page<Sale> findSalesByDate(@DateTimeFormat(pattern = "dd-MM-yyyy",
+    Page<Sale> findSalesByDate(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                Pageable pageable) {
         return facade.findSalesByCreatedAtGreaterThanEqual(date, pageable);
@@ -98,9 +103,7 @@ public class SaleController {
     @GetMapping(path = "/createSale/{gymId}/{customerId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> createSale(@PathVariable Long gymId, @PathVariable Long customerId) {
-
         Sale sale = this.facade.createSale(gymId, customerId);
-
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
@@ -135,9 +138,9 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @PostMapping(path = "/pay/{saleId}")
+    @GetMapping(path = "/pay/{saleId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestBody Double amount) {
+    ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestParam Double amount) {
         Sale sale = this.facade.paySale(saleId, amount);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }

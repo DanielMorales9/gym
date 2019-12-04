@@ -37,7 +37,7 @@ export class SaleDetailsComponent implements OnInit {
 
     getSale (id) {
         this.helper.findById(id).subscribe((res: Sale) => {
-            this.sale = SaleHelperService.extractSalesLineItem(res);
+            this.sale = res;
         });
     }
 

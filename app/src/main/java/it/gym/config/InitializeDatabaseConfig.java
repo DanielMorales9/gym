@@ -1,17 +1,22 @@
-package it.gym;
+package it.gym.config;
 
 import it.gym.config.TenantContext;
 import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.model.*;
-import it.gym.service.*;
+import it.gym.service.GymService;
+import it.gym.service.RoleService;
+import it.gym.service.TenantService;
+import it.gym.service.UserService;
 import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
@@ -19,8 +24,13 @@ import java.util.Date;
 import java.util.List;
 
 @Component
+@EnableScheduling
+@ConditionalOnProperty(
+        name = "it.gym.enabled",
+        havingValue = "true",
+        matchIfMissing = true)
 @PropertySource("application.yml")
-public class InitializeDatabase implements CommandLineRunner {
+public class InitializeDatabaseConfig implements CommandLineRunner {
 
     private static final String DEV_ENV = "dev";
 
@@ -44,7 +54,7 @@ public class InitializeDatabase implements CommandLineRunner {
     private UserService userService;
 
     @Autowired
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private GymService gymService;
@@ -57,17 +67,17 @@ public class InitializeDatabase implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-
-        Tenant tenant = createTenant();
-        boolean exists = tenantService.existsByTenant(tenant);
-        if (exists) {
-            tenant = tenantService.findTenantBySchemaName(tenant.getSchemaName());
-        }
-        else {
-            tenant = tenantService.createTenant(tenant);
-        }
-
         if (isDev()) {
+
+            Tenant tenant = createTenant();
+            boolean exists = tenantService.existsByTenant(tenant);
+            if (exists) {
+                tenant = tenantService.findTenantBySchemaName(tenant.getSchemaName());
+            }
+            else {
+                tenant = tenantService.createTenant(tenant);
+            }
+
             // setting Current Tenant Schema for multi-tenant access
             TenantContext.setCurrentTenantSchema(tenant.getSchemaName());
 
@@ -91,8 +101,13 @@ public class InitializeDatabase implements CommandLineRunner {
 
 
 
-    private boolean isDev() {
-        return env.getActiveProfiles()[0].equals(DEV_ENV);
+    private boolean isDev(String... args) {
+        if (args.length > 0) {
+            return args[0].equals("test");
+        }
+        else {
+            return env.getActiveProfiles()[0].equals(DEV_ENV);
+        }
     }
 
     private Tenant createTenant() {
@@ -111,19 +126,19 @@ public class InitializeDatabase implements CommandLineRunner {
     }
 
     private void createAndSaveTrainer(Gym gym, List<Role> roles) {
-        String password = bCryptPasswordEncoder.encode(ADMIN_PASSWORD);
+        String password = passwordEncoder.encode(ADMIN_PASSWORD);
         Trainer trainer = createTrainer(password, gym, roles);
         if (!userService.existsByEmail(trainer.getEmail())) userService.save(trainer);
     }
 
     private void createAndSaveCustomer(Gym gym, List<Role> roles) {
-        String password = bCryptPasswordEncoder.encode(ADMIN_PASSWORD);
+        String password = passwordEncoder.encode(ADMIN_PASSWORD);
         Customer customer = createCustomer(password, gym, roles);
         if (!userService.existsByEmail(customer.getEmail())) userService.save(customer);
     }
 
     private void createAndSaveAdmin(Gym gym, List<Role> roles) {
-        String password = bCryptPasswordEncoder.encode(ADMIN_PASSWORD);
+        String password = passwordEncoder.encode(ADMIN_PASSWORD);
         Admin admin = createAdmin(password, gym, roles);
         if (!userService.existsByEmail(admin.getEmail())) userService.save(admin);
     }

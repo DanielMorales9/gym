@@ -4,7 +4,6 @@ import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingSession;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingSessionRepository;
-import it.gym.utility.Constants;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -19,10 +18,10 @@ public class TrainingSessionAssembler extends ResourceAssemblerSupport<ATraining
     @Override
     public TrainingSessionResource toResource(ATrainingSession session) {
         TrainingSessionResource resource = new TrainingSessionResource(session);
-        resource.add(linkTo(TrainingSessionRepository.class).slash(Constants.SESSION_BASE_PATH)
+        resource.add(linkTo(TrainingSessionRepository.class).slash("sessions")
                 .slash(session.getId()).withSelfRel());
-        resource.add(linkTo(TrainingBundleRepository.class).slash(Constants.BUNDLE_BASE_PATH)
-                .slash(session.getTrainingBundle().getId()).withRel(Constants.BUNDLE_BASE_PATH));
+        resource.add(linkTo(TrainingBundleRepository.class).slash("bundles")
+                .slash(session.getTrainingBundle().getId()).withRel("bundles"));
         return resource;
     }
 }
