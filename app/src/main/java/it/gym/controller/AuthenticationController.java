@@ -42,8 +42,14 @@ public class AuthenticationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @PostMapping("/changePassword/{id}")
+    @PostMapping("/changePasswordAnonymous/{id}")
     @PreAuthorize("isAnonymous()")
+    ResponseEntity<AUserResource> changePasswordAnonymous(@PathVariable Long id, @RequestBody PasswordForm form) {
+        AUser user = this.facade.changePassword(id, form);
+        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+    }
+
+    @PostMapping("/changePassword/{id}")
     ResponseEntity<AUserResource> changePassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.facade.changePassword(id, form);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
@@ -63,16 +69,16 @@ public class AuthenticationController {
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/resendAnonymousToken")
+    @GetMapping(path = "/resendTokenAnonymous")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity resendAnonymousToken(@RequestParam("id") Long id) {
+    public ResponseEntity<AUserResource> resendTokenAnonymous(@RequestParam("id") Long id) {
         AUser user = facade.resendAnonymousToken(id);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/resendToken")
     @PreAuthorize("isAnonymous()")
-    public ResponseEntity resendToken(@RequestParam("token") String existingToken) {
+    public ResponseEntity<AUserResource> resendToken(@RequestParam("token") String existingToken) {
         AUser user = facade.resendToken(existingToken);
         return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
     }
