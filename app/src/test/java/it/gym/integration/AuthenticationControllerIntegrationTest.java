@@ -13,11 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import javax.print.attribute.standard.MediaPrintableArea;
+import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +47,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         admin = createAdmin(1L, "admin@admin.com", gym, roles);
         admin = repository.save(admin);
         logger.info(admin.toString());
-        token = createToken(1L, "admin_token", admin);
+        token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
         tokenRepository.save(token);
     }
 
@@ -102,6 +103,26 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
     @Test
     @WithAnonymousUser
+    public void whenChangePasswordAnonymous_OK() throws Exception {
+        Object cred = new Object() {
+            public final String oldPassword = "password";
+            public final String password = "password1";
+            public final String confirmPassword = "password1";
+        };
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResultActions result = mockMvc.perform(post("/authentication/changePasswordAnonymous/"+admin.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cred)))
+                .andExpect(status().isOk());
+
+        admin.setVerified(true);
+        roles = admin.getRoles();
+        expectAdmin(result, admin);
+        expectAdminRoles(result, roles, "roles");
+        expectGym(result, admin.getGym(), "gym");
+    }
+    @Test
     public void whenChangePassword_OK() throws Exception {
         Object cred = new Object() {
             public final String oldPassword = "password";
@@ -150,7 +171,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
     @Test
     public void whenResendAnonymousToken_OK() throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/authentication/resendAnonymousToken?id="+admin.getId()))
+                .perform(get("/authentication/resendTokenAnonymous?id="+admin.getId()))
                 .andExpect(status().isOk());
 
         testExpectedAdmin(result);

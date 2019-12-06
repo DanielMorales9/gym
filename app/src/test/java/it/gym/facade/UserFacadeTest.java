@@ -15,6 +15,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Date;
+
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -41,7 +44,7 @@ public class UserFacadeTest {
     public void delete() {
         AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
         Mockito.doReturn(customer).when(userService).findById(1L);
-        VerificationToken token = Fixture.createToken(1L, "ababa", customer);
+        VerificationToken token = Fixture.createToken(1L, "ababa", customer, addHours(new Date(), 2));
         Mockito.doReturn(token).when(tokenService).findByUser(customer);
         Mockito.doReturn(true).when(tokenService).existsByUser(customer);
 
