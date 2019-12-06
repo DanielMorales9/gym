@@ -13,11 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import javax.print.attribute.standard.MediaPrintableArea;
+import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -46,7 +47,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         admin = createAdmin(1L, "admin@admin.com", gym, roles);
         admin = repository.save(admin);
         logger.info(admin.toString());
-        token = createToken(1L, "admin_token", admin);
+        token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
         tokenRepository.save(token);
     }
 

@@ -74,7 +74,6 @@ public class AuthenticationFacade {
         user.setRoles(roles);
         user.setVerified(false);
 
-
         if (userService.existsByEmail(user.getEmail()))
             throw new InternalServerException(String.format("L'utente con l'email %s esiste già.",user.getEmail()));
         else

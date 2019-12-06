@@ -16,10 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -47,7 +49,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         admin = createAdmin(1L, "admin@admin.com", gym, roles);
         admin = repository.save(admin);
         logger.info(admin.toString());
-        VerificationToken token = createToken(1L, "admin_token", admin);
+        VerificationToken token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
         tokenRepository.save(token);
     }
 

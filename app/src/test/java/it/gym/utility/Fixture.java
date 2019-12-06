@@ -33,11 +33,11 @@ public class Fixture {
         return user;
     }
 
-    public static VerificationToken createToken(long id, String token, AUser u) {
+    public static VerificationToken createToken(long id, String token, AUser u, Date expiryDate) {
         VerificationToken vk = new VerificationToken();
         vk.setId(id);
         vk.setToken(token);
-        vk.setExpiryDate(addHours(new Date(), 2));
+        vk.setExpiryDate(expiryDate);
         vk.setUser(u);
         return vk;
     }
