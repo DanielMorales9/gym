@@ -49,7 +49,7 @@ export class ModifyPasswordComponent implements OnInit {
     modifyPassword() {
         const form = {password: this.password.value, oldPassword: '', confirmPassword: this.confirmPassword.value};
 
-        this.authService.changePassword(this.user.id, form).subscribe(_ => {
+        this.authService.changePasswordAnonymous(this.user.id, form).subscribe(_ => {
             const message = `${this.user.firstName} la tua password è stata modificata con successo!`;
             this.snackbar.open(message);
             return this.router.navigateByUrl('/');

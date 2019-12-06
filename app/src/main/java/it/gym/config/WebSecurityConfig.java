@@ -73,6 +73,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/",
                         "/user",
                         "/logout",
+                        "/authentication/**",
                         "/login",
                         "/actuator/*").permitAll()
                 .anyRequest().authenticated()

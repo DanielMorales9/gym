@@ -102,6 +102,26 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
     @Test
     @WithAnonymousUser
+    public void whenChangePasswordAnonymous_OK() throws Exception {
+        Object cred = new Object() {
+            public final String oldPassword = "password";
+            public final String password = "password1";
+            public final String confirmPassword = "password1";
+        };
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ResultActions result = mockMvc.perform(post("/authentication/changePasswordAnonymous/"+admin.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(cred)))
+                .andExpect(status().isOk());
+
+        admin.setVerified(true);
+        roles = admin.getRoles();
+        expectAdmin(result, admin);
+        expectAdminRoles(result, roles, "roles");
+        expectGym(result, admin.getGym(), "gym");
+    }
+    @Test
     public void whenChangePassword_OK() throws Exception {
         Object cred = new Object() {
             public final String oldPassword = "password";
@@ -150,7 +170,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
     @Test
     public void whenResendAnonymousToken_OK() throws Exception {
         ResultActions result = mockMvc
-                .perform(get("/authentication/resendAnonymousToken?id="+admin.getId()))
+                .perform(get("/authentication/resendTokenAnonymous?id="+admin.getId()))
                 .andExpect(status().isOk());
 
         testExpectedAdmin(result);

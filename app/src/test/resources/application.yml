@@ -11,7 +11,7 @@ spring:
     - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
   jpa:
     hibernate.ddl-auto: none
-    show-sql: true
+    show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
 

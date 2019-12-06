@@ -85,7 +85,7 @@ public class AuthenticationFacade {
         try {
             this.sendRegistrationConfirmationEmail(vk);
         } catch (MailException e) {
-
+            logger.info(e.getMessage());
             this.rollbackRegistration(vk);
 
             String message = String.format(EMAIL_REGISTRATION_EX_MESSAGE, user.getFirstName(), user.getLastName());
@@ -133,11 +133,11 @@ public class AuthenticationFacade {
 
     public AUser getUserFromVerificationToken(String token) {
         VerificationToken vToken = tokenService.findByToken(token);
-
+        logger.info(vToken.toString());
         if (vToken.isExpired()) {
             throw new UnAuthorizedException("Il token è scaduto.");
         }
-
+        logger.info(vToken.getUser().toString());
         return vToken.getUser();
     }
 

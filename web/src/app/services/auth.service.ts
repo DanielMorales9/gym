@@ -30,12 +30,17 @@ export class AuthService {
     }
 
     resendTokenAnonymous(id: number) {
-        return this.http.get(`/authentication/resendAnonymousToken?id=${id}`);
+        return this.http.get(`/authentication/resendTokenAnonymous?id=${id}`);
     }
 
     changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
         this.appService.credentials = undefined;
         return this.http.post(`/authentication/changePassword/${id}`, form);
+    }
+
+    changePasswordAnonymous(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
+        this.appService.credentials = undefined;
+        return this.http.post(`/authentication/changePasswordAnonymous/${id}`, form);
     }
 
     confirmRegistration(credentials) {
