@@ -1,14 +1,9 @@
 package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.model.Admin;
-import it.gym.model.Gym;
-import it.gym.model.Role;
-import it.gym.model.VerificationToken;
-import it.gym.repository.GymRepository;
-import it.gym.repository.RoleRepository;
-import it.gym.repository.UserRepository;
-import it.gym.repository.VerificationTokenRepository;
+import it.gym.model.*;
+import it.gym.repository.*;
+import it.gym.utility.Fixture;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +31,8 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Autowired private VerificationTokenRepository tokenRepository;
     @Autowired private GymRepository gymRepository;
     @Autowired private RoleRepository roleRepository;
+    @Autowired private TrainingBundleSpecificationRepository bundleSpecRepository;
+    @Autowired private TrainingBundleRepository bundleRepository;
 
     private Admin admin;
     private Gym gym;
@@ -135,6 +133,25 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         mockMvc.perform(delete("/users/" + admin.getId())).andExpect(status().isOk());
         assertThat(repository.findAll().isEmpty()).isTrue();
         assertThat(tokenRepository.findAll().isEmpty()).isTrue();
+    }
+
+    @Test
+    public void deleteByUserId_throwsException() throws Exception {
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal");
+        spec = bundleSpecRepository.save(spec);
+        ATrainingBundle bundle = spec.createTrainingBundle();
+        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+        customer = repository.save(customer);
+        logger.info(customer.getCurrentTrainingBundles().toString());
+        mockMvc.perform(delete("/users/" + customer.getId()))
+                .andExpect(status().isBadRequest());
+
+        customer.setCurrentTrainingBundles(null);
+        repository.save(customer);
+        bundleRepository.deleteAll();
+        bundleSpecRepository.deleteAll();
+
     }
 
 }

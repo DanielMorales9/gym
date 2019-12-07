@@ -110,6 +110,8 @@ export class UsersComponent implements OnInit {
         if (confirmed) {
             this.service.delete(user.id).subscribe(_ => {
                 this.search();
+            }, err => {
+                this.snackbar.open(err.error.message);
             });
         }
     }

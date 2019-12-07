@@ -79,4 +79,11 @@ public class Customer extends AUser {
     public String getType() {
         return "C";
     }
+
+    @Override
+    public boolean isActive() {
+        if (this.currentTrainingBundles != null)
+            return !this.currentTrainingBundles.isEmpty();
+        else return false;
+    }
 }

@@ -21,7 +21,7 @@ import java.util.List;
 @RequestMapping("/customers")
 public class CustomerController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CustomerController.class);
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     private CustomerService service;
