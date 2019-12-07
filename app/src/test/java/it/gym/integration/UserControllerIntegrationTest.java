@@ -132,7 +132,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void deleteByUserId_throwsException() throws Exception {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal");
         spec = bundleSpecRepository.save(spec);
         ATrainingBundle bundle = spec.createTrainingBundle();
