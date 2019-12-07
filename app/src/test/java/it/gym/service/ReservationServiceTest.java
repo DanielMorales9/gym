@@ -69,7 +69,7 @@ public class ReservationServiceTest {
 
     @Test
     public void deleteAll() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         List<Reservation> list = Collections.singletonList(createReservation(1L, customer));
         service.deleteAll(list);
         Mockito.verify(repository).deleteAll(list);

@@ -4,7 +4,6 @@ import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.Customer;
 import it.gym.repository.CustomerRepository;
-import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -41,7 +40,7 @@ public class CustomerServiceTest {
 
     @Test
     public void save() {
-        this.service.save((Customer) createCustomer(1L, "email", "", "name", "surname", true, null, null));
+        this.service.save((Customer) createCustomer(1L, "email", "", "name", "surname", true, null));
         Mockito.verify(repository).save(any(Customer.class));
     }
 
@@ -49,15 +48,15 @@ public class CustomerServiceTest {
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createCustomer(1L, "email", "", "name", "surname", true, null, null)));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createCustomer(1L, "email", "", "name", "surname", true, null)));
         AUser u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createCustomer(1L, "email", "", "name", "surname", true, null, null));
+        assertThat(u).isEqualTo(createCustomer(1L, "email", "", "name", "surname", true, null));
         Mockito.verify(repository).findById(1L);
     }
 
     @Test
     public void findAll() {
-        AUser customer = createCustomer(1L, "email", "", "name", "surname", true, null, null);
+        AUser customer = createCustomer(1L, "email", "", "name", "surname", true, null);
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(customer));
         List<Customer> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(customer));
@@ -71,7 +70,7 @@ public class CustomerServiceTest {
 
     @Test
     public void delete() {
-        Customer u = (Customer) createCustomer(1L, "email", "", "name", "surname", true, null, null);
+        Customer u = (Customer) createCustomer(1L, "email", "", "name", "surname", true, null);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(Customer.class));
     }

@@ -77,7 +77,7 @@ public class SaleServiceTest {
     }
 
     private Customer createCustomer(Gym gym) {
-        return (Customer) Fixture.createCustomer(1L, "pippo", "", "pippo", "pluto", true, null, gym);
+        return (Customer) Fixture.createCustomer(1L, "pippo", "", "pippo", "pluto", true, null);
     }
 
 }

@@ -127,8 +127,7 @@ export class UsersComponent implements OnInit {
     }
 
     private createUser(user: User) {
-        const gymId = this.gymService.gym.id;
-        this.authService.registration(user, gymId).subscribe(_ => {
+        this.authService.registration(user).subscribe(_ => {
             const message = `L'utente ${user.lastName} è stato creato`;
             this.snackbar.open(message);
         },  err => {

@@ -55,8 +55,8 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 "customer",
                 "customer",
                 true,
-                roles,
-                gym);
+                roles
+        );
         customer = userRepository.save(customer);
         sale = createSale(1L, customer);
         personal = createPersonalBundleSpec(1L, "personal");

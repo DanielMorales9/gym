@@ -2,7 +2,6 @@ package it.gym.integration;
 
 import it.gym.model.*;
 import it.gym.repository.*;
-import it.gym.utility.HateoasTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,12 +12,9 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -48,8 +44,8 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 "customer",
                 "customer",
                 true,
-                roles,
-                gym);
+                roles
+        );
         ATrainingBundleSpecification personal = createPersonalBundleSpec(1L, "personal");
         personal = bundleSpecRepository.save(personal);
         ATrainingBundle bundle = personal.createTrainingBundle();
@@ -75,7 +71,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/customers")).andExpect(status().isOk());
         expectCustomer(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
-        expectGym(result, gym, "content[0].gym");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
             expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
@@ -89,7 +84,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectCustomer(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
-        expectGym(result, gym, "content[0].gym");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
             expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
@@ -104,7 +98,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectCustomer(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
-        expectGym(result, gym, "content[0].gym");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
             expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),

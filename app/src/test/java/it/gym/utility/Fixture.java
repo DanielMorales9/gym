@@ -19,8 +19,7 @@ public class Fixture {
                                        String firstName,
                                        String lastName,
                                        boolean verified,
-                                       List<Role> roles,
-                                       Gym gym) {
+                                       List<Role> roles) {
         AUser user = new Customer();
         user.setId(id);
         user.setEmail(email);
@@ -29,7 +28,6 @@ public class Fixture {
         user.setRoles(roles);
         user.setVerified(verified);
         user.setPassword(password);
-        user.setGym(gym);
         return user;
     }
 
@@ -108,13 +106,12 @@ public class Fixture {
         return pt;
     }
 
-    public static Admin createAdmin(long id, String email, Gym gym, List<Role> roles) {
+    public static Admin createAdmin(long id, String email, List<Role> roles) {
         Admin user = new Admin();
         user.setId(id);
         user.setEmail(email);
         user.setFirstName("admin");
         user.setLastName("admin");
-        user.setGym(gym);
         user.setRoles(roles);
         return user;
     }

@@ -1,2 +1,4 @@
 ALTER TABLE sales DROP CONSTRAINT fkrh7y4q7ny0ks7lly8u741wuab;
 ALTER TABLE sales DROP COLUMN gym_gym_id;
+ALTER TABLE users DROP CONSTRAINT fkj88949d0ybov2j0g2xhvoxmi7;
+ALTER TABLE users DROP COLUMN gym_id;
