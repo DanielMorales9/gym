@@ -1,6 +1,7 @@
 package it.gym.facade;
 
 import it.gym.controller.ReservationController;
+import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
@@ -34,6 +35,13 @@ public class TrainingBundleSpecificationFacade {
     public void delete(ATrainingBundleSpecification spec) {
         List<ATrainingBundle> bundles = bundleService.findBundlesBySpec(spec);
         logger.info(bundles.toString());
+        boolean isDeletable = bundles.stream()
+                .map(ATrainingBundle::isDeletable)
+                .reduce(Boolean::logicalAnd)
+                .orElse(true);
+        if (!isDeletable) {
+            throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso");
+        }
         bundleService.deleteAll(bundles);
         service.delete(spec);
     }

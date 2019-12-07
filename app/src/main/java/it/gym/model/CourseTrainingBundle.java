@@ -75,6 +75,11 @@ public class CourseTrainingBundle extends ATrainingBundle {
     }
 
     @Override
+    public boolean isNotGroup() {
+        return false;
+    }
+
+    @Override
     public ATrainingSession createSession(Date startTime, Date endTime) {
         CourseTrainingSession session = new CourseTrainingSession();
         session.setStartTime(startTime);

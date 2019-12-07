@@ -1,18 +1,15 @@
 package it.gym.integration;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
 import it.gym.utility.Calendar;
-import it.gym.utility.HateoasTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
@@ -22,7 +19,8 @@ import java.util.stream.Collectors;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -120,7 +118,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setCustomer((Customer) customer);
 
         expectSale(result, expected);
-        expectGym(result, gym, "gym");
         expectCustomer(result, (Customer) customer, "customer");
     }
 
@@ -145,7 +142,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
 
-        expectGym(result, gym, "gym");
         expectCustomer(result, (Customer) customer, "customer");
 
     }
@@ -168,9 +164,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSale(result, expected);
         result = result.andExpect(jsonPath("$.salesLineItems").value(sli));
-        expectGym(result, gym, "gym");
         expectCustomer(result, (Customer) customer, "customer");
-
+        result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
+        assertThat(sliRepository.findAll()).isEmpty();
+        assertThat(bundleRepository.findAll()).isEmpty();
     }
 
     @Test
@@ -192,7 +189,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectGym(result, gym, "gym");
 
         Customer c = (Customer) customer;
         expectCustomer(result, c, "customer");
@@ -232,11 +228,14 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectGym(result, gym, "gym");
 
         Customer c = (Customer) customer;
         expectCustomer(result, c, "customer");
-        assertThat(repository.findAll().size()).isEqualTo(0);
+        result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
+        assertThat(repository.findAll()).isEmpty();
+        assertThat(sliRepository.findAll()).isEmpty();
+        assertThat(bundleRepository.findAll()).isEmpty();
+
     }
 
     @Test
@@ -258,7 +257,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectGym(result, gym, "gym");
         expectCustomer(result, (Customer) customer, "customer");
 
     }
@@ -287,7 +285,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
             expectSale(result, expected, "content[" + i + "]");
             expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
-            expectGym(result, gym, "content[" + i + "].gym");
             expectCustomer(result, (Customer) customer, "content[" + i + "].customer");
         }
     }
@@ -314,7 +311,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setSalesLineItems(sli);
 
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectGym(result, gym, "gym");
         expectCustomer(result, (Customer) customer, "customer");
 
     }

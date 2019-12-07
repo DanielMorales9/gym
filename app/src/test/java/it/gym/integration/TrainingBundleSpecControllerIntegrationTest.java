@@ -2,9 +2,8 @@ package it.gym.integration;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.model.ATrainingBundleSpecification;
-import it.gym.model.CourseTrainingBundleSpecification;
-import it.gym.model.PersonalTrainingBundleSpecification;
+import it.gym.exception.BadRequestException;
+import it.gym.model.*;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import it.gym.utility.HateoasTest;
@@ -46,6 +45,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @After
     public void after() {
+        bundleRepository.deleteAll();
         repository.deleteAll();
     }
 
@@ -87,6 +87,30 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isOk());
         assertThat(repository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void deletePersonalBundleSpecId_throwsException() throws Exception {
+        ATrainingBundle bundle = personalBundle.createTrainingBundle();
+        ATrainingSession session = bundle.createSession(new Date(), new Date());
+        session.setCompleted(true);
+        bundle.addSession(session);
+        bundleRepository.save(bundle);
+
+        mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteCourseBundleSpecId_throwsException() throws Exception {
+        ATrainingBundle bundle = courseBundle.createTrainingBundle();
+        ATrainingSession session = bundle.createSession(new Date(), new Date());
+        session.setCompleted(true);
+        bundle.addSession(session);
+        bundleRepository.save(bundle);
+
+        mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
