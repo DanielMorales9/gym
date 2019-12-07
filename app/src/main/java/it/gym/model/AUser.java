@@ -166,4 +166,6 @@ public abstract class AUser implements DefaultRoles {
         isVerified = verified;
     }
 
+    public abstract boolean isActive();
+
 }

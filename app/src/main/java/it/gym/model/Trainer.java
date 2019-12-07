@@ -25,4 +25,8 @@ public class Trainer extends AUser {
     public String getType() {
         return "T";
     }
+    @Override
+    public boolean isActive() {
+        return false;
+    }
 }

@@ -28,4 +28,9 @@ public class Admin extends AUser {
     public String getType() {
         return "A";
     }
+
+    @Override
+    public boolean isActive() {
+        return false;
+    }
 }

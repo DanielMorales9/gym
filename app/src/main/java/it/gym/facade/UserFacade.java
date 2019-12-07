@@ -6,6 +6,7 @@ import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
 import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;
+import org.hibernate.JDBCException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,11 +39,11 @@ public class UserFacade {
             this.tokenService.delete(vtk);
         }
 
-        try {
+        if (!user.isActive()) {
             this.service.deleteById(id);
-        } catch (ConstraintViolationException e) {
-            logger.debug(e.getMessage());
-            throw new BadRequestException("Impossibile eliminare un utente con delle transazioni");
+        }
+        else {
+            throw new BadRequestException("Impossibile eliminare un utente con delle transazioni attive");
         }
         return user;
     }

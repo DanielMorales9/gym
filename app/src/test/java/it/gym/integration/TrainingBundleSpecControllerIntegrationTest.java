@@ -83,10 +83,24 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
+    public void deletePersonalBundleSpecId_throwException() throws Exception {
+        bundleRepository.save(personalBundle.createTrainingBundle());
+        mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
     public void deleteCourseBundleSpecId_OK() throws Exception {
         mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isOk());
         assertThat(repository.findAll().size()).isEqualTo(1);
+    }
+
+    @Test
+    public void deleteCourseBundleSpecId_throwsException() throws Exception {
+        bundleRepository.save(courseBundle.createTrainingBundle());
+        mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -98,18 +112,6 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         bundleRepository.save(bundle);
 
         mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
-                .andExpect(status().isBadRequest());
-    }
-
-    @Test
-    public void deleteCourseBundleSpecId_throwsException() throws Exception {
-        ATrainingBundle bundle = courseBundle.createTrainingBundle();
-        ATrainingSession session = bundle.createSession(new Date(), new Date());
-        session.setCompleted(true);
-        bundle.addSession(session);
-        bundleRepository.save(bundle);
-
-        mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isBadRequest());
     }
 
