@@ -73,19 +73,7 @@ public abstract class AUser implements DefaultRoles {
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles;
 
-    @OneToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "gym_id")
-    private Gym gym;
-
     public abstract String getType();
-
-    public Gym getGym() {
-        return gym;
-    }
-
-    public void setGym(Gym gym) {
-        this.gym = gym;
-    }
 
     @PrePersist
     protected void prePersist() {

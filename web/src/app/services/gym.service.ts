@@ -37,9 +37,8 @@ export class GymService {
         return {startTime, endTime};
     }
 
-    getConfig(id?: number) {
-        if (!id) { id = this.app.user.id; }
-        return this.http.get(`/users/${id}/gym`).pipe(map((res: Object) => this.gym = res));
+    getConfig() {
+        return this.http.get(`/gyms`).pipe(map((res: Object) => this.gym = res[0]));
     }
 
     patch(gym: any) {

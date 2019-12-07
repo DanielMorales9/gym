@@ -14,7 +14,6 @@ export class User {
     height: number;
     weight: number;
     roles: Role[];
-    gym: Gym;
     currentTrainingBundles: any;
 
     constructor() {

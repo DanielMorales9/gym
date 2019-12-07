@@ -66,7 +66,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void deleteExpiredBundles() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         facade.deleteExpiredBundles(customer);
     }
@@ -103,7 +103,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void isAvailable() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Mockito.doReturn(Fixture.createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
@@ -121,7 +121,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void book() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
         Mockito.doReturn(Fixture.createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
@@ -162,7 +162,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void customerDeleteReservation() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Role role = new Role();
         role.setId(1L);
         role.setName("CUSTOMER");
@@ -195,7 +195,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void adminDeleteReservation() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Role role = new Role();
         role.setId(1L);
         role.setName("CUSTOMER");
@@ -218,7 +218,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void confirm() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
         ATrainingBundle bundle = Fixture.createPersonalBundle(1L);
         PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);

@@ -41,7 +41,7 @@ export class AppComponent implements OnInit {
                 this.user = this.service.user;
                 // TODO check whether profilePath is used
                 this.profilePath = `profile/${this.user.id}/user`;
-                this.gymService.getConfig(this.user.id).subscribe((gym: Gym) => {
+                this.gymService.getConfig().subscribe((gym: Gym) => {
                    this.appName = gym.name;
                    document.title = this.appName;
                 });
