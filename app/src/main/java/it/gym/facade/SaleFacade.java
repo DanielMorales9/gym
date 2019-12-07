@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @Transactional
@@ -121,6 +122,10 @@ public class SaleFacade {
         SalesLineItem sli = salesLineItemService.findById(salesLineItemId);
         if (!sale.deleteSalesLineItem(sli))
             throw new ConflictException("Impossibile eliminate riga con id " + saleId + " della vendita con id " + saleId);
+        ATrainingBundle trainingBundle = sli.getTrainingBundle();
+        if (trainingBundle.isNotGroup() && trainingBundle.isDeletable()) {
+            bundleService.delete(trainingBundle);
+        }
         this.salesLineItemService.delete(sli);
         return this.save(sale);
     }
@@ -168,10 +173,22 @@ public class SaleFacade {
             throw new BadRequestException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
                     sale.getCustomer().getLastName()));
         }
-        this.salesLineItemService.deleteAll(sale.getSalesLineItems());
         this.userService.save(sale.getCustomer());
+        List<ATrainingBundle> bundles = getDeletableBundles(sale);
+        this.bundleService.deleteAll(bundles);
+        this.salesLineItemService.deleteAll(sale.getSalesLineItems());
+
+
         this.delete(sale);
         return sale;
+    }
+
+    private List<ATrainingBundle> getDeletableBundles(Sale sale) {
+        return sale.getSalesLineItems()
+                    .stream()
+                    .map(SalesLineItem::getTrainingBundle)
+                    .filter(ATrainingBundle::isNotGroup)
+                    .collect(Collectors.toList());
     }
 
 

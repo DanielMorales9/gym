@@ -1,12 +1,12 @@
-import {NgModule} from "@angular/core";
-import {RouterModule} from "@angular/router";
+import {NgModule} from '@angular/core';
+import {RouterModule} from '@angular/router';
 import {
     TrainingComponent,
-} from "./components";
+} from './components';
 
 const routes = [
     { path: '', children: [
-            { path: '', redirectTo: "user", pathMatch: "full"},
+            { path: '', redirectTo: 'user', pathMatch: 'full'},
             { path: 'trainings', component: TrainingComponent }
         ]},
 ];

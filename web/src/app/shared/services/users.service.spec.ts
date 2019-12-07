@@ -94,20 +94,6 @@ describe('UserService', () => {
         req.flush(user);
     });
 
-    it('testing #getCurrentTrainingBundles', done => {
-        const user = new User();
-        user.id = 1;
-        userService.getCurrentTrainingBundles(user.id).subscribe(res => {
-            expect(res).toEqual([]);
-            done();
-        });
-        const req = backend.expectOne({
-            url: '/customers/1/currentTrainingBundles',
-            method: 'GET'
-        });
-        req.flush([]);
-    });
-
     describe ('testing #findUserById', () => {
         it('it should return an empty user', done => {
             userService.findById(1).subscribe(res => {
