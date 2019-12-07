@@ -68,11 +68,10 @@ public class Fixture {
         return gym;
     }
 
-    public static Sale createSale(long id, AUser customer, Gym gym) {
+    public static Sale createSale(long id, AUser customer) {
         Sale sale = new Sale();
         sale.setId(id);
         sale.setCustomer((Customer) customer);
-        sale.setGym(gym);
         sale.setAmountPayed(0.0);
         sale.setCompleted(false);
         return sale;

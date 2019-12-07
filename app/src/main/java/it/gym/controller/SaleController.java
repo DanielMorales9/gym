@@ -100,10 +100,10 @@ public class SaleController {
         return facade.findSalesByCustomerLastName(lastName, pageable);
     }
 
-    @GetMapping(path = "/createSale/{gymId}/{customerId}")
+    @GetMapping(path = "/createSale/{customerId}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<SaleResource> createSale(@PathVariable Long gymId, @PathVariable Long customerId) {
-        Sale sale = this.facade.createSale(gymId, customerId);
+    ResponseEntity<SaleResource> createSale(@PathVariable Long customerId) {
+        Sale sale = this.facade.createSale(customerId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 

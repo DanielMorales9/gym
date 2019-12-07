@@ -58,7 +58,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 roles,
                 gym);
         customer = userRepository.save(customer);
-        sale = createSale(1L, customer, gym);
+        sale = createSale(1L, customer);
         personal = createPersonalBundleSpec(1L, "personal");
         personal = bundleSpecRepository.save(personal);
         bundle = personal.createTrainingBundle();
@@ -99,7 +99,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenCreateSale_OK() throws Exception {
-        String path = "/sales/createSale/" + gym.getId() + "/" + customer.getId();
+        String path = "/sales/createSale/" + customer.getId();
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
@@ -114,7 +114,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(s.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
 
         expectSale(result, expected);
@@ -135,7 +134,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
         expected.setSalesLineItems(sli);
 
@@ -159,7 +157,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
 
         expectSale(result, expected);
@@ -183,7 +180,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(true);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
         expected.setSalesLineItems(sli);
 
@@ -222,7 +218,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(true);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
         expected.setSalesLineItems(sli);
 
@@ -251,7 +246,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(true);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
         expected.setSalesLineItems(sli);
 
@@ -279,7 +273,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
             expected.setId(sale.getId());
             expected.setAmountPayed(0.);
             expected.setCompleted(true);
-            expected.setGym(gym);
             expected.setCustomer((Customer) customer);
             expected.setSalesLineItems(sli);
 
@@ -306,7 +299,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setAmountPayed(111.);
         expected.setCompleted(true);
         expected.setPayed(true);
-        expected.setGym(gym);
         expected.setCustomer((Customer) customer);
         expected.setSalesLineItems(sli);
 

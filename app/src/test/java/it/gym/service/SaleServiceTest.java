@@ -43,7 +43,7 @@ public class SaleServiceTest {
     @Test
     public void findById() {
         Gym gym = createGym(1L);
-        Sale mockSale = createSale(1L, createCustomer(gym), gym);
+        Sale mockSale = createSale(1L, createCustomer(gym));
         Mockito.doReturn(Optional.of(mockSale)).when(saleRepository).findById(1L);
         Sale actual = saleService.findById(1L);
         assertThat(actual).isEqualTo(mockSale);
@@ -52,7 +52,7 @@ public class SaleServiceTest {
     @Test
     public void findAll() {
         Gym gym = createGym(1L);
-        Sale mockSale = createSale(1L, createCustomer(gym), gym);
+        Sale mockSale = createSale(1L, createCustomer(gym));
         Mockito.doReturn(Collections.singletonList(mockSale)).when(saleRepository).findAll();
         List<Sale> actual = saleService.findAll();
         assertThat(actual).isEqualTo(Collections.singletonList(mockSale));
@@ -61,7 +61,7 @@ public class SaleServiceTest {
     @Test
     public void save() {
         Gym gym = createGym(1L);
-        Sale mockSale = createSale(1L, createCustomer(gym), gym);
+        Sale mockSale = createSale(1L, createCustomer(gym));
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(saleRepository).save(mockSale);
         Sale actual = saleService.save(mockSale);
@@ -71,7 +71,7 @@ public class SaleServiceTest {
     @Test
     public void delete() {
         Gym gym = createGym(1L);
-        Sale mockSale = createSale(1L, createCustomer(gym), gym);
+        Sale mockSale = createSale(1L, createCustomer(gym));
         saleService.delete(mockSale);
         Mockito.verify(saleRepository).delete(mockSale);
     }

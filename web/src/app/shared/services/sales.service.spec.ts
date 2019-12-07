@@ -48,12 +48,12 @@ describe('SalesService', () => {
     });
 
     it('testing #createSale', done => {
-        salesService.createSale(1, 1).subscribe(res => {
+        salesService.createSale(1).subscribe(res => {
             expect(res).toEqual({});
             done();
         });
         const req = backend.expectOne({
-            url: '/sales/createSale/1/1',
+            url: '/sales/createSale/1',
             method: 'GET'
         });
         req.flush({});
