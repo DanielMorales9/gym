@@ -39,7 +39,7 @@ public class UserAuthServiceTest {
 
     @Test
     public void loadUserByUsername() {
-        AUser customer = createCustomer(1L, EMAIL, "password", "admin", "admin", true, createCustomerRoles(), null);
+        AUser customer = createCustomer(1L, EMAIL, "password", "admin", "admin", true, createCustomerRoles());
         Mockito.when(userService.findByEmail(EMAIL)).thenAnswer(invocationOnMock -> customer);
         UserDetails u = auth.loadUserByUsername(EMAIL);
         assertThat(u.isEnabled()).isTrue();

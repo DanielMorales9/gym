@@ -38,9 +38,6 @@ public class SaleFacade {
     @Autowired
     private SalesLineItemService salesLineItemService;
 
-    @Autowired
-    private GymService gymService;
-
     private Sale save(Sale sale) {
         return this.saleService.save(sale);
     }
@@ -93,13 +90,11 @@ public class SaleFacade {
         return spec.createTrainingBundle();
     }
 
-    public Sale createSale(Long gymId, Long customerId) {
-        Gym gym = gymService.findById(gymId);
+    public Sale createSale(Long customerId) {
         Customer customer = (Customer) userService.findById(customerId);
 
         Sale sale = new Sale();
         sale.setCreatedAt(new Date());
-        sale.setGym(gym);
         sale.setAmountPayed(0.);
         sale.setCustomer(customer);
         sale.setPayed(false);

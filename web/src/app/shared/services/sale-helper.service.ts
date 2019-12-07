@@ -14,8 +14,7 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     createSale(customerId: number) {
-        const gymId = this.gymService.gym.id;
-        return this.service.createSale(gymId, customerId);
+        return this.service.createSale(customerId);
     }
 
     delete(id: number) {

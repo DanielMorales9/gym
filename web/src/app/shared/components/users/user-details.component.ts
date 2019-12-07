@@ -70,7 +70,9 @@ export class UserDetailsComponent implements OnInit {
         const confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
         if (confirmed) {
             this.service.delete(this.user.id)
-                .subscribe(_ => this.router.navigate([this.root, 'users']));
+                .subscribe(_ => this.router.navigate([this.root, 'users']),  err => {
+                    this.snackbar.open(err.error.message);
+                });
         }
     }
 

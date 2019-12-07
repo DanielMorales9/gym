@@ -42,21 +42,21 @@ public class UserServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null));
+        this.service.save(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null));
         Mockito.verify(repository).save(any(Customer.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null)));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null)));
         AUser u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null));
+        assertThat(u).isEqualTo(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null));
         Mockito.verify(repository).findById(1L);
     }
 
     @Test
     public void findAll() {
-        AUser customer = createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null);
+        AUser customer = createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null);
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(customer) );
         List<AUser> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(customer));
@@ -70,22 +70,22 @@ public class UserServiceTest {
 
     @Test
     public void findByEmail() {
-        Mockito.when(repository.findByEmail(email)).thenAnswer(invocationOnMock -> createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null));
+        Mockito.when(repository.findByEmail(email)).thenAnswer(invocationOnMock -> createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null));
         AUser u = this.service.findByEmail(email);
-        assertThat(u).isEqualTo(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null));
+        assertThat(u).isEqualTo(createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null));
         Mockito.verify(repository).findByEmail(email);
     }
 
     @Test
     public void delete() {
-        AUser u = createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null);
+        AUser u = createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(AUser.class));
     }
 
     @Test
     public void existsByEmail() {
-        Mockito.when(this.service.existsByEmail(email)).thenAnswer(invocationOnMock -> createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null, null));
+        Mockito.when(this.service.existsByEmail(email)).thenAnswer(invocationOnMock -> createCustomer(1L, "admin@admin.com", "", "admin", "admin", true, null));
         boolean u = this.service.existsByEmail(email);
         assertThat(u).isTrue();
         Mockito.verify(repository).findByEmail(email);

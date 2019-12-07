@@ -5,7 +5,6 @@ import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
 import it.gym.exception.UnAuthorizedException;
 import it.gym.model.AUser;
-import it.gym.model.Gym;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
 import it.gym.pojo.PasswordForm;
@@ -35,9 +34,6 @@ public class AuthenticationFacade {
     private static final String EMAIL_REGISTRATION_EX_MESSAGE = "Non è stato possibile inviare l'email a %s %s";
 
     @Autowired
-    private GymService gymService;
-
-    @Autowired
     private MailService mailService;
 
     @Autowired
@@ -58,11 +54,8 @@ public class AuthenticationFacade {
     @Value("${baseUrl}") private String baseUrl;
 
 
-    public AUser register(AUser user, Long gymId) {
+    public AUser register(AUser user) {
         logger.info(String.format("User is being registered: %s", user.toString()));
-
-        Gym gym = this.gymService.findById(gymId);
-        user.setGym(gym);
 
         logger.info("Registering user");
         String password = generateRandomPassword();

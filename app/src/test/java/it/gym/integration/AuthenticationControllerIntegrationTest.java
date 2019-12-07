@@ -30,23 +30,19 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
     @Autowired private UserRepository repository;
     @Autowired private CustomerRepository customerRepository;
     @Autowired private VerificationTokenRepository tokenRepository;
-    @Autowired private GymRepository gymRepository;
     @Autowired private RoleRepository roleRepository;
 
     private Admin admin;
-    private Gym gym;
     private List<Role> roles;
     private VerificationToken token;
 
     @Before
     public void before() {
-        gym = createGym(1L);
+        Gym gym = createGym(1L);
         roles = createAdminRoles();
-        gym = gymRepository.save(gym);
         roles = roleRepository.saveAll(roles);
-        admin = createAdmin(1L, "admin@admin.com", gym, roles);
+        admin = createAdmin(1L, "admin@admin.com", roles);
         admin = repository.save(admin);
-        logger.info(admin.toString());
         token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
         tokenRepository.save(token);
     }
@@ -55,7 +51,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
     public void after() {
         tokenRepository.deleteAll();
         repository.deleteAll();
-        gymRepository.deleteAll();
         roleRepository.deleteAll();
     }
 
@@ -66,10 +61,10 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
                 "password",
                 "customer",
                 "customer",
-                false, null, null);
+                false, null);
 
         ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/authentication/registration?gymId=" + gym.getId())
+        ResultActions result = mockMvc.perform(post("/authentication/registration")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(customer)))
                 .andExpect(status().isOk());
@@ -77,7 +72,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         roles = customer.getRoles();
         logger.info(roles.toString());
         expectCustomer(result, customer);
-        expectGym(result, customer.getGym(), "gym");
     }
 
     @Test
@@ -98,7 +92,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         roles = admin.getRoles();
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, admin.getGym(), "gym");
     }
 
     @Test
@@ -120,7 +113,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         roles = admin.getRoles();
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, admin.getGym(), "gym");
     }
     @Test
     public void whenChangePassword_OK() throws Exception {
@@ -140,7 +132,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         roles = admin.getRoles();
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, admin.getGym(), "gym");
     }
 
     @Test
@@ -153,7 +144,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         roles = admin.getRoles();
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, admin.getGym(), "gym");
     }
 
     @Test
@@ -189,7 +179,6 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
     private void testExpectedAdmin(ResultActions result) throws Exception {
         roles = admin.getRoles();
         expectAdmin(result, admin);
-        expectGym(result, admin.getGym(), "gym");
         expectAdminRoles(result, roles, "roles");
     }
 }

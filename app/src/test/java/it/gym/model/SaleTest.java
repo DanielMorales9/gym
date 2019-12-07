@@ -7,7 +7,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.time.DayOfWeek;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -19,7 +18,7 @@ public class SaleTest {
 
     @Test
     public void addPersonalToSalesLineItem() {
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
         ATrainingBundleSpecification expectedSpecs = createPersonalBundleSpecification();
@@ -31,7 +30,7 @@ public class SaleTest {
     public void addCourseToSalesLineItem() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
         CourseTrainingBundleSpecification expectedSpecs = (CourseTrainingBundleSpecification) createCourseBundleSpecification(start);
@@ -46,29 +45,29 @@ public class SaleTest {
 
     @Test
     public void deletePersonalToSalesLineItem() {
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
         sale.deleteSalesLineItem(sli);
 
-        assertThat(sale).isEqualTo(createSale(createCustomer(), createGym()));
+        assertThat(sale).isEqualTo(createSale(createCustomer()));
     }
 
     @Test
     public void deleteCourseToSalesLineItem() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
         sale.deleteSalesLineItem(sli);
 
-        Sale expected = createSale(createCustomer(), createGym());
+        Sale expected = createSale(createCustomer());
         assertThat(sale).isEqualTo(expected);
     }
 
     @Test
     public void isPersonalBasedSaleDeletable() {
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
         assertThat(sale.isDeletable()).isTrue();
@@ -78,7 +77,7 @@ public class SaleTest {
     public void isCourseBasedSaleDeletable() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
         assertThat(sale.isDeletable()).isTrue();
@@ -87,7 +86,7 @@ public class SaleTest {
     @Test
     public void confirmPersonalBasedSale() {
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
         assertThat(sale.confirmSale()).isTrue();
@@ -97,7 +96,7 @@ public class SaleTest {
     public void confirmCourseBasedSale() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
         assertThat(sale.confirmSale()).isTrue();
@@ -106,7 +105,7 @@ public class SaleTest {
     @Test
     public void whenConfirmPersonalBasedSaleReturnsFalse() {
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
         sale.deleteSalesLineItem(sli);
 
@@ -117,7 +116,7 @@ public class SaleTest {
     public void whenConfirmCourseBasedSaleReturnsFalse() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
         sale.deleteSalesLineItem(sli);
 
@@ -128,7 +127,7 @@ public class SaleTest {
     public void addBundlesToCustomersCurrentBundles() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         addPersonalToSalesLineItem(sale);
         addCourseToSalesLineItem(sale, start);
 
@@ -143,7 +142,7 @@ public class SaleTest {
     public void removeBundlesToCustomersCurrentBundles() {
         Date start = getDate();
 
-        Sale sale = createSale(createCustomer(), createGym());
+        Sale sale = createSale(createCustomer());
         addPersonalToSalesLineItem(sale);
         addCourseToSalesLineItem(sale, start);
 
@@ -230,7 +229,7 @@ public class SaleTest {
         return p;
     }
 
-    private Sale createSale(Customer customer, Gym gym) {
+    private Sale createSale(Customer customer) {
         Sale sale = new Sale();
         sale.setId(1L);
         sale.setCompleted(false);
@@ -238,7 +237,6 @@ public class SaleTest {
         sale.setPayed(false);
         sale.setPayedDate(null);
         sale.setCustomer(customer);
-        sale.setGym(gym);
         return sale;
     }
 

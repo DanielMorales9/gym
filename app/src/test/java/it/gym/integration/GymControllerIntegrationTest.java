@@ -46,6 +46,13 @@ public class GymControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenFindAll_OK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/gyms"))
+                .andExpect(status().isOk());
+        expectGym(result, gym, "[0]");
+    }
+
+    @Test
     public void whenPatch_OK() throws Exception {
         gym.setFridayOpen(false);
         ObjectMapper objectMapper = new ObjectMapper();

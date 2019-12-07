@@ -20,8 +20,8 @@ export class AuthService {
         return this.http.get('/authentication/getUserFromVerificationToken', {params: {token: token}});
     }
 
-    registration(user: User, gymId: any): Observable<Object> {
-        return this.http.post(`/authentication/registration?gymId=${gymId}`, user);
+    registration(user: User): Observable<Object> {
+        return this.http.post(`/authentication/registration`, user);
     }
 
     resendToken(token: string) {

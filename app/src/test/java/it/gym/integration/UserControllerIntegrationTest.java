@@ -44,7 +44,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         roles = createAdminRoles();
         gym = gymRepository.save(gym);
         roles = roleRepository.saveAll(roles);
-        admin = createAdmin(1L, "admin@admin.com", gym, roles);
+        admin = createAdmin(1L, "admin@admin.com", roles);
         admin = repository.save(admin);
         logger.info(admin.toString());
         VerificationToken token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
@@ -66,7 +66,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         for (int i = 0; i < 1; i++) {
             expectAdmin(result, admin, "content["+i+"]");
             expectAdminRoles(result, roles, "content["+i+"].roles");
-            expectGym(result, gym, "content["+i+"].gym");
         }
     }
 
@@ -76,7 +75,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, gym, "gym");
     }
 
     @Test
@@ -88,7 +86,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         expectAdmin(result, admin, "content["+0+"]");
         logger.info(roles.toString());
         expectAdminRoles(result, roles, "content["+0+"].roles");
-        expectGym(result, gym, "content["+0+"].gym");
     }
 
     @Test
@@ -98,12 +95,12 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         expectAdminRoles(result, roles);
     }
 
-    @Test
-    public void getGymByUserId_OK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/users/" + admin.getId() + "/gym"))
-                .andExpect(status().isOk());
-        expectGym(result, gym);
-    }
+//    @Test
+//    public void getGymByUserId_OK() throws Exception {
+//        ResultActions result = mockMvc.perform(get("/users/" + admin.getId() + "/gym"))
+//                .andExpect(status().isOk());
+//        expectGym(result, gym);
+//    }
 
     @Test
     public void findByEmail_OK() throws Exception {
@@ -111,7 +108,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, gym, "gym");
     }
 
     @Test
@@ -124,7 +120,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectAdmin(result, admin);
         expectAdminRoles(result, roles, "roles");
-        expectGym(result, gym, "gym");
     }
 
     @Test
@@ -137,7 +132,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void deleteByUserId_throwsException() throws Exception {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal");
         spec = bundleSpecRepository.save(spec);
         ATrainingBundle bundle = spec.createTrainingBundle();

@@ -49,11 +49,6 @@ public class Sale {
     private List<SalesLineItem> salesLineItems;
 
     @ManyToOne
-    @JoinColumn(name = "gym_gym_id")
-    @JsonIgnore
-    private Gym gym;
-
-    @ManyToOne
     @JoinColumn(name = "customer_user_id")
     private Customer customer;
 
@@ -129,13 +124,6 @@ public class Sale {
         this.amountPayed = amountPayed;
     }
 
-    public Gym getGym() {
-        return gym;
-    }
-
-    public void setGym(Gym gym) {
-        this.gym = gym;
-    }
 
     public Double getTotalPrice() {
         this.totalPrice = salesLineItems.stream().map(SalesLineItem::getSubTotal).reduce(Double::sum).orElse(0.);

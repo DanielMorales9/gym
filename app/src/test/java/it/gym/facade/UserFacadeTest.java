@@ -35,14 +35,14 @@ public class UserFacadeTest {
 
     @Test
     public void findById() {
-        Mockito.doReturn(Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null)).when(userService).findById(1L);
+        Mockito.doReturn(Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null)).when(userService).findById(1L);
         AUser user = userFacade.findById(1L);
-        assertThat(user).isEqualTo(Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null));
+        assertThat(user).isEqualTo(Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
     }
 
     @Test
     public void delete() {
-        AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Mockito.doReturn(customer).when(userService).findById(1L);
         VerificationToken token = Fixture.createToken(1L, "ababa", customer, addHours(new Date(), 2));
         Mockito.doReturn(token).when(tokenService).findByUser(customer);
@@ -56,7 +56,7 @@ public class UserFacadeTest {
 
     @Test
     public void save() {
-        AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(userService).save(customer);
         AUser user = userFacade.save(customer);
         assertThat(user).isEqualTo(customer);
@@ -64,7 +64,7 @@ public class UserFacadeTest {
 
     @Test
     public void findByEmail() {
-        AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null, null);
+        AUser customer = Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         String email = "customer@customer.com";
         Mockito.doReturn(customer).when(userService).findByEmail(email);
         AUser user = userFacade.findByEmail(email);

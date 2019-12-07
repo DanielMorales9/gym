@@ -1,6 +1,5 @@
 package it.gym.config;
 
-import it.gym.config.TenantContext;
 import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.model.*;
 import it.gym.service.GymService;
@@ -127,19 +126,19 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
 
     private void createAndSaveTrainer(Gym gym, List<Role> roles) {
         String password = passwordEncoder.encode(ADMIN_PASSWORD);
-        Trainer trainer = createTrainer(password, gym, roles);
+        Trainer trainer = createTrainer(password, roles);
         if (!userService.existsByEmail(trainer.getEmail())) userService.save(trainer);
     }
 
     private void createAndSaveCustomer(Gym gym, List<Role> roles) {
         String password = passwordEncoder.encode(ADMIN_PASSWORD);
-        Customer customer = createCustomer(password, gym, roles);
+        Customer customer = createCustomer(password, roles);
         if (!userService.existsByEmail(customer.getEmail())) userService.save(customer);
     }
 
     private void createAndSaveAdmin(Gym gym, List<Role> roles) {
         String password = passwordEncoder.encode(ADMIN_PASSWORD);
-        Admin admin = createAdmin(password, gym, roles);
+        Admin admin = createAdmin(password, roles);
         if (!userService.existsByEmail(admin.getEmail())) userService.save(admin);
     }
 
@@ -176,7 +175,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         return p;
     }
 
-    private Admin createAdmin(String password, Gym gym, List<Role> roles) {
+    private Admin createAdmin(String password, List<Role> roles) {
         Admin admin = new Admin();
         admin.setEmail(ADMIN_EMAIL);
         admin.setFirstName("Admin");
@@ -184,11 +183,10 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         admin.setPassword(password);
         admin.setVerified(true);
         admin.setRoles(roles);
-        admin.setGym(gym);
         return admin;
     }
 
-    private Customer createCustomer(String password, Gym gym, List<Role> roles) {
+    private Customer createCustomer(String password, List<Role> roles) {
         Customer customer = new Customer();
         customer.setEmail("pippo@email.com");
         customer.setFirstName("Pippo");
@@ -196,11 +194,10 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         customer.setPassword(password);
         customer.setVerified(true);
         customer.setRoles(roles);
-        customer.setGym(gym);
         return customer;
     }
 
-    private Trainer createTrainer(String password, Gym gym, List<Role> roles) {
+    private Trainer createTrainer(String password, List<Role> roles) {
         Trainer trainer = new Trainer();
         trainer.setEmail("pluto@email.com");
         trainer.setFirstName("Pluto");
@@ -208,7 +205,6 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         trainer.setPassword(password);
         trainer.setVerified(true);
         trainer.setRoles(roles);
-        trainer.setGym(gym);
         return trainer;
     }
 

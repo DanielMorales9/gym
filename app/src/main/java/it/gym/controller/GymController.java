@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @RequestMapping("/gyms")
@@ -25,6 +26,12 @@ public class GymController {
     ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
         Gym gym = service.findById(id);
         return ResponseEntity.ok(new GymAssembler().toResource(gym));
+    }
+
+    @GetMapping
+    ResponseEntity<List<GymResource>> findGyms() {
+        List<Gym> gym = service.findAll();
+        return ResponseEntity.ok(new GymAssembler().toResources(gym));
     }
 
     @PatchMapping(path = "/{id}")
