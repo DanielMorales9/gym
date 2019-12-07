@@ -20,7 +20,7 @@ public class SalesLineItem {
     @Column(name="line_id")
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
     @JoinColumn(name = "training_bundle_bundle_id")
     private ATrainingBundle trainingBundle;
 
