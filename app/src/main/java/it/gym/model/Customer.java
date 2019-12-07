@@ -82,6 +82,8 @@ public class Customer extends AUser {
 
     @Override
     public boolean isActive() {
-        return !this.currentTrainingBundles.isEmpty();
+        if (this.currentTrainingBundles != null)
+            return !this.currentTrainingBundles.isEmpty();
+        else return false;
     }
 }
