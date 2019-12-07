@@ -46,14 +46,6 @@ public class UserController {
         return ResponseEntity.ok(new RoleAssembler().toResources(roles));
     }
 
-//    @Deprecated
-//    @GetMapping(path = "/{id}/gym")
-//    ResponseEntity<GymResource> getGym(@PathVariable Long id) {
-//        AUser user = facade.findById(id);
-//        Gym gym = user.getGym();
-//        return ResponseEntity.ok(new GymAssembler().toResource(gym));
-//    }
-
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<AUserResource> delete(@PathVariable Long id) {
