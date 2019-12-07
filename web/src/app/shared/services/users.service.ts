@@ -31,10 +31,6 @@ export class UserService {
         return this.http.get(`/users/${id}/roles`);
     }
 
-    getCurrentTrainingBundles(id: number): Observable<Object> {
-        return this.http.get(`/customers/${id}/currentTrainingBundles`);
-    }
-
     delete(id: number) {
         return this.http.delete(`/users/${id}`);
     }

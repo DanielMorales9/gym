@@ -40,9 +40,6 @@ export class TrainingComponent implements OnInit, OnDestroy {
     updateUser() {
         const closure = (res => {
             this.user = res;
-            this.userService.getCurrentTrainingBundles(this.user.id).subscribe( r => {
-                    this.user.currentTrainingBundles = r['_embedded'].personalTrainingBundles;
-            }, err => this._error());
         });
 
         if (this.id) {

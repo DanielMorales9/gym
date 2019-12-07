@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -40,6 +41,11 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     @Override
     public String getType() {
         return "P";
+    }
+
+    @Override
+    public boolean isNotGroup() {
+        return true;
     }
 
     @Override

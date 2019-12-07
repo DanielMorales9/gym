@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
@@ -62,6 +63,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
+    @JsonIgnore
+    public abstract boolean isNotGroup();
     public abstract ATrainingSession createSession(Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
 
@@ -133,4 +136,5 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     protected void prePersist() {
         this.createdAt = new Date();
     }
+
 }
