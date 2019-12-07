@@ -34,23 +34,14 @@ public class TrainingBundleSpecificationFacade {
 
     public void delete(ATrainingBundleSpecification spec) {
         List<ATrainingBundle> bundles = bundleService.findBundlesBySpec(spec);
-        logger.info(bundles.toString());
-        boolean isDeletable = bundles.stream()
-                .map(ATrainingBundle::isDeletable)
-                .reduce(Boolean::logicalAnd)
-                .orElse(true);
+        boolean isDeletable = bundles.isEmpty();
         if (!isDeletable) {
             throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso");
         }
-        bundleService.deleteAll(bundles);
         service.delete(spec);
     }
 
     public ATrainingBundleSpecification createTrainingBundleSpecification(ATrainingBundleSpecification spec) {
-        if (spec.getType().equals(CourseTrainingBundleSpecification.TYPE)) {
-            ATrainingBundle bundle = spec.createTrainingBundle();
-            bundleService.save(bundle);
-        }
         return service.save(spec);
     }
 
