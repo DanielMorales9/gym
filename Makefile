@@ -11,11 +11,12 @@ clean:
 	mvn clean
 
 up:
-	docker-compose up
+	docker-compose up &
 
 run: clean install up
 	echo "running"
+	cd web && npm start
 
 run_app: clean install_app up
 	echo "running"
-
+	cd web && npm start

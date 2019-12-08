@@ -4,9 +4,9 @@
   "license": "MIT",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "start": "ng serve --proxy-config proxy.conf.json",
     "build": "ng build --prod --extract-css=false",
-    "test": "ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI",
+    "test": "ng test --code-coverage=true --progress=false --watch=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "coverage": "ng test --progress=false --watch=true --browsers=ChromeHeadlessCI",
     "e2e": "ng e2e"
