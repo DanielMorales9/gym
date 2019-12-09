@@ -45,10 +45,6 @@ public abstract class AEvent {
     @Column(name = "end_time")
     private Date endTime;
 
-    @ManyToOne
-    @JoinColumn(name = "gym_id")
-    private Gym gym;
-
     public abstract String getType();
 
     public abstract boolean isReservable();
@@ -85,14 +81,6 @@ public abstract class AEvent {
 
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
-    }
-
-    public Gym getGym() {
-        return gym;
-    }
-
-    public void setGym(Gym gym) {
-        this.gym = gym;
     }
 
     @Override

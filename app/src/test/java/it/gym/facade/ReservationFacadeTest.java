@@ -16,7 +16,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -78,7 +80,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void hasHolidays() {
-        List<AEvent> holidays = Collections.singletonList(Fixture.createHoliday(1L, "'holiday", new Date(), new Date(), null));
+        List<AEvent> holidays = Collections.singletonList(Fixture.createHoliday(1L, "'holiday", new Date(), new Date()));
         facade.hasHolidays(holidays);
     }
 
@@ -91,7 +93,7 @@ public class ReservationFacadeTest {
     @Test(expected = BadRequestException.class)
     public void hasNoAvailableTrainers() {
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        List<AEvent> timesOff = Collections.singletonList(Fixture.createTimeOff(2L, "my time", new Date(), new Date(), Fixture.createTrainer(2L), null));
+        List<AEvent> timesOff = Collections.singletonList(Fixture.createTimeOff(2L, "my time", new Date(), new Date(), Fixture.createTrainer(2L)));
         facade.isTrainerAvailable(timesOff);
     }
 
@@ -139,7 +141,7 @@ public class ReservationFacadeTest {
         }).when(sessionService).save(any(ATrainingSession.class));
 
         Mockito.doAnswer(invocationOnMock -> {
-            Reservation var = invocationOnMock.<Reservation>getArgument(0);
+            Reservation var = invocationOnMock.getArgument(0);
             var.setId(1L);
             return var;
         }).when(service).save(any(Reservation.class));
@@ -175,7 +177,7 @@ public class ReservationFacadeTest {
         Reservation reservation = Fixture.createReservation(1L, customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doReturn(customer).when(userService).findByEmail(email);
-        Mockito.doReturn(createPersonalEvent(session, Fixture.createGym(1L))).when(eventService).findById(1L);
+        Mockito.doReturn(createPersonalEvent(session)).when(eventService).findById(1L);
 
         Reservation actual = facade.deleteReservations(1L, 1L, email, "customer");
 
@@ -183,12 +185,11 @@ public class ReservationFacadeTest {
         assertThat(actual).isEqualTo(Fixture.createReservation(1L, customer));
     }
 
-    private ATrainingEvent createPersonalEvent(ATrainingSession session, Gym gym) {
+    private ATrainingEvent createPersonalEvent(ATrainingSession session) {
         ATrainingEvent evt = new PersonalEvent();
         evt.setSession(session);
         evt.setEndTime(evt.getSession().getEndTime());
         evt.setStartTime(evt.getSession().getStartTime());
-        evt.setGym(gym);
         evt.setName("Allenamento");
         return evt;
     }
@@ -208,7 +209,7 @@ public class ReservationFacadeTest {
         Reservation reservation = Fixture.createReservation(1L, customer);
         Mockito.doReturn(reservation).when(service).findById(1L);
         Mockito.doReturn(customer).when(userService).findByEmail(email);
-        Mockito.doReturn(createPersonalEvent(session, Fixture.createGym(1L))).when(eventService).findById(1L);
+        Mockito.doReturn(createPersonalEvent(session)).when(eventService).findById(1L);
 
         Reservation actual = facade.deleteReservations(1L, 1L, email, "admin");
 

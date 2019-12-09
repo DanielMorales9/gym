@@ -90,7 +90,6 @@ public class ReservationFacade {
         evt.setSession(session);
         evt.setEndTime(endTime);
         evt.setStartTime(startTime);
-        evt.setGym(gym);
         evt.setName(String.format("Allenamento: %s", bundle.getName()));
 
         Reservation res = evt.reserve(customer);

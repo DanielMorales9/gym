@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-
 public class Fixture {
 
 
@@ -125,24 +123,22 @@ public class Fixture {
         return user;
     }
 
-    public static AEvent createHoliday(long id, String name, Date start, Date end, Gym gym) {
+    public static AEvent createHoliday(long id, String name, Date start, Date end) {
         AEvent time = new Holiday();
         time.setId(id);
         time.setName(name);
         time.setStartTime(start);
         time.setEndTime(end);
-        time.setGym(gym);
         return time;
     }
 
-    public static AEvent createTimeOff(long id, String name, Date start, Date end, AUser trainer, Gym gym) {
+    public static AEvent createTimeOff(long id, String name, Date start, Date end, AUser trainer) {
         TimeOff time = new TimeOff();
         time.setId(id);
         time.setName(name);
         time.setStartTime(start);
         time.setEndTime(end);
         time.setUser(trainer);
-        time.setGym(gym);
         return time;
     }
 
@@ -154,9 +150,8 @@ public class Fixture {
         return res;
     }
 
-    public static CourseEvent createCourseEvent(long id, String name, ATrainingSession session, Gym gym) {
+    public static CourseEvent createCourseEvent(long id, String name, ATrainingSession session) {
         CourseEvent course = new CourseEvent();
-        course.setGym(gym);
         course.setId(id);
         course.setStartTime(session.getStartTime());
         course.setEndTime(session.getEndTime());
