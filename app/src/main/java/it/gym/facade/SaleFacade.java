@@ -164,10 +164,11 @@ public class SaleFacade {
 
     public Sale deleteSaleById(Long saleId) {
         Sale sale = this.findById(saleId);
-        if (!sale.isDeletable() || !sale.removeBundlesFromCustomersCurrentBundles()) {
+        if (!sale.isDeletable()) {
             throw new BadRequestException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
                     sale.getCustomer().getLastName()));
         }
+        sale.removeBundlesFromCustomersCurrentBundles();
         this.userService.save(sale.getCustomer());
         List<ATrainingBundle> bundles = getDeletableBundles(sale);
         this.bundleService.deleteAll(bundles);
