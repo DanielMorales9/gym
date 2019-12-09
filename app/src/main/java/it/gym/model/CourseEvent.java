@@ -23,6 +23,7 @@ public class CourseEvent extends ATrainingEvent {
     public static final String TYPE = "C";
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "event_id")
     private List<Reservation> reservations;
 
     @Override
