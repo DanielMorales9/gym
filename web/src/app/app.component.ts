@@ -52,13 +52,13 @@ export class AppComponent implements OnInit {
 
     }
 
-    logout() {
-        this.service.logout(() => {
-            this.snav.close();
+    async logout() {
+        this.service.logout(async () => {
+            await this.snav.close();
             this.current_role_view = undefined;
             this.authenticated = false;
             this.user = undefined;
-            return this.router.navigateByUrl('/auth/login');
+            await this.router.navigateByUrl('/auth/login');
         });
     }
 

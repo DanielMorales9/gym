@@ -68,7 +68,6 @@ export class VerificationComponent implements OnInit {
             });
     }
 
-    // TODO invalid token redirects somewhere
     confirmRegistration() {
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
