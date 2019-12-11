@@ -51,8 +51,12 @@ public class Customer extends AUser {
     }
 
     public List<ATrainingBundle> getCurrentTrainingBundles() {
+        if (currentTrainingBundles == null)
+            this.currentTrainingBundles = new ArrayList<>();
         return currentTrainingBundles;
     }
+
+
 
     public void setCurrentTrainingBundles(List<ATrainingBundle> currentTrainingBundles) {
         this.currentTrainingBundles = currentTrainingBundles;
@@ -65,8 +69,8 @@ public class Customer extends AUser {
         return this.currentTrainingBundles.addAll(bundles);
     }
 
-    public boolean deleteBundle(ATrainingBundle bundle) {
-        return this.currentTrainingBundles.remove(bundle);
+    public void deleteBundle(ATrainingBundle bundle) {
+        this.currentTrainingBundles.remove(bundle);
     }
 
     @Override
@@ -85,5 +89,11 @@ public class Customer extends AUser {
         if (this.currentTrainingBundles != null)
             return !this.currentTrainingBundles.isEmpty();
         else return false;
+    }
+
+    public boolean containsBundle(ATrainingBundle bundle) {
+        if (this.currentTrainingBundles != null)
+            return this.currentTrainingBundles.contains(bundle);
+        return false;
     }
 }

@@ -32,5 +32,7 @@ public abstract class ATrainingEvent extends AEvent {
 
     public abstract Reservation reserve(Customer customer);
 
-    public abstract boolean deleteReservation(Reservation res);
+    public abstract void deleteReservation(Reservation res);
+
+    public abstract void deleteSession();
 }

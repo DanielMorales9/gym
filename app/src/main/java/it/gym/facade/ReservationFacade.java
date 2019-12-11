@@ -16,8 +16,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -35,7 +37,6 @@ public class ReservationFacade {
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
     @Autowired private TrainingBundleService bundleService;
-    @Autowired private UserService userService;
     @Autowired private MailService mailService;
 
     @Value("${reservationBeforeHours}")
@@ -56,7 +57,9 @@ public class ReservationFacade {
                 .orElseThrow(() -> new BadRequestException("Non possiedi questo pacchetto"));
     }
 
-    private void simpleReservationChecks(Gym gym, Customer customer, ATrainingBundle bundle, Date startTime, Date endTime) {
+    private void simpleReservationChecks(Gym gym, Customer customer,
+                                         ATrainingBundle bundle,
+                                         Date startTime, Date endTime) {
         // do all the checks
         gymService.simpleGymChecks(gym, startTime, endTime);
 
@@ -90,7 +93,6 @@ public class ReservationFacade {
         evt.setSession(session);
         evt.setEndTime(endTime);
         evt.setStartTime(startTime);
-        evt.setGym(gym);
         evt.setName(String.format("Allenamento: %s", bundle.getName()));
 
         Reservation res = evt.reserve(customer);
@@ -121,31 +123,21 @@ public class ReservationFacade {
         return res;
     }
 
-    public Reservation deleteReservations(Long eventId, Long reservationId, String email, String type) {
+    public Reservation deleteReservations(Long eventId, Long reservationId, String type) {
         logger.info("Getting reservation by id");
         Reservation res = this.service.findById(reservationId);
         ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
 
+        ATrainingBundle bundle = event.getSession().getTrainingBundle();
+
         event.deleteReservation(res);
-
-        logger.info("Getting session from reservation");
-        ATrainingSession session = event.getSession();
-
-        logger.info("Getting the principal user");
-        AUser principal = this.userService.findByEmail(email);
-
-        deleteSessionFromBundle(res.getUser(), event.getSession(), principal);
-
-        logger.info("Deleting training session from bundle and reservation");
-        this.bundleService.save(event.getSession().getTrainingBundle());
+        event.deleteSession();
 
         if (event.getType().equals("P")) {
             this.eventService.delete(event);
+            this.bundleService.save(bundle);
         }
-        else {
-            sessionService.delete(session);
-            this.service.delete(res);
-        }
+        this.service.delete(res);
 
         sendCancelEmail(res, type);
         return res;
@@ -169,7 +161,7 @@ public class ReservationFacade {
             deleteExpiredBundles(customer);
             throw new MethodNotAllowedException("Hai completato tutte le sessioni di allenamento disponibili in questo pacchetto");
         }
-        if (!customer.getCurrentTrainingBundles().contains(bundle)) {
+        if (!customer.containsBundle(bundle)) {
             throw new MethodNotAllowedException("Non hai acquistato questo pacchetto");
         }
     }
@@ -187,15 +179,11 @@ public class ReservationFacade {
 
     void deleteExpiredBundles(Customer customer) {
         logger.info("Checking whether the bundles are expired");
-        boolean allDeleted = customer
+        List<ATrainingBundle> expiredBundles = customer
                 .getCurrentTrainingBundles()
-                .parallelStream()
-                .filter(ATrainingBundle::isExpired)
-                .map(customer::deleteBundle)
-                .reduce(Boolean::logicalAnd).orElse(true);
-
-        if (!allDeleted)
-            throw new InternalServerException("Qualcosa è andato storto.");
+                .stream()
+                .filter(ATrainingBundle::isExpired).collect(Collectors.toList());
+        expiredBundles.forEach(customer::deleteBundle);
     }
 
     void isReservedOnTime(Date startTime) {
@@ -217,21 +205,6 @@ public class ReservationFacade {
 
         if (nHolidays > 0)
             throw new BadRequestException("Chiusura Aziendale");
-    }
-
-    private void deleteSessionFromBundle(Customer customer,  ATrainingSession session, AUser principal) {
-        List<String> roles = principal.getRoles().stream().map(Role::getName).collect(Collectors.toList());
-
-        if (roles.contains("ADMIN") || roles.contains("TRAINER")) {
-            session.deleteMeFromBundle();
-        } else if (session.isDeletable() && this.sessionIsPast(session) && principal.getEmail().equals(customer.getEmail()))
-            session.deleteMeFromBundle();
-        else
-            throw new MethodNotAllowedException("Non è possibile eliminare la prenotazione");
-    }
-
-    private boolean sessionIsPast(ATrainingSession session) {
-        return session.getStartTime().before(new Date());
     }
 
     private void sendCancelEmail(Reservation res, String type) {

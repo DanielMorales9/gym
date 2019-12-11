@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-
 public class Fixture {
 
 
@@ -96,10 +94,10 @@ public class Fixture {
         return pt;
     }
 
-    public static ATrainingBundle createPersonalBundle(long id) {
+    public static ATrainingBundle createPersonalBundle(long id, int sessions) {
         PersonalTrainingBundle pt = new PersonalTrainingBundle();
         pt.setName("Winter Pack");
-        pt.setNumSessions(11);
+        pt.setNumSessions(sessions);
         pt.setPrice(111.0);
         pt.setDescription("Description");
         pt.setId(id);
@@ -125,24 +123,22 @@ public class Fixture {
         return user;
     }
 
-    public static AEvent createHoliday(long id, String name, Date start, Date end, Gym gym) {
+    public static AEvent createHoliday(long id, String name, Date start, Date end) {
         AEvent time = new Holiday();
         time.setId(id);
         time.setName(name);
         time.setStartTime(start);
         time.setEndTime(end);
-        time.setGym(gym);
         return time;
     }
 
-    public static AEvent createTimeOff(long id, String name, Date start, Date end, AUser trainer, Gym gym) {
+    public static AEvent createTimeOff(long id, String name, Date start, Date end, AUser trainer) {
         TimeOff time = new TimeOff();
         time.setId(id);
         time.setName(name);
         time.setStartTime(start);
         time.setEndTime(end);
         time.setUser(trainer);
-        time.setGym(gym);
         return time;
     }
 
@@ -154,9 +150,8 @@ public class Fixture {
         return res;
     }
 
-    public static CourseEvent createCourseEvent(long id, String name, ATrainingSession session, Gym gym) {
+    public static CourseEvent createCourseEvent(long id, String name, ATrainingSession session) {
         CourseEvent course = new CourseEvent();
-        course.setGym(gym);
         course.setId(id);
         course.setStartTime(session.getStartTime());
         course.setEndTime(session.getEndTime());
@@ -211,5 +206,17 @@ public class Fixture {
         specs.setStartTime(startTime);
         specs.setEndTime(endTime);
         return specs;
+    }
+
+    public static ATrainingBundle createCourseBundle(long l, Date startTime, Date endTime, int customers) {
+            CourseTrainingBundle pt = new CourseTrainingBundle();
+            pt.setName("Winter Pack");
+            pt.setMaxCustomers(customers);
+            pt.setPrice(111.0);
+            pt.setEndTime(endTime);
+            pt.setStartTime(startTime);
+            pt.setDescription("Description");
+            pt.setId(l);
+            return pt;
     }
 }

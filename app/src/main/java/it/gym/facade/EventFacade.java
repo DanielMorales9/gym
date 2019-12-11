@@ -58,7 +58,6 @@ public class EventFacade {
         holiday.setName(event.getName());
         holiday.setStartTime(event.getStartTime());
         holiday.setEndTime(event.getEndTime());
-        holiday.setGym(gym);
 
         return this.service.save(holiday);
     }
@@ -100,7 +99,6 @@ public class EventFacade {
         timeOff.setName(event.getName());
         timeOff.setStartTime(event.getStartTime());
         timeOff.setEndTime(event.getEndTime());
-        timeOff.setGym(gym);
         timeOff.setUser(trainer);
 
         return service.save(timeOff);
@@ -159,7 +157,6 @@ public class EventFacade {
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setName(evt.getName());
-        event.setGym(gym);
 
         session = sessionService.save(session);
         bundleService.save(bundle);

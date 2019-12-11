@@ -17,7 +17,8 @@ import java.util.Date;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.*;
+import static it.gym.utility.HateoasTest.expectEvent;
+import static it.gym.utility.HateoasTest.expectUser;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -45,7 +46,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         gym = gymRepository.save(gym);
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        event = createHoliday(1L, "closed",  start, end, gym);
+        event = createHoliday(1L, "closed", start, end);
         event = eventRepository.save(event);
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
@@ -83,7 +84,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
         AEvent h = eventRepository.findAll().get(1);
         expectEvent(result, h);
-        expectGym(result, h.getGym(), "gym");
     }
 
     @Test
@@ -92,7 +92,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         expectEvent(result, event);
-        expectGym(result, event.getGym(), "gym");
     }
 
     @Test
@@ -106,14 +105,13 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         expectEvent(result, event);
-        expectGym(result, event.getGym(), "gym");
     }
 
     @Test
     public void whenEditTimeOff_OK() throws Exception {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed",  start, end, trainer, gym);
+        TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed", start, end, trainer);
         timeOff = eventRepository.save(timeOff);
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -125,21 +123,19 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         expectEvent(result, timeOff);
-        expectGym(result, timeOff.getGym(), "gym");
     }
 
     @Test
     public void whenDeleteTimeOff_OK() throws Exception {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed",  start, end, trainer, gym);
+        TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed", start, end, trainer);
         timeOff = eventRepository.save(timeOff);
 
         ResultActions result = mockMvc.perform(delete("/events/timeOff/"+timeOff.getId()))
                 .andExpect(status().isOk());
 
         expectEvent(result, timeOff);
-        expectGym(result, timeOff.getGym(), "gym");
     }
 
     @Test
@@ -261,7 +257,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         ATrainingSession session = courseBundle.createSession(start, end);
         courseBundle.addSession(session);
 
-        event = createCourseEvent(1L, "course",  session, gym);
+        event = createCourseEvent(1L, "course", session);
         event = eventRepository.save(event);
 
 
@@ -285,7 +281,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         ATrainingSession session = courseBundle.createSession(start, end);
         courseBundle.addSession(session);
 
-        event = createCourseEvent(1L, "course",  session, gym);
+        event = createCourseEvent(1L, "course", session);
         event = eventRepository.save(event);
 
         ResultActions result = mockMvc.perform(get("/events/" + event.getId()+"/complete"))
