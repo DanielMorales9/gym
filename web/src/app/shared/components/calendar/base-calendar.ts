@@ -4,7 +4,7 @@ import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} 
 import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CalendarFacade} from '../../../services';
+import {CalendarFacade, ScreenService} from '../../../services';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -95,9 +95,15 @@ export abstract class BaseCalendar implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
-    protected constructor(public facade: CalendarFacade,
-                          public router: Router,
-                          public activatedRoute: ActivatedRoute) {
+    constructor(public facade: CalendarFacade,
+                public router: Router,
+                public activatedRoute: ActivatedRoute,
+                public screenService: ScreenService) {
+    }
+
+
+    isDesktop() {
+        return this.screenService.isDesktop();
     }
 
     static isNotPast(date) {

@@ -14,6 +14,7 @@ export class CalendarHeaderToolbar {
 
     @Input() view: CalendarView;
     @Input() viewDate: Date;
+    @Input() desktop: boolean;
 
     @Output() done: EventEmitter<any> = new EventEmitter();
 
@@ -23,6 +24,10 @@ export class CalendarHeaderToolbar {
         } else {
             this.done.emit(this.viewDate);
         }
+    }
+
+    isDesktop() {
+        return this.desktop;
     }
 }
 

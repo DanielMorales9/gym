@@ -1,4 +1,7 @@
-<calendar-header [view]="view" [viewDate]="viewDate" (done)="onViewDateChanged($event)"></calendar-header>
+<calendar-header [view]="view"
+                 [viewDate]="viewDate"
+                 [desktop]="isDesktop()"
+                 (done)="onViewDateChanged($event)"></calendar-header>
 <div [ngSwitch]="view" class="main-calendar">
     <mwl-calendar-month-view
             *ngSwitchCase="MONTH"
@@ -43,4 +46,10 @@
             (eventTimesChanged)="handleEvent('change',$event)">
     </mwl-calendar-day-view>
 </div>
-<calendar-footer [view]="view" [viewDate]="viewDate" (done)="onViewDateChanged($event)"></calendar-footer>
+
+<calendar-button
+        *ngIf="!isDesktop()"
+        [view]="view"
+        [viewDate]="viewDate"
+        (done)="onViewDateChanged($event)" >
+</calendar-button>

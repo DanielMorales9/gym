@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CalendarFacade, SnackBarService} from '../../../services';
+import {CalendarFacade, ScreenService, SnackBarService} from '../../../services';
 import {concat} from 'rxjs';
 import {MatDialog} from '@angular/material';
 import {CustomerInfoModalComponent} from './customer-info-modal.component';
@@ -19,8 +19,9 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 private snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public router: Router,
+                public screenService: ScreenService,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute);
+        super(facade, router, activatedRoute, screenService);
     }
 
     getEvents() {
