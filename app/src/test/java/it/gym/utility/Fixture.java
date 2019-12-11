@@ -94,10 +94,10 @@ public class Fixture {
         return pt;
     }
 
-    public static ATrainingBundle createPersonalBundle(long id) {
+    public static ATrainingBundle createPersonalBundle(long id, int sessions) {
         PersonalTrainingBundle pt = new PersonalTrainingBundle();
         pt.setName("Winter Pack");
-        pt.setNumSessions(11);
+        pt.setNumSessions(sessions);
         pt.setPrice(111.0);
         pt.setDescription("Description");
         pt.setId(id);
@@ -206,5 +206,17 @@ public class Fixture {
         specs.setStartTime(startTime);
         specs.setEndTime(endTime);
         return specs;
+    }
+
+    public static ATrainingBundle createCourseBundle(long l, Date startTime, Date endTime, int customers) {
+            CourseTrainingBundle pt = new CourseTrainingBundle();
+            pt.setName("Winter Pack");
+            pt.setMaxCustomers(customers);
+            pt.setPrice(111.0);
+            pt.setEndTime(endTime);
+            pt.setStartTime(startTime);
+            pt.setDescription("Description");
+            pt.setId(l);
+            return pt;
     }
 }

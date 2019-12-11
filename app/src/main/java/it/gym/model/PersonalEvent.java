@@ -7,7 +7,6 @@ import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="P")
@@ -17,8 +16,6 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class PersonalEvent extends ATrainingEvent {
-
-    public static final String TYPE = "P";
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "reservation_res_id")
@@ -51,7 +48,12 @@ public class PersonalEvent extends ATrainingEvent {
     }
 
     @Override
-    public boolean deleteReservation(Reservation res) {
-        return true;
+    public void deleteReservation(Reservation res) {
+        this.reservation = null;
+    }
+
+    @Override
+    public void deleteSession() {
+        this.getSession().deleteMeFromBundle();
     }
 }

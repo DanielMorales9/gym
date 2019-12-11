@@ -33,7 +33,10 @@ public class CourseEvent extends ATrainingEvent {
 
     @Override
     public boolean isReservable() {
-        return true;
+        int nReservations;
+        if (this.reservations == null) nReservations = 0;
+        else nReservations = reservations.size();
+        return nReservations < ((CourseTrainingSession) this.getSession()).getMaxCustomers() ;
     }
 
     public List<Reservation> getReservations() {
@@ -62,7 +65,13 @@ public class CourseEvent extends ATrainingEvent {
     }
 
     @Override
-    public boolean deleteReservation(Reservation res) {
-        return this.reservations.remove(res);
+    public void deleteReservation(Reservation res) {
+        this.reservations.remove(res);
+    }
+
+    @Override
+    public void deleteSession() {
+        this.setSession(null);
+        // the session is shared among other users and it should not deleted
     }
 }

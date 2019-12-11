@@ -209,4 +209,15 @@ public class HateoasTest {
         result.andExpect(jsonPath("$"+prefix+"id").value(event.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(event.getName()));
     }
+
+    public static void expectReservation(ResultActions result, Reservation reservation) throws Exception {
+        expectReservation(result, reservation, null);
+    }
+
+    public static void expectReservation(ResultActions result, Reservation reservation, String prefix) throws Exception {
+        prefix = handlePrefix(prefix);
+        result.andExpect(jsonPath("$"+prefix+"id").value(reservation.getId()))
+                .andExpect(jsonPath("$"+prefix+"confirmed").value(reservation.getConfirmed()));
+    }
+
 }

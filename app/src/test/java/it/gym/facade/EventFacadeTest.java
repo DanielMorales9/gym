@@ -120,7 +120,6 @@ public class EventFacadeTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Date endCourse = addDays(start, 30);
-        Gym gym = Fixture.createGym(1L);
 
         // all what you need to create a course event
         ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
@@ -141,7 +140,6 @@ public class EventFacadeTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Date endCourse = addDays(start, 30);
-        Gym gym = Fixture.createGym(1L);
 
         // all what you need to create a course event
         ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
@@ -159,7 +157,6 @@ public class EventFacadeTest {
         Date start = addDays(getNextMonday(), -30);
         Date end = addHours(start, 1);
         Date endCourse = addDays(start, 30);
-        Gym gym = Fixture.createGym(1L);
 
         // all what you need to create a course event
         ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);

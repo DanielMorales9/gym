@@ -46,7 +46,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         roles = roleRepository.saveAll(roles);
         admin = createAdmin(1L, "admin@admin.com", roles);
         admin = repository.save(admin);
-        logger.info(admin.toString());
         VerificationToken token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
         tokenRepository.save(token);
     }
@@ -84,7 +83,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectAdmin(result, admin, "content["+0+"]");
         expectAdmin(result, admin, "content["+0+"]");
-        logger.info(roles.toString());
         expectAdminRoles(result, roles, "content["+0+"].roles");
     }
 
@@ -138,7 +136,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ATrainingBundle bundle = spec.createTrainingBundle();
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
         customer = repository.save(customer);
-        logger.info(customer.getCurrentTrainingBundles().toString());
         mockMvc.perform(delete("/users/" + customer.getId()))
                 .andExpect(status().isBadRequest());
 
