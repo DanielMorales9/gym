@@ -9,15 +9,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Date;
-import java.util.List;
 
 @RepositoryRestController
 @RequestMapping("/reservations")
@@ -69,11 +66,9 @@ public class ReservationController {
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
                                                @RequestParam Long eventId,
-                                               @RequestParam(value = "type", defaultValue = "customer") String type,
-                                               Principal principal) {
+                                               @RequestParam(value = "type", defaultValue = "customer") String type) {
 
-        String email = principal.getName();
-        Reservation res = facade.deleteReservations(eventId, reservationId, email, type);
+        Reservation res = facade.deleteReservations(eventId, reservationId, type);
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }

@@ -16,13 +16,11 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import static it.gym.utility.Calendar.getNextMonday;
-import static it.gym.utility.Fixture.createTrainer;
 import static it.gym.utility.Fixture.createTimeOff;
+import static it.gym.utility.Fixture.createTrainer;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -82,7 +80,7 @@ public class EventFacadeTest {
         event.setName("holiday");
         AEvent evt = facade.createHoliday(1L, event);
         Mockito.verify(gymService).findById(1L);
-        assertThat(evt).isEqualTo(Fixture.createHoliday(1L, "holiday", start, end, gym));
+        assertThat(evt).isEqualTo(Fixture.createHoliday(1L, "holiday", start, end));
     }
 
     @Test
@@ -122,7 +120,6 @@ public class EventFacadeTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Date endCourse = addDays(start, 30);
-        Gym gym = Fixture.createGym(1L);
 
         // all what you need to create a course event
         ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
@@ -130,7 +127,7 @@ public class EventFacadeTest {
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
-        Mockito.doReturn(Fixture.createCourseEvent(1L, "CourseEvent", session, gym)).when(service).findById(1L);
+        Mockito.doReturn(Fixture.createCourseEvent(1L, "CourseEvent", session)).when(service).findById(1L);
         CourseEvent event = (CourseEvent) facade.deleteCourseEvent(1L);
         Mockito.verify(sessionService).delete(session);
         Mockito.verify(service).delete(event);
@@ -143,7 +140,6 @@ public class EventFacadeTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Date endCourse = addDays(start, 30);
-        Gym gym = Fixture.createGym(1L);
 
         // all what you need to create a course event
         ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
@@ -152,7 +148,7 @@ public class EventFacadeTest {
         bundle.addSession(session);
         session.setCompleted(true);
 
-        Mockito.doReturn(Fixture.createCourseEvent(1L, "CourseEvent", session, gym)).when(service).findById(1L);
+        Mockito.doReturn(Fixture.createCourseEvent(1L, "CourseEvent", session)).when(service).findById(1L);
         facade.deleteCourseEvent(1L);
     }
 
@@ -161,7 +157,6 @@ public class EventFacadeTest {
         Date start = addDays(getNextMonday(), -30);
         Date end = addHours(start, 1);
         Date endCourse = addDays(start, 30);
-        Gym gym = Fixture.createGym(1L);
 
         // all what you need to create a course event
         ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
@@ -169,7 +164,7 @@ public class EventFacadeTest {
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
-        CourseEvent courseEvent = Fixture.createCourseEvent(1L, "CourseEvent", session, gym);
+        CourseEvent courseEvent = Fixture.createCourseEvent(1L, "CourseEvent", session);
         Mockito.doReturn(courseEvent).when(service).findById(1L);
         Mockito.doAnswer(inv -> inv.getArgument(0)).when(service).save(any());
         AEvent actual = facade.complete(1L);
@@ -201,7 +196,7 @@ public class EventFacadeTest {
 
         Mockito.doReturn(gym).when(gymService).findById(1L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
-        Mockito.doReturn(Fixture.createHoliday(1L, "'holiday", start, end, gym)).when(service).findById(1L);
+        Mockito.doReturn(Fixture.createHoliday(1L, "'holiday", start, end)).when(service).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
 
         Event event = new Event();
@@ -211,7 +206,7 @@ public class EventFacadeTest {
         event.setName("holiday");
         AEvent evt = facade.editEvent(1L, 1L, event);
         Mockito.verify(gymService).findById(1L);
-        assertThat(evt).isEqualTo(Fixture.createHoliday(1L, "holiday", start, newEnd, gym));
+        assertThat(evt).isEqualTo(Fixture.createHoliday(1L, "holiday", start, newEnd));
     }
 
     @Test
@@ -222,7 +217,7 @@ public class EventFacadeTest {
 
         Mockito.doReturn(gym).when(gymService).findById(1L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
-        Mockito.doReturn(Fixture.createHoliday(1L, "holiday", start, end, gym)).when(service).findById(1L);
+        Mockito.doReturn(Fixture.createHoliday(1L, "holiday", start, end)).when(service).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
 
         Event event = new Event();
@@ -242,7 +237,7 @@ public class EventFacadeTest {
 
         Mockito.doReturn(gym).when(gymService).findById(1L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
-        Mockito.doReturn(Fixture.createHoliday(1L, "'holiday", start, end, gym)).when(service).findById(1L);
+        Mockito.doReturn(Fixture.createHoliday(1L, "'holiday", start, end)).when(service).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
 
         Event event = new Event();
@@ -275,7 +270,7 @@ public class EventFacadeTest {
         event.setName("timeOff");
         AEvent evt = facade.createTimeOff(1L, 2L, event);
         Mockito.verify(gymService).findById(1L);
-        assertThat(evt).isEqualTo(createTimeOff(1L, "timeOff", start, end, trainer, gym));
+        assertThat(evt).isEqualTo(createTimeOff(1L, "timeOff", start, end, trainer));
     }
 
     @Test
@@ -286,7 +281,7 @@ public class EventFacadeTest {
         AUser trainer = createTrainer(2L);
 
         Mockito.doReturn(gym).when(gymService).findById(1L);
-        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer, gym)).when(service).findById(2L);
+        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer)).when(service).findById(2L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
         Event event = new Event();
@@ -296,7 +291,7 @@ public class EventFacadeTest {
         event.setName("timeOff");
         AEvent evt = facade.editEvent(1L, 2L, event);
         Mockito.verify(gymService).findById(1L);
-        assertThat(evt).isEqualTo(createTimeOff(1L, "timeOff", start, newEnd, trainer, gym));
+        assertThat(evt).isEqualTo(createTimeOff(1L, "timeOff", start, newEnd, trainer));
     }
 
     @Test
@@ -307,7 +302,7 @@ public class EventFacadeTest {
         AUser trainer = createTrainer(2L);
 
         Mockito.doReturn(gym).when(gymService).findById(1L);
-        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer, gym)).when(service).findById(2L);
+        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer)).when(service).findById(2L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
         Event event = new Event();
@@ -327,7 +322,7 @@ public class EventFacadeTest {
         AUser trainer = createTrainer(2L);
 
         Mockito.doReturn(gym).when(gymService).findById(1L);
-        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer, gym)).when(service).findById(2L);
+        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer)).when(service).findById(2L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
         Event event = new Event();

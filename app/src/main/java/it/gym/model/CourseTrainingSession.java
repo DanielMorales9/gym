@@ -33,6 +33,10 @@ public class CourseTrainingSession extends ATrainingSession {
         return !this.getCompleted();
     }
 
+    public int getMaxCustomers() {
+        return ((CourseTrainingBundle) this.getTrainingBundle()).getMaxCustomers();
+    }
+
     @Override
     public void complete() {
         if (!this.getEndTime().before(new Date()))

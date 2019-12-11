@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,13 +41,13 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPersonalTrainingSession(1L, createPersonalBundle(1L)));
+        this.service.save(createPersonalTrainingSession(1L, createPersonalBundle(1L, 11)));
         Mockito.verify(repository).save(any(ATrainingSession.class));
     }
 
     @Test
     public void findById() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L));
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, 11));
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(session));
         ATrainingSession u = this.service.findById(1L);
         assertThat(u).isEqualTo(session);
@@ -57,7 +56,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findAll() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L));
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, 11));
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(session));
         List<ATrainingSession> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(session));
@@ -71,7 +70,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L));
+        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L, 11));
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingSession.class));
     }

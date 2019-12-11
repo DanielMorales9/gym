@@ -40,7 +40,6 @@ public class Holiday extends AEvent {
 
         return " Tipo :" + this.getType() +
                 " Nome :" + this.getName() +
-                " Palestra: " + this.getGym().toString() +
                 " Data :" + this.getStartTime().toString();
     }
 }

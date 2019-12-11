@@ -103,19 +103,20 @@ export class BundlesComponent implements OnInit {
             const message = `Il pacchetto ${bundle.name} è stato creato`;
             this.snackbar.open(message);
             this.search();
-        });
+        }, err => this.snackbar.open(err.error.message));
     }
 
     private deleteBundle(bundle: BundleSpecification) {
         const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
         if (confirmed) {
-            this.service.delete(bundle.id).subscribe(_ => this.search());
+            this.service.delete(bundle.id).subscribe(_ => this.search(),
+                    err => this.snackbar.open(err.error.message));
         }
     }
 
     private toggleDisabled(bundle: BundleSpecification) {
         bundle.disabled = !bundle.disabled;
-        this.service.patch(bundle).subscribe(res => console.log(res));
+        this.service.patch(bundle).subscribe(res => console.log(res), err => this.snackbar.open(err.error.message));
     }
 
     private modifyBundle(bundle: BundleSpecification) {
@@ -123,6 +124,6 @@ export class BundlesComponent implements OnInit {
             const message = `Il pacchetto ${bundle.name} è stato modificato`;
             this.snackbar.open(message);
             this.search();
-        });
+        }, err => this.snackbar.open(err.error.message));
     }
 }

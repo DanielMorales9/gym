@@ -174,14 +174,14 @@ public class Sale {
                         .collect(Collectors.toList()));
     }
 
-    public boolean removeBundlesFromCustomersCurrentBundles() {
+    public void removeBundlesFromCustomersCurrentBundles() {
         List<ATrainingBundle> trainingBundles = this.getSalesLineItems()
                 .stream()
                 .map(SalesLineItem::getTrainingBundle)
                 .collect(Collectors.toList());
         if (trainingBundles.isEmpty() || this.getCustomer().getCurrentTrainingBundles().isEmpty())
-            return true;
-        return this.getCustomer().getCurrentTrainingBundles().removeAll(trainingBundles);
+            return;
+        this.getCustomer().getCurrentTrainingBundles().removeAll(trainingBundles);
     }
 
     @PrePersist

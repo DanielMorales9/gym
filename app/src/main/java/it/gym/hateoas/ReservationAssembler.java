@@ -16,7 +16,6 @@ public class ReservationAssembler extends ResourceAssemblerSupport<Reservation,
     @Override
     public ReservationResource toResource(Reservation reservation) {
         ReservationResource resource = new ReservationResource(reservation);
-        resource.setUser(new CustomerAssembler().toResource(reservation.getUser()));
         resource.add(linkTo(ReservationRepository.class).slash("reservations")
                 .slash(reservation.getId()).withSelfRel());
         return resource;
