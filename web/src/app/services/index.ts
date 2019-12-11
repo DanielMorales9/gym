@@ -10,3 +10,4 @@ export * from './authenticated.service';
 export * from './snackbar.service';
 export * from './sale.facade';
 export * from './spec.facade';
+export * from './screen.service';

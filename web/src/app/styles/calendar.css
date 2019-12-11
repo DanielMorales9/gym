@@ -10,10 +10,14 @@
     justify-content: space-between;
 }
 
-
+.fab-button-today {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+}
 
 .main-calendar {
-    height: calc(100vh - 192px) !important;
+    height: calc(100vh - 96px) !important;
     top: 128px;
     padding: 8px;
     overflow-x: hidden;
@@ -24,7 +28,7 @@
 @media (max-width: 599px) {
     .main-calendar {
         top: 112px;
-        height: calc(100vh - 168px) !important;
+        height: calc(100vh - 84px) !important;
     }
 
     .calendar-top-toolbar {

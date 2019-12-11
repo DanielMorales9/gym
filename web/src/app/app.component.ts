@@ -4,6 +4,7 @@ import 'rxjs/add/operator/finally';
 import {AppService, AuthenticatedService, GymService} from './services';
 import {Gym, User} from './shared/model';
 import {MatSidenav} from '@angular/material';
+import {ScreenService} from './services/screen.service';
 
 
 @Component({
@@ -19,11 +20,10 @@ export class AppComponent implements OnInit {
     profilePath: string;
     user: User;
     appName = '';
-    screenWidth: number;
     @ViewChild('snav') public snav: MatSidenav;
 
-
     constructor(private service: AppService,
+                private screenService: ScreenService,
                 private router: Router,
                 private gymService: GymService,
                 private authenticatedService: AuthenticatedService) {
@@ -49,10 +49,7 @@ export class AppComponent implements OnInit {
 
         });
 
-        this.screenWidth = window.innerWidth;
-        window.onresize = (_) => {
-            this.screenWidth = window.innerWidth;
-        };
+
     }
 
     logout() {
@@ -104,5 +101,9 @@ export class AppComponent implements OnInit {
 
     isOnLogin() {
         return this.router.url.startsWith('/auth');
+    }
+
+    isDesktop() {
+        return this.screenService.isDesktop();
     }
 }
