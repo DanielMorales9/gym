@@ -2,15 +2,11 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {CalendarView} from 'angular-calendar';
 
 @Component({
-    selector: 'calendar-footer',
-    templateUrl: './calendar-footer.toolbar.html',
+    selector: 'calendar-button',
+    templateUrl: './calendar-button.toolbar.html',
     styleUrls: ['../../../styles/calendar.css', '../../../styles/root.css']
 })
-export class CalendarFooterToolbar {
-
-    MONTH = CalendarView.Month;
-    WEEK = CalendarView.Week;
-    DAY = CalendarView.Day;
+export class CalendarButtonToolbar {
 
     @Input() view: CalendarView;
     @Input() viewDate: Date;

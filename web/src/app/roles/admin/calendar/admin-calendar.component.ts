@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {EVENT_TYPES} from '../../../shared/components/calendar/event-types.enum';
-import {CalendarFacade, DateService, SnackBarService} from '../../../services';
+import {CalendarFacade, DateService, ScreenService, SnackBarService} from '../../../services';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
@@ -21,9 +21,10 @@ export class AdminCalendarComponent extends BaseCalendar {
                 private dateService: DateService,
                 private snackBar: SnackBarService,
                 public facade: CalendarFacade,
+                public screenService: ScreenService,
                 public router: Router,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute);
+        super(facade, router, activatedRoute, screenService);
     }
 
     getEvents() {

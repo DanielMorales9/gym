@@ -19,19 +19,6 @@ services:
     restart: always
     container_name: redis
     image: redis:alpine
-  web:
-    build:
-      context: web
-      dockerfile: Dockerfile_dev
-    restart: always
-    container_name: web
-    image: tenentedan9/web_dev:0.0.1-SNAPSHOT
-    ports:
-      - "80:80"
-    volumes:
-      - ./web/dist:/var/www/ui
-    depends_on:
-      - app
   app:
     restart: always
     container_name: app
@@ -41,7 +28,7 @@ services:
       - redis
       - postgres
     ports:
-    - "9090:80"
+    - "80:80"
     environment:
       POSTGRES_HOST: postgres
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

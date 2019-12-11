@@ -37,7 +37,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {SaleHelperService} from './services/sale-helper.service';
-import {CalendarFooterToolbar, CalendarHeaderToolbar} from './components/calendar';
+import {CalendarHeaderToolbar, CalendarButtonToolbar} from './components/calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
@@ -79,7 +79,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     declarations: [
         NoItemComponent,
         CalendarHeaderToolbar,
-        CalendarFooterToolbar,
+        CalendarButtonToolbar,
         SimpleSearchToolbar,
         SearchMixedToolbar,
         UserModalComponent,
@@ -97,7 +97,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     exports: [
         NoItemComponent,
         CalendarHeaderToolbar,
-        CalendarFooterToolbar,
+        CalendarButtonToolbar,
         SimpleSearchToolbar,
         SearchMixedToolbar,
         SearchDateToolbar,

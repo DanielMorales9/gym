@@ -16,7 +16,7 @@ import {
     GymService,
     NotificationService,
     SaleFacade,
-    SnackBarService
+    SnackBarService, ScreenService
 } from './services';
 import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
@@ -81,6 +81,7 @@ import {BundleService} from './services/bundle.service';
         AuthGuardService,
         RoleGuardService,
         GymService,
+        ScreenService,
         DateService,
         SnackBarService,
         BundleService,
