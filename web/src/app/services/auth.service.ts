@@ -2,21 +2,18 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../shared/model';
 import {Observable} from 'rxjs';
-import {AppService} from './app.service';
+import {to_promise} from '../shared/directives/decorators';
 
 @Injectable()
 export class AuthService {
 
-    constructor(private http: HttpClient,
-                private appService: AppService) {}
+    constructor(private http: HttpClient) {}
 
     forgotPassword(email: string) {
-        this.appService.credentials = undefined;
         return this.http.get(`/authentication/forgotPassword?email=${email}`);
     }
 
     getUserFromVerificationToken(token: any) {
-        this.appService.credentials = undefined;
         return this.http.get('/authentication/getUserFromVerificationToken', {params: {token: token}});
     }
 
@@ -25,7 +22,6 @@ export class AuthService {
     }
 
     resendToken(token: string) {
-        this.appService.credentials = undefined;
         return this.http.get('/authentication/resendToken', {params: {token: token}});
     }
 
@@ -34,17 +30,15 @@ export class AuthService {
     }
 
     changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
-        this.appService.credentials = undefined;
         return this.http.post(`/authentication/changePassword/${id}`, form);
     }
 
     changePasswordAnonymous(id: number, form: { password: string; oldPassword: string, confirmPassword: string }) {
-        this.appService.credentials = undefined;
         return this.http.post(`/authentication/changePasswordAnonymous/${id}`, form);
     }
 
-    confirmRegistration(credentials) {
-        this.appService.credentials = undefined;
+    @to_promise
+    confirmRegistration(credentials): any {
         return this.http.post( `/authentication/confirmRegistration`, credentials);
     }
 }

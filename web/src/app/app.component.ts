@@ -1,10 +1,9 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService, GymService} from './services';
+import {AppService, AuthenticatedService, GymService, ScreenService} from './services';
 import {Gym, User} from './shared/model';
 import {MatSidenav} from '@angular/material';
-import {ScreenService} from './services/screen.service';
 
 
 @Component({
@@ -53,34 +52,21 @@ export class AppComponent implements OnInit {
     }
 
     async logout() {
-        this.service.logout(async () => {
-            await this.snav.close();
-            this.current_role_view = undefined;
-            this.authenticated = false;
-            this.user = undefined;
-            await this.router.navigateByUrl('/auth/login');
-        });
+        const [_, error] = await this.service.logout();
+
+        await this.snav.close();
+        this.current_role_view = undefined;
+        this.authenticated = false;
+        this.user = undefined;
+        await this.router.navigateByUrl('/auth/login');
     }
 
     private authOnNavigation() {
-        this.router.events.subscribe(event => {
+        this.router.events.subscribe(async event => {
             if (event instanceof NavigationStart) {
-                this.service.authenticate();
+                await this.service.authenticate();
             }
         });
-    }
-
-    toHome() {
-        if (!this.isOnHome()) {
-            this.router.navigateByUrl('/home');
-        }
-    }
-
-    hasRoles() {
-        if (!!this.user && !!this.user.roles) {
-            return this.user.roles && this.user.roles.length > 1;
-        }
-        return false;
     }
 
     hideLogin() {
@@ -89,18 +75,6 @@ export class AppComponent implements OnInit {
 
     hideLogout() {
         return !this.authenticated;
-    }
-
-    isOnHome() {
-        return this.router.url.startsWith('/home');
-    }
-
-    isOnProfile() {
-        return this.router.url.startsWith('/profile');
-    }
-
-    isOnLogin() {
-        return this.router.url.startsWith('/auth');
     }
 
     isDesktop() {

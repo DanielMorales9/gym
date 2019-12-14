@@ -189,6 +189,7 @@ export class CalendarFacade {
     }
 
     deleteReservation(data: any, type?: string) {
+        // TODO fix the reservations and events deletion
         if ('reservation' in data) {
             if (data.reservation.user.id === this.getUser().id) {
                 return this.reservationService.delete(data.id, data.reservation.id, type);
@@ -200,7 +201,7 @@ export class CalendarFacade {
                 return this.reservationService.delete(data.id, myReservations[0].id, type);
             }
         }
-        return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione '}}));
+        return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione'}}));
     }
 
     createReservationFromBundle(userId: number, bundleId: number, event: any) {

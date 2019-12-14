@@ -11,6 +11,7 @@ export class AppService {
 
     currentRole: number;
     authenticated;
+    credentials: {username: string, password: string};
     user: User;
 
     constructor(private userService: UserService,
@@ -21,23 +22,26 @@ export class AppService {
         this.getCurrentRoleView();
     }
 
-    authenticate(credentials?, success?, error?) {
-        this.authenticationService.login(credentials).subscribe( res => {
+    async authenticate(credentials?) {
+        let [data, err] = await this.authenticationService.login(credentials);
+        console.log(data, err);
+        if (data) {
             this.authenticated = true;
-            if (!this.user.id) {
-                this.userHelperService.getUserByEmail(res['principal']['username'], user => {
-                    this.user = user;
-                    this.getCurrentRoleView();
-                    this.saveSessionInfo();
-                });
-            }
-            this.authenticatedService.setAuthenticated(this.authenticated);
+            [data, err] = await this.getUser(data['principal']['username']);
+            console.log(data, err);
 
-            return !!success && success(this.authenticated);
-        }, err => {
+            if (data) {
+                this.user = data;
+                this.getCurrentRoleView();
+                this.saveSessionInfo();
+            }
+
+        } else {
+            this.authenticated = false;
             this.discardSession();
-            return !!error && error(err);
-        });
+        }
+        this.authenticatedService.setAuthenticated(this.authenticated);
+        return [this.authenticated, err];
     }
 
 
@@ -62,13 +66,23 @@ export class AppService {
         this.authenticatedService.setAuthenticated(this.authenticated);
     }
 
-    logout(callback) {
-        this.authenticationService.logout().subscribe(_ => {
-                this.discardSession();
-            },
-            undefined, () => {
-                return !!callback && callback();
-            });
+    async logout() {
+        const [data, error] = await this.authenticationService.logout();
+        if (data) {
+            this.discardSession();
+        }
+        return [data, error];
     }
 
+    private async getUser(email: string) {
+        let [data, err] = [undefined, undefined];
+        if (!this.user.id) {
+            [data, err] = await this.userHelperService.getUserByEmail(email);
+        }
+        else {
+            [data, err] = [this.user, undefined];
+        }
+        return [data, err];
+
+    }
 }

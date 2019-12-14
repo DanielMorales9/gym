@@ -1,6 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {to_promise} from '../directives/decorators';
 
 @Injectable()
 export class UserService {
@@ -11,7 +12,8 @@ export class UserService {
         return this.http.get(`/users/${id}`);
     }
 
-    findByEmail(email: string): Observable<Object> {
+    @to_promise
+    findByEmail(email: string): any {
         return this.http.get(`/users/findByEmail?email=${email}`);
     }
 

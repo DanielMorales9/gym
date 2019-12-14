@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 
 import {Credentials, CredentialsService} from './credentials.service';
-import {Observable, of, throwError} from 'rxjs';
 import {HttpClient} from '@angular/common/http';
-import {catchError, tap} from 'rxjs/operators';
+import {to_promise} from '../../shared/directives/decorators';
 
 /**
  * Provides a base for authentication workflow.
@@ -22,29 +21,28 @@ export class AuthenticationService {
      * @param credentials The login parameters.
      * @return The user credentials.
      */
-    login(credentials?: Credentials): Observable<Object> {
+    async login(credentials?: Credentials): Promise<any> {
         if (credentials) { this.credentialsService.setCredentials(credentials); }
 
-        return this.http.get('/user')
-            .pipe(
-                tap(res => {
-                    if (!!res) {
-                        this.credentialsService.setCredentials();
-                        throwError(new Error('No Auth'));
-                    }
-                    return res;
-                })
-            );
+        const [data, error] = await this.signIn();
+        if (error) {
+            this.credentialsService.setCredentials();
+        }
+
+        return [data, error];
     }
 
     /**
      * Logs out the user and clear credentials.
      * @return True if the user was logged out successfully.
      */
-    logout(): Observable<Object> {
+    async logout(): Promise<any> {
         // Customize credentials invalidation here
-        this.credentialsService.setCredentials();
-        return this.http.get('/logout');
+        const [data, error] = await this.signOut();
+        if (!error) {
+            this.credentialsService.setCredentials();
+        }
+        return [data, error];
     }
 
     public getAuthorizationHeader() {
@@ -53,5 +51,20 @@ export class AuthenticationService {
         }
         const credentials = this.credentialsService.credentials;
         return 'Basic ' + btoa(credentials.username + ':' + credentials.password);
+    }
+
+    @to_promise
+    private signIn(): any {
+        return this.http.get('/user');
+    }
+
+    @to_promise
+    private signOut(): any {
+        return this.http.get('/logout');
+    }
+
+    @to_promise
+    private async getUser(email: string) {
+        return this.http.get(`/users/findByEmail?email=${email}`);
     }
 }

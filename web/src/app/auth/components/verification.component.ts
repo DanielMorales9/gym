@@ -18,6 +18,7 @@ export class VerificationComponent implements OnInit {
     token = '';
     toResendToken = false;
     resendTokenMessage = '';
+    QUERY_PARAMS = { message: 'Errore di Autenticazione<br>Rivolgiti all\'amministratore per risolvere il problema.'};
 
     constructor(private authService: AuthService,
                 private appService: AppService,
@@ -68,19 +69,24 @@ export class VerificationComponent implements OnInit {
             });
     }
 
-    confirmRegistration() {
+    async confirmRegistration() {
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
-        this.authService.confirmRegistration({email: this.user.email, password: this.user.password})
-            .subscribe( (response: User) => {
-                this.appService.authenticate({username: response.email, password: this.user.password},
-                    (isAuthenticated) => {
-                        if (!isAuthenticated) { return this.router.navigate(['/error'],
-                            {queryParams: { message: 'Errore di Autenticazione' +
-                                        '<br>Rivolgiti all\'amministratore per risolvere il problema.'}});
-                        } else { return this.router.navigateByUrl('/'); }
-                    });
-            });
+        const credentials = {email: this.user.email, password: this.user.password};
+        let [data, error] = await this.authService.confirmRegistration(credentials);
+
+        if (error) { throw error; }
+
+        data = data as User;
+        const auth_credentials = {username: data.email, password: this.user.password};
+        [data, error] = await this.appService.authenticate(auth_credentials);
+
+        if (!data || error) {
+            await this.router.navigate(['/error'], {queryParams: this.QUERY_PARAMS});
+        } else {
+            await this.router.navigateByUrl('/');
+        }
+
     }
 
 

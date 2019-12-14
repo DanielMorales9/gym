@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import { Router } from '@angular/router';
 import {AppService} from '../../services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Credentials} from '../../core/authentication/credentials.service';
 
 @Component({
     templateUrl: './login.component.html',
@@ -12,7 +13,7 @@ export class LoginComponent implements OnInit {
     error = false;
     form: FormGroup;
 
-    credentials = {username: '', password: ''};
+    credentials: Credentials = {username: '', password: '', remember: false};
 
     constructor(private app: AppService,
                 private builder: FormBuilder,
@@ -23,20 +24,17 @@ export class LoginComponent implements OnInit {
         this.buildForm();
     }
 
-    login() {
-        this.credentials.username = this.email.value;
-        this.credentials.password = this.password.value;
-        this.app.authenticate(this.credentials, (isAuthenticated) => {
-            if (!isAuthenticated) {
-                this.error = true;
-            }
-            else {
-                this.error = false;
-                this.router.navigateByUrl('/home');
-            }
-        }, _ => {
+    async login() {
+        this.credentials = { username: this.email.value, password: this.password.value, remember: false};
+        const [data, error] = await this.app.authenticate(this.credentials);
+        if (data) {
+            this.error = false;
+            await this.router.navigateByUrl('/home');
+        }
+        else {
             this.error = true;
-        });
+        }
+        console.log(this.error);
     }
 
 

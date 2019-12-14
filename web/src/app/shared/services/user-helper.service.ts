@@ -32,9 +32,8 @@ export class UserHelperService extends HelperService<User> {
         this.service.findById(id).subscribe(callback);
     }
 
-
-    getUserByEmail(email: string, callback: (user) => void) {
-        this.service.findByEmail(email).subscribe(callback);
+    getUserByEmail(email: string) {
+        return this.service.findByEmail(email);
     }
 
     getHighestRole(user) {
