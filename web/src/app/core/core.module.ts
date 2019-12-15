@@ -4,6 +4,7 @@ import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/h
 import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, LoaderInterceptor, XhrInterceptor} from './http';
 import {LoaderComponent, LoaderService} from './loader';
 import {MatProgressBarModule} from '@angular/material';
+import {AuthGuardService, RoleGuardService} from './guards';
 
 
 @NgModule({
@@ -28,6 +29,8 @@ import {MatProgressBarModule} from '@angular/material';
         CacheInterceptor,
         LoaderInterceptor,
         LoaderService,
+        AuthGuardService,
+        RoleGuardService,
         ApiPrefixInterceptor]
 })
 export class CoreModule {

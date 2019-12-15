@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {UserHelperService, UserService} from '../shared/services';
 import {User} from '../shared/model';
 import {AuthenticatedService} from './authenticated.service';
-import {AuthenticationService} from '../core/authentication/authentication.service';
+import {AuthenticationService} from '../core/authentication';
 
 @Injectable({
     providedIn: 'root'
@@ -18,26 +18,20 @@ export class AppService {
                 private userHelperService: UserHelperService,
                 private authenticationService: AuthenticationService,
                 private authenticatedService: AuthenticatedService) {
-        this.loadSessionInfo();
+        this.loadAuthenticationInfo();
         this.getCurrentRoleView();
     }
 
     async authenticate(credentials?) {
-        let [data, err] = await this.authenticationService.login(credentials);
+        console.log(credentials);
+        const [data, err] = await this.authenticationService.login(credentials);
         console.log(data, err);
         if (data) {
             this.authenticated = true;
-            [data, err] = await this.getUser(data['principal']['username']);
-            console.log(data, err);
-
-            if (data) {
-                this.user = data;
-                this.getCurrentRoleView();
-                this.saveSessionInfo();
-            }
+            this.user = data;
+            this.getCurrentRoleView();
 
         } else {
-            this.authenticated = false;
             this.discardSession();
         }
         this.authenticatedService.setAuthenticated(this.authenticated);
@@ -49,20 +43,14 @@ export class AppService {
         this.currentRole = this.userHelperService.getHighestRole(this.user);
     }
 
-    private saveSessionInfo() {
-        localStorage.setItem('authenticated', JSON.stringify(this.authenticated));
-        localStorage.setItem('user', JSON.stringify(this.user));
-    }
-
-    private loadSessionInfo() {
-        this.authenticated = JSON.parse(localStorage.getItem('authenticated')) || false;
-        this.user = JSON.parse(localStorage.getItem('user')) || new User();
+    private loadAuthenticationInfo() {
+        this.authenticated = this.authenticationService.isAuthenticated();
+        this.user = this.authenticationService.getUser();
     }
 
     public discardSession() {
-        this.authenticated = false;
         this.user = new User();
-        this.saveSessionInfo();
+        this.authenticated = false;
         this.authenticatedService.setAuthenticated(this.authenticated);
     }
 
@@ -74,15 +62,4 @@ export class AppService {
         return [data, error];
     }
 
-    private async getUser(email: string) {
-        let [data, err] = [undefined, undefined];
-        if (!this.user.id) {
-            [data, err] = await this.userHelperService.getUserByEmail(email);
-        }
-        else {
-            [data, err] = [this.user, undefined];
-        }
-        return [data, err];
-
-    }
 }

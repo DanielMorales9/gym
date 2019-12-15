@@ -1,9 +1,10 @@
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
-import {AppService, AuthService, SnackBarService} from '../../services';
+import {AuthService, SnackBarService} from '../../services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../shared/directives';
+import {AuthenticationService} from '../../core/authentication';
 
 
 @Component({
@@ -21,7 +22,7 @@ export class VerificationComponent implements OnInit {
     QUERY_PARAMS = { message: 'Errore di Autenticazione<br>Rivolgiti all\'amministratore per risolvere il problema.'};
 
     constructor(private authService: AuthService,
-                private appService: AppService,
+                private auth: AuthenticationService,
                 private builder: FormBuilder,
                 private snackbar: SnackBarService,
                 private activatedRoute: ActivatedRoute,
@@ -33,6 +34,7 @@ export class VerificationComponent implements OnInit {
         this.buildForm();
 
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
+
         this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
             this.user = res;
             if (this.user.verified) { return this.router.navigateByUrl('/'); }
@@ -78,10 +80,10 @@ export class VerificationComponent implements OnInit {
         if (error) { throw error; }
 
         data = data as User;
-        const auth_credentials = {username: data.email, password: this.user.password};
-        [data, error] = await this.appService.authenticate(auth_credentials);
+        const auth_credentials = {username: data.email, password: this.user.password, remember: false};
+        [data, error] = await this.auth.authenticate(auth_credentials);
 
-        if (!data || error) {
+        if (error) {
             await this.router.navigate(['/error'], {queryParams: this.QUERY_PARAMS});
         } else {
             await this.router.navigateByUrl('/');

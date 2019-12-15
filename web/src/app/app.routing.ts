@@ -1,8 +1,8 @@
 import {RouterModule, Routes} from '@angular/router';
 import {NgModule} from '@angular/core';
 import {ErrorComponent, GymSettingsComponent, ProfileComponent} from './components';
-import {RoleGuardService} from './services/role.guard.service';
-import {AuthGuardService} from './services/auth.guard.service';
+import {RoleGuardService} from './core/guards/role.guard.service';
+import {AuthGuardService} from './core/guards/auth.guard.service';
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
@@ -38,10 +38,6 @@ const routes: Routes = [
             expectedRole: 'C'
         }
     },
-    // {
-    //     path: 'profile/:id?', loadChildren: "app/profile/profile.module#ProfileModule",
-    //     canActivate: [AuthGuardService]
-    // },
     { path: '**', redirectTo: 'home' }
 ];
 

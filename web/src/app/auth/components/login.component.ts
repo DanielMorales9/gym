@@ -1,8 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
-import {AppService} from '../../services';
+import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {Credentials} from '../../core/authentication/credentials.service';
+import {AuthenticationService, Credentials} from '../../core/authentication';
 
 @Component({
     templateUrl: './login.component.html',
@@ -15,7 +14,7 @@ export class LoginComponent implements OnInit {
 
     credentials: Credentials = {username: '', password: '', remember: false};
 
-    constructor(private app: AppService,
+    constructor(private auth: AuthenticationService,
                 private builder: FormBuilder,
                 private router: Router) {
     }
@@ -26,7 +25,7 @@ export class LoginComponent implements OnInit {
 
     async login() {
         this.credentials = { username: this.email.value, password: this.password.value, remember: false};
-        const [data, error] = await this.app.authenticate(this.credentials);
+        const [data, error] = await this.auth.authenticate(this.credentials);
         if (data) {
             this.error = false;
             await this.router.navigateByUrl('/home');
@@ -41,7 +40,7 @@ export class LoginComponent implements OnInit {
     private buildForm() {
         this.form = this.builder.group({
             email: [this.credentials.username, [Validators.required]],
-            password: [this.credentials.password, Validators.required]
+            password: [this.credentials.password, Validators.required],
         });
     }
 
@@ -52,4 +51,5 @@ export class LoginComponent implements OnInit {
     get password() {
         return this.form.get('password');
     }
+
 }

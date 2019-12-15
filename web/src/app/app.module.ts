@@ -31,8 +31,6 @@ import {
     MatSnackBarModule, MatTableModule,
     MatToolbarModule
 } from '@angular/material';
-import {RoleGuardService} from './services/role.guard.service';
-import {AuthGuardService} from './services/auth.guard.service';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BundleService} from './services/bundle.service';
@@ -78,8 +76,6 @@ import {BundleService} from './services/bundle.service';
         AppService,
         AuthService,
         AuthenticatedService,
-        AuthGuardService,
-        RoleGuardService,
         GymService,
         ScreenService,
         DateService,
