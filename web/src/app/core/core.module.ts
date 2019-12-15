@@ -6,16 +6,16 @@ import {LoaderComponent, LoaderService} from './loader';
 import {MatProgressBarModule} from '@angular/material';
 import {AuthGuardService, RoleGuardService} from './guards';
 import {
-    AuthService, BundleHelperService, BundlePayHelperService,
+    AuthService,
     BundleService,
     BundlesNotDisabledService,
     BundleSpecsService,
     EventService,
     ReservationService,
-    SalesService, UserHelperService, UserService
+    SalesService, UserService
 } from './controllers';
-import {DateService, GymService, ScreenService, SnackBarService, StorageService} from './utilities';
-import {SaleHelperService} from './controllers/sale-helper.service';
+import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
+import {BundleHelperService, BundlePayHelperService, SaleHelperService, UserHelperService} from './helpers';
 
 
 @NgModule({
@@ -54,9 +54,9 @@ import {SaleHelperService} from './controllers/sale-helper.service';
         EventService,
         ReservationService,
         UserService,
-        UserHelperService,
         GymService,
         SaleHelperService,
+        UserHelperService,
         BundleHelperService,
         BundlePayHelperService,
 

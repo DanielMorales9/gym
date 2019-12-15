@@ -61,7 +61,7 @@ export class GymService {
     }
 
     canEdit() {
-        return this.auth.getCurrentRoleView() === 1;
+        return this.auth.getCurrentUserRole() === 1;
     }
 
     isDayEvent(start: Date, end: Date) {

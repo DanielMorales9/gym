@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {UserHelperService, UserService} from '../core/controllers';
+import {UserService} from '../core/controllers';
 import {User} from '../shared/model';
 import {AuthenticatedService} from './authenticated.service';
 import {AuthenticationService} from '../core/authentication';
@@ -15,7 +15,6 @@ export class AppService {
     user: User;
 
     constructor(private userService: UserService,
-                private userHelperService: UserHelperService,
                 private authenticationService: AuthenticationService,
                 private authenticatedService: AuthenticatedService) {
         this.loadAuthenticationInfo();
@@ -40,7 +39,7 @@ export class AppService {
 
 
     private getCurrentRoleView() {
-        this.currentRole = this.userHelperService.getHighestRole(this.user);
+        this.currentRole = this.authenticationService.getCurrentUserRole();
     }
 
     private loadAuthenticationInfo() {

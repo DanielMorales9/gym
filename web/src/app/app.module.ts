@@ -5,15 +5,7 @@ import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared';
 import {CoreModule} from './core';
-import {
-    AppService,
-    AuthenticatedService,
-    CalendarFacade,
-    GlobalErrorHandler,
-    GymService,
-    SaleFacade,
-    SpecFacade
-} from './services';
+import {AppService, AuthenticatedService, CalendarFacade, GlobalErrorHandler, GymService, SaleFacade, SpecFacade} from './services';
 import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import {
@@ -34,7 +26,6 @@ import {
 } from '@angular/material';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BundleService} from './core/controllers/bundle.service';
 
 @NgModule({
     declarations: [
@@ -77,7 +68,6 @@ import {BundleService} from './core/controllers/bundle.service';
         AppService,
         AuthenticatedService,
         GymService,
-        BundleService,
         SaleFacade,
         CalendarFacade,
         SpecFacade,

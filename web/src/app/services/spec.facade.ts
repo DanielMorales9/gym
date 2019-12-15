@@ -9,14 +9,14 @@ export class SpecFacade {
     }
 
     canEdit() {
-        return this.service.getCurrentRoleView() === 1;
+        return this.service.getCurrentUserRole() === 1;
     }
 
     canDisable() {
-        return this.service.getCurrentRoleView() === 1;
+        return this.service.getCurrentUserRole() === 1;
     }
 
     canDelete() {
-        return this.service.getCurrentRoleView() === 1;
+        return this.service.getCurrentUserRole() === 1;
     }
 }

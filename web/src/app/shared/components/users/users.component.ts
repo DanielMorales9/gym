@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
-import {QueryableDatasource, UserHelperService, UserService} from '../../../core/controllers';
+import {QueryableDatasource, UserService} from '../../../core/controllers';
 import {GymService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -8,6 +8,7 @@ import {UserModalComponent} from './user-modal.component';
 import {AuthenticationService} from '../../../core/authentication';
 import {AuthService} from '../../../core/controllers';
 import {SnackBarService} from '../../../core/utilities';
+import {UserHelperService} from '../../../core/helpers';
 
 @Component({
     templateUrl: './users.component.html',

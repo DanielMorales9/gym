@@ -36,7 +36,7 @@ export class CalendarFacade {
     }
 
     getRole() {
-        return this.auth.getCurrentRoleView();
+        return this.auth.getCurrentUserRole();
     }
 
     getConfig() {

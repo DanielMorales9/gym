@@ -4,7 +4,7 @@ import {SaleFacade} from '../../../services';
 import {Sale} from '../../model';
 import {MatDialog} from '@angular/material';
 import {SalesService} from '../../../core/controllers';
-import {SaleHelperService} from '../../../core/controllers/sale-helper.service';
+import {SaleHelperService} from '../../../core/helpers/sale-helper.service';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SnackBarService} from '../../../core/utilities';
 

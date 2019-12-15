@@ -27,7 +27,7 @@ export class AuthenticationService {
 
     private user: User;
     private remember: boolean;
-    private currentRoleView: number;
+    private currentRole: number;
     private TYPE2INDEX = {
         'A': 1,
         'T': 2,
@@ -50,7 +50,6 @@ export class AuthenticationService {
                 console.log([data, error]);
                 if (!error) {
                     this.user = data;
-                    this.currentRoleView = this.getCurrentRoleView();
                     this.storageService.set(this.USER_KEY, this.user, this.remember);
                 }
             }
@@ -108,11 +107,11 @@ export class AuthenticationService {
         return !!this.storageService.get(this.CREDENTIAL_KEY);
     }
 
-    getCurrentRoleView() {
-        if (!this.currentRoleView) {
-            this.currentRoleView = this.computeRole();
+    getCurrentUserRole() {
+        if (!this.currentRole) {
+            this.currentRole = this.computeRole();
         }
-        return this.currentRoleView;
+        return this.currentRole;
     }
 
     private computeRole() {

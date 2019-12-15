@@ -3,27 +3,21 @@ import {CommonModule} from '@angular/common';
 import {
     BundleDetailsComponent,
     BundleModalComponent,
-    UserModalComponent,
     NoItemComponent,
+    SalesComponent,
     SearchDateToolbar,
     SearchMixedToolbar,
-    SimpleSearchToolbar, SalesComponent, UserItemComponent, UsersComponent, UserDetailsComponent
+    SimpleSearchToolbar,
+    UserDetailsComponent,
+    UserItemComponent,
+    UserModalComponent,
+    UsersComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-    BundleHelperService,
-    BundlePayHelperService,
-    BundlesNotDisabledService,
-    BundleSpecsService,
-    SalesService,
-    EventService,
-    ReservationService,
-    UserHelperService,
-    UserService
-} from '../core/controllers';
-import {
     MatButtonModule,
-    MatCardModule, MatCheckboxModule,
+    MatCardModule,
+    MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
     MatExpansionModule,
@@ -36,8 +30,7 @@ import {
     MatSelectModule,
     MatToolbarModule
 } from '@angular/material';
-import {SaleHelperService} from '../core/controllers/sale-helper.service';
-import {CalendarHeaderToolbar, CalendarButtonToolbar} from './components/calendar';
+import {CalendarButtonToolbar, CalendarHeaderToolbar} from './components/calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';

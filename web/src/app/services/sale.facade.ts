@@ -8,10 +8,10 @@ export class SaleFacade {
     }
 
     canPay() {
-        return this.auth.getCurrentRoleView() === 1;
+        return this.auth.getCurrentUserRole() === 1;
     }
 
     canDelete() {
-        return this.auth.getCurrentRoleView() === 1;
+        return this.auth.getCurrentUserRole() === 1;
     }
 }

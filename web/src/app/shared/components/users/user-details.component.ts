@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
-import {UserHelperService, UserService} from '../../../core/controllers';
+import {UserService} from '../../../core/controllers';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AuthenticationService} from '../../../core/authentication';
 import {AuthService} from '../../../core/controllers';
 import {SnackBarService} from '../../../core/utilities';
+import {UserHelperService} from '../../../core/helpers';
 
 
 @Component({
