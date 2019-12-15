@@ -16,7 +16,6 @@ export class AppComponent implements OnInit {
     current_role_view: number;
     authenticated: boolean;
 
-    profilePath: string;
     user: User;
     appName = '';
     @ViewChild('snav') public snav: MatSidenav;
@@ -29,8 +28,10 @@ export class AppComponent implements OnInit {
     }
 
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.authOnNavigation();
+        // TODO decouple HomeComponent from AppService
+        await this.service.authenticate();
 
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
@@ -38,8 +39,6 @@ export class AppComponent implements OnInit {
             if (this.authenticated && !this.user) {
                 this.current_role_view = this.service.currentRole;
                 this.user = this.service.user;
-                // TODO check whether profilePath is used
-                this.profilePath = `profile/${this.user.id}/user`;
                 this.gymService.getConfig().subscribe((gym: Gym) => {
                    this.appName = gym.name;
                    document.title = this.appName;

@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
 import {QueryableDatasource, UserHelperService, UserService} from '../../services';
-import {AppService, AuthService, GymService, SnackBarService} from '../../../services';
+import {AuthService, GymService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
+import {AuthenticationService} from '../../../core/authentication';
 
 @Component({
     templateUrl: './users.component.html',
@@ -13,7 +14,6 @@ import {UserModalComponent} from './user-modal.component';
 export class UsersComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
-    // SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
 
     currentUserId: number;
 
@@ -31,11 +31,11 @@ export class UsersComponent implements OnInit {
                 private gymService: GymService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
-                private app: AppService,
+                private auth: AuthenticationService,
                 private authService: AuthService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
-        this.currentUserId = this.app.user.id;
+        this.currentUserId = this.auth.getUser().id;
         this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
     }
 

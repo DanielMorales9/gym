@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
 import {UserHelperService, UserService} from '../../services';
-import {AppService, AuthService, SnackBarService} from '../../../services';
+import {AuthService, SnackBarService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
+import {AuthenticationService} from '../../../core/authentication';
 
 
 @Component({
@@ -23,7 +24,7 @@ export class UserDetailsComponent implements OnInit {
     private root: string;
 
     constructor(private service: UserService,
-                private appService: AppService,
+                private auth: AuthenticationService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private authService: AuthService,
@@ -33,13 +34,14 @@ export class UserDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = new User();
-        this.me = this.appService.user;
+        this.me = this.auth.getUser();
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
+
         this.route.params.subscribe(params => {
             const id = params['id'];
             this.service.findById(id).subscribe((user: User) => {
                 this.user = user;
-                this.canDelete = this.user.id !== this.appService.user.id && this.me.type === 'A';
+                this.canDelete = this.user.id !== this.me.id && this.me.type === 'A';
                 this.canSell = this.user.type === 'C' && this.me.type === 'A';
                 this.canSendToken = this.me.type === 'A' && !this.user.verified;
                 this.canEdit = this.me.type === 'A';

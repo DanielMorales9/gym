@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../shared/model';
-import {AppService, AuthService, SnackBarService} from '../services';
+import {AuthService, SnackBarService} from '../services';
 import {UserHelperService, UserService} from '../shared/services';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from '../shared/components/users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
+import {AuthenticationService} from '../core/authentication';
 
 @Component({
     templateUrl: './profile.component.html',
@@ -14,7 +15,7 @@ export class ProfileComponent implements OnInit {
 
     user: User;
 
-    constructor(private appService: AppService,
+    constructor(private auth: AuthenticationService,
                 private userService: UserService,
                 private authService: AuthService,
                 private snackbar: SnackBarService,
@@ -22,7 +23,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.user = this.appService.user;
+        this.user = this.auth.getUser();
     }
 
     openDialog(): void {

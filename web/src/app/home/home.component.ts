@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
     constructor(private authenticatedService: AuthenticatedService, private appService: AppService) { }
 
     ngOnInit() {
+        // TODO check this problem
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
             this.user = this.appService.user;

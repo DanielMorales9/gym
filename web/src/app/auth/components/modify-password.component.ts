@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {User} from '../../shared/model';
 import {UserHelperService} from '../../shared/services';
-import {AppService, AuthService, SnackBarService} from '../../services';
+import {AuthService, SnackBarService} from '../../services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../shared/directives';
 
@@ -21,7 +21,6 @@ export class ModifyPasswordComponent implements OnInit {
 
     constructor(private activatedRoute: ActivatedRoute,
                 private userHelperService: UserHelperService,
-                private appService: AppService,
                 private snackbar: SnackBarService,
                 private authService: AuthService,
                 private builder: FormBuilder,

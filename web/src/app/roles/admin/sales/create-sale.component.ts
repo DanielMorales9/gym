@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BundlePayHelperService, QueryableDatasource} from '../../../shared/services';
 import {BundleSpecification, Sale} from '../../../shared/model';
-import {AppService, SnackBarService} from '../../../services';
+import {SnackBarService} from '../../../services';
 import {SaleHelperService} from '../../../shared/services/sale-helper.service';
 
 
@@ -29,8 +29,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     ds: QueryableDatasource<BundleSpecification>;
     private queryParams: { query: string };
 
-    constructor(private app: AppService,
-                private saleHelper: SaleHelperService,
+    constructor(private saleHelper: SaleHelperService,
                 private helper: BundlePayHelperService,
                 private snackbar: SnackBarService,
                 private router: Router,

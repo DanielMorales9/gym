@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {Gym} from '../shared/model';
-import {AppService, AuthService, GymService, SnackBarService} from '../services';
+import {GymService, SnackBarService} from '../services';
 import {MatDialog} from '@angular/material';
 import {GymModalComponent} from './gym-modal.component';
 

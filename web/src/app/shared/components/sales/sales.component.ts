@@ -3,7 +3,8 @@ import {Sale} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SaleHelperService} from '../../services/sale-helper.service';
 import {QueryableDatasource, SalesService} from '../../services';
-import {AppService, SnackBarService} from '../../../services';
+import {SnackBarService} from '../../../services';
+import {AuthenticationService} from '../../../core/authentication';
 
 
 @Component({
@@ -13,7 +14,6 @@ import {AppService, SnackBarService} from '../../../services';
 export class SalesComponent implements OnInit {
 
     private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
-    // private SEARCH_NO_CARD_MESSAGE = "Nessuna vendita disponibile con questa query";
 
     query: any;
     noCardMessage: string;
@@ -29,9 +29,9 @@ export class SalesComponent implements OnInit {
 
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
+                private auth: AuthenticationService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
-                private app: AppService,
                 private snackbar: SnackBarService) {
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
@@ -45,7 +45,7 @@ export class SalesComponent implements OnInit {
                 break;
             case 'customer':
                 this.mixed = this.canDelete = this.canPay = false;
-                this.id = this.app.user.id;
+                this.id = this.auth.getUser().user.id;
                 break;
         }
         this.initQueryParams(this.id);
