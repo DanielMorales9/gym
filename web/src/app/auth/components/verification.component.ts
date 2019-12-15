@@ -29,24 +29,28 @@ export class VerificationComponent implements OnInit {
                 private router: Router) {
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.user = new User();
         this.buildForm();
 
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
 
-        this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
-            this.user = res;
-            if (this.user.verified) { return this.router.navigateByUrl('/'); }
-        }, (err) => {
+        const [data, err] = await this.authService.getUserFromVerificationToken(this.token);
+        if (err) {
             if (err.status === 404) {
                 this.snackbar.open(err.error.message);
-                return this.router.navigateByUrl('/auth/login');
+                await this.router.navigateByUrl('/auth/login');
             } else if (err.status < 500) {
                 this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
             } else { throw err; }
-        });
+        }
+        else {
+            this.user = data;
+            if (this.user.verified) {
+                await this.router.navigateByUrl('/');
+            }
+        }
     }
 
     get password() {
@@ -92,11 +96,14 @@ export class VerificationComponent implements OnInit {
     }
 
 
-    resendToken() {
-        this.authService.resendToken(this.token).subscribe((_) => {
+    async resendToken() {
+        const [data, err] = await this.authService.resendToken(this.token);
+        if (err) {
+            throw err;
+        } else {
             const message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`;
             this.snackbar.open(message);
             return this.router.navigateByUrl('/');
-        });
+        }
     }
 }

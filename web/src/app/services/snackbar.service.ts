@@ -12,11 +12,13 @@ export class SnackBarService {
 
     open(message: string, action?: string, config?: MatSnackBarConfig) {
         console.log(message, action, config);
-        if (config === undefined)
+        if (config === undefined) {
             config = this.config;
+        }
 
-        if (action === undefined)
+        if (action === undefined) {
             action = 'Chiudi';
+        }
 
         this.snackbar.open(message, action, config)
     }

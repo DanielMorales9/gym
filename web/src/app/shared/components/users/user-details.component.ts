@@ -37,15 +37,19 @@ export class UserDetailsComponent implements OnInit {
         this.me = this.auth.getUser();
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
 
-        this.route.params.subscribe(params => {
+        this.route.params.subscribe(async params => {
             const id = params['id'];
-            this.service.findById(id).subscribe((user: User) => {
-                this.user = user;
+            const [data, error] = await this.service.findById(id);
+            if (error) {
+                throw error;
+            }
+            else {
+                this.user = data;
                 this.canDelete = this.user.id !== this.me.id && this.me.type === 'A';
                 this.canSell = this.user.type === 'C' && this.me.type === 'A';
                 this.canSendToken = this.me.type === 'A' && !this.user.verified;
                 this.canEdit = this.me.type === 'A';
-            });
+            }
         });
     }
 
@@ -68,25 +72,27 @@ export class UserDetailsComponent implements OnInit {
         this.service.patch(user).subscribe((u: User) => this.user = u);
     }
 
-    deleteUser() {
+    async deleteUser() {
         const confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
         if (confirmed) {
-            this.service.delete(this.user.id)
-                .subscribe(_ => this.router.navigate([this.root, 'users']),  err => {
-                    this.snackbar.open(err.error.message);
-                });
+            const [data, err] = await this.service.delete(this.user.id);
+            if (err) {
+                this.snackbar.open(err.error.message);
+            }
+            else {
+                await this.router.navigate([this.root, 'users']);
+            }
         }
     }
 
-    resendToken() {
-        this.authService.resendTokenAnonymous(this.user.id)
-            .subscribe(
-                _ => {
-                    this.snackbar.open('Controlla la mail per verificare il tuo account');
-                },
-                error => {
-                    this.snackbar.open(error.error.message);
-                });
+
+    async resendToken() {
+        const [data, error] = await this.authService.resendTokenAnonymous(this.user.id);
+        if (error) {
+            this.snackbar.open(error.error.message);
+        } else {
+            this.snackbar.open('Controlla la mail per verificare il tuo account');
+        }
     }
 
     getUserCreatedAt() {

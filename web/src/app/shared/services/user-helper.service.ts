@@ -28,14 +28,6 @@ export class UserHelperService extends HelperService<User> {
         return date.toLocaleDateString();
     }
 
-    getUser(id: number, callback: (user: User) => void) {
-        this.service.findById(id).subscribe(callback);
-    }
-
-    getUserByEmail(email: string) {
-        return this.service.findByEmail(email);
-    }
-
     getHighestRole(user) {
         if (user.type) {
             return this.TYPE2INDEX[user.type];

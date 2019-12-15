@@ -9,26 +9,31 @@ import {
     AppService,
     AuthenticatedService,
     AuthService,
-    SpecFacade,
     CalendarFacade,
     DateService,
     GlobalErrorHandler,
     GymService,
-    NotificationService,
     SaleFacade,
-    SnackBarService, ScreenService
+    ScreenService,
+    SnackBarService,
+    SpecFacade
 } from './services';
 import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import {
     MatButtonModule,
-    MatCardModule, MatCheckboxModule, MatDialogModule,
+    MatCardModule,
+    MatCheckboxModule,
+    MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
-    MatListModule, MatRadioModule, MatSelectModule,
+    MatListModule,
+    MatRadioModule,
+    MatSelectModule,
     MatSidenavModule,
-    MatSnackBarModule, MatTableModule,
+    MatSnackBarModule,
+    MatTableModule,
     MatToolbarModule
 } from '@angular/material';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
@@ -84,7 +89,6 @@ import {BundleService} from './services/bundle.service';
         SaleFacade,
         CalendarFacade,
         SpecFacade,
-        NotificationService,
         {
             provide: ErrorHandler,
             useClass: GlobalErrorHandler

@@ -37,18 +37,6 @@ describe('UserService', () => {
         req.flush({});
     });
 
-    it('testing #getRoles', done => {
-        userService.getRoles(1).subscribe(res => {
-            expect(res).toEqual([]);
-            done();
-        });
-        const req = backend.expectOne({
-            url: '/users/1/roles',
-            method: 'GET'
-        });
-        req.flush([]);
-    });
-
     it('testing #get', done => {
         userService.get(1, 5).subscribe(res => {
             expect(res).toEqual([user]);

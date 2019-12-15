@@ -46,19 +46,19 @@ export class ProfileComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user);
     }
 
-    openPasswordDialog() {
+    async openPasswordDialog() {
         const dialogRef = this.dialog.open(ChangePasswordModalComponent);
 
-        dialogRef.afterClosed().subscribe(passwordForm => {
-            if (passwordForm) {
-                this.authService.changePassword(this.user.id, passwordForm)
-                    .subscribe(_ => {
-                        const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
-                        this.snackbar.open(message);
-                    }, err => {
-                        this.snackbar.open(err.error.message);
-                    });
+        const passwordForm = await dialogRef.afterClosed().toPromise();
+
+        if (passwordForm) {
+            const [data, err] = await this.authService.changePassword(this.user.id, passwordForm);
+            if (err) {
+                this.snackbar.open(err.error.message);
+            } else {
+                const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
+                this.snackbar.open(message);
             }
-        });
+        }
     }
 }

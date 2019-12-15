@@ -1,5 +1,3 @@
-export * from './change-view.service';
-export * from './notification.service';
 export * from './date.service';
 export * from './gym.service';
 export * from './auth.service';

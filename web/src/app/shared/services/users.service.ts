@@ -8,7 +8,8 @@ export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    findById(id: number): Observable<Object> {
+    @to_promise
+    findById(id: number): any {
         return this.http.get(`/users/${id}`);
     }
 
@@ -17,7 +18,7 @@ export class UserService {
         return this.http.get(`/users/findByEmail?email=${email}`);
     }
 
-    get(page: number, size: number): Observable<Object> {
+    get(page: number, size: number): any {
         return this.http.get(`/users?page=${page}&size=${size}&sort=lastName`);
     }
 
@@ -25,15 +26,13 @@ export class UserService {
         return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
     }
 
-    patch(user): Observable<Object> {
+    @to_promise
+    patch(user): any {
         return this.http.patch(`/users/${user.id}`, user);
     }
 
-    getRoles(id: number): Observable<Object> {
-        return this.http.get(`/users/${id}/roles`);
-    }
-
-    delete(id: number) {
+    @to_promise
+    delete(id: number): any {
         return this.http.delete(`/users/${id}`);
     }
 
