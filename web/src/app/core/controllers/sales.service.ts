@@ -1,6 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {to_promise} from '../../shared/directives/decorators';
 
 @Injectable()
 export class SalesService {
@@ -15,11 +16,12 @@ export class SalesService {
         return this.http.get(`/sales?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
-    createSale(customerId: number): Observable<Object> {
+    @to_promise
+    createSale(customerId: number): any {
         return this.http.get(`/sales/createSale/${customerId}`);
     }
 
-    delete(id: number): Observable<Object> {
+    delete(id: number): any {
         return this.http.delete(`/sales/${id}`);
     }
 

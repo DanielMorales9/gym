@@ -20,7 +20,7 @@ import {
     ReservationService,
     UserHelperService,
     UserService
-} from './services';
+} from '../core/controllers';
 import {
     MatButtonModule,
     MatCardModule, MatCheckboxModule,
@@ -36,7 +36,7 @@ import {
     MatSelectModule,
     MatToolbarModule
 } from '@angular/material';
-import {SaleHelperService} from './services/sale-helper.service';
+import {SaleHelperService} from '../core/controllers/sale-helper.service';
 import {CalendarHeaderToolbar, CalendarButtonToolbar} from './components/calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
@@ -108,18 +108,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         BundleDetailsComponent,
         SalesComponent
     ],
-    providers: [
-        BundleSpecsService,
-        BundlesNotDisabledService,
-        SalesService,
-        EventService,
-        ReservationService,
-        UserService,
-        UserHelperService,
-        SaleHelperService,
-        BundleHelperService,
-        BundlePayHelperService,
-    ]
+    providers: []
 
 })
 export class SharedModule {

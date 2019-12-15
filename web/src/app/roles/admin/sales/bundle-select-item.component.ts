@@ -1,5 +1,4 @@
-import {AfterContentChecked, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {BundleSpecification} from '../../../shared/model';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 
 @Component({

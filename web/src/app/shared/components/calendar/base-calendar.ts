@@ -4,7 +4,8 @@ import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} 
 import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CalendarFacade, ScreenService} from '../../../services';
+import {CalendarFacade} from '../../../services';
+import {ScreenService} from '../../../core/utilities';
 
 const CALENDAR_COLUMNS: any = {
     RED: {

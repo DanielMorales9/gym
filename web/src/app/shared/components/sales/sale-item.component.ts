@@ -1,9 +1,9 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Sale} from '../../model';
-import {DateService} from '../../../services';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
+import {DateService} from '../../../core/utilities';
 
 
 @Component({

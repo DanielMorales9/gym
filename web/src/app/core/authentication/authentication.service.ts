@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {StorageService} from './storage.service';
+import {StorageService} from '../utilities/storage.service';
 import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../../shared/directives/decorators';
 import {User} from '../../shared/model';
@@ -27,7 +27,13 @@ export class AuthenticationService {
 
     private user: User;
     private remember: boolean;
-w2
+    private currentRoleView: number;
+    private TYPE2INDEX = {
+        'A': 1,
+        'T': 2,
+        'C': 3
+    };
+
     constructor(private http: HttpClient,
                 private storageService: StorageService) { }
 
@@ -44,6 +50,7 @@ w2
                 console.log([data, error]);
                 if (!error) {
                     this.user = data;
+                    this.currentRoleView = this.getCurrentRoleView();
                     this.storageService.set(this.USER_KEY, this.user, this.remember);
                 }
             }
@@ -101,8 +108,26 @@ w2
         return !!this.storageService.get(this.CREDENTIAL_KEY);
     }
 
-    getUser() {
-        return this.storageService.get(this.USER_KEY) || new User();
+    getCurrentRoleView() {
+        if (!this.currentRoleView) {
+            this.currentRoleView = this.computeRole();
+        }
+        return this.currentRoleView;
+    }
+
+    private computeRole() {
+        if (this.getUser().type) {
+            return this.TYPE2INDEX[this.user.type];
+        } else {
+            return 3;
+        }
+    }
+
+    getUser(): User {
+        if (!this.user) {
+            this.user = this.storageService.get(this.USER_KEY) || new User();
+        }
+        return this.user;
     }
 
     @to_promise

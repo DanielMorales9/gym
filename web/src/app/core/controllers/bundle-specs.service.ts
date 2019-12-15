@@ -1,7 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {BundleSpecification} from '../model';
+import {BundleSpecification} from '../../shared/model';
 import {ABundleService} from './abundle.service';
 
 @Injectable()

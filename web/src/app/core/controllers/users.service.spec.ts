@@ -2,7 +2,7 @@ import {TestBed} from '@angular/core/testing';
 import {UserService} from './users.service';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {HttpErrorResponse} from '@angular/common/http';
-import {User} from '../model';
+import {User} from '../../shared/model';
 
 describe('UserService', () => {
 
@@ -25,16 +25,16 @@ describe('UserService', () => {
         backend.verify();
     });
 
-    it('testing #findByEmail', done => {
-        userService.findByEmail('admin').subscribe(res => {
-            expect(res).toEqual({});
-            done();
-        });
+    it('testing #findByEmail', async done => {
+        const promise = userService.findByEmail('admin');
         const req = backend.expectOne({
             url: '/users/findByEmail?email=admin',
             method: 'GET'
         });
         req.flush({});
+        const [data, error] = await promise;
+        expect(data).toEqual({});
+        done();
     });
 
     it('testing #get', done => {
@@ -67,48 +67,48 @@ describe('UserService', () => {
         req.flush([user]);
     });
 
-    it('testing #patch', done => {
+    it('testing #patch', async done => {
         const user = new User();
         user.id = 1;
-        userService.patch(user).subscribe(res => {
-            expect(res).toEqual(user);
-            done();
-        });
+        const promise = userService.patch(user);
         const req = backend.expectOne({
             url: '/users/1',
             method: 'PATCH'
         });
         user.firstName = 'Daniel';
         req.flush(user);
+        const [res, error] = await promise;
+        expect(res).toEqual(user);
+        done();
     });
 
     describe ('testing #findUserById', () => {
-        it('it should return an empty user', done => {
-            userService.findById(1).subscribe(res => {
-                expect(res).toEqual({});
-                done();
-            });
+        it('it should return an empty user', async done => {
+            const promise = userService.findById(1);
             const req = backend.expectOne({
                 url: '/users/1',
                 method: 'GET'
             });
             req.flush({});
+            const [res, error] = await promise;
+            expect(res).toEqual({});
+            done();
         });
-        it('it should return a 404 error', done => {
-            const emsg = 'deliberate 404 error';
 
-            userService.findById(1).subscribe(data =>
-                    fail('should have failed with the 404 error'),
-                (error: HttpErrorResponse) => {
-                    expect(error.status).toEqual(404, 'status');
-                    expect(error.error).toEqual(emsg, 'message');
-                    done();
-                });
+        it('it should return a 404 error', async done => {
+            const emsg = 'deliberate 404 error';
+            const promise = userService.findById(1);
             const req = backend.expectOne({
                 url: '/users/1',
                 method: 'GET'
             });
+
             req.flush(emsg, { status: 404, statusText: 'Not Found' });
+
+            const [data, error] = await promise;
+            expect(error.status).toEqual(404, 'status');
+            expect(error.error).toEqual(emsg, 'message');
+            done();
         });
     });
 

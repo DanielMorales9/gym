@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../shared/model';
-import {AuthService, SnackBarService} from '../services';
-import {UserHelperService, UserService} from '../shared/services';
+import {UserHelperService, UserService} from '../core/controllers';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from '../shared/components/users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
 import {AuthenticationService} from '../core/authentication';
+import {AuthService} from '../core/controllers';
+import {SnackBarService} from '../core/utilities';
 
 @Component({
     templateUrl: './profile.component.html',

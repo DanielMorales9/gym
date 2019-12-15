@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {UserHelperService, UserService} from '../shared/services';
+import {UserHelperService, UserService} from '../core/controllers';
 import {User} from '../shared/model';
 import {AuthenticatedService} from './authenticated.service';
 import {AuthenticationService} from '../core/authentication';

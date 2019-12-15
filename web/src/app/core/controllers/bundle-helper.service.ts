@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BundleSpecification} from '../model';
+import {BundleSpecification} from '../../shared/model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
-import {BundlesNotDisabledService} from './bundles-not-disabled.service';
+import {BundleSpecsService} from './bundle-specs.service';
 
 @Injectable()
-export class BundlePayHelperService extends HelperService<BundleSpecification> {
+export class BundleHelperService extends HelperService<BundleSpecification> {
 
-    constructor(private service: BundlesNotDisabledService) {
+    constructor(private service: BundleSpecsService) {
         super();
     }
 

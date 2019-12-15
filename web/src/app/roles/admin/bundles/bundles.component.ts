@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {BundleSpecification} from '../../../shared/model';
-import {BundleHelperService, BundleSpecsService, QueryableDatasource} from '../../../shared/services';
+import {BundleHelperService, BundleSpecsService, QueryableDatasource} from '../../../core/controllers';
 import {MatDialog} from '@angular/material';
 import {BundleModalComponent} from '../../../shared/components/bundles';
-import {SnackBarService} from '../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SnackBarService} from '../../../core/utilities';
 
 @Component({
     templateUrl: './bundles.component.html',

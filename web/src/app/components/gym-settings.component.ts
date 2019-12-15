@@ -1,8 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Gym} from '../shared/model';
-import {GymService, SnackBarService} from '../services';
+import {GymService} from '../services';
 import {MatDialog} from '@angular/material';
 import {GymModalComponent} from './gym-modal.component';
+import {SnackBarService} from '../core/utilities';
 
 @Component({
     templateUrl: './gym-settings.component.html',

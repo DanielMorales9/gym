@@ -5,6 +5,17 @@ import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, L
 import {LoaderComponent, LoaderService} from './loader';
 import {MatProgressBarModule} from '@angular/material';
 import {AuthGuardService, RoleGuardService} from './guards';
+import {
+    AuthService, BundleHelperService, BundlePayHelperService,
+    BundleService,
+    BundlesNotDisabledService,
+    BundleSpecsService,
+    EventService,
+    ReservationService,
+    SalesService, UserHelperService, UserService
+} from './controllers';
+import {DateService, GymService, ScreenService, SnackBarService, StorageService} from './utilities';
+import {SaleHelperService} from './controllers/sale-helper.service';
 
 
 @NgModule({
@@ -26,12 +37,30 @@ import {AuthGuardService, RoleGuardService} from './guards';
             useClass: HttpService
         },
         HttpCacheService,
+        ApiPrefixInterceptor,
         CacheInterceptor,
+        AuthService,
+        BundleService,
         LoaderInterceptor,
         LoaderService,
         AuthGuardService,
         RoleGuardService,
-        ApiPrefixInterceptor]
+        ScreenService,
+        DateService,
+        SnackBarService,
+        BundleSpecsService,
+        BundlesNotDisabledService,
+        SalesService,
+        EventService,
+        ReservationService,
+        UserService,
+        UserHelperService,
+        GymService,
+        SaleHelperService,
+        BundleHelperService,
+        BundlePayHelperService,
+
+    ]
 })
 export class CoreModule {
 

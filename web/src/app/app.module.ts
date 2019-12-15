@@ -8,14 +8,10 @@ import {CoreModule} from './core';
 import {
     AppService,
     AuthenticatedService,
-    AuthService,
     CalendarFacade,
-    DateService,
     GlobalErrorHandler,
     GymService,
     SaleFacade,
-    ScreenService,
-    SnackBarService,
     SpecFacade
 } from './services';
 import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
@@ -38,7 +34,7 @@ import {
 } from '@angular/material';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {BundleService} from './services/bundle.service';
+import {BundleService} from './core/controllers/bundle.service';
 
 @NgModule({
     declarations: [
@@ -79,12 +75,8 @@ import {BundleService} from './services/bundle.service';
     ],
     providers: [
         AppService,
-        AuthService,
         AuthenticatedService,
         GymService,
-        ScreenService,
-        DateService,
-        SnackBarService,
         BundleService,
         SaleFacade,
         CalendarFacade,

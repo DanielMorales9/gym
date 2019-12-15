@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 import {EVENT_TYPES} from '../../../shared/components/calendar/event-types.enum';
-import {CalendarFacade, DateService, ScreenService, SnackBarService} from '../../../services';
+import {CalendarFacade} from '../../../services';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
@@ -9,6 +9,7 @@ import {AdminInfoModalComponent} from './admin-info-modal.component';
 import {AdminDeleteModalComponent} from './admin-delete-modal.component';
 import {AdminChangeModalComponent} from './admin-change-modal.component';
 import {AdminHourModalComponent} from './admin-hour-modal.component';
+import {DateService, ScreenService, SnackBarService} from '../../../core/utilities';
 
 
 @Component({

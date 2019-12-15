@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UserService} from './users.service';
-import {Role, User} from '../model';
+import {Role, User} from '../../shared/model';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
 

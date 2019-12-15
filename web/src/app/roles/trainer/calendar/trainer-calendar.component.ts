@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {EVENT_TYPES} from '../../../shared/components/calendar/event-types.enum';
-import {CalendarFacade, DateService, ScreenService, SnackBarService} from '../../../services';
+import {CalendarFacade} from '../../../services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {concat} from 'rxjs';
 import {TrainerInfoModalComponent} from './trainer-info-modal.component';
@@ -10,6 +10,7 @@ import {TrainerHeaderModalComponent} from './trainer-header-modal.component';
 import {TrainerDeleteModalComponent} from './trainer-delete-modal.component';
 import {TrainerChangeModalComponent} from './trainer-change-modal.component';
 import {TrainerHourModalComponent} from './trainer-hour-modal.component';
+import {DateService, ScreenService, SnackBarService} from '../../../core/utilities';
 
 
 @Component({

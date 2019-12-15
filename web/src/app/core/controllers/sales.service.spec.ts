@@ -47,16 +47,16 @@ describe('SalesService', () => {
         req.flush([]);
     });
 
-    it('testing #createSale', done => {
-        salesService.createSale(1).subscribe(res => {
-            expect(res).toEqual({});
-            done();
-        });
+    it('testing #createSale', async done => {
+        const promise = salesService.createSale(1);
         const req = backend.expectOne({
             url: '/sales/createSale/1',
             method: 'GET'
         });
         req.flush({});
+        const [res, error] = await promise;
+        expect(res).toEqual({});
+        done();
     });
 
     it('testing #delete', done => {

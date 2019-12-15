@@ -1,10 +1,11 @@
 import {ActivatedRoute, Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
-import {AuthService, SnackBarService} from '../../services';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../shared/directives';
 import {AuthenticationService} from '../../core/authentication';
+import {AuthService} from '../../core/controllers';
+import {SnackBarService} from '../../core/utilities';
 
 
 @Component({

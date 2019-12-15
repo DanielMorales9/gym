@@ -1,17 +1,16 @@
 import {Injectable} from '@angular/core';
-import {EventService, ReservationService, UserService} from '../shared/services';
-import {AppService} from './app.service';
-import {GymService} from './gym.service';
-import {DateService} from './date.service';
+import {BundleService, EventService, ReservationService, UserService} from '../core/controllers';
+import {GymService} from '../core/utilities/gym.service';
+import {DateService} from '../core/utilities';
 import {Observable} from 'rxjs';
-import {BundleService} from './bundle.service';
+import {AuthenticationService} from '../core/authentication';
 
 
 @Injectable()
 export class CalendarFacade {
 
     constructor(private userService: UserService,
-                private appService: AppService,
+                private auth: AuthenticationService,
                 private reservationService: ReservationService,
                 private bundleService: BundleService,
                 private eventService: EventService,
@@ -33,11 +32,11 @@ export class CalendarFacade {
      */
 
     getUser() {
-        return this.appService.user;
+        return this.auth.getUser();
     }
 
     getRole() {
-        return this.appService.currentRole;
+        return this.auth.getCurrentRoleView();
     }
 
     getConfig() {

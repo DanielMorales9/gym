@@ -1,9 +1,10 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService, GymService, ScreenService} from './services';
+import {AppService, AuthenticatedService, GymService} from './services';
 import {Gym, User} from './shared/model';
 import {MatSidenav} from '@angular/material';
+import {ScreenService} from './core/utilities';
 
 
 @Component({

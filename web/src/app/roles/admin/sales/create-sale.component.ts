@@ -1,9 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundlePayHelperService, QueryableDatasource} from '../../../shared/services';
+import {BundlePayHelperService, QueryableDatasource} from '../../../core/controllers';
 import {BundleSpecification, Sale} from '../../../shared/model';
-import {SnackBarService} from '../../../services';
-import {SaleHelperService} from '../../../shared/services/sale-helper.service';
+import {SaleHelperService} from '../../../core/controllers/sale-helper.service';
+import {SnackBarService} from '../../../core/utilities';
 
 
 @Component({
@@ -69,10 +69,14 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         this.destroy();
     }
 
-    private createSale() {
-        this.saleHelper.createSale(this.id).subscribe((res: Sale) => {
-            this.sale = res;
-        });
+    private async createSale() {
+        const [data, error] = await this.saleHelper.createSale(this.id);
+        if (error) {
+            throw error;
+        }
+        else {
+            this.sale = data;
+        }
     }
 
     private addSalesLineItem(id: number) {

@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {User} from '../../shared/model';
-import {UserHelperService} from '../../shared/services';
-import {AuthService, SnackBarService} from '../../services';
+import {UserHelperService} from '../../core/controllers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../shared/directives';
+import {AuthService} from '../../core/controllers';
+import {SnackBarService} from '../../core/utilities';
 
 @Component({
     templateUrl: './modify-password.component.html',

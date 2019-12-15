@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Sale} from '../model';
+import {Sale} from '../../shared/model';
 import {SalesService} from './sales.service';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
-import {GymService} from '../../services';
+import {GymService} from '../utilities';
 
 @Injectable()
 export class SaleHelperService extends HelperService<Sale> {

@@ -1,10 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Sale} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SaleHelperService} from '../../services/sale-helper.service';
-import {QueryableDatasource, SalesService} from '../../services';
-import {SnackBarService} from '../../../services';
+import {QueryableDatasource, SalesService, SaleHelperService} from '../../../core/controllers';
 import {AuthenticationService} from '../../../core/authentication';
+import {SnackBarService} from '../../../core/utilities';
 
 
 @Component({
@@ -45,7 +44,7 @@ export class SalesComponent implements OnInit {
                 break;
             case 'customer':
                 this.mixed = this.canDelete = this.canPay = false;
-                this.id = this.auth.getUser().user.id;
+                this.id = this.auth.getUser().id;
                 break;
         }
         this.initQueryParams(this.id);

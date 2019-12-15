@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {AppService} from './app.service';
+import {AuthenticationService} from '../authentication';
 
 @Injectable({
     providedIn: 'root'
@@ -21,7 +21,7 @@ export class GymService {
     gym: any;
 
     constructor(private http: HttpClient,
-                private app: AppService) {}
+                private auth: AuthenticationService) {}
 
     private getDay(date: Date) {
         return this.R_DAY_OF_WEEK[date.getDay()];
@@ -61,7 +61,7 @@ export class GymService {
     }
 
     canEdit() {
-        return this.app.currentRole === 1;
+        return this.auth.getCurrentRoleView() === 1;
     }
 
     isDayEvent(start: Date, end: Date) {

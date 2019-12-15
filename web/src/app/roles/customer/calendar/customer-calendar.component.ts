@@ -1,12 +1,13 @@
 import {Component} from '@angular/core';
 import {BaseCalendar} from '../../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CalendarFacade, ScreenService, SnackBarService} from '../../../services';
+import {CalendarFacade} from '../../../services';
 import {concat} from 'rxjs';
 import {MatDialog} from '@angular/material';
 import {CustomerInfoModalComponent} from './customer-info-modal.component';
 import {CustomerHourModalComponent} from './customer-hour-modal.component';
 import {CustomerDeleteModalComponent} from './customer-delete-modal.component';
+import {ScreenService, SnackBarService} from '../../../core/utilities';
 
 
 @Component({

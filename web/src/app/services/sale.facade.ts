@@ -1,17 +1,17 @@
 import {Injectable} from '@angular/core';
-import {AppService} from './app.service';
+import {AuthenticationService} from '../core/authentication';
 
 @Injectable()
 export class SaleFacade {
 
-    constructor(private appService: AppService) {
+    constructor(private auth: AuthenticationService) {
     }
 
     canPay() {
-        return this.appService.currentRole === 1;
+        return this.auth.getCurrentRoleView() === 1;
     }
 
     canDelete() {
-        return this.appService.currentRole === 1;
+        return this.auth.getCurrentRoleView() === 1;
     }
 }

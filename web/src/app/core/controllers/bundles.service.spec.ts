@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
 import {BundleSpecsService} from './bundle-specs.service';
-import {PersonalBundleSpecification} from '../model';
+import {PersonalBundleSpecification} from '../../shared/model';
 
 describe('BundleSpecsService', () => {
 
