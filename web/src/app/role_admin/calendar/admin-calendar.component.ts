@@ -308,6 +308,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private deleteCourseEvent(data: any) {
+        // TODO check whether course event can be cancelled
         this.facade.deleteCourseEvent(data.eventId).subscribe( (_) => {
             this.snackBar.open('Evento eliminato');
             this.getEvents();

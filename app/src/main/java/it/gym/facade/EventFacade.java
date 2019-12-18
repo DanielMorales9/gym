@@ -177,6 +177,7 @@ public class EventFacade {
         sessionService.delete(session);
         bundleService.save(session.getTrainingBundle());
 
+        // TODO test whether the reservations are deleted
         reservationService.deleteAll(event.getReservations());
 
         service.delete(event);

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {AppService, AuthenticatedService} from '../services';
+import {AuthenticatedService} from '../services';
 import {User} from '../shared/model';
+import {AuthenticationService} from '../core/authentication';
 
 @Component({
     templateUrl: './home.component.html',
@@ -11,13 +12,13 @@ export class HomeComponent implements OnInit {
     user: User;
     authenticated = false;
 
-    constructor(private authenticatedService: AuthenticatedService, private appService: AppService) { }
+    constructor(private authenticatedService: AuthenticatedService,
+                private auth: AuthenticationService) { }
 
     ngOnInit() {
-        // TODO check this problem
         this.authenticatedService.getAuthenticated().subscribe(auth => {
             this.authenticated = auth;
-            this.user = this.appService.user;
+            this.user = this.auth.getUser();
         });
 
     }

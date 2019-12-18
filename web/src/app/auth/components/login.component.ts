@@ -24,8 +24,12 @@ export class LoginComponent implements OnInit {
     }
 
     async login() {
-        this.credentials = { username: this.email.value, password: this.password.value, remember: false};
-        const [data, error] = await this.auth.authenticate(this.credentials);
+        this.credentials = {
+            username: this.email.value,
+            password: this.password.value,
+            remember: false
+        };
+        const [data, error] = await this.auth.login(this.credentials);
         if (data) {
             this.error = false;
             await this.router.navigateByUrl('/home');

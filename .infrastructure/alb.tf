@@ -22,7 +22,6 @@
 //  #
 //  # If the expression in the following list itself returns a list, remove the
 //  # brackets to avoid interpretation as a list of lists. If the expression
-//  # returns a single list item then leave it as-is and remove this TODO comment.
 //  records = [aws_acm_certificate.acm_certificate.domain_validation_options[0]["resource_record_value"]]
 //  zone_id = data.aws_route53_zone.route53.zone_id
 //  ttl     = 300

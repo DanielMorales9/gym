@@ -188,11 +188,10 @@ export class CalendarFacade {
     }
 
     deleteReservation(data: any, type?: string) {
+        console.log(data);
         // TODO fix the reservations and events deletion
         if ('reservation' in data) {
-            if (data.reservation.user.id === this.getUser().id) {
-                return this.reservationService.delete(data.id, data.reservation.id, type);
-            }
+            return this.reservationService.delete(data.id, data.reservation.id, type);
         }
         else if ('reservations' in data) {
             const myReservations = data.reservations.filter(a => a.user.id === this.getUser().id);

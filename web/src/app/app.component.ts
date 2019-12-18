@@ -31,7 +31,6 @@ export class AppComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.authOnNavigation();
-        // TODO decouple HomeComponent from AppService
         await this.service.authenticate();
 
         this.authenticatedService.getAuthenticated().subscribe(auth => {

@@ -45,13 +45,10 @@ export class AuthenticationService {
     async login(credentials?: Credentials): Promise<any> {
         let [data, error] = await this.authenticate(credentials);
         if (!error) {
-            if (!this.user) {
-                [data, error] = await this.findUserByEmail(data['principal']['username']);
-                console.log([data, error]);
-                if (!error) {
-                    this.user = data;
-                    this.storageService.set(this.USER_KEY, this.user, this.remember);
-                }
+            [data, error] = await this.findUserByEmail(data['principal']['username']);
+            if (!error) {
+                this.user = data;
+                this.storageService.set(this.USER_KEY, this.user, this.remember);
             }
             else {
                 [data, error] = [this.user, undefined];
@@ -73,7 +70,6 @@ export class AuthenticationService {
         }
 
         const [data, error] = await this.signIn();
-        console.log([data, error]);
         if (error) {
             this.storageService.set(this.CREDENTIAL_KEY);
         }
@@ -89,6 +85,7 @@ export class AuthenticationService {
         const [data, error] = await this.signOut();
         console.log([data, error]);
         if (!error) {
+            this.currentRole = undefined;
             this.storageService.set(this.CREDENTIAL_KEY);
             this.storageService.set(this.USER_KEY);
         }
@@ -108,9 +105,9 @@ export class AuthenticationService {
     }
 
     getCurrentUserRole() {
-        if (!this.currentRole) {
-            this.currentRole = this.computeRole();
-        }
+        // if (!this.currentRole) {
+        this.currentRole = this.computeRole();
+        // }
         return this.currentRole;
     }
 
@@ -124,7 +121,7 @@ export class AuthenticationService {
 
     getUser(): User {
         if (!this.user) {
-            this.user = this.storageService.get(this.USER_KEY) || new User();
+            this.user = this.storageService.get(this.USER_KEY) || {};
         }
         return this.user;
     }
