@@ -332,7 +332,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         CourseEvent actual = (CourseEvent) eventRepository.findById(event.getId()).get();
         assertThat(actual).isEqualTo(event);
-        assertThat(actual.getReservations()).isNull();
+        assertThat(actual.getReservations()).isEmpty();
         assertThat(sessionRepository.findById(session.getId()).get()).isEqualTo(sess);
         assertThat(bundleRepository.findById(course.getId()).get().getSessions()).isNotEmpty();
         assertThat(reservationRepository.findAll()).isEmpty();

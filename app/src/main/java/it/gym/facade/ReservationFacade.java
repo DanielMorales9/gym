@@ -137,7 +137,9 @@ public class ReservationFacade {
             this.eventService.delete(event);
             this.bundleService.save(bundle);
         }
-        this.service.delete(res);
+        else {
+            this.service.delete(res);
+        }
 
         sendCancelEmail(res, type);
         return res;

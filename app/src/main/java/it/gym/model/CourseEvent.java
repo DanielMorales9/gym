@@ -22,7 +22,7 @@ public class CourseEvent extends ATrainingEvent {
 
     public static final String TYPE = "C";
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "event_id")
     private List<Reservation> reservations;
 
@@ -44,7 +44,13 @@ public class CourseEvent extends ATrainingEvent {
     }
 
     public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
+        if (this.reservations == null)
+            this.reservations = reservations;
+        else {
+            this.reservations.clear();
+            if (reservations != null)
+                this.reservations.addAll(reservations);
+        }
     }
 
 
