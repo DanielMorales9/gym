@@ -4,6 +4,18 @@ import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/h
 import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, LoaderInterceptor, XhrInterceptor} from './http';
 import {LoaderComponent, LoaderService} from './loader';
 import {MatProgressBarModule} from '@angular/material';
+import {AuthGuardService, RoleGuardService} from './guards';
+import {
+    AuthService,
+    BundleService,
+    BundlesNotDisabledService,
+    BundleSpecsService,
+    EventService,
+    ReservationService,
+    SalesService, UserService
+} from './controllers';
+import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
+import {BundleHelperService, BundlePayHelperService, SaleHelperService, UserHelperService} from './helpers';
 
 
 @NgModule({
@@ -25,10 +37,30 @@ import {MatProgressBarModule} from '@angular/material';
             useClass: HttpService
         },
         HttpCacheService,
+        ApiPrefixInterceptor,
         CacheInterceptor,
+        AuthService,
+        BundleService,
         LoaderInterceptor,
         LoaderService,
-        ApiPrefixInterceptor]
+        AuthGuardService,
+        RoleGuardService,
+        ScreenService,
+        DateService,
+        SnackBarService,
+        BundleSpecsService,
+        BundlesNotDisabledService,
+        SalesService,
+        EventService,
+        ReservationService,
+        UserService,
+        GymService,
+        SaleHelperService,
+        UserHelperService,
+        BundleHelperService,
+        BundlePayHelperService,
+
+    ]
 })
 export class CoreModule {
 

@@ -1,10 +1,14 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
-import {QueryableDatasource, UserHelperService, UserService} from '../../services';
-import {AppService, AuthService, GymService, SnackBarService} from '../../../services';
+import {UserService} from '../../../core/controllers';
+import {GymService} from '../../../services';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
+import {AuthenticationService} from '../../../core/authentication';
+import {AuthService} from '../../../core/controllers';
+import {SnackBarService} from '../../../core/utilities';
+import {UserHelperService, QueryableDatasource} from '../../../core/helpers';
 
 @Component({
     templateUrl: './users.component.html',
@@ -13,7 +17,6 @@ import {UserModalComponent} from './user-modal.component';
 export class UsersComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
-    // SEARCH_NO_CARD_MESSAGE = "Nessun utente registrato con questo nome";
 
     currentUserId: number;
 
@@ -31,11 +34,11 @@ export class UsersComponent implements OnInit {
                 private gymService: GymService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute,
-                private app: AppService,
+                private auth: AuthenticationService,
                 private authService: AuthService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
-        this.currentUserId = this.app.user.id;
+        this.currentUserId = this.auth.getUser().id;
         this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
     }
 
@@ -105,38 +108,39 @@ export class UsersComponent implements OnInit {
         }
     }
 
-    private deleteUser(user: User) {
+    private async deleteUser(user: User) {
         const confirmed = confirm(`Vuoi rimuovere l'utente ${user.firstName} ${user.lastName}?`);
         if (confirmed) {
-            this.service.delete(user.id).subscribe(_ => {
-                this.search();
-            }, err => {
+            const [data, err] = await this.service.delete(user.id);
+            if (err) {
                 this.snackbar.open(err.error.message);
-            });
+            } else {
+                this.search();
+            }
         }
     }
 
-    private patchUser(user: User) {
-        this.service.patch(user).subscribe( _ => {
+    private async patchUser(user: User) {
+        const [data, error] = await this.service.patch(user);
+        if (error) {
+            this.snackbar.open(error.error.message);
+        } else {
             this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
-        }, err => {
-            this.snackbar.open(err.error.message);
-        }, () => {
-            this.search();
-        });
+        }
+        this.search();
     }
 
-    private createUser(user: User) {
-        this.authService.registration(user).subscribe(_ => {
-            const message = `L'utente ${user.lastName} è stato creato`;
-            this.snackbar.open(message);
-        },  err => {
+    private async createUser(user: User) {
+        const [data, err] = await this.authService.registration(user);
+        if (err) {
             if (err.status === 500) {
                 this.snackbar.open(err.error.message);
             } else { throw err; }
-        }, () => {
-            this.search();
-        });
+        } else {
+            const message = `L'utente ${user.lastName} è stato creato`;
+            this.snackbar.open(message);
+        }
+        this.search();
     }
 
     itsMe(id: any) {

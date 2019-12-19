@@ -13,4 +13,5 @@ export class AuthenticatedService {
     getAuthenticated(): Observable<any> {
         return this.subject.asObservable();
     }
+
 }

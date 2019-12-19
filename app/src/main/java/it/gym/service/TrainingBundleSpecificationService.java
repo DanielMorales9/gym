@@ -57,4 +57,8 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    public boolean existsByName(String name) {
+        return repository.existsByName(name);
+    }
 }

@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {BundleSpecsService} from '../../services';
+import {BundleSpecsService} from '../../../core/controllers';
 import {BundleSpecification} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';

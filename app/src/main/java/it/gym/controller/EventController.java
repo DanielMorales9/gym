@@ -217,7 +217,6 @@ public class EventController {
                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
         List<AEvent> res = facade.findAllCourseEvents(startTime, endTime);
-        logger.info(res.toString());
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }

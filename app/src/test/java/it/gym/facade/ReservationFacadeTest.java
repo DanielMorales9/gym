@@ -243,7 +243,7 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(userService).findByEmail(email);
         Mockito.doReturn(createPersonalEvent(session)).when(eventService).findById(1L);
 
-        Reservation actual = facade.deleteReservations(1L, 1L, "customer");
+        Reservation actual = facade.deleteReservations(1L, 1L);
 
         Mockito.verifyZeroInteractions(mailService);
         assertThat(actual).isEqualTo(createReservation(1L, customer));
@@ -275,9 +275,8 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(userService).findByEmail(email);
         Mockito.doReturn(createPersonalEvent(session)).when(eventService).findById(1L);
 
-        Reservation actual = facade.deleteReservations(1L, 1L, "admin");
+        Reservation actual = facade.deleteReservations(1L, 1L);
 
-        Mockito.verify(mailService).sendSimpleMail(anyString(), anyString(), anyString());
         assertThat(actual).isEqualTo(createReservation(1L, customer));
     }
 

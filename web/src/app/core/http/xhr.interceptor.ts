@@ -1,17 +1,17 @@
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {AppService} from '../../services';
+import {AuthenticationService} from '../authentication/authentication.service';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
 
-    constructor(private app: AppService) {}
+    constructor(private authenticationService: AuthenticationService) {}
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
         const xhr = req.clone({
             setHeaders: {
                 'X-Requested-With': 'XMLHttpRequest',
-                'authorization': this.app.getAuthorizationHeader()
+                'authorization': this.authenticationService.getAuthorizationHeader()
             }
         });
         return next.handle(xhr);

@@ -64,4 +64,8 @@ public class TrainingBundleSpecificationFacade {
     public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
         return service.findAll(pageable);
     }
+
+    public boolean existsByName(String name) {
+        return service.existsByName(name);
+    }
 }

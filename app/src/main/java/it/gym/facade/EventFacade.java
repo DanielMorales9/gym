@@ -177,8 +177,6 @@ public class EventFacade {
         sessionService.delete(session);
         bundleService.save(session.getTrainingBundle());
 
-        reservationService.deleteAll(event.getReservations());
-
         service.delete(event);
         return event;
     }

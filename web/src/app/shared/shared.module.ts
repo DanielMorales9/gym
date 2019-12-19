@@ -3,27 +3,21 @@ import {CommonModule} from '@angular/common';
 import {
     BundleDetailsComponent,
     BundleModalComponent,
-    UserModalComponent,
     NoItemComponent,
+    SalesComponent,
     SearchDateToolbar,
     SearchMixedToolbar,
-    SimpleSearchToolbar, SalesComponent, UserItemComponent, UsersComponent, UserDetailsComponent
+    SimpleSearchToolbar,
+    UserDetailsComponent,
+    UserItemComponent,
+    UserModalComponent,
+    UsersComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
-    BundleHelperService,
-    BundlePayHelperService,
-    BundlesNotDisabledService,
-    BundleSpecsService,
-    SalesService,
-    EventService,
-    ReservationService,
-    UserHelperService,
-    UserService
-} from './services';
-import {
     MatButtonModule,
-    MatCardModule, MatCheckboxModule,
+    MatCardModule,
+    MatCheckboxModule,
     MatDatepickerModule,
     MatDialogModule,
     MatExpansionModule,
@@ -36,8 +30,7 @@ import {
     MatSelectModule,
     MatToolbarModule
 } from '@angular/material';
-import {SaleHelperService} from './services/sale-helper.service';
-import {CalendarHeaderToolbar, CalendarButtonToolbar} from './components/calendar';
+import {CalendarButtonToolbar, CalendarHeaderToolbar} from './components/calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
@@ -108,18 +101,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         BundleDetailsComponent,
         SalesComponent
     ],
-    providers: [
-        BundleSpecsService,
-        BundlesNotDisabledService,
-        SalesService,
-        EventService,
-        ReservationService,
-        UserService,
-        UserHelperService,
-        SaleHelperService,
-        BundleHelperService,
-        BundlePayHelperService,
-    ]
+    providers: []
 
 })
 export class SharedModule {

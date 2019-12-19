@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SaleFacade, SnackBarService} from '../../../services';
+import {SaleFacade} from '../../../services';
 import {Sale} from '../../model';
 import {MatDialog} from '@angular/material';
-import {SalesService} from '../../services';
-import {SaleHelperService} from '../../services/sale-helper.service';
+import {SalesService} from '../../../core/controllers';
+import {SaleHelperService} from '../../../core/helpers/sale-helper.service';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
+import {SnackBarService} from '../../../core/utilities';
 
 @Component({
     templateUrl: './sale-details.component.html',

@@ -1,10 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../shared/model';
-import {AppService, AuthService, SnackBarService} from '../services';
-import {UserHelperService, UserService} from '../shared/services';
+import {UserService} from '../core/controllers';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from '../shared/components/users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
+import {AuthenticationService} from '../core/authentication';
+import {AuthService} from '../core/controllers';
+import {SnackBarService} from '../core/utilities';
+import {UserHelperService} from '../core/helpers';
 
 @Component({
     templateUrl: './profile.component.html',
@@ -14,7 +17,7 @@ export class ProfileComponent implements OnInit {
 
     user: User;
 
-    constructor(private appService: AppService,
+    constructor(private auth: AuthenticationService,
                 private userService: UserService,
                 private authService: AuthService,
                 private snackbar: SnackBarService,
@@ -22,7 +25,7 @@ export class ProfileComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.user = this.appService.user;
+        this.user = this.auth.getUser();
     }
 
     openDialog(): void {
@@ -45,19 +48,19 @@ export class ProfileComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user);
     }
 
-    openPasswordDialog() {
+    async openPasswordDialog() {
         const dialogRef = this.dialog.open(ChangePasswordModalComponent);
 
-        dialogRef.afterClosed().subscribe(passwordForm => {
-            if (passwordForm) {
-                this.authService.changePassword(this.user.id, passwordForm)
-                    .subscribe(_ => {
-                        const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
-                        this.snackbar.open(message);
-                    }, err => {
-                        this.snackbar.open(err.error.message);
-                    });
+        const passwordForm = await dialogRef.afterClosed().toPromise();
+
+        if (passwordForm) {
+            const [data, err] = await this.authService.changePassword(this.user.id, passwordForm);
+            if (err) {
+                this.snackbar.open(err.error.message);
+            } else {
+                const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
+                this.snackbar.open(message);
             }
-        });
+        }
     }
 }
