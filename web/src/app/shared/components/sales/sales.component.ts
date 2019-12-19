@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Sale} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {QueryableDatasource, SalesService} from '../../../core/controllers';
+import {SalesService} from '../../../core/controllers';
 import {AuthenticationService} from '../../../core/authentication';
 import {SnackBarService} from '../../../core/utilities';
-import {SaleHelperService} from '../../../core/helpers';
+import {SaleHelperService, QueryableDatasource} from '../../../core/helpers';
 
 
 @Component({

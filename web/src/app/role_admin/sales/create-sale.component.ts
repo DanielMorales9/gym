@@ -1,8 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {QueryableDatasource} from '../../core/controllers';
 import {BundleSpecification, Sale} from '../../shared/model';
-import {BundlePayHelperService, SaleHelperService} from '../../core/helpers';
+import {BundlePayHelperService, SaleHelperService, QueryableDatasource} from '../../core/helpers';
 import {SnackBarService} from '../../core/utilities';
 
 

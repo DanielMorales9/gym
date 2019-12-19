@@ -1,7 +1,7 @@
 import {DataSource} from '@angular/cdk/table';
 import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {CollectionViewer} from '@angular/cdk/collections';
-import {HelperService} from '../helpers/helper.service';
+import {HelperService} from './index';
 
 export class QueryableDatasource<T> extends DataSource<any> {
     private length = 1;
