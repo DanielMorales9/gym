@@ -9,6 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TrainingBundleSpecificationRepository extends JpaRepository<ATrainingBundleSpecification, Long> {
 
+    boolean existsByName(String name);
+
     Page<ATrainingBundleSpecification> findByNameContains(String name, Pageable pageable);
 
     Page<ATrainingBundleSpecification> findByNameContainsAndIsDisabled(String name, Boolean isDisabled, Pageable pageable);

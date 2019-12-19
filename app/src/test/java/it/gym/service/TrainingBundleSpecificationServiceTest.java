@@ -45,6 +45,12 @@ public class TrainingBundleSpecificationServiceTest {
     }
 
     @Test
+    public void existsByName() {
+        this.service.existsByName("personal");
+        Mockito.verify(repository).existsByName("personal");
+    }
+
+    @Test
     public void findById() {
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L, "personal")));
         ATrainingBundleSpecification u = this.service.findById(1L);

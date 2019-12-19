@@ -1,17 +1,16 @@
 import {Injectable} from '@angular/core';
-import {EventService, ReservationService, UserService} from '../shared/services';
-import {AppService} from './app.service';
-import {GymService} from './gym.service';
-import {DateService} from './date.service';
+import {BundleService, EventService, ReservationService, UserService} from '../core/controllers';
+import {GymService} from '../core/utilities/gym.service';
+import {DateService} from '../core/utilities';
 import {Observable} from 'rxjs';
-import {BundleService} from './bundle.service';
+import {AuthenticationService} from '../core/authentication';
 
 
 @Injectable()
 export class CalendarFacade {
 
     constructor(private userService: UserService,
-                private appService: AppService,
+                private auth: AuthenticationService,
                 private reservationService: ReservationService,
                 private bundleService: BundleService,
                 private eventService: EventService,
@@ -33,11 +32,11 @@ export class CalendarFacade {
      */
 
     getUser() {
-        return this.appService.user;
+        return this.auth.getUser();
     }
 
     getRole() {
-        return this.appService.currentRole;
+        return this.auth.getCurrentUserRole();
     }
 
     getConfig() {
@@ -188,19 +187,18 @@ export class CalendarFacade {
         return this.eventService.complete(id);
     }
 
-    deleteReservation(data: any, type?: string) {
+    deleteReservation(data: any) {
+        // TODO this complex logic should be implemented simpler
         if ('reservation' in data) {
-            if (data.reservation.user.id === this.getUser().id) {
-                return this.reservationService.delete(data.id, data.reservation.id, type);
-            }
+            return this.reservationService.delete(data.id, data.reservation.id);
         }
         else if ('reservations' in data) {
             const myReservations = data.reservations.filter(a => a.user.id === this.getUser().id);
             if (myReservations.length > 0) {
-                return this.reservationService.delete(data.id, myReservations[0].id, type);
+                return this.reservationService.delete(data.id, myReservations[0].id);
             }
         }
-        return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione '}}));
+        return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione'}}));
     }
 
     createReservationFromBundle(userId: number, bundleId: number, event: any) {

@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Generated //exclude coverage analysis on generated methods
 public class PersonalEvent extends ATrainingEvent {
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "reservation_res_id")
     private Reservation reservation;
 

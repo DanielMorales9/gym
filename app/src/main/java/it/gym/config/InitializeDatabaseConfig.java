@@ -117,11 +117,15 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     }
 
     private void createAndSaveCourseBundleSpecification() {
-        specService.createTrainingBundleSpecification(createCourseBundleSpecification(new Date()));
+        String name = "Course";
+        if (!specService.existsByName(name))
+            specService.createTrainingBundleSpecification(createCourseBundleSpecification(name, new Date()));
     }
 
     private void createAndSavePersonalBundleSpecification() {
-        specService.createTrainingBundleSpecification(createPersonalBundleSpecification());
+        String name = "Personal";
+        if (!specService.existsByName(name))
+            specService.createTrainingBundleSpecification(createPersonalBundleSpecification(name));
     }
 
     private void createAndSaveTrainer(Gym gym, List<Role> roles) {
@@ -152,9 +156,9 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         return roleService.findAll();
     }
 
-    private ATrainingBundleSpecification createCourseBundleSpecification(Date start) {
+    private ATrainingBundleSpecification createCourseBundleSpecification(String name, Date start) {
         CourseTrainingBundleSpecification p = new CourseTrainingBundleSpecification();
-        p.setName("Corso");
+        p.setName(name);
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
         p.setPrice(111.0);
@@ -165,9 +169,9 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         return p;
     }
 
-    private ATrainingBundleSpecification createPersonalBundleSpecification() {
+    private ATrainingBundleSpecification createPersonalBundleSpecification(String name) {
         PersonalTrainingBundleSpecification p = new PersonalTrainingBundleSpecification();
-        p.setName("Personal");
+        p.setName(name);
         p.setDescription("Questo è un pacchetto di Personal Training");
         p.setDisabled(false);
         p.setPrice(111.0);

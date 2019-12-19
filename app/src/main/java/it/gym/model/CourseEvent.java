@@ -22,7 +22,7 @@ public class CourseEvent extends ATrainingEvent {
 
     public static final String TYPE = "C";
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "event_id")
     private List<Reservation> reservations;
 
@@ -44,7 +44,13 @@ public class CourseEvent extends ATrainingEvent {
     }
 
     public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
+        if (this.reservations == null)
+            this.reservations = reservations;
+        else {
+            this.reservations.clear();
+            if (reservations != null)
+                this.reservations.addAll(reservations);
+        }
     }
 
 
@@ -71,7 +77,9 @@ public class CourseEvent extends ATrainingEvent {
 
     @Override
     public void deleteSession() {
+        // the session is shared among other users and it
+        // should not deleted unless deleting the courseEvent
+        this.getSession().deleteMeFromBundle();
         this.setSession(null);
-        // the session is shared among other users and it should not deleted
     }
 }

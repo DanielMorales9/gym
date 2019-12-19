@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
 import java.util.Date;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -21,6 +22,7 @@ import static it.gym.utility.HateoasTest.expectEvent;
 import static it.gym.utility.HateoasTest.expectUser;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -30,8 +32,10 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Autowired private GymRepository gymRepository;
     @Autowired private EventRepository eventRepository;
+    @Autowired private ReservationRepository reservationRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private TrainingBundleSpecificationRepository specRepository;
+    @Autowired private TrainingSessionRepository sessionRepository;
     @Autowired private TrainingBundleRepository bundleRepository;
 
     private Gym gym;
@@ -39,6 +43,8 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     private Trainer trainer;
     private ATrainingBundleSpecification courseSpec;
     private ATrainingBundle courseBundle;
+    private ATrainingBundleSpecification personalSpec;
+    private ATrainingBundle personalBundle;
 
     @Before
     public void before() {
@@ -51,7 +57,11 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
         courseSpec = createCourseBundleSpec(1L, "course", start, end);
+        personalSpec = createPersonalBundleSpec(1L, "personal");
         courseSpec = specRepository.save(courseSpec);
+        personalSpec = specRepository.save(personalSpec);
+        personalBundle = personalSpec.createTrainingBundle();
+        personalBundle = bundleRepository.save(personalBundle);
         courseBundle = courseSpec.createTrainingBundle();
         courseBundle = bundleRepository.save(courseBundle);
     }
@@ -257,10 +267,21 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         ATrainingSession session = courseBundle.createSession(start, end);
         courseBundle.addSession(session);
 
-        event = createCourseEvent(1L, "course", session);
+        CourseEvent event = createCourseEvent(1L, "course", session);
+        Customer customer = (Customer) createCustomer(1L,
+                "test@test.com",
+                "test",
+                "test",
+                "test",
+                true,
+                null);
+        customer = userRepository.save(customer);
+
+        Reservation reservation = createReservation(1L, customer);
+        event.setReservations(Collections.singletonList(reservation));
         event = eventRepository.save(event);
 
-
+        assertThat(reservationRepository.findAll().size()).isEqualTo(1);
         ResultActions result = mockMvc.perform(delete("/events/course/" + event.getId()))
                 .andExpect(status().isOk());
 
@@ -270,6 +291,8 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setEndTime(end);
         expected.setId(event.getId());
         expectEvent(result, expected);
+        assertThat(reservationRepository.findAll().size()).isEqualTo(0);
+        assertThat(sessionRepository.findAll().size()).isEqualTo(0);
         // TODO expectTrainingSession
     }
 

@@ -1,5 +1,6 @@
 package it.gym.controller;
 
+import it.gym.exception.UnAuthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -18,6 +19,7 @@ public class PrincipalController {
     public Principal user(Principal user) {
         if (user == null){
             logger.info("this is null");
+            throw new UnAuthorizedException("Authenticazione necessaria");
         }
         else logger.info(user.toString());
         return user;

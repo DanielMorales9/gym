@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import { Router } from '@angular/router';
-import {AppService} from '../../services';
+import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {AuthenticationService, Credentials} from '../../core/authentication';
 
 @Component({
     templateUrl: './login.component.html',
@@ -12,9 +12,9 @@ export class LoginComponent implements OnInit {
     error = false;
     form: FormGroup;
 
-    credentials = {username: '', password: ''};
+    credentials: Credentials = {username: '', password: '', remember: false};
 
-    constructor(private app: AppService,
+    constructor(private auth: AuthenticationService,
                 private builder: FormBuilder,
                 private router: Router) {
     }
@@ -23,27 +23,28 @@ export class LoginComponent implements OnInit {
         this.buildForm();
     }
 
-    login() {
-        this.credentials.username = this.email.value;
-        this.credentials.password = this.password.value;
-        this.app.authenticate(this.credentials, (isAuthenticated) => {
-            if (!isAuthenticated) {
-                this.error = true;
-            }
-            else {
-                this.error = false;
-                this.router.navigateByUrl('/home');
-            }
-        }, _ => {
+    async login() {
+        this.credentials = {
+            username: this.email.value,
+            password: this.password.value,
+            remember: false
+        };
+        const [data, error] = await this.auth.login(this.credentials);
+        if (data) {
+            this.error = false;
+            await this.router.navigateByUrl('/home');
+        }
+        else {
             this.error = true;
-        });
+        }
+        console.log(this.error);
     }
 
 
     private buildForm() {
         this.form = this.builder.group({
             email: [this.credentials.username, [Validators.required]],
-            password: [this.credentials.password, Validators.required]
+            password: [this.credentials.password, Validators.required],
         });
     }
 
@@ -54,4 +55,5 @@ export class LoginComponent implements OnInit {
     get password() {
         return this.form.get('password');
     }
+
 }

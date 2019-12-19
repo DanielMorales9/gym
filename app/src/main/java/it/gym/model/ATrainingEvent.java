@@ -14,7 +14,7 @@ import java.util.Date;
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Generated //exclude coverage analysis on generated methods
 public abstract class ATrainingEvent extends AEvent {
 

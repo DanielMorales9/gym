@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {User} from '../../shared/model';
-import {UserHelperService} from '../../shared/services';
-import {AppService, AuthService, SnackBarService} from '../../services';
+import {UserHelperService} from '../../core/helpers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../shared/directives';
+import {AuthService} from '../../core/controllers';
+import {SnackBarService} from '../../core/utilities';
 
 @Component({
     templateUrl: './modify-password.component.html',
@@ -21,7 +22,6 @@ export class ModifyPasswordComponent implements OnInit {
 
     constructor(private activatedRoute: ActivatedRoute,
                 private userHelperService: UserHelperService,
-                private appService: AppService,
                 private snackbar: SnackBarService,
                 private authService: AuthService,
                 private builder: FormBuilder,
@@ -29,39 +29,48 @@ export class ModifyPasswordComponent implements OnInit {
     }
 
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
         this.buildForm();
-        this.authService.getUserFromVerificationToken(this.token).subscribe( (res: User) => {
-            this.user = res;
-            this.buildForm();
-        }, (err) => {
+        const [data, err] = await this.authService.getUserFromVerificationToken(this.token);
+
+        if (err) {
             if (err.status === 404) {
                 this.snackbar.open(err.error.message);
-                return this.router.navigateByUrl('/auth/login');
+                await this.router.navigateByUrl('/auth/login');
             } else if (err.status < 500) {
                 this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
             } else { throw err; }
-        });
+        }
+        else {
+            this.user = data;
+            this.buildForm();
+        }
     }
 
-    modifyPassword() {
+    async modifyPassword() {
         const form = {password: this.password.value, oldPassword: '', confirmPassword: this.confirmPassword.value};
 
-        this.authService.changePasswordAnonymous(this.user.id, form).subscribe(_ => {
+        const [data, err] = await this.authService.changePasswordAnonymous(this.user.id, form);
+        if (err) {
+            throw err;
+        } else {
             const message = `${this.user.firstName} la tua password è stata modificata con successo!`;
             this.snackbar.open(message);
             return this.router.navigateByUrl('/');
-        });
+        }
     }
 
-    resendToken() {
-        this.authService.resendToken(this.token).subscribe((_) => {
+    async resendToken() {
+        const [data, err] = await this.authService.resendToken(this.token);
+        if (err) {
+            throw err;
+        } else {
             const message = 'Il tuo token è stato re-inviato';
             this.snackbar.open(message);
             return this.router.navigateByUrl('/auth/login');
-        });
+        }
     }
 
     get password() {

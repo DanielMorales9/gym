@@ -14,8 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
-
 @RepositoryRestController
 @RequestMapping("/reservations")
 @PreAuthorize("isAuthenticated()")
@@ -65,10 +63,9 @@ public class ReservationController {
     @DeleteMapping(path = "/{reservationId}")
     @PreAuthorize("isAuthenticated()")
     ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
-                                               @RequestParam Long eventId,
-                                               @RequestParam(value = "type", defaultValue = "customer") String type) {
+                                               @RequestParam Long eventId) {
 
-        Reservation res = facade.deleteReservations(eventId, reservationId, type);
+        Reservation res = facade.deleteReservations(eventId, reservationId);
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }
