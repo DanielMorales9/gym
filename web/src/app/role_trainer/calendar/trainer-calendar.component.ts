@@ -274,7 +274,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     private deleteReservation(data: any) {
-        this.facade.deleteReservation(data, 'trainer')
+        this.facade.deleteReservation(data)
             .subscribe(_ => {
                 this.snackBar.open('Prenotazione è stata eliminata');
                 this.getEvents();

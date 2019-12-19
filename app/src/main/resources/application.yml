@@ -34,8 +34,8 @@ logging:
     org.springframework.beans: off
     org.springframework.web: info
     org.springframework.security: info
-    org.springframework.http: debug
-    org.flywaydb: debug
+    org.springframework.http: info
+    org.flywaydb: info
     it.gym: info
 
 server:
@@ -66,4 +66,8 @@ spring:
 
 logging:
   level:
+    org.springframework.web: info
+    org.springframework.security: info
+    org.springframework.http: debug
+    org.flywaydb: debug
     it.gym: debug

@@ -240,7 +240,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private deleteReservation(data) {
-        this.facade.deleteReservation(data, 'admin')
+        this.facade.deleteReservation(data)
             .subscribe(_ => {
                 this.snackBar.open('Prenotazione è stata eliminata');
                 this.getEvents();
@@ -308,7 +308,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private deleteCourseEvent(data: any) {
-        // TODO check whether course event can be cancelled
         this.facade.deleteCourseEvent(data.eventId).subscribe( (_) => {
             this.snackBar.open('Evento eliminato');
             this.getEvents();

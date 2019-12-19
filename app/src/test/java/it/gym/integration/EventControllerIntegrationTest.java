@@ -35,6 +35,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     @Autowired private ReservationRepository reservationRepository;
     @Autowired private UserRepository userRepository;
     @Autowired private TrainingBundleSpecificationRepository specRepository;
+    @Autowired private TrainingSessionRepository sessionRepository;
     @Autowired private TrainingBundleRepository bundleRepository;
 
     private Gym gym;
@@ -291,6 +292,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(event.getId());
         expectEvent(result, expected);
         assertThat(reservationRepository.findAll().size()).isEqualTo(0);
+        assertThat(sessionRepository.findAll().size()).isEqualTo(0);
         // TODO expectTrainingSession
     }
 

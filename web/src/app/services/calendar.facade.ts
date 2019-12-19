@@ -187,16 +187,17 @@ export class CalendarFacade {
         return this.eventService.complete(id);
     }
 
-    deleteReservation(data: any, type?: string) {
+    deleteReservation(data: any) {
         console.log(data);
         // TODO fix the reservations and events deletion
         if ('reservation' in data) {
-            return this.reservationService.delete(data.id, data.reservation.id, type);
+            return this.reservationService.delete(data.id, data.reservation.id);
         }
         else if ('reservations' in data) {
             const myReservations = data.reservations.filter(a => a.user.id === this.getUser().id);
             if (myReservations.length > 0) {
-                return this.reservationService.delete(data.id, myReservations[0].id, type);
+                console.log(myReservations);
+                return this.reservationService.delete(data.id, myReservations[0].id);
             }
         }
         return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione'}}));

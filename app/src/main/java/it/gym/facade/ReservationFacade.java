@@ -110,20 +110,23 @@ public class ReservationFacade {
     public Reservation createReservationFromEvent(Long gymId, Long customerId, Long eventId) {
         Gym gym = this.gymService.findById(gymId);
         Customer customer = this.customerService.findById(customerId);
-        ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
+        CourseEvent evt = (CourseEvent) eventService.findById(eventId);
 
         isEventReservable(evt);
         ATrainingSession session = evt.getSession();
         simpleReservationChecks(gym, customer, session.getTrainingBundle(), session.getStartTime(), session.getEndTime());
 
-        Reservation res = evt.reserve(customer);
-        this.eventService.save(evt);
+        Reservation res;
+        evt.reserve(customer);
+        evt = (CourseEvent) this.eventService.save(evt);
 
-        service.save(res);
+        List<Reservation> reservationList = evt.getReservations();
+        res = reservationList.get(reservationList.size()-1);
+
         return res;
     }
 
-    public Reservation deleteReservations(Long eventId, Long reservationId, String type) {
+    public Reservation deleteReservations(Long eventId, Long reservationId) {
         logger.info("Getting reservation by id");
         Reservation res = this.service.findById(reservationId);
         ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
@@ -131,17 +134,16 @@ public class ReservationFacade {
         ATrainingBundle bundle = event.getSession().getTrainingBundle();
 
         event.deleteReservation(res);
-        event.deleteSession();
 
         if (event.getType().equals("P")) {
+            event.deleteSession();
             this.eventService.delete(event);
             this.bundleService.save(bundle);
         }
         else {
-            this.service.delete(res);
+            this.eventService.save(event);
         }
 
-        sendCancelEmail(res, type);
         return res;
     }
 
@@ -207,14 +209,5 @@ public class ReservationFacade {
 
         if (nHolidays > 0)
             throw new BadRequestException("Chiusura Aziendale");
-    }
-
-    private void sendCancelEmail(Reservation res, String type) {
-        if (!type.equals("customer")) {
-            String recipientAddress = res.getUser().getEmail();
-            String message = "Ci dispiace informarla che la sua prenotazione è stata cancellata.\n" +
-                    "La ringraziamo per la comprensione.";
-            this.mailService.sendSimpleMail(recipientAddress, "Prenotazione eliminata", message);
-        }
     }
 }

@@ -77,7 +77,9 @@ public class CourseEvent extends ATrainingEvent {
 
     @Override
     public void deleteSession() {
+        // the session is shared among other users and it
+        // should not deleted unless deleting the courseEvent
+        this.getSession().deleteMeFromBundle();
         this.setSession(null);
-        // the session is shared among other users and it should not deleted
     }
 }
