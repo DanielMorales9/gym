@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +16,9 @@ public class TrainingBundleSpecificationServiceTest {
 
     @MockBean
     private TrainingBundleSpecificationService service;
+
+    @MockBean
+    private TrainingBundleService bundleService;
 
     @TestConfiguration
     static class TrainingBundleSpecificationFacadeTestContextConfiguration {
