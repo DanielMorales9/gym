@@ -188,15 +188,13 @@ export class CalendarFacade {
     }
 
     deleteReservation(data: any) {
-        console.log(data);
-        // TODO fix the reservations and events deletion
+        // TODO this complex logic should be implemented simpler
         if ('reservation' in data) {
             return this.reservationService.delete(data.id, data.reservation.id);
         }
         else if ('reservations' in data) {
             const myReservations = data.reservations.filter(a => a.user.id === this.getUser().id);
             if (myReservations.length > 0) {
-                console.log(myReservations);
                 return this.reservationService.delete(data.id, myReservations[0].id);
             }
         }
