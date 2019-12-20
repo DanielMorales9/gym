@@ -46,6 +46,11 @@
                 <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>&nbsp;Acquista
             </span>
             </button>
+            <button *ngIf="canMakeAppointments" mat-button color="basic" (click)="makeAppointments()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;Appuntamenti
+            </span>
+            </button>
             <button *ngIf="canDelete" mat-button color="warn" (click)="deleteUser()">
                 <span>
                     <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi

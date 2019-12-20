@@ -5,8 +5,8 @@
 <!--    </button>-->
     <div mat-dialog-content>
         <div *ngIf="!!modalData?.event">
-            Vuoi chiudere la palestra dalle {{ modalData?.event.newStart | date : 'HH:mm a'}}
-            alle {{ modalData?.event.newEnd | date : 'HH:mm a'}}
+            Vuoi chiudere la palestra dalle {{ modalData?.event.newStart | date : 'HH:mm'}}
+            alle {{ modalData?.event.newEnd | date : 'HH:mm'}}
             del giorno {{ modalData?.event?.newStart | date : 'dd/MM/yyyy'}} ?
             <br>
             <mat-form-field>
@@ -21,7 +21,6 @@
                 <mat-error *ngIf="name.touched && name.invalid">
                     <div *ngIf="!!name.errors?.required">Nome chiusura obbligatorio</div>
                 </mat-error>
-
             </mat-form-field>
 
             <br>

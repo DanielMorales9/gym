@@ -20,10 +20,15 @@ export class GymSettingsComponent implements OnInit {
         this.canEdit = this.gymService.canEdit();
     }
 
-    ngOnInit(): void {
-        this.gymService.getConfig().subscribe((res: Gym) => {
-            this.gym = res;
-        });
+    async ngOnInit(): Promise<void> {
+        const [data, error] = await this.gymService.getConfig();
+
+        if (error) {
+            throw error;
+        }
+        else {
+            this.gym = data;
+        }
     }
 
     openDialog(): void {

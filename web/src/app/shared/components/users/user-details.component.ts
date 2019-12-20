@@ -22,6 +22,7 @@ export class UserDetailsComponent implements OnInit {
     canSell: boolean;
     canEdit: boolean;
     canSendToken: boolean;
+    canMakeAppointments: boolean;
     private me: User;
     private root: string;
 
@@ -51,6 +52,7 @@ export class UserDetailsComponent implements OnInit {
                 this.canSell = this.user.type === 'C' && this.me.type === 'A';
                 this.canSendToken = this.me.type === 'A' && !this.user.verified;
                 this.canEdit = this.me.type === 'A';
+                this.canMakeAppointments = this.me.type === 'A' && this.user.type === 'C';
             }
         });
     }
@@ -105,4 +107,7 @@ export class UserDetailsComponent implements OnInit {
         return this.router.navigate([this.root, 'sales', 'buy', this.user.id]);
     }
 
+    makeAppointments() {
+        return this.router.navigate([this.root, 'calendar', 'customer', this.user.id]);
+    }
 }

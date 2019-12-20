@@ -3,7 +3,6 @@ import {BaseCalendar} from '../../shared/components/calendar';
 import {EVENT_TYPES} from '../../shared/components/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
 import {ActivatedRoute, Router} from '@angular/router';
-import {concat} from 'rxjs';
 import {TrainerInfoModalComponent} from './trainer-info-modal.component';
 import {MatDialog} from '@angular/material';
 import {TrainerHeaderModalComponent} from './trainer-header-modal.component';
@@ -30,21 +29,28 @@ export class TrainerCalendarComponent extends BaseCalendar {
         super(facade, router, activatedRoute, screenService);
     }
 
-    getEvents() {
+    async getEvents() {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        const s1 = this.facade.getTrainingEvents(startDay, endDay);
+        let [data, error] = await this.facade.getTrainingEvents(startDay, endDay);
+        if (error) {
+            throw error;
+        }
+        this.events.push(...data.map(value => this.formatEvent(value)));
 
-        const s2 = this.facade.getTimesOff(startDay, endDay, this.user.id);
+        [data, error] = await this.facade.getTimesOff(startDay, endDay, this.user.id);
+        if (error) {
+            throw error;
+        }
+        this.events.push(...data.map(value => this.formatEvent(value)));
 
-        const s3 = this.facade.getHoliday(startDay, endDay);
-
-        concat(s1, s2, s3)
-            .subscribe(rel => {
-                this.events.push(...rel.map(value => this.formatEvent(value)));
-                this.refreshView();
-            });
+        [data, error] = await this.facade.getHoliday(startDay, endDay);
+        if (error) {
+            throw error;
+        }
+        this.events.push(...data.map(value => this.formatEvent(value)));
+        this.refreshView();
     }
 
     change(action: string, event: any) {
@@ -193,11 +199,11 @@ export class TrainerCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
                 switch (data.type) {
                     case 'trainer':
-                        this.deleteTimeOff(data);
+                        await this.deleteTimeOff(data);
                         break;
                     case 'reservation':
                         this.deleteReservation(data);
@@ -236,17 +242,17 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     private confirmReservation(data: any) {
         this.facade.confirmReservation(data.eventId)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Prenotazione confermata');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => this.snackBar.open(err.error.message));
     }
 
     private completeReservation(data: any) {
         this.facade.completeEvent(data.eventId)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Allenamento completato');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => {
                 this.snackBar.open(err.error.message);
             });
@@ -254,30 +260,29 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     private createTimeOff(data: any, end?: Date) {
         this.facade.createTimeOff(data.userId, data.name, data.start, end)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Ferie richieste');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => {
                 this.snackBar.open(err.error.message);
             });
     }
 
-    private deleteTimeOff(data: any) {
-        this.facade.deleteTimeOff(data.eventId)
-            .subscribe(res => {
-                this.snackBar.open('Ferie eliminate con successo');
-                this.getEvents();
-            }, err => {
-                this.snackBar.open(err.error.message);
-
-            });
+    private async deleteTimeOff(data: any) {
+        const [_, error] = await this.facade.deleteTimeOff(data.eventId);
+        if (error) {
+            this.snackBar.open(error.error.message);
+        } else {
+            this.snackBar.open('Ferie eliminate con successo');
+            await this.getEvents();
+        }
     }
 
     private deleteReservation(data: any) {
         this.facade.deleteReservation(data)
-            .subscribe(_ => {
+            .subscribe(async _ => {
                 this.snackBar.open('Prenotazione è stata eliminata');
-                this.getEvents();
+                await this.getEvents();
             }, err => {
                 this.snackBar.open(err.error.message);
             });
@@ -285,9 +290,9 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     private editTimeOff(data) {
         this.facade.editTimeOff(data.eventId, data.start, data.end, data.eventName)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Ferie richieste');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => this.snackBar.open(err.error.message));
     }
 }

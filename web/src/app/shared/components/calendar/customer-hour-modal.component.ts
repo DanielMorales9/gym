@@ -1,11 +1,11 @@
 import {Component, Inject, OnInit} from '@angular/core';
-import {BaseCalendarModal} from '../../shared/components/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {BaseCalendarModal} from './base-calendar-modal';
 
 @Component({
     templateUrl: './customer-hour-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
     form: FormGroup;
@@ -16,7 +16,6 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
         this.modalData = data;
         console.log(this.modalData);
     }
-
 
     ngOnInit(): void {
         this.form = new FormGroup({

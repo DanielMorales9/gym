@@ -16,11 +16,8 @@ export class TrainerDeleteModalComponent extends BaseCalendarModal {
     }
 
     submit() {
-        const data = {
-            type: this.modalData.event.meta.type,
-            eventId: this.modalData.event.meta.id
-        };
-
+        const data = this.modalData.event.meta;
+        data.eventId = this.modalData.event.meta.id;
         this.close(data);
     }
 }

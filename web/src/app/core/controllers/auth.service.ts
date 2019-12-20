@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../shared/model';
-import {to_promise} from '../../shared/directives/decorators';
+import {to_promise} from '../functions/decorators';
 
 @Injectable()
 export class AuthService {

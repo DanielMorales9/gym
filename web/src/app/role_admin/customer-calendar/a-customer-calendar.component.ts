@@ -1,21 +1,17 @@
 import {Component} from '@angular/core';
-import {
-    BaseCalendar,
-    CustomerDeleteModalComponent,
-    CustomerHourModalComponent,
-    CustomerInfoModalComponent
-} from '../../shared/components/calendar';
+import {BaseCalendar, CustomerInfoModalComponent} from '../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
+import {CustomerHourModalComponent, CustomerDeleteModalComponent} from '../../shared/components/calendar';
 import {ScreenService, SnackBarService} from '../../core/utilities';
-
+import {first} from 'rxjs/operators';
 
 @Component({
-    templateUrl: './customer-calendar.component.html',
+    templateUrl: './a-customer-calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
-export class CustomerCalendarComponent extends BaseCalendar {
+export class ACustomerCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
                 private snackBar: SnackBarService,
@@ -51,6 +47,22 @@ export class CustomerCalendarComponent extends BaseCalendar {
         this.refreshView();
     }
 
+    async getUser() {
+        const params = await this.activatedRoute.params.pipe(first()).toPromise();
+        const id = +params['id'];
+        const [data, error] = await this.facade.findUserById(id);
+        if (error) {
+            throw error;
+        }
+        else {
+            this.user = data;
+        }
+    }
+
+    async getRole() {
+        this.role = this.facade.getRoleByUser(this.user);
+    }
+
     header(action: string, event: any) {
         console.log(action, event);
     }
@@ -65,6 +77,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         }
 
         event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
+        event.user = this.user;
         this.modalData = {
             action: action,
             title: 'Prenota il tuo allenamento!',
@@ -78,6 +91,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     change(action: string, event: any) {}
 
     delete(action: string, event: any) {
+        event.user = this.user;
         this.modalData = {
             action: action,
             title: `Sei sicuro di voler eliminare la prenotazione?`,
@@ -90,6 +104,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
     info(action: string, event: any) {
         event = event.event;
+        event.user = this.user;
         this.modalData = {
             action: action,
             title: event.title,
@@ -165,7 +180,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
             }
         });
     }
-
 
     private openDeleteModal() {
         const dialogRef = this.dialog.open(CustomerDeleteModalComponent, {

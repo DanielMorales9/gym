@@ -4,21 +4,10 @@
 <!--</button>-->
 <div [ngSwitch]="modalData?.event.meta?.type" mat-dialog-content>
     <ng-container *ngSwitchCase="'trainer'">
-        <ng-container *ngIf="!!modalData?.event">
-                Vuoi eliminare il giorno di riposo ({{ modalData?.event.start | date :  'dd/MM/yyyy'}})
-                di {{modalData.event.meta.user.lastName}}?
-                <br>
-                Conferma per eliminare oppure cancella.
-        </ng-container>
+        <delete-time-off-event [event]="modalData.event"></delete-time-off-event>
     </ng-container>
     <ng-container *ngSwitchCase="'reservation'">
-        <ng-container *ngIf="!!modalData?.event">
-            Vuoi eliminare la prenotazione del {{ modalData?.event.start | date :  'dd/MM/yyyy'}}
-            dalle {{ modalData?.event.start | date :  'HH:mm a'}}
-            alle {{ modalData?.event.end | date :  'HH:mm a'}}?
-            <br>
-            Conferma per eliminare oppure cancella.
-        </ng-container>
+        <delete-personal-event [event]="modalData.event"></delete-personal-event>
     </ng-container>
 </div>
 <div mat-dialog-actions>

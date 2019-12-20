@@ -1,22 +1,26 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {to_promise} from '../functions/decorators';
 
 @Injectable()
 export class EventService {
 
     constructor(private http: HttpClient) {}
 
-    getTimesOff(start: string, end: string, id: number): Observable<any> {
+    @to_promise
+    getTimesOff(start: string, end: string, id: number): any {
         return this.http.get(`/events/timeOff?trainerId=${id}&startTime=${start}&endTime=${end}`);
     }
 
-    deleteTimeOff(id: number): Observable<any> {
+    @to_promise
+    deleteTimeOff(id: number): any {
         const endpoint = `/events/timeOff/${id}`;
         return this.http.delete(endpoint);
     }
 
-    getAllEvents(start: string, end: string): Observable<any> {
+    @to_promise
+    getAllEvents(start: string, end: string): any {
         return this.http.get(`/events?startTime=${start}&endTime=${end}`);
     }
 
@@ -28,7 +32,8 @@ export class EventService {
         return this.http.post(`/events/${gymId}/holiday/isAvailable`, event);
     }
 
-    createHoliday(gymId: any, event: { name: string; startTime: Date; endTime: Date }) {
+    @to_promise
+    createHoliday(gymId: any, event: { name: string; startTime: Date; endTime: Date }): any {
         return this.http.post(`/events/${gymId}/holiday`, event);
     }
 
@@ -48,7 +53,8 @@ export class EventService {
         return this.http.post(`/events/${gymId}/canEdit`, event);
     }
 
-    getHolidays(start: any, end: any): Observable<any> {
+    @to_promise
+    getHolidays(start: any, end: any): any {
         return this.http.get(`/events/holiday?startTime=${start}&endTime=${end}`);
     }
 
@@ -64,15 +70,18 @@ export class EventService {
         return this.http.delete(`/events/course/${id}`);
     }
 
-    getCourseEvents(start: string, end: string): Observable<any> {
+    @to_promise
+    getCourseEvents(start: string, end: string): any {
         return this.http.get(`/events/course?startTime=${start}&endTime=${end}`);
     }
 
-    getCustomerEvents(id: any, start: string, end: string): Observable<any> {
+    @to_promise
+    getCustomerEvents(id: any, start: string, end: string): any {
         return this.http.get(`/events/personal?customerId=${id}&startTime=${start}&endTime=${end}`);
     }
 
-    getTrainingEvents(start: string, end: string): Observable<any> {
+    @to_promise
+    getTrainingEvents(start: string, end: string): any {
         return this.http.get(`/events/training?&startTime=${start}&endTime=${end}`);
     }
 

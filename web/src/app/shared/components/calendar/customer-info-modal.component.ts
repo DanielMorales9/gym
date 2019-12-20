@@ -1,10 +1,10 @@
 import {Component, Inject} from '@angular/core';
-import {BaseCalendarModal} from '../../shared/components/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {BaseCalendarModal} from './base-calendar-modal';
 
 @Component({
     templateUrl: './customer-info-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class CustomerInfoModalComponent extends BaseCalendarModal {
 

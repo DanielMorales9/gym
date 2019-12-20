@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BundleService, EventService, ReservationService, UserService} from '../core/controllers';
-import {GymService} from '../core/utilities/gym.service';
-import {DateService} from '../core/utilities';
+import {GymService, DateService} from '../core/utilities';
 import {Observable} from 'rxjs';
 import {AuthenticationService} from '../core/authentication';
+import {User} from '../shared/model';
 
 
 @Injectable()
@@ -35,6 +35,10 @@ export class CalendarFacade {
         return this.auth.getUser();
     }
 
+    findUserById(id: number) {
+        return this.userService.findById(id);
+    }
+
     getRole() {
         return this.auth.getCurrentUserRole();
     }
@@ -56,29 +60,29 @@ export class CalendarFacade {
     }
 
 
-    getCustomerEvents(startTime: any, endTime: any): Observable<Object[]> {
+    getCustomerEvents(id: number, startTime: any, endTime: any) {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getCustomerEvents(this.getUser().id, startS, endS);
+        return this.eventService.getCustomerEvents(id, startS, endS);
     }
 
     /**
      * EVENTS API
      */
 
-    getAllEvents(startTime: any, endTime: any): Observable<Object[]> {
+    getAllEvents(startTime: any, endTime: any) {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getAllEvents(startS, endS);
     }
 
-    getCourseEvents(startTime: any, endTime: any): Observable<Object[]> {
+    getCourseEvents(startTime: any, endTime: any) {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getCourseEvents(startS, endS);
     }
 
-    getTrainingEvents(startTime: any, endTime: any): Observable<Object[]> {
+    getTrainingEvents(startTime: any, endTime: any) {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getTrainingEvents(startS, endS);
@@ -122,7 +126,7 @@ export class CalendarFacade {
     }
 
 
-    getHoliday(startTime: any, endTime: any): Observable<Object[]> {
+    getHoliday(startTime: any, endTime: any): any {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getHolidays(startS, endS);
@@ -158,7 +162,7 @@ export class CalendarFacade {
         return this.eventService.isTimeOffAvailable(gymId, {startTime: startTime, endTime: endTime});
     }
 
-    getTimesOff(startTime: any, endTime: any, id: number): Observable<Object[]> {
+    getTimesOff(startTime: any, endTime: any, id: number) {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getTimesOff(startS,  endS, id);
@@ -187,13 +191,13 @@ export class CalendarFacade {
         return this.eventService.complete(id);
     }
 
-    deleteReservation(data: any) {
-        // TODO this complex logic should be implemented simpler
+    deleteReservation(data: any, id?: number) {
+        // TODO implement simpler logic
         if ('reservation' in data) {
             return this.reservationService.delete(data.id, data.reservation.id);
         }
-        else if ('reservations' in data) {
-            const myReservations = data.reservations.filter(a => a.user.id === this.getUser().id);
+        else if ('reservations' in data && !!id) {
+            const myReservations = data.reservations.filter(a => a.user.id === id);
             if (myReservations.length > 0) {
                 return this.reservationService.delete(data.id, myReservations[0].id);
             }
@@ -237,5 +241,9 @@ export class CalendarFacade {
 
     deleteCourseEvent(id: any) {
         return this.eventService.deleteCourseEvent(id);
+    }
+
+    getRoleByUser(user: User) {
+        return this.auth.computeRole(user);
     }
 }
