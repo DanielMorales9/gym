@@ -15,6 +15,8 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
+import static it.gym.utility.CheckEvents.hasHolidays;
+
 @Component
 @Transactional
 public class EventFacade {
@@ -129,7 +131,6 @@ public class EventFacade {
         Date endTime = event.getEndTime();
         List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
         logger.info(events.toString());
-        logger.info(String.format("%s", events.size()));
         if (events.size() > 1)
             throw new BadRequestException(PRESENT_EVENTS_EX);
     }
@@ -138,6 +139,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
         List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
+        logger.debug(events.toString());
         if (!events.isEmpty())
             throw new BadRequestException(PRESENT_EVENTS_EX);
     }
@@ -150,6 +152,9 @@ public class EventFacade {
         Date endTime = evt.getEndTime();
 
         gymService.simpleGymChecks(gym, startTime, endTime);
+
+        simpleTrainingEventChecks(startTime, endTime);
+
         ATrainingSession session = bundle.createSession(startTime, endTime);
         bundle.addSession(session);
 
@@ -164,6 +169,11 @@ public class EventFacade {
         event.setSession(session);
 
         return service.save(event);
+    }
+
+    private void simpleTrainingEventChecks(Date startTime, Date endTime) {
+        List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
+        hasHolidays(events);
     }
 
     public AEvent deleteCourseEvent(Long id) {

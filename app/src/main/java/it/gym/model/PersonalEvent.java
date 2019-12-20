@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import lombok.ToString;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
@@ -55,5 +56,14 @@ public class PersonalEvent extends ATrainingEvent {
     @Override
     public void deleteSession() {
         this.getSession().deleteMeFromBundle();
+    }
+
+
+    @Override
+    public String toString() {
+        return "PersonalEvent{" +
+                "startTime" + this.getStartTime() +
+                "endTime" + this.getEndTime() +
+                '}';
     }
 }

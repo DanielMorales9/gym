@@ -37,9 +37,9 @@ public class Holiday extends AEvent {
 
     @Override
     public String toString() {
-
-        return " Tipo :" + this.getType() +
-                " Nome :" + this.getName() +
-                " Data :" + this.getStartTime().toString();
+        return "Holiday{" +
+                "startTime" + this.getStartTime() +
+                "endTime" + this.getEndTime() +
+                '}';
     }
 }

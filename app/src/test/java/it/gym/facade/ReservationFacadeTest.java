@@ -88,25 +88,6 @@ public class ReservationFacadeTest {
     }
 
     @Test
-    public void hasTrainers() {
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        facade.isTrainerAvailable(Collections.emptyList());
-    }
-
-    @Test(expected = BadRequestException.class)
-    public void hasNoAvailableTrainers() {
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        List<AEvent> timesOff = Collections.singletonList(Fixture.createTimeOff(2L, "my time", new Date(), new Date(), Fixture.createTrainer(2L)));
-        facade.isTrainerAvailable(timesOff);
-    }
-
-    @Test
-    public void trainersHaveOtherReservations() {
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
-        facade.isTrainerAvailable(Collections.emptyList());
-    }
-
-    @Test
     public void isAvailable() {
         Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Mockito.doReturn(Fixture.createGym(1L)).when(gymService).findById(1L);

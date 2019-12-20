@@ -11,6 +11,7 @@ import java.util.List;
 
 @Repository
 public interface EventRepository extends JpaRepository<AEvent, Long> {
+
     @Query("select t " +
             "from AEvent as t " +
             "where t.startTime >= :startTime and t.endTime <= :endTime")
@@ -18,7 +19,7 @@ public interface EventRepository extends JpaRepository<AEvent, Long> {
 
     @Query("select t " +
             "from AEvent as t " +
-            "where t.startTime > :endTime and t.endTime > :startTime")
+            "where t.endTime > :startTime and :endTime > t.startTime")
     List<AEvent> findOverlappingEvents(Date startTime, Date endTime);
 
     @Query("select t " +

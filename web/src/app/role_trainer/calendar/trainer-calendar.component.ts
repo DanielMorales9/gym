@@ -208,6 +208,9 @@ export class TrainerCalendarComponent extends BaseCalendar {
                     case 'reservation':
                         this.deleteReservation(data);
                         break;
+                    case 'course':
+                        this.deleteCourseEvent(data);
+                        break;
                     default:
                         break;
                 }
@@ -294,5 +297,14 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 this.snackBar.open('Ferie richieste');
                 await this.getEvents();
             }, (err) => this.snackBar.open(err.error.message));
+    }
+
+    private deleteCourseEvent(data: any) {
+        this.facade.deleteCourseEvent(data.eventId).subscribe( async(_) => {
+            this.snackBar.open('Evento eliminato');
+            await this.getEvents();
+        }, (err) => {
+            this.snackBar.open(err.error.message);
+        });
     }
 }

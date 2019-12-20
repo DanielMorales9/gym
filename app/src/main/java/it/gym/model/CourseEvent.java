@@ -5,6 +5,7 @@ import it.gym.exception.MethodNotAllowedException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import lombok.ToString;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
@@ -81,5 +82,13 @@ public class CourseEvent extends ATrainingEvent {
         // should not deleted unless deleting the courseEvent
         this.getSession().deleteMeFromBundle();
         this.setSession(null);
+    }
+
+    @Override
+    public String toString() {
+        return "CourseEvent{" +
+                "startTime" + this.getStartTime() +
+                "endTime" + this.getEndTime() +
+                '}';
     }
 }

@@ -77,7 +77,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenCreateHoliday_OK() throws Exception {
-        Date start = getNextMonday();
+        Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         Event e = new Event();
         e.setStartTime(start);
@@ -94,6 +94,31 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
         AEvent h = eventRepository.findAll().get(1);
         expectEvent(result, h);
+    }
+
+    @Test
+    public void whenCreateHoliday_ReturnsException() throws Exception {
+        Date start = addHours(getNextMonday(), 24);
+        Date end = addHours(start, 1);
+        Event e = new Event();
+        e.setStartTime(start);
+        e.setEndTime(end);
+        e.setName("closed1");
+
+        ATrainingSession session = courseBundle.createSession(start, end);
+        CourseEvent course = createCourseEvent(1L, "course", session);
+        course = eventRepository.save(course);
+        session = course.getSession();
+        courseBundle.addSession(session);
+        courseBundle = bundleRepository.save(courseBundle);
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(e);
+
+        ResultActions result = mockMvc.perform(post("/events/" + gym.getId() + "/holiday")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -119,7 +144,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenEditTimeOff_OK() throws Exception {
-        Date start = getNextMonday();
+        Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed", start, end, trainer);
         timeOff = eventRepository.save(timeOff);
@@ -151,7 +176,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void whenIsAvailable_OK() throws Exception {
         Event e = new Event();
-        Date start = getNextMonday();
+        Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         e.setStartTime(start);
         e.setEndTime(end);
@@ -169,7 +194,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void whenTimeOffIsAvailable_OK() throws Exception {
         Event e = new Event();
-        Date start = getNextMonday();
+        Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         e.setStartTime(start);
         e.setEndTime(end);
@@ -205,7 +230,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void whenCreateTimeOff_OK() throws Exception {
         Event e = new Event();
-        Date start = getNextMonday();
+        Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         e.setStartTime(start);
         e.setEndTime(end);
@@ -232,7 +257,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenCreateCourseEvent_OK() throws Exception {
-        Date start = getNextMonday();
+        Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
 
         Event e = new Event();
