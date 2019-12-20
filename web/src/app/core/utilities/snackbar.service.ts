@@ -20,6 +20,6 @@ export class SnackBarService {
             action = 'Chiudi';
         }
 
-        this.snackbar.open(message, action, config)
+        this.snackbar.open(message, action, config);
     }
 }

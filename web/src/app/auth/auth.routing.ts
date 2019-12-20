@@ -1,13 +1,14 @@
-import { NgModule }             from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-import {SendChangePasswordTokenComponent, LoginComponent, ModifyPasswordComponent, VerificationComponent} from "./components";
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
+import {LoginComponent, ModifyPasswordComponent, SendChangePasswordTokenComponent, VerificationComponent} from './components';
+import {NoAuthGuardService} from '../core/guards';
 
 
 const routes: Routes = [
     { path: 'login', component: LoginComponent},
-    { path: 'verification', component: VerificationComponent},
-    { path: 'sendChangePasswordToken', component: SendChangePasswordTokenComponent},
-    { path: 'modifyPassword', component: ModifyPasswordComponent},
+    { path: 'verification', component: VerificationComponent, canActivate: [NoAuthGuardService]},
+    { path: 'sendChangePasswordToken', component: SendChangePasswordTokenComponent, canActivate: [NoAuthGuardService]},
+    { path: 'modifyPassword', component: ModifyPasswordComponent, canActivate: [NoAuthGuardService]},
     { path: '**', redirectTo: 'login' }
 ];
 
