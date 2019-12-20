@@ -1,11 +1,9 @@
 import {Component} from '@angular/core';
-import {BaseCalendar} from '../../shared/components/calendar';
+import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent} from '../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {CustomerInfoModalComponent} from './customer-info-modal.component';
-import {CustomerHourModalComponent} from './customer-hour-modal.component';
-import {CustomerDeleteModalComponent} from './customer-delete-modal.component';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 
 

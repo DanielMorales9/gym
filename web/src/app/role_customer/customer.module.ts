@@ -15,7 +15,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {CustomerRouting} from './customer.routing';
-import {CustomerCalendarComponent, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from './calendar';
+import {CustomerCalendarComponent, CustomerInfoModalComponent} from './calendar';
 import localeIt from '@angular/common/locales/it';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 
@@ -45,9 +45,7 @@ registerLocaleData(localeIt);
     ],
     declarations: [
         CustomerCalendarComponent,
-        CustomerHourModalComponent,
         CustomerInfoModalComponent,
-        CustomerDeleteModalComponent
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
@@ -55,9 +53,7 @@ registerLocaleData(localeIt);
     exports: [
     ],
     entryComponents: [
-        CustomerHourModalComponent,
         CustomerInfoModalComponent,
-        CustomerDeleteModalComponent,
     ]
 })
 export class CustomerModule { }

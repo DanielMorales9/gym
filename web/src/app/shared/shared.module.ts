@@ -14,7 +14,7 @@ import {
     SearchDateToolbar,
     SearchMixedToolbar,
     SimpleSearchToolbar,
-    DeleteTimeOffEventComponent, ReservationsComponent
+    DeleteTimeOffEventComponent, ReservationsComponent, DeleteHolidayEventComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -33,7 +33,12 @@ import {
     MatSelectModule,
     MatToolbarModule
 } from '@angular/material';
-import {CalendarButtonToolbar, CalendarHeaderToolbar} from './components/calendar';
+import {
+    CalendarButtonToolbar,
+    CalendarHeaderToolbar,
+    CustomerDeleteModalComponent,
+    CustomerHourModalComponent
+} from './components/calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
@@ -70,7 +75,9 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     entryComponents: [
         UserModalComponent,
         PaySaleModalComponent,
-        BundleModalComponent
+        BundleModalComponent,
+        CustomerHourModalComponent,
+        CustomerDeleteModalComponent,
     ],
     declarations: [
         NoItemComponent,
@@ -79,6 +86,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         InfoPersonalEventComponent,
         DeletePersonalEventComponent,
         DeleteTimeOffEventComponent,
+        DeleteHolidayEventComponent,
         ReservationsComponent,
         SearchDateToolbar,
         SimpleSearchToolbar,
@@ -94,7 +102,9 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SalesComponent,
         UsersComponent,
         UserItemComponent,
-        UserDetailsComponent
+        UserDetailsComponent,
+        CustomerHourModalComponent,
+        CustomerDeleteModalComponent,
     ],
     exports: [
         NoItemComponent,
@@ -102,6 +112,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         InfoPersonalEventComponent,
         DeletePersonalEventComponent,
         DeleteTimeOffEventComponent,
+        DeleteHolidayEventComponent,
         InfoCourseEventComponent,
         ReservationsComponent,
         CalendarHeaderToolbar,
@@ -114,7 +125,9 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleDetailsComponent,
         BundleModalComponent,
         BundleDetailsComponent,
-        SalesComponent
+        SalesComponent,
+        CustomerHourModalComponent,
+        CustomerDeleteModalComponent,
     ],
     providers: []
 

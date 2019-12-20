@@ -4,11 +4,7 @@
 <!--                </button>-->
 <div [ngSwitch]="modalData?.event.meta?.type" mat-dialog-content>
     <ng-container *ngSwitchCase="'admin'" >
-        <ng-container *ngIf="!!modalData?.event">
-            Vuoi eliminare la chiusura {{ modalData?.event.start | date :  'dd/MM/yyyy'}}?
-            <br>
-            Conferma per eliminare oppure cancella.
-        </ng-container>
+        <delete-holiday-event [event]="modalData.event"></delete-holiday-event>
     </ng-container>
     <ng-container *ngSwitchCase="'trainer'">
         <delete-time-off-event [event]="modalData.event"></delete-time-off-event>

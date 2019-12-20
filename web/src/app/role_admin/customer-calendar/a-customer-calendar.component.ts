@@ -4,8 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ACustomerInfoModalComponent} from './a-customer-info-modal.component';
-import {ACustomerHourModalComponent} from './a-customer-hour-modal.component';
-import {ACustomerDeleteModalComponent} from './a-customer-delete-modal.component';
+import {CustomerHourModalComponent, CustomerDeleteModalComponent} from '../../shared/components/calendar';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {first} from 'rxjs/operators';
 
@@ -163,7 +162,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     private openHourModal() {
-        const dialogRef = this.dialog.open(ACustomerHourModalComponent, {
+        const dialogRef = this.dialog.open(CustomerHourModalComponent, {
             data: this.modalData
         });
 
@@ -185,7 +184,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     private openDeleteModal() {
-        const dialogRef = this.dialog.open(ACustomerDeleteModalComponent, {
+        const dialogRef = this.dialog.open(CustomerDeleteModalComponent, {
             data: this.modalData
         });
 

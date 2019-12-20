@@ -24,7 +24,9 @@
             <div mat-dialog-content>
                 Vuoi prenotare {{modalData?.event.name}} dalle {{ modalData?.event.start | date :  'HH:mm'}}
                 alle {{ modalData?.event.end | date :  'HH:mm'}}
-                per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}?
+                <ng-container *ngIf="modalData.event.user">
+                    per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}
+                </ng-container>?
             </div>
             <div mat-dialog-actions>
                 <button (click)="close()" color="basic" mat-flat-button type="button">Cancella</button>
@@ -49,7 +51,10 @@
         <br>
         <reservations [events]="modalData?.event.meta.reservations"></reservations>
         <br>
-        Cancella per disdire la prenotazione per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}.
+        Cancella per disdire la prenotazione
+        <ng-container *ngIf="modalData?.event.user">
+            per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}
+        </ng-container>.
     </div>
     <div mat-dialog-actions>
         <button (click)="close()" color="basic" mat-flat-button type="button">Ok</button>
