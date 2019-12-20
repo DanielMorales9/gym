@@ -34,7 +34,6 @@ public class ReservationFacade {
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
     @Autowired private TrainingBundleService bundleService;
-    @Autowired private MailService mailService;
 
     @Value("${reservationBeforeHours}")
     Integer reservationBeforeHours;
