@@ -30,7 +30,6 @@ public class ReservationFacade {
     @Autowired private ReservationService service;
     @Autowired private GymService gymService;
     @Autowired private CustomerService customerService;
-    @Autowired private TrainerService trainerService;
     @Autowired private EventService eventService;
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
@@ -163,13 +162,6 @@ public class ReservationFacade {
         if (!customer.containsBundle(bundle)) {
             throw new MethodNotAllowedException("Non hai acquistato questo pacchetto");
         }
-    }
-
-    void isTrainerAvailable(List<AEvent> events) {
-        logger.info("Checking whether there are trainers available");
-
-        Long nTrainers = this.trainerService.countAllTrainer();
-        CheckEvents.isTrainerAvailable(nTrainers, events);
     }
 
     void deleteExpiredBundles(Customer customer) {
