@@ -84,6 +84,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         PaySaleModalComponent,
         BundleModalComponent,
         CustomerHourModalComponent,
+        CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
     ],
     declarations: [
