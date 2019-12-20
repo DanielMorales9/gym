@@ -49,7 +49,7 @@ h1.main-app-name {
     }
 }
 
-@media (orientation: landscape){
+@media (max-width: 799px) and (orientation: landscape){
     .main-sidenav {
         top: 0 !important;
         z-index: 10;
