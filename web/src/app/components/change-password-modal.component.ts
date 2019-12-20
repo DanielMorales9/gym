@@ -1,7 +1,7 @@
 import {User} from '../shared/model';
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {passwordMatchValidator} from '../shared/directives';
+import {passwordMatchValidator} from '../core/functions';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({

@@ -5,6 +5,7 @@ import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
 import {UserDetailsComponent, UsersComponent} from '../shared/components/users';
+import {ACustomerCalendarComponent} from './customer-calendar';
 
 const routes = [
 
@@ -18,6 +19,7 @@ const routes = [
             { path: 'sales/buy/:id', component: CreateSaleComponent },
             { path: 'sales/:id', component: SaleDetailsComponent },
             { path: 'calendar', component: AdminCalendarComponent },
+            { path: 'calendar/customer/:id', component: ACustomerCalendarComponent },
             { path: '**', redirectTo: 'bundles' }
         ]},
 ];

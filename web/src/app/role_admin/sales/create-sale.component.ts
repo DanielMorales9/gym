@@ -19,8 +19,6 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
     id: number;
     query: string;
-
-    gymId: number;
     sale: Sale;
 
     private pageSize = 10;
@@ -43,9 +41,9 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     private getId() {
-        this.sub = this.activatedRoute.params.subscribe(params => {
+        this.sub = this.activatedRoute.params.subscribe(async params => {
             this.id = +params['id'];
-            this.createSale();
+            await this.createSale();
         });
     }
 

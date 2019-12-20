@@ -12,7 +12,7 @@ export class SimpleSearchToolbar {
     @Output() done: EventEmitter<any> = new EventEmitter();
 
     emit() {
-        this.done.emit({query: this.query})
+        this.done.emit({query: this.query});
     }
 }
 

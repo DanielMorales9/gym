@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {User} from '../../shared/model';
 import {UserHelperService} from '../../core/helpers';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {passwordMatchValidator} from '../../shared/directives';
+import {passwordMatchValidator} from '../../core/functions';
 import {AuthService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
 

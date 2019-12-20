@@ -28,15 +28,16 @@ export class AdminCalendarComponent extends BaseCalendar {
         super(facade, router, activatedRoute, screenService);
     }
 
-    getEvents() {
+    async getEvents() {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        this.facade.getAllEvents(startDay, endDay).subscribe(rel  => {
-            this.events.push(...rel.map(value => this.formatEvent(value)));
-            console.log(this.events);
-            this.refreshView();
-        });
+        const [data, error] = await this.facade.getAllEvents(startDay, endDay);
+        if (error) {
+            throw error;
+        }
+        this.events.push(...data.map(value => this.formatEvent(value)));
+        this.refreshView();
     }
 
     header(action: string, event: any) {
@@ -144,9 +145,9 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
-                this.createHoliday(data);
+                await this.createHoliday(data);
             }
         });
     }
@@ -156,14 +157,14 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
                 const end = this.dateService.addHour(data.start);
                 if (!!data.meta) {
                     console.log(data);
                     this.createCourseEvent(data, end);
                 } else {
-                    this.createHoliday(data, end);
+                    await this.createHoliday(data, end);
                 }
             }
         });
@@ -233,47 +234,49 @@ export class AdminCalendarComponent extends BaseCalendar {
     private editHoliday(data) {
         console.log(data);
         this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Chiusura confermata');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => this.snackBar.open(err.error.message));
     }
 
     private deleteReservation(data) {
         this.facade.deleteReservation(data)
-            .subscribe(_ => {
+            .subscribe(async _ => {
                 this.snackBar.open('Prenotazione è stata eliminata');
-                this.getEvents();
+                await this.getEvents();
             }, err => {
                 this.snackBar.open(err.error.message);
             });
     }
 
-    private createHoliday(data, end?) {
-        this.facade.createHoliday(data.eventName, data.start, end)
-            .subscribe((_) => {
-                this.snackBar.open('Chiusura confermata');
-                this.getEvents();
-            }, (err) => {
-                this.snackBar.open(err.error.message);
-            });
+    private async createHoliday(data, end?) {
+        const [_, error] = await this.facade.createHoliday(data.eventName, data.start, end);
+        if (error) {
+            this.snackBar.open(error.error.message);
+        }
+        else {
+            this.snackBar.open('Chiusura confermata');
+            await this.getEvents();
+        }
     }
 
-    private deleteTrainerTimeOff(data) {
-        this.facade.deleteTimeOff(data.eventId)
-            .subscribe(res => {
-                this.snackBar.open('Ferie cancellate');
-                this.getEvents();
-            }, err => {
-                this.snackBar.open(err.error.message);
-            });
+    private async deleteTrainerTimeOff(data) {
+        const [_, error] = await this.facade.deleteTimeOff(data.eventId);
+        if (error) {
+            this.snackBar.open(error.error.message);
+        }
+        else {
+            this.snackBar.open('Ferie cancellate');
+            await this.getEvents();
+        }
     }
 
     private deleteHoliday(data) {
         this.facade.deleteHoliday(data.eventId)
-            .subscribe(res => {
+            .subscribe(async res => {
                 this.snackBar.open('La chiusura è stata eliminata');
-                this.getEvents();
+                await this.getEvents();
             }, err => {
                 this.snackBar.open(err.error.message);
             });
@@ -281,9 +284,9 @@ export class AdminCalendarComponent extends BaseCalendar {
 
     private completeReservation(data) {
         this.facade.completeEvent(data.eventId)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Allenamento completato');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => {
                 this.snackBar.open(err.error.message);
             });
@@ -291,26 +294,26 @@ export class AdminCalendarComponent extends BaseCalendar {
 
     private confirmReservation(data) {
         this.facade.confirmReservation(data.eventId)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Prenotazione confermata');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => this.snackBar.open(err.error.message));
     }
 
     private createCourseEvent(data: any, end: Date) {
         this.facade.createCourseEvent(data.eventName, data.meta, data.start, end)
-            .subscribe((_) => {
+            .subscribe(async (_) => {
                 this.snackBar.open('Evento confermato');
-                this.getEvents();
+                await this.getEvents();
             }, (err) => {
                 this.snackBar.open(err.error.message);
             });
     }
 
     private deleteCourseEvent(data: any) {
-        this.facade.deleteCourseEvent(data.eventId).subscribe( (_) => {
+        this.facade.deleteCourseEvent(data.eventId).subscribe( async(_) => {
             this.snackBar.open('Evento eliminato');
-            this.getEvents();
+            await this.getEvents();
         }, (err) => {
             this.snackBar.open(err.error.message);
         });

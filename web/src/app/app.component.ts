@@ -33,16 +33,20 @@ export class AppComponent implements OnInit {
         this.authOnNavigation();
         await this.service.authenticate();
 
-        this.authenticatedService.getAuthenticated().subscribe(auth => {
+        this.authenticatedService.getAuthenticated().subscribe(async auth => {
             this.authenticated = auth;
 
             if (this.authenticated && !this.user) {
                 this.current_role_view = this.service.currentRole;
                 this.user = this.service.user;
-                this.gymService.getConfig().subscribe((gym: Gym) => {
-                   this.appName = gym.name;
-                   document.title = this.appName;
-                });
+                const [data, error] = await this.gymService.getConfig();
+                if (error) {
+                    throw error;
+                }
+                else {
+                    this.appName = data.name;
+                    document.title = this.appName;
+                }
             }
 
         });
