@@ -2,7 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {BundleSpecification, BundleSpecificationType, CourseBundleSpecification, PersonalBundleSpecification} from '../../model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {rangeValidator, timeValidator} from '../../directives';
+import {rangeValidator, timeValidator} from '../../../core/functions';
 
 @Component({
     selector: 'bundle-modal',

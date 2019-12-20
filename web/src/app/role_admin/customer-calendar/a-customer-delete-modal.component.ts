@@ -3,21 +3,20 @@ import {BaseCalendarModal} from '../../shared/components/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
-    templateUrl: './trainer-delete-modal.component.html',
+    templateUrl: './a-customer-delete-modal.component.html',
     styleUrls: ['../../styles/root.css']
 })
-export class TrainerDeleteModalComponent extends BaseCalendarModal {
+export class ACustomerDeleteModalComponent extends BaseCalendarModal {
 
 
-    constructor(public dialogRef: MatDialogRef<TrainerDeleteModalComponent>,
+    constructor(public dialogRef: MatDialogRef<ACustomerDeleteModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = data;
     }
 
     submit() {
-        const data = this.modalData.event.meta;
-        data.eventId = this.modalData.event.meta.id;
-        this.close(data);
+        this.close(this.modalData.event.meta);
     }
+
 }

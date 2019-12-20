@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 
 import {StorageService} from '../utilities/storage.service';
 import {HttpClient} from '@angular/common/http';
-import {to_promise} from '../../shared/directives/decorators';
+import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
 
 
@@ -105,14 +105,13 @@ export class AuthenticationService {
     }
 
     getCurrentUserRole() {
-        // if (!this.currentRole) {
-        this.currentRole = this.computeRole();
-        // }
+        const user = this.getUser();
+        this.currentRole = this.computeRole(user);
         return this.currentRole;
     }
 
-    private computeRole() {
-        if (this.getUser().type) {
+    computeRole(user: User) {
+        if (user.type) {
             return this.TYPE2INDEX[this.user.type];
         } else {
             return 3;

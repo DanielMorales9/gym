@@ -6,8 +6,8 @@
     <!--</button>-->
     <div mat-dialog-content>
         <ng-container *ngIf="!!modalData?.event">
-            Vuoi andare in ferie dalle {{ modalData?.event.newStart | date : 'HH:mm a'}}
-            alle {{ modalData?.event.newEnd | date : 'HH:mm a'}}
+            Vuoi andare in ferie dalle {{ modalData?.event.newStart | date : 'HH:mm'}}
+            alle {{ modalData?.event.newEnd | date : 'HH:mm'}}
             del giorno {{ modalData?.event?.newStart | date : 'dd/MM/yyyy'}} ?
             <br>
             <mat-form-field>

@@ -1,0 +1,6 @@
+<ng-container *ngIf="!!event">
+    Vuoi eliminare il giorno di riposo ({{ event.start | date :  'dd/MM/yyyy'}})
+    di {{event.meta.user.lastName}}?
+    <br>
+    Conferma per eliminare oppure cancella.
+</ng-container>

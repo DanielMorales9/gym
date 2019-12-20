@@ -1,0 +1,6 @@
+<i class="fas fa-user"></i>&nbsp;Ci sono {{events?.length}} prenotati:
+<ul>
+    <li *ngFor="let reservation of events">
+        {{reservation.user.firstName}} {{reservation.user.lastName}}
+    </li>
+</ul>

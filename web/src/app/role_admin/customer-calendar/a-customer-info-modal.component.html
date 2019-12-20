@@ -13,11 +13,7 @@
     </ng-container>
     <ng-container *ngSwitchCase="'reservation'">
         <div mat-dialog-content>
-            <i class="fas fa-check" *ngIf="modalData?.event.meta?.confirmed"></i>
-            <i class="fas fa-ban" *ngIf="!modalData?.event.meta?.confirmed"></i>&nbsp;
-            Il tuo allenamento dalle {{ modalData?.event.start | date :  'HH:mm'}}
-            alle {{ modalData?.event.end | date :  'HH:mm'}}
-            <span *ngIf="!modalData?.event.meta.confirmed"> non</span> è stato confermato.
+            <info-personal-event [event]="modalData.event"></info-personal-event>
         </div>
         <ng-container *ngTemplateOutlet="ok">
 
@@ -27,7 +23,8 @@
         <ng-container *ngIf="!isReserved(); else reserved">
             <div mat-dialog-content>
                 Vuoi prenotare {{modalData?.event.name}} dalle {{ modalData?.event.start | date :  'HH:mm'}}
-                alle {{ modalData?.event.end | date :  'HH:mm'}}?
+                alle {{ modalData?.event.end | date :  'HH:mm'}}
+                per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}?
             </div>
             <div mat-dialog-actions>
                 <button (click)="close()" color="basic" mat-flat-button type="button">Cancella</button>
@@ -46,13 +43,13 @@
 <ng-template #reserved>
     <div mat-dialog-content>
         <i class="fas fa-calendar-week"></i>
-        Hai prenotato {{modalData?.event.meta?.name}} dalle
-        {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm'}}
-        alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm'}}.
+        Prenotazioni {{modalData?.event.meta?.name}} dalle
+        {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm a'}}
+        alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
         <br>
         <reservations [events]="modalData?.event.meta.reservations"></reservations>
         <br>
-        Cancella per disdire la prenotazione.
+        Cancella per disdire la prenotazione per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}.
     </div>
     <div mat-dialog-actions>
         <button (click)="close()" color="basic" mat-flat-button type="button">Ok</button>

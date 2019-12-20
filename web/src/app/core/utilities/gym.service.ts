@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
 import {AuthenticationService} from '../authentication';
+import {to_promise} from '../functions/decorators';
 
 @Injectable({
     providedIn: 'root'
@@ -37,7 +38,8 @@ export class GymService {
         return {startTime, endTime};
     }
 
-    getConfig() {
+    @to_promise
+    getConfig(): any {
         return this.http.get(`/gyms`).pipe(map((res: Object) => this.gym = res[0]));
     }
 

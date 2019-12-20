@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatSelectionList} from '@angular/material';
 import {Gym} from '../shared/model';
-import {rangeValidator} from '../shared/directives';
+import {rangeValidator} from '../core/functions';
 
 
 @Component({

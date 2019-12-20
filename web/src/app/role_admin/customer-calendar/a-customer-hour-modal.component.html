@@ -4,15 +4,15 @@
     <!--    <span aria-hidden="true">&times;</span>-->
     <!--</button>-->
     <div mat-dialog-content>
-        Prenota l'orario selezionato ({{ modalData?.event.date | date :  'HH:mm - dd/MM/yyyy'}}).
+        Prenota l'orario selezionato ({{ modalData?.event.date | date :  'HH:mm - dd/MM/yyyy'}})
+        per {{modalData?.event.user.firstName}} {{modalData?.event.user.lastName}}.
         <br>
-        Prenota una sessione di allenamento da uno dei tuoi pacchetti.
+        Prenota una sessione di allenamento da uno dei suoi pacchetti.
         <div>
             <mat-form-field>
                 <label for="bundle"><b>Pacchetto</b></label>
                 <mat-select
                         id="bundle"
-                        type="text"
                         formControlName="bundle"
                         [ngClass]="{ 'is-invalid': bundle.touched && bundle.invalid }"
                         [value]="modalData.event.bundles[0]">

@@ -11,11 +11,11 @@
         <mat-card-content>
             <div class="summary-info">
             <span>
-                <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{sale?.createdAt | date: 'dd-MM-yyyy HH:mm a'}}
+                <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{sale?.createdAt | date: 'dd-MM-yyyy HH:mm'}}
             </span>
 
                 <span [hidden]="!sale?.payed" class="green-light">
-                <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{sale?.payedDate | date: 'dd-MM-yyyy HH:mm a'}}
+                <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{sale?.payedDate | date: 'dd-MM-yyyy HH:mm'}}
             </span>
                 <span>
                 <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;

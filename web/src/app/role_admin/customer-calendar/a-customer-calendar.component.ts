@@ -3,17 +3,18 @@ import {BaseCalendar} from '../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
-import {CustomerInfoModalComponent} from './customer-info-modal.component';
-import {CustomerHourModalComponent} from './customer-hour-modal.component';
-import {CustomerDeleteModalComponent} from './customer-delete-modal.component';
+import {ACustomerInfoModalComponent} from './a-customer-info-modal.component';
+import {ACustomerHourModalComponent} from './a-customer-hour-modal.component';
+import {ACustomerDeleteModalComponent} from './a-customer-delete-modal.component';
 import {ScreenService, SnackBarService} from '../../core/utilities';
+import {first} from 'rxjs/operators';
 
 
 @Component({
-    templateUrl: './customer-calendar.component.html',
+    templateUrl: './a-customer-calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
-export class CustomerCalendarComponent extends BaseCalendar {
+export class ACustomerCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
                 private snackBar: SnackBarService,
@@ -49,6 +50,22 @@ export class CustomerCalendarComponent extends BaseCalendar {
         this.refreshView();
     }
 
+    async getUser() {
+        const params = await this.activatedRoute.params.pipe(first()).toPromise();
+        const id = +params['id'];
+        const [data, error] = await this.facade.findUserById(id);
+        if (error) {
+            throw error;
+        }
+        else {
+            this.user = data;
+        }
+    }
+
+    async getRole() {
+        this.role = this.facade.getRoleByUser(this.user);
+    }
+
     header(action: string, event: any) {
         console.log(action, event);
     }
@@ -63,6 +80,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         }
 
         event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
+        event.user = this.user;
         this.modalData = {
             action: action,
             title: 'Prenota il tuo allenamento!',
@@ -76,6 +94,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     change(action: string, event: any) {}
 
     delete(action: string, event: any) {
+        event.user = this.user;
         this.modalData = {
             action: action,
             title: `Sei sicuro di voler eliminare la prenotazione?`,
@@ -88,6 +107,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
     info(action: string, event: any) {
         event = event.event;
+        event.user = this.user;
         this.modalData = {
             action: action,
             title: event.title,
@@ -109,12 +129,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
             case 'delete':
                 this.openDeleteModal();
                 break;
-            // case 'change':
-            //     this.openChangeModal();
-            //     break;
-            // case 'header':
-            //     this.openHeaderModal();
-            //     break;
             default:
                 console.log(action);
                 break;
@@ -122,7 +136,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     private openInfoModal() {
-        const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
+        const dialogRef = this.dialog.open(ACustomerInfoModalComponent, {
             data: this.modalData
         });
 
@@ -149,7 +163,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     private openHourModal() {
-        const dialogRef = this.dialog.open(CustomerHourModalComponent, {
+        const dialogRef = this.dialog.open(ACustomerHourModalComponent, {
             data: this.modalData
         });
 
@@ -170,9 +184,8 @@ export class CustomerCalendarComponent extends BaseCalendar {
         });
     }
 
-
     private openDeleteModal() {
-        const dialogRef = this.dialog.open(CustomerDeleteModalComponent, {
+        const dialogRef = this.dialog.open(ACustomerDeleteModalComponent, {
             data: this.modalData
         });
 

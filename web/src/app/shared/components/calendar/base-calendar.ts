@@ -1,6 +1,6 @@
 import {Subject} from 'rxjs';
 import {Injectable, OnInit} from '@angular/core';
-import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
+import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -28,6 +28,12 @@ const CALENDAR_COLUMNS: any = {
 
 @Injectable()
 export abstract class BaseCalendar implements OnInit {
+
+    protected constructor(public facade: CalendarFacade,
+                          public router: Router,
+                          public activatedRoute: ActivatedRoute,
+                          public screenService: ScreenService) {
+    }
 
     MONTH = CalendarView.Month;
     WEEK = CalendarView.Week;
@@ -60,7 +66,7 @@ export abstract class BaseCalendar implements OnInit {
     EVENT_COLOR = {
         H: CALENDAR_COLUMNS.RED,
         T: CALENDAR_COLUMNS.RED,
-        C: CALENDAR_COLUMNS.GREEN,
+        C: CALENDAR_COLUMNS.YELLOW,
         P: CALENDAR_COLUMNS.YELLOW,
     };
 
@@ -73,8 +79,8 @@ export abstract class BaseCalendar implements OnInit {
         },*/
         {
             label: '<i class="fa fa-fw fa-times"></i>',
-            onClick: ({ event }: { event: CalendarEvent }): void => {
-                this.handleEvent(EVENT_TYPES.DELETE, event);
+            onClick: async ({event}: { event: CalendarEvent }): Promise<void> => {
+                await this.handleEvent(EVENT_TYPES.DELETE, event);
             }
         }
     ];
@@ -96,10 +102,16 @@ export abstract class BaseCalendar implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
-    constructor(public facade: CalendarFacade,
-                public router: Router,
-                public activatedRoute: ActivatedRoute,
-                public screenService: ScreenService) {
+    static isNotPast(date) {
+        return date >= new Date();
+    }
+
+    static getPersonalEventColor(event: any) {
+        return (event.reservation.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+    }
+
+    static getCourseEventColor(event: any) {
+        return (event.reservations.length > 0) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
 
@@ -107,22 +119,18 @@ export abstract class BaseCalendar implements OnInit {
         return this.screenService.isDesktop();
     }
 
-    static isNotPast(date) {
-        return date >= new Date();
-    }
-
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.events = [];
-        this.initCalendarConfig();
-        this.getUser();
-        this.getRole();
         this.initView();
         this.initViewDate();
-        this.updateQueryParams();
-        this.getEvents();
+        await this.initCalendarConfig();
+        await this.getUser();
+        await this.getRole();
+        await this.updateQueryParams();
+        await this.getEvents();
     }
 
-    abstract getEvents();
+    abstract async getEvents();
 
     abstract delete(action: string, event: CalendarEvent);
     abstract info(action: string, event: CalendarEvent);
@@ -132,20 +140,24 @@ export abstract class BaseCalendar implements OnInit {
 
     abstract openModal(action: string);
 
-    private getUser() {
+    protected async getUser() {
         this.user = this.facade.getUser();
     }
 
-    private getRole() {
+    protected async getRole() {
         this.role = this.facade.getRole();
     }
 
-    private initCalendarConfig() {
-        this.facade.getConfig().subscribe((config: Gym) => {
+    private async initCalendarConfig() {
+        const [config, error] = await this.facade.getConfig();
+        if (error) {
+            throw error;
+        } else {
             this.gym = config;
             this.dayStartHour = 24;
             this.dayEndHour = 0;
             this.excludeDays = [];
+
             // tslint:disable-next-line:forin
             for (const key in this.DAY_OF_WEEK) {
                 if (!config[key + 'Open']) {
@@ -158,7 +170,8 @@ export abstract class BaseCalendar implements OnInit {
             }
 
             this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
-        });
+
+        }
     }
 
     private initView() {
@@ -189,7 +202,7 @@ export abstract class BaseCalendar implements OnInit {
         }
     }
 
-    handleEvent(action: string, event: any): void {
+    async handleEvent(action: string, event: any): Promise<void> {
         switch (action) {
             case EVENT_TYPES.DELETE:
                 this.delete(action, event);
@@ -204,7 +217,7 @@ export abstract class BaseCalendar implements OnInit {
                 this.header(action, event);
                 break;
             case EVENT_TYPES.DAY:
-                this.day(action, event);
+                await this.day(action, event);
                 break;
             case EVENT_TYPES.CHANGE:
                 this.change(action, event);
@@ -300,6 +313,7 @@ export abstract class BaseCalendar implements OnInit {
             case 'C':
                 isDeletable = true;
                 isResizable = false;
+                color = BaseCalendar.getCourseEventColor(event);
                 break;
             case 'P':
                 isDeletable = this.isReservationDeletable(event);
@@ -328,10 +342,6 @@ export abstract class BaseCalendar implements OnInit {
             draggable: false,
             meta: event
         };
-    }
-
-    static getPersonalEventColor(event: any) {
-        return (event.reservation.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
     private isReservationDeletable(event: any) {
@@ -363,7 +373,7 @@ export abstract class BaseCalendar implements OnInit {
         return this.user.type === 'A';
     }
 
-    onViewDateChanged(viewOrDate?) {
+    async onViewDateChanged(viewOrDate?) {
         if (viewOrDate instanceof Date) {
             this.viewDate = viewOrDate;
         } else {
@@ -371,13 +381,13 @@ export abstract class BaseCalendar implements OnInit {
         }
         this.updateQueryParams();
         this.activeDayIsOpen = false;
-        this.getEvents();
+        await this.getEvents();
     }
 
-    day(action: string, event: any): void {
+    async day(action: string, event: any): Promise<void> {
         if (this.viewDate.getTime() === event.day.date.getTime()) {
             if (this.activeDayIsOpen || event.day.events.length === 0) {
-                this.getEvents();
+                await this.getEvents();
                 this.view = this.DAY;
                 this.activeDayIsOpen = true;
             }
@@ -386,7 +396,7 @@ export abstract class BaseCalendar implements OnInit {
             this.viewDate = event.day.date;
             if (!this.activeDayIsOpen) {
                 if (event.day.events.length === 0) {
-                    this.getEvents();
+                    await this.getEvents();
                     this.view = this.DAY;
                 }
             }
@@ -394,26 +404,13 @@ export abstract class BaseCalendar implements OnInit {
         }
     }
 
-
     refreshView() {
         this.refresh.next();
     }
 
-    beforeMonthViewRender({ body }: { body: CalendarMonthViewDay[] }): void {
-        body.forEach(cell => {
-            const groups: any = {};
-            cell.events.forEach((event: CalendarEvent<{ type: string }>) => {
-                groups[event.meta.type] = groups[event.meta.type] || [];
-                groups[event.meta.type].push(event);
-            });
-            cell['eventGroups'] = Object.entries(groups);
-        });
-    }
-
-
-    private updateQueryParams() {
+    private async updateQueryParams() {
         this.queryParams = {view: this.view, viewDate: this.viewDate};
-        this.router.navigate(
+        await this.router.navigate(
             [],
             {
                 relativeTo: this.activatedRoute,
