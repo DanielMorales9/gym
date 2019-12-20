@@ -20,11 +20,4 @@ public class CheckEvents {
             throw new BadRequestException("Chiusura Aziendale");
     }
 
-    public static void isTrainerAvailable(long nTrainers, List<AEvent> timesOff) {
-        long nUnavailableTrainers = timesOff.stream().filter(t -> t.getType().equals(TimeOff.TYPE)).count();
-        long nAvailableTrainers = nTrainers - nUnavailableTrainers;
-        if (nAvailableTrainers <= 0) {
-            throw new BadRequestException("Non ci sono personal trainer disponibili");
-        }
-    }
 }
