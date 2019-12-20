@@ -138,8 +138,6 @@ public class EventFacade {
     private void checkNoOtherEvents(Event event) {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
-        logger.debug(startTime.toString());
-        logger.debug(endTime.toString());
         List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
         logger.debug(events.toString());
         if (!events.isEmpty())
