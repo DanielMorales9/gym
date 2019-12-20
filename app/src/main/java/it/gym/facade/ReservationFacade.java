@@ -1,11 +1,11 @@
 package it.gym.facade;
 
 import it.gym.exception.BadRequestException;
-import it.gym.exception.InternalServerException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
+import it.gym.utility.CheckEvents;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,10 +16,8 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -67,12 +65,9 @@ public class ReservationFacade {
 
         isReservedOnTime(startTime);
 
-        List<AEvent> timesOff = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
+        List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
-        hasHolidays(timesOff);
-
-        isTrainerAvailable(timesOff);
-
+        hasHolidays(events);
     }
 
     public Reservation createReservationFromBundle(Long gymId, Long customerId, Long bundleId, Event event) {
@@ -170,15 +165,11 @@ public class ReservationFacade {
         }
     }
 
-    void isTrainerAvailable(List<AEvent> timesOff) {
+    void isTrainerAvailable(List<AEvent> events) {
         logger.info("Checking whether there are trainers available");
 
         Long nTrainers = this.trainerService.countAllTrainer();
-        Long nUnavailableTrainers = timesOff.stream().filter(t -> t.getType().equals(TimeOff.TYPE)).count();
-        long nAvailableTrainers = nTrainers - nUnavailableTrainers;
-        if (nAvailableTrainers <= 0) {
-            throw new BadRequestException("Non ci sono personal trainer disponibili");
-        }
+        CheckEvents.isTrainerAvailable(nTrainers, events);
     }
 
     void deleteExpiredBundles(Customer customer) {
@@ -200,14 +191,6 @@ public class ReservationFacade {
     }
 
     void hasHolidays(List<AEvent> events) {
-        logger.info("Checking whether there are times off");
-
-        long nHolidays = events.stream()
-                .filter(s -> s.getType().equals(Holiday.TYPE))
-                .limit(1)
-                .count();
-
-        if (nHolidays > 0)
-            throw new BadRequestException("Chiusura Aziendale");
+        CheckEvents.hasHolidays(events);
     }
 }
