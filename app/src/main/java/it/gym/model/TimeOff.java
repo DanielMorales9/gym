@@ -50,10 +50,9 @@ public class TimeOff extends AEvent {
 
     @Override
     public String toString() {
-
-        return " Tipo :" + this.getType() +
-                " Nome :" + this.getName() +
-                " User :" + this.user.toString() +
-                " Data :" + this.getStartTime().toString();
+        return "TimeOff{" +
+                "startTime" + this.getStartTime() +
+                "endTime" + this.getEndTime() +
+                '}';
     }
 }

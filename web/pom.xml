@@ -10,7 +10,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <docker.image.prefix>tenentedan9</docker.image.prefix>
+        <!--suppress UnresolvedMavenProperty -->
+        <docker.image.prefix>${env.DOCKER_USER}</docker.image.prefix>
     </properties>
 
     <build>

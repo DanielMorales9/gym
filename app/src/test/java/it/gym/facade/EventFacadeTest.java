@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
@@ -16,6 +17,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -314,6 +317,30 @@ public class EventFacadeTest {
         Mockito.verify(gymService).findById(1L);
     }
 
+    @Test(expected = BadRequestException.class)
+    public void canEditTimeOff_ReturnsBadRequest() {
+        Gym gym = Fixture.createGym(1L);
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        AUser trainer = createTrainer(2L);
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        AEvent timeOff = createTimeOff(1L, "timeOff", start, end, trainer);
+        Mockito.doReturn(timeOff).when(service).findById(1L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+        ArrayList<AEvent> list = new ArrayList<>();
+        list.add(timeOff);
+        list.add(Fixture.createHoliday(1L, "name", start, end));
+        Mockito.doReturn(list).when(service).findOverlappingEvents(any(), any());
+        Event event = new Event();
+        Date newEnd = addHours(end, 1);
+        event.setStartTime(start);
+        event.setEndTime(newEnd);
+        event.setName("timeOff");
+        facade.canEdit(1L, event);
+    }
+
     @Test
     public void isTimeOffAvailable() {
         Gym gym = Fixture.createGym(1L);
@@ -325,11 +352,37 @@ public class EventFacadeTest {
         Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer)).when(service).findById(2L);
         Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+
         Event event = new Event();
         Date newEnd = addHours(end, 1);
         event.setStartTime(start);
         event.setEndTime(newEnd);
         event.setName("timeOff");
+        
+        facade.isAvailable(1L, event);
+        Mockito.verify(gymService).findById(1L);
+    }
+
+    @Test(expected = BadRequestException.class)
+    public void whenIsTimeOffAvailable_ReturnException() {
+        Gym gym = Fixture.createGym(1L);
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        AUser trainer = createTrainer(2L);
+
+        Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(createTimeOff(1L, "timeOff", start, end, trainer)).when(service).findById(2L);
+        Mockito.doReturn(true).when(gymService).isWithinWorkingHours(any(), any(), any());
+        Mockito.doReturn(Collections.singletonList(Fixture.createHoliday(2L, "test", start, end)))
+                .when(service).findOverlappingEvents(any(), any());
+        Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0)).when(service).save(any());
+
+        Event event = new Event();
+        Date newEnd = addHours(end, 1);
+        event.setStartTime(start);
+        event.setEndTime(newEnd);
+        event.setName("timeOff");
+
         facade.isAvailable(1L, event);
         Mockito.verify(gymService).findById(1L);
     }

@@ -117,53 +117,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
-    public void whenIsAvailablePersonal_NoTrainer() throws Exception {
-        customer.addToCurrentTrainingBundles(Collections.singletonList(personal));
-        customer = userRepository.save(customer);
-        Date start = getNextMonday();
-        Date end = addHours(start, 1);
-        Event e = new Event();
-        e.setStartTime(start);
-        e.setEndTime(end);
-        e.setName("test");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(e);
-
-        mockMvc.perform(post("/reservations/"+gym.getId()
-                +"/isAvailable?customerId="+customer.getId()+"&bundleId="+personal.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message")
-                        .value("Non ci sono personal trainer disponibili"));
-        customer.setCurrentTrainingBundles(null);
-        customer = userRepository.save(customer);
-    }
-
-    @Test
-    public void whenIsAvailableCourse_NoTrainer() throws Exception {
-        customer.addToCurrentTrainingBundles(Collections.singletonList(course));
-        customer = userRepository.save(customer);
-        Date start = getNextMonday();
-        Date end = addHours(start, 1);
-        Event e = new Event();
-        e.setStartTime(start);
-        e.setEndTime(end);
-        e.setName("test");
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(e);
-
-        mockMvc.perform(post("/reservations/"+gym.getId()
-                +"/isAvailable?customerId="+customer.getId()+"&bundleId="+course.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json)).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.message").value("Non ci sono personal trainer disponibili"));
-        customer.setCurrentTrainingBundles(null);
-        customer = userRepository.save(customer);
-    }
-
-    @Test
     public void whenIsAvailableCourse_OK() throws Exception {
         Trainer trainer = createTrainer(1L);
         userRepository.save(trainer);
