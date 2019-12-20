@@ -1,13 +1,11 @@
 import {Component} from '@angular/core';
-import {BaseCalendar} from '../../shared/components/calendar';
+import {BaseCalendar, CustomerInfoModalComponent} from '../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
-import {ACustomerInfoModalComponent} from './a-customer-info-modal.component';
 import {CustomerHourModalComponent, CustomerDeleteModalComponent} from '../../shared/components/calendar';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {first} from 'rxjs/operators';
-
 
 @Component({
     templateUrl: './a-customer-calendar.component.html',
@@ -135,7 +133,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     private openInfoModal() {
-        const dialogRef = this.dialog.open(ACustomerInfoModalComponent, {
+        const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
             data: this.modalData
         });
 

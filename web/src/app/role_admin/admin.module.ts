@@ -33,7 +33,7 @@ import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared';
 import {BundleItemComponent, BundlesComponent} from './bundles';
-import {ACustomerCalendarComponent, ACustomerInfoModalComponent} from './customer-calendar';
+import {ACustomerCalendarComponent} from './customer-calendar';
 
 registerLocaleData(localeIt);
 
@@ -75,7 +75,6 @@ registerLocaleData(localeIt);
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
         ACustomerCalendarComponent,
-        ACustomerInfoModalComponent,
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
@@ -89,8 +88,6 @@ registerLocaleData(localeIt);
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
-        ACustomerCalendarComponent,
-        ACustomerInfoModalComponent,
     ]
 })
 export class AdminModule { }

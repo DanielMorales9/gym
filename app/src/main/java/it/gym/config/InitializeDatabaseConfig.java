@@ -117,7 +117,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     }
 
     private void createAndSaveCourseBundleSpecification() {
-        String name = "Course";
+        String name = "Corso";
         if (!specService.existsByName(name))
             specService.createTrainingBundleSpecification(createCourseBundleSpecification(name, new Date()));
     }

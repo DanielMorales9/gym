@@ -1,0 +1,15 @@
+<i class="fas fa-calendar-week"></i>
+<ng-container *ngIf="event.user else you;">Prenotazioni</ng-container> {{event.meta?.name}} dalle
+{{ event.start | date :  'dd-MM-yyyy HH:mm a'}}
+alle {{ event.end | date :  'dd-MM-yyyy HH:mm a'}}.
+<br>
+<ng-container *ngIf="event.user">
+<reservations [events]="event.meta.reservations"></reservations>
+<br>
+</ng-container>
+
+Cancella per disdire la prenotazione <ng-container *ngIf="event.user">per {{event.user.firstName}} {{event.user.lastName}}</ng-container>.
+
+<ng-template #you>
+    Hai prenotato
+</ng-template>

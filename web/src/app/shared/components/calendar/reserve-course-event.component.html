@@ -1,0 +1,5 @@
+Vuoi prenotare {{event?.name}} dalle {{ event?.start | date :  'HH:mm'}}
+alle {{ event?.end | date :  'HH:mm'}}
+<ng-container *ngIf="event?.user">
+    per {{event?.user.firstName}} {{event?.user.lastName}}
+</ng-container>?

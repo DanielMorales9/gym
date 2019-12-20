@@ -1,9 +1,13 @@
 import {Component} from '@angular/core';
-import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent} from '../../shared/components/calendar';
+import {
+    BaseCalendar,
+    CustomerDeleteModalComponent,
+    CustomerHourModalComponent,
+    CustomerInfoModalComponent
+} from '../../shared/components/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
-import {CustomerInfoModalComponent} from './customer-info-modal.component';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 
 
@@ -107,12 +111,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
             case 'delete':
                 this.openDeleteModal();
                 break;
-            // case 'change':
-            //     this.openChangeModal();
-            //     break;
-            // case 'header':
-            //     this.openHeaderModal();
-            //     break;
             default:
                 console.log(action);
                 break;
