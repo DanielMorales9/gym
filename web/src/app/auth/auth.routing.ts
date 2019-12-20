@@ -5,7 +5,7 @@ import {NoAuthGuardService} from '../core/guards';
 
 
 const routes: Routes = [
-    { path: 'login', component: LoginComponent, canActivate: [NoAuthGuardService]},
+    { path: 'login', component: LoginComponent},
     { path: 'verification', component: VerificationComponent, canActivate: [NoAuthGuardService]},
     { path: 'sendChangePasswordToken', component: SendChangePasswordTokenComponent, canActivate: [NoAuthGuardService]},
     { path: 'modifyPassword', component: ModifyPasswordComponent, canActivate: [NoAuthGuardService]},
