@@ -53,6 +53,6 @@ public class SalesLineItem {
     }
 
     Double getSubTotal() {
-        return this.bundleSpecification.getPrice();
+        return this.trainingBundle.getPrice();
     }
 }
