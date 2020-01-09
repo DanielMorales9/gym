@@ -113,6 +113,7 @@ export class UserDetailsComponent implements OnInit {
 
     getRoleName() {
         let name;
+        if (!this.user) { return name; }
         switch (this.user.type) {
             case 'A':
                 name = 'Amministratore';

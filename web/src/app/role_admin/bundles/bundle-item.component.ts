@@ -46,16 +46,18 @@ export class BundleItemComponent {
     }
 
     getBundleType() {
+        const defaultName = 'Allenamento Personale';
         let name;
+        if (!this.bundle) { return name; }
         switch (this.bundle.type) {
             case this.PERSONAL:
-                name = 'Allenamento Personale';
+                name = defaultName;
                 break;
             case this.COURSE:
                 name = 'Corso';
                 break;
             default:
-                name = 'Allenamento Personale';
+                name = defaultName;
                 break;
         }
         return name;

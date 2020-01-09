@@ -74,6 +74,7 @@ export class BundleDetailsComponent implements OnInit {
 
     getBundleType() {
         let name;
+        if (!this.bundle) { return name; }
         switch (this.bundle.type) {
             case this.PERSONAL:
                 name = 'Allenamento Personale';
