@@ -40,4 +40,22 @@ export class UserItemComponent {
         this.done.emit({type: 'delete', user: this.user});
     }
 
+    getRoleName() {
+        let name;
+        switch (this.user.type) {
+            case 'A':
+                name = 'Amministratore';
+                break;
+            case 'C':
+                name = 'Cliente';
+                break;
+            case 'T':
+                name = 'Allenatore';
+                break;
+            default:
+                name = 'Cliente';
+                break;
+        }
+        return name;
+    }
 }

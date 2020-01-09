@@ -44,4 +44,20 @@ export class BundleItemComponent {
     toggleDisabled() {
         this.done.emit({type: 'patch', bundle: this.bundle});
     }
+
+    getBundleType() {
+        let name;
+        switch (this.bundle.type) {
+            case this.PERSONAL:
+                name = 'Allenamento Personale';
+                break;
+            case this.COURSE:
+                name = 'Corso';
+                break;
+            default:
+                name = 'Allenamento Personale';
+                break;
+        }
+        return name;
+    }
 }

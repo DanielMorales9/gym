@@ -110,4 +110,23 @@ export class UserDetailsComponent implements OnInit {
     makeAppointments() {
         return this.router.navigate([this.root, 'calendar', 'customer', this.user.id]);
     }
+
+    getRoleName() {
+        let name;
+        switch (this.user.type) {
+            case 'A':
+                name = 'Amministratore';
+                break;
+            case 'C':
+                name = 'Cliente';
+                break;
+            case 'T':
+                name = 'Allenatore';
+                break;
+            default:
+                name = 'Cliente';
+                break;
+        }
+        return name;
+    }
 }

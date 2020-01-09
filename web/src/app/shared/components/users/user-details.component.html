@@ -19,6 +19,9 @@
                     <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;&nbsp;Verificato
                 </div>
             </div>
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-user-tag"></mat-icon>&nbsp;{{getRoleName()}}
+            </div>
             <div *ngIf="user?.height && user?.weight">
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-weight"></mat-icon>&nbsp;&nbsp;
