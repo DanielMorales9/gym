@@ -13,7 +13,9 @@
         <span>{{bundle?.description || 'Loading...'}}</span>
     </div>
     <div class="panel-content">
-
+        <div>
+            <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
+        </div>
         <div>
         <span class="green-light" [hidden]="bundle?.disabled">
             <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
