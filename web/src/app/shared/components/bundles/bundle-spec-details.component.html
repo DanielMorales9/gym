@@ -42,13 +42,6 @@
 
         </mat-card-content>
         <mat-card-actions>
-            <ng-container *ngIf="canEdit">
-                <button mat-button color="primary" (click)="editBundle()">
-                <span>
-                    <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
-                </span>
-                </button>
-            </ng-container>
             <ng-container *ngIf="canDisable">
                 <button mat-button color="accent" (click)="toggleDisabled()">
                 <span *ngIf="bundle?.disabled">
