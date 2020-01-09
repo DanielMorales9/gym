@@ -31,14 +31,14 @@ export class SalesComponent implements OnInit {
                 private service: SalesService,
                 private auth: AuthenticationService,
                 private router: Router,
-                private activatedRoute: ActivatedRoute,
+                private route: ActivatedRoute,
                 private snackbar: SnackBarService) {
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
-        const path = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
+        const path = this.route.parent.parent.snapshot.routeConfig.path;
         switch (path) {
             case 'admin':
                 this.mixed = this.canDelete = this.canPay = true;
@@ -52,7 +52,7 @@ export class SalesComponent implements OnInit {
     }
 
     private initQueryParams(id?) {
-        this.activatedRoute.queryParams.subscribe(params => {
+        this.route.queryParams.subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
                 if (!!this.queryParams.date) {
@@ -74,7 +74,7 @@ export class SalesComponent implements OnInit {
         this.router.navigate(
             [],
             {
-                relativeTo: this.activatedRoute,
+                relativeTo: this.route,
                 queryParams: this.queryParams,
             });
     }
@@ -92,6 +92,9 @@ export class SalesComponent implements OnInit {
                 break;
             case 'pay':
                 this.paySale($event.sale, $event.amount);
+                break;
+            case 'info':
+                this.goToDetails($event.sale);
                 break;
         }
     }
@@ -111,5 +114,9 @@ export class SalesComponent implements OnInit {
     private paySale(sale: Sale, amount: number) {
         this.service.pay(sale.id, amount)
             .subscribe(_ => this.search());
+    }
+
+    private goToDetails(sale: Sale) {
+        return this.router.navigate([sale.id], {relativeTo: this.route});
     }
 }

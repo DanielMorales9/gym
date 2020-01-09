@@ -2,7 +2,6 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Sale} from '../../model';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {MatDialog} from '@angular/material';
-import {ActivatedRoute, Router} from '@angular/router';
 import {DateService} from '../../../core/utilities';
 
 
@@ -19,8 +18,6 @@ export class SaleItemComponent {
     @Output() done = new EventEmitter();
 
     constructor(private dateService: DateService,
-                private route: ActivatedRoute,
-                private router: Router,
                 private dialog: MatDialog) {
     }
 
@@ -45,7 +42,7 @@ export class SaleItemComponent {
         });
     }
 
-    goToDetails() {
-        this.router.navigate([this.sale.id], {relativeTo: this.route});
+    goToInfo() {
+        this.done.emit({type: 'info', sale: this.sale});
     }
 }
