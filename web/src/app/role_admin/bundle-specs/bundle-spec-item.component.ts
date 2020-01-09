@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BundleSpecification} from '../../shared/model';
 import {MatDialog} from '@angular/material';
-import {BundleSpecModalComponent} from '../../shared/components/bundles';
+import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
 
 
 @Component({

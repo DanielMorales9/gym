@@ -1,5 +1,5 @@
 export * from './sales';
-export * from './bundles';
+export * from './bundle-specs';
 export * from './users';
 export * from './calendar';
 export * from './no-item.component';

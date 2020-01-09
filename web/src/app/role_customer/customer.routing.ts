@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CustomerCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
-import {BundleSpecDetailsComponent} from '../shared/components/bundles';
+import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
 
 const routes = [
     { path: '', children : [
