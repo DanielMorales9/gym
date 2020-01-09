@@ -37,7 +37,7 @@ export class BundleSpecItemComponent {
         });
     }
 
-    deleteBundle() {
+    deleteBundleSpec() {
         this.done.emit({type: 'delete', bundleSpec: this.bundleSpec});
     }
 

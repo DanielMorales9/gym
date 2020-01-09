@@ -7,6 +7,8 @@ import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
 import {UserDetailsComponent, UsersComponent} from '../shared/components/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
+import {BundlesComponent} from './bundles';
+import {BundleDetailsComponent} from '../shared/components/bundles';
 
 const routes = [
 
@@ -14,6 +16,8 @@ const routes = [
             { path: '', redirectTo: 'sales', pathMatch: 'full'},
             { path: 'bundleSpecs', component: BundleSpecsComponent },
             { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
+            { path: 'bundles', component: BundlesComponent },
+            { path: 'bundles/:id', component: BundleDetailsComponent },
             { path: 'users', component: UsersComponent },
             { path: 'users/:id', component: UserDetailsComponent},
             { path: 'sales', component: SalesComponent },

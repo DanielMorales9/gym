@@ -5,9 +5,6 @@
         <mat-card-content>
             <div class="panel-content">
                 <div>
-                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
-                </div>
-                <div>
                     <span class="green-light" [hidden]="bundleSpec?.disabled">
                         <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
                     </span>
@@ -15,6 +12,9 @@
                     <span class="red-light" [hidden]="!bundleSpec?.disabled">
                         <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
                     </span>
+                </div>
+                <div>
+                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
                 </div>
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundleSpec?.price}}

@@ -19,10 +19,6 @@ public class TrainingBundleAssembler extends ResourceAssemblerSupport<ATrainingB
         resource.add(linkTo(TrainingBundleRepository.class).slash("bundles")
                 .slash(bundle.getId()).withSelfRel());
 
-        TrainingBundleSpecificationResource res = new TrainingBundleSpecificationAssembler()
-                .toResource(bundle.getBundleSpec());
-        resource.setBundleSpecificationResource(res);
-        resource.setSessions(new Resources<>(new TrainingSessionAssembler().toResources(bundle.getSessions())));
         return resource;
     }
 }

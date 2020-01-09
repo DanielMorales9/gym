@@ -34,6 +34,7 @@ import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared';
 import {BundleSpecItemComponent, BundleSpecsComponent} from './bundle-specs';
 import {ACustomerCalendarComponent} from './customer-calendar';
+import {BundleItemComponent, BundlesComponent} from './bundles';
 
 registerLocaleData(localeIt);
 
@@ -65,6 +66,8 @@ registerLocaleData(localeIt);
     ],
     declarations: [
         BundleSpecsComponent,
+        BundlesComponent,
+        BundleItemComponent,
         BundleSpecItemComponent,
         BundleSelectItemComponent,
         CreateSaleComponent,

@@ -90,6 +90,9 @@ export class BundleSpecDetailsComponent implements OnInit {
     }
 
     goToEditions() {
-        this.router.navigate(['admin', 'bundles', this.bundleSpec.id]);
+        this.router.navigate(['admin', 'bundles'],
+            {queryParams: {
+                    specId: this.bundleSpec.id
+                }});
     }
 }

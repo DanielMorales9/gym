@@ -3,6 +3,7 @@ import {RouterModule} from '@angular/router';
 import {CustomerCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
 import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
+import {BundleDetailsComponent} from '../shared/components/bundles';
 
 const routes = [
     { path: '', children : [
@@ -11,7 +12,8 @@ const routes = [
             { path: 'sales', component: SalesComponent },
             { path: 'sales/:id', component: SaleDetailsComponent },
             { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
-            { path: '**', redirectTo: 'bundles' }
+            { path: 'bundle/:id', component: BundleDetailsComponent },
+            { path: '**', redirectTo: 'bundleSpecs' }
         ]},
 ];
 

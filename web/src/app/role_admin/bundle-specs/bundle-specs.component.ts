@@ -106,7 +106,7 @@ export class BundleSpecsComponent implements OnInit {
         const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundleSpec.name}?`);
         if (confirmed) {
             this.service.delete(bundleSpec.id).subscribe(_ => this.search(),
-                    err => this.snackbar.open(err.error.message));
+                err => this.snackbar.open(err.error.message));
         }
     }
 
@@ -128,6 +128,9 @@ export class BundleSpecsComponent implements OnInit {
     }
 
     private goToList(bundleSpec: any) {
-        this.router.navigate(['admin', 'bundles', bundleSpec.id]);
+        this.router.navigate(['admin', 'bundles'],
+            {queryParams: {
+                    specId: bundleSpec.id
+                }});
     }
 }

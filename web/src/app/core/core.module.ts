@@ -15,7 +15,7 @@ import {
     SalesService, UserService
 } from './controllers';
 import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
-import {BundleSpecHelperService, BundlePayHelperService, SaleHelperService, UserHelperService} from './helpers';
+import {BundleSpecHelperService, BundlePayHelperService, SaleHelperService, UserHelperService, BundleHelperService} from './helpers';
 
 
 @NgModule({
@@ -59,6 +59,7 @@ import {BundleSpecHelperService, BundlePayHelperService, SaleHelperService, User
         SaleHelperService,
         UserHelperService,
         BundleSpecHelperService,
+        BundleHelperService,
         BundlePayHelperService,
 
     ]

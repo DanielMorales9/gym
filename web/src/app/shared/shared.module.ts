@@ -51,6 +51,7 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
 import {RouterModule} from '@angular/router';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {BundleDetailsComponent} from './components/bundles';
 
 @NgModule({
     imports: [
@@ -109,6 +110,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleDetailsComponent,
         BundleSpecModalComponent,
         BundleSpecDetailsComponent,
+        BundleDetailsComponent,
         SalesComponent,
         UsersComponent,
         UserItemComponent,
@@ -138,6 +140,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleDetailsComponent,
         BundleSpecModalComponent,
         BundleSpecDetailsComponent,
+        BundleDetailsComponent,
         SalesComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,

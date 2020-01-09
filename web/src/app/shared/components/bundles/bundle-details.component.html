@@ -1,0 +1,50 @@
+<div class="card-container">
+    <mat-card>
+        <mat-card-title>{{bundle?.bundleSpec.name || 'Loading...'}}</mat-card-title>
+        <mat-card-subtitle>{{bundle?.bundleSpec.description || 'Loading...'}}</mat-card-subtitle>
+        <mat-card-content>
+            <div class="panel-content">
+                <div>
+                    <span class="green-light" [hidden]="bundle?.expired">
+                        <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Valido
+                    </span>
+
+                    <span class="red-light" [hidden]="!bundle?.expired">
+                        <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Scaduto
+                    </span>
+                </div>
+                <div>
+                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
+                </div>
+                <div>
+                    <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.bundleSpec.price}}
+                </div>
+
+                <ng-container [ngSwitch]="bundle?.type">
+
+                    <ng-container *ngSwitchCase="PERSONAL">
+                        <div>
+                            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.bundleSpec.numSessions}}
+                        </div>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="COURSE">
+                        <div>
+                            <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date : 'shortDate'}}
+                        </div>
+                        <div>
+                            <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date : 'shortDate'}}
+                        </div>
+                        <div>
+                            <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.bundleSpec.maxCustomers}}
+                        </div>
+                    </ng-container>
+                </ng-container>
+            </div>
+
+        </mat-card-content>
+        <mat-card-actions>
+            <!-- TODO add list of session-->
+            <!-- TODO add link to bundleSpec-->
+        </mat-card-actions>
+    </mat-card>
+</div>
