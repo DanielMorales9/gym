@@ -82,6 +82,9 @@ export class BundlesComponent implements OnInit {
             case 'put':
                 this.modifyBundle($event.bundle);
                 break;
+            case 'info':
+                this.goToDetails($event.bundle);
+                break;
             default:
                 console.error(`Operazione non riconosciuta: ${$event.type}`);
                 break;
@@ -126,5 +129,9 @@ export class BundlesComponent implements OnInit {
             this.snackbar.open(message);
             this.search();
         }, err => this.snackbar.open(err.error.message));
+    }
+
+    private goToDetails(bundle: any) {
+        return this.router.navigate(['admin', 'bundles', bundle.id]);
     }
 }

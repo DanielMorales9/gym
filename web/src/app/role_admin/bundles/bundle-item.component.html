@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <a routerLink="/admin/bundles/{{bundle?.id}}">
+            <a (click)="goToInfo()">
                 {{bundle?.name || 'Loading...'}}
             </a>
         </mat-panel-title>
@@ -48,9 +48,9 @@
         </ng-container>
     </div>
     <div class="panel-actions">
-        <button mat-button color="primary" (click)="openDialog()">
+        <button mat-button color="primary" (click)="goToInfo()">
             <span>
-                <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
             </span>
         </button>
         <button mat-button color="accent" (click)="toggleDisabled()">

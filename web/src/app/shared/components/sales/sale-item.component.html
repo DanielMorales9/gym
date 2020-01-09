@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title>
-            <a (click)="goToDetails()">
+            <a (click)="goToInfo()">
                 Vendita #{{sale?.id || 'Loading...'}}
             </a>
         </mat-panel-title>
@@ -29,6 +29,11 @@
     </span>
     </div>
     <div class="panel-actions">
+        <button mat-button color="primary" (click)="goToInfo()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+            </span>
+        </button>
         <ng-container *ngIf="canPay">
             <button mat-button (click)="pay()" *ngIf="!sale?.payed">
             <span>
