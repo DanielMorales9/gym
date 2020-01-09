@@ -3,15 +3,15 @@ import {BundleSpecsService} from '../../../core/controllers';
 import {BundleSpecification} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
-import {BundleModalComponent} from './bundle-modal.component';
+import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {SpecFacade} from '../../../services';
 
 @Component({
-    selector: 'bundle-details',
-    templateUrl: './bundle-details.component.html',
+    selector: 'bundle-spec-details',
+    templateUrl: './bundle-spec-details.component.html',
     styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
 })
-export class BundleDetailsComponent implements OnInit {
+export class BundleSpecDetailsComponent implements OnInit {
 
     bundle: any;
     canDelete: boolean;
@@ -40,7 +40,7 @@ export class BundleDetailsComponent implements OnInit {
     editBundle(): void {
         const title = 'Modifica Pacchetto';
 
-        const dialogRef = this.dialog.open(BundleModalComponent, {
+        const dialogRef = this.dialog.open(BundleSpecModalComponent, {
             data: {
                 title: title,
                 bundle: this.bundle

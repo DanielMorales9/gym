@@ -2,47 +2,47 @@
     <mat-expansion-panel-header>
         <mat-panel-title>
             <a (click)="goToInfo()">
-                {{bundle?.name || 'Loading...'}}
+                {{bundleSpec?.name || 'Loading...'}}
             </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">
-            {{bundle?.description || 'Loading...'}}
+            {{bundleSpec?.description || 'Loading...'}}
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="panel-body-description">
-        <span>{{bundle?.description || 'Loading...'}}</span>
+        <span>{{bundleSpec?.description || 'Loading...'}}</span>
     </div>
     <div class="panel-content">
         <div>
             <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
         </div>
         <div>
-        <span class="green-light" [hidden]="bundle?.disabled">
+        <span class="green-light" [hidden]="bundleSpec?.disabled">
             <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
         </span>
-            <span class="red-light" [hidden]="!bundle?.disabled">
+            <span class="red-light" [hidden]="!bundleSpec?.disabled">
             <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
         </span>
         </div>
         <div>
-            <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
+            <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundleSpec?.price}}
         </div>
-        <ng-container [ngSwitch]="bundle?.type">
+        <ng-container [ngSwitch]="bundleSpec?.type">
 
         <ng-container *ngSwitchCase="PERSONAL">
             <div>
-                <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
+                <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundleSpec?.numSessions}}
             </div>
         </ng-container>
         <ng-container *ngSwitchCase="COURSE">
             <div>
-                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date : 'shortDate'}}
+                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundleSpec?.startTime| date : 'shortDate'}}
             </div>
             <div>
-                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date : 'shortDate'}}
+                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundleSpec?.endTime| date : 'shortDate'}}
             </div>
             <div>
-                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.maxCustomers}}
+                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundleSpec?.maxCustomers}}
             </div>
         </ng-container>
         </ng-container>
@@ -54,10 +54,10 @@
             </span>
         </button>
         <button mat-button color="accent" (click)="toggleDisabled()">
-            <span *ngIf="bundle?.disabled">
+            <span *ngIf="bundleSpec?.disabled">
                 <mat-icon fontSet="fa" fontIcon="fa-check"></mat-icon>&nbsp;Abilita
             </span>
-            <span *ngIf="!bundle?.disabled">
+            <span *ngIf="!bundleSpec?.disabled">
                 <mat-icon fontSet="fa" fontIcon="fa-ban"></mat-icon>&nbsp;Disabilita
             </span>
         </button>

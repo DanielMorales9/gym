@@ -1,8 +1,8 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
-    BundleDetailsComponent,
-    BundleModalComponent,
+    BundleSpecDetailsComponent,
+    BundleSpecModalComponent,
     SalesComponent,
     UserDetailsComponent,
     UserItemComponent,
@@ -82,7 +82,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     entryComponents: [
         UserModalComponent,
         PaySaleModalComponent,
-        BundleModalComponent,
+        BundleSpecModalComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
@@ -107,8 +107,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleItemComponent,
         PaySaleModalComponent,
         SaleDetailsComponent,
-        BundleModalComponent,
-        BundleDetailsComponent,
+        BundleSpecModalComponent,
+        BundleSpecDetailsComponent,
         SalesComponent,
         UsersComponent,
         UserItemComponent,
@@ -136,8 +136,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleItemComponent,
         PaySaleModalComponent,
         SaleDetailsComponent,
-        BundleModalComponent,
-        BundleDetailsComponent,
+        BundleSpecModalComponent,
+        BundleSpecDetailsComponent,
         SalesComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,

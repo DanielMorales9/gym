@@ -65,7 +65,7 @@ export class SaleDetailsComponent implements OnInit {
         });
     }
 
-    goToBundleDetails(id: number) {
-        this.router.navigate(['bundles', id], {relativeTo: this.route.parent});
+    goToBundleSpecDetails(id: number) {
+        this.router.navigate(['bundleSpecs', id], {relativeTo: this.route.parent});
     }
 }

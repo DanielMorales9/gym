@@ -1,17 +1,17 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BundleSpecification} from '../../shared/model';
 import {MatDialog} from '@angular/material';
-import {BundleModalComponent} from '../../shared/components/bundles';
+import {BundleSpecModalComponent} from '../../shared/components/bundles';
 
 
 @Component({
-    selector: 'bundle-item',
-    templateUrl: './bundle-item.component.html',
+    selector: 'bundle-spec-item',
+    templateUrl: './bundle-spec-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
 })
-export class BundleItemComponent {
+export class BundleSpecItemComponent {
 
-    @Input() bundle: any;
+    @Input() bundleSpec: any;
 
     @Output() done = new EventEmitter();
 
@@ -23,10 +23,10 @@ export class BundleItemComponent {
     openDialog(): void {
         const title = 'Modifica Pacchetto';
 
-        const dialogRef = this.dialog.open(BundleModalComponent, {
+        const dialogRef = this.dialog.open(BundleSpecModalComponent, {
             data: {
                 title: title,
-                bundle: this.bundle
+                bundle: this.bundleSpec
             }
         });
 
@@ -38,18 +38,18 @@ export class BundleItemComponent {
     }
 
     deleteBundle() {
-        this.done.emit({type: 'delete', bundle: this.bundle});
+        this.done.emit({type: 'delete', bundle: this.bundleSpec});
     }
 
     toggleDisabled() {
-        this.done.emit({type: 'patch', bundle: this.bundle});
+        this.done.emit({type: 'patch', bundle: this.bundleSpec});
     }
 
     getBundleType() {
         const defaultName = 'Allenamento Personale';
         let name;
-        if (!this.bundle) { return name; }
-        switch (this.bundle.type) {
+        if (!this.bundleSpec) { return name; }
+        switch (this.bundleSpec.type) {
             case this.PERSONAL:
                 name = defaultName;
                 break;
@@ -64,6 +64,6 @@ export class BundleItemComponent {
     }
 
     goToInfo() {
-        this.done.emit({type: 'info', bundle: this.bundle});
+        this.done.emit({type: 'info', bundle: this.bundleSpec});
     }
 }

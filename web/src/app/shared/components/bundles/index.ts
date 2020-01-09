@@ -1,2 +1,2 @@
-export * from './bundle-details.component';
-export * from './bundle-modal.component';
+export * from './bundle-spec-details.component';
+export * from './bundle-spec-modal.component';

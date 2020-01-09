@@ -2,14 +2,14 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {BundleSpecification, BundleSpecificationType, CourseBundleSpecification, PersonalBundleSpecification} from '../../model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {rangeValidator, timeValidator} from '../../../core/functions';
+import {timeValidator} from '../../../core/functions';
 
 @Component({
-    selector: 'bundle-modal',
-    templateUrl: './bundle-modal.component.html',
+    selector: 'bundle-spec-modal',
+    templateUrl: './bundle-spec-modal.component.html',
     styleUrls: ['../../../styles/root.css']
 })
-export class BundleModalComponent implements OnInit {
+export class BundleSpecModalComponent implements OnInit {
 
     bundle: any;
     form: FormGroup;
@@ -17,7 +17,7 @@ export class BundleModalComponent implements OnInit {
     showCourse: boolean;
 
     constructor(private builder: FormBuilder,
-                public dialogRef: MatDialogRef<BundleModalComponent>,
+                public dialogRef: MatDialogRef<BundleSpecModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.bundle = this.data.bundle;
     }

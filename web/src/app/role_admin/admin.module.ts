@@ -32,7 +32,7 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared';
-import {BundleItemComponent, BundlesComponent} from './bundles';
+import {BundleSpecItemComponent, BundleSpecsComponent} from './bundle-specs';
 import {ACustomerCalendarComponent} from './customer-calendar';
 
 registerLocaleData(localeIt);
@@ -64,8 +64,8 @@ registerLocaleData(localeIt);
         MatCheckboxModule
     ],
     declarations: [
-        BundlesComponent,
-        BundleItemComponent,
+        BundleSpecsComponent,
+        BundleSpecItemComponent,
         BundleSelectItemComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
@@ -80,7 +80,7 @@ registerLocaleData(localeIt);
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
     ],
     exports: [
-        BundleItemComponent,
+        BundleSpecItemComponent,
     ],
     entryComponents: [
         AdminHeaderModalComponent,

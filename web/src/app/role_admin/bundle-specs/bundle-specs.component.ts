@@ -2,16 +2,16 @@ import {Component, OnInit} from '@angular/core';
 import {BundleSpecification} from '../../shared/model';
 import {BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
-import {BundleModalComponent} from '../../shared/components/bundles';
+import {BundleSpecModalComponent} from '../../shared/components/bundles';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 
 @Component({
-    templateUrl: './bundles.component.html',
+    templateUrl: './bundle-specs.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class BundlesComponent implements OnInit {
+export class BundleSpecsComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
@@ -29,16 +29,6 @@ export class BundlesComponent implements OnInit {
                 private snackbar: SnackBarService) {
 
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
-        // for(let _i= 0; _i < 50; _i++) {
-        //    let bundle = new Bundle();
-        //    bundle.name= 'winter_pack_'+_i;
-        //    bundle.description= 'winter_pack_'+_i;
-        //    bundle.type = 'P';
-        //    bundle.price = 11;
-        //    bundle.numSessions = 11;
-        //    bundle.disabled = false;
-        //    this.service.post(bundle).subscribe(value => console.log(value))
-        // }
     }
 
     ngOnInit(): void {
@@ -60,7 +50,7 @@ export class BundlesComponent implements OnInit {
     openDialog(): void {
         const title = 'Crea Nuovo Pacchetto';
 
-        const dialogRef = this.dialog.open(BundleModalComponent, {
+        const dialogRef = this.dialog.open(BundleSpecModalComponent, {
             data: {
                 title: title,
             }
@@ -132,6 +122,6 @@ export class BundlesComponent implements OnInit {
     }
 
     private goToDetails(bundle: any) {
-        return this.router.navigate(['admin', 'bundles', bundle.id]);
+        return this.router.navigate(['admin', 'bundleSpecs', bundle.id]);
     }
 }
