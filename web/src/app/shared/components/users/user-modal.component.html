@@ -55,7 +55,7 @@
                         type="text"
                         formControlName="type"
                         [ngClass]="{ 'is-invalid': type.touched && type.invalid }">
-                    <mat-option value="C">Utente</mat-option>
+                    <mat-option value="C">Cliente</mat-option>
                     <mat-option value="T">Allenatore</mat-option>
                 </mat-select>
                 <mat-error *ngIf="type.touched && type.invalid">

@@ -105,6 +105,9 @@ export class UsersComponent implements OnInit {
             case 'patch':
                 this.patchUser($event.user);
                 break;
+            case 'info':
+                this.goToDetails($event.user);
+                break;
         }
     }
 
@@ -145,5 +148,9 @@ export class UsersComponent implements OnInit {
 
     itsMe(id: any) {
         return this.currentUserId !== id;
+    }
+
+    private goToDetails(user: any) {
+        return this.router.navigate([this.type, 'users', user.id]);
     }
 }

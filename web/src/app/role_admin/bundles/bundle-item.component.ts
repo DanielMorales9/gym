@@ -62,4 +62,8 @@ export class BundleItemComponent {
         }
         return name;
     }
+
+    goToInfo() {
+        this.done.emit({type: 'info', bundle: this.bundle});
+    }
 }

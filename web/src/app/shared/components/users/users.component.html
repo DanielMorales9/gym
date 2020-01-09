@@ -2,7 +2,6 @@
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
     <div *cdkVirtualFor="let u of ds;" class="scroll-item">
         <user-item [user]="u"
-                   [root]="type"
                    [canPatch]="canPatch"
                    [canDelete]="canDelete && itsMe(u?.id)"
                    (done)="handleEvent($event)"></user-item>

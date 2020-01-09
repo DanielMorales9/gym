@@ -14,7 +14,6 @@ export class UserItemComponent {
     @Input() user: User;
     @Input() canDelete: boolean;
     @Input() canPatch: boolean;
-    @Input() root: string;
 
     @Output() done = new EventEmitter();
 
@@ -58,5 +57,9 @@ export class UserItemComponent {
                 break;
         }
         return name;
+    }
+
+    goToInfo() {
+        this.done.emit({type: 'info', user: this.user});
     }
 }
