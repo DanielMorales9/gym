@@ -3,6 +3,9 @@
         <mat-card-title>{{user?.firstName || 'Loading...'}} {{user?.lastName || 'Loading...'}}</mat-card-title>
         <mat-card-content>
             <div>
+                <mat-icon fontSet="fa" fontIcon="fa-user-tag"></mat-icon>&nbsp;{{getRoleName()}}
+            </div>
+            <div>
                 <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;&nbsp;
                 <a href="mailto:{{user?.email}}">{{user?.email || 'Loading...'}}</a>
             </div>

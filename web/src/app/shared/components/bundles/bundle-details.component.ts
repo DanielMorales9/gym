@@ -71,4 +71,21 @@ export class BundleDetailsComponent implements OnInit {
             this.bundle = res;
         });
     }
+
+    getBundleType() {
+        let name;
+        if (!this.bundle) { return name; }
+        switch (this.bundle.type) {
+            case this.PERSONAL:
+                name = 'Allenamento Personale';
+                break;
+            case this.COURSE:
+                name = 'Corso';
+                break;
+            default:
+                name = 'Allenamento Personale';
+                break;
+        }
+        return name;
+    }
 }
