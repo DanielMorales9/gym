@@ -1,40 +1,40 @@
 <div class="card-container">
     <mat-card>
-        <mat-card-title>{{bundle?.name || 'Loading...'}}</mat-card-title>
-        <mat-card-subtitle>{{bundle?.description || 'Loading...'}}</mat-card-subtitle>
+        <mat-card-title>{{bundleSpec?.name || 'Loading...'}}</mat-card-title>
+        <mat-card-subtitle>{{bundleSpec?.description || 'Loading...'}}</mat-card-subtitle>
         <mat-card-content>
             <div class="panel-content">
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
                 </div>
                 <div>
-                    <span class="green-light" [hidden]="bundle?.disabled">
+                    <span class="green-light" [hidden]="bundleSpec?.disabled">
                         <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
                     </span>
 
-                    <span class="red-light" [hidden]="!bundle?.disabled">
+                    <span class="red-light" [hidden]="!bundleSpec?.disabled">
                         <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
                     </span>
                 </div>
                 <div>
-                    <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
+                    <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundleSpec?.price}}
                 </div>
-                <ng-container [ngSwitch]="bundle?.type">
+                <ng-container [ngSwitch]="bundleSpec?.type">
 
                     <ng-container *ngSwitchCase="PERSONAL">
                         <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
+                            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundleSpec?.numSessions}}
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="COURSE">
                         <div>
-                            <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date : 'shortDate'}}
+                            <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundleSpec?.startTime| date : 'shortDate'}}
                         </div>
                         <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date : 'shortDate'}}
+                            <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundleSpec?.endTime| date : 'shortDate'}}
                         </div>
                         <div>
-                            <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.maxCustomers}}
+                            <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundleSpec?.maxCustomers}}
                         </div>
                     </ng-container>
                 </ng-container>
@@ -42,12 +42,19 @@
 
         </mat-card-content>
         <mat-card-actions>
+            <ng-container *ngIf="bundleSpec?.type=='C'">
+                <button mat-button (click)="goToEditions()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Edizioni
+                </span>
+                </button>
+            </ng-container>
             <ng-container *ngIf="canDisable">
                 <button mat-button color="accent" (click)="toggleDisabled()">
-                <span *ngIf="bundle?.disabled">
+                <span *ngIf="bundleSpec?.disabled">
                     <mat-icon fontSet="fa" fontIcon="fa-check"></mat-icon>&nbsp;Abilita
                 </span>
-                    <span *ngIf="!bundle?.disabled">
+                    <span *ngIf="!bundleSpec?.disabled">
                     <mat-icon fontSet="fa" fontIcon="fa-ban"></mat-icon>&nbsp;Disabilita
                 </span>
                 </button>

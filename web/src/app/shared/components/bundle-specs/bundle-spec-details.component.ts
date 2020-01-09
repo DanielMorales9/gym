@@ -13,7 +13,7 @@ import {SpecFacade} from '../../../services';
 })
 export class BundleSpecDetailsComponent implements OnInit {
 
-    bundle: any;
+    bundleSpec: any;
     canDelete: boolean;
     canDisable: boolean;
     canEdit: boolean;
@@ -43,39 +43,39 @@ export class BundleSpecDetailsComponent implements OnInit {
         const dialogRef = this.dialog.open(BundleSpecModalComponent, {
             data: {
                 title: title,
-                bundle: this.bundle
+                bundle: this.bundleSpec
             }
         });
 
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.service.patch(res).subscribe((v: BundleSpecification) => this.bundle = v);
+                this.service.patch(res).subscribe((v: BundleSpecification) => this.bundleSpec = v);
             }
         });
     }
 
     deleteBundle() {
-        const confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundle.name}?`);
+        const confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundleSpec.name}?`);
         if (confirmed) {
-            this.service.delete(this.bundle.id).subscribe(_ => this.router.navigateByUrl('/'));
+            this.service.delete(this.bundleSpec.id).subscribe(_ => this.router.navigateByUrl('/'));
         }
     }
 
     toggleDisabled() {
-        this.bundle.disabled = !this.bundle.disabled;
-        this.service.patch(this.bundle);
+        this.bundleSpec.disabled = !this.bundleSpec.disabled;
+        this.service.patch(this.bundleSpec);
     }
 
     private getBundle(id: number) {
         this.service.findById(id).subscribe((res: BundleSpecification) => {
-            this.bundle = res;
+            this.bundleSpec = res;
         });
     }
 
     getBundleType() {
         let name;
-        if (!this.bundle) { return name; }
-        switch (this.bundle.type) {
+        if (!this.bundleSpec) { return name; }
+        switch (this.bundleSpec.type) {
             case this.PERSONAL:
                 name = 'Allenamento Personale';
                 break;
@@ -87,5 +87,9 @@ export class BundleSpecDetailsComponent implements OnInit {
                 break;
         }
         return name;
+    }
+
+    goToEditions() {
+        this.router.navigate(['admin', 'bundles', this.bundleSpec.id]);
     }
 }

@@ -38,11 +38,11 @@ export class BundleSpecItemComponent {
     }
 
     deleteBundle() {
-        this.done.emit({type: 'delete', bundle: this.bundleSpec});
+        this.done.emit({type: 'delete', bundleSpec: this.bundleSpec});
     }
 
     toggleDisabled() {
-        this.done.emit({type: 'patch', bundle: this.bundleSpec});
+        this.done.emit({type: 'patch', bundleSpec: this.bundleSpec});
     }
 
     getBundleType() {
@@ -64,6 +64,10 @@ export class BundleSpecItemComponent {
     }
 
     goToInfo() {
-        this.done.emit({type: 'info', bundle: this.bundleSpec});
+        this.done.emit({type: 'info', bundleSpec: this.bundleSpec});
+    }
+
+    goToEditions() {
+        this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
     }
 }

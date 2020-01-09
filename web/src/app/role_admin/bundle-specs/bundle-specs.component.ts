@@ -5,7 +5,7 @@ import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
-import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
+import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
 
 @Component({
     templateUrl: './bundle-specs.component.html',
@@ -24,7 +24,7 @@ export class BundleSpecsComponent implements OnInit {
     constructor(private service: BundleSpecsService,
                 private router: Router,
                 private dialog: MatDialog,
-                private helper: BundleHelperService,
+                private helper: BundleSpecHelperService,
                 private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
 
@@ -56,24 +56,27 @@ export class BundleSpecsComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(bundle => {
-            if (bundle) { this.createBundle(bundle); }
+        dialogRef.afterClosed().subscribe(bundleSpec => {
+            if (bundleSpec) { this.createBundleSpec(bundleSpec); }
         });
     }
 
     handleEvent($event) {
         switch ($event.type) {
             case 'delete':
-                this.deleteBundle($event.bundle);
+                this.deleteBundleSpec($event.bundleSpec);
                 break;
             case 'patch':
-                this.toggleDisabled($event.bundle);
+                this.toggleDisabled($event.bundleSpec);
                 break;
             case 'put':
-                this.modifyBundle($event.bundle);
+                this.modifyBundleSpec($event.bundleSpec);
                 break;
             case 'info':
-                this.goToDetails($event.bundle);
+                this.goToDetails($event.bundleSpec);
+                break;
+            case 'list':
+                this.goToList($event.bundleSpec);
                 break;
             default:
                 console.error(`Operazione non riconosciuta: ${$event.type}`);
@@ -90,38 +93,41 @@ export class BundleSpecsComponent implements OnInit {
         this.updateQueryParams();
     }
 
-    private createBundle(bundle: BundleSpecification) {
-        console.log(bundle);
-        delete bundle.id;
-        this.service.post(bundle).subscribe(_ => {
-            const message = `Il pacchetto ${bundle.name} è stato creato`;
+    private createBundleSpec(bundleSpec: BundleSpecification) {
+        delete bundleSpec.id;
+        this.service.post(bundleSpec).subscribe(_ => {
+            const message = `Il pacchetto ${bundleSpec.name} è stato creato`;
             this.snackbar.open(message);
             this.search();
         }, err => this.snackbar.open(err.error.message));
     }
 
-    private deleteBundle(bundle: BundleSpecification) {
-        const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
+    private deleteBundleSpec(bundleSpec: BundleSpecification) {
+        const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundleSpec.name}?`);
         if (confirmed) {
-            this.service.delete(bundle.id).subscribe(_ => this.search(),
+            this.service.delete(bundleSpec.id).subscribe(_ => this.search(),
                     err => this.snackbar.open(err.error.message));
         }
     }
 
-    private toggleDisabled(bundle: BundleSpecification) {
-        bundle.disabled = !bundle.disabled;
-        this.service.patch(bundle).subscribe(res => console.log(res), err => this.snackbar.open(err.error.message));
+    private toggleDisabled(bundleSpec: BundleSpecification) {
+        bundleSpec.disabled = !bundleSpec.disabled;
+        this.service.patch(bundleSpec).subscribe(res => console.log(res), err => this.snackbar.open(err.error.message));
     }
 
-    private modifyBundle(bundle: BundleSpecification) {
-        this.service.patch(bundle).subscribe(_ => {
-            const message = `Il pacchetto ${bundle.name} è stato modificato`;
+    private modifyBundleSpec(bundleSpec: BundleSpecification) {
+        this.service.patch(bundleSpec).subscribe(_ => {
+            const message = `Il pacchetto ${bundleSpec.name} è stato modificato`;
             this.snackbar.open(message);
             this.search();
         }, err => this.snackbar.open(err.error.message));
     }
 
-    private goToDetails(bundle: any) {
-        return this.router.navigate(['admin', 'bundleSpecs', bundle.id]);
+    private goToDetails(bundleSpec: any) {
+        const r = this.router.navigate(['admin', 'bundleSpecs', bundleSpec.id]);
+    }
+
+    private goToList(bundleSpec: any) {
+        this.router.navigate(['admin', 'bundles', bundleSpec.id]);
     }
 }

@@ -5,7 +5,7 @@ import {HelperService} from './helper.service';
 import {BundleSpecsService} from '../controllers/bundle-specs.service';
 
 @Injectable()
-export class BundleHelperService extends HelperService<BundleSpecification> {
+export class BundleSpecHelperService extends HelperService<BundleSpecification> {
 
     constructor(private service: BundleSpecsService) {
         super();
