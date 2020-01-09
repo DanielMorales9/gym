@@ -40,7 +40,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPersonalBundleSpec(1L, "personal"));
+        this.service.save(createPersonalBundleSpec(1L, "personal", 11));
         Mockito.verify(repository).save(any(ATrainingBundleSpecification.class));
     }
 
@@ -52,15 +52,15 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L, "personal")));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L, "personal", 11)));
         ATrainingBundleSpecification u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createPersonalBundleSpec(1L, "personal"));
+        assertThat(u).isEqualTo(createPersonalBundleSpec(1L, "personal", 11));
         Mockito.verify(repository).findById(1L);
     }
 
     @Test
     public void findAll() {
-        ATrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal");
+        ATrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", 11);
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(pe));
         List<ATrainingBundleSpecification> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(pe));
@@ -74,7 +74,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void delete() {
-        ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal");
+        ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal", 11);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));
     }

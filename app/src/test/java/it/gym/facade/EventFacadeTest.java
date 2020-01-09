@@ -22,8 +22,7 @@ import java.util.Collections;
 import java.util.Date;
 
 import static it.gym.utility.Calendar.getNextMonday;
-import static it.gym.utility.Fixture.createTimeOff;
-import static it.gym.utility.Fixture.createTrainer;
+import static it.gym.utility.Fixture.*;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -99,8 +98,8 @@ public class EventFacadeTest {
         event.setId(1L);
         event.setName("course");
 
-        ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
-        ATrainingBundle bundle = spec.createTrainingBundle();
+        ATrainingBundleSpecification spec = createCourseBundleSpec();
+        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(gym).when(gymService).findById(1L);
         Mockito.doAnswer(inv -> inv.getArgument(0)).when(service).save(any());
@@ -125,8 +124,8 @@ public class EventFacadeTest {
         Date endCourse = addDays(start, 30);
 
         // all what you need to create a course event
-        ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
-        ATrainingBundle bundle = spec.createTrainingBundle();
+        ATrainingBundleSpecification spec = createCourseBundleSpec();
+        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
@@ -145,8 +144,8 @@ public class EventFacadeTest {
         Date endCourse = addDays(start, 30);
 
         // all what you need to create a course event
-        ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
-        ATrainingBundle bundle = spec.createTrainingBundle();
+        ATrainingBundleSpecification spec = createCourseBundleSpec();
+        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
         session.setCompleted(true);
@@ -162,8 +161,8 @@ public class EventFacadeTest {
         Date endCourse = addDays(start, 30);
 
         // all what you need to create a course event
-        ATrainingBundleSpecification spec = createCourseBundleSpec(start, endCourse);
-        ATrainingBundle bundle = spec.createTrainingBundle();
+        ATrainingBundleSpecification spec = createCourseBundleSpec();
+        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
@@ -177,11 +176,10 @@ public class EventFacadeTest {
         assertThat(actual).isEqualTo(courseEvent);
     }
 
-    private ATrainingBundleSpecification createCourseBundleSpec(Date startTime, Date endTime) {
+    private ATrainingBundleSpecification createCourseBundleSpec() {
         CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
         spec.setMaxCustomers(11);
-        spec.setStartTime(startTime);
-        spec.setEndTime(endTime);
+        spec.setNumber(30);
         spec.setDescription("Description");
         spec.setName("corso");
         spec.setId(1L);

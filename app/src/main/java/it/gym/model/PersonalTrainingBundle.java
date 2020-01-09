@@ -22,17 +22,6 @@ import java.util.Date;
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundle extends ATrainingBundle {
 
-    @Column(name="num_sessions")
-    private Integer numSessions;
-
-    public Integer getNumSessions() {
-        return numSessions;
-    }
-
-    public void setNumSessions(Integer numSessions) {
-        this.numSessions = numSessions;
-    }
-
     @Override
     public int compareTo(ATrainingBundle aTrainingBundle) {
         return this.getSessions().size() - aTrainingBundle.getSessions().size();
@@ -51,7 +40,8 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     @Override
     public Boolean isExpired() {
         Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        return this.numSessions.equals(size);
+        PersonalTrainingBundleSpecification spec = ((PersonalTrainingBundleSpecification) this.getBundleSpec());
+        return spec.getNumSessions().equals(size);
     }
 
     @Override

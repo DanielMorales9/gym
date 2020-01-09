@@ -116,9 +116,16 @@ public class SaleController {
     @GetMapping(path = "/addSalesLineItem/{saleId}/{bundleSpecId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
-                                                  @PathVariable Long bundleSpecId,
-                                                  @RequestParam(defaultValue = "1") Integer quantity) {
-        Sale sale = this.facade.addSalesLineItem(saleId, bundleSpecId, quantity);
+                                                  @PathVariable Long bundleSpecId) {
+        Sale sale = this.facade.addSalesLineItem(saleId, bundleSpecId);
+        return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
+    }
+
+    @GetMapping(path = "/addSalesLineItemByBundle/{saleId}/{bundleId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    ResponseEntity<SaleResource> addSalesLineItemByBundle(@PathVariable Long saleId,
+                                                  @PathVariable Long bundleId) {
+        Sale sale = this.facade.addSalesLineItemByBundle(saleId, bundleId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 

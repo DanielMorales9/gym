@@ -41,13 +41,13 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPersonalTrainingSession(1L, createPersonalBundle(1L, 11)));
+        this.service.save(createPersonalTrainingSession(1L, createPersonalBundle(1L, null)));
         Mockito.verify(repository).save(any(ATrainingSession.class));
     }
 
     @Test
     public void findById() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, 11));
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, null));
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(session));
         ATrainingSession u = this.service.findById(1L);
         assertThat(u).isEqualTo(session);
@@ -56,7 +56,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findAll() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, 11));
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, null));
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(session));
         List<ATrainingSession> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(session));
@@ -70,7 +70,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L, 11));
+        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L, null));
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingSession.class));
     }

@@ -1,9 +1,14 @@
 package it.gym.controller;
 
+import it.gym.facade.TrainingBundleFacade;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
+import it.gym.hateoas.TrainingBundleSpecificationAssembler;
+import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.ATrainingBundle;
+import it.gym.model.ATrainingBundleSpecification;
 import it.gym.model.CourseTrainingBundle;
+import it.gym.pojo.CourseBundle;
 import it.gym.service.TrainingBundleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -23,7 +28,7 @@ import java.util.List;
 public class TrainingBundleController {
 
     @Autowired
-    private TrainingBundleService service;
+    private TrainingBundleFacade service;
 
     @GetMapping("/courses")
     ResponseEntity<List<TrainingBundleResource>> findCoursesByLargerInterval(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")
@@ -34,6 +39,12 @@ public class TrainingBundleController {
         List<CourseTrainingBundle> courses = service.findCoursesLargerThanInterval(startTime, endTime);
 
         return ResponseEntity.ok(new TrainingBundleAssembler().toResources(courses));
+    }
+
+    @PostMapping
+    ResponseEntity<TrainingBundleResource> post(@RequestBody CourseBundle params) {
+        ATrainingBundle bundle = service.createTrainingBundle(params);
+        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
     }
 
     @GetMapping

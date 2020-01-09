@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.repository.*;
-import it.gym.service.ReservationServiceTest;
 import it.gym.utility.Calendar;
 import it.gym.utility.HateoasTest;
 import org.junit.After;
@@ -14,11 +13,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.session.SessionRepository;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.transaction.Transactional;
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -28,6 +25,7 @@ import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static net.bytebuddy.matcher.ElementMatchers.is;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -48,8 +46,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
     private Customer customer;
     private Gym gym;
-    private ATrainingBundleSpecification personalSpec;
-    private ATrainingBundleSpecification courseSpec;
     private PersonalTrainingBundle personal;
     private CourseTrainingBundle course;
     private ATrainingSession session;
@@ -68,21 +64,25 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         customer = userRepository.save(customer);
         gym = createGym(1L);
         gym = gymRepository.save(gym);
-        personalSpec = createPersonalBundleSpec(1L, "personal");
+        ATrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         Date start = Calendar.getNextMonday();
         Date end = addHours(start, 1);
-        courseSpec = createCourseBundleSpec(1L, "course", start, end);
+        ATrainingBundleSpecification courseSpec = createCourseBundleSpec(1L, "course", 1, 1);
 
         personalSpec = specRepository.save(personalSpec);
         courseSpec = specRepository.save(courseSpec);
 
         personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle();
-        course = (CourseTrainingBundle) courseSpec.createTrainingBundle();
+
+        Date monday = getNextMonday();
+        end = addMonths(monday, 1);
+        course = (CourseTrainingBundle) createCourseBundle(1L, monday, (CourseTrainingBundleSpecification) courseSpec);
 
         personal = bundleRepository.save(personal);
         session = course.createSession(start, end);
         course.addSession(session);
         course = bundleRepository.save(course);
+        session = course.getSessions().get(0);
     }
 
     @After

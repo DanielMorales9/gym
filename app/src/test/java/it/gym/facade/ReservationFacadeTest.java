@@ -25,7 +25,6 @@ import static it.gym.utility.Fixture.*;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(SpringRunner.class)
 public class ReservationFacadeTest {
@@ -95,8 +94,9 @@ public class ReservationFacadeTest {
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
-        ATrainingBundle spec = Fixture.createPersonalBundle(1L, 11);
-        customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
+        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, spec);
+        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Event event = new Event();
@@ -130,8 +130,9 @@ public class ReservationFacadeTest {
             return var;
         }).when(service).save(any(Reservation.class));
 
-        ATrainingBundle spec = Fixture.createPersonalBundle(1L, 11);
-        customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
+        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+        ATrainingBundle bundle = createPersonalBundle(1L, spec);
+        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
         Date start = getNextMonday();
         Date end = addHours(start, 1);
@@ -157,7 +158,8 @@ public class ReservationFacadeTest {
 
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        ATrainingBundle course = Fixture.createCourseBundle(1L, start, end, 0);
+        ATrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 0, 1);
+        ATrainingBundle course = Fixture.createCourseBundle(1L, start, spec);
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
@@ -178,7 +180,8 @@ public class ReservationFacadeTest {
 
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        ATrainingBundle course = createCourseBundle(1L, start, end, 1);
+        ATrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 1, 1);
+        ATrainingBundle course = createCourseBundle(1L, start, spec);
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
@@ -193,8 +196,9 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
 
-        ATrainingBundle spec = createPersonalBundle(1L, 0);
-        customer.addToCurrentTrainingBundles(Collections.singletonList(spec));
+        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 0);
+        ATrainingBundle bundle = createPersonalBundle(1L, spec);
+        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
         Date start = getNextMonday();
         Date end = addHours(start, 1);
@@ -215,7 +219,7 @@ public class ReservationFacadeTest {
         role.setName("CUSTOMER");
         customer.setRoles(Collections.singletonList(role));
         String email = "customer@customer.com";
-        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, 11);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, null);
         PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
@@ -247,7 +251,7 @@ public class ReservationFacadeTest {
         role.setName("CUSTOMER");
         customer.setRoles(Collections.singletonList(role));
         String email = "customer@customer.com";
-        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, 11);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, null);
         PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
@@ -265,7 +269,7 @@ public class ReservationFacadeTest {
     public void confirm() {
         Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
-        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, 11);
+        ATrainingBundle bundle = Fixture.createPersonalBundle(1L, null);
         PersonalTrainingSession session = Fixture.createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 

@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import it.gym.utility.Fixture;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,6 +12,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.Fixture.createCourseBundleSpec;
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -33,7 +37,8 @@ public class SaleTest {
         Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        CourseTrainingBundleSpecification expectedSpecs = (CourseTrainingBundleSpecification) createCourseBundleSpecification(start);
+        CourseTrainingBundleSpecification expectedSpecs = (CourseTrainingBundleSpecification)
+                createCourseBundleSpec(1L, "Course", 11, 1);
         CourseTrainingBundle expectedBundle = (CourseTrainingBundle) createCourseBundle(start, expectedSpecs);
         SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
 
@@ -165,8 +170,8 @@ public class SaleTest {
     }
 
     private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
-        ATrainingBundleSpecification spec = createCourseBundleSpecification(start);
-        ATrainingBundle a = spec.createTrainingBundle();
+        ATrainingBundleSpecification spec = createCourseBundleSpec(1L, "Course", 11, 1);
+        ATrainingBundle a = createCourseBundle(start, spec);
         return sale.addSalesLineItem(a);
     }
 
@@ -174,27 +179,21 @@ public class SaleTest {
     private ATrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec) {
         CourseTrainingBundle p = new CourseTrainingBundle();
         p.setName("Course");
-        p.setDescription("Description");
         p.setExpired(false);
         p.setBundleSpec(spec);
-        p.setPrice(111.0);
         Date end = DateUtils.addDays(start, 30);
         p.setStartTime(start);
         p.setEndTime(end);
-        p.setMaxCustomers(11);
         return p;
     }
 
-    private ATrainingBundleSpecification createCourseBundleSpecification(Date start) {
+    private ATrainingBundleSpecification createCourseBundleSpecification() {
         CourseTrainingBundleSpecification p = new CourseTrainingBundleSpecification();
         p.setId(1L);
         p.setName("Course");
         p.setDescription("Description");
         p.setDisabled(false);
         p.setPrice(111.0);
-        Date end = DateUtils.addDays(start, 30);
-        p.setStartTime(start);
-        p.setEndTime(end);
         p.setMaxCustomers(11);
         return p;
     }
@@ -210,11 +209,8 @@ public class SaleTest {
     private ATrainingBundle createPersonalBundle(ATrainingBundleSpecification spec) {
         PersonalTrainingBundle p = new PersonalTrainingBundle();
         p.setName("Personal");
-        p.setDescription("Description");
         p.setExpired(false);
         p.setBundleSpec(spec);
-        p.setPrice(111.0);
-        p.setNumSessions(11);
         return p;
     }
 

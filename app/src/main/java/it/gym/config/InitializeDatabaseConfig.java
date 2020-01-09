@@ -119,7 +119,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     private void createAndSaveCourseBundleSpecification() {
         String name = "Corso";
         if (!specService.existsByName(name))
-            specService.createTrainingBundleSpecification(createCourseBundleSpecification(name, new Date()));
+            specService.createTrainingBundleSpecification(createCourseBundleSpecification(name));
     }
 
     private void createAndSavePersonalBundleSpecification() {
@@ -156,15 +156,12 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         return roleService.findAll();
     }
 
-    private ATrainingBundleSpecification createCourseBundleSpecification(String name, Date start) {
+    private ATrainingBundleSpecification createCourseBundleSpecification(String name) {
         CourseTrainingBundleSpecification p = new CourseTrainingBundleSpecification();
         p.setName(name);
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
         p.setPrice(111.0);
-        Date end = DateUtils.addDays(start, 30);
-        p.setStartTime(start);
-        p.setEndTime(end);
         p.setMaxCustomers(11);
         return p;
     }

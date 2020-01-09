@@ -34,7 +34,8 @@ public class CourseTrainingSession extends ATrainingSession {
     }
 
     public int getMaxCustomers() {
-        return ((CourseTrainingBundle) this.getTrainingBundle()).getMaxCustomers();
+        return ((CourseTrainingBundleSpecification) this.getTrainingBundle()
+                .getBundleSpec()).getMaxCustomers();
     }
 
     @Override

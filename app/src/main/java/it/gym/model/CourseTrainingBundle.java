@@ -27,9 +27,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Column(name = "end_time")
     private Date endTime;
 
-    @Column(name="max_customers")
-    private Integer maxCustomers;
-
     public Date getEndTime() {
         return endTime;
     }
@@ -44,14 +41,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
-    }
-
-    public Integer getMaxCustomers() {
-        return maxCustomers;
-    }
-
-    public void setMaxCustomers(Integer maxCustomers) {
-        this.maxCustomers = maxCustomers;
     }
 
     @Override
