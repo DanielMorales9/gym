@@ -7,7 +7,6 @@ import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleModalComponent} from './bundle-modal.component';
-import {CalendarFacade} from '../../services';
 
 @Component({
     templateUrl: './bundles.component.html',
@@ -112,11 +111,13 @@ export class BundlesComponent implements OnInit, OnDestroy {
         this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent})
     }
 
-    private createCourseBundle(params: any) {
-        const [data, error] = this.service.post(params);
+    private async createCourseBundle(params: any) {
+        const [data, error] = await this.service.post(params);
         if (error) {
             throw error;
         }
         this.get(this.copyQuery);
     }
+
+    // TODO delete
 }
