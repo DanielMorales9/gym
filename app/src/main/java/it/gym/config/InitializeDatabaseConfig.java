@@ -161,6 +161,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setName(name);
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
+        p.setNumber(11);
         p.setPrice(111.0);
         p.setMaxCustomers(11);
         return p;

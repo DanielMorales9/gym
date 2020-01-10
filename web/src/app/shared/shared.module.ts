@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
-    BundleSpecDetailsComponent,
-    BundleSpecModalComponent,
     SalesComponent,
     UserDetailsComponent,
     UserItemComponent,
@@ -21,7 +19,7 @@ import {
     DeleteHolidayEventComponent,
     ReserveCourseEventComponent,
     DeleteReservationCourseEventComponent,
-    CustomerInfoModalComponent
+    CustomerInfoModalComponent, BundleSpecModalComponent, BundleSpecDetailsComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {

@@ -31,8 +31,7 @@ export class PersonalBundleSpecification extends BundleSpecification {
 }
 
 export class CourseBundleSpecification extends BundleSpecification {
-    startTime: number;
-    endTime: number;
+    number: number;
     maxCustomers: number;
 
     constructor() {
@@ -44,9 +43,6 @@ export class CourseBundleSpecification extends BundleSpecification {
 export abstract class Bundle {
     id: number;
     name: string;
-    price: number;
-    description: string;
-    disabled: boolean;
     expired: boolean;
     type: string;
 
@@ -58,7 +54,6 @@ export abstract class Bundle {
 export class PersonalBundle extends Bundle {
 
     bundleSpec: PersonalBundleSpecification;
-    numSessions: number;
 
     constructor() {
         super();
@@ -71,7 +66,6 @@ export class CourseBundle extends Bundle {
     bundleSpec: CourseBundleSpecification;
     startTime: number;
     endTime: number;
-    maxCustomers: number;
 
     constructor() {
         super();

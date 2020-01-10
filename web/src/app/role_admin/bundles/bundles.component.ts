@@ -5,6 +5,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {BundleModalComponent} from './bundle-modal.component';
+import {CalendarFacade} from '../../services';
 
 @Component({
     templateUrl: './bundles.component.html',
@@ -15,7 +18,8 @@ export class BundlesComponent implements OnInit, OnDestroy {
     SIMPLE_NO_CARD_MESSAGE = 'Nessuna edizione disponibile';
 
     query: any;
-    private specId: number;
+    copyQuery: any;
+    specId: number;
 
     private queryParams: { query: string };
     private pageSize = 10;
@@ -26,6 +30,7 @@ export class BundlesComponent implements OnInit, OnDestroy {
                 private helper: BundleHelperService,
                 private route: ActivatedRoute,
                 private router: Router,
+                private dialog: MatDialog,
                 private snackbar: SnackBarService) {
 
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
@@ -33,18 +38,23 @@ export class BundlesComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.sub = this.route.queryParams.subscribe(value => {
-            const query = {};
+            this.copyQuery = {};
             // tslint:disable
             for (let key in value) {
-                query[key] = value[key];
+                this.copyQuery[key] = value[key];
             }
-            console.log(query);
-            this.specId = query['specId'];
-            this.ds.setQuery(query);
-            this.ds.fetchPage(0);
+            console.log(this.copyQuery);
+            this.specId = this.copyQuery['specId'];
+            this.get(this.copyQuery);
         });
     }
 
+
+    private get(query: {}) {
+        // TODO fix
+        this.ds.setQuery(query);
+        this.ds.fetchPage(0);
+    }
 
     handleEvent($event) {
         switch ($event.type) {
@@ -69,19 +79,18 @@ export class BundlesComponent implements OnInit, OnDestroy {
     // }
 
     openDialog(): void {
-        // TODO create feature
-        this.snackbar.open('Questa funzione sarà disponibile a breve');
-        // const title = 'Crea Nuova Edizione';
+        const title = 'Crea Nuova Edizione';
 
-        // const dialogRef = this.dialog.open(BundleSpecModalComponent, {
-        //     data: {
-        //         title: title,
-        //     }
-        // });
+        const dialogRef = this.dialog.open(BundleModalComponent, {
+            data: {
+                title: title,
+                specId: this.specId
+            }
+        });
 
-        // dialogRef.afterClosed().subscribe(bundle => {
-        //     if (bundle) { this.createBundleSpec(bundle); }
-        // });
+        dialogRef.afterClosed().subscribe(params => {
+            if (params) { this.createCourseBundle(params); }
+        });
     }
 
     search($event?) {
@@ -101,5 +110,13 @@ export class BundlesComponent implements OnInit, OnDestroy {
 
     private goToDetails(bundle: any) {
         this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent})
+    }
+
+    private createCourseBundle(params: any) {
+        const [data, error] = this.service.post(params);
+        if (error) {
+            throw error;
+        }
+        this.get(this.copyQuery);
     }
 }

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {to_promise} from '../functions/decorators';
 
 
 @Injectable()
@@ -25,5 +26,10 @@ export class BundleService {
 
     findById(id: number) {
         return this.http.get(`/bundles/${id}`);
+    }
+
+    @to_promise
+    post(params: any): any {
+        return this.http.post(`/bundles`, params);
     }
 }

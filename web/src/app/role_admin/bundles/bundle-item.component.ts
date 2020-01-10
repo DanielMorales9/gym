@@ -21,7 +21,7 @@ export class BundleItemComponent {
     // openDialog(): void {
     //     const title = 'Modifica Pacchetto';
     //
-    //     const dialogRef = this.dialog.open(BundleSpecModalComponent, {
+    //     const dialogRef = this.dialog.open(BundleModalComponent, {
     //         data: {
     //             title: title,
     //             bundle: this.bundle

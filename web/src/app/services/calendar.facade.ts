@@ -18,7 +18,7 @@ export class CalendarFacade {
                 private gymService: GymService) {
     }
 
-    private static formatDateToString(date: Date) {
+    static formatDateToString(date: Date) {
         const dateValue = date.getUTCDate();
         const monthValue = date.getUTCMonth() + 1;
         const yearValue = date.getUTCFullYear();
