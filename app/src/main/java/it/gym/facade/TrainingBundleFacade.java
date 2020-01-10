@@ -67,6 +67,6 @@ public class TrainingBundleFacade {
 
         bundle.setBundleSpec(spec);
 
-        return bundle;
+        return this.service.save(bundle);
     }
 }
