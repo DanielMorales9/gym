@@ -29,8 +29,8 @@ public class AuthenticationController {
     @PostMapping(path = "/registration")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AUserResource> registration(@Valid @RequestBody AUser user) {
-        user = facade.register(user);
-        return ResponseEntity.ok(new AUserAssembler().toResource(user));
+        AUser u = facade.register(user);
+        return ResponseEntity.ok(new AUserAssembler().toResource(u));
 
     }
 

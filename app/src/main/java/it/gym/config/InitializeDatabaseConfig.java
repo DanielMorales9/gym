@@ -6,7 +6,6 @@ import it.gym.service.GymService;
 import it.gym.service.RoleService;
 import it.gym.service.TenantService;
 import it.gym.service.UserService;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.util.Date;
 import java.util.List;
 
 @Component

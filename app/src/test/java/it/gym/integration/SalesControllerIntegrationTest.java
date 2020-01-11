@@ -88,7 +88,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         expectSale(result, sale);
-
         expectCustomer(result, (Customer) customer, "customer");
     }
 

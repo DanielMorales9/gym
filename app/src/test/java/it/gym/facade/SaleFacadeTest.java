@@ -113,7 +113,6 @@ public class SaleFacadeTest {
     @Test
     public void addCourseBundleToSalesLineItemAlreadyCreated() {
         Date start = getNextMonday();
-        Date end = addMonths(start, 1);
 
         AUser customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Sale mockSale = createSale(1L, customer);
