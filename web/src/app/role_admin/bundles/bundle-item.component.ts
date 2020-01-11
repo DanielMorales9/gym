@@ -56,4 +56,8 @@ export class BundleItemComponent {
     goToInfo() {
         this.done.emit({type: 'info', bundle: this.bundle});
     }
+
+    delete() {
+        this.done.emit({type: 'delete', bundle: this.bundle});
+    }
 }

@@ -59,6 +59,12 @@ public class TrainingBundleController {
         return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
     }
 
+    @DeleteMapping(path = "/{id}")
+    ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
+        ATrainingBundle bundle = service.deleteById(id);
+        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
+    }
+
     @GetMapping("/search")
     @ResponseBody
     Page<ATrainingBundle> findBySpecs(@RequestParam Long specId, Pageable pageable) {

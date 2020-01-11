@@ -69,4 +69,10 @@ public class TrainingBundleFacade {
 
         return this.service.save(bundle);
     }
+
+    public ATrainingBundle deleteById(Long id) {
+        ATrainingBundle bundle = service.findById(id);
+        service.delete(bundle);
+        return bundle;
+    }
 }

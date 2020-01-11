@@ -60,6 +60,9 @@ export class BundlesComponent implements OnInit, OnDestroy {
             case 'info':
                 this.goToDetails($event.bundle);
                 break;
+            case 'delete':
+                this.delete($event.bundle);
+                break;
             default:
                 console.error(`Operazione non riconosciuta: ${$event.type}`);
                 break;
@@ -119,5 +122,11 @@ export class BundlesComponent implements OnInit, OnDestroy {
         this.get(this.copyQuery);
     }
 
-    // TODO delete
+    private async delete(bundle: any) {
+        const [data, error] = await this.service.delete(bundle.id);
+        if (error) {
+            throw error;
+        }
+        this.get(this.copyQuery);
+    }
 }

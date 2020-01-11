@@ -32,4 +32,9 @@ export class BundleService {
     post(params: any): any {
         return this.http.post(`/bundles`, params);
     }
+
+    @to_promise
+    delete(id: number): any {
+        return this.http.delete(`/bundles/${id}`);
+    }
 }
