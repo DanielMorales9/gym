@@ -2,6 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CustomerCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
+import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
 import {BundleDetailsComponent} from '../shared/components/bundles';
 
 const routes = [
@@ -10,8 +11,9 @@ const routes = [
             { path: 'calendar', component: CustomerCalendarComponent },
             { path: 'sales', component: SalesComponent },
             { path: 'sales/:id', component: SaleDetailsComponent },
-            { path: 'bundles/:id', component: BundleDetailsComponent },
-            { path: '**', redirectTo: 'bundles' }
+            { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
+            { path: 'bundleSpec/:id', component: BundleDetailsComponent },
+            { path: '**', redirectTo: 'bundleSpecs' }
         ]},
 ];
 

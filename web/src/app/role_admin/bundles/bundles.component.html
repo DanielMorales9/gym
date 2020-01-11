@@ -1,4 +1,4 @@
-<simple-search [query]="query" text="Cerca pacchetti" (done)="search($event)"></simple-search>
+<simple-search [query]="query" text="Cerca" (done)="search($event)"></simple-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
     <div *cdkVirtualFor="let b of ds;" class="scroll-item">
@@ -6,7 +6,10 @@
     </div>
 </cdk-virtual-scroll-viewport>
 <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
-<button type="button" mat-fab color="primary" class="fab-button-add"
-        title="Aggiungi Pacchetto" (click)="openDialog()">
-    <mat-icon>add</mat-icon>
-</button>
+
+<ng-container *ngIf="!!specId">
+    <button type="button" mat-fab color="primary" class="fab-button-add"
+            title="Crea Edizione" (click)="openDialog()">
+        <mat-icon>add</mat-icon>
+    </button>
+</ng-container>

@@ -1,89 +1,70 @@
-import {Component, OnInit} from '@angular/core';
-import {BundleSpecification} from '../../shared/model';
-import {BundleSpecsService} from '../../core/controllers';
-import {MatDialog} from '@angular/material';
-import {BundleModalComponent} from '../../shared/components/bundles';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Bundle} from '../../shared/model';
+import {BundleService} from '../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
+import {Subscription} from 'rxjs';
+import {MatDialog} from '@angular/material/dialog';
+import {BundleModalComponent} from '../../shared/components/bundles/bundle-modal.component';
 
 @Component({
     templateUrl: './bundles.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class BundlesComponent implements OnInit {
+export class BundlesComponent implements OnInit, OnDestroy {
 
-    SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
+    SIMPLE_NO_CARD_MESSAGE = 'Nessuna edizione disponibile';
 
-    query: string;
+    query: any;
+    copyQuery: any;
+    specId: number;
+
     private queryParams: { query: string };
-
     private pageSize = 10;
-    ds: QueryableDatasource<BundleSpecification>;
+    ds: QueryableDatasource<Bundle>;
+    private sub: Subscription;
 
-    constructor(private service: BundleSpecsService,
+    constructor(private service: BundleService,
+                private helper: BundleHelperService,
+                private route: ActivatedRoute,
                 private router: Router,
                 private dialog: MatDialog,
-                private helper: BundleHelperService,
-                private activatedRoute: ActivatedRoute,
                 private snackbar: SnackBarService) {
 
-        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
-        // for(let _i= 0; _i < 50; _i++) {
-        //    let bundle = new Bundle();
-        //    bundle.name= 'winter_pack_'+_i;
-        //    bundle.description= 'winter_pack_'+_i;
-        //    bundle.type = 'P';
-        //    bundle.price = 11;
-        //    bundle.numSessions = 11;
-        //    bundle.disabled = false;
-        //    this.service.post(bundle).subscribe(value => console.log(value))
-        // }
+        this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
-        this.query = this.activatedRoute.snapshot.queryParamMap.get('query') || undefined;
-        this.search();
-    }
-
-    private updateQueryParams() {
-        this.queryParams = {query: this.query};
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.activatedRoute,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
-    }
-
-    openDialog(): void {
-        const title = 'Crea Nuovo Pacchetto';
-
-        const dialogRef = this.dialog.open(BundleModalComponent, {
-            data: {
-                title: title,
+        this.sub = this.route.queryParams.subscribe(value => {
+            this.copyQuery = {};
+            // tslint:disable
+            for (let key in value) {
+                this.copyQuery[key] = value[key];
             }
-        });
-
-        dialogRef.afterClosed().subscribe(bundle => {
-            if (bundle) { this.createBundle(bundle); }
+            console.log(this.copyQuery);
+            this.specId = this.copyQuery['specId'];
+            this.get(this.copyQuery);
         });
     }
 
-    handleEvent($event) {
+
+    private get(query: {}) {
+        // TODO fix
+        this.ds.setQuery(query);
+        this.ds.fetchPage(0);
+    }
+
+    async handleEvent($event) {
         switch ($event.type) {
-            case 'delete':
-                this.deleteBundle($event.bundle);
-                break;
-            case 'patch':
-                this.toggleDisabled($event.bundle);
-                break;
-            case 'put':
-                this.modifyBundle($event.bundle);
-                break;
             case 'info':
                 this.goToDetails($event.bundle);
+                break;
+            case 'delete':
+                await this.delete($event.bundle);
+                break;
+            case 'edit':
+                await this.edit($event.bundle);
                 break;
             default:
                 console.error(`Operazione non riconosciuta: ${$event.type}`);
@@ -91,47 +72,77 @@ export class BundlesComponent implements OnInit {
         }
     }
 
+    // private updateQueryParams() {
+    //     this.queryParams = {query: this.query};
+    //     this.router.navigate(
+    //         [],
+    //         {
+    //             relativeTo: this.activatedRoute,
+    //             queryParams: this.queryParams,
+    //             queryParamsHandling: 'merge', // remove to replace all query params by provided
+    //         });
+    // }
+
+    openDialog(): void {
+        const title = 'Crea Nuova Edizione';
+
+        const dialogRef = this.dialog.open(BundleModalComponent, {
+            data: {
+                title: title,
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(async params => {
+            if (params) {
+                if (!!this.specId) {
+                    params['specId'] = this.specId;
+                }
+                this.createCourseBundle(params);
+            }
+        });
+    }
+
     search($event?) {
-        if ($event) {
-            this.query = $event.query;
+        // TODO search feature
+        this.snackbar.open('Questa funzione sarà disponibile a breve');
+
+        // if ($event) {
+        //     this.query = $event.query;
+        // }
+        // this.ds.setQuery(this.query);
+        // this.ds.fetchPage(0);
+        // this.updateQueryParams();
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
+
+    private async goToDetails(bundle: any) {
+        await this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent})
+    }
+
+    private async createCourseBundle(params: any) {
+        const [data, error] = await this.service.post(params);
+        if (error) {
+            throw error;
         }
-        this.ds.setQuery(this.query);
-        this.ds.fetchPage(0);
-        this.updateQueryParams();
+        this.get(this.copyQuery);
     }
 
-    private createBundle(bundle: BundleSpecification) {
-        console.log(bundle);
-        delete bundle.id;
-        this.service.post(bundle).subscribe(_ => {
-            const message = `Il pacchetto ${bundle.name} è stato creato`;
-            this.snackbar.open(message);
-            this.search();
-        }, err => this.snackbar.open(err.error.message));
-    }
-
-    private deleteBundle(bundle: BundleSpecification) {
-        const confirmed = confirm(`Vuoi eliminare il pacchetto ${bundle.name}?`);
-        if (confirmed) {
-            this.service.delete(bundle.id).subscribe(_ => this.search(),
-                    err => this.snackbar.open(err.error.message));
+    private async delete(bundle: any) {
+        const [data, error] = await this.service.delete(bundle.id);
+        if (error) {
+            throw error;
         }
+        this.get(this.copyQuery);
     }
 
-    private toggleDisabled(bundle: BundleSpecification) {
-        bundle.disabled = !bundle.disabled;
-        this.service.patch(bundle).subscribe(res => console.log(res), err => this.snackbar.open(err.error.message));
-    }
-
-    private modifyBundle(bundle: BundleSpecification) {
-        this.service.patch(bundle).subscribe(_ => {
-            const message = `Il pacchetto ${bundle.name} è stato modificato`;
-            this.snackbar.open(message);
-            this.search();
-        }, err => this.snackbar.open(err.error.message));
-    }
-
-    private goToDetails(bundle: any) {
-        return this.router.navigate(['admin', 'bundles', bundle.id]);
+    private async edit(bundle: any) {
+        const [data, error] = await this.service.patch(bundle);
+        if (error) {
+            throw error;
+        }
+        this.get(this.copyQuery);
     }
 }

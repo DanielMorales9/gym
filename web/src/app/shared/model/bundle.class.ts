@@ -3,6 +3,11 @@ export enum BundleSpecificationType {
     COURSE = 'C'
 }
 
+export enum BundleType {
+    PERSONAL =  'P',
+    COURSE = 'C'
+}
+
 export abstract class BundleSpecification {
     id: number;
     name: string;
@@ -26,12 +31,44 @@ export class PersonalBundleSpecification extends BundleSpecification {
 }
 
 export class CourseBundleSpecification extends BundleSpecification {
-    startTime: number;
-    endTime: number;
+    number: number;
     maxCustomers: number;
 
     constructor() {
         super();
         this.type = BundleSpecificationType.COURSE;
+    }
+}
+
+export abstract class Bundle {
+    id: number;
+    name: string;
+    expired: boolean;
+    type: string;
+
+    constructor() {
+
+    }
+}
+
+export class PersonalBundle extends Bundle {
+
+    bundleSpec: PersonalBundleSpecification;
+
+    constructor() {
+        super();
+        this.type = BundleType.PERSONAL;
+    }
+}
+
+export class CourseBundle extends Bundle {
+
+    bundleSpec: CourseBundleSpecification;
+    startTime: number;
+    endTime: number;
+
+    constructor() {
+        super();
+        this.type = BundleType.COURSE;
     }
 }

@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BundleSpecification} from '../../shared/model';
 import {MatDialog} from '@angular/material';
+import {BundleType} from '../../shared/model';
 import {BundleModalComponent} from '../../shared/components/bundles';
 
 
@@ -15,35 +15,10 @@ export class BundleItemComponent {
 
     @Output() done = new EventEmitter();
 
-    PERSONAL = 'P';
-    COURSE   = 'C';
+    PERSONAL = BundleType.PERSONAL;
+    COURSE   = BundleType.COURSE;
 
     constructor(private dialog: MatDialog) {}
-
-    openDialog(): void {
-        const title = 'Modifica Pacchetto';
-
-        const dialogRef = this.dialog.open(BundleModalComponent, {
-            data: {
-                title: title,
-                bundle: this.bundle
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(res => {
-            if (res) {
-                this.done.emit({type: 'put', bundle: res});
-            }
-        });
-    }
-
-    deleteBundle() {
-        this.done.emit({type: 'delete', bundle: this.bundle});
-    }
-
-    toggleDisabled() {
-        this.done.emit({type: 'patch', bundle: this.bundle});
-    }
 
     getBundleType() {
         const defaultName = 'Allenamento Personale';
@@ -65,5 +40,28 @@ export class BundleItemComponent {
 
     goToInfo() {
         this.done.emit({type: 'info', bundle: this.bundle});
+    }
+
+    delete() {
+        this.done.emit({type: 'delete', bundle: this.bundle});
+    }
+
+    edit() {
+        const title = 'Modifica Pacchetto';
+
+        const dialogRef = this.dialog.open(BundleModalComponent, {
+            data: {
+                title: title,
+                bundle: this.bundle
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(res => {
+            console.log(res);
+            if (res) {
+                this.done.emit({type: 'edit', bundle: res});
+            }
+        });
+
     }
 }

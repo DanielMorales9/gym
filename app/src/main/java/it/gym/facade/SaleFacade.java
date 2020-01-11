@@ -80,16 +80,6 @@ public class SaleFacade {
         return sale;
     }
 
-    public ATrainingBundle createBundle(ATrainingBundleSpecification spec) {
-        if (spec.getType().equals(CourseTrainingBundleSpecification.TYPE)) {
-            List<ATrainingBundle> l = bundleService.findBundlesBySpec(spec);
-            if (l.size() == 1) {
-                return l.get(0);
-            }
-        }
-        return spec.createTrainingBundle();
-    }
-
     public Sale createSale(Long customerId) {
         Customer customer = (Customer) userService.findById(customerId);
 
@@ -101,14 +91,22 @@ public class SaleFacade {
         return this.save(sale);
     }
 
-    public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Integer quantity) {
+    public Sale addSalesLineItem(Long saleId, Long bundleSpecId) {
         Sale sale = this.findById(saleId);
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
 
-        for (int i = 0; i < quantity; i++) {
-            ATrainingBundle bundle = createBundle(bundleSpec);
-            sale.addSalesLineItem(bundle);
+        ATrainingBundle bundle = bundleSpec.createTrainingBundle();
+        if (bundle == null) {
+            throw new BadRequestException("Qualcosa è andato storto");
         }
+        sale.addSalesLineItem(bundle);
+        return this.save(sale);
+    }
+
+    public Sale addSalesLineItemByBundle(Long saleId, Long bundleId) {
+        Sale sale = this.findById(saleId);
+        ATrainingBundle bundle = this.bundleService.findById(bundleId);
+        sale.addSalesLineItem(bundle);
         return this.save(sale);
     }
 
@@ -186,6 +184,4 @@ public class SaleFacade {
                     .filter(ATrainingBundle::isNotGroup)
                     .collect(Collectors.toList());
     }
-
-
 }

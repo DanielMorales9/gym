@@ -1,13 +1,13 @@
 import {Injectable} from '@angular/core';
-import {BundleSpecification} from '../../shared/model';
+import {Bundle} from '../../shared/model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
-import {BundleSpecsService} from '../controllers/bundle-specs.service';
+import {BundleService} from '../controllers';
 
 @Injectable()
-export class BundleHelperService extends HelperService<BundleSpecification> {
+export class BundleHelperService extends HelperService<Bundle> {
 
-    constructor(private service: BundleSpecsService) {
+    constructor(private service: BundleService) {
         super();
     }
 
@@ -19,7 +19,7 @@ export class BundleHelperService extends HelperService<BundleSpecification> {
         return this.service.search(query, page, size);
     }
 
-    preProcessResources(resources: BundleSpecification[]): BundleSpecification[] {
+    preProcessResources(resources: Bundle[]): Bundle[] {
         resources = this.extract(resources);
         return resources;
     }
@@ -34,13 +34,7 @@ export class BundleHelperService extends HelperService<BundleSpecification> {
         return observable;
     }
 
-    extract(res: Object): BundleSpecification[] {
-        let bundles;
-        if (res['_embedded']) {
-            bundles = res['_embedded']['aTrainingBundleSpecifications'];
-        } else {
-            bundles = res['content'];
-        }
-        return bundles;
+    extract(res: Object): Bundle[] {
+        return res['content'];
     }
 }

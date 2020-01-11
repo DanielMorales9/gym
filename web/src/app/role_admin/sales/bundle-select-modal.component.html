@@ -1,0 +1,15 @@
+<h5 mat-dialog-title>{{title}} - {{spec.name}}</h5>
+
+<div mat-dialog-content>
+    <bundle-select-item *ngFor="let bundle of bundles"
+                             [bundle]="bundle"
+                             [selected]="selected[bundle?.id]"
+                             (done)="selectBundle(bundle)">
+
+    </bundle-select-item>
+    <no-item [hidden]="bundles?.length > 0" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>
+    <button mat-flat-button type="button" color="primary" (click)="submit()">Conferma</button>
+</div>

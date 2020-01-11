@@ -6,7 +6,6 @@ import it.gym.service.GymService;
 import it.gym.service.RoleService;
 import it.gym.service.TenantService;
 import it.gym.service.UserService;
-import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.util.Date;
 import java.util.List;
 
 @Component
@@ -119,7 +117,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     private void createAndSaveCourseBundleSpecification() {
         String name = "Corso";
         if (!specService.existsByName(name))
-            specService.createTrainingBundleSpecification(createCourseBundleSpecification(name, new Date()));
+            specService.createTrainingBundleSpecification(createCourseBundleSpecification(name));
     }
 
     private void createAndSavePersonalBundleSpecification() {
@@ -156,15 +154,13 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         return roleService.findAll();
     }
 
-    private ATrainingBundleSpecification createCourseBundleSpecification(String name, Date start) {
+    private ATrainingBundleSpecification createCourseBundleSpecification(String name) {
         CourseTrainingBundleSpecification p = new CourseTrainingBundleSpecification();
         p.setName(name);
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
+        p.setNumber(1);
         p.setPrice(111.0);
-        Date end = DateUtils.addDays(start, 30);
-        p.setStartTime(start);
-        p.setEndTime(end);
         p.setMaxCustomers(11);
         return p;
     }

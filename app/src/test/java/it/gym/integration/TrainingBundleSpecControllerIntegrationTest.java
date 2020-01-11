@@ -2,7 +2,6 @@ package it.gym.integration;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
@@ -19,9 +18,9 @@ import org.springframework.test.web.servlet.ResultActions;
 import java.util.Date;
 import java.util.stream.Collectors;
 
-import static it.gym.utility.Fixture.createCourseBundleSpec;
-import static it.gym.utility.Fixture.createPersonalBundleSpec;
-import static it.gym.utility.HateoasTest.*;
+import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.expectTrainingBundleSpec;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -37,8 +36,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Before
     public void before() {
-        personalBundle = createPersonalBundleSpec(1L, "personal");
-        courseBundle = createCourseBundleSpec(1L, "course", new Date(), new Date());
+        personalBundle = createPersonalBundleSpec(1L, "personal", 11);
+        courseBundle = createCourseBundleSpec(1L, "course", 1, 1);
         personalBundle = repository.save(personalBundle);
         courseBundle = repository.save(courseBundle);
     }
@@ -98,7 +97,9 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Test
     public void deleteCourseBundleSpecId_throwsException() throws Exception {
-        bundleRepository.save(courseBundle.createTrainingBundle());
+        ATrainingBundle bundle = createCourseBundle(1L, getNextMonday(),
+                (CourseTrainingBundleSpecification) courseBundle);
+        bundleRepository.save(bundle);
         mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isBadRequest());
     }
@@ -202,8 +203,6 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         expected.setDescription("pacchetto");
         expected.setDisabled(false);
         expected.setMaxCustomers(11);
-        expected.setStartTime(new Date());
-        expected.setEndTime(new Date());
         expected.setPrice(1.0);
 
         ObjectMapper objectMapper = new ObjectMapper();

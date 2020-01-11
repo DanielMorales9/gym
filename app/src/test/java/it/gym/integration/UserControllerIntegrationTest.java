@@ -3,7 +3,6 @@ package it.gym.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
-import it.gym.utility.Fixture;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -131,7 +130,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void deleteByUserId_throwsException() throws Exception {
         Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
-        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal");
+        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
         spec = bundleSpecRepository.save(spec);
         ATrainingBundle bundle = spec.createTrainingBundle();
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));

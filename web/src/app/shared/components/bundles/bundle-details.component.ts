@@ -1,75 +1,43 @@
-import {Component, OnInit} from '@angular/core';
-import {BundleSpecsService} from '../../../core/controllers';
-import {BundleSpecification} from '../../model';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
+import {BundleService} from '../../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
-import {SpecFacade} from '../../../services';
+import {Subscription} from 'rxjs';
 
 @Component({
-    selector: 'bundle-details',
+    selector: 'bundle-spec-details',
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
 })
-export class BundleDetailsComponent implements OnInit {
+export class BundleDetailsComponent implements OnInit, OnDestroy {
 
     bundle: any;
-    canDelete: boolean;
-    canDisable: boolean;
-    canEdit: boolean;
 
     PERSONAL = 'P';
     COURSE   = 'C';
+    private sub: Subscription;
 
-    constructor(private service: BundleSpecsService,
+    constructor(private service: BundleService,
                 private dialog: MatDialog,
                 private router: Router,
-                private facade: SpecFacade,
                 private route: ActivatedRoute) {
-        this.canDelete = facade.canDelete();
-        this.canEdit = facade.canEdit();
-        this.canDisable = facade.canDisable();
     }
 
     ngOnInit(): void {
-        this.route.params.subscribe(params => {
-            this.getBundle(+params['id']);
+        this.sub = this.route.params.subscribe(async params => {
+            await this.getBundle(+params['id']);
         });
     }
 
-    editBundle(): void {
-        const title = 'Modifica Pacchetto';
-
-        const dialogRef = this.dialog.open(BundleModalComponent, {
-            data: {
-                title: title,
-                bundle: this.bundle
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(res => {
-            if (res) {
-                this.service.patch(res).subscribe((v: BundleSpecification) => this.bundle = v);
-            }
-        });
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
     }
 
-    deleteBundle() {
-        const confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundle.name}?`);
-        if (confirmed) {
-            this.service.delete(this.bundle.id).subscribe(_ => this.router.navigateByUrl('/'));
-        }
-    }
-
-    toggleDisabled() {
-        this.bundle.disabled = !this.bundle.disabled;
-        this.service.patch(this.bundle);
-    }
-
-    private getBundle(id: number) {
-        this.service.findById(id).subscribe((res: BundleSpecification) => {
-            this.bundle = res;
-        });
+    private async getBundle(id: number) {
+        const [data, error] = await this.service.findById(id);
+        if (error) { throw error; }
+        this.bundle = data;
     }
 
     getBundleType() {
@@ -87,5 +55,43 @@ export class BundleDetailsComponent implements OnInit {
                 break;
         }
         return name;
+    }
+
+    edit() {
+        const title = 'Modifica Pacchetto';
+
+        const dialogRef = this.dialog.open(BundleModalComponent, {
+            data: {
+                title: title,
+                bundle: this.bundle
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(async res => {
+            if (res) {
+                await this.editBundle(res);
+            }
+        });
+    }
+
+    async delete() {
+        const [data, error] = await this.service.delete(this.bundle.id);
+        if (error) {
+            throw error;
+        }
+        await this.router.navigateByUrl('/');
+    }
+
+    private async editBundle(res: any) {
+        const [data, error] = await this.service.patch(this.bundle);
+        if (error) {
+            throw error;
+        }
+        await this.getBundle(this.bundle.id);
+    }
+
+    async goToBundleSPec() {
+        await this.router.navigate(['bundleSpecs', this.bundle.bundleSpec.id],
+            {relativeTo: this.route.parent});
     }
 }

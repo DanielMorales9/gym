@@ -6,45 +6,40 @@
             </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">
-            {{bundle?.description || 'Loading...'}}
+            {{bundle?.bundleSpec.description || 'Loading...'}}
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="panel-body-description">
-        <span>{{bundle?.description || 'Loading...'}}</span>
+        <span>{{bundle?.bundleSpec.description || 'Loading...'}}</span>
     </div>
     <div class="panel-content">
         <div>
+            <span class="green-light" [hidden]="bundle?.expired">
+                <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Valido
+            </span>
+
+            <span class="red-light" [hidden]="!bundle?.expired">
+                <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Scaduto
+            </span>
+        </div>
+        <div>
             <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
-        </div>
-        <div>
-        <span class="green-light" [hidden]="bundle?.disabled">
-            <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato
-        </span>
-            <span class="red-light" [hidden]="!bundle?.disabled">
-            <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Disabilitato
-        </span>
-        </div>
-        <div>
-            <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
         </div>
         <ng-container [ngSwitch]="bundle?.type">
 
-        <ng-container *ngSwitchCase="PERSONAL">
-            <div>
-                <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
-            </div>
-        </ng-container>
-        <ng-container *ngSwitchCase="COURSE">
-            <div>
-                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date : 'shortDate'}}
-            </div>
-            <div>
-                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date : 'shortDate'}}
-            </div>
-            <div>
-                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.maxCustomers}}
-            </div>
-        </ng-container>
+            <ng-container *ngSwitchCase="PERSONAL">
+                <div>
+                    <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}
+                </div>
+            </ng-container>
+            <ng-container *ngSwitchCase="COURSE">
+                <div>
+                    <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
+                </div>
+                <div>
+                    <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
+                </div>
+            </ng-container>
         </ng-container>
     </div>
     <div class="panel-actions">
@@ -53,17 +48,14 @@
                 <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
             </span>
         </button>
-        <button mat-button color="accent" (click)="toggleDisabled()">
-            <span *ngIf="bundle?.disabled">
-                <mat-icon fontSet="fa" fontIcon="fa-check"></mat-icon>&nbsp;Abilita
-            </span>
-            <span *ngIf="!bundle?.disabled">
-                <mat-icon fontSet="fa" fontIcon="fa-ban"></mat-icon>&nbsp;Disabilita
+        <button mat-button (click)="edit()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>
         </button>
-        <button mat-button color="warn" (click)="deleteBundle()">
+        <button *ngIf="bundle?.deletable" mat-button color="warn" (click)="delete()">
             <span>
-                <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
+                <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
             </span>
         </button>
     </div>

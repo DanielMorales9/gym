@@ -5,8 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value="C")
@@ -18,31 +19,18 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     public static final String TYPE = "C";
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "start_time")
-    private Date startTime;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end_time")
-    private Date endTime;
+    @Column(name = "number")
+    private Integer number;
 
     @Column(name="max_customers")
     private Integer maxCustomers;
 
-    public Date getEndTime() {
-        return endTime;
+    public Integer getNumber() {
+        return number;
     }
 
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
+    public void setNumber(Integer number) {
+        this.number = number;
     }
 
     public Integer getMaxCustomers() {
@@ -60,16 +48,6 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Override
     public ATrainingBundle createTrainingBundle() {
-        CourseTrainingBundle bundle = new CourseTrainingBundle();
-        bundle.setName(name);
-        bundle.setPrice(price);
-        bundle.setDescription(description);
-        bundle.setExpired(false);
-        bundle.setBundleSpec(this);
-        bundle.setEndTime(endTime);
-        bundle.setStartTime(startTime);
-        bundle.setMaxCustomers(maxCustomers);
-
-        return bundle;
+        return null;
     }
 }

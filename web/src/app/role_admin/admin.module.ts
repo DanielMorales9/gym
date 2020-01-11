@@ -19,7 +19,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {BundleSelectItemComponent, CreateSaleComponent} from './sales';
+import {BundleSelectItemComponent, BundleSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -32,8 +32,11 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared';
-import {BundleItemComponent, BundlesComponent} from './bundles';
+import {BundleSpecItemComponent, BundleSpecsComponent} from './bundle-specs';
 import {ACustomerCalendarComponent} from './customer-calendar';
+import {BundleItemComponent, BundlesComponent} from './bundles';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 registerLocaleData(localeIt);
 
@@ -54,6 +57,7 @@ registerLocaleData(localeIt);
         MatSelectModule,
         MatButtonModule,
         MatIconModule,
+        MatDatepickerModule,
         MatToolbarModule,
         MatExpansionModule,
         MatDividerModule,
@@ -64,8 +68,11 @@ registerLocaleData(localeIt);
         MatCheckboxModule
     ],
     declarations: [
+        BundleSpecsComponent,
         BundlesComponent,
         BundleItemComponent,
+        BundleSpecItemComponent,
+        BundleSpecSelectItemComponent,
         BundleSelectItemComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
@@ -75,12 +82,14 @@ registerLocaleData(localeIt);
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
         ACustomerCalendarComponent,
+        BundleSelectModalComponent
     ],
     providers: [
-        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
     ],
     exports: [
-        BundleItemComponent,
+        BundleSpecItemComponent,
     ],
     entryComponents: [
         AdminHeaderModalComponent,
@@ -88,6 +97,7 @@ registerLocaleData(localeIt);
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
+        BundleSelectModalComponent
     ]
 })
 export class AdminModule { }

@@ -1,8 +1,11 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundleSpecification, Sale} from '../../shared/model';
-import {BundlePayHelperService, SaleHelperService, QueryableDatasource} from '../../core/helpers';
+import {BundleSpecification, BundleType, Sale} from '../../shared/model';
+import {BundleSpecPayHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {SnackBarService} from '../../core/utilities';
+import {BundleService, BundleSpecsService} from '../../core/controllers';
+import {MatDialog} from '@angular/material/dialog';
+import {BundleSelectModalComponent} from './bundle-select-modal.component';
 
 
 @Component({
@@ -12,9 +15,7 @@ import {SnackBarService} from '../../core/utilities';
 export class CreateSaleComponent implements OnInit, OnDestroy {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
-    // SEARCH_NO_CARD_MESSAGE = "Nessun pacchetto disponibile con questo nome";
 
-    no_message_card: string;
     sub: any;
 
     id: number;
@@ -23,15 +24,19 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
     private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
+    bundleSelected: Map<number, boolean> = new Map<number, boolean>();
+
     ds: QueryableDatasource<BundleSpecification>;
     private queryParams: { query: string };
 
     constructor(private saleHelper: SaleHelperService,
-                private helper: BundlePayHelperService,
+                private helper: BundleSpecPayHelperService,
+                private specService: BundleSpecsService,
+                private bundleService: BundleService,
                 private snackbar: SnackBarService,
+                private dialog: MatDialog,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
-        this.no_message_card = this.SIMPLE_NO_CARD_MESSAGE;
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
     }
 
@@ -130,13 +135,20 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
             });
     }
 
-    selectBundle(id: number) {
-        const isSelected = !this.getSelectBundle(id);
-        this.selected[id] = isSelected;
+    async selectBundleSpec(spec: any) {
+        const isSelected = !this.getSelectBundle(spec.id);
+        this.selected[spec.id] = isSelected;
+
+
         if (isSelected) {
-            this.addSalesLineItem(id);
+            if (spec.type === BundleType.PERSONAL) {
+                this.addSalesLineItem(spec.id);
+            }
+            if (spec.type === BundleType.COURSE) {
+                await this.openDialog(spec);
+            }
         } else {
-            this.deleteSalesLineItem(id);
+            this.deleteSalesLineItem(spec.id);
         }
 
     }
@@ -150,5 +162,43 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
             isSelected = this.selected[id];
         }
         return isSelected;
+    }
+
+    private async openDialog(spec) {
+        const [bundles, error] = await this.bundleService.searchBySpecIdAndNotExpired({specId: spec.id});
+        if (error) {
+            throw error;
+        }
+
+        const title = 'Scegli Edizione';
+
+        const dialogRef = this.dialog.open(BundleSelectModalComponent, {
+            data: {
+                title: title,
+                spec: spec,
+                sale: this.sale,
+                bundles: bundles,
+                selected: this.bundleSelected
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(res => {
+            console.log(res);
+            if (res) {
+                res.forEach((value, key, map) => {
+                    this.bundleSelected[key] = value;
+                });
+
+                let acc = false;
+                for (const key in res) {
+                    acc = acc || res[key];
+                }
+                this.selected[spec.id] = acc;
+            }
+            else {
+                this.selected[spec.id] = false;
+            }
+        });
+
     }
 }
