@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Sale} from '../../shared/model';
-import {SalesService} from '../controllers/sales.service';
+import {SalesService} from '../controllers';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
 import {GymService} from '../utilities';
@@ -25,8 +25,8 @@ export class SaleHelperService extends HelperService<Sale> {
         return this.service.addSalesLineItem(saleId, bundleId);
     }
 
-    deleteSalesLineItem(saleId: number, adminId: any) {
-        return this.service.deleteSalesLineItem(saleId, adminId);
+    deleteSalesLineItem(saleId: number, sliId: any) {
+        return this.service.deleteSalesLineItem(saleId, sliId);
     }
 
     confirmSale(id: number) {
@@ -78,12 +78,6 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     extract(res: Object): Sale[] {
-        let sales;
-        if (res['_embedded']) {
-            sales = res['_embedded']['sales'];
-        } else {
-            sales = res['content'];
-        }
-        return sales;
+        return res['content'];
     }
 }

@@ -23,19 +23,19 @@ public class GymController {
     private ObjectMapper objectMapper;
 
     @GetMapping("/{id}")
-    ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
+    public ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
         Gym gym = service.findById(id);
         return ResponseEntity.ok(new GymAssembler().toResource(gym));
     }
 
     @GetMapping
-    ResponseEntity<List<GymResource>> findGyms() {
+    public ResponseEntity<List<GymResource>> findGyms() {
         List<Gym> gym = service.findAll();
         return ResponseEntity.ok(new GymAssembler().toResources(gym));
     }
 
     @PatchMapping(path = "/{id}")
-    ResponseEntity<GymResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
+    public ResponseEntity<GymResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
         Gym gym = service.findById(id);
         gym = objectMapper.readerForUpdating(gym).readValue(request.getReader());
         gym = service.save(gym);

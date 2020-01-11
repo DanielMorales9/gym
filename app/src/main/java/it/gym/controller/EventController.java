@@ -29,7 +29,7 @@ public class EventController {
 
     @PostMapping(path = "/{gymId}/holiday")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<EventResource> createHoliday(@PathVariable Long gymId,
+    public ResponseEntity<EventResource> createHoliday(@PathVariable Long gymId,
                                                 @RequestBody Event event) {
         logger.info("Create holiday");
 
@@ -41,7 +41,7 @@ public class EventController {
 
     @DeleteMapping(path = "/holiday/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<EventResource> deleteHoliday(@PathVariable Long id) {
+    public ResponseEntity<EventResource> deleteHoliday(@PathVariable Long id) {
         logger.info("Deleting holiday");
 
         AEvent holiday = facade.delete(id);
@@ -52,7 +52,7 @@ public class EventController {
 
     @PatchMapping(path = "/{gymId}/holiday/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<EventResource> editHoliday(@PathVariable Long gymId,
+    public ResponseEntity<EventResource> editHoliday(@PathVariable Long gymId,
                                               @PathVariable Long id,
                                               @RequestBody Event event) {
         logger.info("Edit holiday");
@@ -64,7 +64,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/holiday/isAvailable")
-    ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
+    public ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
                                               @RequestBody Event event) {
         logger.info("is holiday available");
 
@@ -75,7 +75,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/canEdit")
-    ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
+    public ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
                                         @RequestBody Event event) {
         logger.info("canEdit event");
 
@@ -87,7 +87,7 @@ public class EventController {
 
 
     @PostMapping(path = "/{gymId}/timeOff")
-    ResponseEntity<EventResource> createTimeOff(@PathVariable Long gymId,
+    public ResponseEntity<EventResource> createTimeOff(@PathVariable Long gymId,
                                                 @RequestParam Long trainerId,
                                                 @RequestBody Event event) {
         logger.info("Create timeOff");
@@ -99,7 +99,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/course")
-    ResponseEntity<EventResource> createCourseEvent(@PathVariable Long gymId,
+    public ResponseEntity<EventResource> createCourseEvent(@PathVariable Long gymId,
                                                     @RequestBody Event event) {
         logger.info("Create course event");
 
@@ -110,7 +110,7 @@ public class EventController {
     }
 
     @DeleteMapping(path = "/course/{id}")
-    ResponseEntity<EventResource> deleteCourseEvent(@PathVariable Long id) {
+    public ResponseEntity<EventResource> deleteCourseEvent(@PathVariable Long id) {
         logger.info("Deleting course event");
 
         AEvent timeOff = facade.deleteCourseEvent(id);
@@ -120,7 +120,7 @@ public class EventController {
     }
 
     @DeleteMapping(path = "/timeOff/{id}")
-    ResponseEntity<EventResource> deleteTimeOff(@PathVariable Long id) {
+    public ResponseEntity<EventResource> deleteTimeOff(@PathVariable Long id) {
         logger.info("Deleting timeOff");
 
         AEvent timeOff = facade.delete(id);
@@ -131,7 +131,7 @@ public class EventController {
 
     @PatchMapping(path = "/{gymId}/timeOff/{id}")
     @PreAuthorize("hasAuthority('TRAINER')")
-    ResponseEntity<EventResource> editTimeOff(@PathVariable Long gymId,
+    public ResponseEntity<EventResource> editTimeOff(@PathVariable Long gymId,
                                               @PathVariable Long id,
                                               @RequestBody Event event) {
         logger.info("Edit TimeOff");
@@ -143,7 +143,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/timeOff/isAvailable")
-    ResponseEntity<String> isTimeOffAvailable(@PathVariable Long gymId,
+    public ResponseEntity<String> isTimeOffAvailable(@PathVariable Long gymId,
                                               @RequestBody Event event) {
         logger.info("isAvailable timeOff");
 
@@ -155,7 +155,7 @@ public class EventController {
 
     @GetMapping("/timeOff")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam
+    public ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam
                                                                            Long trainerId,
                                                                    @RequestParam(value = "startTime")
                                                                    @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -170,7 +170,7 @@ public class EventController {
 
     @GetMapping("/holiday")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllHolidaysByInterval(@RequestParam(value = "startTime")
+    public ResponseEntity<List<EventResource>> findAllHolidaysByInterval(@RequestParam(value = "startTime")
                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                   @RequestParam(value = "endTime")
@@ -183,7 +183,7 @@ public class EventController {
 
     @GetMapping("/personal")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findPersonalByInterval(@RequestParam Long customerId,
+    public ResponseEntity<List<EventResource>> findPersonalByInterval(@RequestParam Long customerId,
                                                                @RequestParam(value = "startTime")
                                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                        iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
@@ -197,7 +197,7 @@ public class EventController {
 
     @GetMapping("/training")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findTrainingByInterval(@RequestParam(value = "startTime")
+    public ResponseEntity<List<EventResource>> findTrainingByInterval(@RequestParam(value = "startTime")
                                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                        iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                @RequestParam(value = "endTime")
@@ -210,7 +210,7 @@ public class EventController {
 
     @GetMapping("/course")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllCoursesByInterval(@RequestParam(value = "startTime")
+    public ResponseEntity<List<EventResource>> findAllCoursesByInterval(@RequestParam(value = "startTime")
                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                  @RequestParam(value = "endTime")
@@ -223,7 +223,7 @@ public class EventController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
+    public ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
                                                                 @RequestParam(value = "endTime")
@@ -237,7 +237,7 @@ public class EventController {
     @GetMapping(path = "/{eventId}/complete")
     @ResponseBody
     @PreAuthorize("hasAuthority('TRAINER')")
-    ResponseEntity<EventResource> complete(@PathVariable Long eventId) {
+    public ResponseEntity<EventResource> complete(@PathVariable Long eventId) {
 
         logger.info("completing session");
         AEvent event = facade.complete(eventId);

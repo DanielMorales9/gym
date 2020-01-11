@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
+
 @Entity
 @DiscriminatorValue(value="C")
 @JsonTypeName("C")
@@ -27,9 +29,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Column(name = "end_time")
     private Date endTime;
 
-    @Column(name="max_customers")
-    private Integer maxCustomers;
-
     public Date getEndTime() {
         return endTime;
     }
@@ -44,14 +43,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
-    }
-
-    public Integer getMaxCustomers() {
-        return maxCustomers;
-    }
-
-    public void setMaxCustomers(Integer maxCustomers) {
-        this.maxCustomers = maxCustomers;
     }
 
     @Override
@@ -96,6 +87,12 @@ public class CourseTrainingBundle extends ATrainingBundle {
         }
 
         this.getSessions().add(session);
+    }
+
+    @Override
+    public void update() {
+        Integer num = ((CourseTrainingBundleSpecification) this.getBundleSpec()).getNumber();
+        setEndTime(addMonths(this.startTime, num));
     }
 
     @Override

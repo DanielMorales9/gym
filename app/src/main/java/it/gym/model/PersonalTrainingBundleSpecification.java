@@ -36,9 +36,6 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     @Override
     public ATrainingBundle createTrainingBundle() {
         PersonalTrainingBundle ptb = new PersonalTrainingBundle();
-        ptb.setNumSessions(numSessions);
-        ptb.setPrice(this.getPrice());
-        ptb.setDescription(this.getDescription());
         ptb.setName(this.getName());
         ptb.setBundleSpec(this);
         ptb.setExpired(false);

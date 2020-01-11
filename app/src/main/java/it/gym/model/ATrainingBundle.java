@@ -37,14 +37,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @Column(name="bundle_id")
     private Long id;
 
-    @Column(name = "description")
-    private String description;
-
     @Column(name = "name")
     private String name;
-
-    @Column(name = "price")
-    private Double price;
 
     @Column(name = "is_expired")
     private Boolean isExpired;
@@ -67,22 +61,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public abstract boolean isNotGroup();
     public abstract ATrainingSession createSession(Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
 
     public Long getId() {
         return id;
@@ -137,4 +115,5 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         this.createdAt = new Date();
     }
 
+    public abstract void update();
 }

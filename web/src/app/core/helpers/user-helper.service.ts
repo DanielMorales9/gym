@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {UserService} from '../controllers/users.service';
+import {UserService} from '../controllers';
 import {Role, User} from '../../shared/model';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
@@ -10,32 +10,10 @@ export class UserHelperService extends HelperService<User> {
     constructor(private service: UserService) {
         super();
     }
-
-    ROLE2INDEX = {
-        'ADMIN' : 1,
-        'TRAINER' : 2,
-        'CUSTOMER' : 3
-    };
-
-    TYPE2INDEX = {
-        'A': 1,
-        'T': 2,
-        'C': 3
-    };
-
     static getUserCreatedAt(user) {
         const date = new Date(user.createdAt);
         return date.toLocaleDateString();
     }
-
-    getHighestRole(user) {
-        if (user.type) {
-            return this.TYPE2INDEX[user.type];
-        } else {
-            return 3;
-        }
-    }
-
     get(page: number, size: number): Observable<Object> {
         return this.service.get(page, size);
     }

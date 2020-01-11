@@ -3,7 +3,6 @@ package it.gym.facade;
 import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.service.*;
-import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,6 +18,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Locale;
 
+import static it.gym.utility.Fixture.*;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -58,28 +58,28 @@ public class SaleFacadeTest {
     private SaleFacade saleFacade;
 
     @Test
-    public void createSale() {
+    public void whenCreateSale() {
         Mockito.doAnswer(invocationOnMock -> {
             Sale sale = invocationOnMock.getArgument(0);
             sale.setId(1L);
             return sale;
         }).when(saleService).save(any());
-        Mockito.doReturn(Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null)).when(userService).findById(2L);
-        Mockito.doReturn(Fixture.createGym(1L)).when(gymService).findById(1L);
+        Mockito.doReturn(createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null)).when(userService).findById(2L);
+        Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Sale sale = saleFacade.createSale(2L);
         assertThat(sale.getId()).isEqualTo(1L);
-        assertThat(sale.getCustomer()).isEqualTo(Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        assertThat(sale.getCustomer()).isEqualTo(createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
         assertThat(sale.getAmountPayed()).isEqualTo(0.);
     }
 
     @Test
     public void addSalesLineItem() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        ATrainingBundleSpecification mockBundleSpec = Fixture.createPersonalBundleSpec(1L, "personal");
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        ATrainingBundleSpecification mockBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
         mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItem(1L, 1L, 1);
+        Sale sale = saleFacade.addSalesLineItem(1L, 1L);
         assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
         assertThat(sale.getTotalPrice()).isEqualTo(111.0);
     }
@@ -87,41 +87,47 @@ public class SaleFacadeTest {
     @Test
     public void addCourseBundleToSalesLineItem() {
         Date start = getNextMonday();
-        Date end = addHours(start, 1);
 
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        ATrainingBundleSpecification mockBundleSpec = createMockCourseBundleSpec(start, end);
+        AUser customer = createCustomer(1L,
+                "customer@customer.com", "",
+                "customer", "customer", true, null);
+        Sale mockSale = createSale(1L, customer);
+        ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
+                "course", 11, 1);
+        ATrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec);
 
+        Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
-        ATrainingBundle bundle = mockBundleSpec.createTrainingBundle();
+
         mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItem(1L, 1L, 1);
+        Sale sale = saleFacade.addSalesLineItemByBundle(1L, 1L);
+
         assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
         assertThat(sale.getSalesLineItems().get(0).getTrainingBundle()).isEqualTo(bundle);
-
-        assertThat(sale.getTotalPrice()).isEqualTo(100.0);
+        assertThat(sale.getTotalPrice()).isEqualTo(111.0);
     }
 
     @Test
     public void addCourseBundleToSalesLineItemAlreadyCreated() {
         Date start = getNextMonday();
-        Date end = addHours(start, 1);
 
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        ATrainingBundleSpecification mockBundleSpec = createMockCourseBundleSpec(start, end);
+        AUser customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Sale mockSale = createSale(1L, customer);
 
+        ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
+                "course", 11, 1);
+        ATrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec);
+        Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
-        ATrainingBundle bundle = mockBundleSpec.createTrainingBundle();
-        Mockito.doReturn(Collections.singletonList(bundle)).when(bundleService).findBundlesBySpec(mockBundleSpec);
 
         mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItem(1L, 1L, 1);
+        Sale sale = saleFacade.addSalesLineItemByBundle(1L, 1L);
+
         assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
         assertThat(sale.getSalesLineItems().get(0).getTrainingBundle()).isEqualTo(bundle);
-
-        assertThat(sale.getTotalPrice()).isEqualTo(100.0);
+        assertThat(sale.getTotalPrice()).isEqualTo(111.0);
     }
 
     private static Date getNextMonday() {
@@ -135,24 +141,10 @@ public class SaleFacadeTest {
         return date.getTime();
     }
 
-    private ATrainingBundleSpecification createMockCourseBundleSpec(Date startTime, Date endTime) {
-        CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
-        spec.setMaxCustomers(11);
-        spec.setStartTime(startTime);
-        spec.setEndTime(endTime);
-        spec.setDescription("Description");
-        spec.setName("corso");
-        spec.setId(1L);
-        spec.setPrice(100.);
-        spec.setDisabled(false);
-        spec.setCreatedAt(new Date());
-        return spec;
-    }
-
     @Test
     public void confirmSale() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
         Sale sale = saleFacade.confirmSale(1L);
@@ -162,8 +154,8 @@ public class SaleFacadeTest {
 
     @Test
     public void deleteSalesLineItem() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        SalesLineItem mockSalesLineItem = addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        SalesLineItem mockSalesLineItem = addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockSalesLineItem).when(salesLineItemService).findById(1L);
         mockSaveMethod();
@@ -174,20 +166,20 @@ public class SaleFacadeTest {
 
     @Test
     public void deleteSaleById() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
-        Sale mockSale = Fixture.createSale(1L, customer);
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, customer);
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         saleFacade.deleteSaleById(1L);
     }
 
     @Test(expected = BadRequestException.class)
     public void deleteSaleByIdNonDeletable() {
-        Customer customer = (Customer) Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
-        Sale mockSale = Fixture.createSale(1L, customer);
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, customer);
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         ATrainingBundle trainingBundle = mockSale.getSalesLineItems().get(0).getTrainingBundle();
         ATrainingSession session = trainingBundle.createSession(addHours(new Date(), -2), addHours(new Date(), -1));
         trainingBundle.addSession(session);
@@ -198,8 +190,8 @@ public class SaleFacadeTest {
 
     @Test
     public void paySale() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         mockSale.setCompleted(true);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
@@ -209,8 +201,8 @@ public class SaleFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void paySaleNotCompleted() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
         Sale sale = saleFacade.paySale(1L, 11.);
@@ -218,8 +210,8 @@ public class SaleFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void paySaleMoreThanNeeded() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         mockSale.setCompleted(true);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
@@ -229,8 +221,8 @@ public class SaleFacadeTest {
 
     @Test
     public void paySaleExactlyWhatNeeded() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         mockSale.setCompleted(true);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
@@ -242,8 +234,8 @@ public class SaleFacadeTest {
 
     @Test
     public void getTotalPrice() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        addSalesLineItem(mockSale, Fixture.createPersonalBundleSpec(1L, "personal"));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Sale sale = saleFacade.getTotalPriceBySaleId(1L);
         assertThat(sale.getTotalPrice()).isEqualTo(111.0);
@@ -251,7 +243,7 @@ public class SaleFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void confirmSaleThrowsExceptionWhenEmptySale() {
-        Sale mockSale = Fixture.createSale(1L, Fixture.createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
+        Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         saleFacade.confirmSale(1L);
     }

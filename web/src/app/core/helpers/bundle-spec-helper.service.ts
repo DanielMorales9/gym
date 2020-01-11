@@ -2,12 +2,12 @@ import {Injectable} from '@angular/core';
 import {BundleSpecification} from '../../shared/model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
-import {BundlesNotDisabledService} from '../controllers/bundles-not-disabled.service';
+import {BundleSpecsService} from '../controllers';
 
 @Injectable()
-export class BundlePayHelperService extends HelperService<BundleSpecification> {
+export class BundleSpecHelperService extends HelperService<BundleSpecification> {
 
-    constructor(private service: BundlesNotDisabledService) {
+    constructor(private service: BundleSpecsService) {
         super();
     }
 
@@ -20,8 +20,7 @@ export class BundlePayHelperService extends HelperService<BundleSpecification> {
     }
 
     preProcessResources(resources: BundleSpecification[]): BundleSpecification[] {
-        resources = this.extract(resources);
-        return resources;
+        return this.extract(resources);
     }
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
@@ -35,12 +34,6 @@ export class BundlePayHelperService extends HelperService<BundleSpecification> {
     }
 
     extract(res: Object): BundleSpecification[] {
-        let bundles;
-        if (res['_embedded']) {
-            bundles = res['_embedded']['aTrainingBundleSpecifications'];
-        } else {
-            bundles = res['content'];
-        }
-        return bundles;
+        return res['content'];
     }
 }

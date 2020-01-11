@@ -1,5 +1,5 @@
-import {User} from "./user.class";
-import {SaleLineItem} from "./sale_line_item.class";
+import {User} from './user.class';
+import {SaleLineItem} from './sale_line_item.class';
 
 export class Sale {
 

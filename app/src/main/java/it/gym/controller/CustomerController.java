@@ -29,14 +29,14 @@ public class CustomerController {
     @GetMapping
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    Page<Customer> simpleSearch(Pageable pageable) {
+    public Page<Customer> simpleSearch(Pageable pageable) {
         return service.findAll(pageable);
     }
 
     @GetMapping(path = "/search")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    Page<Customer> searchByLastName(@RequestParam String query, Pageable pageable) {
+    public Page<Customer> searchByLastName(@RequestParam String query, Pageable pageable) {
         logger.info(String.format("Query: %s", query));
         return service.findByLastName(query, pageable);
     }

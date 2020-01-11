@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {BundleType} from '../../shared/model';
 
 
 @Component({
@@ -12,8 +13,8 @@ export class BundleSelectItemComponent {
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;
-    PERSONAL: 'P';
-    COURSE: 'C';
+    PERSONAL: BundleType.PERSONAL;
+    COURSE: BundleType.COURSE;
 
     constructor() {}
 

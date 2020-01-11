@@ -1,8 +1,6 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
-    BundleDetailsComponent,
-    BundleModalComponent,
     SalesComponent,
     UserDetailsComponent,
     UserItemComponent,
@@ -21,7 +19,7 @@ import {
     DeleteHolidayEventComponent,
     ReserveCourseEventComponent,
     DeleteReservationCourseEventComponent,
-    CustomerInfoModalComponent
+    CustomerInfoModalComponent, BundleSpecModalComponent, BundleSpecDetailsComponent, BundleModalComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -51,6 +49,8 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
 import {RouterModule} from '@angular/router';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {BundleDetailsComponent} from './components/bundles';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 @NgModule({
     imports: [
@@ -82,10 +82,11 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
     entryComponents: [
         UserModalComponent,
         PaySaleModalComponent,
-        BundleModalComponent,
+        BundleSpecModalComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        BundleModalComponent,
     ],
     declarations: [
         NoItemComponent,
@@ -107,7 +108,8 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleItemComponent,
         PaySaleModalComponent,
         SaleDetailsComponent,
-        BundleModalComponent,
+        BundleSpecModalComponent,
+        BundleSpecDetailsComponent,
         BundleDetailsComponent,
         SalesComponent,
         UsersComponent,
@@ -116,8 +118,11 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        BundleModalComponent,
+
     ],
     exports: [
+        BundleModalComponent,
         NoItemComponent,
         GymClosedComponent,
         InfoPersonalEventComponent,
@@ -136,14 +141,17 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
         SaleItemComponent,
         PaySaleModalComponent,
         SaleDetailsComponent,
-        BundleModalComponent,
+        BundleSpecModalComponent,
+        BundleSpecDetailsComponent,
         BundleDetailsComponent,
         SalesComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
     ],
-    providers: []
+    providers: [
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+    ]
 
 })
 export class SharedModule {

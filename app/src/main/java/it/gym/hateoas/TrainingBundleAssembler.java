@@ -2,7 +2,6 @@ package it.gym.hateoas;
 
 import it.gym.model.ATrainingBundle;
 import it.gym.repository.TrainingBundleRepository;
-import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -19,10 +18,6 @@ public class TrainingBundleAssembler extends ResourceAssemblerSupport<ATrainingB
         resource.add(linkTo(TrainingBundleRepository.class).slash("bundles")
                 .slash(bundle.getId()).withSelfRel());
 
-        TrainingBundleSpecificationResource res = new TrainingBundleSpecificationAssembler()
-                .toResource(bundle.getBundleSpec());
-        resource.setBundleSpecificationResource(res);
-        resource.setSessions(new Resources<>(new TrainingSessionAssembler().toResources(bundle.getSessions())));
         return resource;
     }
 }

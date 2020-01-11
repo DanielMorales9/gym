@@ -1,13 +1,11 @@
 package it.gym.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.ArrayList;
@@ -21,17 +19,6 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundle extends ATrainingBundle {
-
-    @Column(name="num_sessions")
-    private Integer numSessions;
-
-    public Integer getNumSessions() {
-        return numSessions;
-    }
-
-    public void setNumSessions(Integer numSessions) {
-        this.numSessions = numSessions;
-    }
 
     @Override
     public int compareTo(ATrainingBundle aTrainingBundle) {
@@ -51,7 +38,8 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     @Override
     public Boolean isExpired() {
         Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        return this.numSessions.equals(size);
+        PersonalTrainingBundleSpecification spec = ((PersonalTrainingBundleSpecification) this.getBundleSpec());
+        return spec.getNumSessions().equals(size);
     }
 
     @Override
@@ -81,6 +69,11 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         }
 
         this.getSessions().add(session);
+    }
+
+    @Override
+    public void update() {
+        // no need to call this method
     }
 
 }

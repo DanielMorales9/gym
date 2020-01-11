@@ -1,4 +1,4 @@
 export * from './admin.module';
-export * from './bundles';
+export * from './bundle-specs';
 export * from './calendar';
 export * from './sales';

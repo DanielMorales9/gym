@@ -26,6 +26,7 @@ import {
 } from '@angular/material';
 import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 @NgModule({
     declarations: [
@@ -71,10 +72,8 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
         SaleFacade,
         CalendarFacade,
         SpecFacade,
-        {
-            provide: ErrorHandler,
-            useClass: GlobalErrorHandler
-        }
+        { provide: ErrorHandler, useClass: GlobalErrorHandler },
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
     ],
     bootstrap: [AppComponent]
 })

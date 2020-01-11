@@ -14,3 +14,10 @@
 .sales-bundle-header {
     padding: 16px 16px 0 16px;
 }
+
+.divider {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}

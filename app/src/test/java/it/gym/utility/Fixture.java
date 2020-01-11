@@ -8,6 +8,8 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
+
 public class Fixture {
 
 
@@ -73,12 +75,12 @@ public class Fixture {
         return sale;
     }
 
-    public static ATrainingBundleSpecification createPersonalBundleSpec(long id, String name) {
+    public static ATrainingBundleSpecification createPersonalBundleSpec(long id, String name, int numSessions) {
         PersonalTrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
         specs.setId(id);
-        specs.setName("Bundle");
+        specs.setName(name);
         specs.setDescription("Description");
-        specs.setNumSessions(11);
+        specs.setNumSessions(numSessions);
         specs.setPrice(111.0);
         specs.setDisabled(false);
         return specs;
@@ -94,12 +96,10 @@ public class Fixture {
         return pt;
     }
 
-    public static ATrainingBundle createPersonalBundle(long id, int sessions) {
+    public static ATrainingBundle createPersonalBundle(long id, ATrainingBundleSpecification spec) {
         PersonalTrainingBundle pt = new PersonalTrainingBundle();
         pt.setName("Winter Pack");
-        pt.setNumSessions(sessions);
-        pt.setPrice(111.0);
-        pt.setDescription("Description");
+        pt.setBundleSpec(spec);
         pt.setId(id);
         return pt;
     }
@@ -195,28 +195,27 @@ public class Fixture {
         return list;
     }
 
-    public static ATrainingBundleSpecification createCourseBundleSpec(long l, String name, Date startTime, Date endTime) {
+    public static ATrainingBundleSpecification createCourseBundleSpec(long l, String name,
+                                                                      int maxCustomers, int number) {
         CourseTrainingBundleSpecification specs = new CourseTrainingBundleSpecification();
         specs.setDisabled(false);
         specs.setDescription("Description");
         specs.setId(l);
         specs.setName(name);
+        specs.setNumber(number);
         specs.setPrice(111.0);
-        specs.setMaxCustomers(1);
-        specs.setStartTime(startTime);
-        specs.setEndTime(endTime);
+        specs.setMaxCustomers(maxCustomers);
         return specs;
     }
 
-    public static ATrainingBundle createCourseBundle(long l, Date startTime, Date endTime, int customers) {
-            CourseTrainingBundle pt = new CourseTrainingBundle();
-            pt.setName("Winter Pack");
-            pt.setMaxCustomers(customers);
-            pt.setPrice(111.0);
-            pt.setEndTime(endTime);
-            pt.setStartTime(startTime);
-            pt.setDescription("Description");
-            pt.setId(l);
-            return pt;
+    public static ATrainingBundle createCourseBundle(long l, Date startTime,
+                                                     ATrainingBundleSpecification spec) {
+        CourseTrainingBundle pt = new CourseTrainingBundle();
+        pt.setName("Winter Pack");
+        pt.setStartTime(startTime);
+        pt.setEndTime(addMonths(startTime, ((CourseTrainingBundleSpecification) spec).getNumber()));
+        pt.setBundleSpec(spec);
+        pt.setId(l);
+        return pt;
     }
 }
