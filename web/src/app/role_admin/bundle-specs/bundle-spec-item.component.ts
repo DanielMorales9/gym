@@ -1,6 +1,8 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
+import {BundleType} from '../../shared/model';
+import {PolicyService} from '../../core/policy';
 
 
 @Component({
@@ -10,14 +12,18 @@ import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
 })
 export class BundleSpecItemComponent {
 
+    COURSE   = BundleType.COURSE;
+    PERSONAL = BundleType.PERSONAL;
+
     @Input() bundleSpec: any;
+    @Input() canDelete: boolean;
+    @Input() canDisable: boolean;
+    @Input() canShowEditions: boolean;
 
     @Output() done = new EventEmitter();
+    constructor(private dialog: MatDialog) {
+    }
 
-    PERSONAL = 'P';
-    COURSE   = 'C';
-
-    constructor(private dialog: MatDialog) {}
 
     openDialog(): void {
         const title = 'Modifica Pacchetto';
@@ -69,4 +75,5 @@ export class BundleSpecItemComponent {
     goToEditions() {
         this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
     }
+
 }

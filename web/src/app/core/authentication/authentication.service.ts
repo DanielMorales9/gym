@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 
-import {StorageService} from '../utilities/storage.service';
+import {StorageService} from '../utilities';
 import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';

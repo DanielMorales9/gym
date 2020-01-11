@@ -34,7 +34,6 @@ import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared';
 import {BundleSpecItemComponent, BundleSpecsComponent} from './bundle-specs';
 import {ACustomerCalendarComponent} from './customer-calendar';
-import {BundleItemComponent, BundlesComponent} from './bundles';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 
@@ -69,8 +68,6 @@ registerLocaleData(localeIt);
     ],
     declarations: [
         BundleSpecsComponent,
-        BundlesComponent,
-        BundleItemComponent,
         BundleSpecItemComponent,
         BundleSpecSelectItemComponent,
         BundleSelectItemComponent,

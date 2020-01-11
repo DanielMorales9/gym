@@ -6,6 +6,7 @@ import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
+import {PolicyService} from '../../core/policy';
 
 @Component({
     templateUrl: './bundle-specs.component.html',
@@ -20,12 +21,16 @@ export class BundleSpecsComponent implements OnInit {
 
     private pageSize = 10;
     ds: QueryableDatasource<BundleSpecification>;
+    canDelete: boolean;
+    canShowEditions: boolean;
+    canDisable: boolean;
 
     constructor(private service: BundleSpecsService,
                 private router: Router,
                 private dialog: MatDialog,
                 private helper: BundleSpecHelperService,
                 private activatedRoute: ActivatedRoute,
+                private policy: PolicyService,
                 private snackbar: SnackBarService) {
 
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
@@ -34,6 +39,10 @@ export class BundleSpecsComponent implements OnInit {
     ngOnInit(): void {
         this.query = this.activatedRoute.snapshot.queryParamMap.get('query') || undefined;
         this.search();
+
+        this.canDelete = this.policy.get('bundleSpec', 'canDelete');
+        this.canDisable = this.policy.get('bundleSpec', 'canDisable');
+        this.canShowEditions = this.policy.get('bundleSpec', 'canShow', 'editions')
     }
 
     private updateQueryParams() {

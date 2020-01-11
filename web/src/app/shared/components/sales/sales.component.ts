@@ -5,6 +5,7 @@ import {SalesService} from '../../../core/controllers';
 import {AuthenticationService} from '../../../core/authentication';
 import {SnackBarService} from '../../../core/utilities';
 import {SaleHelperService, QueryableDatasource} from '../../../core/helpers';
+import {PolicyService} from '../../../core/policy';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class SalesComponent implements OnInit {
                 private auth: AuthenticationService,
                 private router: Router,
                 private route: ActivatedRoute,
+                private policy: PolicyService,
                 private snackbar: SnackBarService) {
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
@@ -39,15 +41,10 @@ export class SalesComponent implements OnInit {
 
     ngOnInit(): void {
         const path = this.route.parent.parent.snapshot.routeConfig.path;
-        switch (path) {
-            case 'admin':
-                this.mixed = this.canDelete = this.canPay = true;
-                break;
-            case 'customer':
-                this.mixed = this.canDelete = this.canPay = false;
-                this.id = this.auth.getUser().id;
-                break;
-        }
+        this.canDelete = this.policy.get('sale', 'canDelete');
+        this.canPay = this.policy.get('sale', 'canPay');
+        this.mixed = this.canDelete;
+
         this.initQueryParams(this.id);
     }
 

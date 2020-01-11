@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {BundleSpecification} from '../../shared/model';
 import {ABundleService} from './abundle.service';
+import {to_promise} from '../functions/decorators';
 
 @Injectable()
 export class BundleSpecsService extends ABundleService {
@@ -35,7 +36,8 @@ export class BundleSpecsService extends ABundleService {
         return this.http.delete(`/bundleSpecs/${id}`);
     }
 
-    findById(id: number) {
+    @to_promise
+    findById(id: number): any {
         return this.http.get(`/bundleSpecs/${id}`);
     }
 }

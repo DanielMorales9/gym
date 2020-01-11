@@ -7,8 +7,7 @@ import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
 import {UserDetailsComponent, UsersComponent} from '../shared/components/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
-import {BundlesComponent} from './bundles';
-import {BundleDetailsComponent} from '../shared/components/bundles';
+import {BundleDetailsComponent, BundlesComponent} from '../shared/components/bundles';
 
 const routes = [
 

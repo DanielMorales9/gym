@@ -22,6 +22,7 @@ import {
     UserHelperService,
     BundleHelperService,
 } from './helpers';
+import {PolicyService} from './policy';
 
 
 @NgModule({
@@ -67,6 +68,7 @@ import {
         BundleSpecHelperService,
         BundleHelperService,
         BundleSpecPayHelperService,
+        PolicyService
     ]
 })
 export class CoreModule {

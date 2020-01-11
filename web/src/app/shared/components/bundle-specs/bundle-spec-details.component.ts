@@ -1,10 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../../core/controllers';
-import {BundleSpecification} from '../../model';
+import {BundleSpecification, BundleType} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {SpecFacade} from '../../../services';
+import {PolicyService} from '../../../core/policy';
 
 @Component({
     selector: 'bundle-spec-details',
@@ -12,29 +12,34 @@ import {SpecFacade} from '../../../services';
     styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
 })
 export class BundleSpecDetailsComponent implements OnInit {
+    PERSONAL = BundleType.PERSONAL;
+    COURSE   = BundleType.COURSE;
 
     bundleSpec: any;
+
     canDelete: boolean;
     canDisable: boolean;
-    canEdit: boolean;
-
-    PERSONAL = 'P';
-    COURSE   = 'C';
+    canShowEditions: boolean;
 
     constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
                 private router: Router,
-                private facade: SpecFacade,
+                private policy: PolicyService,
                 private route: ActivatedRoute) {
-        this.canDelete = facade.canDelete();
-        this.canEdit = facade.canEdit();
-        this.canDisable = facade.canDisable();
     }
 
     ngOnInit(): void {
-        this.route.params.subscribe(params => {
-            this.getBundle(+params['id']);
+        this.route.params.subscribe(async params => {
+            await this.getBundleSpec(+params['id']);
+            this.getPolicies();
         });
+    }
+
+    private getPolicies() {
+        this.canDelete = this.policy.get('bundleSpec', 'canDelete');
+        this.canDisable = this.policy.get('bundleSpec', 'canDisable');
+        this.canShowEditions = this.policy.get('bundleSpec', 'canShow', 'editions')
+            && this.bundleSpec.type === 'C';
     }
 
     editBundle(): void {
@@ -66,10 +71,10 @@ export class BundleSpecDetailsComponent implements OnInit {
         this.service.patch(this.bundleSpec);
     }
 
-    private getBundle(id: number) {
-        this.service.findById(id).subscribe((res: BundleSpecification) => {
-            this.bundleSpec = res;
-        });
+    private async getBundleSpec(id: number) {
+        const [data, error] = await this.service.findById(id);
+        if (error) { throw error; }
+        this.bundleSpec = data;
     }
 
     getBundleType() {

@@ -1,16 +1,16 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Bundle} from '../../shared/model';
-import {BundleService} from '../../core/controllers';
+import {Bundle} from '../../model';
+import {BundleService} from '../../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SnackBarService} from '../../core/utilities';
-import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
+import {SnackBarService} from '../../../core/utilities';
+import {BundleHelperService, QueryableDatasource} from '../../../core/helpers';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {BundleModalComponent} from '../../shared/components/bundles/bundle-modal.component';
+import {BundleModalComponent} from './bundle-modal.component';
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
 export class BundlesComponent implements OnInit, OnDestroy {
 

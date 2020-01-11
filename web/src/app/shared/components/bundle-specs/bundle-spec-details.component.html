@@ -39,7 +39,7 @@
 
         </mat-card-content>
         <mat-card-actions>
-            <ng-container *ngIf="bundleSpec?.type=='C'">
+            <ng-container *ngIf="canShowEditions">
                 <button mat-button (click)="goToEditions()">
                 <span>
                     <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Edizioni

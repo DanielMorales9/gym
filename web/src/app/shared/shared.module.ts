@@ -19,7 +19,12 @@ import {
     DeleteHolidayEventComponent,
     ReserveCourseEventComponent,
     DeleteReservationCourseEventComponent,
-    CustomerInfoModalComponent, BundleSpecModalComponent, BundleSpecDetailsComponent, BundleModalComponent
+    CustomerInfoModalComponent,
+    BundleSpecModalComponent,
+    BundleSpecDetailsComponent,
+    BundleModalComponent,
+    BundlesComponent,
+    BundleItemComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -119,7 +124,8 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
-
+        BundlesComponent,
+        BundleItemComponent,
     ],
     exports: [
         BundleModalComponent,
@@ -144,6 +150,8 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         BundleSpecModalComponent,
         BundleSpecDetailsComponent,
         BundleDetailsComponent,
+        BundlesComponent,
+        BundleItemComponent,
         SalesComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
