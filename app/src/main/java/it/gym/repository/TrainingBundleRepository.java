@@ -14,4 +14,5 @@ public interface TrainingBundleRepository extends JpaRepository<ATrainingBundle,
 
     List<ATrainingBundle> findATrainingBundleByBundleSpec(ATrainingBundleSpecification spec);
     Page<ATrainingBundle> findATrainingBundleByBundleSpec_Id(Long id, Pageable pageable);
+    List<ATrainingBundle> findATrainingBundleByBundleSpec_Id(Long id);
 }

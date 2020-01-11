@@ -19,7 +19,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {BundleSelectItemComponent, CreateSaleComponent} from './sales';
+import {BundleSelectItemComponent, BundleSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -72,6 +72,7 @@ registerLocaleData(localeIt);
         BundlesComponent,
         BundleItemComponent,
         BundleSpecItemComponent,
+        BundleSpecSelectItemComponent,
         BundleSelectItemComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
@@ -81,6 +82,7 @@ registerLocaleData(localeIt);
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
         ACustomerCalendarComponent,
+        BundleSelectModalComponent
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
@@ -95,6 +97,7 @@ registerLocaleData(localeIt);
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
+        BundleSelectModalComponent
     ]
 })
 export class AdminModule { }

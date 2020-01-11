@@ -1,10 +1,7 @@
 package it.gym.controller;
 
 import it.gym.facade.TrainingBundleFacade;
-import it.gym.hateoas.TrainingBundleAssembler;
-import it.gym.hateoas.TrainingBundleResource;
-import it.gym.hateoas.TrainingBundleSpecificationAssembler;
-import it.gym.hateoas.TrainingBundleSpecificationResource;
+import it.gym.hateoas.*;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.CourseTrainingBundle;
 import it.gym.pojo.CourseBundle;
@@ -69,6 +66,13 @@ public class TrainingBundleController {
     @ResponseBody
     public Page<ATrainingBundle> findBySpecs(@RequestParam Long specId, Pageable pageable) {
         return service.findBundlesBySpecId(specId, pageable);
+    }
+
+    @GetMapping("/searchNotExpired")
+    @ResponseBody
+    public ResponseEntity<List<TrainingBundleResource>> findBySpecsNotExpired(@RequestParam Long specId) {
+        List<ATrainingBundle> bundles = service.findBundlesBySpecIdNotExpired(specId);
+        return ResponseEntity.ok(new TrainingBundleAssembler().toResources(bundles));
     }
 
     @PatchMapping(path = "/{id}")

@@ -65,4 +65,8 @@ export class SalesService {
         const endpoint = `/sales/searchByLastNameAndDate?lastName=${lastName}&date=${date}&page=${page}&size=${size}&sort=createdAt,asc`;
         return this.http.get(endpoint);
     }
+
+    addSalesLineItemByBundle(saleId: number, bundleId: number): Observable<Object> {
+        return this.http.get(`/sales/addSalesLineItemByBundle/${saleId}/${bundleId}`);
+    }
 }

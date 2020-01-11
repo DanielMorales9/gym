@@ -3,13 +3,13 @@ import {BundleType} from '../../shared/model';
 
 
 @Component({
-    selector: 'bundle-select-item',
-    templateUrl: './bundle-select-item.component.html',
+    selector: 'bundle-spec-select-item',
+    templateUrl: './bundle-spec-select-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css']
 })
-export class BundleSelectItemComponent {
+export class BundleSpecSelectItemComponent {
 
-    @Input() bundle: any;
+    @Input() spec: any;
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;

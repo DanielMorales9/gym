@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TrainingBundleService implements ICrudService<ATrainingBundle, Long> {
@@ -59,4 +60,8 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         this.repository.deleteAll(bundles);
     }
 
+    public List<ATrainingBundle> findBundlesBySpecIdNotExpired(Long specId) {
+        return repository.findATrainingBundleByBundleSpec_Id(specId).stream()
+                .filter(bundle -> !bundle.isExpired()).collect(Collectors.toList());
+    }
 }

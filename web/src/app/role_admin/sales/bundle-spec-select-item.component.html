@@ -1,8 +1,11 @@
 <mat-card>
     <mat-card-header>
         <mat-card-title>
-            {{bundle?.name || 'Loading...'}}
+            {{spec?.name || 'Loading...'}}
         </mat-card-title>
+        <mat-card-subtitle class="card-list-subtitle">
+            {{spec?.description || 'Loading...'}}
+        </mat-card-subtitle>
         <mat-checkbox class="card-list-checkbox"
                       (change)="selectBundle()"
                       [checked]="selected">
@@ -11,8 +14,7 @@
     <mat-card-content>
         <div class="card-list-content">
             <div>
-                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>Periodo&nbsp;&nbsp;
-                {{bundle?.startTime| date: 'dd/MM/yyyy'}} - {{bundle?.endTime| date: 'dd/MM/yyyy'}}
+                <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{spec?.price}}
             </div>
         </div>
     </mat-card-content>

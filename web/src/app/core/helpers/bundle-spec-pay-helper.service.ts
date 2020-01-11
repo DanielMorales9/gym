@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {BundleSpecification} from '../../shared/model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
-import {BundlesNotDisabledService} from '../controllers/bundles-not-disabled.service';
+import {BundlesNotDisabledService} from '../controllers';
 
 @Injectable()
-export class BundlePayHelperService extends HelperService<BundleSpecification> {
+export class BundleSpecPayHelperService extends HelperService<BundleSpecification> {
 
     constructor(private service: BundlesNotDisabledService) {
         super();
@@ -35,12 +35,6 @@ export class BundlePayHelperService extends HelperService<BundleSpecification> {
     }
 
     extract(res: Object): BundleSpecification[] {
-        let bundles;
-        if (res['_embedded']) {
-            bundles = res['_embedded']['aTrainingBundleSpecifications'];
-        } else {
-            bundles = res['content'];
-        }
-        return bundles;
+        return res['content'];
     }
 }

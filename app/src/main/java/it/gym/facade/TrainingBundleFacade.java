@@ -100,4 +100,8 @@ public class TrainingBundleFacade {
         }
         return service.save(bundle);
     }
+
+    public List<ATrainingBundle> findBundlesBySpecIdNotExpired(Long specId) {
+        return service.findBundlesBySpecIdNotExpired(specId);
+    }
 }
