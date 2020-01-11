@@ -31,10 +31,10 @@ import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
-import {BundleSpecModalComponent, SharedModule} from '../shared';
+import {SharedModule} from '../shared';
 import {BundleSpecItemComponent, BundleSpecsComponent} from './bundle-specs';
 import {ACustomerCalendarComponent} from './customer-calendar';
-import {BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
+import {BundleItemComponent, BundlesComponent} from './bundles';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 
@@ -72,7 +72,6 @@ registerLocaleData(localeIt);
         BundlesComponent,
         BundleItemComponent,
         BundleSpecItemComponent,
-        BundleModalComponent,
         BundleSelectItemComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
@@ -96,7 +95,6 @@ registerLocaleData(localeIt);
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
-        BundleModalComponent,
     ]
 })
 export class AdminModule { }

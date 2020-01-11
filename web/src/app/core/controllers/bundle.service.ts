@@ -24,7 +24,8 @@ export class BundleService {
         return this.http.get(`/bundles/courses?startTime=${startTime}&endTime=${endTime}`);
     }
 
-    findById(id: number) {
+    @to_promise
+    findById(id: number): any {
         return this.http.get(`/bundles/${id}`);
     }
 

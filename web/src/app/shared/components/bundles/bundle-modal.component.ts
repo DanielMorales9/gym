@@ -1,12 +1,12 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {CourseBundle} from '../../shared/model';
+import {CourseBundle} from '../../model';
 
 @Component({
     selector: 'bundle-spec-modal',
     templateUrl: './bundle-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../../styles/root.css']
 })
 export class BundleModalComponent implements OnInit {
 

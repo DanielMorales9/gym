@@ -6,7 +6,7 @@ import {SnackBarService} from '../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
-import {BundleModalComponent} from './bundle-modal.component';
+import {BundleModalComponent} from '../../shared/components/bundles/bundle-modal.component';
 
 @Component({
     templateUrl: './bundles.component.html',
