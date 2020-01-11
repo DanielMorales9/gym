@@ -2,7 +2,6 @@ package it.gym.facade;
 
 import it.gym.exception.BadRequestException;
 import it.gym.exception.ConflictException;
-import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.service.*;
 import org.slf4j.Logger;
