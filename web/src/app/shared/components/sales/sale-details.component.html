@@ -36,10 +36,15 @@
                             <a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">
                             {{l?.bundleSpecification?.name || 'Loading...'}}
                             </a>
+                            &nbsp;-&nbsp;
+                            <a (click)="goToBundleDetails(l?.trainingBundle?.id)">
+                            {{l?.trainingBundle?.name || 'Loading...'}}
+                        </a>
                         </div>
                         <div>{{l?.bundleSpecification.price}}&euro;</div>
                         </div>
                     </mat-list-item>
+                    <span layout="row"><hr class="divider" flex/></span>
                 </mat-list>
             </div>
         </mat-card-content>
