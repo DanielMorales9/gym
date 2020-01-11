@@ -1,6 +1,7 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {CourseBundle} from '../../shared/model';
 
 @Component({
     selector: 'bundle-spec-modal',
@@ -9,23 +10,27 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class BundleModalComponent implements OnInit {
 
-    specId: any;
+    bundle: any;
     form: FormGroup;
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<BundleModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.specId = this.data.specId;
+        this.bundle = this.data.bundle;
     }
 
     ngOnInit(): void {
-        this.buildForm();
+        const hasBundle = !!this.bundle;
+        if (!hasBundle) {
+            this.bundle = new CourseBundle();
+        }
+        this.buildForm(hasBundle);
     }
 
-    private buildForm() {
+    private buildForm(hasBundle) {
         this.form = new FormGroup({
-            name: new FormControl('', Validators.required),
-            startTime: new FormControl('', Validators.required),
+            name: new FormControl(this.bundle.name, Validators.required),
+            startTime: new FormControl(new Date(this.bundle.startTime)),
         });
 
     }
@@ -39,10 +44,13 @@ export class BundleModalComponent implements OnInit {
     }
 
     submit() {
-        this.dialogRef.close({
-            specId: this.specId,
-            name: this.name.value,
-            startTime: this.startTime.value
-        });
+        const bundle = this.getBundle();
+        this.dialogRef.close(bundle);
+    }
+
+    private getBundle() {
+        this.bundle.name = this.name.value;
+        this.bundle.startTime = this.startTime.value;
+        return this.bundle;
     }
 }

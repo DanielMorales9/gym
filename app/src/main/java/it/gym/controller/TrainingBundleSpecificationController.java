@@ -28,26 +28,26 @@ public class TrainingBundleSpecificationController {
     private ObjectMapper objectMapper;
 
     @DeleteMapping("/{id}")
-    ResponseEntity<TrainingBundleSpecificationResource> delete(@PathVariable Long id) {
+    public ResponseEntity<TrainingBundleSpecificationResource> delete(@PathVariable Long id) {
         ATrainingBundleSpecification specs = facade.findById(id);
         facade.delete(specs);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(specs));
     }
 
     @GetMapping(path = "/{id}")
-    ResponseEntity<TrainingBundleSpecificationResource> findById(@PathVariable Long id) {
+    public ResponseEntity<TrainingBundleSpecificationResource> findById(@PathVariable Long id) {
         ATrainingBundleSpecification spec = facade.findById(id);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
     }
 
     @PostMapping
-    ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
+    public ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
         spec = facade.createTrainingBundleSpecification(spec);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
     }
 
     @PatchMapping(path = "/{id}")
-    ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
+    public ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
                                                               HttpServletRequest request) throws IOException {
         ATrainingBundleSpecification spec = facade.findById(id);
         spec = objectMapper.readerForUpdating(spec).readValue(request.getReader());
@@ -57,25 +57,25 @@ public class TrainingBundleSpecificationController {
 
     @GetMapping
     @ResponseBody
-    Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
+    public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
         return facade.findAll(pageable);
     }
 
     @GetMapping(path = "/search")
     @ResponseBody
-    Page<ATrainingBundleSpecification> search(@RequestParam String query, Pageable pageable) {
+    public Page<ATrainingBundleSpecification> search(@RequestParam String query, Pageable pageable) {
         return facade.findByNameContains(query, pageable);
     }
 
     @GetMapping(path = "/searchNotDisabled")
     @ResponseBody
-    Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
+    public Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
         return facade.findByNameContainsAndIsDisabled(query, false, pageable);
     }
 
     @GetMapping(path = "/getNotDisabled")
     @ResponseBody
-    Page<ATrainingBundleSpecification> getNotDisabled(Pageable pageable) {
+    public Page<ATrainingBundleSpecification> getNotDisabled(Pageable pageable) {
         return facade.findByIsDisabled(false, pageable);
     }
 }

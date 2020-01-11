@@ -1,5 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
+import {BundleType} from '../../shared/model';
+import {BundleModalComponent} from './bundle-modal.component';
 
 
 @Component({
@@ -13,27 +15,10 @@ export class BundleItemComponent {
 
     @Output() done = new EventEmitter();
 
-    PERSONAL = 'P';
-    COURSE   = 'C';
+    PERSONAL = BundleType.PERSONAL;
+    COURSE   = BundleType.COURSE;
 
     constructor(private dialog: MatDialog) {}
-
-    // openDialog(): void {
-    //     const title = 'Modifica Pacchetto';
-    //
-    //     const dialogRef = this.dialog.open(BundleModalComponent, {
-    //         data: {
-    //             title: title,
-    //             bundle: this.bundle
-    //         }
-    //     });
-    //
-    //     dialogRef.afterClosed().subscribe(res => {
-    //         if (res) {
-    //             this.done.emit({type: 'put', bundle: res});
-    //         }
-    //     });
-    // }
 
     getBundleType() {
         const defaultName = 'Allenamento Personale';
@@ -59,5 +44,24 @@ export class BundleItemComponent {
 
     delete() {
         this.done.emit({type: 'delete', bundle: this.bundle});
+    }
+
+    edit() {
+        const title = 'Modifica Pacchetto';
+
+        const dialogRef = this.dialog.open(BundleModalComponent, {
+            data: {
+                title: title,
+                bundle: this.bundle
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(res => {
+            console.log(res);
+            if (res) {
+                this.done.emit({type: 'edit', bundle: res});
+            }
+        });
+
     }
 }

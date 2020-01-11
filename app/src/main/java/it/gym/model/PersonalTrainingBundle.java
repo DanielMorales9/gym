@@ -73,4 +73,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         this.getSessions().add(session);
     }
 
+    @Override
+    public void update() { }
+
 }

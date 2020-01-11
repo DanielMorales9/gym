@@ -36,6 +36,7 @@ import {BundleSpecItemComponent, BundleSpecsComponent} from './bundle-specs';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {BundleItemComponent, BundleModalComponent, BundlesComponent} from './bundles';
 import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 registerLocaleData(localeIt);
 
@@ -83,7 +84,8 @@ registerLocaleData(localeIt);
         ACustomerCalendarComponent,
     ],
     providers: [
-        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
     ],
     exports: [
         BundleSpecItemComponent,

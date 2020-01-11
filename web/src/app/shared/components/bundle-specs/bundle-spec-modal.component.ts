@@ -11,7 +11,7 @@ import {timeValidator} from '../../../core/functions';
 })
 export class BundleSpecModalComponent implements OnInit {
 
-    bundle: any;
+    bundleSpec: any;
     form: FormGroup;
     showPersonal: boolean;
     showCourse: boolean;
@@ -19,15 +19,15 @@ export class BundleSpecModalComponent implements OnInit {
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<BundleSpecModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.bundle = this.data.bundle;
+        this.bundleSpec = this.data.bundle;
     }
 
     ngOnInit(): void {
-        const hasBundle = !!this.bundle;
+        const hasBundle = !!this.bundleSpec;
         if (!hasBundle) {
-            this.bundle = new PersonalBundleSpecification();
+            this.bundleSpec = new PersonalBundleSpecification();
         }
-        if (this.bundle.type === BundleSpecificationType.PERSONAL) {
+        if (this.bundleSpec.type === BundleSpecificationType.PERSONAL) {
             this.showCourse = false;
             this.showPersonal = true;
         }
@@ -40,40 +40,40 @@ export class BundleSpecModalComponent implements OnInit {
     }
 
     private buildForm(hasBundle: boolean) {
-        console.log(this.bundle);
+        console.log(this.bundleSpec);
         this.form = new FormGroup({
-            name: new FormControl(this.bundle.name, Validators.required),
-            price: new FormControl(this.bundle.price, [
+            name: new FormControl(this.bundleSpec.name, Validators.required),
+            price: new FormControl(this.bundleSpec.price, [
                 Validators.required,
                 Validators.pattern(/^\d+\.?\d{0,2}$/)
             ]),
-            description: new FormControl(this.bundle.description, Validators.required),
+            description: new FormControl(this.bundleSpec.description, Validators.required),
             type: new FormControl({
-                value: this.bundle.type,
+                value: this.bundleSpec.type,
                 disabled: hasBundle,
             }, Validators.required),
             startTime: new FormControl({
-                value: new Date(this.bundle.startTime),
-                disabled: this.bundle.type !== BundleSpecificationType.COURSE
+                value: new Date(this.bundleSpec.startTime),
+                disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
             },  [
                 Validators.required
             ]),
             endTime: new FormControl({
-                value: new Date(this.bundle.endTime),
-                disabled: this.bundle.type !== BundleSpecificationType.COURSE
+                value: new Date(this.bundleSpec.endTime),
+                disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
             },  [
                 Validators.required,
             ]),
             maxCustomers: new FormControl({
-                value: this.bundle.maxCustomers,
-                disabled: this.bundle.type !== BundleSpecificationType.COURSE
+                value: this.bundleSpec.maxCustomers,
+                disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
             }, [
                 Validators.required,
                 Validators.min(2)
             ]),
             numSessions: new FormControl({
-                value: this.bundle.numSessions,
-                disabled: this.bundle.type !== BundleSpecificationType.PERSONAL
+                value: this.bundleSpec.numSessions,
+                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL
             }, [
                 Validators.required,
                 Validators.pattern(/^\d+$/)
@@ -155,12 +155,12 @@ export class BundleSpecModalComponent implements OnInit {
             bundle.endTime = this.endTime.value;
         }
 
-        bundle.id = this.bundle.id;
+        bundle.id = this.bundleSpec.id;
         bundle.name = this.name.value;
         bundle.price = this.price.value;
         bundle.description = this.description.value;
         bundle.type = this.type.value;
-        bundle.disabled = (this.bundle.disabled !== undefined) ? this.bundle.disabled : false;
+        bundle.disabled = (this.bundleSpec.disabled !== undefined) ? this.bundleSpec.disabled : false;
         return bundle;
     }
 }

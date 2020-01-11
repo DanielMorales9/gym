@@ -29,12 +29,12 @@ public class UserController {
 
     @GetMapping
     @ResponseBody
-    Page<AUser> get(Pageable pageable) {
+    public Page<AUser> get(Pageable pageable) {
         return facade.findAll(pageable);
     }
 
     @GetMapping(path = "/{id}")
-    ResponseEntity<AUserResource> get(@PathVariable Long id) {
+    public ResponseEntity<AUserResource> get(@PathVariable Long id) {
         AUser user = facade.findById(id);
         return ResponseEntity.ok(new AUserAssembler().toResource(user));
     }
@@ -48,13 +48,13 @@ public class UserController {
 
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
-    ResponseEntity<AUserResource> delete(@PathVariable Long id) {
+    public ResponseEntity<AUserResource> delete(@PathVariable Long id) {
         AUser user = facade.delete(id);
         return ResponseEntity.ok(new AUserAssembler().toResource(user));
     }
 
     @PatchMapping(path = "/{id}")
-    ResponseEntity<AUserResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
+    public ResponseEntity<AUserResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
         AUser u = facade.findById(id);
         u = objectMapper.readerForUpdating(u).readValue(request.getReader());
         u = facade.save(u);
@@ -62,7 +62,7 @@ public class UserController {
     }
 
     @GetMapping(path = "/findByEmail")
-    ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
+    public ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         AUser user = facade.findByEmail(email);
         return ResponseEntity.ok(new AUserAssembler().toResource(user));
     }
@@ -70,7 +70,7 @@ public class UserController {
     @GetMapping(path = "/search")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    Page<AUser> searchByLastName(@RequestParam String query, Pageable pageable) {
+    public Page<AUser> searchByLastName(@RequestParam String query, Pageable pageable) {
         return facade.findByLastName(query, pageable);
     }
 

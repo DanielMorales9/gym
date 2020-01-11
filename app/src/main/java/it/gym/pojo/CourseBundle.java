@@ -7,9 +7,6 @@ public class CourseBundle {
     private Date startTime;
     private Long specId;
 
-    public CourseBundle() {
-    }
-
     public Date getStartTime() {
         return startTime;
     }

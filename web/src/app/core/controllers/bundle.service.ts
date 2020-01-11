@@ -37,4 +37,9 @@ export class BundleService {
     delete(id: number): any {
         return this.http.delete(`/bundles/${id}`);
     }
+
+    @to_promise
+    patch(bundle: any): any {
+        return this.http.patch(`/bundles/${bundle.id}`, bundle);
+    }
 }

@@ -22,6 +22,7 @@ import {
     TrainerInfoModalComponent
 } from './calendar';
 import localeIt from '@angular/common/locales/it';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 registerLocaleData(localeIt);
 
@@ -54,7 +55,8 @@ registerLocaleData(localeIt);
         TrainerInfoModalComponent
     ],
     providers: [
-        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
     ],
     exports: [
     ],

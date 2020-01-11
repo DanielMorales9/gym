@@ -10,6 +10,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
 
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
+
 @Entity
 @DiscriminatorValue(value="C")
 @JsonTypeName("C")
@@ -85,6 +87,12 @@ public class CourseTrainingBundle extends ATrainingBundle {
         }
 
         this.getSessions().add(session);
+    }
+
+    @Override
+    public void update() {
+        Integer num = ((CourseTrainingBundleSpecification) this.getBundleSpec()).getNumber();
+        setEndTime(addMonths(this.startTime, num));
     }
 
     @Override

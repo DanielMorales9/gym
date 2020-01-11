@@ -18,6 +18,7 @@ import {CustomerRouting} from './customer.routing';
 import {CustomerCalendarComponent} from './calendar';
 import localeIt from '@angular/common/locales/it';
 import {ScrollingModule} from '@angular/cdk/scrolling';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 registerLocaleData(localeIt);
 
@@ -47,7 +48,8 @@ registerLocaleData(localeIt);
         CustomerCalendarComponent
     ],
     providers: [
-        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'}
+        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
     ],
     exports: [],
     entryComponents: []

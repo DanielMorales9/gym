@@ -55,13 +55,16 @@ export class BundlesComponent implements OnInit, OnDestroy {
         this.ds.fetchPage(0);
     }
 
-    handleEvent($event) {
+    async handleEvent($event) {
         switch ($event.type) {
             case 'info':
                 this.goToDetails($event.bundle);
                 break;
             case 'delete':
-                this.delete($event.bundle);
+                await this.delete($event.bundle);
+                break;
+            case 'edit':
+                await this.edit($event.bundle);
                 break;
             default:
                 console.error(`Operazione non riconosciuta: ${$event.type}`);
@@ -86,18 +89,23 @@ export class BundlesComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(BundleModalComponent, {
             data: {
                 title: title,
-                specId: this.specId
             }
         });
 
-        dialogRef.afterClosed().subscribe(params => {
-            if (params) { this.createCourseBundle(params); }
+        dialogRef.afterClosed().subscribe(async params => {
+            if (params) {
+                if (!!this.specId) {
+                    params['specId'] = this.specId;
+                }
+                this.createCourseBundle(params);
+            }
         });
     }
 
     search($event?) {
         // TODO search feature
         this.snackbar.open('Questa funzione sarà disponibile a breve');
+
         // if ($event) {
         //     this.query = $event.query;
         // }
@@ -110,8 +118,8 @@ export class BundlesComponent implements OnInit, OnDestroy {
         this.sub.unsubscribe();
     }
 
-    private goToDetails(bundle: any) {
-        this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent})
+    private async goToDetails(bundle: any) {
+        await this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent})
     }
 
     private async createCourseBundle(params: any) {
@@ -124,6 +132,14 @@ export class BundlesComponent implements OnInit, OnDestroy {
 
     private async delete(bundle: any) {
         const [data, error] = await this.service.delete(bundle.id);
+        if (error) {
+            throw error;
+        }
+        this.get(this.copyQuery);
+    }
+
+    private async edit(bundle: any) {
+        const [data, error] = await this.service.patch(bundle);
         if (error) {
             throw error;
         }

@@ -50,13 +50,6 @@
                 <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
             </span>
         </button>
-        <ng-container *ngIf="bundleSpec?.type=='C'">
-            <button mat-button (click)="goToEditions()">
-                <span>
-                    <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Edizioni
-                </span>
-            </button>
-        </ng-container>
         <button mat-button color="accent" (click)="toggleDisabled()">
             <span *ngIf="bundleSpec?.disabled">
                 <mat-icon fontSet="fa" fontIcon="fa-check"></mat-icon>&nbsp;Abilita
@@ -65,6 +58,13 @@
                 <mat-icon fontSet="fa" fontIcon="fa-ban"></mat-icon>&nbsp;Disabilita
             </span>
         </button>
+        <ng-container *ngIf="bundleSpec?.type=='C'">
+            <button mat-button (click)="goToEditions()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Edizioni
+                </span>
+            </button>
+        </ng-container>
         <button mat-button color="warn" (click)="deleteBundleSpec()">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina

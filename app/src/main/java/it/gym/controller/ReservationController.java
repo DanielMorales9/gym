@@ -25,7 +25,7 @@ public class ReservationController {
 
     @PostMapping(path = "/{gymId}/isAvailable")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    ResponseEntity<String> isAvailable(@PathVariable Long gymId,
+    public ResponseEntity<String> isAvailable(@PathVariable Long gymId,
                                        @RequestParam("customerId") Long customerId,
                                        @RequestParam("bundleId") Long bundleId,
                                        @RequestBody Event event) {
@@ -37,7 +37,7 @@ public class ReservationController {
 
     @PostMapping(path = "/{gymId}")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
+    public ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
                                                                     @RequestParam("customerId") Long customerId,
                                                                     @RequestParam("bundleId") Long bundleId,
                                                                     @RequestBody Event event) {
@@ -50,7 +50,7 @@ public class ReservationController {
 
     @GetMapping(path = "/{gymId}")
     @PreAuthorize("hasAuthority('CUSTOMER')")
-    ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
+    public ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
                                                                    @RequestParam("customerId") Long customerId,
                                                                    @RequestParam("eventId") Long eventId) {
 
@@ -62,7 +62,7 @@ public class ReservationController {
 
     @DeleteMapping(path = "/{reservationId}")
     @PreAuthorize("isAuthenticated()")
-    ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
+    public ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
                                                @RequestParam Long eventId) {
 
         Reservation res = facade.deleteReservations(eventId, reservationId);
@@ -74,7 +74,7 @@ public class ReservationController {
     @GetMapping(path = "/{reservationId}/confirm")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('TRAINER', 'ADMIN')")
-    ResponseEntity<ReservationResource> confirm(@PathVariable Long reservationId) {
+    public ResponseEntity<ReservationResource> confirm(@PathVariable Long reservationId) {
 
         logger.info("confirming session");
         Reservation res = facade.confirm(reservationId);

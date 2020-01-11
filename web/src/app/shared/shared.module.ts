@@ -50,6 +50,7 @@ import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './
 import {RouterModule} from '@angular/router';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {BundleDetailsComponent} from './components/bundles';
+import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 @NgModule({
     imports: [
@@ -144,7 +145,9 @@ import {BundleDetailsComponent} from './components/bundles';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
     ],
-    providers: []
+    providers: [
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+    ]
 
 })
 export class SharedModule {

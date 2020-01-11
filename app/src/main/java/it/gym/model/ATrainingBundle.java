@@ -115,4 +115,5 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         this.createdAt = new Date();
     }
 
+    public abstract void update();
 }

@@ -29,10 +29,10 @@
                     </ng-container>
                     <ng-container *ngSwitchCase="COURSE">
                         <div>
-                            <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date : 'shortDate'}}
+                            <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
                         </div>
                         <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date : 'shortDate'}}
+                            <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
                         </div>
                         <div>
                             <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.bundleSpec.maxCustomers}}
