@@ -13,7 +13,7 @@ export class UserItemComponent {
 
     @Input() user: User;
     @Input() canDelete: boolean;
-    @Input() canPatch: boolean;
+    @Input() canEdit: boolean;
 
     @Output() done = new EventEmitter();
 

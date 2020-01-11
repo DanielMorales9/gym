@@ -18,6 +18,11 @@ export class PolicyService {
         sale: {
             canDelete: true,
             canPay: true
+        },
+        user: {
+            canDelete: true,
+            canCreate: true,
+            canEdit: true
         }
     };
 
@@ -33,6 +38,11 @@ export class PolicyService {
         sale: {
             canDelete: false,
             canPay: false
+        },
+        user: {
+            canDelete: false,
+            canCreate: true,
+            canEdit: true
         }
     };
 
@@ -49,6 +59,11 @@ export class PolicyService {
         sale: {
             canDelete: false,
             canPay: false
+        },
+        user: {
+            canDelete: false,
+            canCreate: false,
+            canEdit: true
         }
     };
 
