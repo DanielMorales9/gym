@@ -1,15 +1,12 @@
 package it.gym.integration;
 
 
-import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.repository.*;
 import it.gym.utility.Calendar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -86,7 +83,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void findSaleById_OK() throws Exception {
+    public void findSaleByIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/sales/" + sale.getId()))
                 .andExpect(status().isOk());
 
@@ -96,14 +93,14 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void findSaleUserById_OK() throws Exception {
+    public void findSaleUserByIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/sales/" + sale.getId() + "/customer"))
                 .andExpect(status().isOk());
         expectCustomer(result, (Customer) customer);
     }
 
     @Test
-    public void whenCreateSale_OK() throws Exception {
+    public void whenCreateSaleOK() throws Exception {
         String path = "/sales/createSale/" + customer.getId();
 
         ResultActions result = mockMvc.perform(get(path))
@@ -127,7 +124,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
 
     @Test
-    public void whenAddSli_OK() throws Exception {
+    public void whenAddSliOK() throws Exception {
         String path = "/sales/addSalesLineItem/" + sale.getId() + "/" + personalSpec.getId();
 
         ResultActions result = mockMvc.perform(get(path))
@@ -150,7 +147,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenAddSli_ThenItFails() throws Exception {
+    public void whenAddSliThenItFails() throws Exception {
         String path = "/sales/addSalesLineItem/" + sale.getId() + "/" + courseSpec.getId();
 
         mockMvc.perform(get(path))
@@ -158,7 +155,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenAddSliByBundle_OK() throws Exception {
+    public void whenAddSliByBundleOK() throws Exception {
         String path = "/sales/addSalesLineItemByBundle/" + sale.getId() + "/" + course.getId();
 
         ResultActions result = mockMvc.perform(get(path))
@@ -197,7 +194,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenDeleteSli_OK() throws Exception {
+    public void whenDeleteSliOK() throws Exception {
         String path = "/sales/deleteSalesLineItem/" + sale.getId() + "/" + sli0.getId();
 
         ResultActions result = mockMvc.perform(delete(path))
@@ -220,7 +217,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenConfirmSale_OK() throws Exception {
+    public void whenConfirmSaleOK() throws Exception {
         String path = "/sales/confirmSale/" + sale.getId();
 
         ResultActions result = mockMvc.perform(get(path))
@@ -246,7 +243,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenFindSalesLineItems_OK() throws Exception {
+    public void whenFindSalesLineItemsOK() throws Exception {
         String path = "/sales/" + sale.getId() + "/salesLineItems";
 
         ResultActions result = mockMvc.perform(get(path))
@@ -258,7 +255,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenDeleteSale_OK() throws Exception {
+    public void whenDeleteSaleOK() throws Exception {
         String path = "/sales/" + sale.getId();
 
         List<SalesLineItem> sli = sliRepository.findAll();
@@ -286,7 +283,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenGetTotalPrice_OK() throws Exception {
+    public void whenGetTotalPriceOK() throws Exception {
         String path = "/sales/getTotalPrice/"+sale.getId();
 
         ResultActions result = mockMvc.perform(get(path))
@@ -308,7 +305,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenSearchByDateAndId_OK() throws Exception {
+    public void whenSearchByDateAndIdOK() throws Exception {
         String path = "/sales/searchByDateAndId?id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
 
         ResultActions result = mockMvc.perform(get(path))
@@ -335,7 +332,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenPay_OK() throws Exception {
+    public void whenPayOK() throws Exception {
         String path = "/sales/pay/"+sale.getId()+"?amount="+11.0;
 
         sale.setCompleted(true);
@@ -360,7 +357,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenFindCustomerBySale_OK() throws Exception {
+    public void whenFindCustomerBySaleOK() throws Exception {
         String path = "/sales/" + sale.getId() + "/customer";
 
         ResultActions result = mockMvc.perform(get(path))
@@ -370,7 +367,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenFindAll_OK() throws Exception {
+    public void whenFindAllOK() throws Exception {
         String path = "/sales/";
 
         ResultActions result = mockMvc.perform(get(path))
@@ -380,7 +377,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenFindUserSales_OK() throws Exception {
+    public void whenFindUserSalesOK() throws Exception {
         String path = "/sales/findUserSales?id="+customer.getId();
 
         ResultActions result = mockMvc.perform(get(path))
@@ -390,7 +387,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenSearchByDate_OK() throws Exception {
+    public void whenSearchByDateOK() throws Exception {
         String path = "/sales/searchByDate?date="+ Calendar.today("dd-MM-yyyy");
 
         ResultActions result = mockMvc.perform(get(path))
@@ -400,7 +397,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenSearchByLastNameAndDate_OK() throws Exception {
+    public void whenSearchByLastNameAndDateOK() throws Exception {
         String path = "/sales/searchByLastNameAndDate?lastName="+customer.getLastName()+"&date="
                 +Calendar.yesterday("dd-MM-yyyy");
 
@@ -411,7 +408,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenSearchByLastName_OK() throws Exception {
+    public void whenSearchByLastNameOK() throws Exception {
         String path = "/sales/searchByLastName?lastName="+customer.getLastName();
 
         ResultActions result = mockMvc.perform(get(path))

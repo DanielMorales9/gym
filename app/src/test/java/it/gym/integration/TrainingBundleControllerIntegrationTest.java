@@ -11,8 +11,6 @@ import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -28,8 +26,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
-
-//    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired private TrainingBundleRepository repository;
     @Autowired private TrainingBundleSpecificationRepository specRepository;
@@ -60,7 +56,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenFindCourses_OK() throws Exception {
+    public void whenFindCoursesOK() throws Exception {
         SimpleDateFormat sm = new SimpleDateFormat("dd-MM-yyyy_HH:mm");
         String s = sm.format(addDays(getNextMonday(), 1));
         String e = sm.format(addDays(getNextMonday(), 2));
@@ -71,7 +67,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenFindAll_OK() throws Exception {
+    public void whenFindAllOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundles"))
                 .andExpect(status().isOk());
 
@@ -80,7 +76,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenFindById_OK() throws Exception {
+    public void whenFindByIdOK() throws Exception {
 
         ResultActions result = mockMvc.perform(get("/bundles/"+courseBundle.getId()))
                 .andExpect(status().isOk());
@@ -89,7 +85,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenSearch_OK() throws Exception {
+    public void whenSearchOK() throws Exception {
 
         ResultActions result = mockMvc.perform(get("/bundles/search?specId="+courseBundle
                 .getBundleSpec().getId()))
@@ -99,7 +95,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenSearchNotExpired_OK() throws Exception {
+    public void whenSearchNotExpiredOK() throws Exception {
 
         ResultActions result = mockMvc.perform(get("/bundles/searchNotExpired?specId="+courseBundle
                 .getBundleSpec().getId()))
@@ -109,7 +105,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenPost_OK() throws Exception {
+    public void whenPostOK() throws Exception {
         Object cred = new Object() {
             public final String name = courseBundle.getName();
             public final Long specId = courseBundleSpec.getId();
@@ -126,7 +122,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenDelete_OK() throws Exception {
+    public void whenDeleteOK() throws Exception {
         ResultActions result = mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
                 .andExpect(status().isOk());
 
@@ -135,7 +131,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenPatch_OK() throws Exception {
+    public void whenPatchOK() throws Exception {
         Object cred = new Object() {
             public final String name = courseBundle.getName();
             public final Long id = courseBundle.getId();

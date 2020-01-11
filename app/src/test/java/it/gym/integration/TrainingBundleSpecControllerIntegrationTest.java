@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.*;
+import static it.gym.utility.HateoasTest.expectTrainingBundleSpec;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;

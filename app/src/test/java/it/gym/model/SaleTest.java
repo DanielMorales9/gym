@@ -1,6 +1,5 @@
 package it.gym.model;
 
-import it.gym.utility.Fixture;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,9 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.createCourseBundleSpec;
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -184,17 +181,6 @@ public class SaleTest {
         Date end = DateUtils.addDays(start, 30);
         p.setStartTime(start);
         p.setEndTime(end);
-        return p;
-    }
-
-    private ATrainingBundleSpecification createCourseBundleSpecification() {
-        CourseTrainingBundleSpecification p = new CourseTrainingBundleSpecification();
-        p.setId(1L);
-        p.setName("Course");
-        p.setDescription("Description");
-        p.setDisabled(false);
-        p.setPrice(111.0);
-        p.setMaxCustomers(11);
         return p;
     }
 
