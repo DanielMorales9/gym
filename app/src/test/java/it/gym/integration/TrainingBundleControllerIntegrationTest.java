@@ -29,19 +29,18 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+//    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired private TrainingBundleRepository repository;
     @Autowired private TrainingBundleSpecificationRepository specRepository;
     private ATrainingBundle personalBundle;
     private ATrainingBundle courseBundle;
     private ATrainingBundleSpecification courseBundleSpec;
-    private ATrainingBundleSpecification personalBundleSpec;
 
     @Before
     public void before() {
 
-        personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        ATrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);
