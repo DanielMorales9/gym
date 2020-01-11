@@ -2,7 +2,6 @@ package it.gym.hateoas;
 
 import it.gym.model.ATrainingBundle;
 import it.gym.repository.TrainingBundleRepository;
-import org.springframework.hateoas.Resources;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;

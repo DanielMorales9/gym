@@ -42,8 +42,8 @@ public class TrainingBundleSpecificationController {
 
     @PostMapping
     public ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
-        spec = facade.createTrainingBundleSpecification(spec);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
+        ATrainingBundleSpecification s = facade.createTrainingBundleSpecification(spec);
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 
     @PatchMapping(path = "/{id}")
