@@ -3,7 +3,6 @@ package it.gym.facade;
 import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.service.*;
-import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -21,7 +20,6 @@ import java.util.Locale;
 
 import static it.gym.utility.Fixture.*;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 

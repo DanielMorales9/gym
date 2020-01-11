@@ -5,7 +5,6 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
-import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
