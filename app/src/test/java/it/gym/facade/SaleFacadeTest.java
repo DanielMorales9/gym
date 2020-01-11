@@ -89,7 +89,6 @@ public class SaleFacadeTest {
     @Test
     public void addCourseBundleToSalesLineItem() {
         Date start = getNextMonday();
-        Date end = addHours(start, 1);
 
         AUser customer = createCustomer(1L,
                 "customer@customer.com", "",
@@ -143,19 +142,6 @@ public class SaleFacadeTest {
         }
         date.add(Calendar.DAY_OF_MONTH, diff);
         return date.getTime();
-    }
-
-    private ATrainingBundleSpecification createMockCourseBundleSpec() {
-        CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
-        spec.setMaxCustomers(11);
-        spec.setNumber(30);
-        spec.setDescription("Description");
-        spec.setName("corso");
-        spec.setId(1L);
-        spec.setPrice(100.);
-        spec.setDisabled(false);
-        spec.setCreatedAt(new Date());
-        return spec;
     }
 
     @Test
