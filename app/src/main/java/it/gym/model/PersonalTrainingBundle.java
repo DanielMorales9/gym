@@ -74,6 +74,8 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public void update() { }
+    public void update() {
+        // no need to call this method
+    }
 
 }

@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
 public class Fixture {
 
@@ -213,7 +213,7 @@ public class Fixture {
         CourseTrainingBundle pt = new CourseTrainingBundle();
         pt.setName("Winter Pack");
         pt.setStartTime(startTime);
-        pt.setEndTime(addHours(startTime, ((CourseTrainingBundleSpecification) spec).getNumber()));
+        pt.setEndTime(addMonths(startTime, ((CourseTrainingBundleSpecification) spec).getNumber()));
         pt.setBundleSpec(spec);
         pt.setId(l);
         return pt;

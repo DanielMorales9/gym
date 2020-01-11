@@ -1,7 +1,8 @@
 package it.gym.controller;
 
 import it.gym.facade.TrainingBundleFacade;
-import it.gym.hateoas.*;
+import it.gym.hateoas.TrainingBundleAssembler;
+import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.CourseTrainingBundle;
 import it.gym.pojo.CourseBundle;

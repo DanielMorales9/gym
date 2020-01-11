@@ -178,8 +178,21 @@ public class HateoasTest {
     }
 
     public static void expectTrainingBundle(ResultActions result,
+                                            CourseTrainingBundle trainingBundle) throws Exception {
+        expectTrainingBundle(result, trainingBundle, null);
+    }
+
+    public static void expectTrainingBundle(ResultActions result,
                                                      PersonalTrainingBundle trainingBundle,
                                                      String prefix) throws Exception {
+        prefix = handlePrefix(prefix);
+        result.andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
+    }
+
+    public static void expectTrainingBundle(ResultActions result,
+                                            CourseTrainingBundle trainingBundle,
+                                            String prefix) throws Exception {
         prefix = handlePrefix(prefix);
         result.andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
