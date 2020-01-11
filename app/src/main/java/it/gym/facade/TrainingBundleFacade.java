@@ -30,6 +30,7 @@ public class TrainingBundleFacade {
 //    private static final Logger logger = LoggerFactory.getLogger(TrainingBundleFacade.class);
 
     @Autowired
+    @Qualifier("trainingBundleService")
     private TrainingBundleService service;
 
     @Autowired
