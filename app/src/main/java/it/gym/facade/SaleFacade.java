@@ -81,10 +81,6 @@ public class SaleFacade {
         return sale;
     }
 
-    public ATrainingBundle createBundle(ATrainingBundleSpecification spec) {
-        return spec.createTrainingBundle();
-    }
-
     public Sale createSale(Long customerId) {
         Customer customer = (Customer) userService.findById(customerId);
 
@@ -102,7 +98,7 @@ public class SaleFacade {
 
         ATrainingBundle bundle = bundleSpec.createTrainingBundle();
         if (bundle == null) {
-            throw new MethodNotAllowedException("Qualcosa è andato storto");
+            throw new BadRequestException("Qualcosa è andato storto");
         }
         sale.addSalesLineItem(bundle);
         return this.save(sale);

@@ -1,6 +1,7 @@
 package it.gym.integration;
 
 
+import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.repository.*;
 import it.gym.utility.Calendar;
@@ -26,7 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired RoleRepository roleRepository;
     @Autowired SaleRepository repository;
@@ -147,6 +147,14 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectCustomer(result, (Customer) customer, "customer");
 
+    }
+
+    @Test
+    public void whenAddSli_ThenItFails() throws Exception {
+        String path = "/sales/addSalesLineItem/" + sale.getId() + "/" + courseSpec.getId();
+
+        mockMvc.perform(get(path))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
