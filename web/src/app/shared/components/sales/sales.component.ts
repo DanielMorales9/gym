@@ -31,7 +31,7 @@ export class SalesComponent implements OnInit {
     filters = [
         {name: 'Da Pagare', value: false},
         {name: 'Pagati', value: true},
-        {name: 'Tutti', value: undefined}];
+        {name: 'Entrambi', value: undefined}];
     filterName = 'payed';
     selected = undefined;
 
@@ -49,7 +49,6 @@ export class SalesComponent implements OnInit {
     ngOnInit(): void {
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
-        this.mixed = this.canDelete;
 
         this.initQueryParams();
     }
@@ -64,6 +63,8 @@ export class SalesComponent implements OnInit {
             }
             console.log(this.queryParams);
             this.id = this.queryParams.id;
+            this.mixed = this.canDelete && !this.id;
+
             this.search(this.queryParams);
         });
     }

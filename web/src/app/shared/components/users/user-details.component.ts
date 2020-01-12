@@ -24,10 +24,10 @@ export class UserDetailsComponent implements OnInit {
     canEdit: boolean;
     canSendToken: boolean;
     canMakeAppointments: boolean;
+    canShowSales: boolean;
     canShowBundles: boolean;
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
-
     private me: User;
     private root: string;
 
@@ -67,6 +67,7 @@ export class UserDetailsComponent implements OnInit {
         this.canSendToken = this.policy.get(entity, 'canSendToken') && !this.user.verified;
         this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
         this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
+        this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
     }
 
     openEditDialog(): void {
@@ -146,6 +147,12 @@ export class UserDetailsComponent implements OnInit {
     showBundles() {
         return this.router.navigate([this.root, 'customer', 'bundles'], {queryParams: {
             id: this.user.id
+            }});
+    }
+
+    showSales() {
+        return this.router.navigate([this.root, 'customer', 'sales'], {queryParams: {
+                id: this.user.id
             }});
     }
 }

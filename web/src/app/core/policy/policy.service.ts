@@ -32,7 +32,8 @@ export class PolicyService {
             canSendToken: true,
             canMakeAppointments: false,
             canShow: {
-                bundles: false
+                bundles: false,
+                sales: false
             }
         },
         customer: {
@@ -43,7 +44,8 @@ export class PolicyService {
             canSendToken: true,
             canMakeAppointments: true,
             canShow: {
-                bundles: true
+                bundles: true,
+                sales: true
             }
         },
         trainer: {
@@ -54,7 +56,8 @@ export class PolicyService {
             canSendToken: true,
             canMakeAppointments: false,
             canShow: {
-                bundles: false
+                bundles: false,
+                sales: false
             }
         },
         bundle: {
@@ -89,7 +92,8 @@ export class PolicyService {
             canSendToken: false,
             canMakeAppointments: false,
             canShow: {
-                bundles: false
+                bundles: false,
+                sales: false
             }
         },
         customer: {
@@ -100,7 +104,8 @@ export class PolicyService {
             canSendToken: true,
             canMakeAppointments: true,
             canShow: {
-                bundles: true
+                bundles: true,
+                sales: false
             }
         },
         trainer: {
@@ -111,7 +116,8 @@ export class PolicyService {
             canSendToken: false,
             canMakeAppointments: false,
             canShow: {
-                bundles: false
+                bundles: false,
+                sales: false
             }
         },
         bundle: {
@@ -147,7 +153,8 @@ export class PolicyService {
             canSendToken: false,
             canMakeAppointments: false,
             canShow: {
-                bundles: false
+                bundles: false,
+                sales: false
             }
         },
         customer: {
@@ -158,7 +165,8 @@ export class PolicyService {
             canSendToken: false,
             canMakeAppointments: false,
             canShow: {
-                bundles: true
+                bundles: true,
+                sales: false
             }
         },
         trainer: {
@@ -169,7 +177,8 @@ export class PolicyService {
             canSendToken: false,
             canMakeAppointments: false,
             canShow: {
-                bundles: false
+                bundles: false,
+                sales: false
             }
         },
         bundle: {

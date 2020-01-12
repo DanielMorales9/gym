@@ -11,6 +11,9 @@ export class SearchDateToolbar implements OnInit {
     @Input() query: any;
     @Input() datePlaceholder: string;
     @Input() maxDate: Date;
+    @Input() filters: any;
+    @Input() filterName: string;
+    @Input() selected: any;
 
     @Output() done: EventEmitter<any> = new EventEmitter();
     date: FormControl;
@@ -20,8 +23,23 @@ export class SearchDateToolbar implements OnInit {
     }
 
     emit(type, event) {
-        if (event.value) { this.query.date = event.value; } else { delete this.query.date; }
+        switch (type) {
+            case 'date':
+                if (event.value) { this.query.date = event.value; } else { delete this.query.date; }
+                break;
+            case this.filterName:
+                if (this.isNotNull(event.value)) {
+                    this.query[this.filterName] = event.value;
+                } else {
+                    delete this.query[this.filterName];
+                }
+                break;
+        }
         this.done.emit(this.query);
+    }
+
+    private isNotNull(value) {
+        return !(value === null || value === undefined);
     }
 
 }

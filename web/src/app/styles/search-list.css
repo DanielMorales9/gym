@@ -51,6 +51,10 @@ form.search-form {
     width: 100%;
 }
 
+.search-fulldate-w-filters {
+    width: 84%;
+}
+
 .search-text {
     width: 50%;
 }

@@ -53,6 +53,11 @@
                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;Pacchetti
             </span>
             </button>
+            <button *ngIf="canShowSales" mat-button (click)="showSales()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;Ordini
+            </span>
+            </button>
             <button *ngIf="canMakeAppointments" mat-button color="basic" (click)="makeAppointments()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;Appuntamenti

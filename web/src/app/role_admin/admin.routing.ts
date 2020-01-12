@@ -23,6 +23,7 @@ const routes = [
             { path: 'sales', component: SalesComponent },
             { path: 'sales/buy/:id', component: CreateSaleComponent },
             { path: 'sales/:id', component: SaleDetailsComponent },
+            { path: 'customer/sales', component: SalesComponent },
             { path: 'calendar', component: AdminCalendarComponent },
             { path: 'calendar/:id', component: ACustomerCalendarComponent },
             { path: '**', redirectTo: 'bundleSpecs' }

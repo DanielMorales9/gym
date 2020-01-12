@@ -29,7 +29,7 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
     filters = [
         {name: 'Attivi', value: false},
         {name: 'Terminati', value: true},
-        {name: 'Tutti', value: undefined}];
+        {name: 'Entrambi', value: undefined}];
     filterName = 'expired';
     selected = undefined;
 

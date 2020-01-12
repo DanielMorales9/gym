@@ -1,15 +1,30 @@
 <mat-toolbar color="basic" class="search-toolbar">
     <form class="search-form">
-        <mat-form-field class="search-input-date search-fulldate" floatLabel="never">
+        <mat-form-field [ngClass]="{
+                        'search-input-date': true,
+                        'search-fulldate': !filters,
+                        'search-fulldate-w-filters': !!filters}"
+                        floatLabel="never">
             <label class="sr-only"></label>
             <input matInput
                    [formControl]="date"
                    [matDatepicker]="picker"
                    [placeholder]="datePlaceholder"
                    [max]="maxDate"
-                   (dateChange)="emit('customerDate', $event)">
+                   (dateChange)="emit('date', $event)">
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker color="primary"></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field class="search-filters"
+                        *ngIf="!!filters" floatLabel="never">
+            <mat-label>
+                <mat-icon>filter_list</mat-icon>
+            </mat-label>
+            <mat-select class="search-input-date" (selectionChange)="emit(filterName, $event)" [value]="selected">
+                <mat-option class="search-input-date"  *ngFor="let filter of filters" [value]="filter.value">
+                    {{ filter.name }}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
     </form>
 </mat-toolbar>

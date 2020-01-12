@@ -13,7 +13,7 @@ const routes = [
             { path: 'sales/:id', component: SaleDetailsComponent },
             { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
             { path: 'bundles/:id', component: BundleDetailsComponent },
-            { path: 'myBundles', component: BundlesCustomerComponent },
+            { path: 'bundles', component: BundlesCustomerComponent },
             { path: '**', redirectTo: 'calendar' }
         ]},
 ];
