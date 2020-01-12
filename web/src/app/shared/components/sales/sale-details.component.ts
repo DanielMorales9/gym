@@ -1,12 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SaleFacade} from '../../../services';
 import {Sale} from '../../model';
 import {MatDialog} from '@angular/material';
 import {SalesService} from '../../../core/controllers';
-import {SaleHelperService} from '../../../core/helpers/sale-helper.service';
+import {SaleHelperService} from '../../../core/helpers';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SnackBarService} from '../../../core/utilities';
+import {PolicyService} from '../../../core/policy';
 
 @Component({
     templateUrl: './sale-details.component.html',
@@ -23,11 +23,11 @@ export class SaleDetailsComponent implements OnInit {
                 private router: Router,
                 private helper: SaleHelperService,
                 private service: SalesService,
-                private facade: SaleFacade,
                 private dialog: MatDialog,
+                private policy: PolicyService,
                 private snackbar: SnackBarService) {
-        this.canDelete = this.facade.canDelete();
-        this.canPay = this.facade.canPay();
+        this.canDelete = this.policy.get('sale', 'canDelete');
+        this.canPay = this.policy.get('sale', 'canPay');
     }
 
     ngOnInit(): void {

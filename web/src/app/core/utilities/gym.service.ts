@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map} from 'rxjs/operators';
-import {AuthenticationService} from '../authentication';
 import {to_promise} from '../functions/decorators';
+import {AuthenticationService} from '../authentication';
 
 @Injectable({
     providedIn: 'root'

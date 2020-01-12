@@ -54,7 +54,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     public void before() {
         List<Role> roles = createCustomerRoles();
         roles = roleRepository.saveAll(roles);
-        customer = (Customer) createCustomer(1L,
+        customer = createCustomer(1L,
                 "customer@customer.com",
                 "password",
                 "customer",
@@ -76,7 +76,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         Date monday = getNextMonday();
         end = addMonths(monday, 1);
-        course = (CourseTrainingBundle) createCourseBundle(1L, monday, (CourseTrainingBundleSpecification) courseSpec);
+        course = (CourseTrainingBundle) createCourseBundle(1L, monday, courseSpec);
 
         personal = bundleRepository.save(personal);
         session = course.createSession(start, end);

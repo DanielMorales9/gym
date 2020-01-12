@@ -36,7 +36,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
                 private snackbar: SnackBarService,
                 private dialog: MatDialog,
                 private router: Router,
-                private activatedRoute: ActivatedRoute) {
+                private route: ActivatedRoute) {
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
     }
 
@@ -46,14 +46,14 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     private getId() {
-        this.sub = this.activatedRoute.params.subscribe(async params => {
+        this.sub = this.route.params.subscribe(async params => {
             this.id = +params['id'];
             await this.createSale();
         });
     }
 
     private getQuery() {
-        this.query = this.activatedRoute.snapshot.queryParamMap.get('query');
+        this.query = this.route.snapshot.queryParamMap.get('query');
     }
 
     private updateQueryParams() {
@@ -61,7 +61,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         this.router.navigate(
             [],
             {
-                relativeTo: this.activatedRoute,
+                relativeTo: this.route,
                 queryParams: this.queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });

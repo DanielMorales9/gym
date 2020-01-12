@@ -10,12 +10,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
@@ -31,6 +34,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     private Gym gym;
     private List<Role> roles;
     private Customer customer;
+    private PersonalTrainingBundle personal;
 
     @Before
     public void before() {
@@ -38,7 +42,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         roles = roleRepository.saveAll(roles);
         gym = createGym(1L);
         gym = gymRepository.save(gym);
-        customer = (Customer) createCustomer(1L,
+        customer = createCustomer(1L,
                 "customer@customer.com",
                 "password",
                 "customer",
@@ -46,11 +50,11 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 true,
                 roles
         );
-        ATrainingBundleSpecification personal = createPersonalBundleSpec(1L, "personal", 11);
-        personal = bundleSpecRepository.save(personal);
-        ATrainingBundle bundle = personal.createTrainingBundle();
-        bundle = bundleRepository.save(bundle);
-        customer.setCurrentTrainingBundles(Collections.singletonList(bundle));
+        ATrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+        personalSpec = bundleSpecRepository.save(personalSpec);
+        personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle();
+        personal = bundleRepository.save(personal);
+        customer.setCurrentTrainingBundles(Collections.singletonList(personal));
         customer = repository.save(customer);
     }
 
@@ -104,6 +108,41 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                     "content[0].currentTrainingBundles["+i+"]");
         }
 
+    }
+
+    @Test
+    public void whenFindBundlesWAllParametersOK() throws Exception {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+        String date = fmt.format(new Date());
+        ResultActions result = mockMvc.perform(get("/customers/bundles" +
+                "?id=" + customer.getId()+
+                "&name="+personal.getName()+
+                "&expired=false" +
+                "&date="+date))
+                .andExpect(status().isOk());
+        expectTrainingBundle(result, personal, "content[0]");
+    }
+
+    @Test
+    public void whenFindBundlesWoExpiredOK() throws Exception {
+        SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
+        String date = fmt.format(new Date());
+        ResultActions result = mockMvc.perform(get("/customers/bundles" +
+                "?id=" + customer.getId()+
+                "&name="+personal.getName()+
+                "&date="+date))
+                .andExpect(status().isOk());
+        expectTrainingBundle(result, personal, "content[0]");
+    }
+
+    @Test
+    public void whenFindBundlesWoOK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/customers/bundles" +
+                "?id=" + customer.getId()+
+                "&expired=true"))
+                .andExpect(status().isOk());
+
+        result.andExpect(jsonPath("$.content").isEmpty());
     }
 
 }

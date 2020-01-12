@@ -47,11 +47,9 @@ export class UserModalComponent implements OnInit {
         config['email'] = [this.user.email, [Validators.required, Validators.email]];
         if (this.canShowHeightAndWeight) {
             config['height'] = [this.user.height, [
-                Validators.required,
                 Validators.max(300),
                 Validators.min(100)]];
             config['weight'] = [this.user.weight, [
-                Validators.required,
                 Validators.max(1000),
                 Validators.min(20)]];
         }
@@ -102,6 +100,8 @@ export class UserModalComponent implements OnInit {
         if (this.type) {
             this.user.type = this.type.value;
         }
+
+        this.user.currentTrainingBundles = undefined;
 
         this.dialogRef.close(this.user);
     }

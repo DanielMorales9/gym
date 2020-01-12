@@ -15,8 +15,16 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query(value="select s from Sale as s where s.customer.id = :id")
     Page<Sale> findUserSales(Long id, Pageable pageable);
 
+    @Query(value="select s from Sale as s where s.customer.id = :id and s.isPayed = :payed")
+    Page<Sale> findUserSalesPayed(Long id, Boolean payed, Pageable pageable);
+
     Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id,
                                                                  Date date,
+                                                                 Pageable pageable);
+
+    Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqualAndIsPayed(Long id,
+                                                                 Date date,
+                                                                 Boolean payed,
                                                                  Pageable pageable);
 
     Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date,
@@ -28,5 +36,13 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
                                                                        Date date,
                                                                        Pageable pageable);
 
+    Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsPayed(String lastName,
+                                                                       Date date,
+                                                                       Boolean payed,
+                                                                       Pageable pageable);
 
+
+    Page<Sale> findSalesByCustomerLastNameAndIsPayed(String lastName, Boolean payed, Pageable pageable);
+
+    Page<Sale> findSalesByIsPayed(Boolean payed, Pageable pageable);
 }

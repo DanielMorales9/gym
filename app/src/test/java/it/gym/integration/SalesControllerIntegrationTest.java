@@ -33,7 +33,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     @Autowired TrainingBundleSpecificationRepository bundleSpecRepository;
     @Autowired TrainingBundleRepository bundleRepository;
 
-    private AUser customer;
+    private Customer customer;
     private Sale sale;
     private ATrainingBundleSpecification personalSpec;
     private ATrainingBundleSpecification courseSpec;
@@ -88,14 +88,20 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         expectSale(result, sale);
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
+    }
+
+    @Test
+    public void findSaleByIdGotNotFound() throws Exception {
+        mockMvc.perform(get("/sales/" + 1000))
+                .andExpect(status().isNotFound());
     }
 
     @Test
     public void findSaleUserByIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/sales/" + sale.getId() + "/customer"))
                 .andExpect(status().isOk());
-        expectCustomer(result, (Customer) customer);
+        expectCustomer(result, customer);
     }
 
     @Test
@@ -115,10 +121,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(s.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
 
         expectSale(result, expected);
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
     }
 
 
@@ -135,13 +141,13 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
 
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
 
     }
 
@@ -166,11 +172,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
         expectSale(result, expected);
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
 
         SalesLineItem sl = sli.get(0);
         expectedSalesLineItem(result, sl, "salesLineItems[" + 0 + "]");
@@ -205,11 +211,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(false);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
 
         expectSale(result, expected);
         result = result.andExpect(jsonPath("$.salesLineItems").value(sli));
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
         result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(sliRepository.findAll()).isEmpty();
         assertThat(bundleRepository.findAll().size()).isEqualTo(1);
@@ -228,13 +234,13 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(true);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
 
-        Customer c = (Customer) customer;
+        Customer c = customer;
         expectCustomer(result, c, "customer");
         c.setCurrentTrainingBundles(null);
         userRepository.save(c);
@@ -266,13 +272,13 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(true);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
 
-        Customer c = (Customer) customer;
+        Customer c = customer;
         expectCustomer(result, c, "customer");
         result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(repository.findAll()).isEmpty();
@@ -294,18 +300,28 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(0.);
         expected.setCompleted(true);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
 
     }
 
     @Test
     public void whenSearchByDateAndIdOK() throws Exception {
         String path = "/sales/searchByDateAndId?id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
+    public void whenSearchByDateAndIdAndPayedOK() throws Exception {
+        String path = "/sales/searchByDateAndId?payed=false&id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
@@ -321,12 +337,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
             expected.setId(sale.getId());
             expected.setAmountPayed(0.);
             expected.setCompleted(true);
-            expected.setCustomer((Customer) customer);
+            expected.setCustomer(customer);
             expected.setSalesLineItems(sli);
 
             expectSale(result, expected, "content[" + i + "]");
             expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
-            expectCustomer(result, (Customer) customer, "content[" + i + "].customer");
+            expectCustomer(result, customer, "content[" + i + "].customer");
         }
     }
 
@@ -347,11 +363,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setAmountPayed(111.);
         expected.setCompleted(true);
         expected.setPayed(true);
-        expected.setCustomer((Customer) customer);
+        expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectCustomer(result, (Customer) customer, "customer");
+        expectCustomer(result, customer, "customer");
 
     }
 
@@ -362,7 +378,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        expectCustomer(result, (Customer) customer);
+        expectCustomer(result, customer);
     }
 
     @Test
@@ -376,8 +392,28 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenFindAllPayedOK() throws Exception {
+        String path = "/sales?payed=false";
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
     public void whenFindUserSalesOK() throws Exception {
         String path = "/sales/findUserSales?id="+customer.getId();
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
+    public void whenFindUserSalesAndPayedOK() throws Exception {
+        String path = "/sales/findUserSales?payed=false&id="+customer.getId();
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
@@ -407,8 +443,29 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenSearchByLastNameAndDateAndPayedOK() throws Exception {
+        String path = "/sales/searchByLastNameAndDate?payed=false&lastName="+customer.getLastName()+"&date="
+                +Calendar.yesterday("dd-MM-yyyy");
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
     public void whenSearchByLastNameOK() throws Exception {
         String path = "/sales/searchByLastName?lastName="+customer.getLastName();
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
+    public void whenSearchByLastNameAndPayedOK() throws Exception {
+        String path = "/sales/searchByLastName?payed=false&lastName="+customer.getLastName();
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());

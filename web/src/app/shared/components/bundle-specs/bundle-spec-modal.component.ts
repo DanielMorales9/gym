@@ -2,7 +2,6 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {BundleSpecification, BundleSpecificationType, CourseBundleSpecification, PersonalBundleSpecification} from '../../model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {timeValidator} from '../../../core/functions';
 
 @Component({
     selector: 'bundle-spec-modal',
@@ -52,17 +51,12 @@ export class BundleSpecModalComponent implements OnInit {
                 value: this.bundleSpec.type,
                 disabled: hasBundle,
             }, Validators.required),
-            startTime: new FormControl({
-                value: new Date(this.bundleSpec.startTime),
-                disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
-            },  [
-                Validators.required
-            ]),
-            endTime: new FormControl({
-                value: new Date(this.bundleSpec.endTime),
+            number: new FormControl({
+                value: this.bundleSpec.number,
                 disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
             },  [
                 Validators.required,
+                Validators.min(1)
             ]),
             maxCustomers: new FormControl({
                 value: this.bundleSpec.maxCustomers,
@@ -78,9 +72,7 @@ export class BundleSpecModalComponent implements OnInit {
                 Validators.required,
                 Validators.pattern(/^\d+$/)
             ])
-        }, [
-            timeValidator('startTime', 'endTime').bind(this)
-        ]);
+        });
 
         this.type.valueChanges.subscribe(val => {
             if (val === BundleSpecificationType.PERSONAL) {
@@ -88,8 +80,7 @@ export class BundleSpecModalComponent implements OnInit {
                 this.showPersonal = true;
 
                 this.numSessions.enable();
-                this.startTime.disable();
-                this.endTime.disable();
+                this.number.disable();
                 this.maxCustomers.disable();
             }
             else {
@@ -97,8 +88,7 @@ export class BundleSpecModalComponent implements OnInit {
                 this.showPersonal = false;
 
                 this.numSessions.disable();
-                this.startTime.enable();
-                this.endTime.enable();
+                this.number.enable();
                 this.maxCustomers.enable();
             }
             this.form.updateValueAndValidity();
@@ -125,12 +115,8 @@ export class BundleSpecModalComponent implements OnInit {
         return this.form.get('type');
     }
 
-    get startTime() {
-        return this.form.get('startTime');
-    }
-
-    get endTime() {
-        return this.form.get('endTime');
+    get number() {
+        return this.form.get('number');
     }
 
     get maxCustomers() {
@@ -151,8 +137,7 @@ export class BundleSpecModalComponent implements OnInit {
         else {
             bundle = new CourseBundleSpecification();
             bundle.maxCustomers = this.maxCustomers.value;
-            bundle.startTime = this.startTime.value;
-            bundle.endTime = this.endTime.value;
+            bundle.number = this.number.value;
         }
 
         bundle.id = this.bundleSpec.id;

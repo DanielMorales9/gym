@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared';
 import {CoreModule} from './core';
-import {AppService, AuthenticatedService, CalendarFacade, GlobalErrorHandler, GymService, SaleFacade, SpecFacade} from './services';
+import {AppService, AuthenticatedService, CalendarFacade, GlobalErrorHandler, GymService} from './services';
 import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import {
@@ -69,9 +69,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         AppService,
         AuthenticatedService,
         GymService,
-        SaleFacade,
         CalendarFacade,
-        SpecFacade,
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
     ],

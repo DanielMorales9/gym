@@ -40,7 +40,7 @@ public class CustomerServiceTest {
 
     @Test
     public void save() {
-        this.service.save((Customer) createCustomer(1L, "email", "", "name", "surname", true, null));
+        this.service.save(createCustomer(1L, "email", "", "name", "surname", true, null));
         Mockito.verify(repository).save(any(Customer.class));
     }
 
@@ -70,7 +70,7 @@ public class CustomerServiceTest {
 
     @Test
     public void delete() {
-        Customer u = (Customer) createCustomer(1L, "email", "", "name", "surname", true, null);
+        Customer u = createCustomer(1L, "email", "", "name", "surname", true, null);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(Customer.class));
     }

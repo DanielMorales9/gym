@@ -8,6 +8,7 @@ import it.gym.service.TrainingBundleSpecificationService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -26,6 +27,7 @@ public class TrainingBundleSpecificationFacade {
     private TrainingBundleSpecificationService service;
 
     @Autowired
+    @Qualifier("trainingBundleService")
     private TrainingBundleService bundleService;
 
     public ATrainingBundleSpecification findById(Long id) {
@@ -36,7 +38,7 @@ public class TrainingBundleSpecificationFacade {
         List<ATrainingBundle> bundles = bundleService.findBundlesBySpec(spec);
         boolean isDeletable = bundles.isEmpty();
         if (!isDeletable) {
-            throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso");
+            throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso.");
         }
         service.delete(spec);
     }
@@ -45,8 +47,16 @@ public class TrainingBundleSpecificationFacade {
         return service.save(spec);
     }
 
-    public Page<ATrainingBundleSpecification> findByNameContains(String query, Pageable pageable) {
-        return service.findByNameContains(query, pageable);
+    public Page<ATrainingBundleSpecification> findByNameContains(String name, Boolean disabled, Pageable pageable) {
+        if (disabled == null && name == null)
+            return service.findAll(pageable);
+        else if (disabled == null) {
+            return service.findByNameContains(name, pageable);
+        } if (name == null) {
+            return service.findByIsDisabled(disabled, pageable);
+        } else {
+            return service.findByNameAndIsDisabled(name, disabled, pageable);
+        }
     }
 
     public ATrainingBundleSpecification save(ATrainingBundleSpecification spec) {

@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
 
-import {StorageService} from '../utilities/storage.service';
 import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
+import {StorageService} from './storage.service';
 
 
 export interface Credentials {

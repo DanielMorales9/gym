@@ -5,6 +5,7 @@ import {SalesService} from '../../../core/controllers';
 import {AuthenticationService} from '../../../core/authentication';
 import {SnackBarService} from '../../../core/utilities';
 import {SaleHelperService, QueryableDatasource} from '../../../core/helpers';
+import {PolicyService} from '../../../core/policy';
 
 
 @Component({
@@ -20,35 +21,36 @@ export class SalesComponent implements OnInit {
 
     private pageSize = 10;
     private queryParams: any;
-    private id: number;
+    id: number;
 
     ds: QueryableDatasource<Sale>;
     canPay: boolean;
     canDelete: boolean;
     mixed: boolean;
 
+    filters = [
+        {name: 'Da Pagare', value: false},
+        {name: 'Pagati', value: true},
+        {name: 'Entrambi', value: undefined}];
+    filterName = 'payed';
+    selected = undefined;
+
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
                 private auth: AuthenticationService,
                 private router: Router,
                 private route: ActivatedRoute,
+                private policy: PolicyService,
                 private snackbar: SnackBarService) {
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
-        const path = this.route.parent.parent.snapshot.routeConfig.path;
-        switch (path) {
-            case 'admin':
-                this.mixed = this.canDelete = this.canPay = true;
-                break;
-            case 'customer':
-                this.mixed = this.canDelete = this.canPay = false;
-                this.id = this.auth.getUser().id;
-                break;
-        }
-        this.initQueryParams(this.id);
+        this.canDelete = this.policy.get('sale', 'canDelete');
+        this.canPay = this.policy.get('sale', 'canPay');
+
+        this.initQueryParams();
     }
 
     private initQueryParams(id?) {
@@ -59,9 +61,10 @@ export class SalesComponent implements OnInit {
                     this.queryParams.date = new Date(this.queryParams.date);
                 }
             }
-            if (id) {
-                this.queryParams.id = id;
-            }
+            console.log(this.queryParams);
+            this.id = this.queryParams.id;
+            this.mixed = this.canDelete && !this.id;
+
             this.search(this.queryParams);
         });
     }

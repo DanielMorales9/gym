@@ -44,18 +44,17 @@
         </mat-card-content>
         <mat-card-actions>
             <!-- TODO add list of session-->
-            <!-- TODO add link to bundleSpec-->
             <button mat-button color="primary" (click)="goToBundleSPec()">
-            <span>
-                <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Tipo Pacchetto
-            </span>
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Tipo Pacchetto
+                </span>
             </button>
-            <button mat-button (click)="edit()">
-            <span>
-                <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
-            </span>
+            <button *ngIf="canEdit" mat-button (click)="edit()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                </span>
             </button>
-            <button *ngIf="bundle?.deletable" mat-button color="warn" (click)="delete()">
+            <button *ngIf="canDelete" mat-button color="warn" (click)="delete()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
             </span>

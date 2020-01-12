@@ -41,6 +41,7 @@ public class Sale {
 
     @Column(name = "is_payed")
     private boolean isPayed;
+
     @Column(name = "is_completed")
     private boolean isCompleted;
 

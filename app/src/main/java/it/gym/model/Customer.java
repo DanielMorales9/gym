@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -33,6 +34,15 @@ public class Customer extends AUser {
     @ToString.Exclude
     private List<ATrainingBundle> currentTrainingBundles;
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name="previous_users_bundles",
+            joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
+            inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
+    @JsonProperty(value = "previousTrainingBundles")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @JsonIgnore
+    private List<ATrainingBundle> previousTrainingBundles;
 
     public Integer getWeight() {
         return weight;
@@ -50,12 +60,21 @@ public class Customer extends AUser {
         this.height = height;
     }
 
+    public List<ATrainingBundle> getPreviousTrainingBundles() {
+        if (previousTrainingBundles == null)
+            this.previousTrainingBundles = new ArrayList<>();
+        return previousTrainingBundles;
+    }
+
+    public void setPreviousTrainingBundles(List<ATrainingBundle> previousTrainingBundles) {
+        this.previousTrainingBundles = previousTrainingBundles;
+    }
+
     public List<ATrainingBundle> getCurrentTrainingBundles() {
         if (currentTrainingBundles == null)
             this.currentTrainingBundles = new ArrayList<>();
         return currentTrainingBundles;
     }
-
 
 
     public void setCurrentTrainingBundles(List<ATrainingBundle> currentTrainingBundles) {
@@ -73,7 +92,14 @@ public class Customer extends AUser {
         this.currentTrainingBundles.remove(bundle);
     }
 
-    @Override
+    public void addToPreviousTrainingBundles(List<ATrainingBundle> bundles) {
+        if (this.previousTrainingBundles == null) {
+            this.previousTrainingBundles = new ArrayList<>();
+        }
+        this.previousTrainingBundles.addAll(bundles);
+    }
+
+        @Override
     public List<Role> defaultRoles() {
         return Collections.singletonList(
                 new Role(3L, "CUSTOMER"));
@@ -96,4 +122,5 @@ public class Customer extends AUser {
             return this.currentTrainingBundles.contains(bundle);
         return false;
     }
+
 }
