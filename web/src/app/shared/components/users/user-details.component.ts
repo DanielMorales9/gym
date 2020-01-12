@@ -8,6 +8,7 @@ import {AuthenticationService} from '../../../core/authentication';
 import {AuthService} from '../../../core/controllers';
 import {SnackBarService} from '../../../core/utilities';
 import {UserHelperService} from '../../../core/helpers';
+import {PolicyService} from '../../../core/policy';
 
 
 @Component({
@@ -23,6 +24,10 @@ export class UserDetailsComponent implements OnInit {
     canEdit: boolean;
     canSendToken: boolean;
     canMakeAppointments: boolean;
+    canShowBundles: boolean;
+
+    USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
+
     private me: User;
     private root: string;
 
@@ -31,6 +36,7 @@ export class UserDetailsComponent implements OnInit {
                 private route: ActivatedRoute,
                 private router: Router,
                 private authService: AuthService,
+                private policy: PolicyService,
                 private dialog: MatDialog,
                 private snackbar: SnackBarService) {
     }
@@ -48,13 +54,19 @@ export class UserDetailsComponent implements OnInit {
             }
             else {
                 this.user = data;
-                this.canDelete = this.user.id !== this.me.id && this.me.type === 'A';
-                this.canSell = this.user.type === 'C' && this.me.type === 'A';
-                this.canSendToken = this.me.type === 'A' && !this.user.verified;
-                this.canEdit = this.me.type === 'A';
-                this.canMakeAppointments = this.me.type === 'A' && this.user.type === 'C';
+                this.getPolicies();
             }
         });
+    }
+
+    private getPolicies() {
+        const entity = this.USER_TYPE[this.user.type];
+        this.canEdit = this.policy.get(entity, 'canEdit');
+        this.canDelete = this.policy.get(entity, 'canDelete');
+        this.canSell = this.policy.get(entity, 'canSell');
+        this.canSendToken = this.policy.get(entity, 'canSendToken') && !this.user.verified;
+        this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
+        this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
     }
 
     openEditDialog(): void {
@@ -129,5 +141,11 @@ export class UserDetailsComponent implements OnInit {
                 break;
         }
         return name;
+    }
+
+    showBundles() {
+        return this.router.navigate([this.root, 'customer', 'bundles'], {queryParams: {
+            id: this.user.id
+            }});
     }
 }

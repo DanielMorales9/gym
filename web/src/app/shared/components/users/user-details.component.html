@@ -11,8 +11,7 @@
             </div>
             <div>
                 <mat-icon fontSet="fa" fontIcon="fa-calendar"></mat-icon>&nbsp;&nbsp;
-                Membro dal:&nbsp;
-                <span [innerHTML]="getUserCreatedAt()"></span>
+                Membro dal &nbsp;<span [innerHTML]="getUserCreatedAt()"></span>
             </div>
             <div>
                 <div class="red-light" [hidden]="user?.verified">
@@ -47,6 +46,11 @@
             <button *ngIf="canSell" mat-button color="basic" (click)="buy()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>&nbsp;Acquista
+            </span>
+            </button>
+            <button *ngIf="canShowBundles" mat-button (click)="showBundles()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Pacchetti
             </span>
             </button>
             <button *ngIf="canMakeAppointments" mat-button color="basic" (click)="makeAppointments()">

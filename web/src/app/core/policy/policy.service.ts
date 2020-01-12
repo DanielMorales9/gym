@@ -24,6 +24,39 @@ export class PolicyService {
             canCreate: true,
             canEdit: true
         },
+        admin: {
+            canEdit: true,
+            canDelete: true,
+            canCreate: true,
+            canSell: false,
+            canSendToken: true,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: false
+            }
+        },
+        customer: {
+            canEdit: true,
+            canDelete: true,
+            canCreate: true,
+            canSell: true,
+            canSendToken: true,
+            canMakeAppointments: true,
+            canShow: {
+                bundles: true
+            }
+        },
+        trainer: {
+            canEdit: true,
+            canDelete: true,
+            canCreate: true,
+            canSell: false,
+            canSendToken: true,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: false
+            }
+        },
         bundle: {
             canDelete: true,
             canEdit: true
@@ -47,6 +80,39 @@ export class PolicyService {
             canDelete: false,
             canCreate: true,
             canEdit: true
+        },
+        admin: {
+            canEdit: false,
+            canDelete: false,
+            canCreate: false,
+            canSell: false,
+            canSendToken: false,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: false
+            }
+        },
+        customer: {
+            canEdit: true,
+            canDelete: false,
+            canCreate: true,
+            canSell: false,
+            canSendToken: true,
+            canMakeAppointments: true,
+            canShow: {
+                bundles: true
+            }
+        },
+        trainer: {
+            canEdit: false,
+            canDelete: false,
+            canCreate: false,
+            canSell: false,
+            canSendToken: false,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: false
+            }
         },
         bundle: {
             canDelete: false,
@@ -72,6 +138,39 @@ export class PolicyService {
             canDelete: false,
             canCreate: false,
             canEdit: true
+        },
+        admin: {
+            canEdit: false,
+            canDelete: false,
+            canCreate: false,
+            canSell: false,
+            canSendToken: false,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: false
+            }
+        },
+        customer: {
+            canEdit: false,
+            canDelete: false,
+            canCreate: false,
+            canSell: false,
+            canSendToken: false,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: true
+            }
+        },
+        trainer: {
+            canEdit: false,
+            canDelete: false,
+            canCreate: false,
+            canSell: false,
+            canSendToken: false,
+            canMakeAppointments: false,
+            canShow: {
+                bundles: false
+            }
         },
         bundle: {
             canDelete: false,
