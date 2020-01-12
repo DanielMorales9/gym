@@ -48,12 +48,12 @@
                 <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
             </span>
         </button>
-        <button mat-button (click)="edit()">
+        <button mat-button *ngIf="canEdit" (click)="edit()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>
         </button>
-        <button *ngIf="bundle?.deletable" mat-button color="warn" (click)="delete()">
+        <button *ngIf="bundle?.deletable && canDelete" mat-button color="warn" (click)="delete()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
             </span>

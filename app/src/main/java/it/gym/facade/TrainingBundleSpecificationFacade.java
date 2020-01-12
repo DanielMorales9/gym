@@ -38,7 +38,7 @@ public class TrainingBundleSpecificationFacade {
         List<ATrainingBundle> bundles = bundleService.findBundlesBySpec(spec);
         boolean isDeletable = bundles.isEmpty();
         if (!isDeletable) {
-            throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso");
+            throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso.");
         }
         service.delete(spec);
     }

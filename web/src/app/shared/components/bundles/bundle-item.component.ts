@@ -11,6 +11,8 @@ import {BundleModalComponent} from './bundle-modal.component';
 export class BundleItemComponent {
 
     @Input() bundle: any;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
 
     @Output() done = new EventEmitter();
 

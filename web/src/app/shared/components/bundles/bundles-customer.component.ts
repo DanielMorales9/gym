@@ -6,6 +6,7 @@ import {SnackBarService} from '../../../core/utilities';
 import {BundleCustomerHelperService, QueryableDatasource} from '../../../core/helpers';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
+import {PolicyService} from '../../../core/policy';
 
 @Component({
     templateUrl: './bundles-customer.component.html',
@@ -17,10 +18,13 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
 
     query: any;
     copyQuery: any;
-    userId: number;
+    id: number;
+
+    ds: QueryableDatasource<Bundle>;
+    canDelete: boolean;
+    canEdit: boolean;
 
     private pageSize = 10;
-    ds: QueryableDatasource<Bundle>;
     private sub: Subscription;
 
     constructor(private service: BundleService,
@@ -28,13 +32,14 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private router: Router,
                 private dialog: MatDialog,
+                private policy: PolicyService,
                 private snackbar: SnackBarService) {
 
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
-
+        this.getPolicies();
         this.sub = this.route.queryParams.subscribe(value => {
             this.copyQuery = {};
             // tslint:disable
@@ -42,9 +47,14 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
                 this.copyQuery[key] = value[key];
             }
             console.log(this.copyQuery);
-            this.userId = this.copyQuery['userId'];
+            this.id = this.copyQuery['id'];
             this.get(this.copyQuery);
         });
+    }
+
+    private getPolicies() {
+        this.canDelete = this.policy.get('bundle', 'canDelete');
+        this.canEdit = this.policy.get('bundle', 'canEdit');
     }
 
 

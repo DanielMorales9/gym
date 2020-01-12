@@ -18,9 +18,10 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
     COURSE   = BundleType.COURSE;
 
     bundle: any;
+    private sub: Subscription;
+
     canEdit: boolean;
     canDelete: boolean;
-    private sub: Subscription;
 
     constructor(private service: BundleService,
                 private dialog: MatDialog,
