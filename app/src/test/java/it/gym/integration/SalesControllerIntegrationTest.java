@@ -92,6 +92,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void findSaleByIdGotNotFound() throws Exception {
+        mockMvc.perform(get("/sales/" + 1000))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void findSaleUserByIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/sales/" + sale.getId() + "/customer"))
                 .andExpect(status().isOk());
@@ -313,6 +319,16 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSales(result);
     }
 
+    @Test
+    public void whenSearchByDateAndIdAndPayedOK() throws Exception {
+        String path = "/sales/searchByDateAndId?payed=false&id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
     private void expectSales(ResultActions result) throws Exception {
         List<SalesLineItem> sli = sliRepository.findAll();
         for (int i = 0; i < 1; i++) {
@@ -376,8 +392,28 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenFindAllPayedOK() throws Exception {
+        String path = "/sales?payed=false";
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
     public void whenFindUserSalesOK() throws Exception {
         String path = "/sales/findUserSales?id="+customer.getId();
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
+    public void whenFindUserSalesAndPayedOK() throws Exception {
+        String path = "/sales/findUserSales?payed=false&id="+customer.getId();
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
@@ -407,8 +443,29 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenSearchByLastNameAndDateAndPayedOK() throws Exception {
+        String path = "/sales/searchByLastNameAndDate?payed=false&lastName="+customer.getLastName()+"&date="
+                +Calendar.yesterday("dd-MM-yyyy");
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
     public void whenSearchByLastNameOK() throws Exception {
         String path = "/sales/searchByLastName?lastName="+customer.getLastName();
+
+        ResultActions result = mockMvc.perform(get(path))
+                .andExpect(status().isOk());
+
+        expectSales(result);
+    }
+
+    @Test
+    public void whenSearchByLastNameAndPayedOK() throws Exception {
+        String path = "/sales/searchByLastName?payed=false&lastName="+customer.getLastName();
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());

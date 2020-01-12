@@ -48,6 +48,7 @@ public class SaleService implements ICrudService<Sale, Long> {
                                                                         Date date,
                                                                         Boolean payed,
                                                                         Pageable pageable) {
+        // TODO merge call
         if (payed == null) {
             return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
         }
@@ -62,6 +63,7 @@ public class SaleService implements ICrudService<Sale, Long> {
                                                                               Date date,
                                                                               Boolean payed,
                                                                               Pageable pageable) {
+        // TODO merge call
         if (payed == null) {
             return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
         }
@@ -70,6 +72,7 @@ public class SaleService implements ICrudService<Sale, Long> {
     }
 
     public Page<Sale> findSalesByCustomerLastName(String lastName, Boolean payed, Pageable pageable) {
+        // TODO merge call
         if (payed == null) {
             return saleRepository.findSalesByCustomerLastName(lastName, pageable);
         }
@@ -77,6 +80,7 @@ public class SaleService implements ICrudService<Sale, Long> {
     }
 
     public Page<Sale> findAll(Boolean payed, Pageable pageable) {
+        // TODO merge call
         if (payed == null) {
             return this.findAll(pageable);
         }
