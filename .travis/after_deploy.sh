@@ -60,7 +60,7 @@ fi
 echo "==========================="
 echo "| Login to ECR service... |"
 echo "==========================="
-$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
+aws ecr get-login --region "${AWS_DEFAULT_REGION}" --no-include-email
 
 
 # define the full path of the docker image
@@ -74,8 +74,8 @@ echo "+${ECR_NAME}"
 echo "========================"
 echo "| Push Image to ECR... |"
 echo "========================"
-docker tag ${DOCKER_USER}/${IMAGE}:${TAG} ${ECR_NAME}:${TAG}
-docker push ${ECR_NAME}:${TAG}
+docker tag "${DOCKER_USER}/${IMAGE}:${TAG}" "${ECR_NAME}:${TAG}"
+docker push "${ECR_NAME}:${TAG}"
 echo "+success"
 
 echo "==================================="
