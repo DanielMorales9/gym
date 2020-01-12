@@ -30,23 +30,19 @@ export class SearchMixedToolbar implements OnInit {
     emit(type, event) {
         switch (type) {
             case 'name':
-                if (this.isNotNull(this.name)) { this.query.name = this.name; }
+                if (!!this.name) { this.query.name = this.name; }
                 else { delete this.query.name; }
                 break;
             case 'date':
-                if (this.isNotNull(event.value)) { this.query.date = event.value; }
+                if (!!event.value) { this.query.date = event.value; }
                 else { delete this.query.date; }
                 break;
             case this.filterName:
-                if (this.isNotNull(event.value)) { this.query[this.filterName] = event.value; }
+                if (!!event.value) { this.query[this.filterName] = event.value; }
                 else { delete this.query[this.filterName]; }
                 break;
         }
         this.done.emit(this.query);
-    }
-
-    private isNotNull(value) {
-        return !(value === null || value === undefined);
     }
 }
 

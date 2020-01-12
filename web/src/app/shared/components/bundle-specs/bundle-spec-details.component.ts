@@ -95,9 +95,9 @@ export class BundleSpecDetailsComponent implements OnInit {
     }
 
     goToEditions() {
-        this.router.navigate(['admin', 'bundles'],
+        this.router.navigate(['bundles'],
             {queryParams: {
                     specId: this.bundleSpec.id
-                }});
+                }, relativeTo: this.route.parent});
     }
 }

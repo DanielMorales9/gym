@@ -1,0 +1,10 @@
+<mat-form-field floatLabel="never">
+    <mat-label>
+        <mat-icon>filter_list</mat-icon>
+    </mat-label>
+    <mat-select class="search-input-date" (selectionChange)="emit($event)" [value]="selected">
+        <mat-option class="search-input-date"  *ngFor="let filter of filters" [value]="filter.value">
+            {{ filter.name }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>

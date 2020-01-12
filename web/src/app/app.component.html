@@ -69,6 +69,13 @@
                                 <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
                             </span>
                     </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/trainer/bundleSpecs">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                    </a>
                 </ng-container>
                 <ng-container id="menu-customer"
                               *ngIf="current_role_view == 3">

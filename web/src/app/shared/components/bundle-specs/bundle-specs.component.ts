@@ -1,56 +1,74 @@
-import {Component, OnInit} from '@angular/core';
-import {BundleSpecification} from '../../shared/model';
-import {BundleSpecsService} from '../../core/controllers';
-import {MatDialog} from '@angular/material';
-import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
+import {Component, OnDestroy, OnInit} from '@angular/core';
+import {BundleSpecHelperService, QueryableDatasource} from '../../../core/helpers';
+import {BundleSpecification} from '../../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SnackBarService} from '../../core/utilities';
-import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
-import {PolicyService} from '../../core/policy';
+import {MatDialog} from '@angular/material/dialog';
+import {BundleSpecsService} from '../../../core/controllers';
+import {PolicyService} from '../../../core/policy';
+import {SnackBarService} from '../../../core/utilities';
+import {BundleSpecModalComponent} from './bundle-spec-modal.component';
+import {Subscription} from 'rxjs';
 
 @Component({
     templateUrl: './bundle-specs.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
 export class BundleSpecsComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
-    query: string;
-    private queryParams: { query: string };
+    query: any = {};
+    private queryParams: any;
 
     private pageSize = 10;
     ds: QueryableDatasource<BundleSpecification>;
     canDelete: boolean;
     canShowEditions: boolean;
     canDisable: boolean;
+    canCreate: boolean;
+
+    filters = [
+        {name: 'Disattivo', value: true},
+        {name: 'Attivo', value: false},
+        {name: 'Entrambi', value: undefined}];
+    filterName = 'disabled';
+    selected = false;
+    private sub: Subscription;
 
     constructor(private service: BundleSpecsService,
                 private router: Router,
                 private dialog: MatDialog,
+                private route: ActivatedRoute,
                 private helper: BundleSpecHelperService,
-                private activatedRoute: ActivatedRoute,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
     }
 
     ngOnInit(): void {
-        this.query = this.activatedRoute.snapshot.queryParamMap.get('query') || undefined;
-        this.search();
-
+        this.initQueryParams();
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
-        this.canShowEditions = this.policy.get('bundleSpec', 'canShow', 'editions')
+        this.canCreate = this.policy.get('bundleSpec', 'canCreate');
+        this.canShowEditions = this.policy.get('bundleSpec', 'canShow', 'editions');
     }
 
-    private updateQueryParams() {
-        this.queryParams = {query: this.query};
+    private initQueryParams() {
+        this.sub = this.route.queryParams.subscribe(params => {
+            this.queryParams = Object.assign({}, params);
+            this.search(this.queryParams);
+        });
+        this.sub.unsubscribe();
+    }
+
+    private updateQueryParams($event) {
+        if (!$event) { $event = {}; }
+
+        this.queryParams = this.query = $event;
         this.router.navigate(
             [],
             {
-                relativeTo: this.activatedRoute,
+                relativeTo: this.route,
                 queryParams: this.queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
@@ -94,12 +112,9 @@ export class BundleSpecsComponent implements OnInit {
     }
 
     search($event?) {
-        if ($event) {
-            this.query = $event.query;
-        }
-        this.ds.setQuery(this.query);
+        this.ds.setQuery($event);
         this.ds.fetchPage(0);
-        this.updateQueryParams();
+        this.updateQueryParams($event);
     }
 
     private createBundleSpec(bundleSpec: BundleSpecification) {

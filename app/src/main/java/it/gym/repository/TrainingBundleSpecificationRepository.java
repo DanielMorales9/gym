@@ -16,4 +16,6 @@ public interface TrainingBundleSpecificationRepository extends JpaRepository<ATr
     Page<ATrainingBundleSpecification> findByNameContainsAndIsDisabled(String name, Boolean isDisabled, Pageable pageable);
 
     Page<ATrainingBundleSpecification> findByIsDisabled(Boolean isDisabled, Pageable pageable);
+
+    Page<ATrainingBundleSpecification> findByNameAndIsDisabled(String name, Boolean disabled, Pageable pageable);
 }

@@ -1,14 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
-import {BundleType} from '../../shared/model';
-import {PolicyService} from '../../core/policy';
+import {BundleSpecModalComponent} from './bundle-spec-modal.component';
+import {BundleType} from '../../model';
 
 
 @Component({
     selector: 'bundle-spec-item',
     templateUrl: './bundle-spec-item.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css'],
 })
 export class BundleSpecItemComponent {
 

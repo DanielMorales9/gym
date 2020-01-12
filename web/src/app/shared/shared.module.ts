@@ -24,7 +24,8 @@ import {
     BundleSpecDetailsComponent,
     BundleModalComponent,
     BundlesComponent,
-    BundleItemComponent, BundlesCustomerComponent
+    FilterSearchToolbar,
+    BundleItemComponent, BundlesCustomerComponent, BundleSpecItemComponent, BundleSpecsComponent, FilterComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -108,6 +109,7 @@ import {MatMenuModule} from '@angular/material/menu';
         DeleteReservationCourseEventComponent,
         SearchDateToolbar,
         SimpleSearchToolbar,
+        FilterSearchToolbar,
         SearchMixedToolbar,
         CalendarHeaderToolbar,
         CalendarButtonToolbar,
@@ -129,10 +131,14 @@ import {MatMenuModule} from '@angular/material/menu';
         BundlesCustomerComponent,
         BundlesComponent,
         BundleItemComponent,
+        BundleSpecItemComponent,
+        BundleSpecsComponent,
+        FilterComponent,
     ],
     exports: [
         BundleModalComponent,
         NoItemComponent,
+        FilterComponent,
         GymClosedComponent,
         InfoPersonalEventComponent,
         DeletePersonalEventComponent,
@@ -147,6 +153,7 @@ import {MatMenuModule} from '@angular/material/menu';
         SimpleSearchToolbar,
         SearchMixedToolbar,
         SearchDateToolbar,
+        FilterSearchToolbar,
         SaleItemComponent,
         PaySaleModalComponent,
         SaleDetailsComponent,
@@ -160,6 +167,8 @@ import {MatMenuModule} from '@angular/material/menu';
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        BundleSpecItemComponent,
+        BundleSpecsComponent,
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}

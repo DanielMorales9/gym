@@ -1,12 +1,11 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {BundleSpecsComponent} from './bundle-specs';
 import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
 import {UserDetailsComponent, UsersComponent} from '../shared/components/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
-import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
+import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/components/bundle-specs';
 import {BundleDetailsComponent, BundlesComponent, BundlesCustomerComponent} from '../shared/components/bundles';
 
 const routes = [

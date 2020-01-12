@@ -2,31 +2,34 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {FormControl} from '@angular/forms';
 
 @Component({
-    selector: 'search-date',
-    templateUrl: './search-date.toolbar.html',
+    selector: 'filter-search',
+    templateUrl: './filter-search.toolbar.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class SearchDateToolbar implements OnInit {
-
+export class FilterSearchToolbar implements OnInit {
     @Input() query: any;
-    @Input() datePlaceholder: string;
-    @Input() maxDate: Date;
+    @Input() text: string;
 
     @Input() filters: any;
     @Input() filterName: string;
     @Input() selected: any;
 
     @Output() done: EventEmitter<any> = new EventEmitter();
-    date: FormControl;
+
+    name: string;
 
     ngOnInit(): void {
-        this.date = new FormControl(this.query.date || undefined);
+        if (this.query) {
+            this.name = this.query.name || undefined;
+        }
     }
 
-    emit(type, event) {
+    emit(type?, event?) {
+        console.log(type, event);
         switch (type) {
-            case 'date':
-                if (!!event.value) { this.query.date = event.value; } else { delete this.query.date; }
+            case 'name':
+                if (this.name !== undefined) { this.query.name = this.name; }
+                else { delete this.query.name; }
                 break;
             case this.filterName:
                 if (!!event.value) {
@@ -36,8 +39,16 @@ export class SearchDateToolbar implements OnInit {
                 }
                 break;
         }
+
+        for (const key in this.query) {
+            if (!this.query[key]) {
+                delete this.query[key];
+            }
+        }
+
+        console.log(this.query);
+
         this.done.emit(this.query);
     }
-
 }
 

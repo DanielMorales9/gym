@@ -47,8 +47,16 @@ public class TrainingBundleSpecificationFacade {
         return service.save(spec);
     }
 
-    public Page<ATrainingBundleSpecification> findByNameContains(String query, Pageable pageable) {
-        return service.findByNameContains(query, pageable);
+    public Page<ATrainingBundleSpecification> findByNameContains(String name, Boolean disabled, Pageable pageable) {
+        if (disabled == null && name == null)
+            return service.findAll(pageable);
+        else if (disabled == null) {
+            return service.findByNameContains(name, pageable);
+        } if (name == null) {
+            return service.findByIsDisabled(disabled, pageable);
+        } else {
+            return service.findByNameAndIsDisabled(name, disabled, pageable);
+        }
     }
 
     public ATrainingBundleSpecification save(ATrainingBundleSpecification spec) {

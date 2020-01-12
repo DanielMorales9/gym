@@ -75,12 +75,12 @@ describe('BundleSpecsService', () => {
         const bundle = new PersonalBundleSpecification();
         bundle.id = 1;
         bundle.description = 'now';
-        bundleService.search('query', 1, 5).subscribe(res => {
+        bundleService.search({name: 'course'}, 1, 5).subscribe(res => {
             expect(res).toEqual([bundle]);
             done();
         });
         const req = backend.expectOne({
-            url: '/bundleSpecs/search?query=query&page=1&size=5&sort=createdAt,desc&sort=name,asc',
+            url: '/bundleSpecs/search?name=course&page=1&size=5&sort=createdAt,desc&sort=name,asc',
             method: 'GET'
         });
         req.flush([bundle]);

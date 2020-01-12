@@ -1,0 +1,24 @@
+<mat-toolbar color="basic" class="search-toolbar">
+    <form class="search-form">
+        <mat-form-field class="search-input" floatLabel="never">
+            <label class="sr-only" for="search-input">{{text}}</label>
+            <input matInput
+                   type="text"
+                   title="{{text}}"
+                   placeholder="{{text}}"
+                   id="search-input"
+                   name="query"
+                   [(ngModel)]="name"/>
+            <button mat-button matSuffix type="submit" (click)="emit('name', $event)">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+        <ng-container *ngIf="!!filters" >
+            <filter (change)="emit(filterName, $event)"
+                    [selected]="selected"
+                    [filters]="filters">
+
+            </filter>
+        </ng-container>
+    </form>
+</mat-toolbar>

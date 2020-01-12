@@ -164,7 +164,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Test
     public void whenSearch_OK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundleSpecs/search?query="+courseBundle.getName()))
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/search?name="+courseBundle.getName()))
                 .andExpect(status().isOk());
 
         expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification) courseBundle, "content["+0+"]");

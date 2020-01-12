@@ -32,16 +32,11 @@
                 <mat-icon>search</mat-icon>
             </button>
         </mat-form-field>
-        <mat-form-field class="search-filters"
-                        *ngIf="!!filters" floatLabel="never">
-            <mat-label>
-                <mat-icon>filter_list</mat-icon>
-            </mat-label>
-            <mat-select class="search-input-date" (selectionChange)="emit(filterName, $event)" [value]="selected">
-                <mat-option class="search-input-date"  *ngFor="let filter of filters" [value]="filter.value">
-                    {{ filter.name }}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+        <ng-container *ngIf="!!filters" >
+            <filter (change)="emit(filterName, $event)"
+                    [selected]="selected"
+                    [filters]="filters">
+            </filter>
+        </ng-container>
     </form>
 </mat-toolbar>
