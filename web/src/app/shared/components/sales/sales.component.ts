@@ -28,6 +28,13 @@ export class SalesComponent implements OnInit {
     canDelete: boolean;
     mixed: boolean;
 
+    filters = [
+        {name: 'Da Pagare', value: false},
+        {name: 'Pagati', value: true},
+        {name: 'Tutti', value: undefined}];
+    filterName = 'payed';
+    selected = undefined;
+
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
                 private auth: AuthenticationService,

@@ -42,21 +42,32 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        let observable, date, value;
+        console.log(query);
         if (!!query.date) {
-            date = new Date(query.date);
-            value = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
+            query = Object.assign({}, query);
+            const date = new Date(query.date);
+            query.date = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
         }
-        if (!!query.id && value) {
-            observable = this.service.searchByDateAndId(value, query.id, page, size);
+
+        if (!!query.name) {
+            // this is for refactoring reasons
+            query.lastName = query.name;
+            delete query.name;
+        }
+
+        let observable;
+        if (!!query.id && query.date) {
+            observable = this.service.searchByDateAndId(query, page, size);
         } else if (!!query.id) {
-            observable = this.service.findUserSales(query.id, page, size);
-        } else if (!!query.name && value) {
-            observable = this.service.searchByLastNameAndDate(query.name, value, page, size);
-        } else if (!!query.name) {
-            observable = this.service.searchByLastName(query.name, page, size);
-        } else if (value) {
-            observable = this.service.searchByDate(value, page, size);
+            observable = this.service.findUserSales(query, page, size);
+        } else if (!!query.lastName && query.date) {
+            observable = this.service.searchByLastNameAndDate(query, page, size);
+        } else if (!!query.lastName) {
+            observable = this.service.searchByLastName(query, page, size);
+        } else if (query.date) {
+            observable = this.service.searchByDate(query, page, size);
+        } else {
+            observable = this.service.get(page, size, query);
         }
 
         return observable;

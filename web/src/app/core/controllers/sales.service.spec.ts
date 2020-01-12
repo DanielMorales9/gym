@@ -36,7 +36,7 @@ describe('SalesService', () => {
     });
 
     it('testing #findUserSales', done => {
-        salesService.findUserSales(1, 1, 5).subscribe(res => {
+        salesService.findUserSales({id: 1}, 1, 5).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
@@ -99,7 +99,7 @@ describe('SalesService', () => {
     });
 
     it('testing #searchByLastName', done => {
-        salesService.searchByLastName('prova', 1, 5).subscribe(res => {
+        salesService.searchByLastName({lastName: 'prova'}, 1, 5).subscribe(res => {
             expect(res).toEqual([]);
             done();
         });
@@ -111,7 +111,7 @@ describe('SalesService', () => {
     });
 
     it('testing #searchByDateAndId', done => {
-        salesService.searchByDateAndId('query', 1, 1, 5)
+        salesService.searchByDateAndId({id:1, date: 'query'}, 1, 5)
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();

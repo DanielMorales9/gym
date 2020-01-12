@@ -38,12 +38,20 @@ public class SaleService implements ICrudService<Sale, Long> {
         return this.saleRepository.findAll(pageable);
     }
 
-    public Page<Sale> findUserSales(Long id, Pageable pageable) {
-        return this.saleRepository.findUserSales(id, pageable);
+    public Page<Sale> findUserSales(Long id, Boolean payed, Pageable pageable) {
+        if (payed == null)
+            return this.saleRepository.findUserSales(id, pageable);
+        return  this.saleRepository.findUserSalesPayed(id, payed, pageable);
     }
 
-    public Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id, Date date, Pageable pageable) {
-        return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
+    public Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id,
+                                                                        Date date,
+                                                                        Boolean payed,
+                                                                        Pageable pageable) {
+        if (payed == null) {
+            return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
+        }
+        return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqualAndIsPayed(id, date, payed, pageable);
     }
 
     public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Pageable pageable) {
@@ -52,12 +60,26 @@ public class SaleService implements ICrudService<Sale, Long> {
 
     public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
                                                                               Date date,
+                                                                              Boolean payed,
                                                                               Pageable pageable) {
-        return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
+        if (payed == null) {
+            return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
+        }
+        return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsPayed(lastName, date,
+                payed, pageable);
     }
 
-    public Page<Sale> findSalesByCustomerLastName(String lastName, Pageable pageable) {
-        return saleRepository.findSalesByCustomerLastName(lastName, pageable);
+    public Page<Sale> findSalesByCustomerLastName(String lastName, Boolean payed, Pageable pageable) {
+        if (payed == null) {
+            return saleRepository.findSalesByCustomerLastName(lastName, pageable);
+        }
+        return saleRepository.findSalesByCustomerLastNameAndIsPayed(lastName, payed, pageable);
     }
 
+    public Page<Sale> findAll(Boolean payed, Pageable pageable) {
+        if (payed == null) {
+            return this.findAll(pageable);
+        }
+        return saleRepository.findSalesByIsPayed(payed, pageable);
+    }
 }

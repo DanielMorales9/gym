@@ -51,28 +51,35 @@ public class SaleFacade {
         saleService.delete(sale);
     }
 
-    public Page<Sale> findUserSales(Long id, Pageable pageable) {
-        return this.saleService.findUserSales(id, pageable);
+    public Page<Sale> findUserSales(Long id, Boolean payed, Pageable pageable) {
+        return this.saleService.findUserSales(id, payed, pageable);
     }
 
-    public Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id, Date date, Pageable pageable) {
-        return this.saleService.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
+    public Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id,
+                                                                        Date date,
+                                                                        Boolean payed,
+                                                                        Pageable pageable) {
+        return this.saleService.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
     }
 
     public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Pageable pageable) {
         return this.saleService.findSalesByCreatedAtGreaterThanEqual(date, pageable);
     }
 
-    public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName, Date date, Pageable pageable) {
-        return this.saleService.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
+    public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
+                                                                              Date date,
+                                                                              Boolean payed,
+                                                                              Pageable pageable) {
+        return this.saleService.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date,
+                payed, pageable);
     }
 
-    public Page<Sale> findSalesByCustomerLastName(String lastName, Pageable pageable) {
-        return this.saleService.findSalesByCustomerLastName(lastName, pageable);
+    public Page<Sale> findSalesByCustomerLastName(String lastName, Boolean payed, Pageable pageable) {
+        return this.saleService.findSalesByCustomerLastName(lastName, payed, pageable);
     }
 
-    public Page<Sale> findAll(Pageable pageable) {
-        return this.saleService.findAll(pageable);
+    public Page<Sale> findAll(Boolean payed, Pageable pageable) {
+        return this.saleService.findAll(payed, pageable);
     }
 
     public Sale getTotalPriceBySaleId(Long saleId) {
