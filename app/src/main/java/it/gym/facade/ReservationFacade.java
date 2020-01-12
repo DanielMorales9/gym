@@ -166,7 +166,7 @@ public class ReservationFacade {
         }
     }
 
-    List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
+    public List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
         logger.info("Checking whether the bundles are expired");
         List<ATrainingBundle> expiredBundles = customer
                 .getCurrentTrainingBundles()
