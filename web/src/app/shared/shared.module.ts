@@ -56,6 +56,7 @@ import {RouterModule} from '@angular/router';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {BundleDetailsComponent} from './components/bundles';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
     imports: [
@@ -82,6 +83,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         MatExpansionModule,
         MatCheckboxModule,
         ScrollingModule,
+        MatMenuModule,
     ],
 
     entryComponents: [

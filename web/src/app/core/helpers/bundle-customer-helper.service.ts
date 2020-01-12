@@ -19,9 +19,7 @@ export class BundleCustomerHelperService extends HelperService<Bundle> {
         if (!!query.date) {
             query = Object.assign({}, query);
             const date = new Date(query.date);
-            console.log(date);
             query.date = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
-            console.log(query.date);
         }
         return this.service.getBundles(query, page, size);
     }

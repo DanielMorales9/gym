@@ -58,13 +58,13 @@
                 <mat-icon fontSet="fa" fontIcon="fa-ban"></mat-icon>&nbsp;Disabilita
             </span>
         </button>
-        <ng-container *ngIf="canShowEditions && bundleSpec?.type === 'C'">
-            <button mat-button (click)="goToEditions()">
-                <span>
-                    <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Edizioni
-                </span>
-            </button>
-        </ng-container>
+<!--        <ng-container *ngIf="canShowEditions && bundleSpec?.type === 'C'">-->
+<!--            <button mat-button (click)="goToEditions()">-->
+<!--                <span>-->
+<!--                    <mat-icon fontSet="fas" fontIcon="fa-list"></mat-icon>&nbsp;Edizioni-->
+<!--                </span>-->
+<!--            </button>-->
+<!--        </ng-container>-->
         <button mat-button color="warn" *ngIf="canDelete" (click)="deleteBundleSpec()">
             <span>
                 <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina

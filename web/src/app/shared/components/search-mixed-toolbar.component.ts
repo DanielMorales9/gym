@@ -11,8 +11,12 @@ export class SearchMixedToolbar implements OnInit {
     @Input() textPlaceholder: string;
     @Input() datePlaceholder: string;
     @Input() maxDate: Date;
+    @Input() filters: any;
+    @Input() filterName: string;
+    @Input() selected: any;
 
     @Output() done: EventEmitter<any> = new EventEmitter();
+
     name: string;
     date: any;
 
@@ -26,13 +30,23 @@ export class SearchMixedToolbar implements OnInit {
     emit(type, event) {
         switch (type) {
             case 'name':
-                if (this.name) { this.query.name = this.name; } else { delete this.query.name; }
+                if (this.isNotNull(this.name)) { this.query.name = this.name; }
+                else { delete this.query.name; }
                 break;
             case 'date':
-                if (event.value) { this.query.date = event.value; } else { delete this.query.date; }
+                if (this.isNotNull(event.value)) { this.query.date = event.value; }
+                else { delete this.query.date; }
+                break;
+            case this.filterName:
+                if (this.isNotNull(event.value)) { this.query[this.filterName] = event.value; }
+                else { delete this.query[this.filterName]; }
                 break;
         }
         this.done.emit(this.query);
+    }
+
+    private isNotNull(value) {
+        return !(value === null || value === undefined);
     }
 }
 

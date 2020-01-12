@@ -72,8 +72,8 @@ export class BundleSpecItemComponent {
         this.done.emit({type: 'info', bundleSpec: this.bundleSpec});
     }
 
-    goToEditions() {
-        this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
-    }
+    // goToEditions() {
+    //     this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
+    // }
 
 }

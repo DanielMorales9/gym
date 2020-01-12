@@ -1,6 +1,10 @@
 <mat-toolbar color="basic" class="search-toolbar">
     <form class="search-form">
-        <mat-form-field class="search-input-date search-datepicker" floatLabel="never">
+        <mat-form-field floatLabel="never"
+                        [ngClass]="{
+                        'search-input-date': true,
+                        'search-datepicker': !filters,
+                        'search-datepicker-w-filters': !!filters}">
             <label class="sr-only"></label>
             <input matInput
                    [matDatepicker]="picker"
@@ -11,7 +15,11 @@
             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
             <mat-datepicker #picker color="primary"></mat-datepicker>
         </mat-form-field>
-        <mat-form-field class="search-input-date search-text" floatLabel="never">
+        <mat-form-field floatLabel="never"
+                [ngClass]="{
+                'search-input-date': true,
+                'search-text': !filters,
+                'search-text-w-filters': !!filters}" >
             <label class="sr-only" for="search-input">{{textPlaceholder}}</label>
             <input matInput
                    type="text"
@@ -19,10 +27,21 @@
                    placeholder="&nbsp;{{textPlaceholder}}"
                    id="search-input"
                    name="lastName"
-                   [(ngModel)]="name"/>
+                   [(ngModel)]="name" />
             <button mat-button matSuffix type="submit" (click)="emit('name', $event)">
                 <mat-icon>search</mat-icon>
             </button>
+        </mat-form-field>
+        <mat-form-field class="search-filters"
+                        *ngIf="!!filters" floatLabel="never">
+            <mat-label>
+                <mat-icon>filter_list</mat-icon>
+            </mat-label>
+            <mat-select class="search-input-date" (selectionChange)="emit(filterName, $event)" [value]="selected">
+                <mat-option class="search-input-date"  *ngFor="let filter of filters" [value]="filter.value">
+                    {{ filter.name }}
+                </mat-option>
+            </mat-select>
         </mat-form-field>
     </form>
 </mat-toolbar>

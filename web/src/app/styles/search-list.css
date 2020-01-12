@@ -35,8 +35,16 @@ form.search-form {
     /*height: inherit;*/
 }
 
+::ng-deep .mat-select-content {
+    font-weight: 200;
+}
+
 .search-datepicker {
-    width: 40%;
+    width: 50%;
+}
+
+.search-datepicker-w-filters {
+    width: 42%;
 }
 
 .search-fulldate {
@@ -44,11 +52,19 @@ form.search-form {
 }
 
 .search-text {
-    width: 60%;
+    width: 50%;
+}
+
+.search-text-w-filters {
+    width: 42%;
 }
 
 .search-input-date {
     font-weight: 200;
+}
+
+.search-filters {
+    width: 16%;
 }
 
 .search-input {

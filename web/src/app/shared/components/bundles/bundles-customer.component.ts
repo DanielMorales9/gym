@@ -26,6 +26,12 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
     private queryParams: any;
     private pageSize = 10;
     private sub: Subscription;
+    filters = [
+        {name: 'Attivi', value: false},
+        {name: 'Terminati', value: true},
+        {name: 'Tutti', value: undefined}];
+    filterName = 'expired';
+    selected = undefined;
 
     constructor(private service: BundleService,
                 private helper: BundleCustomerHelperService,
@@ -39,12 +45,13 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+
         this.getPolicies();
         this.initQueryParams();
     }
 
     private initQueryParams() {
-        this.route.queryParams.subscribe(params => {
+        this.sub = this.route.queryParams.subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
                 if (!!this.queryParams.date) {
