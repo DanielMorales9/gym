@@ -32,6 +32,7 @@ public class SaleFacade {
     @Qualifier("trainingBundleSpecificationService")
     private TrainingBundleSpecificationService bundleSpecService;
 
+    @Qualifier("trainingBundleService")
     @Autowired
     private TrainingBundleService bundleService;
 

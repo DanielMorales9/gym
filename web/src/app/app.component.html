@@ -87,6 +87,13 @@
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
                     </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/customer/myBundles" [queryParams]="{userId: user.id}">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                    </a>
                 </ng-container>
 
                 <div id="menu-common">

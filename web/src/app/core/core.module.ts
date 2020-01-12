@@ -20,7 +20,7 @@ import {
     BundleSpecPayHelperService,
     SaleHelperService,
     UserHelperService,
-    BundleHelperService,
+    BundleHelperService, BundleCustomerHelperService,
 } from './helpers';
 import {PolicyService} from './policy';
 
@@ -68,6 +68,7 @@ import {PolicyService} from './policy';
         BundleSpecHelperService,
         BundleHelperService,
         BundleSpecPayHelperService,
+        BundleCustomerHelperService,
         PolicyService
     ]
 })

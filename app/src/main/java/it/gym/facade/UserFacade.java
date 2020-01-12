@@ -1,15 +1,10 @@
 package it.gym.facade;
 
 import it.gym.exception.BadRequestException;
-import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
 import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;
-import org.hibernate.JDBCException;
-import org.hibernate.exception.ConstraintViolationException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
@@ -22,8 +17,6 @@ import javax.transaction.Transactional;
 @Component
 @Transactional
 public class UserFacade {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired
     @Qualifier("verificationTokenService")

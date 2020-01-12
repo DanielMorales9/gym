@@ -32,10 +32,12 @@ public class EventFacadeTest {
 
     @MockBean
     private GymService gymService;
+
     @MockBean
     private ReservationService reservationService;
 
     @MockBean
+    @Qualifier("trainingBundleService")
     private TrainingBundleService bundleService;
 
     @MockBean

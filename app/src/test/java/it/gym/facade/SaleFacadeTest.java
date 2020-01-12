@@ -40,6 +40,7 @@ public class SaleFacadeTest {
     private TrainingBundleSpecificationService bundleSpecService;
 
     @MockBean
+    @Qualifier("trainingBundleService")
     private TrainingBundleService bundleService;
 
     @MockBean

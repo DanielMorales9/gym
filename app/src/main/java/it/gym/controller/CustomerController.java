@@ -41,4 +41,12 @@ public class CustomerController {
         return service.findByLastName(query, pageable);
     }
 
+    @GetMapping(path = "/bundles")
+    @ResponseBody
+    public Page<ATrainingBundle> findBundles(@RequestParam Long id,
+                                             @RequestParam(required = false) Boolean expired,
+                                             Pageable pageable) {
+        return service.findBundles(id, expired, pageable);
+    }
+
 }

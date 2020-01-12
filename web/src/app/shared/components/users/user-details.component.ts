@@ -108,7 +108,7 @@ export class UserDetailsComponent implements OnInit {
     }
 
     makeAppointments() {
-        return this.router.navigate([this.root, 'calendar', 'customer', this.user.id]);
+        return this.router.navigate([this.root, 'calendar', this.user.id]);
     }
 
     getRoleName() {

@@ -29,8 +29,8 @@ public class EventFacade {
     @Autowired private EventService service;
     @Autowired private GymService gymService;
     @Autowired private UserService userService;
+    @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
-    @Autowired private ReservationService reservationService;
 
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;

@@ -24,7 +24,7 @@ import {
     BundleSpecDetailsComponent,
     BundleModalComponent,
     BundlesComponent,
-    BundleItemComponent
+    BundleItemComponent, BundlesCustomerComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -124,6 +124,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
+        BundlesCustomerComponent,
         BundlesComponent,
         BundleItemComponent,
     ],
@@ -151,6 +152,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         BundleSpecDetailsComponent,
         BundleDetailsComponent,
         BundlesComponent,
+        BundlesCustomerComponent,
         BundleItemComponent,
         SalesComponent,
         CustomerHourModalComponent,

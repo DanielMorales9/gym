@@ -33,6 +33,7 @@ public class ReservationFacade {
     @Autowired private EventService eventService;
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
+    @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
 
     @Value("${reservationBeforeHours}")
@@ -155,7 +156,9 @@ public class ReservationFacade {
 
     private void checkBundleIsReservable(Customer customer, ATrainingBundle bundle) {
         if (bundle.isExpired()) {
-            deleteExpiredBundles(customer);
+            List<ATrainingBundle> expiredBundles = deleteExpiredBundles(customer);
+            customer.addToPreviousTrainingBundles(expiredBundles);
+            customerService.save(customer);
             throw new MethodNotAllowedException("Hai completato tutte le sessioni di allenamento disponibili in questo pacchetto");
         }
         if (!customer.containsBundle(bundle)) {
@@ -163,13 +166,14 @@ public class ReservationFacade {
         }
     }
 
-    void deleteExpiredBundles(Customer customer) {
+    List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
         logger.info("Checking whether the bundles are expired");
         List<ATrainingBundle> expiredBundles = customer
                 .getCurrentTrainingBundles()
                 .stream()
                 .filter(ATrainingBundle::isExpired).collect(Collectors.toList());
         expiredBundles.forEach(customer::deleteBundle);
+        return expiredBundles;
     }
 
     void isReservedOnTime(Date startTime) {

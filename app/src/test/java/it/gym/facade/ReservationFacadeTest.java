@@ -33,6 +33,7 @@ public class ReservationFacadeTest {
     @MockBean private CustomerService customerService;
     @MockBean private TrainerService trainerService;
     @MockBean private EventService eventService;
+    @Qualifier("trainingBundleService")
     @MockBean private TrainingBundleService trainingBundleService;
     @Qualifier("trainingSessionService")
     @MockBean private TrainingSessionService sessionService;
