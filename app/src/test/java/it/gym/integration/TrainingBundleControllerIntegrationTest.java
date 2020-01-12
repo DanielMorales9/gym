@@ -85,6 +85,12 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
+    public void whenFindByIdGotNotFound() throws Exception {
+        mockMvc.perform(get("/bundles/1000"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
     public void whenSearchOK() throws Exception {
 
         ResultActions result = mockMvc.perform(get("/bundles/search?specId="+courseBundle
