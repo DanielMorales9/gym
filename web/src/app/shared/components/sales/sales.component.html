@@ -1,4 +1,4 @@
-<ng-template [ngIf]="mixed" [ngIfElse]="date">
+<ng-template [ngIf]="mixed" [ngIfElse]="searchDateOnly">
     <mixed-search [query]="query" textPlaceholder="Cognome" datePlaceholder="Cerca data" (done)="search($event)"></mixed-search>
 </ng-template>
 
@@ -14,6 +14,6 @@
 <no-item [hidden]="!ds.empty" [message]="noCardMessage" ></no-item>
 
 
-<ng-template #date>
+<ng-template #searchDateOnly>
     <search-date [query]="query" datePlaceholder="Cerca data" (done)="search($event)"></search-date>
 </ng-template>

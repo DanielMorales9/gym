@@ -51,10 +51,10 @@ export class SaleHelperService extends HelperService<Sale> {
             observable = this.service.searchByDateAndId(value, query.id, page, size);
         } else if (!!query.id) {
             observable = this.service.findUserSales(query.id, page, size);
-        } else if (!!query.lastName && value) {
-            observable = this.service.searchByLastNameAndDate(query.lastName, value, page, size);
-        } else if (!!query.lastName) {
-            observable = this.service.searchByLastName(query.lastName, page, size);
+        } else if (!!query.name && value) {
+            observable = this.service.searchByLastNameAndDate(query.name, value, page, size);
+        } else if (!!query.name) {
+            observable = this.service.searchByLastName(query.name, page, size);
         } else if (value) {
             observable = this.service.searchByDate(value, page, size);
         }

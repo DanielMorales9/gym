@@ -1,4 +1,7 @@
-<simple-search [query]="query" text="Cerca" (done)="search($event)"></simple-search>
+<mixed-search [query]="query"
+              textPlaceholder="Nome"
+              datePlaceholder="Cerca data" (done)="search($event)"></mixed-search>
+
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
     <div *cdkVirtualFor="let b of ds;" class="scroll-item">

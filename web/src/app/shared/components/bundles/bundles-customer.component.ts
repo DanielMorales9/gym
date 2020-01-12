@@ -17,13 +17,13 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
     query: any;
-    copyQuery: any;
     id: number;
 
     ds: QueryableDatasource<Bundle>;
     canDelete: boolean;
     canEdit: boolean;
 
+    private queryParams: any;
     private pageSize = 10;
     private sub: Subscription;
 
@@ -40,28 +40,44 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getPolicies();
-        this.sub = this.route.queryParams.subscribe(value => {
-            this.copyQuery = {};
-            // tslint:disable
-            for (let key in value) {
-                this.copyQuery[key] = value[key];
+        this.initQueryParams();
+    }
+
+    private initQueryParams() {
+        this.route.queryParams.subscribe(params => {
+            this.queryParams = Object.assign({}, params);
+            if (Object.keys(params).length > 0) {
+                if (!!this.queryParams.date) {
+                    this.queryParams.date = new Date(this.queryParams.date);
+                }
             }
-            console.log(this.copyQuery);
-            this.id = this.copyQuery['id'];
-            this.get(this.copyQuery);
+            this.id = this.queryParams.id;
+            this.search(this.queryParams);
         });
+    }
+
+    private updateQueryParams(event?) {
+        if (!event) { event = {}; }
+        if (this.id) { event.id = this.id; }
+
+        this.queryParams = this.query = event;
+        this.router.navigate(
+            [],
+            {
+                relativeTo: this.route,
+                queryParams: this.queryParams,
+            });
+    }
+
+    search($event?) {
+        this.ds.setQuery($event);
+        this.ds.fetchPage(0);
+        this.updateQueryParams($event);
     }
 
     private getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete');
         this.canEdit = this.policy.get('bundle', 'canEdit');
-    }
-
-
-    private get(query: {}) {
-        // TODO fix
-        this.ds.setQuery(query);
-        this.ds.fetchPage(0);
     }
 
     async handleEvent($event) {
@@ -70,29 +86,6 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
         } else {
             console.error(`Operazione non riconosciuta: ${$event.type}`);
         }
-    }
-
-    // private updateQueryParams() {
-    //     this.queryParams = {query: this.query};
-    //     this.router.navigate(
-    //         [],
-    //         {
-    //             relativeTo: this.activatedRoute,
-    //             queryParams: this.queryParams,
-    //             queryParamsHandling: 'merge', // remove to replace all query params by provided
-    //         });
-    // }
-
-    search($event?) {
-        // TODO search feature
-        this.snackbar.open('Questa funzione sarà disponibile a breve');
-
-        // if ($event) {
-        //     this.query = $event.query;
-        // }
-        // this.ds.setQuery(this.query);
-        // this.ds.fetchPage(0);
-        // this.updateQueryParams();
     }
 
     ngOnDestroy(): void {

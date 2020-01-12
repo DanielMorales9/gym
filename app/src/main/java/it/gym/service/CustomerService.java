@@ -11,7 +11,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -45,7 +48,7 @@ public class CustomerService implements ICrudService<Customer, Long> {
         return repository.findAll(pageable);
     }
 
-    public Page<ATrainingBundle> findBundles(Long id, Boolean expired, Pageable pageable) {
+    public Page<ATrainingBundle> findBundles(Long id, Boolean expired, String name, Date date, Pageable pageable) {
         Customer customer = this.findById(id);
         List<ATrainingBundle> bundles, prev;
         if (expired == null) {
@@ -59,6 +62,14 @@ public class CustomerService implements ICrudService<Customer, Long> {
         else {
             bundles = customer.getCurrentTrainingBundles();
         }
+        Stream<ATrainingBundle> stream = bundles.stream();
+        if (name != null) {
+            stream = stream.filter(b -> b.getName().contains(name));
+        }
+        if (date != null) {
+            stream = stream.filter(b -> b.getCreatedAt().after(date));
+        }
+        bundles = stream.collect(Collectors.toList());
         return new PageImpl<>(bundles, pageable, bundles.size());
     }
 }

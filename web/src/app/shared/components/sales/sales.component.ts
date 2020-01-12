@@ -21,7 +21,7 @@ export class SalesComponent implements OnInit {
 
     private pageSize = 10;
     private queryParams: any;
-    private id: number;
+    id: number;
 
     ds: QueryableDatasource<Sale>;
     canPay: boolean;
@@ -40,12 +40,11 @@ export class SalesComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const path = this.route.parent.parent.snapshot.routeConfig.path;
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
         this.mixed = this.canDelete;
 
-        this.initQueryParams(this.id);
+        this.initQueryParams();
     }
 
     private initQueryParams(id?) {
@@ -56,9 +55,8 @@ export class SalesComponent implements OnInit {
                     this.queryParams.date = new Date(this.queryParams.date);
                 }
             }
-            if (id) {
-                this.queryParams.id = id;
-            }
+            console.log(this.queryParams);
+            this.id = this.queryParams.id;
             this.search(this.queryParams);
         });
     }
