@@ -9,6 +9,7 @@ import {AuthenticationService} from '../../../core/authentication';
 import {AuthService} from '../../../core/controllers';
 import {SnackBarService} from '../../../core/utilities';
 import {UserHelperService, QueryableDatasource} from '../../../core/helpers';
+import {PolicyService} from '../../../core/policy';
 
 @Component({
     templateUrl: './users.component.html',
@@ -24,9 +25,10 @@ export class UsersComponent implements OnInit {
     private pageSize = 10;
     private queryParams: any;
     ds: QueryableDatasource<User>;
-    canAdd: boolean;
+
+    canCreate: boolean;
     canDelete: boolean;
-    canPatch: boolean;
+    canEdit: boolean;
     type: string;
 
     constructor(private service: UserService,
@@ -36,6 +38,7 @@ export class UsersComponent implements OnInit {
                 private activatedRoute: ActivatedRoute,
                 private auth: AuthenticationService,
                 private authService: AuthService,
+                private policy: PolicyService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
         this.currentUserId = this.auth.getUser().id;
@@ -45,14 +48,10 @@ export class UsersComponent implements OnInit {
 
     ngOnInit(): void {
         this.type = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
-        switch (this.type) {
-            case 'admin':
-                this.canPatch = this.canDelete = this.canAdd = true;
-                break;
-            case 'trainer':
-                this.canPatch = this.canDelete = this.canAdd = false;
-                break;
-        }
+
+        this.canDelete = this.policy.get('user', 'canDelete');
+        this.canCreate = this.policy.get('user', 'canCreate');
+        this.canEdit = this.policy.get('user', 'canEdit');
         this.initQueryParams();
     }
 

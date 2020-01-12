@@ -1,14 +1,12 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
-import {BundleSpecsComponent} from './bundle-specs';
 import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
 import {UserDetailsComponent, UsersComponent} from '../shared/components/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
-import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
-import {BundlesComponent} from './bundles';
-import {BundleDetailsComponent} from '../shared/components/bundles';
+import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/components/bundle-specs';
+import {BundleDetailsComponent, BundlesComponent, BundlesCustomerComponent} from '../shared/components/bundles';
 
 const routes = [
 
@@ -18,13 +16,15 @@ const routes = [
             { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
             { path: 'bundles', component: BundlesComponent },
             { path: 'bundles/:id', component: BundleDetailsComponent },
+            { path: 'customer/bundles', component: BundlesCustomerComponent },
             { path: 'users', component: UsersComponent },
             { path: 'users/:id', component: UserDetailsComponent},
             { path: 'sales', component: SalesComponent },
             { path: 'sales/buy/:id', component: CreateSaleComponent },
             { path: 'sales/:id', component: SaleDetailsComponent },
+            { path: 'customer/sales', component: SalesComponent },
             { path: 'calendar', component: AdminCalendarComponent },
-            { path: 'calendar/customer/:id', component: ACustomerCalendarComponent },
+            { path: 'calendar/:id', component: ACustomerCalendarComponent },
             { path: '**', redirectTo: 'bundleSpecs' }
         ]},
 ];

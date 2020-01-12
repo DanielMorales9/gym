@@ -1,15 +1,20 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
+import it.gym.model.ATrainingBundle;
 import it.gym.model.Customer;
 import it.gym.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @Transactional
@@ -41,5 +46,30 @@ public class CustomerService implements ICrudService<Customer, Long> {
 
     public Page<Customer> findAll(Pageable pageable) {
         return repository.findAll(pageable);
+    }
+
+    public Page<ATrainingBundle> findBundles(Long id, Boolean expired, String name, Date date, Pageable pageable) {
+        Customer customer = this.findById(id);
+        List<ATrainingBundle> bundles, prev;
+        if (expired == null) {
+            bundles = customer.getCurrentTrainingBundles();
+            prev = customer.getPreviousTrainingBundles();
+            bundles.addAll(prev);
+        }
+        else if (expired){
+            bundles = customer.getPreviousTrainingBundles();
+        }
+        else {
+            bundles = customer.getCurrentTrainingBundles();
+        }
+        Stream<ATrainingBundle> stream = bundles.stream();
+        if (name != null) {
+            stream = stream.filter(b -> b.getName().contains(name));
+        }
+        if (date != null) {
+            stream = stream.filter(b -> b.getCreatedAt().after(date));
+        }
+        bundles = stream.collect(Collectors.toList());
+        return new PageImpl<>(bundles, pageable, bundles.size());
     }
 }

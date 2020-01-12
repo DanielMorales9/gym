@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {BundleSpecification} from '../../shared/model';
 import {ABundleService} from './abundle.service';
+import {to_promise} from '../functions/decorators';
 
 @Injectable()
 export class BundleSpecsService extends ABundleService {
@@ -23,8 +24,11 @@ export class BundleSpecsService extends ABundleService {
         return this.http.get(`/bundleSpecs?page=${page}&size=${size}&sort=name`);
     }
 
-    search(query: string, page: number, size: number): Observable<Object> {
-        return this.http.get(`/bundleSpecs/search?query=${query}&page=${page}&size=${size}&sort=createdAt,desc&sort=name,asc`);
+    search(query: any, page: number, size: number): Observable<Object> {
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = ['createdAt,desc', 'name,asc'];
+        return this.http.get('/bundleSpecs/search', {params: query});
     }
 
     getSessions(endpoint): Observable<Object> {
@@ -35,7 +39,8 @@ export class BundleSpecsService extends ABundleService {
         return this.http.delete(`/bundleSpecs/${id}`);
     }
 
-    findById(id: number) {
+    @to_promise
+    findById(id: number): any {
         return this.http.get(`/bundleSpecs/${id}`);
     }
 }

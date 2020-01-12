@@ -33,6 +33,7 @@ public class ReservationFacadeTest {
     @MockBean private CustomerService customerService;
     @MockBean private TrainerService trainerService;
     @MockBean private EventService eventService;
+    @Qualifier("trainingBundleService")
     @MockBean private TrainingBundleService trainingBundleService;
     @Qualifier("trainingSessionService")
     @MockBean private TrainingSessionService sessionService;
@@ -69,7 +70,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void deleteExpiredBundles() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         facade.deleteExpiredBundles(customer);
     }
@@ -87,7 +88,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void isAvailable() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
@@ -106,7 +107,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void book() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
@@ -148,9 +149,8 @@ public class ReservationFacadeTest {
 
     @Test(expected = MethodNotAllowedException.class)
     public void whenCreatingReservationFromEvent_IsNotReservable() {
-        Customer customer = (Customer)
-                createCustomer(1L, "customer@customer.com",
-                        "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com",
+                "", "customer", "customer", true, null);
 
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
@@ -169,9 +169,8 @@ public class ReservationFacadeTest {
 
     @Test(expected = MethodNotAllowedException.class)
     public void whenCreatingReservationFromEvent_CustomerDoesNotHaveBundle() {
-        Customer customer = (Customer)
-                createCustomer(1L, "customer@customer.com",
-                        "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com",
+                "", "customer", "customer", true, null);
 
         Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
@@ -189,7 +188,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = MethodNotAllowedException.class)
     public void whenCreatingReservationFromBundle_IsExpired() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
@@ -210,7 +209,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void customerDeleteReservation() {
-        Customer customer = (Customer) createCustomer(1L,
+        Customer customer = createCustomer(1L,
                 "customer@customer.com", "",
                 "customer", "customer", true, null);
         Role role = new Role();
@@ -244,7 +243,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void adminDeleteReservation() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Role role = new Role();
         role.setId(1L);
         role.setName("CUSTOMER");
@@ -266,7 +265,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void confirm() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
         ATrainingBundle bundle = createPersonalBundle(1L, null);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, bundle);

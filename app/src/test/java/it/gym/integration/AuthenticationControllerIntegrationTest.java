@@ -56,7 +56,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
     @Test
     public void whenRegister_OK() throws Exception {
-        Customer customer = (Customer) createCustomer(1L,
+        Customer customer = createCustomer(1L,
                 "customer@customer.com",
                 "password",
                 "customer",

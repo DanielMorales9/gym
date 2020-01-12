@@ -8,12 +8,21 @@ export class SalesService {
 
     constructor(private http: HttpClient) {}
 
-    findUserSales(id: number, page: number, size: number): Observable<Object> {
-        return this.http.get(`/sales/findUserSales?id=${id}&page=${page}&size=${size}&sort=createdAt,desc`);
+    findUserSales(query: any, page: number, size: number): Observable<Object> {
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = 'createdAt,desc';
+        return this.http.get('/sales/findUserSales', {params: query});
     }
 
-    get(page: number, size: number): Observable<Object> {
-        return this.http.get(`/sales?page=${page}&size=${size}&sort=createdAt,desc`);
+    get(page: number, size: number, query?: any): Observable<Object> {
+        if (!query) {
+            query = {};
+        }
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = 'createdAt,desc';
+        return this.http.get('/sales', {params: query});
     }
 
     @to_promise
@@ -49,21 +58,35 @@ export class SalesService {
         return this.http.get(`/sales/pay/${id}?amount=${amount}`);
     }
 
-    searchByLastName(query: string, page: number, size: number): Observable<Object> {
-        return this.http.get(`/sales/searchByLastName?lastName=${query}&page=${page}&size=${size}&sort=createdAt,desc`);
+    searchByLastName(query: any, page: number, size: number): Observable<Object> {
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = 'createdAt,desc';
+
+        return this.http.get('/sales/searchByLastName', {params: query});
     }
 
-    searchByDateAndId(query: string, id: number, page: number, size: number): Observable<Object> {
-        return this.http.get(`/sales/searchByDateAndId?id=${id}&date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
+    searchByDateAndId(query: any, page: number, size: number): Observable<Object> {
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = 'createdAt,asc';
+
+        return this.http.get('/sales/searchByDateAndId', {params: query});
     }
 
     searchByDate(query: any, page: number, size: number): Observable<Object> {
-        return this.http.get(`/sales/searchByDate?date=${query}&page=${page}&size=${size}&sort=createdAt,asc`);
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = 'createdAt,asc';
+        return this.http.get('/sales/searchByDate', {params: query});
     }
 
-    searchByLastNameAndDate(lastName: string , date: any, page: number, size: number) {
-        const endpoint = `/sales/searchByLastNameAndDate?lastName=${lastName}&date=${date}&page=${page}&size=${size}&sort=createdAt,asc`;
-        return this.http.get(endpoint);
+    searchByLastNameAndDate(query: any, page: number, size: number) {
+        query['page'] = page;
+        query['size'] = size;
+        query['sort'] = 'createdAt,asc';
+
+        return this.http.get('/sales/searchByLastNameAndDate', {params: query});
     }
 
     addSalesLineItemByBundle(saleId: number, bundleId: number): Observable<Object> {

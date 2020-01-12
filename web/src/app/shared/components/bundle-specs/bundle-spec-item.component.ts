@@ -1,23 +1,28 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {BundleSpecModalComponent} from '../../shared/components/bundle-specs';
+import {BundleSpecModalComponent} from './bundle-spec-modal.component';
+import {BundleType} from '../../model';
 
 
 @Component({
     selector: 'bundle-spec-item',
     templateUrl: './bundle-spec-item.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css'],
 })
 export class BundleSpecItemComponent {
 
+    COURSE   = BundleType.COURSE;
+    PERSONAL = BundleType.PERSONAL;
+
     @Input() bundleSpec: any;
+    @Input() canDelete: boolean;
+    @Input() canDisable: boolean;
+    @Input() canShowEditions: boolean;
 
     @Output() done = new EventEmitter();
+    constructor(private dialog: MatDialog) {
+    }
 
-    PERSONAL = 'P';
-    COURSE   = 'C';
-
-    constructor(private dialog: MatDialog) {}
 
     openDialog(): void {
         const title = 'Modifica Pacchetto';
@@ -66,7 +71,8 @@ export class BundleSpecItemComponent {
         this.done.emit({type: 'info', bundleSpec: this.bundleSpec});
     }
 
-    goToEditions() {
-        this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
-    }
+    // goToEditions() {
+    //     this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
+    // }
+
 }

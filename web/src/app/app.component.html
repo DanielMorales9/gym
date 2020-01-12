@@ -69,13 +69,20 @@
                                 <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
                             </span>
                     </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/trainer/bundleSpecs">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                    </a>
                 </ng-container>
                 <ng-container id="menu-customer"
                               *ngIf="current_role_view == 3">
                     <h2 matSubheader>Home</h2>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/customer/sales">
+                       routerLink="/customer/sales" [queryParams]="{id: user.id}">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini
                             </span>
@@ -85,6 +92,13 @@
                        routerLink="/customer/calendar">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/customer/bundles" [queryParams]="{id: user.id}">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
                     </a>
                 </ng-container>

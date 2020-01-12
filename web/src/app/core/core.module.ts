@@ -20,8 +20,9 @@ import {
     BundleSpecPayHelperService,
     SaleHelperService,
     UserHelperService,
-    BundleHelperService,
+    BundleHelperService, BundleCustomerHelperService,
 } from './helpers';
+import {PolicyService} from './policy';
 
 
 @NgModule({
@@ -67,6 +68,8 @@ import {
         BundleSpecHelperService,
         BundleHelperService,
         BundleSpecPayHelperService,
+        BundleCustomerHelperService,
+        PolicyService
     ]
 })
 export class CoreModule {

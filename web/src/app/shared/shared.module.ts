@@ -19,7 +19,13 @@ import {
     DeleteHolidayEventComponent,
     ReserveCourseEventComponent,
     DeleteReservationCourseEventComponent,
-    CustomerInfoModalComponent, BundleSpecModalComponent, BundleSpecDetailsComponent, BundleModalComponent
+    CustomerInfoModalComponent,
+    BundleSpecModalComponent,
+    BundleSpecDetailsComponent,
+    BundleModalComponent,
+    BundlesComponent,
+    FilterSearchToolbar,
+    BundleItemComponent, BundlesCustomerComponent, BundleSpecItemComponent, BundleSpecsComponent, FilterComponent
 } from './components';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -51,6 +57,7 @@ import {RouterModule} from '@angular/router';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {BundleDetailsComponent} from './components/bundles';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
     imports: [
@@ -77,6 +84,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         MatExpansionModule,
         MatCheckboxModule,
         ScrollingModule,
+        MatMenuModule,
     ],
 
     entryComponents: [
@@ -101,6 +109,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         DeleteReservationCourseEventComponent,
         SearchDateToolbar,
         SimpleSearchToolbar,
+        FilterSearchToolbar,
         SearchMixedToolbar,
         CalendarHeaderToolbar,
         CalendarButtonToolbar,
@@ -119,11 +128,17 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
-
+        BundlesCustomerComponent,
+        BundlesComponent,
+        BundleItemComponent,
+        BundleSpecItemComponent,
+        BundleSpecsComponent,
+        FilterComponent,
     ],
     exports: [
         BundleModalComponent,
         NoItemComponent,
+        FilterComponent,
         GymClosedComponent,
         InfoPersonalEventComponent,
         DeletePersonalEventComponent,
@@ -138,16 +153,22 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         SimpleSearchToolbar,
         SearchMixedToolbar,
         SearchDateToolbar,
+        FilterSearchToolbar,
         SaleItemComponent,
         PaySaleModalComponent,
         SaleDetailsComponent,
         BundleSpecModalComponent,
         BundleSpecDetailsComponent,
         BundleDetailsComponent,
+        BundlesComponent,
+        BundlesCustomerComponent,
+        BundleItemComponent,
         SalesComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        BundleSpecItemComponent,
+        BundleSpecsComponent,
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}

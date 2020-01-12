@@ -25,8 +25,9 @@ public class SaleController {
 
     @GetMapping
     @ResponseBody
-    public Page<Sale> findAll(Pageable pageable) {
-        return facade.findAll(pageable);
+    public Page<Sale> findAll(@RequestParam(required = false) Boolean payed,
+                              Pageable pageable) {
+        return facade.findAll(payed, pageable);
     }
 
     @GetMapping(path = "/{id}")
@@ -58,25 +59,28 @@ public class SaleController {
 
     @GetMapping(path = "/findUserSales")
     @ResponseBody
-    public Page<Sale> findUserSales(@RequestParam Long id, Pageable pageable) {
-        return facade.findUserSales(id, pageable);
+    public Page<Sale> findUserSales(@RequestParam Long id,
+                                    @RequestParam(required = false) Boolean payed,
+                                    Pageable pageable) {
+        return facade.findUserSales(id, payed, pageable);
     }
 
     @GetMapping(path = "/searchByDateAndId")
     @ResponseBody
     public Page<Sale> findSalesByDateAndId(@RequestParam Long id,
-                                    @RequestParam
-                                    @DateTimeFormat(pattern = "dd-MM-yyyy",
-                                            iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                    Pageable pageable) {
-        return facade.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
+                                           @RequestParam
+                                           @DateTimeFormat(pattern = "dd-MM-yyyy",
+                                                   iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                                           @RequestParam(required = false) Boolean payed,
+                                           Pageable pageable) {
+        return facade.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
     }
 
     @GetMapping(path = "/searchByDate")
     @ResponseBody
     public Page<Sale> findSalesByDate(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                               Pageable pageable) {
+                                      Pageable pageable) {
         return facade.findSalesByCreatedAtGreaterThanEqual(date, pageable);
     }
 
@@ -84,16 +88,19 @@ public class SaleController {
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
     public Page<Sale> findSalesByLastNameAndDate(@RequestParam String lastName,
-                                          @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
-                                                  iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                          Pageable pageable) {
-        return facade.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
+                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
+                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                                                 @RequestParam(required = false) Boolean payed,
+                                                 Pageable pageable) {
+        return facade.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, payed, pageable);
     }
 
     @GetMapping(path = "/searchByLastName")
     @ResponseBody
-    public Page<Sale> findSalesByCustomerLastName(@RequestParam String lastName, Pageable pageable) {
-        return facade.findSalesByCustomerLastName(lastName, pageable);
+    public Page<Sale> findSalesByCustomerLastName(@RequestParam String lastName,
+                                                  @RequestParam(required = false) Boolean payed,
+                                                  Pageable pageable) {
+        return facade.findSalesByCustomerLastName(lastName, payed, pageable);
     }
 
     @GetMapping(path = "/createSale/{customerId}")
@@ -112,7 +119,7 @@ public class SaleController {
     @GetMapping(path = "/addSalesLineItem/{saleId}/{bundleSpecId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
-                                                  @PathVariable Long bundleSpecId) {
+                                                         @PathVariable Long bundleSpecId) {
         Sale sale = this.facade.addSalesLineItem(saleId, bundleSpecId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
@@ -120,7 +127,7 @@ public class SaleController {
     @GetMapping(path = "/addSalesLineItemByBundle/{saleId}/{bundleId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> addSalesLineItemByBundle(@PathVariable Long saleId,
-                                                  @PathVariable Long bundleId) {
+                                                                 @PathVariable Long bundleId) {
         Sale sale = this.facade.addSalesLineItemByBundle(saleId, bundleId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
@@ -129,7 +136,7 @@ public class SaleController {
     @DeleteMapping(path = "/deleteSalesLineItem/{saleId}/{salesLineItemId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
-                                                     @PathVariable Long salesLineItemId) {
+                                                            @PathVariable Long salesLineItemId) {
         Sale sale = this.facade.deleteSalesLineItem(saleId, salesLineItemId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }

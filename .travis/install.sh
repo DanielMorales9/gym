@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-if [ "$TRAVIS_BRANCH" = "master" ]; then
+if [[ "${TRAVIS_BRANCH}" = "master" ]]; then
     echo "========================="
     echo "|  Installing AWS-CLI   |"
     echo "========================="
@@ -10,8 +10,8 @@ if [ "$TRAVIS_BRANCH" = "master" ]; then
     echo "========================="
     TF_ZIP="terraform_${TF_VERSION}_linux_amd64.zip"
     TF_URI="https://releases.hashicorp.com/terraform/${TF_VERSION}/${TF_ZIP}"
-    wget ${TF_URI}
-    unzip ${TF_ZIP}
+    wget "${TF_URI}"
+    unzip "${TF_ZIP}"
 fi
 
 

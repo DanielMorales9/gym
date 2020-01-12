@@ -44,4 +44,10 @@ export class UserService {
     getCustomers(page: number, size: number) {
         return this.http.get(`/customers?page=${page}&size=${size}&sort=lastName`);
     }
+
+    getBundles(query: any, page: number, size: number) {
+        query['page'] = page;
+        query['size'] = size;
+        return this.http.get('/customers/bundles', {params: query});
+    }
 }

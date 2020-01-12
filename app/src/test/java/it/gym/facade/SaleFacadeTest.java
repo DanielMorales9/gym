@@ -40,6 +40,7 @@ public class SaleFacadeTest {
     private TrainingBundleSpecificationService bundleSpecService;
 
     @MockBean
+    @Qualifier("trainingBundleService")
     private TrainingBundleService bundleService;
 
     @MockBean
@@ -88,7 +89,7 @@ public class SaleFacadeTest {
     public void addCourseBundleToSalesLineItem() {
         Date start = getNextMonday();
 
-        AUser customer = createCustomer(1L,
+        Customer customer = createCustomer(1L,
                 "customer@customer.com", "",
                 "customer", "customer", true, null);
         Sale mockSale = createSale(1L, customer);
@@ -112,7 +113,7 @@ public class SaleFacadeTest {
     public void addCourseBundleToSalesLineItemAlreadyCreated() {
         Date start = getNextMonday();
 
-        AUser customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Sale mockSale = createSale(1L, customer);
 
         ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
@@ -166,7 +167,7 @@ public class SaleFacadeTest {
 
     @Test
     public void deleteSaleById() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
@@ -176,7 +177,7 @@ public class SaleFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void deleteSaleByIdNonDeletable() {
-        Customer customer = (Customer) createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
+        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));

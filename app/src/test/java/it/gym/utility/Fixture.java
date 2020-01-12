@@ -13,14 +13,14 @@ import static org.apache.commons.lang3.time.DateUtils.addMonths;
 public class Fixture {
 
 
-    public static AUser createCustomer(long id,
-                                       String email,
-                                       String password,
-                                       String firstName,
-                                       String lastName,
-                                       boolean verified,
-                                       List<Role> roles) {
-        AUser user = new Customer();
+    public static Customer createCustomer(long id,
+                                          String email,
+                                          String password,
+                                          String firstName,
+                                          String lastName,
+                                          boolean verified,
+                                          List<Role> roles) {
+        Customer user = new Customer();
         user.setId(id);
         user.setEmail(email);
         user.setFirstName(firstName);
@@ -66,10 +66,10 @@ public class Fixture {
         return gym;
     }
 
-    public static Sale createSale(long id, AUser customer) {
+    public static Sale createSale(long id, Customer customer) {
         Sale sale = new Sale();
         sale.setId(id);
-        sale.setCustomer((Customer) customer);
+        sale.setCustomer(customer);
         sale.setAmountPayed(0.0);
         sale.setCompleted(false);
         return sale;

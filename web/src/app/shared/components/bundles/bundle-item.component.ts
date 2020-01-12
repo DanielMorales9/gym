@@ -1,17 +1,18 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {BundleType} from '../../shared/model';
-import {BundleModalComponent} from '../../shared/components/bundles';
-
+import {BundleType} from '../../model';
+import {BundleModalComponent} from './bundle-modal.component';
 
 @Component({
     selector: 'bundle-item',
     templateUrl: './bundle-item.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css'],
 })
 export class BundleItemComponent {
 
     @Input() bundle: any;
+    @Input() canEdit: boolean;
+    @Input() canDelete: boolean;
 
     @Output() done = new EventEmitter();
 

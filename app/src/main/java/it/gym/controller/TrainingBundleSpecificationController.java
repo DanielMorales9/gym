@@ -63,13 +63,16 @@ public class TrainingBundleSpecificationController {
 
     @GetMapping(path = "/search")
     @ResponseBody
-    public Page<ATrainingBundleSpecification> search(@RequestParam String query, Pageable pageable) {
-        return facade.findByNameContains(query, pageable);
+    public Page<ATrainingBundleSpecification> search(@RequestParam(required = false) String name,
+                                                     @RequestParam(required = false) Boolean disabled,
+                                                     Pageable pageable) {
+        return facade.findByNameContains(name, disabled, pageable);
     }
 
     @GetMapping(path = "/searchNotDisabled")
     @ResponseBody
     public Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
+        // TODO deprecate and substitute call with /search
         return facade.findByNameContainsAndIsDisabled(query, false, pageable);
     }
 
