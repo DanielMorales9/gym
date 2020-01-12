@@ -4,6 +4,8 @@ import {MatDialog} from '@angular/material';
 import {BundleService} from '../../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Subscription} from 'rxjs';
+import {PolicyService} from '../../../core/policy';
+import {BundleType} from '../../model';
 
 @Component({
     selector: 'bundle-spec-details',
@@ -12,21 +14,25 @@ import {Subscription} from 'rxjs';
 })
 export class BundleDetailsComponent implements OnInit, OnDestroy {
 
-    bundle: any;
+    PERSONAL = BundleType.PERSONAL;
+    COURSE   = BundleType.COURSE;
 
-    PERSONAL = 'P';
-    COURSE   = 'C';
+    bundle: any;
+    canEdit: boolean;
+    canDelete: boolean;
     private sub: Subscription;
 
     constructor(private service: BundleService,
                 private dialog: MatDialog,
                 private router: Router,
+                private policy: PolicyService,
                 private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {
         this.sub = this.route.params.subscribe(async params => {
             await this.getBundle(+params['id']);
+            this.getPolicies();
         });
     }
 
@@ -93,5 +99,10 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
     async goToBundleSPec() {
         await this.router.navigate(['bundleSpecs', this.bundle.bundleSpec.id],
             {relativeTo: this.route.parent});
+    }
+
+    private getPolicies() {
+        this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
+        this.canEdit = this.policy.get('bundle', 'canEdit');
     }
 }

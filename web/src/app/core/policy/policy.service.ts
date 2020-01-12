@@ -23,6 +23,10 @@ export class PolicyService {
             canDelete: true,
             canCreate: true,
             canEdit: true
+        },
+        bundle: {
+            canDelete: true,
+            canEdit: true
         }
     };
 
@@ -43,6 +47,10 @@ export class PolicyService {
             canDelete: false,
             canCreate: true,
             canEdit: true
+        },
+        bundle: {
+            canDelete: false,
+            canEdit: false
         }
     };
 
@@ -53,7 +61,7 @@ export class PolicyService {
             canEdit: false,
             canDisable: false,
             canShow: {
-                editions: true
+                editions: false
             }
         },
         sale: {
@@ -64,6 +72,10 @@ export class PolicyService {
             canDelete: false,
             canCreate: false,
             canEdit: true
+        },
+        bundle: {
+            canDelete: false,
+            canEdit: false
         }
     };
 
@@ -72,15 +84,11 @@ export class PolicyService {
 
     get(entity: string, ...action) {
         const myPolicy = this.POLICIES[this.auth.getCurrentUserRole() - 1];
-        console.log(myPolicy);
-        console.log(action);
         if (entity in myPolicy) {
             let policy = myPolicy[entity];
             let a, index;
             for (index = 0; index < action.length; ++index) {
                 a = action[index];
-                console.log(a);
-                console.log(policy);
                 if (a in policy) {
                     policy = policy[a];
                 }
