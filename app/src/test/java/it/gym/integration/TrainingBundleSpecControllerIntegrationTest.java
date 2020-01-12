@@ -56,7 +56,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void findPersonalBundleSpecId_OK() throws Exception {
+    public void findPersonalBundleSpecIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/" + personalBundle.getId()))
                 .andExpect(status().isOk());
         logger.info(bundleRepository.findAll().toString());
@@ -64,7 +64,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenPatch_OK() throws Exception {
+    public void whenPatchOK() throws Exception {
         personalBundle.setDescription("desco");
         ObjectMapper objectMapper = new ObjectMapper();
         ResultActions result = mockMvc.perform(patch("/bundleSpecs/"+personalBundle.getId())
@@ -75,14 +75,14 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void findCourseBundleSpecId_OK() throws Exception {
+    public void findCourseBundleSpecIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isOk());
-        HateoasTest.expectTrainingBundleSpec(result, courseBundle);
+        expectTrainingBundleSpec(result, courseBundle);
     }
 
     @Test
-    public void deletePersonalBundleSpecId_OK() throws Exception {
+    public void deletePersonalBundleSpecIdOK() throws Exception {
         mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
                 .andExpect(status().isOk());
         assertThat(repository.findAll().size()).isEqualTo(1);
@@ -96,7 +96,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void deleteCourseBundleSpecId_OK() throws Exception {
+    public void deleteCourseBundleSpecIdOK() throws Exception {
         mockMvc.perform(delete("/bundleSpecs/" + courseBundle.getId()))
                 .andExpect(status().isOk());
         assertThat(repository.findAll().size()).isEqualTo(1);
@@ -124,7 +124,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void postPersonalBundleSpec_OK() throws Exception {
+    public void postPersonalBundleSpecOK() throws Exception {
         Object randomObj = new Object() {
             public final boolean disabled = false;
             public final String name = "pacchetto";
@@ -161,7 +161,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenFindAll_OK() throws Exception {
+    public void whenFindAllOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs"))
                 .andExpect(status().isOk());
 
@@ -170,7 +170,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenSearchWAllParameters_OK() throws Exception {
+    public void whenSearchWAllParametersOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/search" +
                 "?name="+courseBundle.getName()+
                 "&disabled=false"))
@@ -180,7 +180,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenSearchWDisabledTrue_OK() throws Exception {
+    public void whenSearchWDisabledTrueOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/search"+
                 "?name="+courseBundle.getName()+
                 "&disabled=true"))
@@ -189,7 +189,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenSearchWOParameters_OK() throws Exception {
+    public void whenSearchWOParametersOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/search"))
                 .andExpect(status().isOk());
         expectTrainingBundleSpec(result, personalBundle, "content["+0+"]");
@@ -197,7 +197,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenSearchWDisabledFalse_OK() throws Exception {
+    public void whenSearchWDisabledFalseOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/search?disabled=false"))
                 .andExpect(status().isOk());
         expectTrainingBundleSpec(result, personalBundle, "content["+0+"]");
@@ -205,7 +205,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenSearchNotDisabled_OK() throws Exception {
+    public void whenSearchNotDisabledOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/searchNotDisabled?" +
                 "query="+courseBundle.getName()))
                 .andExpect(status().isOk());
@@ -213,7 +213,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         expectTrainingBundleSpec(result, courseBundle, "content["+0+"]");    }
 
     @Test
-    public void whenGetNotDisabled_OK() throws Exception {
+    public void whenGetNotDisabledOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/getNotDisabled"))
                 .andExpect(status().isOk());
 
@@ -223,7 +223,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
 
     @Test
-    public void postCourseBundleSpec_OK() throws Exception {
+    public void postCourseBundleSpecOK() throws Exception {
         Object randomObj = new Object() {
             public final boolean disabled = false;
             public final String name = "pacchetto";

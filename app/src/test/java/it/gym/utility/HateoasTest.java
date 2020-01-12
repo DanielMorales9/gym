@@ -183,8 +183,7 @@ public class HateoasTest {
                                             ATrainingBundle trainingBundle,
                                             String prefix) throws Exception {
         result.andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
-                .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()))
-                .andExpect(jsonPath("$"+prefix+"expired").value(trainingBundle.getExpired()));
+                .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
     }
 
     public static void expectTrainingBundle(ResultActions result,
