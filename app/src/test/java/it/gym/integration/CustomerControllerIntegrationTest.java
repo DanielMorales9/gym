@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
@@ -41,7 +43,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         roles = roleRepository.saveAll(roles);
         gym = createGym(1L);
         gym = gymRepository.save(gym);
-        customer = (Customer) createCustomer(1L,
+        customer = createCustomer(1L,
                 "customer@customer.com",
                 "password",
                 "customer",
@@ -132,6 +134,16 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 "&date="+date))
                 .andExpect(status().isOk());
         expectTrainingBundle(result, personal, "content[0]");
+    }
+
+    @Test
+    public void whenFindBundlesWoOK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/customers/bundles" +
+                "?id=" + customer.getId()+
+                "&expired=true"))
+                .andExpect(status().isOk());
+
+        result.andExpect(jsonPath("$.content").isEmpty());
     }
 
 }

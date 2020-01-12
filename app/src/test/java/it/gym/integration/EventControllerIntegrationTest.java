@@ -61,7 +61,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         personalSpec = specRepository.save(personalSpec);
         personalBundle = personalSpec.createTrainingBundle();
         personalBundle = bundleRepository.save(personalBundle);
-        courseBundle = createCourseBundle(1L, start, (CourseTrainingBundleSpecification) courseSpec);
+        courseBundle = createCourseBundle(1L, start, courseSpec);
         courseBundle = bundleRepository.save(courseBundle);
     }
 
@@ -292,7 +292,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         courseBundle.addSession(session);
 
         CourseEvent event = createCourseEvent(1L, "course", session);
-        Customer customer = (Customer) createCustomer(1L,
+        Customer customer = createCustomer(1L,
                 "test@test.com",
                 "test",
                 "test",
