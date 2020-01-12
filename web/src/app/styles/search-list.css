@@ -52,7 +52,7 @@ form.search-form {
 }
 
 .search-fulldate-w-filters {
-    width: 84%;
+    width: 75%;
 }
 
 .search-text {
@@ -63,11 +63,15 @@ form.search-form {
     width: 42%;
 }
 
-.search-input-date {
+.search-font-weight {
     font-weight: 200;
 }
 
 .search-filters {
+    width: 25%;
+}
+
+.search-filters-shrink {
     width: 16%;
 }
 
@@ -76,7 +80,10 @@ form.search-form {
     width: 100%;
     width: -webkit-fill-available;
     width: available;
-    font-weight: 200;
+}
+
+.search-input-shrink {
+    width: 75%;
 }
 
 mat-toolbar.search-toolbar {

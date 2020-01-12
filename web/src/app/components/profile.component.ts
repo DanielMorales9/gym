@@ -38,8 +38,15 @@ export class ProfileComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe((user: User) => {
-            if (user) { this.userService.patch(user).subscribe((u: User) => this.user = u); }
+        dialogRef.afterClosed().subscribe(async (user: User) => {
+            if (user) {
+                const [data, error] = await this.userService.patch(user);
+                if (error) {
+                    this.snackbar.open(error.error.message);
+                } else {
+                    this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
+                }
+            }
         });
     }
 
