@@ -83,8 +83,8 @@ export class PolicyService {
         },
         user: {
             canDelete: false,
-            canCreate: true,
-            canEdit: true
+            canCreate: false,
+            canEdit: false
         },
         admin: {
             canEdit: false,
@@ -99,11 +99,11 @@ export class PolicyService {
             }
         },
         customer: {
-            canEdit: true,
+            canEdit: false,
             canDelete: false,
-            canCreate: true,
+            canCreate: false,
             canSell: false,
-            canSendToken: true,
+            canSendToken: false,
             canMakeAppointments: true,
             canShow: {
                 bundles: true,

@@ -8,6 +8,7 @@ import {PolicyService} from '../../../core/policy';
 import {SnackBarService} from '../../../core/utilities';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {Subscription} from 'rxjs';
+import {first} from 'rxjs/operators';
 
 @Component({
     templateUrl: './bundle-specs.component.html',
@@ -33,7 +34,6 @@ export class BundleSpecsComponent implements OnInit {
         {name: 'Entrambi', value: undefined}];
     filterName = 'disabled';
     selected = false;
-    private sub: Subscription;
 
     constructor(private service: BundleSpecsService,
                 private router: Router,
@@ -54,11 +54,10 @@ export class BundleSpecsComponent implements OnInit {
     }
 
     private initQueryParams() {
-        this.sub = this.route.queryParams.subscribe(params => {
+        this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             this.search(this.queryParams);
         });
-        this.sub.unsubscribe();
     }
 
     private updateQueryParams($event) {
