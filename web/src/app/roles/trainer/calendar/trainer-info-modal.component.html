@@ -1,0 +1,64 @@
+<h5 mat-dialog-title> {{modalData?.title}}</h5>
+<!--<button type="button" (click)="close()">-->
+<!--    <span aria-hidden="true">&times;</span>-->
+<!--</button>-->
+<ng-container [ngSwitch]="modalData?.event.meta?.type">
+    <ng-container *ngSwitchCase="'reservation'">
+        <div mat-dialog-content>
+            <i *ngIf="modalData?.event.meta?.reservation.confirmed"></i>
+            <i class="fas fa-check-double"
+               *ngIf="modalData?.event.meta?.reservation.confirmed && modalData?.event.meta.session.completed"></i>
+            <i *ngIf="!modalData?.event.meta.reservation.confirmed"></i>&nbsp;
+            L'allenamento dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}
+            del cliente {{modalData?.event.meta.reservation.user.lastName}}
+            <span *ngIf="!modalData?.event.meta?.reservation.confirmed"> non</span> è stato confermato e
+            <span *ngIf="!modalData?.event.meta.session.completed"> non è stato </span> completato!
+        </div>
+        <div mat-dialog-actions>
+            <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
+            <button type="button" mat-flat-button color="primary"
+                    *ngIf="!modalData?.event.meta?.reservation.confirmed"
+                    (click)="submit()">Conferma</button>
+            <button type="button" mat-flat-button color="primary"
+                    *ngIf="!modalData?.event.meta?.session.completed && modalData?.event.meta?.reservation.confirmed"
+                    (click)="submit()">Completa</button>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'admin'">
+        <div mat-dialog-content>
+            <i class="fas fa-door-closed"></i>&nbsp;
+            La palestra è chiusa il giorno {{ modalData?.event.start | date :  'dd-MM-yyyy'}}
+            dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+        </div>
+        <div mat-dialog-actions>
+            <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'trainer'">
+        <div mat-dialog-content>
+            <i class="fas fa-bed"></i>&nbsp;
+            Sei di riposo dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}.
+        </div>
+        <div mat-dialog-actions>
+            <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
+        </div>
+    </ng-container>
+
+    <ng-container *ngSwitchCase="'course'">
+        <div mat-dialog-content>
+            <i class="fas fa-calendar-week"></i>
+            {{modalData?.event.meta?.name}} dalle
+            {{ modalData?.event.start | date :  'dd-MM-yyyy HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'dd-MM-yyyy HH:mm a'}}.
+            <br>
+            <i class="fas fa-user"></i>&nbsp;Ci sono {{modalData?.event.meta?.reservations.length}} prenotazioni.
+
+        </div>
+        <div mat-dialog-actions>
+            <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
+        </div>
+    </ng-container>
+</ng-container>

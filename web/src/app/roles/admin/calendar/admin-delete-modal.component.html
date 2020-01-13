@@ -1,0 +1,34 @@
+<h5 mat-dialog-title> {{modalData?.title}}</h5>
+<!--                <button type="button" class="close" (click)="close()">-->
+<!--                    <span aria-hidden="true">&times;</span>-->
+<!--                </button>-->
+<div [ngSwitch]="modalData?.event.meta?.type" mat-dialog-content>
+    <ng-container *ngSwitchCase="'admin'" >
+        <div *ngIf="!!modalData?.event">
+            Vuoi eliminare la chiusura {{ modalData?.event.start | date :  'dd/MM/yyyy'}}?
+            <br>
+            Conferma per eliminare oppure cancella.
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'trainer'">
+        <div *ngIf="!!modalData?.event">
+            Vuoi eliminare il giorno di riposo ({{ modalData?.event.start | date :  'dd/MM/yyyy'}})
+            di {{modalData.event.meta.user.lastName}}?
+            <br>
+            Conferma per eliminare oppure cancella.
+        </div>
+    </ng-container>
+    <ng-container *ngSwitchCase="'reservation'">
+        <div *ngIf="!!modalData?.event">
+            Vuoi eliminare la prenotazione del {{ modalData?.event.start | date :  'dd/MM/yyyy'}}
+            dalle {{ modalData?.event.start | date :  'HH:mm a'}}
+            alle {{ modalData?.event.end | date :  'HH:mm a'}}?
+            <br>
+            Conferma per eliminare oppure cancella.
+        </div>
+    </ng-container>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>
+    <button mat-flat-button type="button" color="primary" (click)="submit()">Conferma</button>
+</div>

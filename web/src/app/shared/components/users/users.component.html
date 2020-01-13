@@ -1,0 +1,15 @@
+<simple-search [query]="query" text="Cerca utenti" (done)="search($event)"></simple-search>
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
+    <div *cdkVirtualFor="let u of ds;" class="scroll-item">
+        <user-item [user]="u"
+                   [root]="type"
+                   [canPatch]="canPatch"
+                   [canDelete]="canDelete && itsMe(u?.id)"
+                   (done)="handleEvent($event)"></user-item>
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE"></no-item>
+<button type="button" mat-fab color="primary" class="fab-button-add" *ngIf="canAdd"
+        title="Aggiungi Utente" (click)="openDialog()">
+    <mat-icon>add</mat-icon>
+</button>

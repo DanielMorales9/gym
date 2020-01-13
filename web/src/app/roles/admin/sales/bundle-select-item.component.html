@@ -1,0 +1,22 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            {{bundle?.name || 'Loading...'}}
+        </mat-card-title>
+        <mat-card-subtitle class="card-list-subtitle">
+            {{bundle?.description || 'Loading...'}}
+        </mat-card-subtitle>
+        <mat-checkbox class="card-list-checkbox"
+                      (change)="selectBundle()"
+                      [checked]="selected">
+        </mat-checkbox>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="card-list-content">
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundle?.price}}
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>
