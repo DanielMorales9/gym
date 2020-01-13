@@ -2,7 +2,7 @@
     <form class="search-form">
         <mat-form-field floatLabel="never"
                         [ngClass]="{
-                        'search-input-date': true,
+                        'search-font-weight': true,
                         'search-datepicker': !filters,
                         'search-datepicker-w-filters': !!filters}">
             <label class="sr-only"></label>
@@ -17,7 +17,7 @@
         </mat-form-field>
         <mat-form-field floatLabel="never"
                 [ngClass]="{
-                'search-input-date': true,
+                'search-font-weight': true,
                 'search-text': !filters,
                 'search-text-w-filters': !!filters}" >
             <label class="sr-only" for="search-input">{{textPlaceholder}}</label>
@@ -33,10 +33,10 @@
             </button>
         </mat-form-field>
         <ng-container *ngIf="!!filters" >
-            <filter (change)="emit(filterName, $event)"
-                    [selected]="selected"
-                    [filters]="filters">
-            </filter>
+            <filter-toolbar class="search-filters-shrink" (change)="emit(filterName, $event)"
+                            [selected]="selected"
+                            [filters]="filters">
+            </filter-toolbar>
         </ng-container>
     </form>
 </mat-toolbar>

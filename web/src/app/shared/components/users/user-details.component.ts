@@ -85,8 +85,13 @@ export class UserDetailsComponent implements OnInit {
         });
     }
 
-    private patchUser(user: User) {
-        this.service.patch(user).subscribe((u: User) => this.user = u);
+    private async patchUser(user: User) {
+        const [data, error] = await this.service.patch(user);
+        if (error) {
+            this.snackbar.open(error.error.message);
+        } else {
+            this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
+        }
     }
 
     async deleteUser() {

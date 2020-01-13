@@ -1,7 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 
 @Component({
-    selector: 'filter',
+    selector: 'filter-toolbar',
     templateUrl: './filter.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })

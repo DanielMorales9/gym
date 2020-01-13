@@ -86,7 +86,7 @@ public class GymServiceTest {
 
     @Test(expected = BadRequestException.class)
     public void isPast() {
-        Date start = addDays(getNextMonday(), -7);
+        Date start = addDays(getNextMonday(), -8);
         Date end = addHours(start, 1);
         Gym gym = createGym(1L);
         service.simpleGymChecks(gym, start, end);

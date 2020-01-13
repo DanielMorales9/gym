@@ -1,6 +1,9 @@
 <mat-toolbar color="basic" class="search-toolbar">
     <form class="search-form">
-        <mat-form-field class="search-input" floatLabel="never">
+        <mat-form-field [ngClass]="{'search-font-weight': true,
+                                    'search-input': !filters,
+                                    'search-input-shrink': !!filters }"
+                        floatLabel="never">
             <label class="sr-only" for="search-input">{{text}}</label>
             <input matInput
                    type="text"
@@ -14,11 +17,13 @@
             </button>
         </mat-form-field>
         <ng-container *ngIf="!!filters" >
-            <filter (change)="emit(filterName, $event)"
+            <filter-toolbar
+                    class="search-filters"
+                    (change)="emit(filterName, $event)"
                     [selected]="selected"
                     [filters]="filters">
 
-            </filter>
+            </filter-toolbar>
         </ng-container>
     </form>
 </mat-toolbar>
