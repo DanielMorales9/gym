@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Bundle} from '../../model';
 import {BundleService} from '../../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -7,12 +7,13 @@ import {BundleCustomerHelperService, QueryableDatasource} from '../../../core/he
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../../core/policy';
+import {first} from 'rxjs/operators';
 
 @Component({
     templateUrl: './bundles-customer.component.html',
     styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
-export class BundlesCustomerComponent implements OnInit, OnDestroy {
+export class BundlesCustomerComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
@@ -25,7 +26,6 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
 
     private queryParams: any;
     private pageSize = 10;
-    private sub: Subscription;
     filters = [
         {name: 'Attivi', value: false},
         {name: 'Terminati', value: true},
@@ -51,7 +51,7 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
     }
 
     private initQueryParams() {
-        this.sub = this.route.queryParams.subscribe(params => {
+        this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
                 if (!!this.queryParams.date) {
@@ -93,10 +93,6 @@ export class BundlesCustomerComponent implements OnInit, OnDestroy {
         } else {
             console.error(`Operazione non riconosciuta: ${$event.type}`);
         }
-    }
-
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
     }
 
     private async goToDetails(bundle: any) {

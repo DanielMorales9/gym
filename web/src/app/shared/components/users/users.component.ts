@@ -10,6 +10,7 @@ import {AuthService} from '../../../core/controllers';
 import {SnackBarService} from '../../../core/utilities';
 import {UserHelperService, QueryableDatasource} from '../../../core/helpers';
 import {PolicyService} from '../../../core/policy';
+import {first} from 'rxjs/operators/first';
 
 @Component({
     templateUrl: './users.component.html',
@@ -56,7 +57,7 @@ export class UsersComponent implements OnInit {
     }
 
     private initQueryParams() {
-        this.activatedRoute.queryParams.subscribe(params => {
+        this.activatedRoute.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
                 this.query = this.queryParams.query || undefined;
