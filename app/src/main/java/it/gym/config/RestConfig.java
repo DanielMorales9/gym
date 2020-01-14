@@ -51,6 +51,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
                 AUser.class,
                 Sale.class,
                 SalesLineItem.class,
+                Payment.class,
                 AEvent.class,
                 ATrainingEvent.class,
                 CourseEvent.class,

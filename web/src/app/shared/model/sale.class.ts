@@ -1,6 +1,12 @@
 import {User} from './user.class';
 import {SaleLineItem} from './sale_line_item.class';
 
+export class Payment {
+    id: number;
+    amount: number;
+    createdAt: string;
+}
+
 export class Sale {
 
     id: number;
@@ -13,6 +19,7 @@ export class Sale {
     payed: boolean;
     payedDate: string;
     salesLineItems: SaleLineItem[];
+    payments: Payment[];
 
     constructor() {}
 }

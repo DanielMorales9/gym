@@ -1,4 +1,4 @@
-<simple-search [query]="query" text="Cerca utenti" (done)="search($event)"></simple-search>
+<simple-search [query]="query" text="Cerca utenti per cognome" (done)="search($event)"></simple-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
     <div *cdkVirtualFor="let u of ds;" class="scroll-item">
         <user-item [user]="u"

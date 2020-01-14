@@ -1,11 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../model';
-import {UserService} from '../../../core/controllers';
+import {AuthService, UserService} from '../../../core/controllers';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
-import {AuthenticationService} from '../../../core/authentication';
-import {AuthService} from '../../../core/controllers';
 import {SnackBarService} from '../../../core/utilities';
 import {UserHelperService} from '../../../core/helpers';
 import {PolicyService} from '../../../core/policy';
@@ -28,11 +26,9 @@ export class UserDetailsComponent implements OnInit {
     canShowBundles: boolean;
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
-    private me: User;
     private root: string;
 
     constructor(private service: UserService,
-                private auth: AuthenticationService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private authService: AuthService,
@@ -43,7 +39,6 @@ export class UserDetailsComponent implements OnInit {
 
     ngOnInit(): void {
         this.user = new User();
-        this.me = this.auth.getUser();
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
 
         this.route.params.subscribe(async params => {
@@ -121,7 +116,7 @@ export class UserDetailsComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user);
     }
 
-    buy() {
+    sell() {
         return this.router.navigate([this.root, 'sales', 'buy', this.user.id]);
     }
 
@@ -156,7 +151,7 @@ export class UserDetailsComponent implements OnInit {
     }
 
     showSales() {
-        return this.router.navigate([this.root, 'customer', 'sales'], {queryParams: {
+        return this.router.navigate([this.root, 'sales'], {queryParams: {
                 id: this.user.id
             }});
     }

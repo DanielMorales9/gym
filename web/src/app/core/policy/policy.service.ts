@@ -18,7 +18,8 @@ export class PolicyService {
         },
         sale: {
             canDelete: true,
-            canPay: true
+            canPay: true,
+            canSell: true
         },
         user: {
             canDelete: true,

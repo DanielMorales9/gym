@@ -91,7 +91,7 @@ public class SaleTest {
         Sale sale = createSale(createCustomer());
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
-        assertThat(sale.confirmSale()).isTrue();
+        assertThat(sale.confirm()).isTrue();
     }
 
     @Test
@@ -101,7 +101,7 @@ public class SaleTest {
         Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        assertThat(sale.confirmSale()).isTrue();
+        assertThat(sale.confirm()).isTrue();
     }
 
     @Test
@@ -111,7 +111,7 @@ public class SaleTest {
         SalesLineItem sli = addPersonalToSalesLineItem(sale);
         sale.deleteSalesLineItem(sli);
 
-        assertThat(sale.confirmSale()).isFalse();
+        assertThat(sale.confirm()).isFalse();
     }
 
     @Test
@@ -122,7 +122,7 @@ public class SaleTest {
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
         sale.deleteSalesLineItem(sli);
 
-        assertThat(sale.confirmSale()).isFalse();
+        assertThat(sale.confirm()).isFalse();
     }
 
     @Test
