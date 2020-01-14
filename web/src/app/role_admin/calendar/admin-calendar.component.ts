@@ -41,21 +41,17 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
-        if (this.isValidHeader(event)) {
-            this.facade.isHolidayAvailableAllDay(event.day.date)
-                .subscribe(_ => {
-                    this.modalData = {
-                        action: EVENT_TYPES.HEADER,
-                        title: 'Giorno di Chiusura',
-                        userId: this.user.id,
-                        role: this.role,
-                        event: event
-                    };
-                    this.openModal(action);
-                }, err => this.snackBar.open(err.error.message));
-        } else {
-            this.snackBar.open('Orario non valido');
-        }
+        this.facade.isHolidayAvailableAllDay(event.day.date)
+            .subscribe(_ => {
+                this.modalData = {
+                    action: EVENT_TYPES.HEADER,
+                    title: 'Giorno di Chiusura',
+                    userId: this.user.id,
+                    role: this.role,
+                    event: event
+                };
+                this.openModal(action);
+            }, err => this.snackBar.open(err.error.message));
     }
 
     delete(action: string, event: any) {
@@ -70,10 +66,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        if (!this.isValidHour(event)) {
-            return this.snackBar.open('Orario non valido');
-        }
-
         this.facade.getCourses(event.date).subscribe(courses => {
             event.courses = courses;
             this.modalData = {
@@ -101,9 +93,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        if (!this.isValidChange(event)) {
-            return this.snackBar.open('Orario non valido');
-        }
         this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
             .subscribe(_ => {
                 this.modalData = {

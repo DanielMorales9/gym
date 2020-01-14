@@ -4,6 +4,7 @@ import it.gym.facade.ReservationFacade;
 import it.gym.hateoas.ReservationAssembler;
 import it.gym.hateoas.ReservationResource;
 import it.gym.model.Reservation;
+import it.gym.model.Role;
 import it.gym.pojo.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
 
 @RepositoryRestController
 @RequestMapping("/reservations")
@@ -25,22 +28,26 @@ public class ReservationController {
 
     @PostMapping(path = "/{gymId}/isAvailable")
     public ResponseEntity<String> isAvailable(@PathVariable Long gymId,
-                                       @RequestParam("customerId") Long customerId,
-                                       @RequestParam("bundleId") Long bundleId,
-                                       @RequestBody Event event) {
+                                              @RequestParam("customerId") Long customerId,
+                                              @RequestParam("bundleId") Long bundleId,
+                                              @RequestBody Event event,
+                                              Principal principal) {
 
-        facade.isAvailable(gymId, customerId, bundleId, event);
+        Role r = facade.getRoleFromPrincipal(principal);
+        facade.isAvailable(gymId, customerId, bundleId, event, r.getName());
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping(path = "/{gymId}")
     public ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
-                                                                    @RequestParam("customerId") Long customerId,
-                                                                    @RequestParam("bundleId") Long bundleId,
-                                                                    @RequestBody Event event) {
+                                                                           @RequestParam("customerId") Long customerId,
+                                                                           @RequestParam("bundleId") Long bundleId,
+                                                                           @RequestBody Event event,
+                                                                           Principal principal) {
 
-        Reservation res = facade.createReservationFromBundle(gymId, customerId, bundleId, event);
+        Role r = facade.getRoleFromPrincipal(principal);
+        Reservation res = facade.createReservationFromBundle(gymId, customerId, bundleId, event, r.getName());
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
 
@@ -48,10 +55,12 @@ public class ReservationController {
 
     @GetMapping(path = "/{gymId}")
     public ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
-                                                                   @RequestParam("customerId") Long customerId,
-                                                                   @RequestParam("eventId") Long eventId) {
+                                                                          @RequestParam("customerId") Long customerId,
+                                                                          @RequestParam("eventId") Long eventId,
+                                                                          Principal principal) {
 
-        Reservation res = facade.createReservationFromEvent(gymId, customerId, eventId);
+        Role r = facade.getRoleFromPrincipal(principal);
+        Reservation res = facade.createReservationFromEvent(gymId, customerId, eventId, r.getName());
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
 
@@ -59,7 +68,7 @@ public class ReservationController {
 
     @DeleteMapping(path = "/{reservationId}")
     public ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
-                                               @RequestParam Long eventId) {
+                                                      @RequestParam Long eventId) {
 
         Reservation res = facade.deleteReservations(eventId, reservationId);
 

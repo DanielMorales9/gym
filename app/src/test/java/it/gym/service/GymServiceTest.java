@@ -14,7 +14,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.DayOfWeek;
 import java.util.*;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -73,7 +72,7 @@ public class GymServiceTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Gym gym = createGym(1L);
-        service.simpleGymChecks(gym, start, end);
+        service.checkGymHours(gym, start, end);
     }
 
     @Test(expected = BadRequestException.class)
@@ -81,7 +80,7 @@ public class GymServiceTest {
         Date start = getNextMonday();
         Date end = addHours(start, -1);
         Gym gym = createGym(1L);
-        service.simpleGymChecks(gym, start, end);
+        service.checkGymHours(gym, start, end);
     }
 
     @Test(expected = BadRequestException.class)
@@ -89,7 +88,7 @@ public class GymServiceTest {
         Date start = addDays(getNextMonday(), -8);
         Date end = addHours(start, 1);
         Gym gym = createGym(1L);
-        service.simpleGymChecks(gym, start, end);
+        service.checkGymHours(gym, start, end);
     }
 
     @Test(expected = BadRequestException.class)
@@ -97,7 +96,7 @@ public class GymServiceTest {
         Date start = addDays(getNextMonday(), 6);
         Date end = addHours(start, 1);
         Gym gym = createGym(1L);
-        service.simpleGymChecks(gym, start, end);
+        service.checkGymHours(gym, start, end);
     }
 
     @Test
