@@ -39,7 +39,7 @@ h1.main-app-name {
 @media (max-width: 599px) and (orientation: portrait){
     .main-sidenav {
         top: 0 !important;
-        z-index: 10;
+        z-index: 1000;
         width: 80% !important;
     }
 
@@ -52,7 +52,7 @@ h1.main-app-name {
 @media (max-width: 799px) and (orientation: landscape){
     .main-sidenav {
         top: 0 !important;
-        z-index: 10;
+        z-index: 1000;
         width: 40% !important;
     }
 

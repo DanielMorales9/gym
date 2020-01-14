@@ -53,7 +53,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        gymService.simpleGymChecks(gym, startTime, endTime);
+        gymService.checkGymHours(gym, startTime, endTime);
         checkNoOtherEvents(event);
 
         Holiday holiday = new Holiday();
@@ -77,7 +77,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        gymService.simpleGymChecks(gym, startTime, endTime);
+        gymService.checkGymHours(gym, startTime, endTime);
         checkNoOtherEventsExceptMe(event);
 
         evt.setName(event.getName());
@@ -94,7 +94,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        gymService.simpleGymChecks(gym, startTime, endTime);
+        gymService.checkGymHours(gym, startTime, endTime);
         checkNoOtherEvents(event);
 
         TimeOff timeOff = new TimeOff();
@@ -112,7 +112,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        gymService.simpleGymChecks(gym, startTime, endTime);
+        gymService.checkGymHours(gym, startTime, endTime);
         checkNoOtherEventsExceptMe(event);
     }
 
@@ -122,7 +122,7 @@ public class EventFacade {
         Date startTime = event.getStartTime();
         Date endTime = event.getEndTime();
 
-        gymService.simpleGymChecks(gym, startTime, endTime);
+        gymService.checkGymHours(gym, startTime, endTime);
         checkNoOtherEvents(event);
     }
 
@@ -151,9 +151,9 @@ public class EventFacade {
         Date startTime = evt.getStartTime();
         Date endTime = evt.getEndTime();
 
-        gymService.simpleGymChecks(gym, startTime, endTime);
+        gymService.checkGymHours(gym, startTime, endTime);
 
-        simpleTrainingEventChecks(startTime, endTime);
+        checkNoHolidays(startTime, endTime);
 
         ATrainingSession session = bundle.createSession(startTime, endTime);
         bundle.addSession(session);
@@ -171,7 +171,7 @@ public class EventFacade {
         return service.save(event);
     }
 
-    private void simpleTrainingEventChecks(Date startTime, Date endTime) {
+    private void checkNoHolidays(Date startTime, Date endTime) {
         List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
         hasHolidays(events);
     }

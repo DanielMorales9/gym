@@ -5,6 +5,7 @@ import it.gym.model.AEvent;
 import it.gym.model.Holiday;
 import it.gym.model.TimeOff;
 
+import java.util.Date;
 import java.util.List;
 
 public class CheckEvents {
@@ -20,4 +21,13 @@ public class CheckEvents {
             throw new BadRequestException("Chiusura Aziendale");
     }
 
+    public static void checkInterval(Date startTime, Date endTime) {
+        if (startTime.after(endTime))
+            throw new BadRequestException("Orario non valido");
+    }
+
+    public static void checkPast(Date startTime) {
+        if (startTime.before(new Date()))
+            throw new BadRequestException("Orario non valido");
+    }
 }

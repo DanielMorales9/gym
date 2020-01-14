@@ -20,6 +20,7 @@ export class AppComponent implements OnInit {
     user: User;
     appName = '';
     @ViewChild('snav') public snav: MatSidenav;
+    opened = this.shouldBeOpen();
 
     constructor(private service: AppService,
                 private screenService: ScreenService,
@@ -82,5 +83,15 @@ export class AppComponent implements OnInit {
 
     isDesktop() {
         return this.screenService.isDesktop();
+    }
+
+    async closeNav() {
+        if (!this.shouldBeOpen()) {
+            await this.snav.toggle();
+        }
+    }
+
+    private shouldBeOpen() {
+        return this.isDesktop() && this.authenticated;
     }
 }

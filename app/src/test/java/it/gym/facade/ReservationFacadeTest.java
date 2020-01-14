@@ -100,7 +100,7 @@ public class ReservationFacadeTest {
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
-        facade.isAvailable(1L, 1L, 1L, event);
+        facade.isAvailable(1L, 1L, 1L, event, "CUSTOMER");
     }
 
     @Test
@@ -137,7 +137,7 @@ public class ReservationFacadeTest {
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
-        Reservation actual = facade.createReservationFromBundle(1L, 1L, 1L, event);
+        Reservation actual = facade.createReservationFromBundle(1L, 1L, 1L, event, "CUSTOMER");
 
         Reservation expected = createReservation(1L, customer);
 
@@ -161,7 +161,7 @@ public class ReservationFacadeTest {
 
         customer.addToCurrentTrainingBundles(Collections.singletonList(course));
 
-        facade.createReservationFromEvent(1L, 1L, 1L);
+        facade.createReservationFromEvent(1L, 1L, 1L, null);
     }
 
     @Test(expected = MethodNotAllowedException.class)
@@ -179,7 +179,7 @@ public class ReservationFacadeTest {
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
-        facade.createReservationFromEvent(1L, 1L, 1L);
+        facade.createReservationFromEvent(1L, 1L, 1L, "CUSTOMER");
     }
 
     @Test(expected = MethodNotAllowedException.class)
@@ -199,7 +199,7 @@ public class ReservationFacadeTest {
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
-        facade.createReservationFromBundle(1L, 1L, 1L, event);
+        facade.createReservationFromBundle(1L, 1L, 1L, event, "CUSTOMER");
     }
 
     @Test
