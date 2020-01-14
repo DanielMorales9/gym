@@ -30,25 +30,27 @@ public class PaymentServiceTest {
     @Autowired
     private PaymentService service;
 
+    Date date = new Date();
+
     @Test
     public void save() {
-        this.service.save(createPayment(1L, 10., new Date()));
+        this.service.save(createPayment(1L, 10., date));
         Mockito.verify(repository).save(any(Payment.class));
     }
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPayment(1L, 10., new Date())));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPayment(1L, 10., date)));
         Payment u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createPayment(1L, 10., new Date()));
+        assertThat(u).isEqualTo(createPayment(1L, 10., date));
         Mockito.verify(repository).findById(1L);
     }
 
     @Test
     public void findAll() {
-        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(createPayment(1L, 10., new Date())));
+        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(createPayment(1L, 10., date)));
         List<Payment> u = this.service.findAll();
-        assertThat(u).isEqualTo(Collections.singletonList(createPayment(1L, 10., new Date())));
+        assertThat(u).isEqualTo(Collections.singletonList(createPayment(1L, 10., date)));
         Mockito.verify(repository).findAll();
     }
 
@@ -59,7 +61,7 @@ public class PaymentServiceTest {
 
     @Test
     public void delete() {
-        Payment u = createPayment(1L, 10., new Date());
+        Payment u = createPayment(1L, 10., date);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(Payment.class));
     }
