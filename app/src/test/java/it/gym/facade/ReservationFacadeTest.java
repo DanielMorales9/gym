@@ -31,7 +31,6 @@ public class ReservationFacadeTest {
     @MockBean private ReservationService service;
     @MockBean private GymService gymService;
     @MockBean private CustomerService customerService;
-    @MockBean private TrainerService trainerService;
     @MockBean private EventService eventService;
     @Qualifier("trainingBundleService")
     @MockBean private TrainingBundleService trainingBundleService;
@@ -91,7 +90,6 @@ public class ReservationFacadeTest {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
         ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
@@ -111,7 +109,6 @@ public class ReservationFacadeTest {
 
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
 
@@ -172,7 +169,6 @@ public class ReservationFacadeTest {
         Customer customer = createCustomer(1L, "customer@customer.com",
                 "", "customer", "customer", true, null);
 
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
 
@@ -192,7 +188,6 @@ public class ReservationFacadeTest {
 
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
-        Mockito.doReturn(1L).when(trainerService).countAllTrainer();
 
         ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 0);
         ATrainingBundle bundle = createPersonalBundle(1L, spec);

@@ -3,6 +3,7 @@ package it.gym.utility;
 import it.gym.model.*;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Date;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -244,4 +245,5 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"amount").value(payment.getAmount()));
 
     }
+
 }

@@ -218,4 +218,12 @@ public class Fixture {
         pt.setId(l);
         return pt;
     }
+
+    public static Payment createPayment(long l, double v, Date date) {
+        Payment p = new Payment();
+        p.setId(l);
+        p.setAmount(v);
+        p.setCreatedAt(date);
+        return p;
+    }
 }
