@@ -7,10 +7,10 @@
 //  }
 //}
 
-//data "aws_route53_zone" "route53" {
-//  name         = "${var.domain}."
-//  private_zone = false
-//}
+data "aws_route53_zone" "route53" {
+  name         = "${var.domain}."
+  private_zone = false
+}
 
 //resource "aws_route53_record" "route53_record" {
 //  depends_on = [aws_acm_certificate.acm_certificate]
@@ -32,17 +32,27 @@
 //  validation_record_fqdns = aws_route53_record.route53_record.*.fqdn
 //}
 
-//resource "aws_route53_record" "route53_record_to_alb" {
-//  zone_id = data.aws_route53_zone.route53.zone_id
-//  name    = var.domain
-//  type    = "A"
-//
-//  alias {
-//    name                   = aws_alb.alb.dns_name
-//    zone_id                = aws_alb.alb.zone_id
-//    evaluate_target_health = true
-//  }
-//}
+resource "aws_route53_record" "route53_record_to_alb" {
+  zone_id = data.aws_route53_zone.route53.zone_id
+  name    = var.domain
+  type    = "A"
+
+  alias {
+    name                   = aws_alb.alb.dns_name
+    zone_id                = aws_alb.alb.zone_id
+    evaluate_target_health = true
+  }
+}
+
+resource "aws_route53_record" "route53_record_cname" {
+  zone_id = data.aws_route53_zone.route53.zone_id
+  name    = "www.${var.domain}"
+  type    = "CNAME"
+  ttl     = 300
+
+  records = [var.domain]
+}
+
 
 resource "aws_alb" "alb" {
   name            = "${var.app_name}-alb-ecs"
