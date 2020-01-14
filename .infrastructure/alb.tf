@@ -62,10 +62,12 @@ resource "aws_alb" "alb" {
 resource "aws_alb_listener" "listener" {
   load_balancer_arn = aws_alb.alb.arn
   port              = 80
+
   default_action {
     type             = "forward"
     target_group_arn = aws_alb_target_group.web_alb_target_group.arn
   }
+
 }
 
 resource "aws_alb_listener_rule" "api" {
@@ -83,6 +85,34 @@ resource "aws_alb_listener_rule" "api" {
   }
 }
 
+resource "aws_alb_listener" "listener_https" {
+  load_balancer_arn = aws_alb.alb.arn
+  certificate_arn   = aws_acm_certificate.default.arn
+  protocol          = "HTTPS"
+  port              = "443"
+
+  default_action {
+    target_group_arn = aws_alb_target_group.web_alb_target_group.arn
+    type             = "forward"
+  }
+
+  depends_on = [aws_alb_target_group.web_alb_target_group]
+}
+
+resource "aws_alb_listener_rule" "api_https" {
+  listener_arn = aws_alb_listener.listener_https.arn
+  priority     = 100
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_alb_target_group.api_alb_target_group.arn
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["/api/*"]
+  }
+}
 
 resource "aws_alb_target_group" "web_alb_target_group" {
   name     = "web-alb-target-group"
@@ -123,16 +153,3 @@ resource "aws_alb_target_group" "api_alb_target_group" {
   }
 }
 
-//resource "aws_alb_listener" "alb_listener_https" {
-//  load_balancer_arn = aws_alb.alb.arn
-//  certificate_arn   = "${aws_acm_certificate.acm_certificate.arn}"
-//  protocol          = "HTTPS"
-//  port              = "443"
-//
-//  default_action {
-//    target_group_arn = aws_alb_target_group.alb_target_group.arn
-//    type             = "forward"
-//  }
-//
-//  depends_on = [aws_alb_target_group.alb_target_group]
-//}
