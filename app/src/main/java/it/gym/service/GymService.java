@@ -4,12 +4,16 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
+import it.gym.utility.CheckEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+
+import static it.gym.utility.CheckEvents.checkInterval;
+import static it.gym.utility.CheckEvents.checkPast;
 
 @Service
 @Transactional
@@ -37,24 +41,14 @@ public class GymService implements ICrudService<Gym, Long> {
         return this.gymRepository.findAll();
     }
 
-    boolean isPast(Date date) {
-        return date.before(new Date());
-    }
-
     public boolean isWithinWorkingHours(Gym gym, Date start, Date end) {
         return gym.isValidDate(start, end);
     }
 
-
-    public void simpleGymChecks(Gym gym, Date startTime, Date endTime) {
+    public void checkGymHours(Gym gym, Date startTime, Date endTime) {
         checkInterval(startTime, endTime);
 
         checkWorkingHours(gym, startTime, endTime);
-    }
-
-    private void checkInterval(Date startTime, Date endTime) {
-        if (startTime.after(endTime) || isPast(startTime))
-            throw new BadRequestException("Orario non valido");
     }
 
     private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {

@@ -54,29 +54,24 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        if (this.isValidChange(event)) {
-            this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
-                .subscribe(_ => {
-                    this.modalData = {
-                        action: EVENT_TYPES.CHANGE,
-                        title: 'Orario di Ferie',
-                        userId: this.user.id,
-                        role: this.role,
-                        event: event
-                    };
-                    this.openModal(action);
-                }, err => {
-                    this.snackBar.open(err.error.message);
-                });
-        } else {
-            this.snackBar.open('Orario non valido');
-        }
+        this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
+            .subscribe(_ => {
+                this.modalData = {
+                    action: EVENT_TYPES.CHANGE,
+                    title: 'Orario di Ferie',
+                    userId: this.user.id,
+                    role: this.role,
+                    event: event
+                };
+                this.openModal(action);
+            }, err => {
+                this.snackBar.open(err.error.message);
+            });
     }
 
     header(action: string, event: any) {
-        if (this.isValidHeader(event)) {
-            this.facade.isTimeOffAvailableAllDay(new Date(event.day.date))
-                .subscribe(res => {
+        this.facade.isTimeOffAvailableAllDay(new Date(event.day.date))
+            .subscribe(res => {
                 this.modalData = {
                     action: EVENT_TYPES.HEADER,
                     title: 'Giorno di Ferie',
@@ -88,9 +83,6 @@ export class TrainerCalendarComponent extends BaseCalendar {
             }, err => {
                 this.snackBar.open(err.error.message);
             });
-        } else {
-            this.snackBar.open('Orario non valido');
-        }
     }
 
     delete(action: string, event: any) {
@@ -105,23 +97,19 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        if (this.isValidHour(event)) {
-            this.facade.isTimeOffAvailable(new Date(event.date))
-                .subscribe(res => {
-                    this.modalData = {
-                        action: EVENT_TYPES.HOUR,
-                        title: 'Orario di Ferie',
-                        userId: this.user.id,
-                        role: this.role,
-                        event: event
-                    };
-                    this.openModal(action);
-                }, err => {
-                    this.snackBar.open(err.error.message);
-                });
-        } else {
-            this.snackBar.open('Orario non valido');
-        }
+        this.facade.isTimeOffAvailable(new Date(event.date))
+            .subscribe(res => {
+                this.modalData = {
+                    action: EVENT_TYPES.HOUR,
+                    title: 'Orario di Ferie',
+                    userId: this.user.id,
+                    role: this.role,
+                    event: event
+                };
+                this.openModal(action);
+            }, err => {
+                this.snackBar.open(err.error.message);
+            });
     }
 
     info(action: string, event: any) {
