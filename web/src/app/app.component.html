@@ -13,7 +13,7 @@
     </mat-toolbar>
     <mat-sidenav-container class="main-sidenav-container" id="main-sidenav-container">
         <mat-sidenav class="main-sidenav" #snav [opened]="isDesktop() && authenticated"
-                     [mode]="!isDesktop() && authenticated ? 'over' : 'side'">
+                     [mode]="!isDesktop() && authenticated ? 'over' : 'side'"  >
             <mat-toolbar *ngIf="!isDesktop()">
                 <mat-toolbar-row>
                     <h2> {{ appName }} </h2>
@@ -25,28 +25,28 @@
                     <h2 matSubheader>Home</h2>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/admin/sales">
+                       routerLink="/admin/sales" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Vendite
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/admin/users">
+                       routerLink="/admin/users" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/admin/bundleSpecs">
+                       routerLink="/admin/bundleSpecs" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/admin/calendar">
+                       routerLink="/admin/calendar" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
@@ -57,21 +57,21 @@
                     <h2 matSubheader>Home</h2>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/trainer/calendar">
+                       routerLink="/trainer/calendar" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/trainer/users">
+                       routerLink="/trainer/users" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/trainer/bundleSpecs">
+                       routerLink="/trainer/bundleSpecs" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
@@ -82,21 +82,21 @@
                     <h2 matSubheader>Home</h2>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="sales" [queryParams]="{id: user.id}">
+                       routerLink="sales" [queryParams]="{id: user.id}" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/customer/calendar">
+                       routerLink="/customer/calendar" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
                     </a>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/customer/bundles" [queryParams]="{id: user.id}">
+                       routerLink="/customer/bundles" [queryParams]="{id: user.id}" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
@@ -109,7 +109,7 @@
                     <h2 matSubheader>Impostazioni</h2>
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/profile">
+                       routerLink="/profile" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>&nbsp;&nbsp;I miei dettagli
                             </span>
@@ -118,7 +118,7 @@
                 <div id="menu-settings">
                     <a href=# mat-list-item
                        [routerLinkActive]="['active-link']"
-                       routerLink="/settings/gym">
+                       routerLink="/settings/gym" (click)="closeNav()">
                         <span>
                             <mat-icon fontSet="fas" fontIcon="fa-store-alt"></mat-icon>&nbsp;&nbsp;La mia palestra
                         </span>
