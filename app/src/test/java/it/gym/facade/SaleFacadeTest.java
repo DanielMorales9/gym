@@ -33,6 +33,9 @@ public class SaleFacadeTest {
     private UserService userService;
 
     @MockBean
+    private PaymentService paymentService;
+
+    @MockBean
     private GymService gymService;
 
     @MockBean

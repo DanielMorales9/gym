@@ -60,6 +60,7 @@ public class Customer extends AUser {
         this.height = height;
     }
 
+    @JsonIgnore
     public List<ATrainingBundle> getPreviousTrainingBundles() {
         if (previousTrainingBundles == null)
             this.previousTrainingBundles = new ArrayList<>();

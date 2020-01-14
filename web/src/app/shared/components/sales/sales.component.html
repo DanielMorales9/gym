@@ -17,7 +17,10 @@
     </div>
 </cdk-virtual-scroll-viewport>
 <no-item [hidden]="!ds.empty" [message]="noCardMessage" ></no-item>
-
+<button type="button" mat-fab color="primary" class="fab-button-add" *ngIf="canSell"
+        title="Vendi" (click)="sell()">
+    <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>
+</button>
 
 <ng-template #searchDateOnly>
     <search-date [filters]="filters"

@@ -38,6 +38,8 @@ public class SaleFacade {
 
     @Autowired
     private SalesLineItemService salesLineItemService;
+    @Autowired
+    private PaymentService paymentService;
 
     private Sale save(Sale sale) {
         return this.saleService.save(sale);
@@ -134,7 +136,7 @@ public class SaleFacade {
     public Sale confirmSale(Long saleId) {
         String messageTemplate = "Impossibile confermare vendita (#%d) vuota.";
         Sale sale = findById(saleId);
-        if (!sale.confirmSale()) throw new BadRequestException(String.format(messageTemplate, sale.getId()));
+        if (!sale.confirm()) throw new BadRequestException(String.format(messageTemplate, sale.getId()));
         if (!sale.addBundlesToCustomersCurrentBundles()) {
             String message = String.format("Impossibile confermare vendita per il cliente %s.",
                     sale.getCustomer().getLastName());
@@ -147,24 +149,24 @@ public class SaleFacade {
         Sale sale = this.findById(saleId);
         logger.debug("Paying");
         logger.debug(sale.toString());
+
         if (!sale.isCompleted()) {
             String message = String.format("La vendita (%d) non è stata completata.", saleId);
             logger.debug(message);
             throw new BadRequestException(message);
         }
+
         Double amountPayed = sale.getAmountPayed();
-        boolean payed = amountPayed + amount == sale.getTotalPrice();
-        if (!payed) {
-            if (amountPayed + amount > sale.getTotalPrice()) {
-                String message = "Stai pagando più del dovuto!";
-                logger.debug(message);
-                throw new BadRequestException(message);
-            }
-        } else {
-            sale.setPayed(true);
-            sale.setPayedDate(new Date());
+        Double totalPrice = sale.getTotalPrice();
+
+        if (amountPayed + amount > totalPrice) {
+            String message = "Stai pagando più del dovuto!";
+            logger.debug(message);
+            throw new BadRequestException(message);
         }
-        sale.setAmountPayed(amountPayed + amount);
+
+        sale.pay(amount);
+
         return this.save(sale);
     }
 
@@ -179,7 +181,7 @@ public class SaleFacade {
         List<ATrainingBundle> bundles = getDeletableBundles(sale);
         this.bundleService.deleteAll(bundles);
         this.salesLineItemService.deleteAll(sale.getSalesLineItems());
-
+        this.paymentService.deleteAll(sale.getPayments());
 
         this.delete(sale);
         return sale;

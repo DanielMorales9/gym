@@ -18,6 +18,10 @@ mat-card {
     width: 100%;
 }
 
+.padding-around {
+    padding: 0 16px 0 16px;
+}
+
 mat-form-field {
     margin-top: 8px;
     margin-bottom: 8px;
