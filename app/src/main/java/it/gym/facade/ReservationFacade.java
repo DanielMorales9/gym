@@ -55,14 +55,14 @@ public class ReservationFacade {
                                          Date endTime,
                                          String roleName) {
 
-        if (roleName.equals("CUSTOMER"))
+        if ("CUSTOMER".equals(roleName))
             checkPast(startTime);
 
         gymService.checkGymHours(gym, startTime, endTime);
 
         checkBundleIsReservable(customer, bundle);
 
-        if (roleName.equals("CUSTOMER"))
+        if ("CUSTOMER".equals(roleName))
             isReservedOnTime(startTime);
 
         List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);

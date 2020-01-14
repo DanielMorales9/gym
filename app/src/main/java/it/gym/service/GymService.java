@@ -4,7 +4,6 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
-import it.gym.utility.CheckEvents;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +12,6 @@ import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.CheckEvents.checkInterval;
-import static it.gym.utility.CheckEvents.checkPast;
 
 @Service
 @Transactional
