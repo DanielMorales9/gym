@@ -20,8 +20,7 @@ public class Admin extends AUser {
     public List<Role> defaultRoles() {
         return Arrays.asList(
                 new Role(1L, "ADMIN"),
-                new Role(2L, "TRAINER"),
-                new Role(3L, "CUSTOMER"));
+                new Role(2L, "TRAINER"));
     }
 
     @Override

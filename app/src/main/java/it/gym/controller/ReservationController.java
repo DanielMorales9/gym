@@ -24,7 +24,6 @@ public class ReservationController {
     @Autowired private ReservationFacade facade;
 
     @PostMapping(path = "/{gymId}/isAvailable")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<String> isAvailable(@PathVariable Long gymId,
                                        @RequestParam("customerId") Long customerId,
                                        @RequestParam("bundleId") Long bundleId,
@@ -36,7 +35,6 @@ public class ReservationController {
     }
 
     @PostMapping(path = "/{gymId}")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
                                                                     @RequestParam("customerId") Long customerId,
                                                                     @RequestParam("bundleId") Long bundleId,
@@ -49,7 +47,6 @@ public class ReservationController {
     }
 
     @GetMapping(path = "/{gymId}")
-    @PreAuthorize("hasAuthority('CUSTOMER')")
     public ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
                                                                    @RequestParam("customerId") Long customerId,
                                                                    @RequestParam("eventId") Long eventId) {
@@ -61,7 +58,6 @@ public class ReservationController {
     }
 
     @DeleteMapping(path = "/{reservationId}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
                                                @RequestParam Long eventId) {
 

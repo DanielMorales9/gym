@@ -8,12 +8,13 @@ import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleModalComponent} from './bundle-modal.component';
 import {PolicyService} from '../../../core/policy';
+import {first} from 'rxjs/operators';
 
 @Component({
     templateUrl: './bundles.component.html',
     styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
 })
-export class BundlesComponent implements OnInit, OnDestroy {
+export class BundlesComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessuna edizione disponibile';
 
@@ -26,7 +27,6 @@ export class BundlesComponent implements OnInit, OnDestroy {
 
     private queryParams: { query: string };
     private pageSize = 10;
-    private sub: Subscription;
 
     constructor(private service: BundleService,
                 private helper: BundleHelperService,
@@ -41,13 +41,12 @@ export class BundlesComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getPolicies();
-        this.sub = this.route.queryParams.subscribe(value => {
+        this.route.queryParams.pipe(first()).subscribe(value => {
             this.copyQuery = {};
             // tslint:disable
             for (let key in value) {
                 this.copyQuery[key] = value[key];
             }
-            console.log(this.copyQuery);
             this.specId = this.copyQuery['specId'];
             this.get(this.copyQuery);
         });
@@ -122,10 +121,6 @@ export class BundlesComponent implements OnInit, OnDestroy {
         // this.ds.setQuery(this.query);
         // this.ds.fetchPage(0);
         // this.updateQueryParams();
-    }
-
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
     }
 
     private async goToDetails(bundle: any) {

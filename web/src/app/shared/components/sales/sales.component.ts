@@ -6,6 +6,7 @@ import {AuthenticationService} from '../../../core/authentication';
 import {SnackBarService} from '../../../core/utilities';
 import {SaleHelperService, QueryableDatasource} from '../../../core/helpers';
 import {PolicyService} from '../../../core/policy';
+import {first} from 'rxjs/operators';
 
 
 @Component({
@@ -54,7 +55,7 @@ export class SalesComponent implements OnInit {
     }
 
     private initQueryParams(id?) {
-        this.route.queryParams.subscribe(params => {
+        this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
                 if (!!this.queryParams.date) {
