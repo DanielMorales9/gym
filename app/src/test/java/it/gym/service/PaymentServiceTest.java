@@ -30,7 +30,7 @@ public class PaymentServiceTest {
     @Autowired
     private PaymentService service;
 
-    Date date = new Date();
+    private Date date = new Date();
 
     @Test
     public void save() {
