@@ -2,9 +2,7 @@ package it.gym.service;
 
 import it.gym.exception.NotFoundException;
 import it.gym.model.Payment;
-import it.gym.model.Role;
 import it.gym.repository.PaymentRepository;
-import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -19,7 +17,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-import static it.gym.utility.Fixture.createAdminRole;
 import static it.gym.utility.Fixture.createPayment;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;

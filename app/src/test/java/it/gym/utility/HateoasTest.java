@@ -3,7 +3,6 @@ package it.gym.utility;
 import it.gym.model.*;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -27,7 +26,7 @@ public class HateoasTest {
         String prefix = handlePrefixForArray(p);
 
         for (int i = 0; i < 3; i++) {
-            result = result
+            result
                     .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
                     .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
         }
@@ -98,8 +97,8 @@ public class HateoasTest {
     }
 
     private static void expectATrainingBundleSpec(ResultActions result,
-                                                          ATrainingBundleSpecification bundle,
-                                                          String prefix) throws Exception {
+                                                  ATrainingBundleSpecification bundle,
+                                                  String prefix) throws Exception {
         result
                 .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(bundle.getName()))
@@ -127,8 +126,8 @@ public class HateoasTest {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
         result
-            .andExpect(jsonPath("$"+prefix+"number").value(bundle.getNumber()))
-            .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()));
+                .andExpect(jsonPath("$"+prefix+"number").value(bundle.getNumber()))
+                .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()));
     }
 
     public static void expectSale(ResultActions result, Sale sale) throws Exception {
@@ -180,8 +179,8 @@ public class HateoasTest {
     }
 
     private static void expectATrainingBundle(ResultActions result,
-                                            ATrainingBundle trainingBundle,
-                                            String prefix) throws Exception {
+                                              ATrainingBundle trainingBundle,
+                                              String prefix) throws Exception {
         result.andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
     }
@@ -212,7 +211,7 @@ public class HateoasTest {
         String prefix = handlePrefixForArray(p);
 
         for (int i = 0; i < 1; i++) {
-            result = result
+            result
                     .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
                     .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
         }
