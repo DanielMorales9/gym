@@ -49,6 +49,10 @@ public class Sale {
     @JoinColumn(name = "sale_id")
     private List<SalesLineItem> salesLineItems;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "sale_id")
+    private List<Payment> payments;
+
     @ManyToOne
     @JoinColumn(name = "customer_user_id")
     private Customer customer;
@@ -117,14 +121,15 @@ public class Sale {
         isCompleted = completed;
     }
 
-    public Double getAmountPayed() {
-        return amountPayed;
-    }
+    public Double getAmountPayed() { return amountPayed; }
 
     public void setAmountPayed(Double amountPayed) {
         this.amountPayed = amountPayed;
     }
 
+    public List<Payment> getPayments() { return payments; }
+
+    public void setPayments(List<Payment> payments) { this.payments = payments; }
 
     public Double getTotalPrice() {
         this.totalPrice = salesLineItems.stream().map(SalesLineItem::getSubTotal).reduce(Double::sum).orElse(0.);
@@ -142,11 +147,19 @@ public class Sale {
         return line;
     }
 
+    public void addPayment(Payment payment) {
+        if (this.payments == null) {
+            this.payments = new ArrayList<>();
+        }
+        this.payments.add(payment);
+    }
+
+
     public boolean deleteSalesLineItem(SalesLineItem salesLineItem) {
         return this.salesLineItems.remove(salesLineItem);
     }
 
-    public boolean confirmSale() {
+    public boolean confirm() {
         if (this.salesLineItems == null)
             return false;
         if (this.salesLineItems.size() == 0)
@@ -154,6 +167,17 @@ public class Sale {
         this.isCompleted = true;
         this.getTotalPrice();
         return true;
+    }
+
+    public void pay(Double amount) {
+        if (amountPayed + amount == totalPrice) {
+            this.setPayed(true);
+            this.setPayedDate(new Date());
+        }
+        Payment payment = new Payment();
+        payment.setAmount(amount);
+        addPayment(payment);
+        this.setAmountPayed(amountPayed + amount);
     }
 
     public boolean isDeletable() {
@@ -189,4 +213,5 @@ public class Sale {
     protected void prePersist() {
         this.createdAt = new Date();
     }
+
 }

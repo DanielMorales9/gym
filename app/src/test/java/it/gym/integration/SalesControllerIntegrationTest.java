@@ -7,6 +7,8 @@ import it.gym.utility.Calendar;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,13 +27,16 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
-    @Autowired RoleRepository roleRepository;
-    @Autowired SaleRepository repository;
-    @Autowired SalesLineItemRepository sliRepository;
-    @Autowired UserRepository userRepository;
-    @Autowired GymRepository gymRepository;
-    @Autowired TrainingBundleSpecificationRepository bundleSpecRepository;
-    @Autowired TrainingBundleRepository bundleRepository;
+    @Autowired private RoleRepository roleRepository;
+    @Autowired private SaleRepository repository;
+    @Autowired private SalesLineItemRepository sliRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private GymRepository gymRepository;
+    @Autowired private TrainingBundleSpecificationRepository bundleSpecRepository;
+    @Autowired private TrainingBundleRepository bundleRepository;
+    @Autowired private PaymentRepository payRepository;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private Customer customer;
     private Sale sale;
@@ -74,6 +79,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     @After
     public void after() {
         sliRepository.deleteAll();
+        payRepository.deleteAll();
         repository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAll();
@@ -357,6 +363,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         List<SalesLineItem> sli = sliRepository.findAll();
+        List<Payment> payments = payRepository.findAll();
+
+        logger.info(payments.toString());
+
+        Payment payment = payments.get(0);
 
         Sale expected = new Sale();
         expected.setId(sale.getId());
@@ -368,6 +379,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSalesLineItems(result, sli, "salesLineItems");
         expectCustomer(result, customer, "customer");
+        expectPayment(result, payment, "payments[0]");
 
     }
 

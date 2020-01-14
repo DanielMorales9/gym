@@ -8,6 +8,14 @@ import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SnackBarService} from '../../../core/utilities';
 import {PolicyService} from '../../../core/policy';
 
+function _transformer(node: any, level: number) {
+    return {
+        expandable: !!node.payments && node.payments.length > 0,
+        name: node.payments.length + 'Rate - ' + node.amountPayed + '&euro;',
+        level: level,
+    };
+}
+
 @Component({
     templateUrl: './sale-details.component.html',
     styleUrls: ['../../../styles/list-items.css', '../../../styles/root.css', '../../../styles/card.css'],
@@ -18,6 +26,9 @@ export class SaleDetailsComponent implements OnInit {
     hidden: boolean;
     canPay: boolean;
     canDelete: boolean;
+    expand = new Proxy({}, {
+        get: (target, name) => name in target ? target[name] : false
+    });
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -29,6 +40,7 @@ export class SaleDetailsComponent implements OnInit {
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
     }
+
 
     ngOnInit(): void {
         this.route.params.subscribe(params => {
@@ -71,5 +83,12 @@ export class SaleDetailsComponent implements OnInit {
 
     async goToBundleDetails(id: number) {
         await this.router.navigate(['bundles', id], {relativeTo: this.route.parent});
+    }
+
+    closeAll() {
+        console.log('closed');
+        for (const key in this.expand){
+            this.expand[key] = false;
+        }
     }
 }

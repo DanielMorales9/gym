@@ -26,7 +26,6 @@
             <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
         </div>
         <ng-container [ngSwitch]="bundle?.type">
-
             <ng-container *ngSwitchCase="PERSONAL">
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundle?.numSessions}}

@@ -26,27 +26,83 @@
                     {{sale?.totalPrice-sale?.amountPayed}}&euro;
             </span>
             </div>
-            <div class="sales-bundle-header">
-                <h6>Pacchetti Acquistati</h6>
-                <mat-list *ngFor="let l of sale?.salesLineItems; let i = index">
-                    <mat-list-item>
-                        <div class="space-between">
+
+            <mat-expansion-panel class='sales-list'
+                                 [class.mat-expansion-panel]="false"
+                                 (closed)="closeAll()">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h6>Pacchetti Acquistati</h6>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <span layout="row"><hr class="divider" flex/></span>
+                <ng-container *ngFor="let l of sale?.salesLineItems; let i = index">
+                    <mat-expansion-panel [class.mat-expansion-panel]="false" [(expanded)]="expand[i]">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{i+1}}.&nbsp;
+                                <a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">
+                                    {{l?.bundleSpecification?.name || 'Loading...'}}
+                                </a>
+                            </mat-panel-title>
+                            <mat-panel-description class="panel-header-description">
+                                {{l?.bundleSpecification.price || 'Loading...'}}&euro;
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
                         <div>
-                            {{i+1}}.&nbsp;
-                            <a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">
-                            {{l?.bundleSpecification?.name || 'Loading...'}}
-                            </a>
-                            &nbsp;-&nbsp;
-                            <a (click)="goToBundleDetails(l?.trainingBundle?.id)">
-                            {{l?.trainingBundle?.name || 'Loading...'}}
-                        </a>
+                            <div>
+                                <mat-icon fontSet="fas" fontIcon="fa-file-alt"></mat-icon>
+                                Tipo:&nbsp;
+                                <a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">
+                                    {{l?.bundleSpecification?.name || 'Loading...'}}
+                                </a>
+                            </div>
+                            <div>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>
+                                Pacchetto:&nbsp;
+                                <a (click)="goToBundleDetails(l?.trainingBundle?.id)">
+                                    {{l?.trainingBundle?.name || 'Loading...'}}
+                                </a>
+                            </div>
+                            <div>
+                                <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>
+                                Prezzo:&nbsp;{{l?.bundleSpecification?.price}}
+                            </div>
                         </div>
-                        <div>{{l?.bundleSpecification.price}}&euro;</div>
-                        </div>
-                    </mat-list-item>
+                    </mat-expansion-panel>
                     <span layout="row"><hr class="divider" flex/></span>
+                </ng-container>
+            </mat-expansion-panel>
+            <mat-expansion-panel class='sales-list'
+                                 [class.mat-expansion-panel]="false"
+                                 *ngIf="sale?.payments.length > 0">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h6>Pagamenti Effettuati</h6>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <mat-list>
+                    <span layout="row"><hr class="divider" flex/></span>
+                    <ng-container *ngFor="let p of sale?.payments; let i = index">
+                        <mat-list-item>
+                            <div class="space-between">
+                                <div>
+                                    <span style="color: darkgray">{{i+1}}.&nbsp;in data</span>
+                                    {{p.createdAt | date: 'dd-MM-yyyy'}}</div>
+                                <div>
+                                    {{p.amount}}&euro;
+                                </div>
+                            </div>
+                        </mat-list-item>
+                        <span layout="row"><hr class="divider" flex/></span>
+                    </ng-container>
+                    <div class="space-between padding-around">
+
+                        <div style="color: darkgray">Da Pagare {{sale.totalPrice - sale.amountPayed}}&euro;</div>
+                        <div style="color: darkgray">Totale {{sale.amountPayed}}&euro;</div>
+                    </div>
                 </mat-list>
-            </div>
+            </mat-expansion-panel>
         </mat-card-content>
         <mat-card-actions>
             <ng-container *ngIf="canPay">

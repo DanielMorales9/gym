@@ -27,14 +27,16 @@ export class SalesComponent implements OnInit {
     ds: QueryableDatasource<Sale>;
     canPay: boolean;
     canDelete: boolean;
-    mixed: boolean;
+    canSell: boolean;
 
+    mixed: boolean;
     filters = [
         {name: 'Da Pagare', value: false},
         {name: 'Pagati', value: true},
         {name: 'Entrambi', value: undefined}];
     filterName = 'payed';
     selected = undefined;
+    private root: string;
 
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
@@ -48,8 +50,11 @@ export class SalesComponent implements OnInit {
     }
 
     ngOnInit(): void {
+        this.root = this.route.parent.parent.snapshot.routeConfig.path;
+
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
+        this.canSell = this.policy.get('sale', 'canSell') && !!this.id;
 
         this.initQueryParams();
     }
@@ -122,5 +127,9 @@ export class SalesComponent implements OnInit {
 
     private goToDetails(sale: Sale) {
         return this.router.navigate([sale.id], {relativeTo: this.route});
+    }
+
+    sell() {
+        return this.router.navigate([this.root, 'sales', 'buy', this.id]);
     }
 }
