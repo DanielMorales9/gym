@@ -20,91 +20,112 @@
                 </mat-toolbar-row>
             </mat-toolbar>
             <mat-nav-list>
-                <ng-container id="menu-admin"
-                              *ngIf="current_role_view == 1">
-                    <h2 matSubheader>Home</h2>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/admin/sales" (click)="closeNav()">
+                <ng-container *ngIf="isOnCalendar()">
+                    <h2 matSubheader>Calendario</h2>
+                    <a mat-list-item (click)="goToView()">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-calendar-day"></mat-icon>&nbsp;&nbsp;Oggi
+                        </span>
+                    </a>
+                    <a mat-list-item (click)="goToView('day')">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-stream"></mat-icon>&nbsp;&nbsp;Giorno
+                        </span>
+                    </a>
+                    <a mat-list-item (click)="goToView('week')">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-columns"></mat-icon>&nbsp;&nbsp;Settimana
+                        </span>
+                    </a>
+                    <a mat-list-item (click)="goToView('month')">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-table"></mat-icon>&nbsp;&nbsp;Mese
+                        </span>
+                    </a>
+
+                </ng-container>
+                <ng-container [ngSwitch]="current_role_view">
+                    <ng-container *ngSwitchCase="1" id="menu-admin">
+                        <h2 matSubheader>Home</h2>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/admin/sales" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Vendite
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/admin/users" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/admin/users" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/admin/bundleSpecs" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/admin/bundleSpecs" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/admin/calendar" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/admin/calendar" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
-                    </a>
-                </ng-container>
-                <ng-container id="menu-trainer"
-                              *ngIf="current_role_view == 2">
-                    <h2 matSubheader>Home</h2>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/trainer/calendar" (click)="closeNav()">
+                        </a>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="2" id="menu-trainer">
+                        <h2 matSubheader>Home</h2>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/trainer/calendar" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/trainer/users" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/trainer/users" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/trainer/bundleSpecs" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/trainer/bundleSpecs" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
-                    </a>
-                </ng-container>
-                <ng-container id="menu-customer"
-                              *ngIf="current_role_view == 3">
-                    <h2 matSubheader>Home</h2>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/customer/sales" [queryParams]="{id: user.id}" (click)="closeNav()">
+                        </a>
+                    </ng-container>
+                    <ng-container *ngSwitchCase="3" id="menu-customer">
+                        <h2 matSubheader>Home</h2>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/customer/sales" [queryParams]="{id: user.id}" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/customer/calendar" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/customer/calendar" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
                             </span>
-                    </a>
-                    <a href=# mat-list-item
-                       [routerLinkActive]="['active-link']"
-                       routerLink="/customer/bundles" [queryParams]="{id: user.id}" (click)="closeNav()">
+                        </a>
+                        <a href=# mat-list-item
+                           [routerLinkActive]="['active-link']"
+                           routerLink="/customer/bundles" [queryParams]="{id: user.id}" (click)="closeNav()">
                             <span>
                                 <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
                             </span>
-                    </a>
+                        </a>
+                    </ng-container>
                 </ng-container>
 
-                <div id="menu-common">
-                </div>
                 <div id="menu-account">
                     <h2 matSubheader>Impostazioni</h2>
                     <a href=# mat-list-item

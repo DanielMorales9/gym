@@ -1,5 +1,5 @@
-import {Subject} from 'rxjs';
-import {Injectable, OnInit} from '@angular/core';
+import {Subject, Subscription} from 'rxjs';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
@@ -27,7 +27,8 @@ const CALENDAR_COLUMNS: any = {
 };
 
 @Injectable()
-export abstract class BaseCalendar implements OnInit {
+export abstract class BaseCalendar implements OnInit, OnDestroy {
+    private sub: Subscription;
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
@@ -128,7 +129,22 @@ export abstract class BaseCalendar implements OnInit {
         await this.getRole();
         await this.updateQueryParams();
         await this.getEvents();
+        this.sub = this.activatedRoute.queryParams.subscribe(async params => {
+            const hasView = 'view' in params;
+            const hasViewDate = 'viewDate' in params;
+            if (hasView && hasViewDate) {
+                this.view = params['view'];
+                this.viewDate = new Date(params['viewDate']);
+                await this.getEvents();
+            }
+        });
     }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
+    }
+
+
 
     abstract async getEvents();
 
@@ -379,9 +395,8 @@ export abstract class BaseCalendar implements OnInit {
         } else {
             this.view = viewOrDate;
         }
-        this.updateQueryParams();
         this.activeDayIsOpen = false;
-        await this.getEvents();
+        await this.updateQueryParams();
     }
 
     async day(action: string, event: any): Promise<void> {
@@ -419,3 +434,4 @@ export abstract class BaseCalendar implements OnInit {
             });
     }
 }
+

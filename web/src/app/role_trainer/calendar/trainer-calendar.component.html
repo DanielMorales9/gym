@@ -47,10 +47,3 @@
             (eventTimesChanged)="handleEvent('change',$event)">
     </mwl-calendar-day-view>
 </div>
-
-<calendar-button
-        *ngIf="!isDesktop()"
-        [view]="view"
-        [viewDate]="viewDate"
-        (done)="onViewDateChanged($event)" >
-</calendar-button>

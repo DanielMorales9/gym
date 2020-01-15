@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {NavigationStart, Router} from '@angular/router';
+import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {AppService, AuthenticatedService, GymService} from './services';
 import {Gym, User} from './shared/model';
@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
     constructor(private service: AppService,
                 private screenService: ScreenService,
                 private router: Router,
+                private route: ActivatedRoute,
                 private gymService: GymService,
                 private authenticatedService: AuthenticatedService) {
     }
@@ -85,6 +86,10 @@ export class AppComponent implements OnInit {
         return this.screenService.isDesktop();
     }
 
+    getRole() {
+        return this.service;
+    }
+
     async closeNav() {
         if (!this.shouldBeOpen()) {
             await this.snav.toggle();
@@ -93,5 +98,25 @@ export class AppComponent implements OnInit {
 
     private shouldBeOpen() {
         return this.isDesktop() && this.authenticated;
+    }
+
+    isOnCalendar() {
+        return this.router.url.includes('calendar');
+    }
+
+    async goToView(view?) {
+        const params = Object.assign({}, this.route.snapshot.queryParams);
+        if (!!view) {
+            params['view'] = view;
+        }
+        else {
+            params['viewDate'] = new Date();
+        }
+        await this.closeNav();
+        const url = this.router.url.split('?')[0];
+        await this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: params,
+        });
     }
 }
