@@ -1,10 +1,11 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {AppService, AuthenticatedService, GymService} from './services';
 import {Gym, User} from './shared/model';
 import {MatSidenav} from '@angular/material';
 import {ScreenService} from './core/utilities';
+import {Subscription} from 'rxjs';
 
 
 @Component({
@@ -12,7 +13,7 @@ import {ScreenService} from './core/utilities';
     templateUrl: './app.component.html',
     styleUrls: ['./styles/root.css', './app.component.css']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
 
     current_role_view: number;
     authenticated: boolean;
@@ -21,6 +22,7 @@ export class AppComponent implements OnInit {
     appName = '';
     @ViewChild('snav') public snav: MatSidenav;
     opened = this.shouldBeOpen();
+    private sub: Subscription = new Subscription();
 
     constructor(private service: AppService,
                 private screenService: ScreenService,
@@ -35,7 +37,7 @@ export class AppComponent implements OnInit {
         this.authOnNavigation();
         await this.service.authenticate();
 
-        this.authenticatedService.getAuthenticated().subscribe(async auth => {
+        const sub = this.authenticatedService.getAuthenticated().subscribe(async auth => {
             this.authenticated = auth;
 
             if (this.authenticated && !this.user) {
@@ -53,7 +55,13 @@ export class AppComponent implements OnInit {
 
         });
 
+        this.sub.add(sub);
 
+    }
+
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
     }
 
     async logout() {
@@ -67,11 +75,21 @@ export class AppComponent implements OnInit {
     }
 
     private authOnNavigation() {
-        this.router.events.subscribe(async event => {
+        let sub = this.router.events.subscribe(async event => {
             if (event instanceof NavigationStart) {
                 await this.service.authenticate();
             }
         });
+        this.sub.add(sub);
+        sub = this.route.queryParams.subscribe(params => {
+            if ('title' in params) {
+                document.title = params['title'];
+            }
+            else {
+                document.title = this.appName;
+            }
+        });
+        this.sub.add(sub);
     }
 
     hideLogin() {
@@ -112,11 +130,11 @@ export class AppComponent implements OnInit {
         else {
             params['viewDate'] = new Date();
         }
-        await this.closeNav();
         const url = this.router.url.split('?')[0];
         await this.router.navigate([], {
             relativeTo: this.route,
             queryParams: params,
         });
+        await this.closeNav();
     }
 }
