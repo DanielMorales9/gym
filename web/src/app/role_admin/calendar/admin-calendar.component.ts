@@ -18,6 +18,7 @@ import {DateService, ScreenService, SnackBarService} from '../../core/utilities'
 })
 export class AdminCalendarComponent extends BaseCalendar {
 
+
     constructor(private dialog: MatDialog,
                 private dateService: DateService,
                 private snackBar: SnackBarService,
@@ -185,14 +186,14 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
                 switch (data.type) {
                     case 'admin':
                         this.deleteHoliday(data);
                         break;
                     case 'trainer':
-                        this.deleteTrainerTimeOff(data);
+                        await this.deleteTrainerTimeOff(data);
                         break;
                     case 'reservation':
                         this.deleteReservation(data);

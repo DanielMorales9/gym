@@ -1,5 +1,5 @@
 import {Subject, Subscription} from 'rxjs';
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import {ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
@@ -28,13 +28,13 @@ const CALENDAR_COLUMNS: any = {
 
 @Injectable()
 export abstract class BaseCalendar implements OnInit, OnDestroy {
-    private sub: Subscription;
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
                           public activatedRoute: ActivatedRoute,
                           public screenService: ScreenService) {
     }
+    private sub: Subscription;
 
     MONTH = CalendarView.Month;
     WEEK = CalendarView.Week;
@@ -103,6 +103,9 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
     refresh: Subject<any> = new Subject();
 
+    @ViewChild('next') next: ElementRef<HTMLElement>;
+    @ViewChild('prev') prev: ElementRef<HTMLElement>;
+
     static isNotPast(date) {
         return date >= new Date();
     }
@@ -115,6 +118,15 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         return (event.reservations.length > 0) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
+    onSwipeLeft($event: any) {
+        const el: HTMLElement = this.next.nativeElement;
+        el.click();
+    }
+
+    onSwipeRight($event: any) {
+        const el: HTMLElement = this.prev.nativeElement;
+        el.click();
+    }
 
     isDesktop() {
         return this.screenService.isDesktop();
@@ -143,8 +155,6 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
-
-
 
     abstract async getEvents();
 

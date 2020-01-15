@@ -2,7 +2,11 @@
                  [viewDate]="viewDate"
                  [desktop]="isDesktop()"
                  (done)="onViewDateChanged($event)"></calendar-header>
-<div [ngSwitch]="view" class="main-calendar">
+
+<!--suppress AngularUndefinedBinding -->
+<div [ngSwitch]="view" class="main-calendar"
+     (swipeleft)="onSwipeLeft($event)"
+     (swiperight)="onSwipeRight($event)">
     <mwl-calendar-month-view
             *ngSwitchCase="MONTH"
             [viewDate]="viewDate"
@@ -46,3 +50,23 @@
             (eventTimesChanged)="handleEvent('change',$event)">
     </mwl-calendar-day-view>
 </div>
+
+<button
+    #next
+    mwlCalendarNextView
+    (viewDateChange)="onViewDateChanged($event)"
+    [(viewDate)]="viewDate"
+    [view]="view"
+    [excludeDays]="excludeDays"
+    hidden>
+</button>
+
+<button
+    #prev
+    mwlCalendarPreviousView
+    (viewDateChange)="onViewDateChanged($event)"
+    [(viewDate)]="viewDate"
+    [view]="view"
+    [excludeDays]="excludeDays"
+    hidden>
+</button>
