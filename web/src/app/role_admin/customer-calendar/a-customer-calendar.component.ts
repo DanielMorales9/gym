@@ -31,19 +31,19 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         if (error) {
             throw error;
         }
-        this.events.push(...data.map(value => this.formatEvent(value)));
+        this.events.push(...data.map(value => this.formatEvent(value, false)));
 
         [data, error] = await this.facade.getHoliday(startDay, endDay);
         if (error) {
             throw error;
         }
-        this.events.push(...data.map(value => this.formatEvent(value)));
+        this.events.push(...data.map(value => this.formatEvent(value, false)));
 
         [data, error] = await this.facade.getCourseEvents(startDay, endDay);
         if (error) {
             throw error;
         }
-        this.events.push(...data.map(value => this.formatEvent(value)));
+        this.events.push(...data.map(value => this.formatEvent(value, false)));
         this.refreshView();
     }
 
@@ -69,14 +69,14 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
     hour(action: string, event: any) {
         if (!this.user.currentTrainingBundles) {
-            return this.snackBar.open('Non hai pacchetti a disposizione');
+            return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} ha pacchetti a disposizione`);
         }
 
         event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
         event.user = this.user;
         this.modalData = {
             action: action,
-            title: 'Prenota il tuo allenamento!',
+            title: `Prenota l\'allenamento per ${this.user.firstName} ${this.user.lastName}!`,
             userId: this.user.id,
             role: this.role,
             event: event
@@ -90,7 +90,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         event.user = this.user;
         this.modalData = {
             action: action,
-            title: `Sei sicuro di voler eliminare la prenotazione?`,
+            title: `Sei sicuro di voler eliminare la prenotazione per ${this.user.firstName} ${this.user.lastName}?`,
             role: this.role,
             userId: this.user.id,
             event: event
@@ -129,17 +129,18 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     private openInfoModal() {
+        this.modalData.confirm = true;
+        this.modalData.complete = true;
         const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
-            data: this.modalData
+            data: this.modalData,
         });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                if (data.cancel) {
-                    this.deleteReservation(data);
-                } else {
-                    this.createReservation(data);
-                }
+                if (data.type === 'confirm') { this.confirmReservation(data); }
+                else if (data.type === 'complete') { this.completeReservation(data); }
+                else if (data.type === 'delete') { this.deleteReservation(data); }
+                else { this.createReservation(data); }
             }
         });
     }
@@ -200,5 +201,23 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                     this.snackBar.open(err.error.message);
                 }
             });
+    }
+
+    private completeReservation(data) {
+        this.facade.completeEvent(data.eventId)
+            .subscribe(async (_) => {
+                this.snackBar.open('Allenamento completato');
+                await this.getEvents();
+            }, (err) => {
+                this.snackBar.open(err.error.message);
+            });
+    }
+
+    private confirmReservation(data) {
+        this.facade.confirmReservation(data.eventId)
+            .subscribe(async (_) => {
+                this.snackBar.open('Prenotazione confermata');
+                await this.getEvents();
+            }, (err) => this.snackBar.open(err.error.message));
     }
 }

@@ -124,7 +124,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                if (data.cancel) {
+                if (data.type === 'delete') {
                     this.deleteReservation(data);
                 } else {
                     this.createReservation(data);

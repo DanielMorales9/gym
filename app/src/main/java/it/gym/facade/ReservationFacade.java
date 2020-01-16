@@ -142,14 +142,27 @@ public class ReservationFacade {
         return res;
     }
 
-    public Reservation deleteReservations(Long eventId, Long reservationId) {
+    public Reservation deleteReservations(Long eventId, Long reservationId, String roleName) {
         logger.info("Getting reservation by id");
         Reservation res = this.service.findById(reservationId);
         ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
 
         ATrainingBundle bundle = event.getSession().getTrainingBundle();
 
+        boolean evtCompleted = event.getSession().getCompleted();
+        boolean resConfirmed = res.getConfirmed();
+
+        boolean eitherCompletedOrConfirmed = resConfirmed || evtCompleted;
+        boolean isPastEvt = isPast(event.getStartTime());
+        boolean youAreCustomer = "CUSTOMER".equals(roleName);
+        boolean isAPersonal = "P".equals(event.getType());
+
+        if (youAreCustomer && eitherCompletedOrConfirmed && isPastEvt && isAPersonal)
+            throw new BadRequestException("La prenotazione non può essere annullata. " +
+                    "Rivolgiti in segreteria per annullare");
+
         event.deleteReservation(res);
+
 
         if (event.getType().equals("P")) {
             event.deleteSession();
@@ -161,6 +174,10 @@ public class ReservationFacade {
         }
 
         return res;
+    }
+
+    private boolean isPast(Date startTime) {
+        return startTime.before(new Date());
     }
 
     public Reservation confirm(Long reservationId) {
