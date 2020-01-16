@@ -52,9 +52,7 @@ export class AppService {
 
     async logout() {
         const [data, error] = await this.auth.logout();
-        if (data) {
-            this.discardSession();
-        }
+        this.discardSession();
         return [data, error];
     }
 
