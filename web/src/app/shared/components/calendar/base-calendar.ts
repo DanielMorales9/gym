@@ -111,11 +111,13 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     static getPersonalEventColor(event: any) {
-        return (event.reservation.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+        return (event.reservation.confirmed) ? (event.session.completed) ?
+            CALENDAR_COLUMNS.GREEN : CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
     static getCourseEventColor(event: any) {
-        return (event.reservations.length > 0) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+        return (event.reservations.length > 0) ? (event.session.completed) ?
+            CALENDAR_COLUMNS.GREEN : CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
     onSwipeLeft($event: any) {
@@ -269,19 +271,6 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
     isValidHour(event: any) {
         return BaseCalendar.isNotPast(event.date) && this.isGymOpenOnDate(event.date) && this.isInGymHours(event.date);
-    }
-
-    isValidChange(event: any) {
-        const start = event.event.start;
-        const end = event.event.end;
-        const isStartNotPast = BaseCalendar.isNotPast(start);
-        const isEndNotPast = BaseCalendar.isNotPast(end);
-        const isGymOpen = this.isGymOpenOnDate(start);
-        return isStartNotPast && isEndNotPast && isGymOpen && this.isInGymHours(start, end);
-    }
-
-    isValidHeader(event: any) {
-        return BaseCalendar.isNotPast(event.day.date) && this.isGymOpenOnDate(event.day.date);
     }
 
     getStartAndEndTimeByView() {
