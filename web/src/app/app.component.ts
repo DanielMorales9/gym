@@ -1,8 +1,8 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, AuthenticatedService, GymService} from './services';
-import {Gym, User} from './shared/model';
+import {AppService, GymService} from './services';
+import {User} from './shared/model';
 import {MatSidenav} from '@angular/material';
 import {ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
@@ -28,56 +28,48 @@ export class AppComponent implements OnInit, OnDestroy {
                 private screenService: ScreenService,
                 private router: Router,
                 private route: ActivatedRoute,
-                private gymService: GymService,
-                private authenticatedService: AuthenticatedService) {
+                private gymService: GymService) {
     }
 
 
     async ngOnInit(): Promise<void> {
         this.authOnNavigation();
-        await this.service.authenticate();
-
-        const sub = this.authenticatedService.getAuthenticated().subscribe(async auth => {
-            this.authenticated = auth;
-
-            if (this.authenticated && !this.user) {
-                this.current_role_view = this.service.currentRole;
-                this.user = this.service.user;
-                const [data, error] = await this.gymService.getConfig();
-                if (error) {
-                    throw error;
-                }
-                else {
-                    this.appName = data.name;
-                    document.title = this.appName;
-                }
-            }
-
-        });
-
-        this.sub.add(sub);
-
+        const [data, error] = await this.service.authenticate();
+        await this.onAuthenticate(data);
     }
 
+    private async onAuthenticate(authenticated: any) {
+        this.authenticated = authenticated;
+        if (this.authenticated && !this.user) {
+            this.current_role_view = this.service.currentRole;
+            this.user = this.service.user;
+            const [data, error] = await this.gymService.getConfig();
+            if (data) {
+                this.appName = data.name;
+                document.title = this.appName;
+            }
+        }
+    }
 
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
 
     async logout() {
-        const [_, error] = await this.service.logout();
-
-        await this.snav.close();
-        this.current_role_view = undefined;
+        await this.service.logout();
         this.authenticated = false;
         this.user = undefined;
-        await this.router.navigateByUrl('/auth/login');
+        this.current_role_view = undefined;
+        await this.router.navigateByUrl('/home');
+        await this.snav.close();
     }
 
     private authOnNavigation() {
         let sub = this.router.events.subscribe(async event => {
             if (event instanceof NavigationStart) {
-                await this.service.authenticate();
+                const [data, error] = await this.service.authenticate();
+                await this.onAuthenticate(data);
+                await this.closeNav();
             }
         });
         this.sub.add(sub);
@@ -104,13 +96,9 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.screenService.isDesktop();
     }
 
-    getRole() {
-        return this.service;
-    }
-
     async closeNav() {
         if (!this.shouldBeOpen()) {
-            await this.snav.toggle();
+            await this.snav.toggle(false);
         }
     }
 
@@ -135,6 +123,5 @@ export class AppComponent implements OnInit, OnDestroy {
             relativeTo: this.route,
             queryParams: params,
         });
-        await this.closeNav();
     }
 }
