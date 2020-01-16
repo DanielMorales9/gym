@@ -1,8 +1,8 @@
 <div class="card-container">
     <mat-card>
         <mat-card-title>{{gym?.name || 'Loading...'}}</mat-card-title>
-        <mat-card-subtitle>Orario della Palestra</mat-card-subtitle>
         <mat-card-content>
+            <h6>Orario della palestra</h6>
             <table>
                 <tr>
                     <td>Lunedì</td>
@@ -61,6 +61,10 @@
                     </td>
                 </tr>
             </table>
+            <div style="margin-top: 1rem;">
+                <h6>Prenotazioni</h6>
+                <span>I clienti possono prenotare fino a {{gym?.reservationBeforeHours|| '...'}} ore prima</span>
+            </div>
         </mat-card-content>
         <mat-card-actions>
             <ng-container *ngIf="canEdit">

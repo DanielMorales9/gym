@@ -12,8 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -26,7 +24,6 @@ import static it.gym.utility.CheckEvents.checkPast;
 
 @Component
 @Transactional
-@PropertySource("application.yml")
 public class ReservationFacade {
 
     private static final Logger logger = LoggerFactory.getLogger(ReservationFacade.class);
@@ -40,9 +37,6 @@ public class ReservationFacade {
     @Autowired private TrainingSessionService sessionService;
     @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
-
-    @Value("${reservationBeforeHours}")
-    Integer reservationBeforeHours;
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
         return customer.getCurrentTrainingBundles()
@@ -63,11 +57,11 @@ public class ReservationFacade {
         checkBundleIsReservable(customer, bundle);
 
         if ("CUSTOMER".equals(roleName))
-            isReservedOnTime(startTime);
+            isReservedOnTime(startTime, gym);
 
         List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
-        hasHolidays(events);
+        CheckEvents.hasHolidays(events);
     }
 
     private void isEventReservable(AEvent event) {
@@ -186,17 +180,13 @@ public class ReservationFacade {
         return expiredBundles;
     }
 
-    void isReservedOnTime(Date startTime) {
+    public void isReservedOnTime(Date startTime, Gym gym) {
         logger.info("Checking whether the date is before certain amount of hours");
-        Date date = DateUtils.addHours(startTime, -this.reservationBeforeHours);
+        Date date = DateUtils.addHours(startTime, - gym.getReservationBeforeHours());
         Date now = new Date();
         if (date.before(now))
             throw new BadRequestException(
-                    String.format("E' necessario prenotare almeno %s ore prima", reservationBeforeHours ));
-    }
-
-    void hasHolidays(List<AEvent> events) {
-        CheckEvents.hasHolidays(events);
+                    String.format("E' necessario prenotare almeno %s ore prima", gym.getReservationBeforeHours() ));
     }
 
     public Role getRoleFromPrincipal(Principal principal) {

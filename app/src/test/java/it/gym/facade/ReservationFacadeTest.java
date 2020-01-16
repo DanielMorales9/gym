@@ -17,7 +17,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -58,13 +57,15 @@ public class ReservationFacadeTest {
     @Test
     public void isOnTime() {
         Date start = getNextMonday();
-        facade.isReservedOnTime(start);
+        Gym gym = createGym(1L);
+        facade.isReservedOnTime(start, gym);
     }
 
     @Test(expected = BadRequestException.class)
     public void isNotOnTime() {
         Date start = new Date();
-        facade.isReservedOnTime(start);
+        Gym gym = createGym(1L);
+        facade.isReservedOnTime(start, gym);
     }
 
     @Test
@@ -72,17 +73,6 @@ public class ReservationFacadeTest {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         facade.deleteExpiredBundles(customer);
-    }
-
-    @Test
-    public void hasNoHolidays() {
-        facade.hasHolidays(Collections.emptyList());
-    }
-
-    @Test(expected = BadRequestException.class)
-    public void hasHolidays() {
-        List<AEvent> holidays = Collections.singletonList(createHoliday(1L, "'holiday", new Date(), new Date()));
-        facade.hasHolidays(holidays);
     }
 
     @Test

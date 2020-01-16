@@ -24,5 +24,6 @@ export interface Gym {
     saturdayStartHour;
     saturdayEndHour;
     saturdayOpen;
+    reservationBeforeHours;
 
 }
