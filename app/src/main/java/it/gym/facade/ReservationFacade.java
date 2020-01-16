@@ -180,7 +180,7 @@ public class ReservationFacade {
         return expiredBundles;
     }
 
-    void isReservedOnTime(Date startTime, Gym gym) {
+    public void isReservedOnTime(Date startTime, Gym gym) {
         logger.info("Checking whether the date is before certain amount of hours");
         Date date = DateUtils.addHours(startTime, - gym.getReservationBeforeHours());
         Date now = new Date();
