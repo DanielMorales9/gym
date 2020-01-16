@@ -1,5 +1,5 @@
-import {Subject} from 'rxjs';
-import {Injectable, OnInit} from '@angular/core';
+import {Subject, Subscription} from 'rxjs';
+import {ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../../model';
 import {EVENT_TYPES} from './event-types.enum';
@@ -27,13 +27,14 @@ const CALENDAR_COLUMNS: any = {
 };
 
 @Injectable()
-export abstract class BaseCalendar implements OnInit {
+export abstract class BaseCalendar implements OnInit, OnDestroy {
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
                           public activatedRoute: ActivatedRoute,
                           public screenService: ScreenService) {
     }
+    private sub: Subscription;
 
     MONTH = CalendarView.Month;
     WEEK = CalendarView.Week;
@@ -102,6 +103,9 @@ export abstract class BaseCalendar implements OnInit {
 
     refresh: Subject<any> = new Subject();
 
+    @ViewChild('next') next: ElementRef<HTMLElement>;
+    @ViewChild('prev') prev: ElementRef<HTMLElement>;
+
     static isNotPast(date) {
         return date >= new Date();
     }
@@ -114,6 +118,15 @@ export abstract class BaseCalendar implements OnInit {
         return (event.reservations.length > 0) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
+    onSwipeLeft($event: any) {
+        const el: HTMLElement = this.next.nativeElement;
+        el.click();
+    }
+
+    onSwipeRight($event: any) {
+        const el: HTMLElement = this.prev.nativeElement;
+        el.click();
+    }
 
     isDesktop() {
         return this.screenService.isDesktop();
@@ -128,6 +141,19 @@ export abstract class BaseCalendar implements OnInit {
         await this.getRole();
         await this.updateQueryParams();
         await this.getEvents();
+        this.sub = this.activatedRoute.queryParams.subscribe(async params => {
+            const hasView = 'view' in params;
+            const hasViewDate = 'viewDate' in params;
+            if (hasView && hasViewDate) {
+                this.view = params['view'];
+                this.viewDate = new Date(params['viewDate']);
+                await this.getEvents();
+            }
+        });
+    }
+
+    ngOnDestroy(): void {
+        this.sub.unsubscribe();
     }
 
     abstract async getEvents();
@@ -379,9 +405,8 @@ export abstract class BaseCalendar implements OnInit {
         } else {
             this.view = viewOrDate;
         }
-        this.updateQueryParams();
         this.activeDayIsOpen = false;
-        await this.getEvents();
+        await this.updateQueryParams();
     }
 
     async day(action: string, event: any): Promise<void> {
@@ -419,3 +444,4 @@ export abstract class BaseCalendar implements OnInit {
             });
     }
 }
+

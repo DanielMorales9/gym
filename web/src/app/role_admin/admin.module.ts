@@ -35,8 +35,18 @@ import {SharedModule} from '../shared';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
+import * as Hammer from 'hammerjs';
+import {CalendarNextViewDirective} from 'angular-calendar/modules/common/calendar-next-view.directive';
+import {CalendarPreviousViewDirective} from 'angular-calendar/modules/common/calendar-previous-view.directive';
 
 registerLocaleData(localeIt);
+
+export class MyHammerConfig extends HammerGestureConfig {
+    overrides = <any> {
+        swipe: { direction: Hammer.DIRECTION_ALL },
+    };
+}
 
 @NgModule({
     imports: [
@@ -79,8 +89,9 @@ registerLocaleData(localeIt);
         BundleSelectModalComponent
     ],
     providers: [
-        {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
-        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+        { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' },
+        { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
+        { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
     ],
     entryComponents: [
         AdminHeaderModalComponent,
