@@ -320,6 +320,25 @@
                 </mat-error>
             </mat-form-field>
         </div>
+        <div>
+
+            <mat-form-field>
+                <label for="reservationBeforeHours" class="sr-only">Prenotazioni prima</label>
+                <input name="reservationBeforeHours"
+                       matInput
+                       placeholder="Prenotazioni x ore prima"
+                       id="reservationBeforeHours"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': reservationBeforeHours.touched && reservationBeforeHours.invalid }"
+                       formControlName="reservationBeforeHours"/>
+                <mat-error *ngIf="reservationBeforeHours.touched && reservationBeforeHours.invalid">
+                    <div *ngIf="!!reservationBeforeHours.errors?.required">Orario di chiusura obbligatorio</div>
+                    <div *ngIf="!!reservationBeforeHours.errors?.min">Orario di chiusura inferiore a 0</div>
+                    <div *ngIf="!!reservationBeforeHours.errors?.max">Orario di chiusura superiore a 24</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
 
     </div>
     <div mat-dialog-actions>

@@ -49,7 +49,6 @@ management:
       enabled: false
 
 baseUrl: ${BASE_HOST}
-reservationBeforeHours: 2
 admin_email: ${ADMIN_EMAIL}
 admin_password: ${ADMIN_PASSWORD}
 schema: ${APP_NAME}

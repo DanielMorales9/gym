@@ -63,6 +63,7 @@ public class Fixture {
         gym.setFridayOpen(true);
         gym.setSaturdayOpen(true);
         gym.setSundayOpen(false);
+        gym.setReservationBeforeHours(6);
         return gym;
     }
 
