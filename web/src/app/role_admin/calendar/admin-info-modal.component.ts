@@ -12,7 +12,6 @@ export class AdminInfoModalComponent extends BaseCalendarModal {
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = this.data;
-        console.log(this.modalData);
     }
 
     submit() {

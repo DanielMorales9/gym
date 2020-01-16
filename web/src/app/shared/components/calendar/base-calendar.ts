@@ -97,7 +97,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     public gym: Gym;
     private queryParams: {view: CalendarView, viewDate: Date};
     user: User;
-    modalData: { role: number; action: string; title: string; userId: number, event: any };
+    modalData: any;
 
     events: CalendarEvent[];
 
@@ -111,11 +111,13 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     static getPersonalEventColor(event: any) {
-        return (event.reservation.confirmed) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+        return (event.reservation.confirmed) ? (event.session.completed) ?
+            CALENDAR_COLUMNS.GREEN : CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
     static getCourseEventColor(event: any) {
-        return (event.reservations.length > 0) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+        return (event.reservations.length > 0) ? (event.session.completed) ?
+            CALENDAR_COLUMNS.GREEN : CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
     onSwipeLeft($event: any) {
@@ -271,19 +273,6 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         return BaseCalendar.isNotPast(event.date) && this.isGymOpenOnDate(event.date) && this.isInGymHours(event.date);
     }
 
-    isValidChange(event: any) {
-        const start = event.event.start;
-        const end = event.event.end;
-        const isStartNotPast = BaseCalendar.isNotPast(start);
-        const isEndNotPast = BaseCalendar.isNotPast(end);
-        const isGymOpen = this.isGymOpenOnDate(start);
-        return isStartNotPast && isEndNotPast && isGymOpen && this.isInGymHours(start, end);
-    }
-
-    isValidHeader(event: any) {
-        return BaseCalendar.isNotPast(event.day.date) && this.isGymOpenOnDate(event.day.date);
-    }
-
     getStartAndEndTimeByView() {
         let startDay;
         let endDay;
@@ -315,7 +304,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
 
 
-    formatEvent(event: any): CalendarEvent {
+    formatEvent(event: any, me?: boolean): CalendarEvent {
         const startTime = new Date(event['startTime']);
         const endTime = new Date(event['endTime']);
         const startHour = startTime.getHours();
@@ -345,7 +334,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 isDeletable = this.isReservationDeletable(event);
                 isResizable = false;
                 color = BaseCalendar.getPersonalEventColor(event);
-                title = this.getReservationTitle(event);
+                title = this.getReservationTitle(event, me);
                 break;
         }
 
@@ -378,20 +367,20 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         return event.user.id === this.user.id && this.user.type === 'T';
     }
 
-    private getReservationTitle(event: any) {
+    private getReservationTitle(event: any, me?: boolean) {
         const startTime = new Date(event['startTime']);
         const endTime = new Date(event['endTime']);
         const startHour = startTime.getHours();
         const endHour = endTime.getHours();
 
-        if (this.isCustomer()) {
+        if (this.isCustomer() && me) {
             return `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
         } else {
             return `Allenamento ${startHour} - ${endHour} di ${event['reservation']['user']['lastName']}`;
         }
     }
 
-    private isCustomer() {
+    private isCustomer(me?) {
         return this.user.type === 'C';
     }
 
@@ -415,6 +404,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 await this.getEvents();
                 this.view = this.DAY;
                 this.activeDayIsOpen = true;
+                await this.updateQueryParams();
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
         } else {
@@ -423,6 +413,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 if (event.day.events.length === 0) {
                     await this.getEvents();
                     this.view = this.DAY;
+                    await this.updateQueryParams();
                 }
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
