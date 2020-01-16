@@ -98,6 +98,9 @@ public class Gym {
     @Column(name="week_starts_on")
     private DayOfWeek weekStartsOn;
 
+    @Column(name="reservation_before_hours")
+    private Integer reservationBeforeHours;
+
     @PrePersist
     protected void prePersist() {
         this.createdAt = new Date();
@@ -395,5 +398,13 @@ public class Gym {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Integer getReservationBeforeHours() {
+        return reservationBeforeHours;
+    }
+
+    public void setReservationBeforeHours(Integer reservationsBeforeHours) {
+        this.reservationBeforeHours = reservationsBeforeHours;
     }
 }

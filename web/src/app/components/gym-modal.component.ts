@@ -120,12 +120,19 @@ export class GymModalComponent implements OnInit {
         return this.form.get('name');
     }
 
+    get reservationBeforeHours() {
+        return this.form.get('reservationBeforeHours');
+    }
+
     buildForm() {
         const hourValidators = [Validators.required, Validators.min(0), Validators.max(24)];
 
         this.form = new FormGroup({
             name: new FormControl(this.gym.name, [Validators.required]),
             mondayOpen: new FormControl(this.gym.mondayOpen, [Validators.required]),
+            reservationBeforeHours: new FormControl({
+                value: this.gym.reservationBeforeHours
+            }, hourValidators),
             mondayStartHour: new FormControl({
                 disabled: !this.gym.mondayOpen,
                 value: this.gym.mondayStartHour
