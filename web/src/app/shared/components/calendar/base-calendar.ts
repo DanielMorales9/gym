@@ -404,6 +404,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 await this.getEvents();
                 this.view = this.DAY;
                 this.activeDayIsOpen = true;
+                await this.updateQueryParams();
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
         } else {
@@ -412,6 +413,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 if (event.day.events.length === 0) {
                     await this.getEvents();
                     this.view = this.DAY;
+                    await this.updateQueryParams();
                 }
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
