@@ -304,7 +304,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
 
 
-    formatEvent(event: any): CalendarEvent {
+    formatEvent(event: any, me?: boolean): CalendarEvent {
         const startTime = new Date(event['startTime']);
         const endTime = new Date(event['endTime']);
         const startHour = startTime.getHours();
@@ -334,7 +334,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 isDeletable = this.isReservationDeletable(event);
                 isResizable = false;
                 color = BaseCalendar.getPersonalEventColor(event);
-                title = this.getReservationTitle(event);
+                title = this.getReservationTitle(event, me);
                 break;
         }
 
@@ -367,20 +367,20 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         return event.user.id === this.user.id && this.user.type === 'T';
     }
 
-    private getReservationTitle(event: any) {
+    private getReservationTitle(event: any, me?: boolean) {
         const startTime = new Date(event['startTime']);
         const endTime = new Date(event['endTime']);
         const startHour = startTime.getHours();
         const endHour = endTime.getHours();
 
-        if (this.isCustomer()) {
+        if (this.isCustomer() && me) {
             return `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
         } else {
             return `Allenamento ${startHour} - ${endHour} di ${event['reservation']['user']['lastName']}`;
         }
     }
 
-    private isCustomer() {
+    private isCustomer(me?) {
         return this.user.type === 'C';
     }
 
