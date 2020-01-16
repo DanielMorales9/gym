@@ -129,17 +129,18 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     private openInfoModal() {
+        this.modalData.confirm = true;
+        this.modalData.complete = true;
         const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
-            data: this.modalData
+            data: this.modalData,
         });
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                if (data.cancel) {
-                    this.deleteReservation(data);
-                } else {
-                    this.createReservation(data);
-                }
+                if (data.type === 'confirm') { this.confirmReservation(data); }
+                else if (data.type === 'complete') { this.completeReservation(data); }
+                else if (data.type === 'delete') { this.deleteReservation(data); }
+                else { this.createReservation(data); }
             }
         });
     }
@@ -200,5 +201,23 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                     this.snackBar.open(err.error.message);
                 }
             });
+    }
+
+    private completeReservation(data) {
+        this.facade.completeEvent(data.eventId)
+            .subscribe(async (_) => {
+                this.snackBar.open('Allenamento completato');
+                await this.getEvents();
+            }, (err) => {
+                this.snackBar.open(err.error.message);
+            });
+    }
+
+    private confirmReservation(data) {
+        this.facade.confirmReservation(data.eventId)
+            .subscribe(async (_) => {
+                this.snackBar.open('Prenotazione confermata');
+                await this.getEvents();
+            }, (err) => this.snackBar.open(err.error.message));
     }
 }

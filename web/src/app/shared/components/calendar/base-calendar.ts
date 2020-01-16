@@ -97,7 +97,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     public gym: Gym;
     private queryParams: {view: CalendarView, viewDate: Date};
     user: User;
-    modalData: { role: number; action: string; title: string; userId: number, event: any };
+    modalData: any;
 
     events: CalendarEvent[];
 
