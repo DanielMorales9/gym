@@ -9,7 +9,7 @@ import {PolicyService} from '../../../core/policy';
 @Component({
     selector: 'bundle-spec-details',
     templateUrl: './bundle-spec-details.component.html',
-    styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
+    styleUrls: ['../../../styles/root.css', '../../../styles/card.css', '../../../styles/details.css'],
 })
 export class BundleSpecDetailsComponent implements OnInit {
     PERSONAL = BundleType.PERSONAL;

@@ -100,7 +100,7 @@ mat-list.no-card {
 
 .panel-actions {
     display: flex;
-    padding-top: 12px;
+    padding: 0.5em;
     flex-direction: row;
     justify-content: center;
 }
@@ -129,4 +129,12 @@ mat-panel-title > a {
     cdk-virtual-scroll-viewport.scroll-viewport {
         height: calc(100vh - 112px) !important;
     }
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+.mat-ex-panel-body {
+    padding: 0 0 0 24px;
 }

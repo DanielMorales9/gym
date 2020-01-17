@@ -59,6 +59,8 @@ import {BundleDetailsComponent} from './components/bundles';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTreeModule} from '@angular/material/tree';
+import {MatBadgeModule} from '@angular/material/badge';
+import {MatTableModule} from '@angular/material/table';
 
 @NgModule({
     imports: [
@@ -87,6 +89,8 @@ import {MatTreeModule} from '@angular/material/tree';
         ScrollingModule,
         MatMenuModule,
         MatTreeModule,
+        MatBadgeModule,
+        MatTableModule,
     ],
 
     entryComponents: [
