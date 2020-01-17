@@ -1,0 +1,39 @@
+.summary-toolbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.summary-info {
+    padding: 0 0.25em;
+    display: flex;
+    flex-direction: column
+}
+
+.expansion-list {
+    margin: 8px;
+}
+
+.expansion-list > mat-expansion-panel-header {
+    padding: 0.25em;
+}
+
+::ng-deep .mat-expansion-panel-body {
+    padding: 0 !important;
+}
+
+::ng-deep .mat-card-header-text {
+    margin: 0.25em !important;
+}
+
+.mat-ex-panel-body {
+    padding: 0 0 0 1em;
+}
+
+.divider {
+    margin-top: 4px;
+    margin-bottom: 4px;
+    border: 0;
+    border-top: 1px solid rgba(0,0,0,.1);
+}

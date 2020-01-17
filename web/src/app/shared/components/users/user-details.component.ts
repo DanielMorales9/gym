@@ -11,7 +11,7 @@ import {PolicyService} from '../../../core/policy';
 
 @Component({
     templateUrl: './user-details.component.html',
-    styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
+    styleUrls: ['../../../styles/root.css', '../../../styles/card.css', '../../../styles/details.css'],
 })
 export class UserDetailsComponent implements OnInit {
 

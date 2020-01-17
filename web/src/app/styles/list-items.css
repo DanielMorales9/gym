@@ -11,15 +11,6 @@
     flex-direction: column
 }
 
-.sales-list {
-    margin: 8px;
-}
-
-.sales-list > mat-expansion-panel-header {
-    padding: 0 16px 0 16px;
-}
-
-
 .divider {
     margin-top: 4px;
     margin-bottom: 4px;

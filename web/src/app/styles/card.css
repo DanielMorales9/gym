@@ -1,9 +1,9 @@
 div.card-container {
-    margin: 1em;
+    margin: 0.5em;
 }
 
 mat-card {
-    padding: 2em;
+    padding: 1.25em;
     background-clip: border-box !important;
     border: 1px solid rgba(0,0,0,.125) !important;
     border-radius: .25rem !important;
