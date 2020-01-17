@@ -27,7 +27,7 @@
             </span>
             </div>
 
-            <mat-expansion-panel class='sales-list'
+            <mat-expansion-panel class='expansion-list'
                                  [class.mat-expansion-panel]="false"
                                  (closed)="closeAll()">
                 <mat-expansion-panel-header>
@@ -37,7 +37,7 @@
                 </mat-expansion-panel-header>
                 <span layout="row"><hr class="divider" flex/></span>
                 <ng-container *ngFor="let l of sale?.salesLineItems; let i = index">
-                    <mat-expansion-panel [class.mat-expansion-panel]="false" [(expanded)]="expand[i]">
+                    <mat-expansion-panel  [class.mat-expansion-panel]="false" [(expanded)]="expand[i]">
                         <mat-expansion-panel-header>
                             <mat-panel-title>
                                 {{i+1}}.&nbsp;
@@ -49,7 +49,7 @@
                                 {{l?.bundleSpecification.price || 'Loading...'}}&euro;
                             </mat-panel-description>
                         </mat-expansion-panel-header>
-                        <div>
+                        <div class="mat-ex-panel-body">
                             <div>
                                 <mat-icon fontSet="fas" fontIcon="fa-file-alt"></mat-icon>
                                 Tipo:&nbsp;
@@ -73,7 +73,7 @@
                     <span layout="row"><hr class="divider" flex/></span>
                 </ng-container>
             </mat-expansion-panel>
-            <mat-expansion-panel class='sales-list'
+            <mat-expansion-panel class='expansion-list'
                                  [class.mat-expansion-panel]="false"
                                  *ngIf="sale?.payments.length > 0">
                 <mat-expansion-panel-header>

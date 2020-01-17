@@ -1,9 +1,11 @@
 <div class="card-container">
     <mat-card>
-        <mat-card-title>{{bundleSpec?.name || 'Loading...'}}</mat-card-title>
-        <mat-card-subtitle>{{bundleSpec?.description || 'Loading...'}}</mat-card-subtitle>
+        <mat-card-header>
+            <mat-card-title>{{bundleSpec?.name || 'Loading...'}}</mat-card-title>
+            <mat-card-subtitle>{{bundleSpec?.description || 'Loading...'}}</mat-card-subtitle>
+        </mat-card-header>
         <mat-card-content>
-            <div class="panel-content">
+            <div class="summary-info">
                 <div>
                     <span class="green-light" [hidden]="bundleSpec?.disabled">
                         <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Abilitato

@@ -1,10 +1,9 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {Bundle} from '../../model';
 import {BundleService} from '../../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../../core/helpers';
-import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleModalComponent} from './bundle-modal.component';
 import {PolicyService} from '../../../core/policy';
@@ -12,7 +11,7 @@ import {first} from 'rxjs/operators';
 
 @Component({
     templateUrl: './bundles.component.html',
-    styleUrls: ['../../../styles/search-list.css', '../../../styles/root.css']
+    styleUrls: ['../../../styles/list-items.css', '../../../styles/root.css']
 })
 export class BundlesComponent implements OnInit {
 

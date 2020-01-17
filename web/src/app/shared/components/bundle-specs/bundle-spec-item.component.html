@@ -9,6 +9,8 @@
             {{bundleSpec?.description || 'Loading...'}}
         </mat-panel-description>
     </mat-expansion-panel-header>
+    <div class="mat-ex-panel-body">
+
     <div class="panel-body-description">
         <span>{{bundleSpec?.description || 'Loading...'}}</span>
     </div>
@@ -43,6 +45,7 @@
             </div>
         </ng-container>
         </ng-container>
+    </div>
     </div>
     <div class="panel-actions">
         <button mat-button color="primary" (click)="goToInfo()">

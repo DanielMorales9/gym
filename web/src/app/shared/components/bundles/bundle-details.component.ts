@@ -10,7 +10,7 @@ import {BundleType} from '../../model';
 @Component({
     selector: 'bundle-spec-details',
     templateUrl: './bundle-details.component.html',
-    styleUrls: ['../../../styles/root.css', '../../../styles/card.css'],
+    styleUrls: ['../../../styles/root.css', '../../../styles/card.css', '../../../styles/details.css'],
 })
 export class BundleDetailsComponent implements OnInit, OnDestroy {
 
@@ -22,6 +22,7 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
 
     canEdit: boolean;
     canDelete: boolean;
+    displayedSessionsColumns = ['index', 'date', 'startTime', 'endTime'];
 
     constructor(private service: BundleService,
                 private dialog: MatDialog,
@@ -44,7 +45,9 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
     private async getBundle(id: number) {
         const [data, error] = await this.service.findById(id);
         if (error) { throw error; }
+        data.sessions = data.sessions.map(item => {item.date = item.startTime });
         this.bundle = data;
+
     }
 
     getBundleType() {

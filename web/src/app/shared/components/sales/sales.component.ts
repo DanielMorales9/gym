@@ -115,18 +115,18 @@ export class SalesComponent implements OnInit {
             this.helper.delete(sale.id)
                 .subscribe( _ => {
                     this.snackbar.open('Vendita eliminata per il cliente ' + sale.customer.lastName + '!');
-                    return this.search();
+                    return this.search(this.queryParams);
                 }, err => this.snackbar.open(err.error.message));
         }
     }
 
     private paySale(sale: Sale, amount: number) {
         this.service.pay(sale.id, amount)
-            .subscribe(_ => this.search());
+            .subscribe(_ => this.search(this.queryParams));
     }
 
     private goToDetails(sale: Sale) {
-        return this.router.navigate([sale.id], {relativeTo: this.route});
+        this.router.navigate([sale.id], {relativeTo: this.route});
     }
 
     sell() {

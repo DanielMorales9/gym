@@ -18,7 +18,7 @@ function _transformer(node: any, level: number) {
 
 @Component({
     templateUrl: './sale-details.component.html',
-    styleUrls: ['../../../styles/list-items.css', '../../../styles/root.css', '../../../styles/card.css'],
+    styleUrls: ['../../../styles/details.css', '../../../styles/root.css', '../../../styles/card.css'],
 })
 export class SaleDetailsComponent implements OnInit {
 
