@@ -81,27 +81,38 @@
                         <h6>Pagamenti Effettuati</h6>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
-                <mat-list>
-                    <span layout="row"><hr class="divider" flex/></span>
-                    <ng-container *ngFor="let p of sale?.payments; let i = index">
-                        <mat-list-item>
-                            <div class="space-between">
-                                <div>
-                                    <span style="color: darkgray">{{i+1}}.&nbsp;in data</span>
-                                    {{p.createdAt | date: 'dd-MM-yyyy'}}</div>
-                                <div>
-                                    {{p.amount}}&euro;
-                                </div>
-                            </div>
-                        </mat-list-item>
-                        <span layout="row"><hr class="divider" flex/></span>
-                    </ng-container>
-                    <div class="space-between padding-around">
 
-                        <div style="color: darkgray">Da Pagare {{sale.totalPrice - sale.amountPayed}}&euro;</div>
-                        <div style="color: darkgray">Totale {{sale.amountPayed}}&euro;</div>
-                    </div>
-                </mat-list>
+                <table mat-table style="width: 100%" [dataSource]="sale?.payments">
+
+                    <ng-container matColumnDef="index">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{i+1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef> Data </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hour">
+                        <th mat-header-cell *matHeaderCellDef> Ora </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdAt | date: 'HH:mm'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Pagati </th>
+                        <td mat-cell *matCellDef="let element"> {{element.amount}}&euro;</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedPaymentsColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedPaymentsColumns; let i = index;"></tr>
+                </table>
+
+                <div class="space-between padding-around">
+
+                    <div style="color: darkgray">Da Pagare: {{sale.totalPrice - sale.amountPayed}}&euro;</div>
+                    <div style="color: darkgray">Totale: {{sale.amountPayed}}&euro;</div>
+                </div>
             </mat-expansion-panel>
         </mat-card-content>
         <mat-card-actions>

@@ -45,7 +45,6 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
     private async getBundle(id: number) {
         const [data, error] = await this.service.findById(id);
         if (error) { throw error; }
-        data.sessions = data.sessions.map(item => {item.date = item.startTime });
         this.bundle = data;
 
     }

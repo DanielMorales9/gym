@@ -29,6 +29,7 @@ export class SaleDetailsComponent implements OnInit {
     expand = new Proxy({}, {
         get: (target, name) => name in target ? target[name] : false
     });
+    displayedPaymentsColumns = ['index', 'date', 'hour', 'amount'];
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
