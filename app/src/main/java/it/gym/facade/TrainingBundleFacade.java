@@ -58,7 +58,7 @@ public class TrainingBundleFacade {
     public Page<ATrainingBundle> findAll(Pageable pageable) {
         return service.findAll(pageable);
     }
-    
+
     public ATrainingBundle deleteById(Long id) {
         ATrainingBundle bundle = service.findById(id);
         service.delete(bundle);
@@ -66,21 +66,6 @@ public class TrainingBundleFacade {
     }
 
     public ATrainingBundle save(ATrainingBundle bundle) {
-        return service.save(bundle);
-    }
-
-    public ATrainingBundle update(Long id, HttpServletRequest request) throws IOException {
-        ATrainingBundle bundle = service.findById(id);
-        if (!bundle.isDeletable()) {
-            throw new MethodNotAllowedException("Non è possibile modificare un pacchetto in uso");
-        }
-        bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
-        if (bundle.getType().equals("C")) {
-            bundle.update();
-        }
-        else {
-            throw new MethodNotAllowedException("Non è possibile modificare un pacchetto personal");
-        }
         return service.save(bundle);
     }
 

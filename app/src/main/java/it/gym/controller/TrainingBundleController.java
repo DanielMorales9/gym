@@ -69,12 +69,4 @@ public class TrainingBundleController {
         List<ATrainingBundle> bundles = service.findBundlesBySpecIdNotExpired(specId);
         return ResponseEntity.ok(new TrainingBundleAssembler().toResources(bundles));
     }
-
-    // TODO this need to deleted as there is no need to edit bundle
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
-                                                                     HttpServletRequest request) throws IOException {
-        ATrainingBundle bundle = this.service.update(id, request);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
-    }
 }

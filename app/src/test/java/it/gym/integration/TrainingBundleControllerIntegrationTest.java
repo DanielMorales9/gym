@@ -62,7 +62,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         ResultActions result = mockMvc.perform(get("/bundles/courses?startTime="+s+ "&endTime="+e))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle, "["+0+"]");
+        expectTrainingBundle(result, courseBundle, "["+0+"]");
     }
 
     @Test
@@ -70,8 +70,8 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         ResultActions result = mockMvc.perform(get("/bundles"))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (PersonalTrainingBundle) personalBundle, "content["+0+"]");
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle, "content["+1+"]");
+        expectTrainingBundle(result, personalBundle, "content["+0+"]");
+        expectTrainingBundle(result, courseBundle, "content["+1+"]");
     }
 
     @Test
@@ -80,7 +80,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         ResultActions result = mockMvc.perform(get("/bundles/"+courseBundle.getId()))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle);
+        expectTrainingBundle(result, courseBundle);
     }
 
     @Test
@@ -96,17 +96,16 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
                 .getBundleSpec().getId()))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle, "content["+0+"]");
+        expectTrainingBundle(result, courseBundle, "content["+0+"]");
     }
 
     @Test
     public void whenSearchNotExpiredOK() throws Exception {
-
         ResultActions result = mockMvc.perform(get("/bundles/searchNotExpired?specId="+courseBundle
                 .getBundleSpec().getId()))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle, "["+0+"]");
+        expectTrainingBundle(result, courseBundle, "["+0+"]");
     }
 
     @Test
@@ -118,22 +117,4 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
     }
 
-    @Test
-    public void whenPatchOK() throws Exception {
-        Object cred = new Object() {
-            public final String name = courseBundle.getName();
-            public final Long id = courseBundle.getId();
-            public final Date startTime = addDays(courseBundle.getStartTime(), 1);
-            public final Date endTime = courseBundle.getEndTime();
-        };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(patch("/bundles/"+courseBundle.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(cred)))
-                .andExpect(status().isOk());
-
-        expectTrainingBundle(result, courseBundle);
-
-    }
 }

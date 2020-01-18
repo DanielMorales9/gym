@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
 
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
-
 @Entity
 @DiscriminatorValue(value="C")
 @JsonTypeName("C")
@@ -120,11 +118,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
         }
 
         this.getSessions().add(session);
-    }
-
-    @Override
-    public void update() {
-        setEndTime(addMonths(this.startTime, this.option.getNumber()));
     }
 
     @Override
