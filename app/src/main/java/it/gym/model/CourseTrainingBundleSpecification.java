@@ -5,9 +5,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="C")
@@ -24,6 +23,10 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Column(name="max_customers")
     private Integer maxCustomers;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name="bundle_spec_id")
+    private List<TimeOption> options;
 
     public Integer getNumber() {
         return number;
@@ -43,11 +46,19 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Override
     public String getType() {
-        return "C";
+        return TYPE;
     }
 
     @Override
     public ATrainingBundle createTrainingBundle() {
         return null;
+    }
+
+    public List<TimeOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<TimeOption> options) {
+        this.options = options;
     }
 }
