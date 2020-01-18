@@ -99,7 +99,8 @@ public class EventFacadeTest {
         event.setName("course");
 
         CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(gym).when(gymService).findById(1L);
         Mockito.doAnswer(inv -> inv.getArgument(0)).when(service).save(any());
@@ -124,7 +125,9 @@ public class EventFacadeTest {
 
         // all what you need to create a course event
         CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
@@ -140,11 +143,12 @@ public class EventFacadeTest {
     public void deleteCourseEventUndeletableSession() {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        Date endCourse = addDays(start, 30);
 
         // all what you need to create a course event
         CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
         session.setCompleted(true);
@@ -161,7 +165,8 @@ public class EventFacadeTest {
 
         // all what you need to create a course event
         CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
@@ -184,7 +189,7 @@ public class EventFacadeTest {
         TimeOption o = new TimeOption();
         o.setPrice(100.);
         o.setNumber(30);
-        spec.setOptions(Collections.singletonList(o));
+        spec.addOption(o);
         spec.setDisabled(false);
         spec.setCreatedAt(new Date());
         return spec;

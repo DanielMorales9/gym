@@ -98,7 +98,9 @@ public class SaleFacadeTest {
         Sale mockSale = createSale(1L, customer);
         CourseTrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
                 "course", 11, 1, 111.);
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec, mockBundleSpec.getOptions().get(0));
+        TimeOption option = mockBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
+
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec, option);
 
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -121,7 +123,9 @@ public class SaleFacadeTest {
 
         CourseTrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
                 "course", 11, 1, 111.);
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec, mockBundleSpec.getOptions().get(0));
+        TimeOption option = mockBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
+
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec, option);
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);

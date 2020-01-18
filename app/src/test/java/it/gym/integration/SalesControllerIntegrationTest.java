@@ -66,7 +66,8 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         courseSpec = createCourseBundleSpec(1L, "course", 11, 1, 111.);
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
-        course = createCourseBundle(1L, getNextMonday(), courseSpec, courseSpec.getOptions().get(0));
+        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+        course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
         course = bundleRepository.save(course);
         ATrainingBundle bundle = personalSpec.createTrainingBundle();
         bundleRepository.save(bundle);

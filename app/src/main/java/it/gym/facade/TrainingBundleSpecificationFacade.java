@@ -78,4 +78,10 @@ public class TrainingBundleSpecificationFacade {
     public boolean existsByName(String name) {
         return service.existsByName(name);
     }
+
+    public ATrainingBundleSpecification createOptionToBundleSpec(Long id, TimeOption option) {
+        CourseTrainingBundleSpecification bundleSpec = (CourseTrainingBundleSpecification) this.service.findById(id);
+        bundleSpec.addOption(option);
+        return service.save(bundleSpec);
+    }
 }

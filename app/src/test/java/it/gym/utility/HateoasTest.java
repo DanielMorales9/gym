@@ -243,4 +243,15 @@ public class HateoasTest {
 
     }
 
+    public static void expectOption(ResultActions result, TimeOption timeOption) throws Exception {
+        expectOption(result, timeOption, null);
+    }
+
+    public static void expectOption(ResultActions result, TimeOption timeOption, String p) throws Exception {
+        String prefix = handlePrefix(p);
+        result.andExpect(jsonPath("$"+prefix+"id").value(timeOption.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(timeOption.getName()))
+                .andExpect(jsonPath("$"+prefix+"price").value(timeOption.getPrice()))
+                .andExpect(jsonPath("$"+prefix+"number").value(timeOption.getNumber()));
+    }
 }

@@ -207,7 +207,8 @@ public class Fixture {
         TimeOption option = new TimeOption();
         option.setNumber(number);
         option.setPrice(price);
-        specs.setOptions(Collections.singletonList(option));
+        option.setName("myOption");
+        specs.addOption(option);
         specs.setMaxCustomers(maxCustomers);
         return specs;
     }

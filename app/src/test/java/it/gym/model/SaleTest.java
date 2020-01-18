@@ -35,7 +35,7 @@ public class SaleTest {
 
         CourseTrainingBundleSpecification expectedSpecs =
                 createCourseBundleSpec(1L, "Course", 11, 1, 111.);
-        TimeOption option = expectedSpecs.getOptions().get(0);
+        TimeOption option = expectedSpecs.getOptions().toArray(new TimeOption[]{})[0];;
         CourseTrainingBundle expectedBundle = createCourseBundle(start, expectedSpecs, option);
         SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
 
@@ -169,7 +169,8 @@ public class SaleTest {
     private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
         CourseTrainingBundleSpecification spec =
                 createCourseBundleSpec(1L, "Course", 11, 1, 111.);
-        ATrainingBundle a = createCourseBundle(start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        ATrainingBundle a = createCourseBundle(start, spec, option);
         return sale.addSalesLineItem(a);
     }
 

@@ -5,6 +5,7 @@ import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.hateoas.TrainingBundleSpecificationAssembler;
 import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.TimeOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -43,6 +44,13 @@ public class TrainingBundleSpecificationController {
     @PostMapping
     public ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
         ATrainingBundleSpecification s = facade.createTrainingBundleSpecification(spec);
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+    }
+
+    @PostMapping(path = "/{id}/option")
+    public ResponseEntity<TrainingBundleSpecificationResource> createOption(@PathVariable Long id,
+                                                                            @RequestBody TimeOption option) {
+        ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 

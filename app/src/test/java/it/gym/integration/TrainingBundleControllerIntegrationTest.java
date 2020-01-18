@@ -39,7 +39,9 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);
 
-        courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, courseBundleSpec.getOptions().get(0));
+        TimeOption option = courseBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
+
+        courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
         personalBundle = createPersonalBundle(1L, personalBundleSpec);
 
         personalBundle = repository.save(personalBundle);
@@ -109,10 +111,12 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
     @Test
     public void whenPostOK() throws Exception {
+        TimeOption option = courseBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
+
         Object cred = new Object() {
             public final String name = courseBundle.getName();
             public final Long specId = courseBundleSpec.getId();
-            public final Long optionId = courseBundleSpec.getOptions().get(0).getId();
+            public final Long optionId = option.getId();
             public final Date startTime = courseBundle.getStartTime();
         };
 

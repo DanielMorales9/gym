@@ -1,6 +1,6 @@
 CREATE TABLE options (
                           option_id bigint NOT NULL,
-                          bundle_spec_id bigint,
+                          name character varying(255) NOT NULL,
                           price double precision NOT NULL,
                           number int NOT NULL,
                           created_at timestamp without time zone NOT NULL

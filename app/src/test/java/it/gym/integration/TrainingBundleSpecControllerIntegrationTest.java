@@ -15,12 +15,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.expectOption;
 import static it.gym.utility.HateoasTest.expectTrainingBundleSpec;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -102,7 +105,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     public void deleteCourseBundleSpecId_throwsException() throws Exception {
         CourseTrainingBundle bundle = createCourseBundle(1L, getNextMonday(),
                 courseBundleSpec,
-                courseBundleSpec.getOptions().get(0));
+                courseBundleSpec.getOptions().toArray(new TimeOption[] {})[0]);
         bundleRepository.save(bundle);
         mockMvc.perform(delete("/bundleSpecs/" + courseBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
@@ -155,6 +158,32 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
                 .getId();
         expected.setId(id);
         expectTrainingBundleSpec(result, expected);
+    }
+
+    @Test
+    public void postCourseBundleSpecOptionOK() throws Exception {
+        Object randomObj = new Object() {
+            public final Integer number = 1;
+            public final String name = "One Month Option";
+            public final Double price = 111.0;
+        };
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(randomObj);
+
+        ResultActions result = mockMvc.perform(post("/bundleSpecs/"+courseBundleSpec.getId()+"/option")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
+        CourseTrainingBundleSpecification expected = (CourseTrainingBundleSpecification)
+                repository.findById(courseBundleSpec.getId()).get();
+
+        expectTrainingBundleSpec(result, expected);
+        ArrayList<TimeOption> options = new ArrayList<>(courseBundleSpec.getOptions());
+        logger.info(options.toString());
+        for (int i = 0; i < options.size(); i++) {
+            expectOption(result, options.get(i), "options["+i+"]");
+        }
     }
 
     @Test
@@ -238,7 +267,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         TimeOption o = new TimeOption();
         o.setPrice(1.0);
         o.setNumber(1);
-        expected.setOptions(Collections.singletonList(o));
+        expected.addOption(o);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(randomObj);

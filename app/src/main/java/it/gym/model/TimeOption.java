@@ -1,6 +1,5 @@
 package it.gym.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -21,6 +20,9 @@ public class TimeOption {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "options_id_seq")
     @Column(name="option_id")
     private Long id;
+
+    @Column(name = "name", nullable = false)
+    private String name;
 
     @Column(name = "number", nullable = false)
     private Integer number;
@@ -61,6 +63,15 @@ public class TimeOption {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @PrePersist

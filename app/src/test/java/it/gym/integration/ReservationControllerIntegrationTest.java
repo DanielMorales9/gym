@@ -75,7 +75,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         Date monday = getNextMonday();
         Date end = addMonths(monday, 1);
-        TimeOption option = courseSpec.getOptions().get(0);
+        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
         course = createCourseBundle(1L, monday, courseSpec, option);
 
         personal = bundleRepository.save(personal);

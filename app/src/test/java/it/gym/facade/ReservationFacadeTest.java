@@ -145,7 +145,8 @@ public class ReservationFacadeTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 0, 1, 111.);
-        CourseTrainingBundle course = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        CourseTrainingBundle course = createCourseBundle(1L, start, spec, option);
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
@@ -165,7 +166,8 @@ public class ReservationFacadeTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
-        CourseTrainingBundle course = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
+        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        CourseTrainingBundle course = createCourseBundle(1L, start, spec, option);
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
