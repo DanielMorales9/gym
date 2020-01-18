@@ -55,17 +55,6 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenFindCoursesOK() throws Exception {
-        SimpleDateFormat sm = new SimpleDateFormat("dd-MM-yyyy_HH:mm");
-        String s = sm.format(addDays(getNextMonday(), 1));
-        String e = sm.format(addDays(getNextMonday(), 2));
-        ResultActions result = mockMvc.perform(get("/bundles/courses?startTime="+s+ "&endTime="+e))
-                .andExpect(status().isOk());
-
-        expectTrainingBundle(result, courseBundle, "["+0+"]");
-    }
-
-    @Test
     public void whenFindAllOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundles"))
                 .andExpect(status().isOk());

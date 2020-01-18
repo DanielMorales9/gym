@@ -52,10 +52,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return this.repository.findATrainingBundleByBundleSpec_Id(id, pageable);
     }
 
-    public List<CourseTrainingBundle> findCoursesLargerThanInterval(Date startTime, Date endTime) {
-        return courseRepository.findCoursesByInterval(startTime, endTime);
-    }
-
     public void deleteAll(List<ATrainingBundle> bundles) {
         this.repository.deleteAll(bundles);
     }

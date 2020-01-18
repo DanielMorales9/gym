@@ -180,6 +180,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
         expectTrainingBundleSpec(result, expected);
         ArrayList<TimeOption> options = new ArrayList<>(courseBundleSpec.getOptions());
+        options.sort((o1, o2) -> (int) (o2.getId() - o1.getId()));
         logger.info(options.toString());
         for (int i = 0; i < options.size(); i++) {
             expectOption(result, options.get(i), "options["+i+"]");

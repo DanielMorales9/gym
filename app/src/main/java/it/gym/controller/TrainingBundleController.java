@@ -28,17 +28,6 @@ public class TrainingBundleController {
     @Autowired
     private TrainingBundleFacade service;
 
-    @GetMapping("/courses")
-    public ResponseEntity<List<TrainingBundleResource>> findCoursesByLargerInterval(@DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")
-                                                                             @RequestParam Date startTime,
-                                                                             @DateTimeFormat(pattern = "dd-MM-yyyy_HH:mm")
-                                                                             @RequestParam Date endTime) {
-
-        List<CourseTrainingBundle> courses = service.findCoursesLargerThanInterval(startTime, endTime);
-
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResources(courses));
-    }
-
     @GetMapping
     @ResponseBody
     public Page<ATrainingBundle> findAll(Pageable pageable) {

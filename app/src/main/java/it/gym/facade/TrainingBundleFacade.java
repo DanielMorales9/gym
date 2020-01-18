@@ -36,17 +36,6 @@ public class TrainingBundleFacade {
     @Qualifier("trainingBundleService")
     private TrainingBundleService service;
 
-    @Autowired
-    @Qualifier("trainingBundleSpecificationService")
-    private TrainingBundleSpecificationService specService;
-
-    @Autowired
-    private ObjectMapper objectMapper;
-
-    public List<CourseTrainingBundle> findCoursesLargerThanInterval(Date startTime, Date endTime) {
-        return service.findCoursesLargerThanInterval(startTime, endTime);
-    }
-
     public ATrainingBundle findById(Long id) {
         return service.findById(id);
     }

@@ -13,6 +13,4 @@ import java.util.List;
 @Repository
 public interface CourseTrainingBundleRepository extends JpaRepository<CourseTrainingBundle, Long> {
 
-    @Query("select c from CourseTrainingBundle as c where c.startTime <= :startTime and c.endTime >= :endTime")
-    List<CourseTrainingBundle> findCoursesByInterval(Date startTime, Date endTime);
 }
