@@ -39,12 +39,6 @@ public class TrainingBundleController {
         return ResponseEntity.ok(new TrainingBundleAssembler().toResources(courses));
     }
 
-    @PostMapping
-    public ResponseEntity<TrainingBundleResource> post(@RequestBody CourseBundle params) {
-        ATrainingBundle bundle = service.createTrainingBundle(params);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
-    }
-
     @GetMapping
     @ResponseBody
     public Page<ATrainingBundle> findAll(Pageable pageable) {
@@ -76,6 +70,7 @@ public class TrainingBundleController {
         return ResponseEntity.ok(new TrainingBundleAssembler().toResources(bundles));
     }
 
+    // TODO this need to deleted as there is no need to edit bundle
     @PatchMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
                                                                      HttpServletRequest request) throws IOException {

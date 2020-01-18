@@ -1,6 +1,7 @@
 package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.CourseTrainingBundle;
@@ -57,32 +58,7 @@ public class TrainingBundleFacade {
     public Page<ATrainingBundle> findAll(Pageable pageable) {
         return service.findAll(pageable);
     }
-
-    public ATrainingBundle createTrainingBundle(CourseBundle params) {
-        CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
-                specService.findById(params.getSpecId());
-        CourseTrainingBundle bundle = new CourseTrainingBundle();
-        List<TimeOption> options = spec.getOptions().stream()
-                .filter(o -> o.getId().equals(params.getOptionId()))
-                .collect(Collectors.toList());
-        // TODO check whether list is not empty
-        TimeOption option = options.get(0);
-
-        // compute start and end
-        Date startTime = params.getStartTime();
-        Date endTime = addMonths(startTime, option.getNumber());
-
-        bundle.setOption(option);
-        bundle.setStartTime(startTime);
-        bundle.setEndTime(endTime);
-        bundle.setExpired(false);
-        bundle.setName(params.getName());
-
-        bundle.setBundleSpec(spec);
-
-        return this.service.save(bundle);
-    }
-
+    
     public ATrainingBundle deleteById(Long id) {
         ATrainingBundle bundle = service.findById(id);
         service.delete(bundle);

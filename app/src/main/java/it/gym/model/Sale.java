@@ -187,7 +187,6 @@ public class Sale {
         //if it has not been paid and has not been used
         return this.salesLineItems.stream()
                 .map(SalesLineItem::getTrainingBundle)
-                .filter(ATrainingBundle::isNotGroup)
                 .map(ATrainingBundle::isDeletable)
                 .reduce(Boolean::logicalAnd).orElse(true);
     }

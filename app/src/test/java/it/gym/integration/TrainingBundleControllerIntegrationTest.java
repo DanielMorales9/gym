@@ -110,26 +110,6 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenPostOK() throws Exception {
-        TimeOption option = courseBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
-
-        Object cred = new Object() {
-            public final String name = courseBundle.getName();
-            public final Long specId = courseBundleSpec.getId();
-            public final Long optionId = option.getId();
-            public final Date startTime = courseBundle.getStartTime();
-        };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/bundles") .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cred)))
-                .andExpect(status().isOk());
-
-        ATrainingBundle course = repository.findATrainingBundleByBundleSpec_Id(courseBundleSpec.getId()).get(1);
-        expectTrainingBundle(result, (CourseTrainingBundle) course);
-    }
-
-    @Test
     public void whenDeleteOK() throws Exception {
         ResultActions result = mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
                 .andExpect(status().isOk());

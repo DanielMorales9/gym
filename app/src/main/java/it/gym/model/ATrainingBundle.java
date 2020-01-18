@@ -54,14 +54,14 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingBundle")
     private List<ATrainingSession> sessions;
 
-    @JsonIgnore
-    public abstract boolean isNotGroup();
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
     public abstract Double getPrice();
     public abstract void update();
     public abstract ATrainingSession createSession(Date startTime, Date endTime);
+    public abstract boolean assignOption(Long optionId);
+
     public abstract void addSession(ATrainingSession session);
 
     public Long getId() {

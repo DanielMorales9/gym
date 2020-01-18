@@ -54,6 +54,13 @@ public class TrainingBundleSpecificationController {
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 
+//    @DeleteMapping(path = "/{id}/option/{optionId}")
+//    public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(@PathVariable Long id,
+//                                                                            @PathVariable Long optionId) {
+//        ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
+//        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+//    }
+
     @PatchMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
                                                               HttpServletRequest request) throws IOException {

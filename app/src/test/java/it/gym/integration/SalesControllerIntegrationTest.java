@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -42,16 +43,13 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     private Sale sale;
     private PersonalTrainingBundleSpecification personalSpec;
     private CourseTrainingBundleSpecification courseSpec;
-    private CourseTrainingBundle course;
 
-    private SalesLineItem sli0;
+    private SalesLineItem sli1;
 
     @Before
     public void before() {
         List<Role> roles = createCustomerRoles();
         roles = roleRepository.saveAll(roles);
-        Gym gym = createGym(1L);
-        gym = gymRepository.save(gym);
         customer = createCustomer(1L,
                 "customer@customer.com",
                 "password",
@@ -67,13 +65,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
         TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
-        course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
+        CourseTrainingBundle course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
         course = bundleRepository.save(course);
-        ATrainingBundle bundle = personalSpec.createTrainingBundle();
-        bundleRepository.save(bundle);
-        sli0 = sale.addSalesLineItem(bundle);
+
+        sli1 = sale.addSalesLineItem(course);
         sale = repository.save(sale);
-        sli0 = sale.getSalesLineItems().get(0);
+        sli1 = sale.getSalesLineItems().get(0);
 
     }
 
@@ -137,9 +134,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenAddSliOK() throws Exception {
-        String path = "/sales/addSalesLineItem/" + sale.getId() + "/" + personalSpec.getId();
+        String path = "/sales/addSalesLineItem";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("bundleSpecId", personalSpec.getId().toString())
+                .param("saleId", sale.getId().toString()))
                 .andExpect(status().isOk());
 
         List<SalesLineItem> sli = sliRepository.findAll();
@@ -158,56 +157,46 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     }
 
+//    @Test
+//    public void whenAddSliByOptionOK() throws Exception {
+//        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+//        String path = "/sales/addSalesLineItem";
+//
+//        ResultActions result = mockMvc.perform(get(path)
+//                .param("bundleSpecId", courseSpec.getId().toString())
+//                .param("saleId", sale.getId().toString())
+//                .param("optionId", option.getId().toString()))
+//                .andExpect(status().isOk());
+//
+//        List<SalesLineItem> sli = sliRepository.findAll();
+//
+//        Sale expected = new Sale();
+//        expected.setId(sale.getId());
+//        expected.setAmountPayed(0.);
+//        expected.setCompleted(false);
+//        expected.setCustomer(customer);
+//        expected.setSalesLineItems(sli);
+//
+//        expectSale(result, expected);
+//        expectSalesLineItems(result, sli, "salesLineItems");
+//
+//        expectCustomer(result, customer, "customer");
+//
+//    }
+
     @Test
     public void whenAddSliThenItFails() throws Exception {
-        String path = "/sales/addSalesLineItem/" + sale.getId() + "/" + courseSpec.getId();
+        String path = "/sales/addSalesLineItem";
 
-        mockMvc.perform(get(path))
+        mockMvc.perform(get(path)
+                        .param("bundleSpecId", courseSpec.getId().toString())
+                        .param("saleId", sale.getId().toString()))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void whenAddSliByBundleOK() throws Exception {
-        String path = "/sales/addSalesLineItemByBundle/" + sale.getId() + "/" + course.getId();
-
-        ResultActions result = mockMvc.perform(get(path))
-                .andExpect(status().isOk());
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(false);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSale(result, expected);
-        expectCustomer(result, customer, "customer");
-
-        SalesLineItem sl = sli.get(0);
-        expectedSalesLineItem(result, sl, "salesLineItems[" + 0 + "]");
-        expectTrainingBundleSpec(result,
-                (PersonalTrainingBundleSpecification) personalSpec,
-                "salesLineItems[" + 0 + "].bundleSpecification");
-        expectTrainingBundle(result,
-                (PersonalTrainingBundle) sl.getTrainingBundle(),
-                "salesLineItems[" + 0 + "].trainingBundle");
-
-        sl = sli.get(1);
-        expectedSalesLineItem(result, sl, "salesLineItems[" + 1 + "]");
-        expectTrainingBundleSpec(result,
-                (CourseTrainingBundleSpecification) courseSpec,
-                "salesLineItems[" + 1 + "].bundleSpecification");
-        expectTrainingBundle(result,
-                (CourseTrainingBundle) sl.getTrainingBundle(),
-                "salesLineItems[" + 1 + "].trainingBundle");
-
-    }
-
-    @Test
     public void whenDeleteSliOK() throws Exception {
-        String path = "/sales/deleteSalesLineItem/" + sale.getId() + "/" + sli0.getId();
+        String path = "/sales/deleteSalesLineItem/" + sale.getId() + "/" + sli1.getId();
 
         ResultActions result = mockMvc.perform(delete(path))
                 .andExpect(status().isOk());
@@ -225,7 +214,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectCustomer(result, customer, "customer");
         result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(sliRepository.findAll()).isEmpty();
-        assertThat(bundleRepository.findAll().size()).isEqualTo(1);
+        logger.info(bundleRepository.findAll().toString());
+        assertThat(bundleRepository.findAll().size()).isEqualTo(0);
+        CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
+                bundleSpecRepository.findById(courseSpec.getId()).get();
+        assertThat(spec.getOptions()).isNotEmpty();
     }
 
     @Test
@@ -290,8 +283,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(repository.findAll()).isEmpty();
         assertThat(sliRepository.findAll()).isEmpty();
-        assertThat(bundleRepository.findAll().size()).isEqualTo(1);
-
+        assertThat(bundleRepository.findAll().size()).isEqualTo(0);
+        CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
+                bundleSpecRepository.findById(courseSpec.getId()).get();
+        assertThat(spec.getOptions()).isNotEmpty();
     }
 
     @Test
@@ -491,12 +486,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         for (int i = 0; i < sli.size(); i++) {
             SalesLineItem sl = sli.get(i);
             expectedSalesLineItem(result, sl, prefix+"[" + i + "]");
-            expectTrainingBundleSpec(result,
-                    (PersonalTrainingBundleSpecification) personalSpec,
-                    prefix+"[" + i + "].bundleSpecification");
-            expectTrainingBundle(result,
-                    (PersonalTrainingBundle) sl.getTrainingBundle(),
-                    prefix+"[" + i + "].trainingBundle");
         }
     }
 

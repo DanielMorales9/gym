@@ -48,7 +48,11 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Override
     public ATrainingBundle createTrainingBundle() {
-        return null;
+        CourseTrainingBundle ctb = new CourseTrainingBundle();
+        ctb.setName(this.getName());
+        ctb.setBundleSpec(this);
+        ctb.setExpired(false);
+        return ctb;
     }
 
     public Set<TimeOption> getOptions() {

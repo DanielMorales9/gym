@@ -206,6 +206,7 @@ public class Fixture {
         specs.setName(name);
         TimeOption option = new TimeOption();
         option.setNumber(number);
+        option.setId(1L);
         option.setPrice(price);
         option.setName("myOption");
         specs.addOption(option);

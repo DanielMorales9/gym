@@ -9,6 +9,8 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Optional;
+import java.util.Set;
 
 import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
@@ -82,10 +84,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
         return this.option.getPrice();
     }
 
-    @Override
-    public boolean isNotGroup() {
-        return false;
-    }
 
     @Override
     public ATrainingSession createSession(Date startTime, Date endTime) {
@@ -95,6 +93,24 @@ public class CourseTrainingBundle extends ATrainingBundle {
         session.setCompleted(false);
         session.setTrainingBundle(this);
         return session;
+    }
+
+    @Override
+    public boolean assignOption(Long optionId) {
+        Set<TimeOption> options = ((CourseTrainingBundleSpecification) getBundleSpec()).getOptions();
+        if(options == null)
+            return false;
+
+        Optional<TimeOption> op = options
+                .stream()
+                .filter(o -> o.getId().equals(optionId))
+                .findFirst();
+
+        boolean present = op.isPresent();
+        if (present) {
+            this.option = op.get();
+        }
+        return present;
     }
 
     @Override

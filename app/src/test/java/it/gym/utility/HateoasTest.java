@@ -174,6 +174,27 @@ public class HateoasTest {
                                              String p) throws Exception {
         String prefix = handlePrefix(p);
         result.andExpect(jsonPath("$"+prefix+"id").value(expected.getId()));
+        switch (expected.getTrainingBundle().getType()) {
+            case "P":
+                expectTrainingBundle(result, (PersonalTrainingBundle)
+                        expected.getTrainingBundle(), prefix+"trainingBundle");
+                break;
+            case "C":
+                expectTrainingBundle(result, (CourseTrainingBundle)
+                        expected.getTrainingBundle(), prefix+"trainingBundle");
+                break;
+        }
+
+        switch (expected.getBundleSpecification().getType()) {
+            case "P":
+                expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification)
+                        expected.getBundleSpecification(), prefix+"bundleSpecification");
+                break;
+            case "C":
+                expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification)
+                        expected.getBundleSpecification(), prefix+"bundleSpecification");
+                break;
+        }
     }
 
     private static void expectATrainingBundle(ResultActions result,
