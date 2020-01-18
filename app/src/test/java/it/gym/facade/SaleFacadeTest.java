@@ -79,7 +79,7 @@ public class SaleFacadeTest {
     @Test
     public void addSalesLineItem() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        ATrainingBundleSpecification mockBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification mockBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
         mockSaveMethod();
@@ -96,9 +96,9 @@ public class SaleFacadeTest {
                 "customer@customer.com", "",
                 "customer", "customer", true, null);
         Sale mockSale = createSale(1L, customer);
-        ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
-                "course", 11, 1);
-        ATrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec);
+        CourseTrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
+                "course", 11, 1, 111.);
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec, mockBundleSpec.getOptions().get(0));
 
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -119,9 +119,9 @@ public class SaleFacadeTest {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         Sale mockSale = createSale(1L, customer);
 
-        ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
-                "course", 11, 1);
-        ATrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec);
+        CourseTrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
+                "course", 11, 1, 111.);
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec, mockBundleSpec.getOptions().get(0));
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);

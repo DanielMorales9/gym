@@ -82,8 +82,8 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
-        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
-        ATrainingBundle bundle = createPersonalBundle(1L, spec);
+        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec);
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
         Date start = getNextMonday();
         Date end = addHours(start, 1);
@@ -117,8 +117,8 @@ public class ReservationFacadeTest {
             return var;
         }).when(service).save(any(Reservation.class));
 
-        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
-        ATrainingBundle bundle = createPersonalBundle(1L, spec);
+        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec);
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
         Date start = getNextMonday();
@@ -144,8 +144,8 @@ public class ReservationFacadeTest {
 
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        ATrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 0, 1);
-        ATrainingBundle course = createCourseBundle(1L, start, spec);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 0, 1, 111.);
+        CourseTrainingBundle course = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
@@ -164,8 +164,8 @@ public class ReservationFacadeTest {
 
         Date start = getNextMonday();
         Date end = addHours(start, 1);
-        ATrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 1, 1);
-        ATrainingBundle course = createCourseBundle(1L, start, spec);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
+        CourseTrainingBundle course = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
         ATrainingSession session = course.createSession(start, end);
         Mockito.doReturn(createCourseEvent(1L, "test", session)).when(eventService).findById(1L);
 
@@ -179,8 +179,8 @@ public class ReservationFacadeTest {
         Mockito.doReturn(createGym(1L)).when(gymService).findById(1L);
         Mockito.doReturn(customer).when(customerService).findById(1L);
 
-        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 0);
-        ATrainingBundle bundle = createPersonalBundle(1L, spec);
+        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 0);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec);
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
         Date start = getNextMonday();
@@ -202,7 +202,7 @@ public class ReservationFacadeTest {
         role.setName("CUSTOMER");
         customer.setRoles(Collections.singletonList(role));
         String email = "customer@customer.com";
-        ATrainingBundle bundle = createPersonalBundle(1L, null);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, null);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
@@ -234,7 +234,7 @@ public class ReservationFacadeTest {
         role.setName("CUSTOMER");
         customer.setRoles(Collections.singletonList(role));
         String email = "customer@customer.com";
-        ATrainingBundle bundle = createPersonalBundle(1L, null);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, null);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 
@@ -252,7 +252,7 @@ public class ReservationFacadeTest {
     public void confirm() {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
-        ATrainingBundle bundle = createPersonalBundle(1L, null);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, null);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, bundle);
         bundle.addSession(session);
 

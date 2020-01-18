@@ -40,9 +40,9 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     private Customer customer;
     private Sale sale;
-    private ATrainingBundleSpecification personalSpec;
-    private ATrainingBundleSpecification courseSpec;
-    private ATrainingBundle course;
+    private PersonalTrainingBundleSpecification personalSpec;
+    private CourseTrainingBundleSpecification courseSpec;
+    private CourseTrainingBundle course;
 
     private SalesLineItem sli0;
 
@@ -63,10 +63,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         customer = userRepository.save(customer);
         sale = createSale(1L, customer);
         personalSpec = createPersonalBundleSpec(1L, "personal", 11);
-        courseSpec = createCourseBundleSpec(1L, "course", 11, 1);
+        courseSpec = createCourseBundleSpec(1L, "course", 11, 1, 111.);
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
-        course = createCourseBundle(1L, getNextMonday(), courseSpec);
+        course = createCourseBundle(1L, getNextMonday(), courseSpec, courseSpec.getOptions().get(0));
         course = bundleRepository.save(course);
         ATrainingBundle bundle = personalSpec.createTrainingBundle();
         bundleRepository.save(bundle);

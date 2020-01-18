@@ -17,6 +17,9 @@ import javax.persistence.Entity;
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecification {
 
+    @Column(name = "price", nullable = false)
+    protected Double price;
+
     @Column(name="num_sessions")
     private Integer numSessions;
 
@@ -31,6 +34,14 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     @Override
     public String getType() {
         return "P";
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 
     @Override

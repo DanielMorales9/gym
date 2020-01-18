@@ -5,6 +5,7 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.CourseTrainingBundle;
 import it.gym.model.CourseTrainingBundleSpecification;
+import it.gym.model.TimeOption;
 import it.gym.pojo.CourseBundle;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
@@ -19,6 +20,7 @@ import javax.transaction.Transactional;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
@@ -60,11 +62,17 @@ public class TrainingBundleFacade {
         CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
                 specService.findById(params.getSpecId());
         CourseTrainingBundle bundle = new CourseTrainingBundle();
+        List<TimeOption> options = spec.getOptions().stream()
+                .filter(o -> o.getId().equals(params.getOptionId()))
+                .collect(Collectors.toList());
+        // TODO check whether list is not empty
+        TimeOption option = options.get(0);
 
         // compute start and end
         Date startTime = params.getStartTime();
-        Date endTime = addMonths(startTime, spec.getNumber());
+        Date endTime = addMonths(startTime, option.getNumber());
 
+        bundle.setOption(option);
         bundle.setStartTime(startTime);
         bundle.setEndTime(endTime);
         bundle.setExpired(false);

@@ -54,11 +54,13 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingBundle")
     private List<ATrainingSession> sessions;
 
+    @JsonIgnore
+    public abstract boolean isNotGroup();
     public abstract String getType();
     public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
-    @JsonIgnore
-    public abstract boolean isNotGroup();
+    public abstract Double getPrice();
+    public abstract void update();
     public abstract ATrainingSession createSession(Date startTime, Date endTime);
     public abstract void addSession(ATrainingSession session);
 
@@ -114,6 +116,4 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     protected void prePersist() {
         this.createdAt = new Date();
     }
-
-    public abstract void update();
 }

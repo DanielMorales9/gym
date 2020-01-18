@@ -29,6 +29,10 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Column(name = "end_time")
     private Date endTime;
 
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
+    @JoinColumn(name = "option_id")
+    private TimeOption option;
+
     public Date getEndTime() {
         return endTime;
     }
@@ -43,6 +47,14 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public TimeOption getOption() {
+        return option;
+    }
+
+    public void setOption(TimeOption option) {
+        this.option = option;
     }
 
     @Override
@@ -63,6 +75,11 @@ public class CourseTrainingBundle extends ATrainingBundle {
         return this.getSessions().stream()
                 .map(ATrainingSession::isDeletable)
                 .reduce(Boolean::logicalAnd).orElse(true);
+    }
+
+    @Override
+    public Double getPrice() {
+        return this.option.getPrice();
     }
 
     @Override
@@ -91,12 +108,13 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public void update() {
-        Integer num = ((CourseTrainingBundleSpecification) this.getBundleSpec()).getNumber();
-        setEndTime(addMonths(this.startTime, num));
+        setEndTime(addMonths(this.startTime, this.option.getNumber()));
     }
 
     @Override
     public int compareTo(ATrainingBundle o) {
         return  this.getSessions().size() - o.getSessions().size();
     }
+
+
 }

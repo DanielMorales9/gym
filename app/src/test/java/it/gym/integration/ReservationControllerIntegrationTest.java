@@ -64,9 +64,9 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         customer = userRepository.save(customer);
         gym = createGym(1L);
         gym = gymRepository.save(gym);
-        ATrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         Date start = Calendar.getNextMonday();
-        ATrainingBundleSpecification courseSpec = createCourseBundleSpec(1L, "course", 1, 1);
+        CourseTrainingBundleSpecification courseSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
 
         personalSpec = specRepository.save(personalSpec);
         courseSpec = specRepository.save(courseSpec);
@@ -75,7 +75,8 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         Date monday = getNextMonday();
         Date end = addMonths(monday, 1);
-        course = (CourseTrainingBundle) createCourseBundle(1L, monday, courseSpec);
+        TimeOption option = courseSpec.getOptions().get(0);
+        course = createCourseBundle(1L, monday, courseSpec, option);
 
         personal = bundleRepository.save(personal);
         session = course.createSession(start, end);

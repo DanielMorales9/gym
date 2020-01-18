@@ -18,23 +18,16 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     public static final String TYPE = "C";
 
-    @Column(name = "number")
-    private Integer number;
-
     @Column(name="max_customers")
     private Integer maxCustomers;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="bundle_spec_id")
+    @JoinTable(
+            name="bundle_specs_options",
+            joinColumns = @JoinColumn( name="bundle_spec_id"),
+            inverseJoinColumns = @JoinColumn( name="option_id")
+    )
     private List<TimeOption> options;
-
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
 
     public Integer getMaxCustomers() {
         return maxCustomers;

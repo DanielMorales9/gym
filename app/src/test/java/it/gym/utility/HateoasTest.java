@@ -102,7 +102,6 @@ public class HateoasTest {
         result
                 .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(bundle.getName()))
-                .andExpect(jsonPath("$"+prefix+"price").value(bundle.getPrice()))
                 .andExpect(jsonPath("$"+prefix+"disabled").value(bundle.getDisabled()))
                 .andExpect(jsonPath("$"+prefix+"description").value(bundle.getDescription()));
     }
@@ -126,7 +125,6 @@ public class HateoasTest {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
         result
-                .andExpect(jsonPath("$"+prefix+"number").value(bundle.getNumber()))
                 .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()));
     }
 

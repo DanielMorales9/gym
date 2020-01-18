@@ -98,8 +98,8 @@ public class EventFacadeTest {
         event.setId(1L);
         event.setName("course");
 
-        ATrainingBundleSpecification spec = createCourseBundleSpec();
-        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
         Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(gym).when(gymService).findById(1L);
         Mockito.doAnswer(inv -> inv.getArgument(0)).when(service).save(any());
@@ -123,8 +123,8 @@ public class EventFacadeTest {
         Date end = addHours(start, 1);
 
         // all what you need to create a course event
-        ATrainingBundleSpecification spec = createCourseBundleSpec();
-        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
@@ -143,8 +143,8 @@ public class EventFacadeTest {
         Date endCourse = addDays(start, 30);
 
         // all what you need to create a course event
-        ATrainingBundleSpecification spec = createCourseBundleSpec();
-        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
         session.setCompleted(true);
@@ -160,8 +160,8 @@ public class EventFacadeTest {
         Date endCourse = addDays(start, 30);
 
         // all what you need to create a course event
-        ATrainingBundleSpecification spec = createCourseBundleSpec();
-        ATrainingBundle bundle = createCourseBundle(1L, start, spec);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
+        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, spec.getOptions().get(0));
         ATrainingSession session = bundle.createSession(start, end);
         bundle.addSession(session);
 
@@ -175,14 +175,16 @@ public class EventFacadeTest {
         assertThat(actual).isEqualTo(courseEvent);
     }
 
-    private ATrainingBundleSpecification createCourseBundleSpec() {
+    private CourseTrainingBundleSpecification createCourseBundleSpec() {
         CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
         spec.setMaxCustomers(11);
-        spec.setNumber(30);
         spec.setDescription("Description");
         spec.setName("corso");
         spec.setId(1L);
-        spec.setPrice(100.);
+        TimeOption o = new TimeOption();
+        o.setPrice(100.);
+        o.setNumber(30);
+        spec.setOptions(Collections.singletonList(o));
         spec.setDisabled(false);
         spec.setCreatedAt(new Date());
         return spec;

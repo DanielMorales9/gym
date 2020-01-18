@@ -2,6 +2,7 @@ package it.gym.service;
 
 import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.CourseTrainingBundleRepository;
 import it.gym.repository.TrainingBundleRepository;
 import org.junit.Test;
@@ -44,7 +45,7 @@ public class TrainingBundleServiceTest {
 
     @Test
     public void findAll() {
-        ATrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", 11);
         ATrainingBundle bundle = createPersonalBundle(1L, pe);
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(bundle));
         List<ATrainingBundle> u = this.service.findAll();

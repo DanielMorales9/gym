@@ -53,6 +53,11 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
+    public Double getPrice() {
+        return ((PersonalTrainingBundleSpecification) this.getBundleSpec()).getPrice();
+    }
+
+    @Override
     public ATrainingSession createSession(Date startTime, Date endTime) {
         PersonalTrainingSession session = new PersonalTrainingSession();
         session.setCompleted(false);

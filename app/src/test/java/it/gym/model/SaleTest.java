@@ -5,7 +5,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -34,9 +33,10 @@ public class SaleTest {
         Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        CourseTrainingBundleSpecification expectedSpecs = (CourseTrainingBundleSpecification)
-                createCourseBundleSpec(1L, "Course", 11, 1);
-        CourseTrainingBundle expectedBundle = (CourseTrainingBundle) createCourseBundle(start, expectedSpecs);
+        CourseTrainingBundleSpecification expectedSpecs =
+                createCourseBundleSpec(1L, "Course", 11, 1, 111.);
+        TimeOption option = expectedSpecs.getOptions().get(0);
+        CourseTrainingBundle expectedBundle = createCourseBundle(start, expectedSpecs, option);
         SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
 
         assertThat(sli.getBundleSpecification()).isEqualTo(expectedSpecs);
@@ -167,18 +167,20 @@ public class SaleTest {
     }
 
     private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
-        ATrainingBundleSpecification spec = createCourseBundleSpec(1L, "Course", 11, 1);
-        ATrainingBundle a = createCourseBundle(start, spec);
+        CourseTrainingBundleSpecification spec =
+                createCourseBundleSpec(1L, "Course", 11, 1, 111.);
+        ATrainingBundle a = createCourseBundle(start, spec, spec.getOptions().get(0));
         return sale.addSalesLineItem(a);
     }
 
 
-    private ATrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec) {
+    private CourseTrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec, TimeOption option) {
         CourseTrainingBundle p = new CourseTrainingBundle();
         p.setName("Course");
         p.setExpired(false);
         p.setBundleSpec(spec);
-        Date end = DateUtils.addDays(start, 30);
+        p.setOption(option);
+        Date end = DateUtils.addMonths(start, option.getNumber());
         p.setStartTime(start);
         p.setEndTime(end);
         return p;
@@ -192,7 +194,7 @@ public class SaleTest {
     }
 
 
-    private ATrainingBundle createPersonalBundle(ATrainingBundleSpecification spec) {
+    private PersonalTrainingBundle createPersonalBundle(ATrainingBundleSpecification spec) {
         PersonalTrainingBundle p = new PersonalTrainingBundle();
         p.setName("Personal");
         p.setExpired(false);
@@ -200,7 +202,7 @@ public class SaleTest {
         return p;
     }
 
-    private ATrainingBundleSpecification createPersonalBundleSpecification() {
+    private PersonalTrainingBundleSpecification createPersonalBundleSpecification() {
         PersonalTrainingBundleSpecification p = new PersonalTrainingBundleSpecification();
         p.setId(1L);
         p.setName("Personal");
@@ -220,32 +222,6 @@ public class SaleTest {
         sale.setPayedDate(null);
         sale.setCustomer(customer);
         return sale;
-    }
-
-    private Gym createGym() {
-        Gym gym = new Gym();
-        gym.setId(1L);
-        gym.setWeekStartsOn(DayOfWeek.MONDAY);
-        gym.setMondayOpen(true);
-        gym.setMondayStartHour(8);
-        gym.setMondayEndHour(22);
-        gym.setTuesdayStartHour(8);
-        gym.setTuesdayEndHour(22);
-        gym.setWednesdayStartHour(8);
-        gym.setWednesdayEndHour(22);
-        gym.setThursdayStartHour(8);
-        gym.setThursdayEndHour(22);
-        gym.setFridayStartHour(8);
-        gym.setFridayEndHour(22);
-        gym.setSaturdayStartHour(8);
-        gym.setSaturdayEndHour(13);
-        gym.setTuesdayOpen(true);
-        gym.setWednesdayOpen(true);
-        gym.setThursdayOpen(true);
-        gym.setFridayOpen(true);
-        gym.setSaturdayOpen(true);
-        gym.setSundayOpen(false);
-        return gym;
     }
 
     private Customer createCustomer() {

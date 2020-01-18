@@ -2,10 +2,7 @@ package it.gym.integration;
 
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.model.ATrainingBundle;
-import it.gym.model.ATrainingBundleSpecification;
-import it.gym.model.CourseTrainingBundle;
-import it.gym.model.PersonalTrainingBundle;
+import it.gym.model.*;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.junit.After;
@@ -29,20 +26,20 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
     @Autowired private TrainingBundleRepository repository;
     @Autowired private TrainingBundleSpecificationRepository specRepository;
-    private ATrainingBundle personalBundle;
-    private ATrainingBundle courseBundle;
-    private ATrainingBundleSpecification courseBundleSpec;
+    private PersonalTrainingBundle personalBundle;
+    private CourseTrainingBundle courseBundle;
+    private CourseTrainingBundleSpecification courseBundleSpec;
 
     @Before
     public void before() {
 
-        ATrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
-        courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);
 
-        courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec);
+        courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, courseBundleSpec.getOptions().get(0));
         personalBundle = createPersonalBundle(1L, personalBundleSpec);
 
         personalBundle = repository.save(personalBundle);
@@ -115,7 +112,8 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         Object cred = new Object() {
             public final String name = courseBundle.getName();
             public final Long specId = courseBundleSpec.getId();
-            public final Date startTime = ((CourseTrainingBundle) courseBundle).getStartTime();
+            public final Long optionId = courseBundleSpec.getOptions().get(0).getId();
+            public final Date startTime = courseBundle.getStartTime();
         };
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -132,7 +130,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         ResultActions result = mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle);
+        expectTrainingBundle(result, courseBundle);
 
     }
 
@@ -141,8 +139,8 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         Object cred = new Object() {
             public final String name = courseBundle.getName();
             public final Long id = courseBundle.getId();
-            public final Date startTime = addDays(((CourseTrainingBundle) courseBundle).getStartTime(), 1);
-            public final Date endTime = ((CourseTrainingBundle) courseBundle).getEndTime();
+            public final Date startTime = addDays(courseBundle.getStartTime(), 1);
+            public final Date endTime = courseBundle.getEndTime();
         };
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -151,7 +149,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
                 .content(objectMapper.writeValueAsString(cred)))
                 .andExpect(status().isOk());
 
-        expectTrainingBundle(result, (CourseTrainingBundle) courseBundle);
+        expectTrainingBundle(result, courseBundle);
 
     }
 }

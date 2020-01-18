@@ -50,7 +50,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 true,
                 roles
         );
-        ATrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         personalSpec = bundleSpecRepository.save(personalSpec);
         personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle();
         personal = bundleRepository.save(personal);

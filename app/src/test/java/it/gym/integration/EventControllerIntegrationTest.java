@@ -40,9 +40,9 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     private Gym gym;
     private AEvent event;
     private Trainer trainer;
-    private ATrainingBundleSpecification courseSpec;
-    private ATrainingBundle courseBundle;
-    private ATrainingBundleSpecification personalSpec;
+    private CourseTrainingBundleSpecification courseSpec;
+    private CourseTrainingBundle courseBundle;
+    private PersonalTrainingBundleSpecification personalSpec;
     private ATrainingBundle personalBundle;
 
     @Before
@@ -55,13 +55,13 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         event = eventRepository.save(event);
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
-        courseSpec = createCourseBundleSpec(1L, "course", 1, 1);
+        courseSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
         personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
         personalBundle = personalSpec.createTrainingBundle();
         personalBundle = bundleRepository.save(personalBundle);
-        courseBundle = createCourseBundle(1L, start, courseSpec);
+        courseBundle = createCourseBundle(1L, start, courseSpec, courseSpec.getOptions().get(0));
         courseBundle = bundleRepository.save(courseBundle);
     }
 

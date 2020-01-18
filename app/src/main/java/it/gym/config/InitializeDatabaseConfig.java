@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
+import java.util.Collections;
 import java.util.List;
 
 @Component
@@ -159,8 +160,10 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setName(name);
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
-        p.setNumber(1);
-        p.setPrice(111.0);
+        TimeOption option = new TimeOption();
+        option.setPrice(111.0);
+        option.setNumber(1);
+        p.setOptions(Collections.singletonList(option));
         p.setMaxCustomers(11);
         return p;
     }
