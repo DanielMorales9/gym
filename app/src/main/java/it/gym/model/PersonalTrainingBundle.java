@@ -9,7 +9,6 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.ArrayList;
-import java.util.Date;
 
 @Entity
 @DiscriminatorValue(value="P")
@@ -53,11 +52,11 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public ATrainingSession createSession(Date startTime, Date endTime) {
+    public ATrainingSession createSession(ATrainingEvent event) {
         PersonalTrainingSession session = new PersonalTrainingSession();
         session.setCompleted(false);
-        session.setEndTime(endTime);
-        session.setStartTime(startTime);
+        session.setStartTime(event.getStartTime());
+        session.setEndTime(event.getEndTime());
         session.setTrainingBundle(this);
         return session;
     }

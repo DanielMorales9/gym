@@ -13,12 +13,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 
+import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -150,9 +150,14 @@ public class SaleFacadeTest {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
-        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
+        PersonalTrainingBundleSpecification bundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        addSalesLineItem(mockSale, bundleSpec);
         ATrainingBundle trainingBundle = mockSale.getSalesLineItems().get(0).getTrainingBundle();
-        ATrainingSession session = trainingBundle.createSession(addHours(new Date(), -2), addHours(new Date(), -1));
+
+        Date start = addDays(getNextMonday(), -7);
+        Date end = addHours(start, 1);
+        PersonalTrainingEvent event = createPersonalEvent(1L, "personal", start, end);
+        ATrainingSession session = trainingBundle.createSession(event);
         trainingBundle.addSession(session);
         session.complete();
         Mockito.doReturn(mockSale).when(saleService).findById(1L);

@@ -26,16 +26,6 @@ public class Holiday extends AEvent {
     }
 
     @Override
-    public boolean isReservable() {
-        return false;
-    }
-
-    @Override
-    public ATrainingSession getSession() {
-        return null;
-    }
-
-    @Override
     public String toString() {
         return "Holiday{" +
                 "startTime" + this.getStartTime() +

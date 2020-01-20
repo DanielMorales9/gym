@@ -84,10 +84,10 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
 
     @Override
-    public ATrainingSession createSession(Date startTime, Date endTime) {
+    public ATrainingSession createSession(ATrainingEvent event) {
         CourseTrainingSession session = new CourseTrainingSession();
-        session.setStartTime(startTime);
-        session.setEndTime(endTime);
+        session.setStartTime(event.getStartTime());
+        session.setEndTime(event.getEndTime());
         session.setCompleted(false);
         session.setTrainingBundle(this);
         return session;

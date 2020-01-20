@@ -79,7 +79,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         course = createCourseBundle(1L, monday, courseSpec, option);
 
         personal = bundleRepository.save(personal);
-        session = course.createSession(start, end);
+        session = course.createSession(null);
         course.addSession(session);
         course = bundleRepository.save(course);
         session = course.getSessions().get(0);
@@ -150,11 +150,11 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         Date end = addHours(start, 1);
 
         ATrainingSession sess = course.getSessions().get(0);
-        CourseEvent event = new CourseEvent();
+        CourseTrainingEvent event = new CourseTrainingEvent();
         event.setStartTime(start);
         event.setEndTime(end);
         event.setName("test");
-        event.setSession(sessionRepository.findById(sess.getId()).get());
+//        event.setSession(sessionRepository.findById(sess.getId()).get());
         event = eventRepository.saveAndFlush(event);
 
         customer.addToCurrentTrainingBundles(Collections.singletonList(course));
@@ -260,14 +260,14 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         Date end = addHours(start, 1);
 
         ATrainingSession sess = course.getSessions().get(0);
-        CourseEvent event = new CourseEvent();
+        CourseTrainingEvent event = new CourseTrainingEvent();
         event.setStartTime(start);
         event.setEndTime(end);
         event.setName("test");
         ArrayList<Reservation> res = new ArrayList<>();
         res.add(reservation);
         event.setReservations(res);
-        event.setSession(sessionRepository.findById(sess.getId()).get());
+//        event.setSession(sessionRepository.findById(sess.getId()).get());
         event = eventRepository.saveAndFlush(event);
 
 
@@ -280,10 +280,10 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         HateoasTest.expectReservation(result, reservation);
         HateoasTest.expectUser(result, reservation.getUser(), "user");
 
-        event.setSession(null);
+//        event.setSession(null);
         event.setReservations(null);
 
-        CourseEvent actual = (CourseEvent) eventRepository.findById(event.getId()).get();
+        CourseTrainingEvent actual = (CourseTrainingEvent) eventRepository.findById(event.getId()).get();
         assertThat(actual).isEqualTo(event);
         assertThat(actual.getReservations()).isEmpty();
         assertThat(sessionRepository.findById(session.getId()).get()).isEqualTo(sess);
@@ -311,7 +311,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         Date end = addHours(start, 1);
 
         ATrainingSession sess = course.getSessions().get(0);
-        PersonalEvent event = new PersonalEvent();
+        PersonalTrainingEvent event = new PersonalTrainingEvent();
         event.setStartTime(start);
         event.setEndTime(end);
         event.setName("test");

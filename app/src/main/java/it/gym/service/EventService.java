@@ -1,9 +1,7 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.AEvent;
-import it.gym.model.Holiday;
-import it.gym.model.TimeOff;
+import it.gym.model.*;
 import it.gym.repository.CourseEventRepository;
 import it.gym.repository.EventRepository;
 import it.gym.repository.PersonalEventRepository;
@@ -26,7 +24,6 @@ public class EventService implements ICrudService<AEvent, Long> {
 
     @Autowired
     private TrainingEventRepository trainingRepository;
-
 
     @Autowired
     private CourseEventRepository courseRepository;

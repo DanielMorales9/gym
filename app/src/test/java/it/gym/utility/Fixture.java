@@ -151,15 +151,27 @@ public class Fixture {
         return res;
     }
 
-    public static CourseEvent createCourseEvent(long id, String name, ATrainingSession session) {
-        CourseEvent course = new CourseEvent();
+    public static CourseTrainingEvent createCourseEvent(long id, String name, Date startTime, Date endTime,
+                                                        CourseTrainingBundleSpecification specification) {
+        CourseTrainingEvent course = new CourseTrainingEvent();
         course.setId(id);
-        course.setStartTime(session.getStartTime());
-        course.setEndTime(session.getEndTime());
+        course.setStartTime(startTime);
+        course.setEndTime(endTime);
         course.setName(name);
-        course.setSession(session);
-        course.setReservations(null);
+        course.setMaxCustomers(specification.getMaxCustomers());
         return course;
+    }
+
+    public static PersonalTrainingEvent createPersonalEvent(long id,
+                                                            String name,
+                                                            Date startTime,
+                                                            Date endTime) {
+        PersonalTrainingEvent personalTrainingEvent = new PersonalTrainingEvent();
+        personalTrainingEvent.setId(id);
+        personalTrainingEvent.setStartTime(startTime);
+        personalTrainingEvent.setEndTime(endTime);
+        personalTrainingEvent.setName(name);
+        return personalTrainingEvent;
     }
 
     public static List<Role> createCustomerRoles() {

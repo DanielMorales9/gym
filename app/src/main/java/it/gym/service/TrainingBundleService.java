@@ -60,4 +60,8 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return repository.findATrainingBundleByBundleSpec_Id(specId).stream()
                 .filter(bundle -> !bundle.isExpired()).collect(Collectors.toList());
     }
+
+    public void saveAll(List<ATrainingBundle> bundles) {
+        repository.saveAll(bundles);
+    }
 }

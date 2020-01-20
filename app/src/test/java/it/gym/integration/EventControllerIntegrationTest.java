@@ -76,7 +76,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCreateHoliday_OK() throws Exception {
+    public void whenCreateHolidayOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         Event e = new Event();
@@ -97,7 +97,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCreateHoliday_ReturnsException() throws Exception {
+    public void whenCreateHolidayReturnsException() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         Event e = new Event();
@@ -105,24 +105,39 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         e.setEndTime(end);
         e.setName("closed1");
 
-        ATrainingSession session = courseBundle.createSession(start, end);
-        CourseEvent course = createCourseEvent(1L, "course", session);
-        course = eventRepository.save(course);
-        session = course.getSession();
+        Customer customer = createCustomer(1L,
+                "customer@customer.com",
+                "",
+                "customer",
+                "customer",
+                true,
+                null);
+
+        customer = userRepository.save(customer);
+        CourseTrainingEvent courseEvent = createCourseEvent(1L, "course", start, end, courseSpec);
+        Reservation res = courseEvent.createReservation(customer);
+        courseEvent.addReservation(res);
+
+        courseEvent = eventRepository.save(courseEvent);
+        res = courseEvent.getReservations().get(0);
+
+        ATrainingSession session = courseBundle.createSession(courseEvent);
         courseBundle.addSession(session);
+        courseEvent.addSession(res.getId(), session);
+        eventRepository.save(courseEvent);
         courseBundle = bundleRepository.save(courseBundle);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(e);
 
-        ResultActions result = mockMvc.perform(post("/events/" + gym.getId() + "/holiday")
+        mockMvc.perform(post("/events/" + gym.getId() + "/holiday")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
-    public void whenDeleteHoliday_OK() throws Exception {
+    public void whenDeleteHolidayOK() throws Exception {
         ResultActions result = mockMvc.perform(delete("/events/holiday/"+event.getId()))
                 .andExpect(status().isOk());
 
@@ -130,7 +145,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenEditHoliday_OK() throws Exception {
+    public void whenEditHolidayOK() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         event.setName("closed1");
         String json = objectMapper.writeValueAsString(event);
@@ -143,7 +158,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenEditTimeOff_OK() throws Exception {
+    public void whenEditTimeOffOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed", start, end, trainer);
@@ -161,7 +176,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenDeleteTimeOff_OK() throws Exception {
+    public void whenDeleteTimeOffOK() throws Exception {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed", start, end, trainer);
@@ -174,7 +189,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenIsAvailable_OK() throws Exception {
+    public void whenIsAvailableOK() throws Exception {
         Event e = new Event();
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
@@ -192,7 +207,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenTimeOffIsAvailable_OK() throws Exception {
+    public void whenTimeOffIsAvailableOK() throws Exception {
         Event e = new Event();
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
@@ -210,7 +225,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCanEdit_OK() throws Exception {
+    public void whenCanEditOK() throws Exception {
         Event e = new Event();
         Date start = getNextMonday();
         Date end = addHours(start, 1);
@@ -228,7 +243,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCreateTimeOff_OK() throws Exception {
+    public void whenCreateTimeOffOK() throws Exception {
         Event e = new Event();
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
@@ -256,14 +271,14 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCreateCourseEvent_OK() throws Exception {
+    public void whenCreateCourseEventOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
 
         Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);
-        e.setId(courseBundle.getId());
+        e.setId(courseSpec.getId());
         e.setName("course");
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -275,7 +290,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         AEvent h = eventRepository.findAll().get(1);
-        CourseEvent expected = new CourseEvent();
+        CourseTrainingEvent expected = new CourseTrainingEvent();
         expected.setName("course");
         expected.setStartTime(start);
         expected.setEndTime(end);
@@ -289,10 +304,10 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
 
-        ATrainingSession session = courseBundle.createSession(start, end);
+        ATrainingSession session = courseBundle.createSession(null);
         courseBundle.addSession(session);
 
-        CourseEvent event = createCourseEvent(1L, "course", session);
+        CourseTrainingEvent event = createCourseEvent(1L, "course", null, null, null);
         Customer customer = createCustomer(1L,
                 "test@test.com",
                 "test",
@@ -310,7 +325,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(delete("/events/course/" + event.getId()))
                 .andExpect(status().isOk());
 
-        CourseEvent expected = new CourseEvent();
+        CourseTrainingEvent expected = new CourseTrainingEvent();
         expected.setName("course");
         expected.setStartTime(start);
         expected.setEndTime(end);
@@ -326,16 +341,16 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         Date start = addDays(getNextMonday(), -30);
         Date end = addHours(start, 1);
 
-        ATrainingSession session = courseBundle.createSession(start, end);
+        ATrainingSession session = courseBundle.createSession(null);
         courseBundle.addSession(session);
 
-        event = createCourseEvent(1L, "course", session);
+        event = createCourseEvent(1L, "course", null, null, null);
         event = eventRepository.save(event);
 
         ResultActions result = mockMvc.perform(get("/events/" + event.getId()+"/complete"))
                 .andExpect(status().isOk());
 
-        CourseEvent expected = new CourseEvent();
+        CourseTrainingEvent expected = new CourseTrainingEvent();
         expected.setName("course");
         expected.setStartTime(start);
         expected.setEndTime(end);

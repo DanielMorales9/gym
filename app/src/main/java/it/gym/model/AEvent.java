@@ -16,7 +16,8 @@ import java.util.Date;
         property = "type",
         visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = TimeOff.class, name="T")
+        @JsonSubTypes.Type(value = TimeOff.class, name="T"),
+        @JsonSubTypes.Type(value = Holiday.class, name="H"),
 })
 @Entity
 @RestResource(path="events")
@@ -47,10 +48,6 @@ public abstract class AEvent {
     private Date endTime;
 
     public abstract String getType();
-
-    public abstract boolean isReservable();
-
-    public abstract ATrainingSession getSession();
 
     public Long getId() {
         return id;

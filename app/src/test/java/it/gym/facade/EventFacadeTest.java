@@ -41,6 +41,10 @@ public class EventFacadeTest {
     private TrainingBundleService bundleService;
 
     @MockBean
+    @Qualifier("trainingBundleSpecificationService")
+    private TrainingBundleSpecificationService specService;
+
+    @MockBean
     @Qualifier("trainingSessionService")
     private TrainingSessionService sessionService;
 
@@ -87,112 +91,93 @@ public class EventFacadeTest {
     }
 
     @Test
-    public void whenCreateCourseEvent() {
+    public void whenCreateEvent() {
         Gym gym = createGym(1L);
         Date start = getNextMonday();
         Date end = addHours(start, 1);
+        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
 
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
-        event.setId(1L);
+        event.setId(spec.getId());
         event.setName("course");
 
-        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
-        Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(gym).when(gymService).findById(1L);
+        Mockito.doReturn(spec).when(specService).findById(spec.getId());
         Mockito.doAnswer(inv -> inv.getArgument(0)).when(service).save(any());
-        Mockito.doAnswer(inv -> inv.getArgument(0)).when(sessionService).save(any());
 
-        AEvent evt = facade.createCourseEvent(1L, event);
+        CourseTrainingEvent evt = (CourseTrainingEvent) facade.createCourseEvent(1L, event);
 
         assertThat(evt).isNotNull();
         assertThat(evt.getName()).isEqualTo("course");
         assertThat(evt.getStartTime()).isEqualTo(start);
         assertThat(evt.getEndTime()).isEqualTo(end);
-        assertThat(evt.getSession()).isNotNull();
-        assertThat(evt.getType()).isEqualTo(CourseEvent.TYPE);
-        assertThat(evt.getSession().getTrainingBundle().getSessions().size()).isEqualTo(1);
+        assertThat(evt.getReservations()).isNull();
+        assertThat(evt.getSessions()).isNull();
+        assertThat(evt.getMaxCustomers()).isEqualTo(spec.getMaxCustomers());
+        assertThat(evt.getType()).isEqualTo(CourseTrainingEvent.TYPE);
 
     }
 
     @Test
     public void deleteCourseEvent() {
         Date start = getNextMonday();
-        Date end = addHours(start, 1);
+        CourseEventFixture fixture = new CourseEventFixture().invoke(start);
 
-        // all what you need to create a course event
-        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        Reservation res = fixture.getReservation();
+        CourseTrainingBundle bundle = fixture.getBundle();
+        CourseTrainingEvent fixtureEvent = fixture.getEvent();
+        ATrainingSession session = fixture.getSession();
 
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
-        ATrainingSession session = bundle.createSession(start, end);
-        bundle.addSession(session);
+        Mockito.doReturn(fixtureEvent).when(service).findById(1L);
 
-        Mockito.doReturn(createCourseEvent(1L, "CourseEvent", session)).when(service).findById(1L);
-        CourseEvent event = (CourseEvent) facade.deleteCourseEvent(1L);
-        Mockito.verify(sessionService).delete(session);
+        CourseTrainingEvent event = (CourseTrainingEvent) facade.deleteEvent(1L);
+
         Mockito.verify(service).delete(event);
-        assertThat(bundle.getSessions().size()).isEqualTo(0);
+        Mockito.verify(bundleService).saveAll(Collections.singletonList(bundle));
+        Mockito.verify(reservationService).deleteAll(Collections.singletonList(res));
+        Mockito.verify(sessionService).deleteAll(Collections.singletonList(session));
+
+        assertThat(event.getReservations()).isNull();
+        assertThat(event.getSessions()).isNull();
         assertThat(event).isNotNull();
     }
 
     @Test(expected = MethodNotAllowedException.class)
-    public void deleteCourseEventUndeletableSession() {
+    public void deleteCourseEventUnDeletableSession() {
         Date start = getNextMonday();
-        Date end = addHours(start, 1);
+        CourseEventFixture fixture = new CourseEventFixture().invoke(start);
 
-        // all what you need to create a course event
-        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
-
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
-        ATrainingSession session = bundle.createSession(start, end);
-        bundle.addSession(session);
+        CourseTrainingEvent fixtureEvent = fixture.getEvent();
+        ATrainingSession session = fixture.getSession();
         session.setCompleted(true);
 
-        Mockito.doReturn(createCourseEvent(1L, "CourseEvent", session)).when(service).findById(1L);
-        facade.deleteCourseEvent(1L);
+        Mockito.doReturn(fixtureEvent).when(service).findById(1L);
+        facade.deleteEvent(1L);
     }
 
     @Test
     public void complete() {
         Date start = addDays(getNextMonday(), -30);
-        Date end = addHours(start, 1);
-        Date endCourse = addDays(start, 30);
+        CourseEventFixture fixture = new CourseEventFixture().invoke(start);
+        fixture.getReservation().setConfirmed(true);
 
-        // all what you need to create a course event
-        CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
-        CourseTrainingBundle bundle = createCourseBundle(1L, start, spec, option);
-        ATrainingSession session = bundle.createSession(start, end);
-        bundle.addSession(session);
-
-        CourseEvent courseEvent = createCourseEvent(1L, "CourseEvent", session);
-        Mockito.doReturn(courseEvent).when(service).findById(1L);
+        CourseTrainingEvent event = fixture.getEvent();
+        Mockito.doReturn(event).when(service).findById(1L);
         Mockito.doAnswer(inv -> inv.getArgument(0)).when(service).save(any());
         AEvent actual = facade.complete(1L);
 
-        Mockito.verify(service).save(courseEvent);
-        assertThat(actual.getSession().getCompleted()).isTrue();
-        assertThat(actual).isEqualTo(courseEvent);
-    }
+        Mockito.verify(service).save(event);
+        boolean allCompleted = event.getSessions()
+                .values()
+                .stream()
+                .map(ATrainingSession::getCompleted)
+                .reduce(Boolean::logicalAnd)
+                .orElse(false);
 
-    private CourseTrainingBundleSpecification createCourseBundleSpec() {
-        CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
-        spec.setMaxCustomers(11);
-        spec.setDescription("Description");
-        spec.setName("corso");
-        spec.setId(1L);
-        TimeOption o = new TimeOption();
-        o.setPrice(100.);
-        o.setNumber(30);
-        spec.addOption(o);
-        spec.setDisabled(false);
-        spec.setCreatedAt(new Date());
-        return spec;
+        assertThat(allCompleted).isTrue();
+        assertThat(actual).isEqualTo(event);
     }
 
     @Test
@@ -398,4 +383,64 @@ public class EventFacadeTest {
         Mockito.verify(service).delete(any());
     }
 
+    private CourseTrainingBundleSpecification createCourseBundleSpec() {
+        CourseTrainingBundleSpecification spec = new CourseTrainingBundleSpecification();
+        spec.setMaxCustomers(11);
+        spec.setDescription("Description");
+        spec.setName("corso");
+        spec.setId(1L);
+        TimeOption o = new TimeOption();
+        o.setPrice(100.);
+        o.setNumber(30);
+        spec.addOption(o);
+        spec.setDisabled(false);
+        spec.setCreatedAt(new Date());
+        return spec;
+    }
+
+    private class CourseEventFixture {
+        private Reservation res;
+        private CourseTrainingEvent fixtureEvent;
+        private CourseTrainingBundle bundle;
+        private ATrainingSession session;
+
+        public CourseTrainingBundle getBundle() {
+            return bundle;
+        }
+
+        public CourseTrainingEvent getEvent() {
+            return fixtureEvent;
+        }
+
+        public Reservation getReservation() {
+            return res;
+        }
+
+        public ATrainingSession getSession() {
+            return session;
+        }
+
+        public CourseEventFixture invoke(Date start) {
+            Customer customer = createCustomer(1L,
+                    "customer@customer.com",
+                    "",
+                    "customer",
+                    "customer",
+                    true,
+                    null);
+            CourseTrainingBundleSpecification spec = createCourseBundleSpec();
+            TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+
+            bundle = createCourseBundle(1L, start, spec, option);
+
+            fixtureEvent = createCourseEvent(1L, "CourseEvent", start, addHours(start, 1), spec);
+            res = fixtureEvent.createReservation(customer);
+            res.setId(1L);
+            fixtureEvent.addReservation(res);
+            session = bundle.createSession(fixtureEvent);
+            bundle.addSession(session);
+            fixtureEvent.addSession(res.getId(), session);
+            return this;
+        }
+    }
 }

@@ -5,7 +5,6 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
-import it.gym.utility.CheckEvents;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -21,6 +20,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static it.gym.utility.CheckEvents.checkPast;
+import static it.gym.utility.CheckEvents.hasHolidays;
 
 @Component
 @Transactional
@@ -61,10 +61,10 @@ public class ReservationFacade {
 
         List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
-        CheckEvents.hasHolidays(events);
+        hasHolidays(events);
     }
 
-    private void isEventReservable(AEvent event) {
+    private void isEventReservable(ATrainingEvent event) {
         if (!event.isReservable()) {
             throw new MethodNotAllowedException("Non è possibile prenotare questo evento");
         }
@@ -90,104 +90,7 @@ public class ReservationFacade {
         simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(), roleName);
     }
 
-    public Reservation createReservationFromBundle(Long gymId, Long customerId, Long bundleId, Event event, String roleName) {
-        Gym gym = this.gymService.findById(gymId);
-        Customer customer = this.customerService.findById(customerId);
-        ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
-
-        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(), roleName);
-
-        Date startTime = event.getStartTime();
-        Date endTime = event.getEndTime();
-
-        logger.info("Creating session");
-        ATrainingSession session = bundle.createSession(startTime, endTime);
-        session = sessionService.save(session);
-
-        ATrainingEvent evt = new PersonalEvent();
-        evt.setSession(session);
-        evt.setEndTime(endTime);
-        evt.setStartTime(startTime);
-        evt.setName(String.format("Allenamento: %s", bundle.getName()));
-
-        Reservation res = evt.reserve(customer);
-
-        eventService.save(evt);
-
-        bundle.addSession(session);
-        bundleService.save(bundle);
-
-        service.save(res);
-
-        return res;
-    }
-
-    public Reservation createReservationFromEvent(Long gymId, Long customerId, Long eventId, String role) {
-        Gym gym = this.gymService.findById(gymId);
-        Customer customer = this.customerService.findById(customerId);
-        CourseEvent evt = (CourseEvent) eventService.findById(eventId);
-
-        isEventReservable(evt);
-        ATrainingSession session = evt.getSession();
-        simpleReservationChecks(gym, customer, session.getTrainingBundle(),
-                session.getStartTime(), session.getEndTime(), role);
-
-        Reservation res;
-        evt.reserve(customer);
-        evt = (CourseEvent) this.eventService.save(evt);
-
-        List<Reservation> reservationList = evt.getReservations();
-        res = reservationList.get(reservationList.size()-1);
-
-        return res;
-    }
-
-    public Reservation deleteReservations(Long eventId, Long reservationId, String roleName) {
-        logger.info("Getting reservation by id");
-        Reservation res = this.service.findById(reservationId);
-        ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
-
-        ATrainingBundle bundle = event.getSession().getTrainingBundle();
-
-        boolean evtCompleted = event.getSession().getCompleted();
-        boolean resConfirmed = res.getConfirmed();
-
-        boolean eitherCompletedOrConfirmed = resConfirmed || evtCompleted;
-        boolean isPastEvt = isPast(event.getStartTime());
-        boolean youAreCustomer = "CUSTOMER".equals(roleName);
-        boolean isAPersonal = "P".equals(event.getType());
-
-        if (youAreCustomer && eitherCompletedOrConfirmed && isPastEvt && isAPersonal)
-            throw new BadRequestException("La prenotazione non può essere annullata. " +
-                    "Rivolgiti in segreteria per annullare");
-
-        event.deleteReservation(res);
-
-
-        if (event.getType().equals("P")) {
-            event.deleteSession();
-            this.eventService.delete(event);
-            this.bundleService.save(bundle);
-        }
-        else {
-            this.eventService.save(event);
-        }
-
-        return res;
-    }
-
-    private boolean isPast(Date startTime) {
-        return startTime.before(new Date());
-    }
-
-    public Reservation confirm(Long reservationId) {
-        Reservation res = this.service.findById(reservationId);
-        res.setConfirmed(true);
-        res = this.service.save(res);
-        return res;
-    }
-
-    public List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
+    private List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
         logger.info("Checking whether the bundles are expired");
         List<ATrainingBundle> expiredBundles = customer
                 .getCurrentTrainingBundles()
@@ -213,5 +116,144 @@ public class ReservationFacade {
                 .stream()
                 .reduce((role, role2) -> role.getId() < role2.getId()? role : role2)
                 .orElseThrow(() -> new InternalException("Nessun ruolo"));
+    }
+
+    private boolean isPast(Date startTime) {
+        return startTime.before(new Date());
+    }
+
+    private ATrainingEvent createPersonalTrainingEvent(ATrainingBundle bundle, Event event) {
+        ATrainingEvent evt = new PersonalTrainingEvent();
+        evt.setStartTime(event.getStartTime());
+        evt.setEndTime(event.getEndTime());
+        evt.setName(String.format("Allenamento: %s", bundle.getName()));
+        return evt;
+    }
+
+    private Reservation makeReservation(Customer customer, ATrainingBundle bundle, ATrainingEvent evt) {
+        isEventReservable(evt);
+
+        logger.info("Creating reservation");
+        Reservation res = evt.createReservation(customer);
+
+        logger.info("Saving reservation");
+        res = service.save(res);
+
+        logger.info("Creating training session");
+        ATrainingSession session = bundle.createSession(evt);
+
+        logger.info("Saving created session");
+        session = sessionService.save(session);
+
+        logger.info("Adding reservation to training event");
+        evt.addReservation(res);
+
+        logger.info("Adding training session to the training event");
+        evt.addSession(res.getId(), session);
+
+        logger.info("Saving training event");
+        eventService.save(evt);
+
+        logger.info("Adding training session to bundle");
+        bundle.addSession(session);
+
+        logger.info("Saving training session into bundle");
+        bundleService.save(bundle);
+
+        return res;
+    }
+
+
+    public Reservation createReservation(Long gymId,
+                                         Long customerId,
+                                         Long bundleId,
+                                         Event event,
+                                         String role) {
+        Gym gym = this.gymService.findById(gymId);
+        Customer customer = this.customerService.findById(customerId);
+        ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
+
+        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(), role);
+
+        logger.info("Creating personal training event");
+        ATrainingEvent evt = createPersonalTrainingEvent(bundle, event);
+
+        return makeReservation(customer, bundle, evt);
+    }
+
+    public Reservation createReservationWithExistingEvent(Long gymId,
+                                                          Long customerId,
+                                                          Long eventId,
+                                                          Long bundleId,
+                                                          String role) {
+        Gym gym = this.gymService.findById(gymId);
+        Customer customer = this.customerService.findById(customerId);
+        ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
+
+        ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
+
+        simpleReservationChecks(gym, customer, bundle, evt.getStartTime(), evt.getEndTime(), role);
+
+        return makeReservation(customer, bundle, evt);
+    }
+
+    public Reservation deleteReservation(Long eventId, Long reservationId, String roleName) {
+        logger.info("Getting reservation by id");
+        ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
+        Reservation res = this.service.findById(reservationId);
+
+        boolean isSessionConfirmed = event.getSession(res).getCompleted();
+        boolean isReservationConfirmed = res.getConfirmed();
+
+        boolean eitherCompletedOrConfirmed = isReservationConfirmed || isSessionConfirmed;
+        boolean isPastEvt = isPast(event.getStartTime());
+        boolean youAreCustomer = "CUSTOMER".equals(roleName);
+        boolean isAPersonal = "P".equals(event.getType());
+
+        if (youAreCustomer && eitherCompletedOrConfirmed && isPastEvt && isAPersonal)
+            throw new BadRequestException("La prenotazione non può essere annullata. " +
+                    "Rivolgiti in segreteria per annullare");
+
+
+        logger.info("Deleting reservation from event");
+        event.deleteReservation(res);
+
+        logger.info("Getting session by reservation from event");
+        ATrainingSession session = event.getSession(res);
+
+        logger.info("Getting bundle from session");
+        ATrainingBundle bundle = session.getTrainingBundle();
+
+        logger.info("Deleting session from bundle");
+        session.deleteMeFromBundle();
+
+        logger.info("Deleting session by reservation from event");
+        event.deleteSession(res);
+
+        if (event.getType().equals("P")) {
+            logger.info("Deleting personal training event");
+            this.eventService.delete(event);
+        } else {
+            logger.info("Saving training event");
+            this.eventService.save(event);
+        }
+
+        logger.info("Saving bundle event");
+        this.bundleService.save(bundle);
+
+        logger.info("Deleting reservation");
+        this.service.delete(res);
+
+        logger.info("Deleting session");
+        this.sessionService.delete(session);
+
+        return res;
+    }
+
+    public Reservation confirm(Long reservationId) {
+        Reservation res = this.service.findById(reservationId);
+        res.setConfirmed(true);
+        res = this.service.save(res);
+        return res;
     }
 }

@@ -1,3 +1,5 @@
+-- options migration
+
 CREATE TABLE options (
                           option_id bigint NOT NULL,
                           bundle_spec_id bigint NOT NULL,
@@ -29,4 +31,26 @@ ALTER TABLE bundle_specs DROP COLUMN number;
 ALTER TABLE bundles ADD COLUMN option_id bigint;
 ALTER TABLE ONLY bundles
     ADD CONSTRAINT fkqqx7636pm22r20b6wlbbvyfs83 FOREIGN KEY (option_id) REFERENCES options(option_id);
+
+-- events migration
+
+ALTER TABLE events ADD COLUMN max_customers int;
+
+CREATE TABLE events_sessions (
+                                 event_id bigint NOT NULL,
+                                 session_id bigint NOT NULL,
+                                 reservation_key bigint NOT NULL
+);
+
+ALTER TABLE events_sessions OWNER TO goodfellas;
+
+ALTER TABLE ONLY events_sessions
+    ADD CONSTRAINT fkc42lfp5ka1na8yx4wh8sv29r8 UNIQUE (event_id, session_id);
+
+ALTER TABLE ONLY events_sessions
+    ADD CONSTRAINT fkc42lfp5ka1na8yx4wh7uw41q3 FOREIGN KEY (event_id) REFERENCES events(event_id);
+
+ALTER TABLE ONLY events_sessions
+    ADD CONSTRAINT fkc42lfp5ka1na8yx4wh3ois47y7 FOREIGN KEY (session_id) REFERENCES sessions(session_id);
+
 

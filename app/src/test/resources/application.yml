@@ -27,6 +27,11 @@ spring:
 logging:
   level:
     root: info
+    it.gym: debug
+    org:
+      hibernate:
+        SQL: info
+
 
 it.gym.enabled: false
 baseUrl: "http://localhost"

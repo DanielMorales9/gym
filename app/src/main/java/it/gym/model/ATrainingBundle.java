@@ -59,7 +59,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @JsonIgnore
     public abstract Double getPrice();
 
-    public abstract ATrainingSession createSession(Date startTime, Date endTime);
+    public abstract ATrainingSession createSession(ATrainingEvent event);
     public abstract boolean assignOption(Long optionId);
 
     public abstract void addSession(ATrainingSession session);

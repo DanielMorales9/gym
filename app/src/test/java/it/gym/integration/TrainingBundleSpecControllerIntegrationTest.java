@@ -16,15 +16,14 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectOption;
 import static it.gym.utility.HateoasTest.expectTrainingBundleSpec;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -112,9 +111,12 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void deletePersonalBundleSpecId_throwsException() throws Exception {
+    public void whenDeletePersonalBundleSpecIdThenThrowsException() throws Exception {
+        Date start = getNextMonday();
+        Date end = addHours(start, 1);
+        PersonalTrainingEvent evt = createPersonalEvent(1L, "course", start, end);
         ATrainingBundle bundle = personalBundle.createTrainingBundle();
-        ATrainingSession session = bundle.createSession(new Date(), new Date());
+        ATrainingSession session = bundle.createSession(evt);
         session.setCompleted(true);
         bundle.addSession(session);
         bundleRepository.save(bundle);
