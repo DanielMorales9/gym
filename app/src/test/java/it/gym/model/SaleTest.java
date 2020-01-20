@@ -178,7 +178,6 @@ public class SaleTest {
     private CourseTrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec, TimeOption option) {
         CourseTrainingBundle p = new CourseTrainingBundle();
         p.setName("Course");
-        p.setExpired(false);
         p.setBundleSpec(spec);
         p.setOption(option);
         Date end = DateUtils.addMonths(start, option.getNumber());
@@ -198,7 +197,6 @@ public class SaleTest {
     private PersonalTrainingBundle createPersonalBundle(ATrainingBundleSpecification spec) {
         PersonalTrainingBundle p = new PersonalTrainingBundle();
         p.setName("Personal");
-        p.setExpired(false);
         p.setBundleSpec(spec);
         return p;
     }

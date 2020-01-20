@@ -40,9 +40,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "is_expired")
-    private Boolean isExpired;
-
     @Column(name = "createdat", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -55,8 +52,11 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     private List<ATrainingSession> sessions;
 
     public abstract String getType();
-    public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
+
+    @JsonIgnore
+    public abstract Boolean isExpired();
+    @JsonIgnore
     public abstract Double getPrice();
 
     public abstract ATrainingSession createSession(Date startTime, Date endTime);
@@ -78,14 +78,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     public void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
         this.bundleSpec = bundleSpec;
-    }
-
-    public Boolean getExpired() {
-        return isExpired;
-    }
-
-    public void setExpired(Boolean expired) {
-        isExpired = expired;
     }
 
     public List<ATrainingSession> getSessions() {

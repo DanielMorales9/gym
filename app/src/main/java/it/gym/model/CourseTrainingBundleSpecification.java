@@ -26,11 +26,7 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     private Integer maxCustomers;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinTable(
-            name="bundle_specs_options",
-            joinColumns = @JoinColumn( name="bundle_spec_id"),
-            inverseJoinColumns = @JoinColumn( name="option_id")
-    )
+    @JoinColumn(name = "bundle_spec_id", nullable = false)
     private Set<TimeOption> options;
 
     public Integer getMaxCustomers() {
@@ -51,7 +47,6 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
         CourseTrainingBundle ctb = new CourseTrainingBundle();
         ctb.setName(this.getName());
         ctb.setBundleSpec(this);
-        ctb.setExpired(false);
         return ctb;
     }
 

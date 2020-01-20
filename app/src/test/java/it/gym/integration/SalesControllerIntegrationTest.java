@@ -157,32 +157,32 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     }
 
-//    @Test
-//    public void whenAddSliByOptionOK() throws Exception {
-//        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
-//        String path = "/sales/addSalesLineItem";
-//
-//        ResultActions result = mockMvc.perform(get(path)
-//                .param("bundleSpecId", courseSpec.getId().toString())
-//                .param("saleId", sale.getId().toString())
-//                .param("optionId", option.getId().toString()))
-//                .andExpect(status().isOk());
-//
-//        List<SalesLineItem> sli = sliRepository.findAll();
-//
-//        Sale expected = new Sale();
-//        expected.setId(sale.getId());
-//        expected.setAmountPayed(0.);
-//        expected.setCompleted(false);
-//        expected.setCustomer(customer);
-//        expected.setSalesLineItems(sli);
-//
-//        expectSale(result, expected);
-//        expectSalesLineItems(result, sli, "salesLineItems");
-//
-//        expectCustomer(result, customer, "customer");
-//
-//    }
+    @Test
+    public void whenAddSliByOptionOK() throws Exception {
+        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+        String path = "/sales/addSalesLineItem";
+
+        ResultActions result = mockMvc.perform(get(path)
+                .param("bundleSpecId", courseSpec.getId().toString())
+                .param("saleId", sale.getId().toString())
+                .param("optionId", option.getId().toString()))
+                .andExpect(status().isOk());
+
+        List<SalesLineItem> sli = sliRepository.findAll();
+
+        Sale expected = new Sale();
+        expected.setId(sale.getId());
+        expected.setAmountPayed(0.);
+        expected.setCompleted(false);
+        expected.setCustomer(customer);
+        expected.setSalesLineItems(sli);
+
+        expectSale(result, expected);
+        expectSalesLineItems(result, sli, "salesLineItems");
+
+        expectCustomer(result, customer, "customer");
+
+    }
 
     @Test
     public void whenAddSliThenItFails() throws Exception {
