@@ -9,8 +9,8 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Entity
 @DiscriminatorValue(value="C")
@@ -95,7 +95,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public boolean assignOption(Long optionId) {
-        Set<TimeOption> options = ((CourseTrainingBundleSpecification) getBundleSpec()).getOptions();
+        List<TimeOption> options = ((CourseTrainingBundleSpecification) getBundleSpec()).getOptions();
         if(options == null)
             return false;
 

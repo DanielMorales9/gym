@@ -75,11 +75,14 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         Date monday = getNextMonday();
         Date end = addMonths(monday, 1);
-        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+
+        CourseTrainingEvent event = createCourseEvent(1L, "course", start, end, courseSpec);
+        event = this.eventRepository.save(event);
+        TimeOption option = courseSpec.getOptions().get(0);
         course = createCourseBundle(1L, monday, courseSpec, option);
 
         personal = bundleRepository.save(personal);
-        session = course.createSession(null);
+        session = course.createSession(event);
         course.addSession(session);
         course = bundleRepository.save(course);
         session = course.getSessions().get(0);
@@ -142,7 +145,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
     @Test
     @Transactional
-    public void whenCreateReservationFromEvent_OK() throws Exception {
+    public void whenCreateReservationFromEventThenOK() throws Exception {
         Trainer trainer = createTrainer(1L);
         userRepository.save(trainer);
 
@@ -154,7 +157,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         event.setStartTime(start);
         event.setEndTime(end);
         event.setName("test");
-//        event.setSession(sessionRepository.findById(sess.getId()).get());
         event = eventRepository.saveAndFlush(event);
 
         customer.addToCurrentTrainingBundles(Collections.singletonList(course));

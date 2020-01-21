@@ -3,7 +3,10 @@ package it.gym.utility;
 import it.gym.model.*;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
@@ -27,8 +30,8 @@ public class HateoasTest {
 
         for (int i = 0; i < 3; i++) {
             result
-                    .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
-                    .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
+                .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
+                .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
         }
 
     }
@@ -57,7 +60,8 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"thursdayOpen").value(gym.isThursdayOpen()))
                 .andExpect(jsonPath("$"+prefix+"fridayOpen").value(gym.isFridayOpen()))
                 .andExpect(jsonPath("$"+prefix+"saturdayOpen").value(gym.isSaturdayOpen()))
-                .andExpect(jsonPath("$"+prefix+"sundayOpen").value(gym.isSundayOpen()));
+                .andExpect(jsonPath("$"+prefix+"sundayOpen").value(gym.isSundayOpen()))
+                .andExpect(jsonPath("$"+prefix+"reservationBeforeHours").value(gym.getReservationBeforeHours()));
     }
 
     public static void expectGym(ResultActions result, Gym gym) throws Exception {
@@ -220,7 +224,6 @@ public class HateoasTest {
                                             CourseTrainingBundle trainingBundle,
                                             String p) throws Exception {
         String prefix = handlePrefix(p);
-        // TODO expect startTime and endTime
         expectATrainingBundle(result, trainingBundle, prefix);
     }
 
@@ -241,11 +244,41 @@ public class HateoasTest {
         expectEvent(result, event, null);
     }
 
+    private static String format(Date d) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
+        fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return fmt.format(d);
+    }
+
     private static void expectEvent(ResultActions result, AEvent event, String p) throws Exception {
+
         String prefix = handlePrefix(p);
         result.andExpect(jsonPath("$"+prefix+"id").value(event.getId()))
-                .andExpect(jsonPath("$"+prefix+"name").value(event.getName()));
+                .andExpect(jsonPath("$"+prefix+"name").value(event.getName()))
+                .andExpect(jsonPath("$"+prefix+"startTime").value(format(event.getStartTime())))
+                .andExpect(jsonPath("$"+prefix+"endTime").value(format(event.getEndTime())))
+                .andExpect(jsonPath("$"+prefix+"type").value(event.getType()));
+
+        switch (event.getType()) {
+            case "T":
+                expectEvent(result, (TimeOff) event, prefix);
+                break;
+            case "C":
+                expectEvent(result, (CourseTrainingEvent) event, prefix);
+                break;
+            default:
+                break;
+        }
     }
+
+    private static void expectEvent(ResultActions result, TimeOff event, String prefix) throws Exception {
+        expectUser(result, event.getUser(), prefix+"user");
+    }
+
+    private static void expectEvent(ResultActions result, CourseTrainingEvent event, String prefix) throws Exception {
+        result.andExpect(jsonPath("$"+prefix+"maxCustomers").value(event.getMaxCustomers()));
+    }
+
 
     public static void expectReservation(ResultActions result, Reservation reservation) throws Exception {
         expectReservation(result, reservation, null);

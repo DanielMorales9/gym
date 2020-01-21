@@ -34,29 +34,20 @@ public abstract class ATrainingEvent extends AEvent {
 
     @JsonIgnore
     public abstract boolean isReservable();
-    @JsonIgnore
     public abstract Reservation createReservation(Customer customer);
-    @JsonIgnore
     public abstract void addReservation(Reservation res);
-    @JsonIgnore
     public abstract void deleteReservation(Reservation res);
 
     @JsonIgnore
     public abstract boolean isSessionDeletable();
-    @JsonIgnore
     public abstract void addSession(Long reservationId, ATrainingSession session);
-    @JsonIgnore
     public abstract List<ATrainingSession> deleteSessions();
-    @JsonIgnore
     public abstract List<ATrainingBundle> deleteSessionsFromBundles();
 
-    @JsonIgnore
     public abstract void deleteSession(Reservation res);
     @JsonIgnore
     public abstract ATrainingSession getSession(Reservation res);
-    @JsonIgnore
     public abstract void complete();
-    @JsonIgnore
     public abstract List<Reservation> deleteReservations();
 
 }

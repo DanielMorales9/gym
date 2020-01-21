@@ -61,7 +61,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         personalSpec = specRepository.save(personalSpec);
         personalBundle = personalSpec.createTrainingBundle();
         personalBundle = bundleRepository.save(personalBundle);
-        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+        TimeOption option = courseSpec.getOptions().get(0);
         courseBundle = createCourseBundle(1L, start, courseSpec, option);
         courseBundle = bundleRepository.save(courseBundle);
     }
@@ -76,7 +76,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCreateHolidayOK() throws Exception {
+    public void whenCreateHolidayReturnsOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         Event e = new Event();
@@ -137,7 +137,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenDeleteHolidayOK() throws Exception {
+    public void whenDeleteHolidayReturnsOK() throws Exception {
         ResultActions result = mockMvc.perform(delete("/events/holiday/"+event.getId()))
                 .andExpect(status().isOk());
 
@@ -145,7 +145,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenEditHolidayOK() throws Exception {
+    public void whenEditHolidayReturnsOK() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
         event.setName("closed1");
         String json = objectMapper.writeValueAsString(event);
@@ -158,7 +158,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenEditTimeOffOK() throws Exception {
+    public void whenEditTimeOffReturnsOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
         TimeOff timeOff = (TimeOff) createTimeOff(1L, "closed", start, end, trainer);
@@ -243,7 +243,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenCreateTimeOffOK() throws Exception {
+    public void whenCreateTimeOffReturnsOK() throws Exception {
         Event e = new Event();
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
@@ -295,7 +295,9 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(h.getId());
+        expected.setMaxCustomers(courseSpec.getMaxCustomers());
         expectEvent(result, expected);
+
         // TODO expectTrainingSession
     }
 
@@ -304,10 +306,11 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
 
-        ATrainingSession session = courseBundle.createSession(null);
+        CourseTrainingEvent event = createCourseEvent(1L, "course", start, end, courseSpec);
+
+        ATrainingSession session = courseBundle.createSession(event);
         courseBundle.addSession(session);
 
-        CourseTrainingEvent event = createCourseEvent(1L, "course", null, null, null);
         Customer customer = createCustomer(1L,
                 "test@test.com",
                 "test",
@@ -330,6 +333,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(event.getId());
+        expected.setMaxCustomers(courseSpec.getMaxCustomers());
         expectEvent(result, expected);
         assertThat(reservationRepository.findAll().size()).isEqualTo(0);
         assertThat(sessionRepository.findAll().size()).isEqualTo(0);
@@ -337,15 +341,14 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenComplete_OK() throws Exception {
+    public void whenCompleteThenOK() throws Exception {
         Date start = addDays(getNextMonday(), -30);
         Date end = addHours(start, 1);
 
-        ATrainingSession session = courseBundle.createSession(null);
-        courseBundle.addSession(session);
-
-        event = createCourseEvent(1L, "course", null, null, null);
+        event = createCourseEvent(1L, "course", start, end, courseSpec);
         event = eventRepository.save(event);
+        ATrainingSession session = courseBundle.createSession((ATrainingEvent) event);
+        courseBundle.addSession(session);
 
         ResultActions result = mockMvc.perform(get("/events/" + event.getId()+"/complete"))
                 .andExpect(status().isOk());
@@ -355,6 +358,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(event.getId());
+        expected.setMaxCustomers(courseSpec.getMaxCustomers());
         expectEvent(result, expected);
         // TODO expectTrainingSession
     }
