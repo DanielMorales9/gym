@@ -20,7 +20,5 @@ mat-card-header {
     padding-right: 16px;
     padding-left: 16px;
     width: 100%;
-    width: -moz-available;          /* WebKit-based browsers will ignore this. */
-    width: -ms-available;
-    width: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
+    width: available;
 }
