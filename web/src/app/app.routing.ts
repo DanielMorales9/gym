@@ -8,8 +8,8 @@ const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
 
     { path: 'error', component: ErrorComponent },
-    { path: 'auth', loadChildren: 'app/auth/auth.module#AuthModule'},
-    { path: 'home', loadChildren: 'app/home/home.module#HomeModule' },
+    { path: 'auth', loadChildren: () => import('app/auth/auth.module').then(m => m.AuthModule)},
+    { path: 'home', loadChildren: () => import('app/home/home.module').then(m => m.HomeModule) },
 
     { path: 'profile', component: ProfileComponent,
         canActivate: [AuthGuardService]
@@ -18,21 +18,21 @@ const routes: Routes = [
         canActivate: [AuthGuardService]
     },
     {
-        path: 'admin', loadChildren: 'app/role_admin/admin.module#AdminModule',
+        path: 'admin', loadChildren: () => import('app/role_admin/admin.module').then(m => m.AdminModule),
         canActivate: [RoleGuardService],
         data: {
             expectedRole: 'A'
         }
     },
     {
-        path: 'trainer', loadChildren: 'app/role_trainer/trainer.module#TrainerModule',
+        path: 'trainer', loadChildren: () => import('app/role_trainer/trainer.module').then(m => m.TrainerModule),
         canActivate: [RoleGuardService],
         data: {
             expectedRole: 'T'
         }
     },
     {
-        path: 'customer', loadChildren: 'app/role_customer/customer.module#CustomerModule',
+        path: 'customer', loadChildren: () => import('app/role_customer/customer.module').then(m => m.CustomerModule),
         canActivate: [RoleGuardService],
         data: {
             expectedRole: 'C'

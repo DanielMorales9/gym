@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {BundleService, EventService, ReservationService, UserService} from '../core/controllers';
-import {GymService, DateService} from '../core/utilities';
+import {BundleService, EventService, ReservationService, UserService} from '../controllers';
 import {Observable} from 'rxjs';
-import {AuthenticationService} from '../core/authentication';
-import {User} from '../shared/model';
+import {User} from '../../shared/model';
+import {AuthenticationService} from '../authentication';
+import {DateService, GymService} from '../utilities';
 
 
 @Injectable()

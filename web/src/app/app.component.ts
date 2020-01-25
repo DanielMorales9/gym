@@ -20,7 +20,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     user: User;
     appName = '';
-    @ViewChild('snav') public snav: MatSidenav;
+    @ViewChild('snav', { static: true }) public snav: MatSidenav;
     opened = this.shouldBeOpen();
     private sub: Subscription = new Subscription();
 

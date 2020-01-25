@@ -8,10 +8,17 @@ export enum BundleType {
     COURSE = 'C'
 }
 
+export abstract class Option {
+    id: number;
+    name: string;
+    number: number;
+    price: number;
+    createdAt: Date;
+}
+
 export abstract class BundleSpecification {
     id: number;
     name: string;
-    price: number;
     description: string;
     disabled: boolean;
     type: string;
@@ -23,6 +30,7 @@ export abstract class BundleSpecification {
 
 export class PersonalBundleSpecification extends BundleSpecification {
     numSessions: number;
+    price: number
 
     constructor() {
         super();
@@ -31,8 +39,7 @@ export class PersonalBundleSpecification extends BundleSpecification {
 }
 
 export class CourseBundleSpecification extends BundleSpecification {
-    number: number;
-    maxCustomers: number;
+    options: Option[];
 
     constructor() {
         super();

@@ -23,6 +23,7 @@ import {
     BundleHelperService, BundleCustomerHelperService,
 } from './helpers';
 import {PolicyService} from './policy';
+import {CalendarFacade} from './facades';
 
 
 @NgModule({
@@ -43,6 +44,7 @@ import {PolicyService} from './policy';
             provide: HttpClient,
             useClass: HttpService
         },
+        CalendarFacade,
         HttpCacheService,
         ApiPrefixInterceptor,
         CacheInterceptor,

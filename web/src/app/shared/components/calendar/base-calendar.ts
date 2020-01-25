@@ -103,8 +103,8 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
     refresh: Subject<any> = new Subject();
 
-    @ViewChild('next') next: ElementRef<HTMLElement>;
-    @ViewChild('prev') prev: ElementRef<HTMLElement>;
+    @ViewChild('next', { static: true }) next: ElementRef<HTMLElement>;
+    @ViewChild('prev', { static: true }) prev: ElementRef<HTMLElement>;
 
     static isNotPast(date) {
         return date >= new Date();

@@ -13,7 +13,7 @@ export class GymModalComponent implements OnInit {
 
     gym: Gym;
     form: FormGroup;
-    @ViewChild('days') output: MatSelectionList;
+    @ViewChild('days', { static: false }) output: MatSelectionList;
 
     constructor(public dialogRef: MatDialogRef<GymModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
