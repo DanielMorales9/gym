@@ -1,13 +1,10 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import it.gym.exception.MethodNotAllowedException;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Generated;
-import org.springframework.data.repository.cdi.Eager;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;

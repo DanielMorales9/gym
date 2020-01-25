@@ -183,6 +183,8 @@ public class HateoasTest {
                 expectTrainingBundle(result, (CourseTrainingBundle)
                         expected.getTrainingBundle(), prefix+"trainingBundle");
                 break;
+            default:
+                break;
         }
 
         switch (expected.getBundleSpecification().getType()) {
@@ -193,6 +195,8 @@ public class HateoasTest {
             case "C":
                 expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification)
                         expected.getBundleSpecification(), prefix+"bundleSpecification");
+                break;
+            default:
                 break;
         }
     }

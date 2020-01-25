@@ -215,8 +215,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         assertThat(sliRepository.findAll()).isEmpty();
         logger.info(bundleRepository.findAll().toString());
         assertThat(bundleRepository.findAll().size()).isEqualTo(0);
-        CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
-                bundleSpecRepository.findById(courseSpec.getId()).get();
+        bundleSpecRepository.findById(courseSpec.getId()).get();
     }
 
     @Test
@@ -282,8 +281,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         assertThat(repository.findAll()).isEmpty();
         assertThat(sliRepository.findAll()).isEmpty();
         assertThat(bundleRepository.findAll().size()).isEqualTo(0);
-        CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
-                bundleSpecRepository.findById(courseSpec.getId()).get();
+        bundleSpecRepository.findById(courseSpec.getId()).get();
     }
 
     @Test

@@ -1,13 +1,10 @@
 package it.gym.hateoas;
 
-import it.gym.facade.EventFacade;
 import it.gym.model.AEvent;
-import it.gym.model.TimeOff;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
-import static jdk.nashorn.internal.codegen.ObjectClassGenerator.getClassName;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 
 public class EventAssembler extends ResourceAssemblerSupport<AEvent, EventResource> {

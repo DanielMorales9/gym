@@ -77,9 +77,6 @@ public class ReservationFacade {
             customerService.save(customer);
             throw new MethodNotAllowedException("Hai completato tutte le sessioni di allenamento disponibili in questo pacchetto");
         }
-        if (!customer.containsBundle(bundle)) {
-            throw new MethodNotAllowedException("Non hai acquistato questo pacchetto");
-        }
     }
 
     public void isAvailable(Long gymId, Long customerId, Long bundleId, Event event, String roleName) {

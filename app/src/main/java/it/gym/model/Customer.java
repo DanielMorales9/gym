@@ -118,10 +118,4 @@ public class Customer extends AUser {
         else return false;
     }
 
-    public boolean containsBundle(ATrainingBundle bundle) {
-        if (this.currentTrainingBundles != null)
-            return this.currentTrainingBundles.contains(bundle);
-        return false;
-    }
-
 }

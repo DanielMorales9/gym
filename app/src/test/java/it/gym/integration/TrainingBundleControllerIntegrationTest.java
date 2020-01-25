@@ -1,7 +1,6 @@
 package it.gym.integration;
 
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
@@ -9,17 +8,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectTrainingBundle;
-import static org.apache.commons.lang3.time.DateUtils.addDays;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
@@ -28,13 +23,12 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     @Autowired private TrainingBundleSpecificationRepository specRepository;
     private PersonalTrainingBundle personalBundle;
     private CourseTrainingBundle courseBundle;
-    private CourseTrainingBundleSpecification courseBundleSpec;
 
     @Before
     public void before() {
 
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
-        courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
+        CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);

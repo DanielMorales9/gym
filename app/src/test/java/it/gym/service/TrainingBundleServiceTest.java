@@ -1,7 +1,6 @@
 package it.gym.service;
 
 import it.gym.model.ATrainingBundle;
-import it.gym.model.ATrainingBundleSpecification;
 import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.CourseTrainingBundleRepository;
 import it.gym.repository.TrainingBundleRepository;

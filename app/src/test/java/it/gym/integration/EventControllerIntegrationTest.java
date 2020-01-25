@@ -27,8 +27,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired private GymRepository gymRepository;
     @Autowired private EventRepository eventRepository;
     @Autowired private ReservationRepository reservationRepository;
@@ -42,7 +40,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     private Trainer trainer;
     private CourseTrainingBundleSpecification courseSpec;
     private CourseTrainingBundle courseBundle;
-    private PersonalTrainingBundleSpecification personalSpec;
     private ATrainingBundle personalBundle;
 
     @Before
@@ -56,7 +53,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
         courseSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
-        personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
         personalBundle = personalSpec.createTrainingBundle();

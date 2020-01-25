@@ -18,7 +18,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
-import java.util.Collections;
 import java.util.List;
 
 @Component

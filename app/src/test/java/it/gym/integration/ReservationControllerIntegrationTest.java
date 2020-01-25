@@ -4,14 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.actuate.endpoint.web.annotation.ExposableControllerEndpoint;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import javax.swing.tree.ExpandVetoException;
 import javax.transaction.Transactional;
 import java.util.Collections;
 import java.util.Date;
@@ -27,8 +23,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class ReservationControllerIntegrationTest extends AbstractIntegrationTest {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
     @Autowired private UserRepository userRepository;
     @Autowired private GymRepository gymRepository;
     @Autowired private TrainingBundleRepository bundleRepository;
@@ -36,8 +30,10 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Autowired private TrainingSessionRepository sessionRepository;
     @Autowired private EventRepository eventRepository;
     @Autowired private ReservationRepository reservationRepository;
+    @Autowired private RoleRepository roleRepository;
 
     @Test
+    @Transactional
     public void whenCreateReservationFromBundleReturnsOK() throws Exception {
         PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(false, false);
         Long gymId = fixture.getGym().getId();
@@ -72,6 +68,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
+    @Transactional
     public void whenCreateReservationFromEventReturnsOK() throws Exception {
         CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(false, true);
         Long gymId = fixture.getGym().getId();
@@ -97,6 +94,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
+    @Transactional
     public void whenIsAvailableReturnsOK() throws Exception {
         PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(false, false);
         Long gymId = fixture.getGym().getId();
@@ -110,7 +108,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(evt);
-        ResultActions result = mockMvc.perform(post("/reservations/"+ gymId + "/isAvailable")
+        mockMvc.perform(post("/reservations/"+ gymId + "/isAvailable")
                 .param("customerId", String.valueOf(customer.getId()))
                 .param("bundleId", String.valueOf(bundle.getId()))
                 .contentType(MediaType.APPLICATION_JSON)
@@ -125,14 +123,15 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
+    @Transactional
     public void whenConfirmCourseEventReservationReturnsOK() throws Exception {
         CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(true, true);
-        CourseTrainingEvent event = fixture.getCourseEvent();
+        Reservation reservation = fixture.getReservation();
 
-        ResultActions result = mockMvc.perform(get("/reservations/"+event.getId()+"/confirm"))
+        ResultActions result = mockMvc.perform(get("/reservations/"+reservation.getId()+"/confirm"))
                 .andExpect(status().isOk());
 
-        Reservation reservation = reservationRepository.findAll().get(0);
+        reservation = reservationRepository.findAll().get(0);
         expectReservation(result, reservation);
         expectUser(result, reservation.getUser(), "user");
 
@@ -144,14 +143,15 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
+    @Transactional
     public void whenConfirmPersonalEventReservationReturnsOK() throws Exception {
         PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(true, true);
-        PersonalTrainingEvent event = fixture.getPersonalEvent();
+        Reservation reservation = fixture.getReservation();
 
-        ResultActions result = mockMvc.perform(get("/reservations/"+event.getId()+"/confirm"))
+        ResultActions result = mockMvc.perform(get("/reservations/"+ reservation.getId() +"/confirm"))
                 .andExpect(status().isOk());
 
-        Reservation reservation = reservationRepository.findAll().get(0);
+        reservation = reservationRepository.findAll().get(0);
         expectReservation(result, reservation);
         expectUser(result, reservation.getUser(), "user");
 
@@ -163,6 +163,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
+    @Transactional
     public void whenDeleteReservationOnCourseEventReturnsOK() throws Exception {
         CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(true, true);
         Reservation reservation = fixture.getReservation();
@@ -193,6 +194,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
+    @Transactional
     public void whenDeleteReservationOnPersonalEventThenOK() throws Exception {
 
         PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(true, true);
@@ -248,16 +250,12 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             return session;
         }
 
-        @Transactional
-        public CourseTrainingEventFixture invoke(boolean hasReservation, boolean hasEvent) throws Exception {
-            if (hasReservation && !hasEvent) {
-                throw new Exception("if it hasReservation then it has to have Event");
-            }
-
+        public CourseTrainingEventFixture invoke(boolean hasReservation, boolean hasEvent) {
             gym = createGym(1L);
             gym = gymRepository.save(gym);
 
             List<Role> roles = createCustomerRoles();
+            roles = roleRepository.saveAll(roles);
             customer = createCustomer(1L,
                     "user@user.com",
                     "",
@@ -367,16 +365,13 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             return end;
         }
 
-        @Transactional
-        public PersonalTrainingEventFixture invoke(boolean hasReservation, boolean hasEvent) throws Exception {
-            if (hasReservation && !hasEvent) {
-                throw new Exception("if it hasReservation then it has to have event");
-            }
+        public PersonalTrainingEventFixture invoke(boolean hasReservation, boolean hasEvent) {
 
             gym = createGym(1L);
             gym = gymRepository.save(gym);
 
             List<Role> roles = createCustomerRoles();
+            roles = roleRepository.saveAll(roles);
             customer = createCustomer(1L,
                     "user@user.com",
                     "",

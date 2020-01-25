@@ -1,29 +1,15 @@
 package it.gym.facade;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.exception.BadRequestException;
-import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.ATrainingBundle;
-import it.gym.model.CourseTrainingBundle;
-import it.gym.model.CourseTrainingBundleSpecification;
-import it.gym.model.TimeOption;
-import it.gym.pojo.CourseBundle;
 import it.gym.service.TrainingBundleService;
-import it.gym.service.TrainingBundleSpecificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
 
 @Component

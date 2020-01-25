@@ -1,10 +1,7 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Generated;
-import lombok.ToString;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
