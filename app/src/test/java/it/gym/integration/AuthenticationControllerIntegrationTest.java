@@ -3,6 +3,7 @@ package it.gym.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
+import it.gym.utility.HateoasTest;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -71,7 +72,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         customer = customerRepository.findAll().get(0);
         roles = customer.getRoles();
         logger.info(roles.toString());
-        expectCustomer(result, customer);
+        expectUser(result, customer);
     }
 
     @Test
@@ -90,7 +91,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
         admin.setVerified(true);
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -111,7 +112,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
         admin.setVerified(true);
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
     @Test
@@ -130,7 +131,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
         admin.setVerified(true);
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -142,7 +143,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
                 .andExpect(status().isOk());
 
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -178,7 +179,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
     private void testExpectedAdmin(ResultActions result) throws Exception {
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 }

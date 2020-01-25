@@ -12,13 +12,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class HateoasTest {
 
-    public static void expectAdmin(ResultActions result, Admin admin, String p) throws Exception {
+    public static void expectUser(ResultActions result, Admin admin, String p) throws Exception {
         String prefix = handlePrefix(p);
-        expectUser(result, admin, prefix);
+        expectAUser(result, admin, prefix);
     }
 
-    public static void expectAdmin(ResultActions result, Admin admin) throws Exception {
-        expectAdmin(result, admin, null);
+    public static void expectUser(ResultActions result, Admin admin) throws Exception {
+        expectUser(result, admin, null);
     }
 
     public static void expectAdminRoles(ResultActions result, List<Role> roles) throws Exception {
@@ -147,19 +147,19 @@ public class HateoasTest {
 
     }
 
-    public static void expectCustomer(ResultActions result, Customer customer, String p) throws Exception {
+    public static void expectUser(ResultActions result, Customer customer, String p) throws Exception {
         String prefix = handlePrefix(p, false);
-        expectUser(result, customer, prefix);
+        expectAUser(result, customer, prefix);
         result
                 .andExpect(jsonPath("$"+prefix+"height").value(customer.getHeight()))
                 .andExpect(jsonPath("$"+prefix+"weight").value(customer.getWeight()));
     }
 
-    public static void expectCustomer(ResultActions result, Customer customer) throws Exception {
-        expectCustomer(result, customer, null);
+    public static void expectUser(ResultActions result, Customer customer) throws Exception {
+        expectUser(result, customer, null);
     }
 
-    public static void expectUser(ResultActions result, AUser user, String p) throws Exception {
+    public static void expectAUser(ResultActions result, AUser user, String p) throws Exception {
         String prefix = handlePrefix(p);
         result
                 .andExpect(jsonPath("$"+prefix+"id").value(user.getId()))
@@ -167,10 +167,6 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"firstName").value(user.getFirstName()))
                 .andExpect(jsonPath("$"+prefix+"lastName").value(user.getLastName()))
                 .andExpect(jsonPath("$"+prefix+"verified")  .value(user.isVerified()));
-    }
-
-    public static void expectedSalesLineItem(ResultActions result, SalesLineItem expected) throws Exception {
-        expectedSalesLineItem(result, expected, null);
     }
 
     public static void expectedSalesLineItem(ResultActions result,
@@ -272,7 +268,7 @@ public class HateoasTest {
     }
 
     private static void expectEvent(ResultActions result, TimeOff event, String prefix) throws Exception {
-        expectUser(result, event.getUser(), prefix+"user");
+        expectAUser(result, event.getUser(), prefix+"user");
     }
 
     private static void expectEvent(ResultActions result, CourseTrainingEvent event, String prefix) throws Exception {

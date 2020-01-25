@@ -4,20 +4,16 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import lombok.ToString;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Entity
 @DiscriminatorValue(value="C")
 @JsonTypeName("C")
 @ExposesResourceFor(value = ATrainingBundle.class)
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class CourseTrainingBundle extends ATrainingBundle {
 
@@ -123,6 +119,20 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Override
     public int compareTo(ATrainingBundle o) {
         return  this.getSessions().size() - o.getSessions().size();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), option);
+    }
+
+    @Override
+    public String toString() {
+        return "CourseTrainingBundle{" + super.toString()+
+                ", startTime=" + startTime +
+                ", endTime=" + endTime +
+                ", option=" + option +
+                '}';
     }
 
 

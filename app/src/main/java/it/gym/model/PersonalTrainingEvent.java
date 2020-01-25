@@ -9,13 +9,13 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = AEvent.class)
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingEvent extends ATrainingEvent {
 
@@ -116,6 +116,20 @@ public class PersonalTrainingEvent extends ATrainingEvent {
         this.reservation = null;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        PersonalTrainingEvent that = (PersonalTrainingEvent) o;
+        return Objects.equals(reservation, that.reservation) &&
+                Objects.equals(session, that.session);
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 
     @Override
     public String toString() {

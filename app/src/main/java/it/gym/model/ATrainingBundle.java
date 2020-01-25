@@ -6,11 +6,13 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import lombok.ToString;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -26,7 +28,6 @@ import java.util.List;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
-@EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
 public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
@@ -107,5 +108,24 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @PrePersist
     protected void prePersist() {
         this.createdAt = new Date();
+    }
+
+    @Override
+    public String toString() {
+        return "id=" + id + ", name='" + name + ", createdAt=" + createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ATrainingBundle that = (ATrainingBundle) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

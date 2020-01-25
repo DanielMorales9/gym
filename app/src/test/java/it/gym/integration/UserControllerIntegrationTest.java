@@ -3,6 +3,7 @@ package it.gym.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
+import it.gym.utility.HateoasTest;
 import org.junit.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users"))
                 .andExpect(status().isOk());
         for (int i = 0; i < 1; i++) {
-            expectAdmin(result, admin, "content["+i+"]");
+            HateoasTest.expectUser(result, admin, "content["+i+"]");
             expectAdminRoles(result, roles, "content["+i+"].roles");
         }
     }
@@ -71,7 +72,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     public void findUserId_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/" + admin.getId()))
                 .andExpect(status().isOk());
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -80,8 +81,8 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users/search?query=" + admin.getLastName()))
                 .andExpect(status().isOk());
 
-        expectAdmin(result, admin, "content["+0+"]");
-        expectAdmin(result, admin, "content["+0+"]");
+        HateoasTest.expectUser(result, admin, "content["+0+"]");
+        HateoasTest.expectUser(result, admin, "content["+0+"]");
         expectAdminRoles(result, roles, "content["+0+"].roles");
     }
 
@@ -92,18 +93,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         expectAdminRoles(result, roles);
     }
 
-//    @Test
-//    public void getGymByUserId_OK() throws Exception {
-//        ResultActions result = mockMvc.perform(get("/users/" + admin.getId() + "/gym"))
-//                .andExpect(status().isOk());
-//        expectGym(result, gym);
-//    }
-
     @Test
     public void findByEmail_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/findByEmail?email=" + admin.getEmail()))
                 .andExpect(status().isOk());
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -115,7 +109,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(admin)))
                 .andExpect(status().isOk());
-        expectAdmin(result, admin);
+        HateoasTest.expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 

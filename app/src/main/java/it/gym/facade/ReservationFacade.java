@@ -214,12 +214,10 @@ public class ReservationFacade {
             throw new BadRequestException("La prenotazione non può essere annullata. " +
                     "Rivolgiti in segreteria per annullare");
 
-
-        logger.info("Deleting reservation from event");
-        event.deleteReservation(res);
-
         logger.info("Getting session by reservation from event");
         ATrainingSession session = event.getSession(res);
+
+        logger.info(session.toString());
 
         logger.info("Getting bundle from session");
         ATrainingBundle bundle = session.getTrainingBundle();
@@ -227,25 +225,29 @@ public class ReservationFacade {
         logger.info("Deleting session from bundle");
         session.deleteMeFromBundle();
 
-        logger.info("Deleting session by reservation from event");
-        event.deleteSession(res);
+        logger.info("Saving bundle event");
+        this.bundleService.save(bundle);
 
         if (event.getType().equals("P")) {
             logger.info("Deleting personal training event");
             this.eventService.delete(event);
         } else {
+            logger.info("Deleting reservation from event");
+            event.deleteReservation(res);
+
+            logger.info("Deleting session by reservation from event");
+            event.deleteSession(res);
+
+            logger.info("Deleting session");
+            this.sessionService.delete(session);
+
+            logger.info("Deleting reservation");
+            this.service.delete(res);
+
             logger.info("Saving training event");
             this.eventService.save(event);
+
         }
-
-        logger.info("Saving bundle event");
-        this.bundleService.save(bundle);
-
-        logger.info("Deleting reservation");
-        this.service.delete(res);
-
-        logger.info("Deleting session");
-        this.sessionService.delete(session);
 
         return res;
     }

@@ -10,6 +10,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -25,7 +26,6 @@ import java.util.Date;
 @Inheritance(strategy= InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
-@EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
 public abstract class AEvent {
 
@@ -84,5 +84,19 @@ public abstract class AEvent {
     @Override
     public String toString() {
         return getName();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AEvent aEvent = (AEvent) o;
+        return Objects.equals(id, aEvent.id) &&
+                Objects.equals(name, aEvent.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
     }
 }

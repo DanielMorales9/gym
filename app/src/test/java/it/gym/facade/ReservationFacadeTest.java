@@ -376,8 +376,8 @@ public class ReservationFacadeTest {
         Mockito.verify(eventService).findById(1L);
         Mockito.verify(service).findById(1L);
         Mockito.verify(bundleService).save(any(PersonalTrainingBundle.class));
-        Mockito.verify(service).delete(any(Reservation.class));
-        Mockito.verify(sessionService).delete(any(PersonalTrainingSession.class));
+//        Mockito.verify(service).delete(any(Reservation.class));
+//        Mockito.verify(sessionService).delete(any(PersonalTrainingSession.class));
 
     }
 
@@ -409,8 +409,7 @@ public class ReservationFacadeTest {
         Mockito.verify(eventService).findById(1L);
         Mockito.verify(service).findById(1L);
         Mockito.verify(bundleService).save(any(PersonalTrainingBundle.class));
-        Mockito.verify(service).delete(any(Reservation.class));
-        Mockito.verify(sessionService).delete(any(PersonalTrainingSession.class));
+//        Mockito.verify(sessionService).delete(any(PersonalTrainingSession.class));
     }
 
     @Test

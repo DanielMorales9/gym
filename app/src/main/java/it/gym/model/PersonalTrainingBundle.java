@@ -14,8 +14,6 @@ import java.util.ArrayList;
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = ATrainingBundle.class)
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundle extends ATrainingBundle {
 
@@ -75,4 +73,8 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         this.getSessions().add(session);
     }
 
+    @Override
+    public String toString() {
+        return "PersonalTrainingBundle{ " + super.toString() + " }";
+    }
 }

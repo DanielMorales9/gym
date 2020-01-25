@@ -7,6 +7,7 @@ import it.gym.exception.MethodNotAllowedException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
+import org.springframework.data.repository.cdi.Eager;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.*;
@@ -18,18 +19,17 @@ import java.util.stream.Collectors;
 @JsonTypeName("C")
 @ExposesResourceFor(value = AEvent.class)
 @Data
-@EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class CourseTrainingEvent extends ATrainingEvent {
 
     public static final String TYPE = "C";
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     @JsonIgnore
     private List<Reservation> reservations;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
             name="events_sessions",
             uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "session_id"}),
@@ -172,6 +172,20 @@ public class CourseTrainingEvent extends ATrainingEvent {
             throw new MethodNotAllowedException("Hai già prenotato il corso");
 
         reservations.add(res);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CourseTrainingEvent that = (CourseTrainingEvent) o;
+        return Objects.equals(maxCustomers, that.maxCustomers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), Objects.hash(maxCustomers));
     }
 
     @Override

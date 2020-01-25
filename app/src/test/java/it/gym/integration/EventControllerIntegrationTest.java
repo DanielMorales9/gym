@@ -19,7 +19,7 @@ import java.util.Date;
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectEvent;
-import static it.gym.utility.HateoasTest.expectUser;
+import static it.gym.utility.HateoasTest.expectAUser;
 import static org.apache.commons.lang3.time.DateUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -267,7 +267,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setEndTime(end);
         expected.setId(h.getId());
         expectEvent(result, expected);
-        expectUser(result, trainer, "user");
+        expectAUser(result, trainer, "user");
     }
 
     @Test

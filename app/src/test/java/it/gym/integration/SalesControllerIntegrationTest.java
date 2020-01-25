@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -92,7 +91,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
 
         expectSale(result, sale);
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
     }
 
     @Test
@@ -105,7 +104,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     public void findSaleUserByIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/sales/" + sale.getId() + "/customer"))
                 .andExpect(status().isOk());
-        expectCustomer(result, customer);
+        expectUser(result, customer);
     }
 
     @Test
@@ -128,7 +127,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setCustomer(customer);
 
         expectSale(result, expected);
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
     }
 
 
@@ -153,7 +152,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
 
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
 
     }
 
@@ -180,7 +179,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
 
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
 
     }
 
@@ -211,7 +210,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSale(result, expected);
         result = result.andExpect(jsonPath("$.salesLineItems").value(sli));
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
         result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(sliRepository.findAll()).isEmpty();
         logger.info(bundleRepository.findAll().toString());
@@ -240,7 +239,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSalesLineItems(result, sli, "salesLineItems");
 
         Customer c = customer;
-        expectCustomer(result, c, "customer");
+        expectUser(result, c, "customer");
         c.setCurrentTrainingBundles(null);
         userRepository.save(c);
 
@@ -278,7 +277,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSalesLineItems(result, sli, "salesLineItems");
 
         Customer c = customer;
-        expectCustomer(result, c, "customer");
+        expectUser(result, c, "customer");
         result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(repository.findAll()).isEmpty();
         assertThat(sliRepository.findAll()).isEmpty();
@@ -305,7 +304,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectSale(result, expected);
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
 
     }
 
@@ -342,7 +341,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
             expectSale(result, expected, "content[" + i + "]");
             expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
-            expectCustomer(result, customer, "content[" + i + "].customer");
+            expectUser(result, customer, "content[" + i + "].customer");
         }
     }
 
@@ -372,7 +371,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setSalesLineItems(sli);
 
         expectSalesLineItems(result, sli, "salesLineItems");
-        expectCustomer(result, customer, "customer");
+        expectUser(result, customer, "customer");
         expectPayment(result, payment, "payments[0]");
 
     }
@@ -384,7 +383,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
 
-        expectCustomer(result, customer);
+        expectUser(result, customer);
     }
 
     @Test
