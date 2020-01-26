@@ -12,9 +12,7 @@ export class PolicyService {
             canEdit: true,
             canDisable: true,
             canCreate: true,
-            canShow: {
-                editions: true
-            }
+            canMakeOption: true
         },
         sale: {
             canDelete: true,
@@ -125,7 +123,6 @@ export class PolicyService {
             canEdit: false
         }
     };
-
 
     CUSTOMER_POLICY = {
         bundleSpec: {

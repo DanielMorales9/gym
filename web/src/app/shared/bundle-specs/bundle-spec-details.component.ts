@@ -20,6 +20,8 @@ export class BundleSpecDetailsComponent implements OnInit {
     canDelete: boolean;
     canDisable: boolean;
     displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'date'];
+    canMakeOption: boolean;
+    canEdit: boolean;
 
     constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
@@ -38,9 +40,11 @@ export class BundleSpecDetailsComponent implements OnInit {
     private getPolicies() {
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
+        this.canEdit = this.policy.get('bundleSpec', 'canEdit');
+        this.canMakeOption = this.policy.get('bundleSpec', 'canMakeOption');
     }
 
-    editBundle(): void {
+    editBundleSpec(): void {
         const title = 'Modifica Pacchetto';
 
         const dialogRef = this.dialog.open(BundleSpecModalComponent, {
@@ -90,5 +94,9 @@ export class BundleSpecDetailsComponent implements OnInit {
                 break;
         }
         return name;
+    }
+
+    createOption() {
+        
     }
 }
