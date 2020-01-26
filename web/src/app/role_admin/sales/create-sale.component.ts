@@ -173,16 +173,12 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
 
         dialogRef.afterClosed().subscribe(res => {
-            console.log(res);
             if (res) {
                 this.sale = res.sale;
                 res = res.selected;
                 for (const key in res) {
                     this.optionsSelected[key] = res[key];
                 }
-
-                console.log(res);
-                console.log(this.optionsSelected);
 
                 let acc = false;
                 for (const key in res) {

@@ -123,18 +123,18 @@ describe('SalesService', () => {
         req.flush([]);
     });
 
-    it('testing #addSalesLineItem', done => {
-        salesService.addSalesLineItem({saleId: 1, bundleSpecId: 1})
-            .subscribe(res => {
-                expect(res).toEqual([]);
-                done();
-            });
-        const req = backend.expectOne({
-            url: '/sales/addSalesLineItem',
-            method: 'GET'
-        });
-        req.flush([]);
-    });
+    // it('testing #addSalesLineItem', done => {
+    //     salesService.addSalesLineItem({saleId: 1, bundleSpecId: 1})
+    //         .subscribe(res => {
+    //             expect(res).toEqual([]);
+    //             done();
+    //         });
+    //     const req = backend.expectOne({
+    //         url: '/sales/addSalesLineItem',
+    //         method: 'GET'
+    //     });
+    //     req.flush([]);
+    // });
 
     it('testing #confirmSale', done => {
         salesService.confirmSale(1)
@@ -149,18 +149,18 @@ describe('SalesService', () => {
         req.flush([]);
     });
 
-    it('testing #deleteSalesLineItem', done => {
-        salesService.deleteSalesLineItem(1, 1)
-            .subscribe(res => {
-                expect(res).toEqual([]);
-                done();
-            });
-        const req = backend.expectOne({
-            url: '/sales/deleteSalesLineItem/1/1',
-            method: 'DELETE'
-        });
-        req.flush([]);
-    });
+    // it('testing #deleteSalesLineItem', done => {
+    //     salesService.deleteSalesLineItem(1, 1)
+    //         .subscribe(res => {
+    //             expect(res).toEqual([]);
+    //             done();
+    //         });
+    //     const req = backend.expectOne({
+    //         url: '/sales/deleteSalesLineItem/1/1',
+    //         method: 'DELETE'
+    //     });
+    //     req.flush([]);
+    // });
 
     it('testing #findById', done => {
         salesService.findById(1)

@@ -151,7 +151,6 @@ export class AdminCalendarComponent extends BaseCalendar {
             if (!!data) {
                 const end = this.dateService.addHour(data.start);
                 if (!!data.meta) {
-                    console.log(data);
                     this.createCourseEvent(data, end);
                 } else {
                     await this.createHoliday(data, end);

@@ -75,11 +75,9 @@ export class OptionSelectModalComponent {
             const key = +k;
             if (!!this.backupSelected[key]) {
                 if (this.backupSelected[key] !== this.selected[key]) {
-                    console.log(this.backupSelected[key], key);
                     await this.addOrDelete(this.backupSelected[key], key);
                 }
             } else {
-                console.log(false, key);
                 await this.addOrDelete(false, key);
             }
         }

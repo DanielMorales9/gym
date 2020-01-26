@@ -42,7 +42,6 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        console.log(query);
         if (!!query.date) {
             query = Object.assign({}, query);
             const date = new Date(query.date);
