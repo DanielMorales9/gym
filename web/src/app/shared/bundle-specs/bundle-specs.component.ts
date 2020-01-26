@@ -24,7 +24,6 @@ export class BundleSpecsComponent implements OnInit {
     private pageSize = 10;
     ds: QueryableDatasource<BundleSpecification>;
     canDelete: boolean;
-    canShowEditions: boolean;
     canDisable: boolean;
     canCreate: boolean;
 
@@ -50,7 +49,6 @@ export class BundleSpecsComponent implements OnInit {
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
         this.canCreate = this.policy.get('bundleSpec', 'canCreate');
-        this.canShowEditions = this.policy.get('bundleSpec', 'canShow', 'editions');
     }
 
     private initQueryParams() {

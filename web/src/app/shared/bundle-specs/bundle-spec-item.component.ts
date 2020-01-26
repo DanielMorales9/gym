@@ -17,7 +17,6 @@ export class BundleSpecItemComponent {
     @Input() bundleSpec: any;
     @Input() canDelete: boolean;
     @Input() canDisable: boolean;
-    @Input() canShowEditions: boolean;
 
     @Output() done = new EventEmitter();
     constructor(private dialog: MatDialog) {
@@ -70,9 +69,5 @@ export class BundleSpecItemComponent {
     goToInfo() {
         this.done.emit({type: 'info', bundleSpec: this.bundleSpec});
     }
-
-    // goToEditions() {
-    //     this.done.emit({type: 'list', bundleSpec: this.bundleSpec});
-    // }
 
 }

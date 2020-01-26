@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BundleService, EventService, ReservationService, UserService} from '../controllers';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {User} from '../../shared/model';
 import {AuthenticationService} from '../authentication';
 import {DateService, GymService} from '../utilities';
@@ -56,7 +56,7 @@ export class CalendarFacade {
         }
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.bundleService.getCourses(startS, endS);
+        return of([]);
     }
 
 
