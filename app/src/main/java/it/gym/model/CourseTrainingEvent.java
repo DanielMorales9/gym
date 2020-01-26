@@ -22,7 +22,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
-    @JsonIgnore
     private List<Reservation> reservations;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -36,8 +35,9 @@ public class CourseTrainingEvent extends ATrainingEvent {
     @JsonIgnore
     private Map<Long, ATrainingSession> sessions;
 
-    @Column(name="max_customers")
-    private Integer maxCustomers;
+    @OneToOne
+    @JoinColumn(name = "spec_id")
+    private CourseTrainingBundleSpecification specification;
 
     @Override
     public String getType() {
@@ -49,12 +49,19 @@ public class CourseTrainingEvent extends ATrainingEvent {
         int nReservations;
         if (this.reservations == null) nReservations = 0;
         else nReservations = reservations.size();
-        return nReservations < this.getMaxCustomers();
+        return nReservations < this.specification.getMaxCustomers();
     }
 
-    @JsonIgnore
     public List<Reservation> getReservations() {
         return reservations;
+    }
+
+    public CourseTrainingBundleSpecification getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(CourseTrainingBundleSpecification specification) {
+        this.specification = specification;
     }
 
     public void setReservations(List<Reservation> reservations) {
@@ -74,14 +81,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
 
     public void setSessions(Map<Long, ATrainingSession> sessions) {
         this.sessions = sessions;
-    }
-
-    public Integer getMaxCustomers() {
-        return maxCustomers;
-    }
-
-    public void setMaxCustomers(Integer maxCustomers) {
-        this.maxCustomers = maxCustomers;
     }
 
     @Override
@@ -171,25 +170,10 @@ public class CourseTrainingEvent extends ATrainingEvent {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-        CourseTrainingEvent that = (CourseTrainingEvent) o;
-        return Objects.equals(maxCustomers, that.maxCustomers);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(super.hashCode(), Objects.hash(maxCustomers));
-    }
-
-    @Override
     public String toString() {
         return "CourseEvent {" +
                 " id " + this.getId() +
                 " name " +  getName() +
-                " maxCustomers " + getMaxCustomers() +
                 " startTime " + this.getStartTime() +
                 " endTime " + this.getEndTime() +
                 " } ";

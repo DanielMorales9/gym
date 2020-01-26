@@ -55,7 +55,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         console.log(action, event);
     }
 
-    hour(action: string, event: any) {
+    async hour(action: string, event: any) {
         if (!this.isValidHour(event)) {
             return this.snackBar.open('Orario non valido');
         }
@@ -133,8 +133,16 @@ export class CustomerCalendarComponent extends BaseCalendar {
         });
     }
 
-    private createReservation(data) {
-        this.facade.createReservationFromEvent(data.userId, data.event.meta.id).subscribe(async (_) => {
+    private async createReservation(d) {
+        const userId = d.userId;
+        const specId = d.event.meta.specification.id;
+        const [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
+        if (error) {
+            throw error;
+        }
+        const bundleId = data[0].id;
+
+        this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId).subscribe(async (_) => {
             this.snackBar.open('Prenotazione effettuata');
             await this.getEvents();
         }, err => {

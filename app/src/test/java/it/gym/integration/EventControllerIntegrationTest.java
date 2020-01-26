@@ -292,7 +292,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(h.getId());
-        expected.setMaxCustomers(courseSpec.getMaxCustomers());
+        expected.setSpecification(courseSpec);
         expectEvent(result, expected);
 
         // TODO expectTrainingSession
@@ -330,7 +330,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(event.getId());
-        expected.setMaxCustomers(courseSpec.getMaxCustomers());
+        expected.setSpecification(courseSpec);
         expectEvent(result, expected);
         assertThat(reservationRepository.findAll().size()).isEqualTo(0);
         assertThat(sessionRepository.findAll().size()).isEqualTo(0);
@@ -355,7 +355,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(event.getId());
-        expected.setMaxCustomers(courseSpec.getMaxCustomers());
+        expected.setSpecification(courseSpec);
         expectEvent(result, expected);
         // TODO expectTrainingSession
     }

@@ -263,9 +263,6 @@ public class HateoasTest {
             case "T":
                 expectEvent(result, (TimeOff) event, prefix);
                 break;
-            case "C":
-                expectEvent(result, (CourseTrainingEvent) event, prefix);
-                break;
             default:
                 break;
         }
@@ -276,7 +273,7 @@ public class HateoasTest {
     }
 
     private static void expectEvent(ResultActions result, CourseTrainingEvent event, String prefix) throws Exception {
-        result.andExpect(jsonPath("$"+prefix+"maxCustomers").value(event.getMaxCustomers()));
+
     }
 
 

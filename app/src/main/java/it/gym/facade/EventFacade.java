@@ -174,7 +174,7 @@ public class EventFacade {
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setName(evt.getName());
-        event.setMaxCustomers(spec.getMaxCustomers());
+        event.setSpecification(spec);
 
         logger.debug("Saving CourseEvent");
         return service.save(event);

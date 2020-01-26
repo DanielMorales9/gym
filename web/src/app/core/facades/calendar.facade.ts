@@ -51,8 +51,8 @@ export class CalendarFacade {
     /**
      * BUNDLE API
      */
-    getCourses(): Observable<Object[]> {
-        return of([]);
+    getCourses() {
+        return this.specService.list({disabled: false});
     }
 
 
@@ -206,9 +206,10 @@ export class CalendarFacade {
         return this.reservationService.createReservationFromBundle(gymId, userId, bundleId, event);
     }
 
-    createReservationFromEvent(userId: number, eventId: number) {
+    createReservationFromEvent(userId: number, eventId: number, bundleId: number) {
         const gymId = this.gymService.gym.id;
-        return this.reservationService.createReservationFromEvent(gymId, userId, eventId);
+        return this.reservationService.createReservationFromEvent(gymId,
+            {customerId: userId, eventId: eventId, bundleId: bundleId});
     }
 
     /**
@@ -241,5 +242,9 @@ export class CalendarFacade {
 
     getRoleByUser(user: User) {
         return this.auth.computeRole(user);
+    }
+
+    getUserBundleBySpecId(userId: number, specId: any) {
+        return this.userService.getBundleBySpecId(userId, specId);
     }
 }

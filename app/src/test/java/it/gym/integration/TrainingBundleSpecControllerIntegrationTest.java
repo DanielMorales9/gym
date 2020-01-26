@@ -234,24 +234,6 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
-    public void whenSearchNotDisabledOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundleSpecs/searchNotDisabled?" +
-                "query="+ courseBundleSpec.getName()))
-                .andExpect(status().isOk());
-
-        expectTrainingBundleSpec(result, courseBundleSpec, "content["+0+"]");    }
-
-    @Test
-    public void whenGetNotDisabledOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundleSpecs/getNotDisabled"))
-                .andExpect(status().isOk());
-
-        expectTrainingBundleSpec(result, personalBundle, "content["+0+"]");
-        expectTrainingBundleSpec(result, courseBundleSpec, "content["+1+"]");
-    }
-
-
-    @Test
     public void postCourseBundleSpecOK() throws Exception {
         Object randomObj = new Object() {
             public final boolean disabled = false;

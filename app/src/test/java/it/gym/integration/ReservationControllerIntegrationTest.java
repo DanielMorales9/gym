@@ -278,7 +278,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 event.setStartTime(start);
                 event.setEndTime(end);
                 event.setName("personal");
-                event.setMaxCustomers(spec.getMaxCustomers());
+                event.setSpecification(spec);
             }
 
             if (hasReservation) {

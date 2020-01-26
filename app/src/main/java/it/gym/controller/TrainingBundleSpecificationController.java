@@ -8,6 +8,7 @@ import it.gym.model.ATrainingBundleSpecification;
 import it.gym.model.TimeOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @RepositoryRestController
 @RequestMapping("/bundleSpecs")
@@ -75,5 +77,11 @@ public class TrainingBundleSpecificationController {
                                                      @RequestParam(required = false) Boolean disabled,
                                                      Pageable pageable) {
         return facade.findByNameContains(name, disabled, pageable);
+    }
+
+    @GetMapping(path = "/list")
+    @ResponseBody
+    public List<ATrainingBundleSpecification> list(@RequestParam(required = false) Boolean disabled) {
+        return facade.findByIsDisabled(disabled);
     }
 }

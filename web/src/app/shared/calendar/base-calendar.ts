@@ -116,8 +116,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     static getCourseEventColor(event: any) {
-        return (event.reservations.length > 0) ? (event.session.completed) ?
-            CALENDAR_COLUMNS.GREEN : CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
+        return (event.reservations.length > 0) ? CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
     onSwipeLeft($event: any) {
@@ -163,7 +162,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     abstract delete(action: string, event: CalendarEvent);
     abstract info(action: string, event: CalendarEvent);
     abstract header(action: string, event: CalendarEvent);
-    abstract hour(action: string, event: CalendarEvent);
+    abstract async hour(action: string, event: CalendarEvent);
     abstract change(action: string, event: CalendarEvent);
 
     abstract openModal(action: string);
@@ -239,7 +238,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 this.info(action, event);
                 break;
             case EVENT_TYPES.HOUR:
-                this.hour(action, event);
+                await this.hour(action, event);
                 break;
             case EVENT_TYPES.HEADER:
                 this.header(action, event);

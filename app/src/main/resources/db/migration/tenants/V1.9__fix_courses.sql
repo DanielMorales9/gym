@@ -34,8 +34,6 @@ ALTER TABLE ONLY bundles
 
 -- events migration
 
-ALTER TABLE events ADD COLUMN max_customers int;
-
 CREATE TABLE events_sessions (
                                  event_id bigint NOT NULL,
                                  session_id bigint NOT NULL,
@@ -53,4 +51,7 @@ ALTER TABLE ONLY events_sessions
 ALTER TABLE ONLY events_sessions
     ADD CONSTRAINT fkc42lfp5ka1na8yx4wh3ois47y7 FOREIGN KEY (session_id) REFERENCES sessions(session_id);
 
+ALTER TABLE events ADD COLUMN spec_id bigint;
 
+ALTER TABLE events ADD CONSTRAINT fkc42lfp5ka1na8yx4wh5zr2wwe
+    FOREIGN KEY (spec_id) REFERENCES bundle_specs(bundle_spec_id);

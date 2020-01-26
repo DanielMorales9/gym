@@ -96,7 +96,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
         this.openModal(action);
     }
 
-    hour(action: string, event: any) {
+    async hour(action: string, event: any) {
         this.facade.isTimeOffAvailable(new Date(event.date))
             .subscribe(res => {
                 this.modalData = {

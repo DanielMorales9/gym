@@ -84,4 +84,8 @@ public class TrainingBundleSpecificationFacade {
         bundleSpec.addOption(option);
         return service.save(bundleSpec);
     }
+
+    public List<ATrainingBundleSpecification> findByIsDisabled(Boolean disabled) {
+        return service.findByIsDisabled(disabled);
+    }
 }

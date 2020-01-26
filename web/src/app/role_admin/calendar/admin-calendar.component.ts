@@ -66,18 +66,20 @@ export class AdminCalendarComponent extends BaseCalendar {
         this.openModal(action);
     }
 
-    hour(action: string, event: any) {
-        this.facade.getCourses().subscribe(courses => {
-            event.courses = courses;
-            this.modalData = {
-                action: EVENT_TYPES.HOUR,
-                title: 'Crea Evento',
-                userId: this.user.id,
-                role: this.role,
-                event: event
-            };
-            this.openModal(action);
-        }, err => this.snackBar.open(err.error.message));
+    async hour(action: string, event: any) {
+        const [data, error] = await this.facade.getCourses();
+        if (error) {
+            return this.snackBar.open(error.error.message);
+        }
+        event.courses = data;
+        this.modalData = {
+            action: EVENT_TYPES.HOUR,
+            title: 'Crea Evento',
+            userId: this.user.id,
+            role: this.role,
+            event: event
+        };
+        this.openModal(action);
 
     }
 

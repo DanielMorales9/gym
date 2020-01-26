@@ -115,7 +115,6 @@ public class EventFacadeTest {
         assertThat(evt.getEndTime()).isEqualTo(end);
         assertThat(evt.getReservations()).isNull();
         assertThat(evt.getSessions()).isNull();
-        assertThat(evt.getMaxCustomers()).isEqualTo(spec.getMaxCustomers());
         assertThat(evt.getType()).isEqualTo(CourseTrainingEvent.TYPE);
 
     }

@@ -7,6 +7,8 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.*;
 import java.util.*;
 
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
+
 @Entity
 @DiscriminatorValue(value="C")
 @JsonTypeName("C")
@@ -57,6 +59,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public Boolean isExpired() {
+        if (endTime == null) return false;
         return new Date().after(endTime);
     }
 
@@ -109,8 +112,16 @@ public class CourseTrainingBundle extends ATrainingBundle {
         if (this.getSessions() == null) {
             this.setSessions(new ArrayList<>());
         }
+        if (startTime == null) {
+            startBundle(session);
+        }
 
         this.getSessions().add(session);
+    }
+
+    private void startBundle(ATrainingSession session) {
+        this.startTime = session.getStartTime();
+        this.endTime = addMonths(this.startTime, this.option.getNumber());
     }
 
     @Override

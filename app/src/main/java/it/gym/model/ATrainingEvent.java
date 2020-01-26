@@ -14,9 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 @Entity
-@Data
-@EqualsAndHashCode(callSuper = true)
-@JsonIgnoreProperties({"reservations", "sessions"})
 @Generated //exclude coverage analysis on generated methods
 public abstract class ATrainingEvent extends AEvent {
 

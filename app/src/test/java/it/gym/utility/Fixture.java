@@ -158,7 +158,7 @@ public class Fixture {
         course.setStartTime(startTime);
         course.setEndTime(endTime);
         course.setName(name);
-        course.setMaxCustomers(specification.getMaxCustomers());
+        course.setSpecification(specification);
         return course;
     }
 
