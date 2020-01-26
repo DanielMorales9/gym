@@ -56,7 +56,6 @@
     "browserslist": "^4.8.5",
     "caniuse-lite": "^1.0.30001023",
     "codelyzer": "^5.0.1",
-    "fsevents": "^2.1.2",
     "jasmine-core": "^3.5.0",
     "jasmine-spec-reporter": "~4.2.1",
     "karma": "^4.4.1",
