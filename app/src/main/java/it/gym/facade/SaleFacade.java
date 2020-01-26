@@ -101,21 +101,15 @@ public class SaleFacade {
         return this.save(sale);
     }
 
-    public Sale addSalesLineItem(Long saleId, Long bundleSpecId) {
+    public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Long optionId) {
         Sale sale = this.findById(saleId);
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
-
         ATrainingBundle bundle = bundleSpec.createTrainingBundle();
-        if (bundle == null) {
-            throw new BadRequestException("Qualcosa è andato storto");
+        boolean ret = bundle.assignOption(optionId);
+        if (!ret) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
         }
-        sale.addSalesLineItem(bundle);
-        return this.save(sale);
-    }
 
-    public Sale addSalesLineItemByBundle(Long saleId, Long bundleId) {
-        Sale sale = this.findById(saleId);
-        ATrainingBundle bundle = this.bundleService.findById(bundleId);
         sale.addSalesLineItem(bundle);
         return this.save(sale);
     }
@@ -126,7 +120,7 @@ public class SaleFacade {
         if (!sale.deleteSalesLineItem(sli))
             throw new ConflictException("Impossibile eliminate riga con id " + saleId + " della vendita con id " + saleId);
         ATrainingBundle trainingBundle = sli.getTrainingBundle();
-        if (trainingBundle.isNotGroup() && trainingBundle.isDeletable()) {
+        if (trainingBundle.isDeletable()) {
             bundleService.delete(trainingBundle);
         }
         this.salesLineItemService.delete(sli);
@@ -191,7 +185,6 @@ public class SaleFacade {
         return sale.getSalesLineItems()
                     .stream()
                     .map(SalesLineItem::getTrainingBundle)
-                    .filter(ATrainingBundle::isNotGroup)
                     .collect(Collectors.toList());
     }
 }

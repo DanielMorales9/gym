@@ -5,8 +5,8 @@ export class SaleLineItem {
     id: number;
     bundleSpecification: BundleSpecification;
     trainingBundle: Bundle;
+    price:  number;
 
     constructor() {
-
     }
 }

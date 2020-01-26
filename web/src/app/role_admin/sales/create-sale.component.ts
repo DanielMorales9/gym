@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BundleSpecification, BundleType, Sale} from '../../shared/model';
-import {BundleSpecPayHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
+import {BundleSpecHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {SnackBarService} from '../../core/utilities';
 import {BundleService, BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
-import {BundleSelectModalComponent} from './bundle-select-modal.component';
+import {OptionSelectModalComponent} from './option-select-modal.component';
+import {first} from 'rxjs/operators';
 
 
 @Component({
@@ -19,18 +20,18 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     sub: any;
 
     id: number;
-    query: string;
+    query = {disabled: false, name: ''};
     sale: Sale;
 
     private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
-    bundleSelected: Map<number, boolean> = new Map<number, boolean>();
+    optionsSelected: Map<number, boolean> = new Map<number, boolean>();
 
     ds: QueryableDatasource<BundleSpecification>;
-    private queryParams: { query: string };
+    private queryParams: any;
 
     constructor(private saleHelper: SaleHelperService,
-                private helper: BundleSpecPayHelperService,
+                private helper: BundleSpecHelperService,
                 private specService: BundleSpecsService,
                 private bundleService: BundleService,
                 private snackbar: SnackBarService,
@@ -41,7 +42,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.getQuery();
+        this.initQueryParams();
         this.getId();
     }
 
@@ -52,12 +53,19 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         });
     }
 
-    private getQuery() {
-        this.query = this.route.snapshot.queryParamMap.get('query');
+    private initQueryParams() {
+        this.route.queryParams.pipe(first()).subscribe(params => {
+            this.queryParams = Object.assign({}, params);
+            this.queryParams.disabled = this.query.disabled;
+            this.queryParams.name = this.query.name;
+            this.search(this.queryParams);
+        });
     }
 
-    private updateQueryParams() {
-        this.queryParams = {query: this.query};
+    private updateQueryParams($event) {
+        if (!$event) { $event = {}; }
+
+        this.queryParams = this.query = $event;
         this.router.navigate(
             [],
             {
@@ -81,27 +89,26 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         }
     }
 
-    private addSalesLineItem(id: number) {
-
-        this.saleHelper.addSalesLineItem(this.sale.id, id)
-            .subscribe( (res: Sale) => {
-                this.sale = res;
-            });
+    private async addSalesLineItem(id: number) {
+        const [data, error] = await this.saleHelper.addSalesLineItem(this.sale.id, id);
+        if (error) {
+            throw error;
+        }
+        this.sale = error;
     }
 
-    private deleteSalesLineItem(id: number) {
+    private async deleteSalesLineItem(id: number) {
         const salesLineId = this.sale
             .salesLineItems
             .map(line => [line.id, line.bundleSpecification.id])
             .filter(line => line[1] === id)
             .map(line => line[0])[0];
 
-        this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId)
-            .subscribe( (res: Sale) => {
-                this.sale = res;
-            }, err => {
-                this.snackbar.open(err.error.message);
-            });
+        const [data, error] = await this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId);
+        if (error) {
+            this.snackbar.open(error.error.message);
+        }
+        this.sale = data;
     }
 
     private destroy() {
@@ -119,9 +126,17 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     search($event) {
-        this.ds.setQuery($event.query);
+        Object.keys($event).forEach(key => {
+            if ($event[key] === undefined) {
+                delete $event[key];
+            }
+            if ($event[key] === '') {
+                delete $event[key];
+            }
+        });
+        this.ds.setQuery($event);
         this.ds.fetchPage(0);
-        this.updateQueryParams();
+        this.updateQueryParams($event);
     }
 
 
@@ -139,16 +154,12 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         const isSelected = !this.getSelectBundle(spec.id);
         this.selected[spec.id] = isSelected;
 
-
-        if (isSelected) {
-            if (spec.type === BundleType.PERSONAL) {
-                this.addSalesLineItem(spec.id);
-            }
-            if (spec.type === BundleType.COURSE) {
-                await this.openDialog(spec);
-            }
+        if (spec.type === BundleType.COURSE) {
+            await this.openDialog(spec);
+        } else if (isSelected) {
+            await this.addSalesLineItem(spec.id);
         } else {
-            this.deleteSalesLineItem(spec.id);
+            await this.deleteSalesLineItem(spec.id);
         }
 
     }
@@ -165,29 +176,25 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     private async openDialog(spec) {
-        const [bundles, error] = await this.bundleService.searchBySpecIdAndNotExpired({specId: spec.id});
-        if (error) {
-            throw error;
-        }
+        const title = 'Scegli Opzione';
 
-        const title = 'Scegli Edizione';
-
-        const dialogRef = this.dialog.open(BundleSelectModalComponent, {
+        const dialogRef = this.dialog.open(OptionSelectModalComponent, {
             data: {
                 title: title,
                 spec: spec,
                 sale: this.sale,
-                bundles: bundles,
-                selected: this.bundleSelected
+                selected: this.optionsSelected
             }
         });
 
+
         dialogRef.afterClosed().subscribe(res => {
-            console.log(res);
             if (res) {
-                res.forEach((value, key, map) => {
-                    this.bundleSelected[key] = value;
-                });
+                this.sale = res.sale;
+                res = res.selected;
+                for (const key in res) {
+                    this.optionsSelected[key] = res[key];
+                }
 
                 let acc = false;
                 for (const key in res) {

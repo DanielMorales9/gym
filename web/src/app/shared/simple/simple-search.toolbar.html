@@ -1,0 +1,17 @@
+<mat-toolbar color="basic" class="search-toolbar">
+    <form class="search-form">
+        <mat-form-field class="search-font-weight search-input" floatLabel="never">
+            <label class="sr-only" for="search-input">{{text}}</label>
+            <input matInput
+                   type="text"
+                   title="{{text}}"
+                   placeholder="{{text}}"
+                   id="search-input"
+                   name="query"
+                   [(ngModel)]="query.name"/>
+            <button mat-button matSuffix type="submit" (click)="emit()">
+                <mat-icon>search</mat-icon>
+            </button>
+        </mat-form-field>
+    </form>
+</mat-toolbar>

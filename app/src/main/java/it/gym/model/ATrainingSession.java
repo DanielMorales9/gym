@@ -72,6 +72,7 @@ public abstract class ATrainingSession {
         this.id = id;
     }
 
+    @JsonIgnore
     public ATrainingBundle getTrainingBundle() {
         return trainingBundle;
     }

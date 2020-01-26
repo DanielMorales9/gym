@@ -13,12 +13,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
 
+import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -79,70 +79,37 @@ public class SaleFacadeTest {
     @Test
     public void addSalesLineItem() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        ATrainingBundleSpecification mockBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification mockBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
         mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItem(1L, 1L);
+        Sale sale = saleFacade.addSalesLineItem(1L, 1L, null);
         assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
         assertThat(sale.getTotalPrice()).isEqualTo(111.0);
     }
 
     @Test
     public void addCourseBundleToSalesLineItem() {
-        Date start = getNextMonday();
-
         Customer customer = createCustomer(1L,
-                "customer@customer.com", "",
-                "customer", "customer", true, null);
+                "customer@customer.com",
+                "",
+                "customer",
+                "customer",
+                true,
+                null);
         Sale mockSale = createSale(1L, customer);
-        ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
-                "course", 11, 1);
-        ATrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec);
+        CourseTrainingBundleSpecification bundleSpec = createCourseBundleSpec(1L,
+                "course", 11, 1, 111.);
+        TimeOption option = bundleSpec.getOptions().toArray(new TimeOption[]{})[0];
 
-        Mockito.doReturn(bundle).when(bundleService).findById(1L);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
-        Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
+        Mockito.doReturn(bundleSpec).when(bundleSpecService).findById(1L);
 
         mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItemByBundle(1L, 1L);
+        Sale sale = saleFacade.addSalesLineItem(1L, 1L, option.getId());
 
         assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
-        assertThat(sale.getSalesLineItems().get(0).getTrainingBundle()).isEqualTo(bundle);
         assertThat(sale.getTotalPrice()).isEqualTo(111.0);
-    }
-
-    @Test
-    public void addCourseBundleToSalesLineItemAlreadyCreated() {
-        Date start = getNextMonday();
-
-        Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
-        Sale mockSale = createSale(1L, customer);
-
-        ATrainingBundleSpecification mockBundleSpec = createCourseBundleSpec(1L,
-                "course", 11, 1);
-        ATrainingBundle bundle = createCourseBundle(1L, start, mockBundleSpec);
-        Mockito.doReturn(bundle).when(bundleService).findById(1L);
-        Mockito.doReturn(mockSale).when(saleService).findById(1L);
-        Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
-
-        mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItemByBundle(1L, 1L);
-
-        assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
-        assertThat(sale.getSalesLineItems().get(0).getTrainingBundle()).isEqualTo(bundle);
-        assertThat(sale.getTotalPrice()).isEqualTo(111.0);
-    }
-
-    private static Date getNextMonday() {
-        Calendar date = Calendar.getInstance(Locale.ITALIAN);
-        date.set(Calendar.HOUR_OF_DAY, 8);
-        int diff = Calendar.MONDAY - date.get(Calendar.DAY_OF_WEEK);
-        if (diff <= 0) {
-            diff += 7;
-        }
-        date.add(Calendar.DAY_OF_MONTH, diff);
-        return date.getTime();
     }
 
     @Test
@@ -183,9 +150,14 @@ public class SaleFacadeTest {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
         customer.setCurrentTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
-        addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", 11));
+        PersonalTrainingBundleSpecification bundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        addSalesLineItem(mockSale, bundleSpec);
         ATrainingBundle trainingBundle = mockSale.getSalesLineItems().get(0).getTrainingBundle();
-        ATrainingSession session = trainingBundle.createSession(addHours(new Date(), -2), addHours(new Date(), -1));
+
+        Date start = addDays(getNextMonday(), -7);
+        Date end = addHours(start, 1);
+        PersonalTrainingEvent event = createPersonalEvent(1L, "personal", start, end);
+        ATrainingSession session = trainingBundle.createSession(event);
         trainingBundle.addSession(session);
         session.complete();
         Mockito.doReturn(mockSale).when(saleService).findById(1L);

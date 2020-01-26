@@ -17,12 +17,12 @@ import {
 import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
 import {
     BundleSpecHelperService,
-    BundleSpecPayHelperService,
     SaleHelperService,
     UserHelperService,
     BundleHelperService, BundleCustomerHelperService,
 } from './helpers';
 import {PolicyService} from './policy';
+import {CalendarFacade} from './facades';
 
 
 @NgModule({
@@ -43,6 +43,7 @@ import {PolicyService} from './policy';
             provide: HttpClient,
             useClass: HttpService
         },
+        CalendarFacade,
         HttpCacheService,
         ApiPrefixInterceptor,
         CacheInterceptor,
@@ -67,7 +68,6 @@ import {PolicyService} from './policy';
         UserHelperService,
         BundleSpecHelperService,
         BundleHelperService,
-        BundleSpecPayHelperService,
         BundleCustomerHelperService,
         PolicyService
     ]

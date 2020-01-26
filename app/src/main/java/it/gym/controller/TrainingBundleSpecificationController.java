@@ -5,6 +5,7 @@ import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.hateoas.TrainingBundleSpecificationAssembler;
 import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.TimeOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @RepositoryRestController
 @RequestMapping("/bundleSpecs")
@@ -46,6 +48,13 @@ public class TrainingBundleSpecificationController {
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 
+    @PostMapping(path = "/{id}/option")
+    public ResponseEntity<TrainingBundleSpecificationResource> createOption(@PathVariable Long id,
+                                                                            @RequestBody TimeOption option) {
+        ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+    }
+
     @PatchMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
                                                               HttpServletRequest request) throws IOException {
@@ -69,16 +78,9 @@ public class TrainingBundleSpecificationController {
         return facade.findByNameContains(name, disabled, pageable);
     }
 
-    @GetMapping(path = "/searchNotDisabled")
+    @GetMapping(path = "/list")
     @ResponseBody
-    public Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
-        // TODO deprecate and substitute call with /search
-        return facade.findByNameContainsAndIsDisabled(query, false, pageable);
-    }
-
-    @GetMapping(path = "/getNotDisabled")
-    @ResponseBody
-    public Page<ATrainingBundleSpecification> getNotDisabled(Pageable pageable) {
-        return facade.findByIsDisabled(false, pageable);
+    public List<ATrainingBundleSpecification> list(@RequestParam(required = false) Boolean disabled) {
+        return facade.findByIsDisabled(disabled);
     }
 }

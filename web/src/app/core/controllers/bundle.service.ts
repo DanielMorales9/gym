@@ -20,18 +20,9 @@ export class BundleService {
         return this.http.get(`/bundles/search`, {params: query});
     }
 
-    getCourses(startTime: string, endTime: string): Observable<any> {
-        return this.http.get(`/bundles/courses?startTime=${startTime}&endTime=${endTime}`);
-    }
-
     @to_promise
     findById(id: number): any {
         return this.http.get(`/bundles/${id}`);
-    }
-
-    @to_promise
-    post(params: any): any {
-        return this.http.post(`/bundles`, params);
     }
 
     @to_promise
@@ -44,8 +35,4 @@ export class BundleService {
         return this.http.patch(`/bundles/${bundle.id}`, bundle);
     }
 
-    @to_promise
-    searchBySpecIdAndNotExpired(query: any): any {
-        return this.http.get(`/bundles/searchNotExpired`, {params: query});
-    }
 }

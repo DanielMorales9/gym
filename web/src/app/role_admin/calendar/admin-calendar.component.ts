@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {EVENT_TYPES} from '../../shared/components/calendar/event-types.enum';
+import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
-import {BaseCalendar} from '../../shared/components/calendar';
+import {BaseCalendar} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {AdminHeaderModalComponent} from './admin-header-modal.component';
@@ -66,18 +66,20 @@ export class AdminCalendarComponent extends BaseCalendar {
         this.openModal(action);
     }
 
-    hour(action: string, event: any) {
-        this.facade.getCourses(event.date).subscribe(courses => {
-            event.courses = courses;
-            this.modalData = {
-                action: EVENT_TYPES.HOUR,
-                title: 'Crea Evento',
-                userId: this.user.id,
-                role: this.role,
-                event: event
-            };
-            this.openModal(action);
-        }, err => this.snackBar.open(err.error.message));
+    async hour(action: string, event: any) {
+        const [data, error] = await this.facade.getCourses();
+        if (error) {
+            return this.snackBar.open(error.error.message);
+        }
+        event.courses = data;
+        this.modalData = {
+            action: EVENT_TYPES.HOUR,
+            title: 'Crea Evento',
+            userId: this.user.id,
+            role: this.role,
+            event: event
+        };
+        this.openModal(action);
 
     }
 
@@ -151,7 +153,6 @@ export class AdminCalendarComponent extends BaseCalendar {
             if (!!data) {
                 const end = this.dateService.addHour(data.start);
                 if (!!data.meta) {
-                    console.log(data);
                     this.createCourseEvent(data, end);
                 } else {
                     await this.createHoliday(data, end);
@@ -293,7 +294,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     private createCourseEvent(data: any, end: Date) {
         this.facade.createCourseEvent(data.eventName, data.meta, data.start, end)
             .subscribe(async (_) => {
-                this.snackBar.open('Evento confermato');
+                this.snackBar.open('Evento creato');
                 await this.getEvents();
             }, (err) => {
                 this.snackBar.open(err.error.message);

@@ -25,7 +25,7 @@ export class BundleSpecHelperService extends HelperService<BundleSpecification> 
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {
         let observable;
-        if (query === undefined || query === '') {
+        if (query === undefined) {
             observable = this.get(page, size);
         } else {
             observable = this.search(query, page, size);

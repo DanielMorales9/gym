@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {BaseCalendar} from '../../shared/components/calendar';
-import {EVENT_TYPES} from '../../shared/components/calendar/event-types.enum';
+import {BaseCalendar} from '../../shared/calendar';
+import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TrainerInfoModalComponent} from './trainer-info-modal.component';
@@ -96,7 +96,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
         this.openModal(action);
     }
 
-    hour(action: string, event: any) {
+    async hour(action: string, event: any) {
         this.facade.isTimeOffAvailable(new Date(event.date))
             .subscribe(res => {
                 this.modalData = {

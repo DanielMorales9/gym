@@ -1,5 +1,5 @@
 import {Component, Inject} from '@angular/core';
-import {BaseCalendarModal} from '../../shared/components/calendar';
+import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({

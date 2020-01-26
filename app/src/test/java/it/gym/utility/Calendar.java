@@ -3,11 +3,12 @@ package it.gym.utility;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 public class Calendar {
 
     public static Date getNextMonday() {
-        java.util.Calendar date = java.util.Calendar.getInstance(Locale.ITALIAN);
+        java.util.Calendar date = java.util.Calendar.getInstance(TimeZone.getTimeZone("UTC"));
         date.set(java.util.Calendar.HOUR_OF_DAY, 8);
         int diff = java.util.Calendar.MONDAY - date.get(java.util.Calendar.DAY_OF_WEEK);
         if (diff <= 0) {

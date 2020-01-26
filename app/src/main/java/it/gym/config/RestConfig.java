@@ -3,17 +3,13 @@ package it.gym.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import it.gym.model.*;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.mapping.RepositoryDetectionStrategy;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurerAdapter;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
-
-import java.util.Set;
 
 @Component
 public class RestConfig extends RepositoryRestConfigurerAdapter {
@@ -54,8 +50,8 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
                 Payment.class,
                 AEvent.class,
                 ATrainingEvent.class,
-                CourseEvent.class,
-                PersonalEvent.class,
+                CourseTrainingEvent.class,
+                PersonalTrainingEvent.class,
                 Holiday.class,
                 TimeOff.class,
                 Gym.class,
@@ -66,6 +62,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
                 CourseTrainingBundleSpecification.class,
                 CourseTrainingBundle.class,
                 CourseTrainingSession.class,
+                TimeOption.class,
                 PersonalTrainingBundleSpecification.class,
                 PersonalTrainingBundle.class,
                 PersonalTrainingSession.class,

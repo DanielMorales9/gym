@@ -50,4 +50,10 @@ export class UserService {
         query['size'] = size;
         return this.http.get('/customers/bundles', {params: query});
     }
+
+    @to_promise
+    getBundleBySpecId(userId: number, specId: any): any {
+        return this.http.get(`/customers/${userId}/currentTrainingBundles`,
+            {params: {specId: specId}});
+    }
 }

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/customers")
@@ -53,6 +54,16 @@ public class CustomerController {
                                                      iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                              Pageable pageable) {
         return service.findBundles(id, expired, name, date, pageable);
+    }
+
+    @GetMapping(path = "/{id}/currentTrainingBundles")
+    @ResponseBody
+    public List<ATrainingBundle> findBundles(@PathVariable Long id,
+                                             @RequestParam Long specId) {
+        return service.findById(id).getCurrentTrainingBundles()
+                .stream()
+                .filter(b -> b.getBundleSpec().getId().equals(specId))
+                .collect(Collectors.toList());
     }
 
 }

@@ -3,9 +3,9 @@ package it.gym.integration;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.*;
-import org.junit.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -15,16 +15,14 @@ import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.*;
+import static it.gym.utility.HateoasTest.expectAdminRoles;
+import static it.gym.utility.HateoasTest.expectUser;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class UserControllerIntegrationTest extends AbstractIntegrationTest {
-
-    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired private UserRepository repository;
     @Autowired private VerificationTokenRepository tokenRepository;
@@ -34,14 +32,13 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Autowired private TrainingBundleRepository bundleRepository;
 
     private Admin admin;
-    private Gym gym;
     private List<Role> roles;
 
     @Before
     public void before() {
-        gym = createGym(1L);
+        Gym gym = createGym(1L);
         roles = createAdminRoles();
-        gym = gymRepository.save(gym);
+        gymRepository.save(gym);
         roles = roleRepository.saveAll(roles);
         admin = createAdmin(1L, "admin@admin.com", roles);
         admin = repository.save(admin);
@@ -62,7 +59,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users"))
                 .andExpect(status().isOk());
         for (int i = 0; i < 1; i++) {
-            expectAdmin(result, admin, "content["+i+"]");
+            expectUser(result, admin, "content["+i+"]");
             expectAdminRoles(result, roles, "content["+i+"].roles");
         }
     }
@@ -71,7 +68,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     public void findUserId_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/" + admin.getId()))
                 .andExpect(status().isOk());
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -80,8 +77,8 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/users/search?query=" + admin.getLastName()))
                 .andExpect(status().isOk());
 
-        expectAdmin(result, admin, "content["+0+"]");
-        expectAdmin(result, admin, "content["+0+"]");
+        expectUser(result, admin, "content["+0+"]");
+        expectUser(result, admin, "content["+0+"]");
         expectAdminRoles(result, roles, "content["+0+"].roles");
     }
 
@@ -92,18 +89,11 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         expectAdminRoles(result, roles);
     }
 
-//    @Test
-//    public void getGymByUserId_OK() throws Exception {
-//        ResultActions result = mockMvc.perform(get("/users/" + admin.getId() + "/gym"))
-//                .andExpect(status().isOk());
-//        expectGym(result, gym);
-//    }
-
     @Test
     public void findByEmail_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/users/findByEmail?email=" + admin.getEmail()))
                 .andExpect(status().isOk());
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -115,7 +105,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(admin)))
                 .andExpect(status().isOk());
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -130,7 +120,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void deleteByUserId_throwsException() throws Exception {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
-        ATrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
         spec = bundleSpecRepository.save(spec);
         ATrainingBundle bundle = spec.createTrainingBundle();
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));

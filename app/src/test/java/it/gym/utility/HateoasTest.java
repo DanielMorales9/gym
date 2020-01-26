@@ -3,19 +3,22 @@ package it.gym.utility;
 import it.gym.model.*;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class HateoasTest {
 
-    public static void expectAdmin(ResultActions result, Admin admin, String p) throws Exception {
+    public static void expectUser(ResultActions result, Admin admin, String p) throws Exception {
         String prefix = handlePrefix(p);
-        expectUser(result, admin, prefix);
+        expectAUser(result, admin, prefix);
     }
 
-    public static void expectAdmin(ResultActions result, Admin admin) throws Exception {
-        expectAdmin(result, admin, null);
+    public static void expectUser(ResultActions result, Admin admin) throws Exception {
+        expectUser(result, admin, null);
     }
 
     public static void expectAdminRoles(ResultActions result, List<Role> roles) throws Exception {
@@ -27,8 +30,8 @@ public class HateoasTest {
 
         for (int i = 0; i < 3; i++) {
             result
-                    .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
-                    .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
+                .andExpect(jsonPath("$"+prefix+"["+i+"].id").value(roles.get(i).getId()))
+                .andExpect(jsonPath("$"+prefix+"["+i+"].name").value(roles.get(i).getName()));
         }
 
     }
@@ -57,7 +60,8 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"thursdayOpen").value(gym.isThursdayOpen()))
                 .andExpect(jsonPath("$"+prefix+"fridayOpen").value(gym.isFridayOpen()))
                 .andExpect(jsonPath("$"+prefix+"saturdayOpen").value(gym.isSaturdayOpen()))
-                .andExpect(jsonPath("$"+prefix+"sundayOpen").value(gym.isSundayOpen()));
+                .andExpect(jsonPath("$"+prefix+"sundayOpen").value(gym.isSundayOpen()))
+                .andExpect(jsonPath("$"+prefix+"reservationBeforeHours").value(gym.getReservationBeforeHours()));
     }
 
     public static void expectGym(ResultActions result, Gym gym) throws Exception {
@@ -102,7 +106,6 @@ public class HateoasTest {
         result
                 .andExpect(jsonPath("$"+prefix+"id").value(bundle.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(bundle.getName()))
-                .andExpect(jsonPath("$"+prefix+"price").value(bundle.getPrice()))
                 .andExpect(jsonPath("$"+prefix+"disabled").value(bundle.getDisabled()))
                 .andExpect(jsonPath("$"+prefix+"description").value(bundle.getDescription()));
     }
@@ -126,7 +129,6 @@ public class HateoasTest {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
         result
-                .andExpect(jsonPath("$"+prefix+"number").value(bundle.getNumber()))
                 .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()));
     }
 
@@ -145,19 +147,19 @@ public class HateoasTest {
 
     }
 
-    public static void expectCustomer(ResultActions result, Customer customer, String p) throws Exception {
+    public static void expectUser(ResultActions result, Customer customer, String p) throws Exception {
         String prefix = handlePrefix(p, false);
-        expectUser(result, customer, prefix);
+        expectAUser(result, customer, prefix);
         result
                 .andExpect(jsonPath("$"+prefix+"height").value(customer.getHeight()))
                 .andExpect(jsonPath("$"+prefix+"weight").value(customer.getWeight()));
     }
 
-    public static void expectCustomer(ResultActions result, Customer customer) throws Exception {
-        expectCustomer(result, customer, null);
+    public static void expectUser(ResultActions result, Customer customer) throws Exception {
+        expectUser(result, customer, null);
     }
 
-    public static void expectUser(ResultActions result, AUser user, String p) throws Exception {
+    public static void expectAUser(ResultActions result, AUser user, String p) throws Exception {
         String prefix = handlePrefix(p);
         result
                 .andExpect(jsonPath("$"+prefix+"id").value(user.getId()))
@@ -167,15 +169,36 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"verified")  .value(user.isVerified()));
     }
 
-    public static void expectedSalesLineItem(ResultActions result, SalesLineItem expected) throws Exception {
-        expectedSalesLineItem(result, expected, null);
-    }
-
     public static void expectedSalesLineItem(ResultActions result,
                                              SalesLineItem expected,
                                              String p) throws Exception {
         String prefix = handlePrefix(p);
         result.andExpect(jsonPath("$"+prefix+"id").value(expected.getId()));
+        switch (expected.getTrainingBundle().getType()) {
+            case "P":
+                expectTrainingBundle(result, (PersonalTrainingBundle)
+                        expected.getTrainingBundle(), prefix+"trainingBundle");
+                break;
+            case "C":
+                expectTrainingBundle(result, (CourseTrainingBundle)
+                        expected.getTrainingBundle(), prefix+"trainingBundle");
+                break;
+            default:
+                break;
+        }
+
+        switch (expected.getBundleSpecification().getType()) {
+            case "P":
+                expectTrainingBundleSpec(result, (PersonalTrainingBundleSpecification)
+                        expected.getBundleSpecification(), prefix+"bundleSpecification");
+                break;
+            case "C":
+                expectTrainingBundleSpec(result, (CourseTrainingBundleSpecification)
+                        expected.getBundleSpecification(), prefix+"bundleSpecification");
+                break;
+            default:
+                break;
+        }
     }
 
     private static void expectATrainingBundle(ResultActions result,
@@ -201,7 +224,6 @@ public class HateoasTest {
                                             CourseTrainingBundle trainingBundle,
                                             String p) throws Exception {
         String prefix = handlePrefix(p);
-        // TODO expect startTime and endTime
         expectATrainingBundle(result, trainingBundle, prefix);
     }
 
@@ -222,11 +244,30 @@ public class HateoasTest {
         expectEvent(result, event, null);
     }
 
+    private static String format(Date d) {
+        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
+        fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return fmt.format(d);
+    }
+
     private static void expectEvent(ResultActions result, AEvent event, String p) throws Exception {
+
         String prefix = handlePrefix(p);
         result.andExpect(jsonPath("$"+prefix+"id").value(event.getId()))
-                .andExpect(jsonPath("$"+prefix+"name").value(event.getName()));
+                .andExpect(jsonPath("$"+prefix+"name").value(event.getName()))
+                .andExpect(jsonPath("$"+prefix+"startTime").value(format(event.getStartTime())))
+                .andExpect(jsonPath("$"+prefix+"endTime").value(format(event.getEndTime())))
+                .andExpect(jsonPath("$"+prefix+"type").value(event.getType()));
+
+        if ("T".equals(event.getType())) {
+            expectEvent(result, (TimeOff) event, prefix);
+        }
     }
+
+    private static void expectEvent(ResultActions result, TimeOff event, String prefix) throws Exception {
+        expectAUser(result, event.getUser(), prefix+"user");
+    }
+
 
     public static void expectReservation(ResultActions result, Reservation reservation) throws Exception {
         expectReservation(result, reservation, null);
@@ -245,4 +286,15 @@ public class HateoasTest {
 
     }
 
+    public static void expectOption(ResultActions result, TimeOption timeOption) throws Exception {
+        expectOption(result, timeOption, null);
+    }
+
+    public static void expectOption(ResultActions result, TimeOption timeOption, String p) throws Exception {
+        String prefix = handlePrefix(p);
+        result.andExpect(jsonPath("$"+prefix+"id").value(timeOption.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(timeOption.getName()))
+                .andExpect(jsonPath("$"+prefix+"price").value(timeOption.getPrice()))
+                .andExpect(jsonPath("$"+prefix+"number").value(timeOption.getNumber()));
+    }
 }

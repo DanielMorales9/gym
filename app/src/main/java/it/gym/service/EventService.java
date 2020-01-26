@@ -27,7 +27,6 @@ public class EventService implements ICrudService<AEvent, Long> {
     @Autowired
     private TrainingEventRepository trainingRepository;
 
-
     @Autowired
     private CourseEventRepository courseRepository;
 

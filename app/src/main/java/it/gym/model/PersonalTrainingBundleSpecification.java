@@ -17,6 +17,9 @@ import javax.persistence.Entity;
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecification {
 
+    @Column(name = "price", nullable = false)
+    protected Double price;
+
     @Column(name="num_sessions")
     private Integer numSessions;
 
@@ -33,12 +36,19 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
         return "P";
     }
 
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
+    }
+
     @Override
     public ATrainingBundle createTrainingBundle() {
         PersonalTrainingBundle ptb = new PersonalTrainingBundle();
         ptb.setName(this.getName());
         ptb.setBundleSpec(this);
-        ptb.setExpired(false);
         return ptb;
     }
 

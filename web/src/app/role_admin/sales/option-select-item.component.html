@@ -1,0 +1,22 @@
+<mat-card class="mat-card-option">
+    <mat-card-header>
+        <mat-card-title>
+            {{option?.name || 'Loading...'}}
+        </mat-card-title>
+        <mat-checkbox class="card-list-checkbox"
+                      (change)="selectOption()"
+                      [checked]="selected">
+        </mat-checkbox>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="card-list-content">
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-history"></mat-icon>&nbsp;Numero di mesi {{option?.number}}
+            </div>
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-money-check-alt"></mat-icon>&nbsp;Prezzo {{option?.price}}&euro;
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>

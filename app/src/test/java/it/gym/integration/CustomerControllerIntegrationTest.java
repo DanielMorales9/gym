@@ -50,7 +50,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 true,
                 roles
         );
-        ATrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         personalSpec = bundleSpecRepository.save(personalSpec);
         personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle();
         personal = bundleRepository.save(personal);
@@ -73,7 +73,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void whenSearchCustomers_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/customers")).andExpect(status().isOk());
-        expectCustomer(result, customer, "content[0]");
+        expectUser(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
@@ -86,7 +86,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenSearchCustomersByLastName_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/customers/search?query="+customer.getLastName()))
                 .andExpect(status().isOk());
-        expectCustomer(result, customer, "content[0]");
+        expectUser(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
@@ -100,7 +100,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenSearch_OK() throws Exception {
         ResultActions result = mockMvc.perform(get("/customers/search?query="+customer.getLastName()))
                 .andExpect(status().isOk());
-        expectCustomer(result, customer, "content[0]");
+        expectUser(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
         List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
         for (int i = 0; i < bundles.size(); i++) {
