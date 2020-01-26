@@ -259,12 +259,8 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"endTime").value(format(event.getEndTime())))
                 .andExpect(jsonPath("$"+prefix+"type").value(event.getType()));
 
-        switch (event.getType()) {
-            case "T":
-                expectEvent(result, (TimeOff) event, prefix);
-                break;
-            default:
-                break;
+        if ("T".equals(event.getType())) {
+            expectEvent(result, (TimeOff) event, prefix);
         }
     }
 
