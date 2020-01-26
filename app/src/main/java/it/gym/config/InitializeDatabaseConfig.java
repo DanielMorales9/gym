@@ -57,6 +57,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     private GymService gymService;
 
     @Autowired
+    @Qualifier("trainingBundleSpecificationFacade")
     private TrainingBundleSpecificationFacade specService;
 
     @Autowired
@@ -214,6 +215,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     private Gym createGym() {
         Gym gym = new Gym();
         gym.setName("MyGym");
+        gym.setReservationBeforeHours(6);
         gym.setMondayStartHour(8);
         gym.setMondayEndHour(22);
         gym.setMondayOpen(true);

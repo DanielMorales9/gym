@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
-import {EVENT_TYPES} from '../../shared/components/calendar/event-types.enum';
+import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
-import {BaseCalendar} from '../../shared/components/calendar';
+import {BaseCalendar} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {AdminHeaderModalComponent} from './admin-header-modal.component';

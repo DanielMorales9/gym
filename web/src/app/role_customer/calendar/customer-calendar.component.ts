@@ -4,7 +4,7 @@ import {
     CustomerDeleteModalComponent,
     CustomerHourModalComponent,
     CustomerInfoModalComponent
-} from '../../shared/components/calendar';
+} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';

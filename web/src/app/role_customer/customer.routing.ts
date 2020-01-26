@@ -1,9 +1,9 @@
 import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CustomerCalendarComponent} from './calendar';
-import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
-import {BundleSpecDetailsComponent} from '../shared/components/bundle-specs';
-import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/components/bundles';
+import {SaleDetailsComponent, SalesComponent} from '../shared/sales';
+import {BundleSpecDetailsComponent} from '../shared/bundle-specs';
+import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
 
 const routes = [
     { path: '', children : [

@@ -3,7 +3,7 @@ import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
-import {SharedModule} from './shared';
+import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
 import {AppService, AuthenticatedService, GlobalErrorHandler, GymService} from './services';
 import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
