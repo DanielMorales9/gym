@@ -272,10 +272,6 @@ public class HateoasTest {
         expectAUser(result, event.getUser(), prefix+"user");
     }
 
-    private static void expectEvent(ResultActions result, CourseTrainingEvent event, String prefix) throws Exception {
-
-    }
-
 
     public static void expectReservation(ResultActions result, Reservation reservation) throws Exception {
         expectReservation(result, reservation, null);
