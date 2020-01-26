@@ -28,16 +28,6 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
 
-logging:
-  level:
-    root: info
-    org.springframework.beans: off
-    org.springframework.web: info
-    org.springframework.security: info
-    org.springframework.http: info
-    org.flywaydb: info
-    it.gym: info
-
 server:
   port: 80
   use-forward-headers: true
@@ -58,6 +48,17 @@ schema: ${APP_NAME}
 
 spring:
   profiles: prod
+
+logging:
+  level:
+    root: info
+    org.springframework.beans: off
+    org.springframework.web: info
+    org.springframework.security: info
+    org.springframework.http: info
+    org.flywaydb: info
+    it.gym: info
+
 ---
 
 spring:
@@ -66,8 +67,6 @@ spring:
 logging:
   level:
     root: info
-    org.springframework.web: info
-    org.springframework.security: info
-    org.springframework.http: debug
-    org.flywaydb: debug
+    org.springframework.beans: off
+    org.springframework.web: debug
     it.gym: debug

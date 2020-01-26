@@ -161,6 +161,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setDisabled(false);
         TimeOption option = new TimeOption();
         option.setPrice(111.0);
+        option.setName("option");
         option.setNumber(1);
         p.addOption(option);
         p.setMaxCustomers(11);

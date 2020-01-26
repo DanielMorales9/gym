@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
@@ -74,6 +75,9 @@ public abstract class AUser implements DefaultRoles {
     private List<Role> roles;
 
     public abstract String getType();
+
+    @JsonIgnore
+    public abstract boolean isActive();
 
     @PrePersist
     protected void prePersist() {
@@ -153,7 +157,5 @@ public abstract class AUser implements DefaultRoles {
     public void setVerified(boolean verified) {
         isVerified = verified;
     }
-
-    public abstract boolean isActive();
 
 }

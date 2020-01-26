@@ -14,7 +14,6 @@ import java.util.Objects;
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = AEvent.class)
-@Data
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingEvent extends ATrainingEvent {
 

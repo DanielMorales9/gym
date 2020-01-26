@@ -13,18 +13,6 @@ import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        property = "type",
-        visible = true)
-@JsonSubTypes({
-        @JsonSubTypes.Type(value = PersonalTrainingEvent.class, name="P"),
-        @JsonSubTypes.Type(value = CourseTrainingEvent.class, name="C"),
-})
-@RestResource(path="events")
-@Table(name="events")
-@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)

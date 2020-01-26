@@ -17,6 +17,8 @@ import java.util.Objects;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TimeOff.class, name="T"),
         @JsonSubTypes.Type(value = Holiday.class, name="H"),
+        @JsonSubTypes.Type(value = PersonalTrainingEvent.class, name="P"),
+        @JsonSubTypes.Type(value = CourseTrainingEvent.class, name="C"),
 })
 @Entity
 @RestResource(path="events")
