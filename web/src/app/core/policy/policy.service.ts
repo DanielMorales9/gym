@@ -74,9 +74,6 @@ export class PolicyService {
             canEdit: false,
             canDisable: false,
             canCreate: false,
-            canShow: {
-                editions: true
-            }
         },
         sale: {
             canDelete: false,
@@ -136,9 +133,6 @@ export class PolicyService {
             canCreate: false,
             canEdit: false,
             canDisable: false,
-            canShow: {
-                editions: false
-            }
         },
         sale: {
             canDelete: false,

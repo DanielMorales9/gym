@@ -26,6 +26,7 @@ export class SaleDetailsComponent implements OnInit {
     hidden: boolean;
     canPay: boolean;
     canDelete: boolean;
+
     expand = new Proxy({}, {
         get: (target, name) => name in target ? target[name] : false
     });

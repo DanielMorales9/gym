@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../core/controllers';
-import {BundleSpecification, BundleType} from '../model';
+import {BundleSpecification, BundleType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
@@ -9,17 +9,17 @@ import {PolicyService} from '../../core/policy';
 @Component({
     selector: 'bundle-spec-details',
     templateUrl: './bundle-spec-details.component.html',
-    styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
+    styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
 })
 export class BundleSpecDetailsComponent implements OnInit {
     PERSONAL = BundleType.PERSONAL;
     COURSE   = BundleType.COURSE;
 
-    bundleSpec: any;
+    bundleSpec: CourseBundleSpecification|PersonalBundleSpecification;
 
     canDelete: boolean;
     canDisable: boolean;
-    canShowEditions: boolean;
+    displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'date'];
 
     constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
@@ -38,8 +38,6 @@ export class BundleSpecDetailsComponent implements OnInit {
     private getPolicies() {
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
-        this.canShowEditions = this.policy.get('bundleSpec', 'canShow', 'editions')
-            && this.bundleSpec.type === 'C';
     }
 
     editBundle(): void {
@@ -54,7 +52,7 @@ export class BundleSpecDetailsComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.service.patch(res).subscribe((v: BundleSpecification) => this.bundleSpec = v);
+                this.service.patch(res).subscribe((v: CourseBundleSpecification|PersonalBundleSpecification) => this.bundleSpec = v);
             }
         });
     }
@@ -92,12 +90,5 @@ export class BundleSpecDetailsComponent implements OnInit {
                 break;
         }
         return name;
-    }
-
-    goToEditions() {
-        this.router.navigate(['bundles'],
-            {queryParams: {
-                    specId: this.bundleSpec.id
-                }, relativeTo: this.route.parent});
     }
 }
