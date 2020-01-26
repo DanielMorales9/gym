@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+wget "https://archive.apache.org/dist/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.zip"
+unzip -qq "apache-maven-${MVN_VERSION}-bin.zip"
+
 if [[ "${TRAVIS_BRANCH}" = "master" ]]; then
     echo "========================="
     echo "|  Installing AWS-CLI   |"
