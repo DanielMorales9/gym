@@ -100,12 +100,14 @@ public class EventController {
 
     @PostMapping(path = "/{gymId}/course")
     public ResponseEntity<EventResource> createCourseEvent(@PathVariable Long gymId,
-                                                    @RequestBody Event event) {
-        logger.info("Create course event");
+                                                           @RequestBody Event event) {
+        logger.debug("Creating CourseEvent");
 
-        AEvent timeOff = facade.createCourseEvent(gymId, event);
+        AEvent course = facade.createCourseEvent(gymId, event);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+        logger.info("Returning CourseEvent");
+        logger.info(course.toString());
+        return ResponseEntity.ok(new EventAssembler().toResource(course));
 
     }
 
@@ -113,7 +115,7 @@ public class EventController {
     public ResponseEntity<EventResource> deleteCourseEvent(@PathVariable Long id) {
         logger.info("Deleting course event");
 
-        AEvent timeOff = facade.deleteCourseEvent(id);
+        AEvent timeOff = facade.deleteEvent(id);
 
         return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
 

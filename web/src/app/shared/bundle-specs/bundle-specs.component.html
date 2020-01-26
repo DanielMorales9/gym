@@ -1,0 +1,20 @@
+<filter-search
+        [filters]="filters"
+        [filterName]="filterName"
+        [selected]="selected"
+        [query]="query" text="Cerca pacchetti" (done)="search($event)">
+</filter-search>
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
+
+    <div *cdkVirtualFor="let b of ds;" class="scroll-item">
+        <bundle-spec-item [bundleSpec]="b"
+                          [canDelete]="canDelete"
+                          [canDisable]="canDisable"
+                          (done)="handleEvent($event)"></bundle-spec-item>
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+<button *ngIf="canCreate" type="button" mat-fab color="primary" class="fab-button-add"
+        title="Aggiungi Pacchetto" (click)="openDialog()">
+    <mat-icon>add</mat-icon>
+</button>

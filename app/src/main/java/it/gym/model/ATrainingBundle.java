@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -26,7 +26,6 @@ import java.util.List;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
-@EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
 public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
@@ -40,9 +39,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "is_expired")
-    private Boolean isExpired;
-
     @Column(name = "createdat", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -55,11 +51,16 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     private List<ATrainingSession> sessions;
 
     public abstract String getType();
-    public abstract Boolean isExpired();
     public abstract Boolean isDeletable();
+
     @JsonIgnore
-    public abstract boolean isNotGroup();
-    public abstract ATrainingSession createSession(Date startTime, Date endTime);
+    public abstract Boolean isExpired();
+    @JsonIgnore
+    public abstract Double getPrice();
+
+    public abstract ATrainingSession createSession(ATrainingEvent event);
+    public abstract boolean assignOption(Long optionId);
+
     public abstract void addSession(ATrainingSession session);
 
     public Long getId() {
@@ -76,14 +77,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     public void setBundleSpec(ATrainingBundleSpecification bundleSpec) {
         this.bundleSpec = bundleSpec;
-    }
-
-    public Boolean getExpired() {
-        return isExpired;
-    }
-
-    public void setExpired(Boolean expired) {
-        isExpired = expired;
     }
 
     public List<ATrainingSession> getSessions() {
@@ -115,5 +108,22 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         this.createdAt = new Date();
     }
 
-    public abstract void update();
+    @Override
+    public String toString() {
+        return "id=" + id + ", name='" + name + ", createdAt=" + createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ATrainingBundle that = (ATrainingBundle) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name);
+    }
 }

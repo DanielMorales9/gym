@@ -76,7 +76,7 @@ public class Fixture {
         return sale;
     }
 
-    public static ATrainingBundleSpecification createPersonalBundleSpec(long id, String name, int numSessions) {
+    public static PersonalTrainingBundleSpecification createPersonalBundleSpec(long id, String name, int numSessions) {
         PersonalTrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
         specs.setId(id);
         specs.setName(name);
@@ -97,7 +97,7 @@ public class Fixture {
         return pt;
     }
 
-    public static ATrainingBundle createPersonalBundle(long id, ATrainingBundleSpecification spec) {
+    public static PersonalTrainingBundle createPersonalBundle(long id, ATrainingBundleSpecification spec) {
         PersonalTrainingBundle pt = new PersonalTrainingBundle();
         pt.setName("Winter Pack");
         pt.setBundleSpec(spec);
@@ -151,15 +151,27 @@ public class Fixture {
         return res;
     }
 
-    public static CourseEvent createCourseEvent(long id, String name, ATrainingSession session) {
-        CourseEvent course = new CourseEvent();
+    public static CourseTrainingEvent createCourseEvent(long id, String name, Date startTime, Date endTime,
+                                                        CourseTrainingBundleSpecification specification) {
+        CourseTrainingEvent course = new CourseTrainingEvent();
         course.setId(id);
-        course.setStartTime(session.getStartTime());
-        course.setEndTime(session.getEndTime());
+        course.setStartTime(startTime);
+        course.setEndTime(endTime);
         course.setName(name);
-        course.setSession(session);
-        course.setReservations(null);
+        course.setSpecification(specification);
         return course;
+    }
+
+    public static PersonalTrainingEvent createPersonalEvent(long id,
+                                                            String name,
+                                                            Date startTime,
+                                                            Date endTime) {
+        PersonalTrainingEvent personalTrainingEvent = new PersonalTrainingEvent();
+        personalTrainingEvent.setId(id);
+        personalTrainingEvent.setStartTime(startTime);
+        personalTrainingEvent.setEndTime(endTime);
+        personalTrainingEvent.setName(name);
+        return personalTrainingEvent;
     }
 
     public static List<Role> createCustomerRoles() {
@@ -196,25 +208,33 @@ public class Fixture {
         return list;
     }
 
-    public static ATrainingBundleSpecification createCourseBundleSpec(long l, String name,
-                                                                      int maxCustomers, int number) {
+    public static CourseTrainingBundleSpecification createCourseBundleSpec(long l, String name,
+                                                                           int maxCustomers,
+                                                                           int number, double price) {
         CourseTrainingBundleSpecification specs = new CourseTrainingBundleSpecification();
         specs.setDisabled(false);
         specs.setDescription("Description");
         specs.setId(l);
         specs.setName(name);
-        specs.setNumber(number);
-        specs.setPrice(111.0);
+        TimeOption option = new TimeOption();
+        option.setNumber(number);
+        option.setId(1L);
+        option.setPrice(price);
+        option.setName("myOption");
+        specs.addOption(option);
         specs.setMaxCustomers(maxCustomers);
         return specs;
     }
 
-    public static ATrainingBundle createCourseBundle(long l, Date startTime,
-                                                     ATrainingBundleSpecification spec) {
+    public static CourseTrainingBundle createCourseBundle(long l,
+                                                          Date startTime,
+                                                          ATrainingBundleSpecification spec,
+                                                          TimeOption option) {
         CourseTrainingBundle pt = new CourseTrainingBundle();
         pt.setName("Winter Pack");
         pt.setStartTime(startTime);
-        pt.setEndTime(addMonths(startTime, ((CourseTrainingBundleSpecification) spec).getNumber()));
+        pt.setEndTime(addMonths(startTime, option.getNumber()));
+        pt.setOption(option);
         pt.setBundleSpec(spec);
         pt.setId(l);
         return pt;

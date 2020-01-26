@@ -47,7 +47,7 @@ public class ReservationController {
                                                                            Principal principal) {
 
         Role r = facade.getRoleFromPrincipal(principal);
-        Reservation res = facade.createReservationFromBundle(gymId, customerId, bundleId, event, r.getName());
+        Reservation res = facade.createReservation(gymId, customerId, bundleId, event, r.getName());
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
 
@@ -57,10 +57,11 @@ public class ReservationController {
     public ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
                                                                           @RequestParam("customerId") Long customerId,
                                                                           @RequestParam("eventId") Long eventId,
+                                                                          @RequestParam("bundleId") Long bundleId,
                                                                           Principal principal) {
 
         Role r = facade.getRoleFromPrincipal(principal);
-        Reservation res = facade.createReservationFromEvent(gymId, customerId, eventId, r.getName());
+        Reservation res = facade.createReservationWithExistingEvent(gymId, customerId, eventId, bundleId, r.getName());
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
 
@@ -72,7 +73,7 @@ public class ReservationController {
                                                       Principal principal) {
 
         Role r = facade.getRoleFromPrincipal(principal);
-        Reservation res = facade.deleteReservations(eventId, reservationId, r.getName());
+        Reservation res = facade.deleteReservation(eventId, reservationId, r.getName());
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }

@@ -15,6 +15,7 @@ env:
     - AWS_DEFAULT_REGION="eu-central-1"
     - MAVEN_OPTS="-Dmaven.repo.local=.m2"
     - TF_VERSION="0.12.19"
+    - MVN_VERSION="3.6.1"
 
 addons:
   apt:
@@ -30,9 +31,7 @@ cache:
     - ./.m2/
 
 before_install:
-  - wget https://archive.apache.org/dist/maven/maven-3/3.6.1/binaries/apache-maven-3.6.1-bin.zip
-  - unzip -qq apache-maven-3.6.1-bin.zip
-  - export M2_HOME="$PWD/apache-maven-3.6.1"
+  - export M2_HOME="$PWD/apache-maven-${MVN_VERSION}"
   - export PATH="$M2_HOME/bin:$PATH"
 
 install: bash .travis/install.sh

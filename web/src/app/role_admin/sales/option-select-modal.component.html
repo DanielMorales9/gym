@@ -1,0 +1,15 @@
+<h5 mat-dialog-title>{{title}} - {{spec.name}}</h5>
+
+<div mat-dialog-content>
+    <option-select-item *ngFor="let option of spec.options"
+                        [option]="option"
+                        [selected]="selected[option?.id]"
+                        (done)="selectOption(option)">
+
+    </option-select-item>
+    <no-item [hidden]="spec.options?.length > 0" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button type="button" color="basic" (click)="close()">Annulla</button>
+    <button mat-flat-button type="button" color="primary" (click)="submit()">Conferma</button>
+</div>

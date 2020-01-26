@@ -6,6 +6,7 @@ public class CourseBundle {
     private String name;
     private Date startTime;
     private Long specId;
+    private Long optionId;
 
     public Date getStartTime() {
         return startTime;
@@ -29,5 +30,13 @@ public class CourseBundle {
 
     public void setSpecId(Long specId) {
         this.specId = specId;
+    }
+
+    public Long getOptionId() {
+        return optionId;
+    }
+
+    public void setOptionId(Long optionId) {
+        this.optionId = optionId;
     }
 }

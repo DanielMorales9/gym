@@ -19,7 +19,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {BundleSelectItemComponent, BundleSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
+import {OptionSelectItemComponent, OptionSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -31,14 +31,12 @@ import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
-import {SharedModule} from '../shared';
+import {SharedModule} from '../shared/shared.module';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
-import {CalendarNextViewDirective} from 'angular-calendar/modules/common/calendar-next-view.directive';
-import {CalendarPreviousViewDirective} from 'angular-calendar/modules/common/calendar-previous-view.directive';
 
 registerLocaleData(localeIt);
 
@@ -77,7 +75,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     ],
     declarations: [
         BundleSpecSelectItemComponent,
-        BundleSelectItemComponent,
+        OptionSelectItemComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
         AdminHeaderModalComponent,
@@ -86,7 +84,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
         ACustomerCalendarComponent,
-        BundleSelectModalComponent
+        OptionSelectModalComponent
     ],
     providers: [
         { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' },
@@ -99,7 +97,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
-        BundleSelectModalComponent
+        OptionSelectModalComponent
     ]
 })
 export class AdminModule { }

@@ -1,22 +1,17 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.ArrayList;
-import java.util.Date;
 
 @Entity
 @DiscriminatorValue(value="P")
 @JsonTypeName("P")
 @ExposesResourceFor(value = ATrainingBundle.class)
-@Data
-@EqualsAndHashCode(callSuper = true)
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingBundle extends ATrainingBundle {
 
@@ -28,11 +23,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     @Override
     public String getType() {
         return "P";
-    }
-
-    @Override
-    public boolean isNotGroup() {
-        return true;
     }
 
     @Override
@@ -53,13 +43,23 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public ATrainingSession createSession(Date startTime, Date endTime) {
+    public Double getPrice() {
+        return ((PersonalTrainingBundleSpecification) this.getBundleSpec()).getPrice();
+    }
+
+    @Override
+    public ATrainingSession createSession(ATrainingEvent event) {
         PersonalTrainingSession session = new PersonalTrainingSession();
         session.setCompleted(false);
-        session.setEndTime(endTime);
-        session.setStartTime(startTime);
+        session.setStartTime(event.getStartTime());
+        session.setEndTime(event.getEndTime());
         session.setTrainingBundle(this);
         return session;
+    }
+
+    @Override
+    public boolean assignOption(Long optionId) {
+        return true;
     }
 
     @Override
@@ -72,8 +72,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public void update() {
-        // no need to call this method
+    public String toString() {
+        return "PersonalTrainingBundle{ " + super.toString() + " }";
     }
-
 }

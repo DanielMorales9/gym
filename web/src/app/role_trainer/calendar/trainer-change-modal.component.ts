@@ -1,6 +1,6 @@
 import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {BaseCalendarModal} from '../../shared/components/calendar';
+import {BaseCalendarModal} from '../../shared/calendar';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({

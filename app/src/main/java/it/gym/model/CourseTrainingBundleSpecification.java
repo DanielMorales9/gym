@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
-import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @DiscriminatorValue(value="C")
@@ -19,19 +19,12 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     public static final String TYPE = "C";
 
-    @Column(name = "number")
-    private Integer number;
-
     @Column(name="max_customers")
     private Integer maxCustomers;
 
-    public Integer getNumber() {
-        return number;
-    }
-
-    public void setNumber(Integer number) {
-        this.number = number;
-    }
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bundle_spec_id", nullable = false)
+    private List<TimeOption> options;
 
     public Integer getMaxCustomers() {
         return maxCustomers;
@@ -43,11 +36,29 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Override
     public String getType() {
-        return "C";
+        return TYPE;
     }
 
     @Override
     public ATrainingBundle createTrainingBundle() {
-        return null;
+        CourseTrainingBundle ctb = new CourseTrainingBundle();
+        ctb.setName(this.getName());
+        ctb.setBundleSpec(this);
+        return ctb;
+    }
+
+    public List<TimeOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<TimeOption> options) {
+        this.options = options;
+    }
+
+    public void addOption(TimeOption option) {
+        if (this.options == null) {
+            this.options = new ArrayList<>();
+        }
+        this.options.add(option);
     }
 }

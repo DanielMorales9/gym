@@ -43,4 +43,14 @@ export class BundleSpecsService extends ABundleService {
     findById(id: number): any {
         return this.http.get(`/bundleSpecs/${id}`);
     }
+
+    @to_promise
+    createOption(id: any, obj: any): any {
+        return this.http.post(`/bundleSpecs/${id}/option`, obj);
+    }
+
+    @to_promise
+    list(param: any): any {
+        return this.http.get(`/bundleSpecs/list`, {params: param});
+    }
 }

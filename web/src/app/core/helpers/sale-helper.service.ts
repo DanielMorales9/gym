@@ -21,8 +21,8 @@ export class SaleHelperService extends HelperService<Sale> {
         return this.service.delete(id);
     }
 
-    addSalesLineItem(saleId: number, bundleId: any) {
-        return this.service.addSalesLineItem(saleId, bundleId);
+    addSalesLineItem(saleId: number, bundleSpecId: any) {
+        return this.service.addSalesLineItem({saleId: saleId, bundleSpecId: bundleSpecId});
     }
 
     deleteSalesLineItem(saleId: number, sliId: any) {
@@ -42,7 +42,6 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        console.log(query);
         if (!!query.date) {
             query = Object.assign({}, query);
             const date = new Date(query.date);

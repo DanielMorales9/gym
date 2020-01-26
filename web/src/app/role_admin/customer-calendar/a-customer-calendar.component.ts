@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
-import {BaseCalendar, CustomerInfoModalComponent} from '../../shared/components/calendar';
+import {BaseCalendar, CustomerInfoModalComponent} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
-import {CustomerHourModalComponent, CustomerDeleteModalComponent} from '../../shared/components/calendar';
+import {CustomerHourModalComponent, CustomerDeleteModalComponent} from '../../shared/calendar';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {first} from 'rxjs/operators';
 
@@ -67,7 +67,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         console.log(action, event);
     }
 
-    hour(action: string, event: any) {
+    async hour(action: string, event: any) {
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} ha pacchetti a disposizione`);
         }
@@ -131,6 +131,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     private openInfoModal() {
         this.modalData.confirm = true;
         this.modalData.complete = true;
+        console.log(this.modalData);
         const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
             data: this.modalData,
         });
@@ -145,12 +146,20 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         });
     }
 
-    private createReservation(data) {
-        this.facade.createReservationFromEvent(data.userId, data.event.meta.id).subscribe(async (_) => {
+    private async createReservation(d) {
+        const userId = d.userId;
+        const specId = d.event.meta.specification.id;
+        const [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
+        if (error) {
+            throw error;
+        }
+
+        const bundleId = data[0].id;
+        this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId).subscribe(async (_) => {
             this.snackBar.open('Prenotazione effettuata');
             await this.getEvents();
         }, err => {
-            if (err.error) {
+            if (err) {
                 this.snackBar.open(err.error.message);
             }
         });

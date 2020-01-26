@@ -1,39 +1,31 @@
 package it.gym.model;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Generated;
-import lombok.ToString;
-import org.springframework.data.rest.core.annotation.RestResource;
 
-import javax.persistence.*;
-import java.util.Date;
+import javax.persistence.Entity;
+import java.util.List;
 
 @Entity
-@Inheritance(strategy= InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
-@Data
-@EqualsAndHashCode(callSuper = false)
 @Generated //exclude coverage analysis on generated methods
 public abstract class ATrainingEvent extends AEvent {
 
-    @OneToOne(cascade = CascadeType.ALL)
-    private ATrainingSession session;
-
-    @Override
-    public ATrainingSession getSession() {
-        return session;
-    }
-
-    public void setSession(ATrainingSession session) {
-        this.session = session;
-    }
-
-    public abstract Reservation reserve(Customer customer);
-
+    @JsonIgnore
+    public abstract boolean isReservable();
+    public abstract Reservation createReservation(Customer customer);
+    public abstract void addReservation(Reservation res);
     public abstract void deleteReservation(Reservation res);
 
-    public abstract void deleteSession();
+    @JsonIgnore
+    public abstract boolean isSessionDeletable();
+    public abstract void addSession(Long reservationId, ATrainingSession session);
+    public abstract List<ATrainingSession> deleteSessions();
+    public abstract List<ATrainingBundle> deleteSessionsFromBundles();
+
+    public abstract void deleteSession(Reservation res);
+    @JsonIgnore
+    public abstract ATrainingSession getSession(Reservation res);
+    public abstract void complete();
+    public abstract List<Reservation> deleteReservations();
+
 }

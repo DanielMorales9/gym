@@ -23,10 +23,10 @@ import {
     BundleSpecModalComponent,
     BundleSpecDetailsComponent,
     BundleModalComponent,
-    BundlesComponent,
+    OptionModalComponent,
     FilterSearchToolbar,
     BundleItemComponent, BundlesCustomerComponent, BundleSpecItemComponent, BundleSpecsComponent, FilterComponent
-} from './components';
+} from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
     MatButtonModule,
@@ -49,13 +49,13 @@ import {
     CalendarHeaderToolbar,
     CustomerDeleteModalComponent,
     CustomerHourModalComponent
-} from './components/calendar';
+} from './calendar';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
-import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './components/sales';
+import {PaySaleModalComponent, SaleDetailsComponent, SaleItemComponent} from './sales';
 import {RouterModule} from '@angular/router';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {BundleDetailsComponent} from './components/bundles';
+import {BundleDetailsComponent} from './bundles';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {MatMenuModule} from '@angular/material/menu';
 import {MatTreeModule} from '@angular/material/tree';
@@ -101,6 +101,7 @@ import {MatTableModule} from '@angular/material/table';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
+        OptionModalComponent,
     ],
     declarations: [
         NoItemComponent,
@@ -134,8 +135,8 @@ import {MatTableModule} from '@angular/material/table';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
+        OptionModalComponent,
         BundlesCustomerComponent,
-        BundlesComponent,
         BundleItemComponent,
         BundleSpecItemComponent,
         BundleSpecsComponent,
@@ -166,13 +167,13 @@ import {MatTableModule} from '@angular/material/table';
         BundleSpecModalComponent,
         BundleSpecDetailsComponent,
         BundleDetailsComponent,
-        BundlesComponent,
         BundlesCustomerComponent,
         BundleItemComponent,
         SalesComponent,
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        OptionModalComponent,
         BundleSpecItemComponent,
         BundleSpecsComponent,
     ],

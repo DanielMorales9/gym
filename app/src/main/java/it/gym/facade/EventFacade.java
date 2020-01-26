@@ -32,8 +32,12 @@ public class EventFacade {
     @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
 
+    @Qualifier("trainingBundleSpecificationService")
+    @Autowired private TrainingBundleSpecificationService specService;
+
     @Qualifier("trainingSessionService")
     @Autowired private TrainingSessionService sessionService;
+    @Autowired private ReservationService reservationService;
 
     public List<AEvent> findAllEventsByInterval(Date startTime, Date endTime) {
         return service.findAllEvents(startTime, endTime);
@@ -144,50 +148,65 @@ public class EventFacade {
             throw new BadRequestException(PRESENT_EVENTS_EX);
     }
 
-    public AEvent createCourseEvent(Long gymId, Event evt) {
-        Gym gym = gymService.findById(gymId);
-        ATrainingBundle bundle = this.bundleService.findById(evt.getId());
-
-        Date startTime = evt.getStartTime();
-        Date endTime = evt.getEndTime();
-
-        gymService.checkGymHours(gym, startTime, endTime);
-
-        checkNoHolidays(startTime, endTime);
-
-        ATrainingSession session = bundle.createSession(startTime, endTime);
-        bundle.addSession(session);
-
-        CourseEvent event = new CourseEvent();
-        event.setStartTime(startTime);
-        event.setEndTime(endTime);
-        event.setName(evt.getName());
-
-        session = sessionService.save(session);
-        bundleService.save(bundle);
-
-        event.setSession(session);
-
-        return service.save(event);
-    }
-
     private void checkNoHolidays(Date startTime, Date endTime) {
         List<AEvent> events = this.service.findOverlappingEvents(startTime, endTime);
         hasHolidays(events);
     }
 
-    public AEvent deleteCourseEvent(Long id) {
-        CourseEvent event = (CourseEvent) service.findById(id);
+    public AEvent createCourseEvent(Long gymId, Event evt) {
+        logger.debug("Looking up gymId");
+        Gym gym = gymService.findById(gymId);
+        logger.debug("Looking up specId");
+        CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
+                this.specService.findById(evt.getId());
 
-        ATrainingSession session = event.getSession();
-        if (!session.isDeletable())
+        Date startTime = evt.getStartTime();
+        Date endTime = evt.getEndTime();
+
+        logger.debug("Checking gym hours");
+        gymService.checkGymHours(gym, startTime, endTime);
+
+        logger.debug("Checking no holidays");
+        checkNoHolidays(startTime, endTime);
+
+        logger.debug("Creating CourseEvent");
+        CourseTrainingEvent event = new CourseTrainingEvent();
+        event.setStartTime(startTime);
+        event.setEndTime(endTime);
+        event.setName(evt.getName());
+        event.setSpecification(spec);
+
+        logger.debug("Saving CourseEvent");
+        return service.save(event);
+    }
+
+    public AEvent deleteEvent(Long id) {
+        ATrainingEvent event = (ATrainingEvent) service.findById(id);
+
+        if (!event.isSessionDeletable())
             throw new MethodNotAllowedException("Il corso non è cancellabile");
 
-        session.deleteMeFromBundle();
-        sessionService.delete(session);
-        bundleService.save(session.getTrainingBundle());
+        logger.info("Deleting reservation from event");
+        List<Reservation> reservations = event.deleteReservations();
 
-        service.delete(event);
+        logger.info("Deleting sessions from bundles");
+        List<ATrainingBundle> bundles = event.deleteSessionsFromBundles();
+
+        logger.info("Deleting session from event");
+        List<ATrainingSession> sessions = event.deleteSessions();
+
+        logger.info("Deleting training event");
+        this.service.delete(event);
+
+        logger.info("Saving bundle event");
+        this.bundleService.saveAll(bundles);
+
+        logger.info("Deleting reservation");
+        this.reservationService.deleteAll(reservations);
+
+        logger.info("Deleting session");
+        this.sessionService.deleteAll(sessions);
+
         return event;
     }
 
@@ -195,11 +214,9 @@ public class EventFacade {
         return service.findAllCourseEvents(startTime, endTime);
     }
 
-
     public AEvent complete(Long eventId) {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
-        ATrainingSession session = event.getSession();
-        session.complete();
+        event.complete();
         return service.save(event);
     }
 

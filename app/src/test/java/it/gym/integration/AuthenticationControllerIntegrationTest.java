@@ -2,7 +2,10 @@ package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
-import it.gym.repository.*;
+import it.gym.repository.CustomerRepository;
+import it.gym.repository.RoleRepository;
+import it.gym.repository.UserRepository;
+import it.gym.repository.VerificationTokenRepository;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,10 +20,11 @@ import java.util.Date;
 import java.util.List;
 
 import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.*;
+import static it.gym.utility.HateoasTest.expectAdminRoles;
+import static it.gym.utility.HateoasTest.expectUser;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthenticationControllerIntegrationTest extends AbstractIntegrationTest {
@@ -71,7 +75,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
         customer = customerRepository.findAll().get(0);
         roles = customer.getRoles();
         logger.info(roles.toString());
-        expectCustomer(result, customer);
+        expectUser(result, customer);
     }
 
     @Test
@@ -90,7 +94,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
         admin.setVerified(true);
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -111,7 +115,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
         admin.setVerified(true);
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
     @Test
@@ -130,7 +134,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
         admin.setVerified(true);
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -142,7 +146,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
                 .andExpect(status().isOk());
 
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 
@@ -178,7 +182,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
 
     private void testExpectedAdmin(ResultActions result) throws Exception {
         roles = admin.getRoles();
-        expectAdmin(result, admin);
+        expectUser(result, admin);
         expectAdminRoles(result, roles, "roles");
     }
 }

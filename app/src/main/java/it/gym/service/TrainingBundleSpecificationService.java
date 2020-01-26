@@ -65,4 +65,8 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
     public Page<ATrainingBundleSpecification> findByNameAndIsDisabled(String name, Boolean disabled, Pageable pageable) {
         return repository.findByNameAndIsDisabled(name, disabled, pageable);
     }
+
+    public List<ATrainingBundleSpecification> findByIsDisabled(Boolean disabled) {
+        return repository.findByIsDisabled(disabled);
+    }
 }

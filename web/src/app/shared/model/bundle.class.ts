@@ -8,10 +8,17 @@ export enum BundleType {
     COURSE = 'C'
 }
 
+export class Option {
+    id: number;
+    name: string;
+    number: number;
+    price: number;
+    createdAt: Date;
+}
+
 export abstract class BundleSpecification {
     id: number;
     name: string;
-    price: number;
     description: string;
     disabled: boolean;
     type: string;
@@ -23,6 +30,7 @@ export abstract class BundleSpecification {
 
 export class PersonalBundleSpecification extends BundleSpecification {
     numSessions: number;
+    price: number
 
     constructor() {
         super();
@@ -31,8 +39,7 @@ export class PersonalBundleSpecification extends BundleSpecification {
 }
 
 export class CourseBundleSpecification extends BundleSpecification {
-    number: number;
-    maxCustomers: number;
+    options: Option[];
 
     constructor() {
         super();
@@ -46,9 +53,10 @@ export abstract class Bundle {
     expired: boolean;
     type: string;
 
-    constructor() {
-
+    protected constructor() {
     }
+
+    public abstract getPrice();
 }
 
 export class PersonalBundle extends Bundle {
@@ -59,16 +67,25 @@ export class PersonalBundle extends Bundle {
         super();
         this.type = BundleType.PERSONAL;
     }
+
+    getPrice() {
+        return this.bundleSpec.price;
+    }
 }
 
 export class CourseBundle extends Bundle {
 
     bundleSpec: CourseBundleSpecification;
+    option: Option;
     startTime: number;
     endTime: number;
 
     constructor() {
         super();
         this.type = BundleType.COURSE;
+    }
+
+    getPrice() {
+        return this.option.price;
     }
 }

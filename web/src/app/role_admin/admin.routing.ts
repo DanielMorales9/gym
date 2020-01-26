@@ -2,11 +2,11 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
-import {SaleDetailsComponent, SalesComponent} from '../shared/components/sales';
-import {UserDetailsComponent, UsersComponent} from '../shared/components/users';
+import {SaleDetailsComponent, SalesComponent} from '../shared/sales';
+import {UserDetailsComponent, UsersComponent} from '../shared/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
-import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/components/bundle-specs';
-import {BundleDetailsComponent, BundlesComponent, BundlesCustomerComponent} from '../shared/components/bundles';
+import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
+import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
 
 const routes = [
 
@@ -14,7 +14,6 @@ const routes = [
             { path: '', redirectTo: 'sales', pathMatch: 'full'},
             { path: 'bundleSpecs', component: BundleSpecsComponent },
             { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
-            { path: 'bundles', component: BundlesComponent },
             { path: 'bundles/:id', component: BundleDetailsComponent },
             { path: 'customer/bundles', component: BundlesCustomerComponent },
             { path: 'users', component: UsersComponent },

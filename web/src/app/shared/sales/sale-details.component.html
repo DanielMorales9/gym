@@ -1,0 +1,126 @@
+<div class="card-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>
+                Riepilogo Vendita #{{sale?.id}}
+            </mat-card-title>
+            <mat-card-subtitle>
+                Cliente: {{sale?.customer?.firstName}} {{sale?.customer?.lastName}}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div class="summary-info">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{sale?.createdAt | date: 'dd-MM-yyyy HH:mm'}}
+            </span>
+
+                <span [hidden]="!sale?.payed" class="green-light">
+                <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{sale?.payedDate | date: 'dd-MM-yyyy HH:mm'}}
+            </span>
+                <span>
+                <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;
+            </span>
+
+                <span [hidden]="sale?.payed" class="red-light">
+                <mat-icon fontSet="fab" fontIcon="fa-cc-apple-pay"></mat-icon>Da Pagare&nbsp;
+                    {{sale?.totalPrice-sale?.amountPayed}}&euro;
+            </span>
+            </div>
+
+            <mat-expansion-panel class='expansion-list'
+                                 [class.mat-expansion-panel]="false"
+                                 (closed)="closeAll()">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h6>Pacchetti Acquistati</h6>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+                <span layout="row"><hr class="divider" flex/></span>
+                <ng-container *ngFor="let l of sale?.salesLineItems; let i = index">
+                    <mat-expansion-panel  [class.mat-expansion-panel]="false" [(expanded)]="expand[i]">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{i+1}}.&nbsp;
+                                <a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">
+                                    {{l?.bundleSpecification?.name || 'Loading...'}}
+                                </a>
+                            </mat-panel-title>
+                            <mat-panel-description class="panel-header-description">
+                                {{l?.price || 'Loading...'}}&euro;
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="mat-ex-panel-body">
+                            <div>
+                                <mat-icon fontSet="fas" fontIcon="fa-file-alt"></mat-icon>&nbsp;<a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">{{l?.bundleSpecification?.name || 'Loading...'}}</a>
+                            </div>
+                            <div>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;<a (click)="goToBundleDetails(l?.trainingBundle?.id)">{{l?.trainingBundle?.name || 'Loading...'}}</a>
+                            </div>
+                            <div>
+                                <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>&nbsp;Prezzo&nbsp;{{l?.price}}
+                            </div>
+                        </div>
+                    </mat-expansion-panel>
+                    <span layout="row"><hr class="divider" flex/></span>
+                </ng-container>
+            </mat-expansion-panel>
+            <mat-expansion-panel class='expansion-list'
+                                 [class.mat-expansion-panel]="false"
+                                 *ngIf="sale?.payments.length > 0">
+                <mat-expansion-panel-header>
+                    <mat-panel-title>
+                        <h6>Pagamenti Effettuati</h6>
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <table mat-table style="width: 100%" [dataSource]="sale?.payments">
+
+                    <ng-container matColumnDef="index">
+                        <th mat-header-cell *matHeaderCellDef> No. </th>
+                        <td mat-cell *matCellDef="let element; let i = index"> {{i+1}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="date">
+                        <th mat-header-cell *matHeaderCellDef> Data </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="hour">
+                        <th mat-header-cell *matHeaderCellDef> Ora </th>
+                        <td mat-cell *matCellDef="let element"> {{element.createdAt | date: 'HH:mm'}} </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="amount">
+                        <th mat-header-cell *matHeaderCellDef> Pagati </th>
+                        <td mat-cell *matCellDef="let element"> {{element.amount}}&euro;</td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedPaymentsColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedPaymentsColumns; let i = index;"></tr>
+                </table>
+
+                <div class="space-between padding-around">
+
+                    <div style="color: darkgray">Da Pagare: {{sale.totalPrice - sale.amountPayed}}&euro;</div>
+                    <div style="color: darkgray">Totale: {{sale.amountPayed}}&euro;</div>
+                </div>
+            </mat-expansion-panel>
+        </mat-card-content>
+        <mat-card-actions>
+            <ng-container *ngIf="canPay">
+                <button mat-button (click)="pay()" *ngIf="!sale?.payed">
+                    <span>
+                        <mat-icon fontSet="fas" color="primary" fontIcon="fa-credit-card"></mat-icon>&nbsp;Paga
+                    </span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="canDelete">
+                <button mat-button color="warn" (click)="delete()" *ngIf="!sale?.payed">
+                    <span>
+                        <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Rimuovi
+                    </span>
+                </button>
+            </ng-container>
+        </mat-card-actions>
+    </mat-card>
+</div>

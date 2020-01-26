@@ -40,9 +40,6 @@ public abstract class ATrainingBundleSpecification {
     @Column(name = "description", nullable = false)
     protected String description;
 
-    @Column(name = "price", nullable = false)
-    protected Double price;
-
     @Column(name = "is_disabled", nullable = false)
     private Boolean isDisabled;
 
@@ -68,14 +65,6 @@ public abstract class ATrainingBundleSpecification {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
     }
 
     public Boolean getDisabled() {

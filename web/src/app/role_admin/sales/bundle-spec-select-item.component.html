@@ -13,7 +13,7 @@
     </mat-card-header>
     <mat-card-content>
         <div class="card-list-content">
-            <div>
+            <div *ngIf="spec?.type === PERSONAL">
                 <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{spec?.price}}
             </div>
         </div>

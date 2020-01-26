@@ -1,0 +1,107 @@
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+    <h5 mat-dialog-title>{{data.title}}</h5>
+    <div mat-dialog-content>
+        <div>
+            <mat-form-field>
+                <label for="type"><b>Tipo</b></label>
+                <mat-select
+                        id="type"
+                        type="text"
+                        formControlName="type"
+                        [ngClass]="{ 'is-invalid': type.touched && type.invalid }">
+                    <mat-option value="P">Personale</mat-option>
+                    <mat-option value="C">Corso</mat-option>
+                </mat-select>
+                <mat-error *ngIf="type.touched && type.invalid">
+                    <div *ngIf="!!type.errors?.required">Tipo obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="name" class="sr-only">Nome</label>
+                <input type="text"
+                       matInput
+                       placeholder="Nome"
+                       id="name"
+                       name="name"
+                       formControlName="name"
+                       [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
+                <mat-error *ngIf="name.touched && name.invalid">
+                    <div *ngIf="!!name.errors?.required">
+                        Nome del pacchetto obbligatorio
+                    </div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="description" class="sr-only">Descrizione</label>
+                <textarea placeholder="Descrizione"
+                          matInput
+                          id="description"
+                          name="description"
+                          formControlName="description"
+                          [ngClass]="{ 'is-invalid': description.touched && description.invalid }"></textarea>
+                <mat-error *ngIf="description.touched && description.invalid">
+                    <div *ngIf="!!description.errors?.required">Descrizione del pacchetto obbligatoria</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <ng-container *ngIf="showPersonal">
+            <div>
+                <mat-form-field>
+                    <label for="price" class="sr-only">Prezzo</label>
+                    <input placeholder="Prezzo&nbsp;&euro;"
+                           matInput
+                           id="price"
+                           name="price"
+                           formControlName="price"
+                           [ngClass]="{ 'is-invalid': price.touched && price.invalid }"
+                    />
+                    <mat-error *ngIf="price.touched && price.invalid">
+                        <div *ngIf="!!price.errors?.required">Prezzo del pacchetto obbligatorio</div>
+                        <div *ngIf="!!price.errors?.pattern">Prezzo del pacchetto non valido</div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+
+            <div>
+                <mat-form-field>
+                    <label for="numSessions" class="sr-only">Numero di Sessioni</label>
+                    <input placeholder="Numero di sessioni"
+                           matInput
+                           id="numSessions"
+                           name="numSessions"
+                           formControlName="numSessions"
+                           [ngClass]="{ 'is-invalid': numSessions.touched && numSessions.invalid }" />
+                    <mat-error *ngIf="numSessions.touched && numSessions.invalid">
+                        <div *ngIf="!!numSessions.errors?.required">Numero di sessioni obbligatori</div>
+                        <div *ngIf="!!numSessions.errors?.pattern">Il numero di sessioni deve essere intero</div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="showCourse">
+            <div>
+                <mat-form-field>
+                    <label for="maxCustomers" class="sr-only">Numero massimo di clienti</label>
+                    <input placeholder="Numero massimo di clienti"
+                           matInput
+                           id="maxCustomers"
+                           name="maxCustomers"
+                           formControlName="maxCustomers"
+                           [ngClass]="{ 'is-invalid': maxCustomers.touched && maxCustomers.invalid }" />
+                    <mat-error *ngIf="maxCustomers.touched && maxCustomers.invalid">
+                        <div *ngIf="!!maxCustomers.errors?.required">Numero massimo di clienti obbligatori</div>
+                        <div *ngIf="!!maxCustomers.errors?.min">Numero massimo di clienti deve essere superiore a 2</div>
+                    </mat-error>
+                </mat-form-field>
+            </div>
+        </ng-container>
+
+    </div>
+    <div mat-dialog-actions>
+        <button type="submit" mat-flat-button color="accent">Invia</button>
+    </div>
+</form>

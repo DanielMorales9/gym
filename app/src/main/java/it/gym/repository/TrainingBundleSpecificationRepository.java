@@ -6,6 +6,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 public interface TrainingBundleSpecificationRepository extends JpaRepository<ATrainingBundleSpecification, Long> {
 
@@ -18,4 +20,6 @@ public interface TrainingBundleSpecificationRepository extends JpaRepository<ATr
     Page<ATrainingBundleSpecification> findByIsDisabled(Boolean isDisabled, Pageable pageable);
 
     Page<ATrainingBundleSpecification> findByNameAndIsDisabled(String name, Boolean disabled, Pageable pageable);
+
+    List<ATrainingBundleSpecification> findByIsDisabled(Boolean disabled);
 }
