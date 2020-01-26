@@ -1,6 +1,6 @@
 import {Subject, Subscription} from 'rxjs';
 import {ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {CalendarEvent, CalendarEventAction, CalendarView} from 'angular-calendar';
+import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -25,6 +25,10 @@ const CALENDAR_COLUMNS: any = {
         secondary: '#9fe370'
     }
 };
+
+interface EventGroupMeta {
+    type: string;
+}
 
 @Injectable()
 export abstract class BaseCalendar implements OnInit, OnDestroy {
@@ -356,6 +360,20 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
             draggable: false,
             meta: event
         };
+    }
+
+    beforeMonthViewRender({ body }: {
+        body: Array<CalendarMonthViewDay<EventGroupMeta>>;
+    }): void {
+        // month view has a different UX from the week and day view so we only really need to group by the type
+        body.forEach(cell => {
+            const groups = {};
+            cell.events.forEach((event: CalendarEvent<EventGroupMeta>) => {
+                groups[event.meta.type] = groups[event.meta.type] || [];
+                groups[event.meta.type].push(event);
+            });
+            cell['eventGroups'] = Object.entries(groups);
+        });
     }
 
     private isReservationDeletable(event: any) {
