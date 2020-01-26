@@ -44,7 +44,7 @@ export class BundleSpecModalComponent implements OnInit {
             name: new FormControl(this.bundleSpec.name, Validators.required),
             price: new FormControl({
                 value: this.bundleSpec.price,
-                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL || !!this.bundleSpec
+                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL || !!this.bundleSpec.price
             }, [
                 Validators.required,
                 Validators.pattern(/^\d+\.?\d{0,2}$/)
@@ -63,7 +63,7 @@ export class BundleSpecModalComponent implements OnInit {
             ]),
             numSessions: new FormControl({
                 value: this.bundleSpec.numSessions,
-                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL || !!this.bundleSpec
+                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL || !!this.bundleSpec.numSessions
             }, [
                 Validators.required,
                 Validators.pattern(/^\d+$/)

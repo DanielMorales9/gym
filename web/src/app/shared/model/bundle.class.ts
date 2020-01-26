@@ -8,7 +8,7 @@ export enum BundleType {
     COURSE = 'C'
 }
 
-export abstract class Option {
+export class Option {
     id: number;
     name: string;
     number: number;

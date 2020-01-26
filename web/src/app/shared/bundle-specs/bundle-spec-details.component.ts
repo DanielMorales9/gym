@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {PolicyService} from '../../core/policy';
+import {OptionModalComponent} from './option-modal.component';
 
 @Component({
     selector: 'bundle-spec-details',
@@ -97,6 +98,21 @@ export class BundleSpecDetailsComponent implements OnInit {
     }
 
     createOption() {
-        
+        const title = 'Crea Opzione';
+
+        const dialogRef = this.dialog.open(OptionModalComponent, {
+            data: {
+                title: title,
+                bundle: this.bundleSpec
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(async res => {
+            if (res) {
+                const [data, error] = await this.service.createOption(this.bundleSpec.id, res);
+                if (error) { throw error; }
+                this.bundleSpec = data;
+            }
+        });
     }
 }

@@ -23,6 +23,7 @@ import {
     BundleSpecModalComponent,
     BundleSpecDetailsComponent,
     BundleModalComponent,
+    OptionModalComponent,
     BundlesComponent,
     FilterSearchToolbar,
     BundleItemComponent, BundlesCustomerComponent, BundleSpecItemComponent, BundleSpecsComponent, FilterComponent
@@ -101,6 +102,7 @@ import {MatTableModule} from '@angular/material/table';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
+        OptionModalComponent,
     ],
     declarations: [
         NoItemComponent,
@@ -134,6 +136,7 @@ import {MatTableModule} from '@angular/material/table';
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
         BundleModalComponent,
+        OptionModalComponent,
         BundlesCustomerComponent,
         BundlesComponent,
         BundleItemComponent,
@@ -173,6 +176,7 @@ import {MatTableModule} from '@angular/material/table';
         CustomerHourModalComponent,
         CustomerInfoModalComponent,
         CustomerDeleteModalComponent,
+        OptionModalComponent,
         BundleSpecItemComponent,
         BundleSpecsComponent,
     ],
