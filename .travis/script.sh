@@ -5,10 +5,10 @@ if [[ "$TRAVIS_BRANCH" = "master" ]]; then
     echo "========================="
     echo "| Building application  |"
     echo "========================="
-    mvn -ntp install
+    mvn -nXtp clean install
 else
     echo "========================="
     echo "|  Testing application  |"
     echo "========================="
-    mvn -ntp test
+    mvn -nXtp clean test
 fi
