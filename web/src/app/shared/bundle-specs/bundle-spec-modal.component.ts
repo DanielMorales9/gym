@@ -42,7 +42,10 @@ export class BundleSpecModalComponent implements OnInit {
         console.log(this.bundleSpec);
         this.form = new FormGroup({
             name: new FormControl(this.bundleSpec.name, Validators.required),
-            price: new FormControl(this.bundleSpec.price, [
+            price: new FormControl({
+                value: this.bundleSpec.price,
+                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL
+            }, [
                 Validators.required,
                 Validators.pattern(/^\d+\.?\d{0,2}$/)
             ]),
@@ -51,13 +54,6 @@ export class BundleSpecModalComponent implements OnInit {
                 value: this.bundleSpec.type,
                 disabled: hasBundle,
             }, Validators.required),
-            number: new FormControl({
-                value: this.bundleSpec.number,
-                disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
-            },  [
-                Validators.required,
-                Validators.min(1)
-            ]),
             maxCustomers: new FormControl({
                 value: this.bundleSpec.maxCustomers,
                 disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
@@ -80,7 +76,7 @@ export class BundleSpecModalComponent implements OnInit {
                 this.showPersonal = true;
 
                 this.numSessions.enable();
-                this.number.disable();
+                this.price.enable();
                 this.maxCustomers.disable();
             }
             else {
@@ -88,7 +84,7 @@ export class BundleSpecModalComponent implements OnInit {
                 this.showPersonal = false;
 
                 this.numSessions.disable();
-                this.number.enable();
+                this.price.disable();
                 this.maxCustomers.enable();
             }
             this.form.updateValueAndValidity();
@@ -115,10 +111,6 @@ export class BundleSpecModalComponent implements OnInit {
         return this.form.get('type');
     }
 
-    get number() {
-        return this.form.get('number');
-    }
-
     get maxCustomers() {
         return this.form.get('maxCustomers');
     }
@@ -133,16 +125,15 @@ export class BundleSpecModalComponent implements OnInit {
         if (this.type.value === BundleSpecificationType.PERSONAL) {
             bundle = new PersonalBundleSpecification();
             bundle.numSessions = this.numSessions.value;
+            bundle.price = this.price.value;
         }
         else {
             bundle = new CourseBundleSpecification();
             bundle.maxCustomers = this.maxCustomers.value;
-            bundle.number = this.number.value;
         }
 
         bundle.id = this.bundleSpec.id;
         bundle.name = this.name.value;
-        bundle.price = this.price.value;
         bundle.description = this.description.value;
         bundle.type = this.type.value;
         bundle.disabled = (this.bundleSpec.disabled !== undefined) ? this.bundleSpec.disabled : false;
