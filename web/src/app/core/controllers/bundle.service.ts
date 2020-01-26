@@ -44,8 +44,4 @@ export class BundleService {
         return this.http.patch(`/bundles/${bundle.id}`, bundle);
     }
 
-    @to_promise
-    searchBySpecIdAndNotExpired(query: any): any {
-        return this.http.get(`/bundles/searchNotExpired`, {params: query});
-    }
 }

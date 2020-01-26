@@ -34,11 +34,13 @@ export class SalesService {
         return this.http.delete(`/sales/${id}`);
     }
 
-    addSalesLineItem(saleId: number, bundleId: number): Observable<Object> {
-        return this.http.get(`/sales/addSalesLineItem/${saleId}/${bundleId}`);
+    @to_promise
+    addSalesLineItem(params?: any): any {
+        return this.http.get(`/sales/addSalesLineItem`,{params: params});
     }
 
-    deleteSalesLineItem(saleId: number, salesLineItemId: number): Observable<Object> {
+    @to_promise
+    deleteSalesLineItem(saleId: number, salesLineItemId: number): any {
         return this.http.delete(`/sales/deleteSalesLineItem/${saleId}/${salesLineItemId}`);
     }
 
@@ -89,7 +91,4 @@ export class SalesService {
         return this.http.get('/sales/searchByLastNameAndDate', {params: query});
     }
 
-    addSalesLineItemByBundle(saleId: number, bundleId: number): Observable<Object> {
-        return this.http.get(`/sales/addSalesLineItemByBundle/${saleId}/${bundleId}`);
-    }
 }

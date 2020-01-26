@@ -124,13 +124,13 @@ describe('SalesService', () => {
     });
 
     it('testing #addSalesLineItem', done => {
-        salesService.addSalesLineItem(1, 1)
+        salesService.addSalesLineItem({saleId: 1, bundleSpecId: 1})
             .subscribe(res => {
                 expect(res).toEqual([]);
                 done();
             });
         const req = backend.expectOne({
-            url: '/sales/addSalesLineItem/1/1',
+            url: '/sales/addSalesLineItem',
             method: 'GET'
         });
         req.flush([]);

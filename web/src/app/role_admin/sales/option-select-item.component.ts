@@ -1,24 +1,22 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {BundleType} from '../../shared/model';
+import {Option} from '../../shared/model';
 
 
 @Component({
-    selector: 'bundle-select-item',
-    templateUrl: './bundle-select-item.component.html',
+    selector: 'option-select-item',
+    templateUrl: './option-select-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css']
 })
-export class BundleSelectItemComponent {
+export class OptionSelectItemComponent {
 
-    @Input() bundle: any;
+    @Input() option: Option;
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;
-    PERSONAL: BundleType.PERSONAL;
-    COURSE: BundleType.COURSE;
 
     constructor() {}
 
-    selectBundle() {
+    selectOption() {
         this.selected = !this.selected;
         this.done.emit();
     }

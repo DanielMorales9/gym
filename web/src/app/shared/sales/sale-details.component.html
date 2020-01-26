@@ -46,27 +46,18 @@
                                 </a>
                             </mat-panel-title>
                             <mat-panel-description class="panel-header-description">
-                                {{l?.bundleSpecification.price || 'Loading...'}}&euro;
+                                {{l?.price || 'Loading...'}}&euro;
                             </mat-panel-description>
                         </mat-expansion-panel-header>
                         <div class="mat-ex-panel-body">
                             <div>
-                                <mat-icon fontSet="fas" fontIcon="fa-file-alt"></mat-icon>
-                                Tipo:&nbsp;
-                                <a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">
-                                    {{l?.bundleSpecification?.name || 'Loading...'}}
-                                </a>
+                                <mat-icon fontSet="fas" fontIcon="fa-file-alt"></mat-icon>&nbsp;<a (click)="goToBundleSpecDetails(l?.bundleSpecification?.id)">{{l?.bundleSpecification?.name || 'Loading...'}}</a>
                             </div>
                             <div>
-                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>
-                                Pacchetto:&nbsp;
-                                <a (click)="goToBundleDetails(l?.trainingBundle?.id)">
-                                    {{l?.trainingBundle?.name || 'Loading...'}}
-                                </a>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;<a (click)="goToBundleDetails(l?.trainingBundle?.id)">{{l?.trainingBundle?.name || 'Loading...'}}</a>
                             </div>
                             <div>
-                                <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>
-                                Prezzo:&nbsp;{{l?.bundleSpecification?.price}}
+                                <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>&nbsp;Prezzo&nbsp;{{l?.price}}
                             </div>
                         </div>
                     </mat-expansion-panel>

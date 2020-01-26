@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Sale} from '../model';
+import {CourseBundle, PersonalBundle, PersonalBundleSpecification, Sale} from '../model';
 import {MatDialog} from '@angular/material';
 import {SalesService} from '../../core/controllers';
 import {SaleHelperService} from '../../core/helpers';
@@ -53,6 +53,13 @@ export class SaleDetailsComponent implements OnInit {
     getSale (id) {
         this.helper.findById(id).subscribe((res: Sale) => {
             this.sale = res;
+            this.sale.salesLineItems.forEach(value => {
+                if (value.trainingBundle.type === 'P') {
+                    value.price = (value.bundleSpecification as PersonalBundleSpecification).price;
+                } else {
+                    value.price = (value.trainingBundle as CourseBundle).option.price;
+                }
+            });
         });
     }
 
@@ -89,7 +96,7 @@ export class SaleDetailsComponent implements OnInit {
 
     closeAll() {
         console.log('closed');
-        for (const key in this.expand){
+        for (const key in this.expand) {
             this.expand[key] = false;
         }
     }

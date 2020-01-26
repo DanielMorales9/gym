@@ -24,7 +24,6 @@ import {
     BundleSpecDetailsComponent,
     BundleModalComponent,
     OptionModalComponent,
-    BundlesComponent,
     FilterSearchToolbar,
     BundleItemComponent, BundlesCustomerComponent, BundleSpecItemComponent, BundleSpecsComponent, FilterComponent
 } from './index';
@@ -138,7 +137,6 @@ import {MatTableModule} from '@angular/material/table';
         BundleModalComponent,
         OptionModalComponent,
         BundlesCustomerComponent,
-        BundlesComponent,
         BundleItemComponent,
         BundleSpecItemComponent,
         BundleSpecsComponent,
@@ -169,7 +167,6 @@ import {MatTableModule} from '@angular/material/table';
         BundleSpecModalComponent,
         BundleSpecDetailsComponent,
         BundleDetailsComponent,
-        BundlesComponent,
         BundlesCustomerComponent,
         BundleItemComponent,
         SalesComponent,

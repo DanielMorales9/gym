@@ -19,7 +19,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {BundleSelectItemComponent, BundleSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
+import {OptionSelectItemComponent, OptionSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -75,7 +75,7 @@ export class MyHammerConfig extends HammerGestureConfig {
     ],
     declarations: [
         BundleSpecSelectItemComponent,
-        BundleSelectItemComponent,
+        OptionSelectItemComponent,
         CreateSaleComponent,
         AdminCalendarComponent,
         AdminHeaderModalComponent,
@@ -84,7 +84,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
         ACustomerCalendarComponent,
-        BundleSelectModalComponent
+        OptionSelectModalComponent
     ],
     providers: [
         { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' },
@@ -97,7 +97,7 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
-        BundleSelectModalComponent
+        OptionSelectModalComponent
     ]
 })
 export class AdminModule { }

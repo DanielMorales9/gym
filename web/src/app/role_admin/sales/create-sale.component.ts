@@ -5,7 +5,7 @@ import {BundleSpecPayHelperService, QueryableDatasource, SaleHelperService} from
 import {SnackBarService} from '../../core/utilities';
 import {BundleService, BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
-import {BundleSelectModalComponent} from './bundle-select-modal.component';
+import {OptionSelectModalComponent} from './option-select-modal.component';
 
 
 @Component({
@@ -24,7 +24,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
     private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
-    bundleSelected: Map<number, boolean> = new Map<number, boolean>();
+    optionsSelected: Map<number, boolean> = new Map<number, boolean>();
 
     ds: QueryableDatasource<BundleSpecification>;
     private queryParams: { query: string };
@@ -81,27 +81,26 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         }
     }
 
-    private addSalesLineItem(id: number) {
-
-        this.saleHelper.addSalesLineItem(this.sale.id, id)
-            .subscribe( (res: Sale) => {
-                this.sale = res;
-            });
+    private async addSalesLineItem(id: number) {
+        const [data, error] = await this.saleHelper.addSalesLineItem(this.sale.id, id);
+        if (error) {
+            throw error;
+        }
+        this.sale = error;
     }
 
-    private deleteSalesLineItem(id: number) {
+    private async deleteSalesLineItem(id: number) {
         const salesLineId = this.sale
             .salesLineItems
             .map(line => [line.id, line.bundleSpecification.id])
             .filter(line => line[1] === id)
             .map(line => line[0])[0];
 
-        this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId)
-            .subscribe( (res: Sale) => {
-                this.sale = res;
-            }, err => {
-                this.snackbar.open(err.error.message);
-            });
+        const [data, error] = await this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId);
+        if (error) {
+            this.snackbar.open(error.error.message);
+        }
+        this.sale = data;
     }
 
     private destroy() {
@@ -139,16 +138,12 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         const isSelected = !this.getSelectBundle(spec.id);
         this.selected[spec.id] = isSelected;
 
-
-        if (isSelected) {
-            if (spec.type === BundleType.PERSONAL) {
-                this.addSalesLineItem(spec.id);
-            }
-            if (spec.type === BundleType.COURSE) {
-                await this.openDialog(spec);
-            }
+        if (spec.type === BundleType.COURSE) {
+            await this.openDialog(spec);
+        } else if (isSelected) {
+            await this.addSalesLineItem(spec.id);
         } else {
-            this.deleteSalesLineItem(spec.id);
+            await this.deleteSalesLineItem(spec.id);
         }
 
     }
@@ -165,29 +160,29 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     private async openDialog(spec) {
-        const [bundles, error] = await this.bundleService.searchBySpecIdAndNotExpired({specId: spec.id});
-        if (error) {
-            throw error;
-        }
+        const title = 'Scegli Opzione';
 
-        const title = 'Scegli Edizione';
-
-        const dialogRef = this.dialog.open(BundleSelectModalComponent, {
+        const dialogRef = this.dialog.open(OptionSelectModalComponent, {
             data: {
                 title: title,
                 spec: spec,
                 sale: this.sale,
-                bundles: bundles,
-                selected: this.bundleSelected
+                selected: this.optionsSelected
             }
         });
+
 
         dialogRef.afterClosed().subscribe(res => {
             console.log(res);
             if (res) {
-                res.forEach((value, key, map) => {
-                    this.bundleSelected[key] = value;
-                });
+                this.sale = res.sale;
+                res = res.selected;
+                for (const key in res) {
+                    this.optionsSelected[key] = res[key];
+                }
+
+                console.log(res);
+                console.log(this.optionsSelected);
 
                 let acc = false;
                 for (const key in res) {
