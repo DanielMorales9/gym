@@ -6,13 +6,13 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
 export class SimpleSearchToolbar {
-    @Input() query: string;
+    @Input() query: any;
     @Input() text: string;
 
     @Output() done: EventEmitter<any> = new EventEmitter();
 
     emit() {
-        this.done.emit({query: this.query});
+        this.done.emit(this.query);
     }
 }
 

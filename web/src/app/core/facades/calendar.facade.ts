@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BundleService, EventService, ReservationService, UserService} from '../controllers';
+import {BundleService, BundleSpecsService, EventService, ReservationService, UserService} from '../controllers';
 import {Observable, of} from 'rxjs';
 import {User} from '../../shared/model';
 import {AuthenticationService} from '../authentication';
@@ -13,6 +13,7 @@ export class CalendarFacade {
                 private auth: AuthenticationService,
                 private reservationService: ReservationService,
                 private bundleService: BundleService,
+                private specService: BundleSpecsService,
                 private eventService: EventService,
                 private dateService: DateService,
                 private gymService: GymService) {
@@ -50,12 +51,7 @@ export class CalendarFacade {
     /**
      * BUNDLE API
      */
-    getCourses(startTime: Date, endTime?: Date): Observable<Object[]> {
-        if (!endTime) {
-            endTime = this.dateService.addHour(startTime);
-        }
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
+    getCourses(): Observable<Object[]> {
         return of([]);
     }
 

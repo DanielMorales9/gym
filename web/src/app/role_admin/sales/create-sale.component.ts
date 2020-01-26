@@ -1,11 +1,12 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BundleSpecification, BundleType, Sale} from '../../shared/model';
-import {BundleSpecPayHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
+import {BundleSpecHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {SnackBarService} from '../../core/utilities';
 import {BundleService, BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
 import {OptionSelectModalComponent} from './option-select-modal.component';
+import {first} from 'rxjs/operators';
 
 
 @Component({
@@ -19,7 +20,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     sub: any;
 
     id: number;
-    query: string;
+    query = {disabled: false, name: ''};
     sale: Sale;
 
     private pageSize = 10;
@@ -27,10 +28,10 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     optionsSelected: Map<number, boolean> = new Map<number, boolean>();
 
     ds: QueryableDatasource<BundleSpecification>;
-    private queryParams: { query: string };
+    private queryParams: any;
 
     constructor(private saleHelper: SaleHelperService,
-                private helper: BundleSpecPayHelperService,
+                private helper: BundleSpecHelperService,
                 private specService: BundleSpecsService,
                 private bundleService: BundleService,
                 private snackbar: SnackBarService,
@@ -41,7 +42,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.getQuery();
+        this.initQueryParams();
         this.getId();
     }
 
@@ -52,12 +53,19 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         });
     }
 
-    private getQuery() {
-        this.query = this.route.snapshot.queryParamMap.get('query');
+    private initQueryParams() {
+        this.route.queryParams.pipe(first()).subscribe(params => {
+            this.queryParams = Object.assign({}, params);
+            this.queryParams.disabled = this.query.disabled;
+            this.queryParams.name = this.query.name;
+            this.search(this.queryParams);
+        });
     }
 
-    private updateQueryParams() {
-        this.queryParams = {query: this.query};
+    private updateQueryParams($event) {
+        if (!$event) { $event = {}; }
+
+        this.queryParams = this.query = $event;
         this.router.navigate(
             [],
             {
@@ -118,9 +126,17 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
     }
 
     search($event) {
-        this.ds.setQuery($event.query);
+        Object.keys($event).forEach(key => {
+            if ($event[key] === undefined) {
+                delete $event[key];
+            }
+            if ($event[key] === '') {
+                delete $event[key];
+            }
+        });
+        this.ds.setQuery($event);
         this.ds.fetchPage(0);
-        this.updateQueryParams();
+        this.updateQueryParams($event);
     }
 
 

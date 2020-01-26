@@ -22,7 +22,7 @@ export class UsersComponent implements OnInit {
 
     currentUserId: number;
 
-    query: string;
+    query = {name: ''};
     private pageSize = 10;
     private queryParams: any;
     ds: QueryableDatasource<User>;
@@ -59,9 +59,6 @@ export class UsersComponent implements OnInit {
     private initQueryParams() {
         this.activatedRoute.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
-            if (Object.keys(params).length > 0) {
-                this.query = this.queryParams.query || undefined;
-            }
             this.search(this.queryParams);
         });
     }
@@ -90,7 +87,9 @@ export class UsersComponent implements OnInit {
     }
 
     search($event?) {
-        if ($event) {if (!$event.query) { $event = {}; }}
+        if (!$event) {
+            $event = {};
+        }
         if (this.type === 'trainer') { $event.type = this.type; }
         this.ds.setQuery($event);
         this.ds.fetchPage(0);

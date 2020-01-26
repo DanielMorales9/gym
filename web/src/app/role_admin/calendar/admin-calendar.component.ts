@@ -67,7 +67,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     hour(action: string, event: any) {
-        this.facade.getCourses(event.date).subscribe(courses => {
+        this.facade.getCourses().subscribe(courses => {
             event.courses = courses;
             this.modalData = {
                 action: EVENT_TYPES.HOUR,
@@ -292,7 +292,7 @@ export class AdminCalendarComponent extends BaseCalendar {
     private createCourseEvent(data: any, end: Date) {
         this.facade.createCourseEvent(data.eventName, data.meta, data.start, end)
             .subscribe(async (_) => {
-                this.snackBar.open('Evento confermato');
+                this.snackBar.open('Evento creato');
                 await this.getEvents();
             }, (err) => {
                 this.snackBar.open(err.error.message);

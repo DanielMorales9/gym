@@ -20,14 +20,19 @@ export class UserHelperService extends HelperService<User> {
 
     search(query: any, page: number, size: number): Observable<Object> {
         if (query.type) {
-            if (query.query) {
-                return this.service.searchCustomerByLastName(query.query, page, size);
+            if (!!query.name) {
+                return this.service.searchCustomerByLastName(query.name, page, size);
             } else {
                 return this.service.getCustomers(page, size);
             }
 
         } else {
-            return this.service.search(query.query, page, size);
+            if (!!query.name) {
+                return this.service.search(query.name, page, size);
+            }
+            else {
+                return this.service.get(page, size);
+            }
         }
     }
 

@@ -17,7 +17,6 @@ import {
 import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
 import {
     BundleSpecHelperService,
-    BundleSpecPayHelperService,
     SaleHelperService,
     UserHelperService,
     BundleHelperService, BundleCustomerHelperService,
@@ -69,7 +68,6 @@ import {CalendarFacade} from './facades';
         UserHelperService,
         BundleSpecHelperService,
         BundleHelperService,
-        BundleSpecPayHelperService,
         BundleCustomerHelperService,
         PolicyService
     ]

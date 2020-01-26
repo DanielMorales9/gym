@@ -54,13 +54,6 @@ public class TrainingBundleSpecificationController {
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 
-//    @DeleteMapping(path = "/{id}/option/{optionId}")
-//    public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(@PathVariable Long id,
-//                                                                            @PathVariable Long optionId) {
-//        ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
-//        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
-//    }
-
     @PatchMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
                                                               HttpServletRequest request) throws IOException {
@@ -82,18 +75,5 @@ public class TrainingBundleSpecificationController {
                                                      @RequestParam(required = false) Boolean disabled,
                                                      Pageable pageable) {
         return facade.findByNameContains(name, disabled, pageable);
-    }
-
-    @GetMapping(path = "/searchNotDisabled")
-    @ResponseBody
-    public Page<ATrainingBundleSpecification> searchNotDisabled(@RequestParam String query, Pageable pageable) {
-        // TODO deprecate and substitute call with /search
-        return facade.findByNameContainsAndIsDisabled(query, false, pageable);
-    }
-
-    @GetMapping(path = "/getNotDisabled")
-    @ResponseBody
-    public Page<ATrainingBundleSpecification> getNotDisabled(Pageable pageable) {
-        return facade.findByIsDisabled(false, pageable);
     }
 }

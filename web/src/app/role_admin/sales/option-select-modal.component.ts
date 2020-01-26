@@ -35,10 +35,6 @@ export class OptionSelectModalComponent {
         this.spec.options.forEach(v => {
             this.selected[v.id] = selected[v.id];
         });
-
-        this.dialogRef.backdropClick().subscribe(async value => {
-            await this.close();
-        });
     }
 
     getSelectOption(id: number) {
@@ -52,16 +48,16 @@ export class OptionSelectModalComponent {
         return isSelected;
     }
 
-    selectOption(option: any) {
+    async selectOption(option: any) {
         console.log(option);
         const isSelected = !this.getSelectOption(option.id);
         this.selected[option.id] = isSelected;
         const id = option.id;
 
-        this.addOrDelete(isSelected, id);
+        await this.addOrDelete(isSelected, id);
     }
 
-    private async addOrDelete(isSelected: boolean, id) {
+    private async addOrDelete(isSelected: boolean, id: number) {
         if (isSelected) {
             await this.addSalesLineItem(id);
         } else {
@@ -70,9 +66,10 @@ export class OptionSelectModalComponent {
     }
 
     async close() {
+        let key;
         // tslint:disable-next-line:prefer-const
         for (let k in this.selected) {
-            const key = +k;
+            key = +k;
             if (!!this.backupSelected[key]) {
                 if (this.backupSelected[key] !== this.selected[key]) {
                     await this.addOrDelete(this.backupSelected[key], key);
@@ -95,12 +92,13 @@ export class OptionSelectModalComponent {
             .filter(line => line[1] === id)
             .map(line => line[0])[0];
 
-
-        const [data, error] = await this.service.deleteSalesLineItem(this.sale.id, salesLineId);
-        if (error) {
-            throw error;
+        if (salesLineId) {
+            const [data, error] = await this.service.deleteSalesLineItem(this.sale.id, salesLineId);
+            if (error) {
+                throw error;
+            }
+            this.sale = data;
         }
-        this.sale = data;
     }
 
     private async addSalesLineItem(id: any) {
