@@ -68,6 +68,13 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         P: 'reservation'
     };
 
+    BADGE_TYPES = {
+        H: 'light',
+        T: 'secondary',
+        C: 'primary',
+        P: 'info'
+    };
+
     EVENT_COLOR = {
         H: CALENDAR_COLUMNS.RED,
         T: CALENDAR_COLUMNS.RED,
@@ -102,7 +109,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     private queryParams: {view: CalendarView, viewDate: Date};
     user: User;
     modalData: any;
-
+    showMarker = true;
     events: CalendarEvent[];
 
     refresh: Subject<any> = new Subject();
@@ -183,26 +190,25 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         const [config, error] = await this.facade.getConfig();
         if (error) {
             throw error;
-        } else {
-            this.gym = config;
-            this.dayStartHour = 24;
-            this.dayEndHour = 0;
-            this.excludeDays = [];
+        }
+        this.gym = config;
+        this.dayStartHour = 24;
+        this.dayEndHour = 0;
+        this.excludeDays = [];
 
-            // tslint:disable-next-line:forin
-            for (const key in this.DAY_OF_WEEK) {
-                if (!config[key + 'Open']) {
-                    this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
-                } else {
-                    this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
-                    this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
-                }
-
+        // tslint:disable-next-line:forin
+        for (const key in this.DAY_OF_WEEK) {
+            if (!config[key + 'Open']) {
+                this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
+            } else {
+                this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
+                this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
             }
 
-            this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
-
         }
+
+        this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
+
     }
 
     private initView() {
@@ -343,7 +349,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
         event.eventName = this.EVENT_NAMES[event.type];
 
-        // TODO avoid this type change
+        event.badge = this.BADGE_TYPES[event.type];
         event.type = this.EVENT_TYPES[event.type];
 
         return {
@@ -363,14 +369,13 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     beforeMonthViewRender({ body }: {
-        body: Array<CalendarMonthViewDay<EventGroupMeta>>;
+        body: Array<CalendarMonthViewDay<any>>;
     }): void {
-        // month view has a different UX from the week and day view so we only really need to group by the type
         body.forEach(cell => {
             const groups = {};
-            cell.events.forEach((event: CalendarEvent<EventGroupMeta>) => {
-                groups[event.meta.type] = groups[event.meta.type] || [];
-                groups[event.meta.type].push(event);
+            cell.events.forEach((event) => {
+                groups[event.meta.badge] = groups[event.meta.badge] || [];
+                groups[event.meta.badge].push(event);
             });
             cell['eventGroups'] = Object.entries(groups);
         });
