@@ -154,7 +154,7 @@ public class SaleFacadeTest {
         addSalesLineItem(mockSale, bundleSpec);
         ATrainingBundle trainingBundle = mockSale.getSalesLineItems().get(0).getTrainingBundle();
 
-        Date start = addDays(getNextMonday(), -7);
+        Date start = addDays(getNextMonday(), -8);
         Date end = addHours(start, 1);
         PersonalTrainingEvent event = createPersonalEvent(1L, "personal", start, end);
         ATrainingSession session = trainingBundle.createSession(event);
