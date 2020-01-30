@@ -5,7 +5,6 @@ import it.gym.facade.TrainingBundleFacade;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
-import it.gym.model.Gym;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
