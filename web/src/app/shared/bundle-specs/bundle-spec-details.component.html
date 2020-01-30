@@ -77,6 +77,15 @@
                             <td mat-cell *matCellDef="let element"> {{element.createdAt | date: 'dd/MM/yyyy'}} </td>
                         </ng-container>
 
+                        <ng-container matColumnDef="actions">
+                            <th mat-header-cell *matHeaderCellDef> Azioni </th>
+                            <td mat-cell *matCellDef="let element">
+                                <button mat-button color="warn" (click)="deleteOption(element.id)">
+                                    <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+
                         <tr mat-header-row *matHeaderRowDef="displayedPaymentsColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedPaymentsColumns; let i = index;"></tr>
                     </table>

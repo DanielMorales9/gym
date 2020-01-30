@@ -46,11 +46,16 @@ export class BundleSpecsService extends ABundleService {
 
     @to_promise
     createOption(id: any, obj: any): any {
-        return this.http.post(`/bundleSpecs/${id}/option`, obj);
+        return this.http.post(`/bundleSpecs/${id}/options`, obj);
     }
 
     @to_promise
     list(param: any): any {
         return this.http.get(`/bundleSpecs/list`, {params: param});
+    }
+
+    @to_promise
+    deleteOption(specId: number, optionId: number): any {
+        return this.http.delete(`/bundleSpecs/${specId}/options/${optionId}`);
     }
 }

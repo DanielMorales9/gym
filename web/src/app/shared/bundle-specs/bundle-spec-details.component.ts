@@ -1,11 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../core/controllers';
-import {BundleSpecification, BundleType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
+import {BundleType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {PolicyService} from '../../core/policy';
 import {OptionModalComponent} from './option-modal.component';
+import {SnackBarService} from '../../core/utilities';
 
 @Component({
     selector: 'bundle-spec-details',
@@ -20,7 +21,8 @@ export class BundleSpecDetailsComponent implements OnInit {
 
     canDelete: boolean;
     canDisable: boolean;
-    displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'date'];
+    displayedPaymentsColumns: String[];
+    canDeleteOption: boolean;
     canMakeOption: boolean;
     canEdit: boolean;
 
@@ -28,13 +30,22 @@ export class BundleSpecDetailsComponent implements OnInit {
                 private dialog: MatDialog,
                 private router: Router,
                 private policy: PolicyService,
+                private snackBar: SnackBarService,
                 private route: ActivatedRoute) {
     }
 
     ngOnInit(): void {
+        this.getPolicies();
+        const displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'date'];
+
+        if (this.canDeleteOption) {
+            displayedPaymentsColumns.push('actions');
+        }
+
+        this.displayedPaymentsColumns = displayedPaymentsColumns;
+
         this.route.params.subscribe(async params => {
             await this.getBundleSpec(+params['id']);
-            this.getPolicies();
         });
     }
 
@@ -42,7 +53,8 @@ export class BundleSpecDetailsComponent implements OnInit {
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
         this.canEdit = this.policy.get('bundleSpec', 'canEdit');
-        this.canMakeOption = this.policy.get('bundleSpec', 'canMakeOption');
+        this.canMakeOption = this.policy.get('option', 'canCreate');
+        this.canDeleteOption = this.policy.get('option', 'canCreate');
     }
 
     editBundleSpec(): void {
@@ -114,5 +126,18 @@ export class BundleSpecDetailsComponent implements OnInit {
                 this.bundleSpec = data;
             }
         });
+    }
+
+    async deleteOption(id: any) {
+        if (confirm('Sei sicuro di voler eliminare l\'opzione?')) {
+
+            const [data, error] = await this.service.deleteOption(this.bundleSpec.id, id);
+            if (error) {
+                this.snackBar.open('Impossibile eliminare opzione in uso');
+                return;
+            }
+            this.bundleSpec = data;
+        }
+
     }
 }

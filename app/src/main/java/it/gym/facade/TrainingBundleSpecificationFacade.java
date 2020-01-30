@@ -2,7 +2,9 @@ package it.gym.facade;
 
 import it.gym.controller.ReservationController;
 import it.gym.exception.BadRequestException;
+import it.gym.exception.NotFoundException;
 import it.gym.model.*;
+import it.gym.repository.OptionRepository;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ public class TrainingBundleSpecificationFacade {
 
     @Autowired
     private TrainingBundleSpecificationService service;
+
+    @Autowired
+    private OptionRepository repository;
 
     @Autowired
     @Qualifier("trainingBundleService")
@@ -79,5 +84,13 @@ public class TrainingBundleSpecificationFacade {
 
     public List<ATrainingBundleSpecification> findByIsDisabled(Boolean disabled) {
         return service.findByIsDisabled(disabled);
+    }
+
+    public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
+        CourseTrainingBundleSpecification c = (CourseTrainingBundleSpecification) this.findById(id);
+        TimeOption o = this.repository.findById(optionId).orElseThrow(() -> new NotFoundException("Opzione non trovata"));
+        c.getOptions().remove(o);
+        repository.delete(o);
+        return service.save(c);
     }
 }

@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -48,11 +49,19 @@ public class TrainingBundleSpecificationController {
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 
-    @PostMapping(path = "/{id}/option")
+    @PostMapping(path = "/{id}/options")
     public ResponseEntity<TrainingBundleSpecificationResource> createOption(@PathVariable Long id,
                                                                             @RequestBody TimeOption option) {
         ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+    }
+
+
+    @DeleteMapping(value = "/{id}/options/{optionId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(@PathVariable Long id, @PathVariable Long optionId) {
+        ATrainingBundleSpecification b = this.facade.deleteOption(id, optionId);
+        return new ResponseEntity<>(new TrainingBundleSpecificationAssembler().toResource(b), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{id}")
