@@ -48,7 +48,7 @@ export class BundleItemComponent {
     }
 
     edit() {
-        const title = 'Modifica Pacchetto';
+        const title = 'Modifica Date del Corso';
 
         const dialogRef = this.dialog.open(BundleModalComponent, {
             data: {

@@ -1,5 +1,7 @@
 package it.gym.facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.ATrainingBundle;
 import it.gym.service.TrainingBundleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +10,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.List;
 
 
@@ -47,4 +51,5 @@ public class TrainingBundleFacade {
     public List<ATrainingBundle> findBundlesBySpecIdNotExpired(Long specId) {
         return service.findBundlesBySpecIdNotExpired(specId);
     }
+
 }

@@ -51,7 +51,7 @@
                 <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
             </span>
         </button>
-        <button mat-button *ngIf="canEdit" (click)="edit()">
+        <button mat-button *ngIf="canEdit && bundle?.type ==='C'" (click)="edit()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
             </span>

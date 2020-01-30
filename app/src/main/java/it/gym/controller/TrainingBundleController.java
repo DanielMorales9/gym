@@ -1,9 +1,11 @@
 package it.gym.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.TrainingBundleFacade;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
+import it.gym.model.Gym;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +14,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.List;
 
 @RepositoryRestController
@@ -21,6 +25,9 @@ public class TrainingBundleController {
 
     @Autowired
     private TrainingBundleFacade service;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @GetMapping
     @ResponseBody
@@ -51,5 +58,14 @@ public class TrainingBundleController {
     public ResponseEntity<List<TrainingBundleResource>> findBySpecsNotExpired(@RequestParam Long specId) {
         List<ATrainingBundle> bundles = service.findBundlesBySpecIdNotExpired(specId);
         return ResponseEntity.ok(new TrainingBundleAssembler().toResources(bundles));
+    }
+
+    @PatchMapping(path = "/{id}")
+    public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
+                                                        HttpServletRequest request) throws IOException {
+        ATrainingBundle bundle = service.findById(id);
+        bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
+        bundle = service.save(bundle);
+        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
     }
 }

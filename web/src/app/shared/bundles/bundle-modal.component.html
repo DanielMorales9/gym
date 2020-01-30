@@ -3,23 +3,6 @@
     <div mat-dialog-content>
         <div>
             <mat-form-field>
-                <label for="name" class="sr-only">Nome</label>
-                <input type="text"
-                       matInput
-                       placeholder="Nome"
-                       id="name"
-                       name="name"
-                       formControlName="name"
-                       [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
-                <mat-error *ngIf="name.touched && name.invalid">
-                    <div *ngIf="!!name.errors?.required">
-                        Nome dell'edizione obbligatorio
-                    </div>
-                </mat-error>
-            </mat-form-field>
-        </div>
-        <div>
-            <mat-form-field>
                 <label for="startTime" class="sr-only">Data d'inizio</label>
                 <input matInput
                        id="startTime"
@@ -33,6 +16,23 @@
                 </mat-error>
                 <mat-datepicker-toggle matSuffix [for]="startTimePicker"></mat-datepicker-toggle>
                 <mat-datepicker #startTimePicker ></mat-datepicker>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="endTime" class="sr-only">Data di scadenza</label>
+                <input matInput
+                       id="endtime"
+                       [matDatepicker]="endTimePicker"
+                       name="endTime"
+                       formControlName="endTime"
+                       placeholder="Data di scadenza"
+                       [ngClass]="{ 'is-invalid': endTime.touched && endTime.invalid }">
+                <mat-error *ngIf="endTime.touched && endTime.invalid">
+                    <div *ngIf="!!endTime.errors?.required">Data di scadenza obbligatoria</div>
+                </mat-error>
+                <mat-datepicker-toggle matSuffix [for]="endTimePicker"></mat-datepicker-toggle>
+                <mat-datepicker #endTimePicker ></mat-datepicker>
             </mat-form-field>
         </div>
 
