@@ -29,7 +29,7 @@ export class SearchDateToolbar implements OnInit {
                 if (!!event.value) { this.query.date = event.value; } else { delete this.query.date; }
                 break;
             case this.filterName:
-                if (!!event.value) {
+                if (event.value !== undefined && event.value !== null) {
                     this.query[this.filterName] = event.value;
                 } else {
                     delete this.query[this.filterName];

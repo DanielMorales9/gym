@@ -4,16 +4,13 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.ConflictException;
 import it.gym.model.*;
 import it.gym.service.*;
-import org.bouncycastle.crypto.agreement.jpake.JPAKERound1Payload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.util.Date;
