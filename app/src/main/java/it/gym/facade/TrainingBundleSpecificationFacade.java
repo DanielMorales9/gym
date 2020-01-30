@@ -90,11 +90,7 @@ public class TrainingBundleSpecificationFacade {
         CourseTrainingBundleSpecification c = (CourseTrainingBundleSpecification) this.findById(id);
         TimeOption o = this.repository.findById(optionId).orElseThrow(() -> new NotFoundException("Opzione non trovata"));
         c.getOptions().remove(o);
-        try {
-            repository.delete(o);
-        } catch (Exception e) {
-            throw new BadRequestException("Impossibile eliminare opzione in uso");
-        }
+        repository.delete(o);
         return service.save(c);
     }
 }

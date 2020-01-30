@@ -181,7 +181,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(randomObj);
 
-        ResultActions result = mockMvc.perform(post("/bundleSpecs/"+courseBundleSpec.getId()+"/option")
+        ResultActions result = mockMvc.perform(post("/bundleSpecs/"+courseBundleSpec.getId()+"/options")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(json))
                 .andExpect(status().isOk());

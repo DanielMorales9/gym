@@ -12,7 +12,10 @@ export class PolicyService {
             canEdit: true,
             canDisable: true,
             canCreate: true,
-            canMakeOption: true
+        },
+        option: {
+            canCreate: true,
+            canDelete: true,
         },
         sale: {
             canDelete: true,

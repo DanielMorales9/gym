@@ -52,7 +52,7 @@ public class TrainingBundleSpecificationController {
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
     }
 
-    @PostMapping(path = "/{id}/option")
+    @PostMapping(path = "/{id}/options")
     public ResponseEntity<TrainingBundleSpecificationResource> createOption(@PathVariable Long id,
                                                                             @RequestBody TimeOption option) {
         ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
