@@ -30,11 +30,11 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date,
                                                     Pageable pageable);
 
-    Page<Sale> findSalesByCustomerLastName(String query, Pageable pageable);
+    Page<Sale> findSalesByCustomerLastNameContains(String query, Pageable pageable);
 
-    Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
-                                                                       Date date,
-                                                                       Pageable pageable);
+    Page<Sale> findSalesByCustomerLastNameContainsAndCreatedAtGreaterThanEqual(String lastName,
+                                                                               Date date,
+                                                                               Pageable pageable);
 
     Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsPayed(String lastName,
                                                                        Date date,
@@ -45,4 +45,6 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     Page<Sale> findSalesByCustomerLastNameAndIsPayed(String lastName, Boolean payed, Pageable pageable);
 
     Page<Sale> findSalesByIsPayed(Boolean payed, Pageable pageable);
+
+    Page<Sale> findSalesByCreatedAtGreaterThanEqualAndIsPayed(Date date, Boolean payed, Pageable pageable);
 }

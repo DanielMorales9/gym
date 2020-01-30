@@ -102,8 +102,7 @@ export class OptionSelectModalComponent {
     }
 
     private async addSalesLineItem(id: any) {
-        const [data, error] = await this.service.addSalesLineItem({
-            saleId: this.sale.id,
+        const [data, error] = await this.service.addSalesLineItem(this.sale.id, {
             bundleSpecId: this.spec.id,
             optionId: id
         });

@@ -1,20 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CourseBundle, PersonalBundle, PersonalBundleSpecification, Sale} from '../model';
+import {CourseBundle, PersonalBundleSpecification, Sale} from '../model';
 import {MatDialog} from '@angular/material';
 import {SalesService} from '../../core/controllers';
 import {SaleHelperService} from '../../core/helpers';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {PolicyService} from '../../core/policy';
-
-function _transformer(node: any, level: number) {
-    return {
-        expandable: !!node.payments && node.payments.length > 0,
-        name: node.payments.length + 'Rate - ' + node.amountPayed + '&euro;',
-        level: level,
-    };
-}
 
 @Component({
     templateUrl: './sale-details.component.html',
@@ -23,14 +15,17 @@ function _transformer(node: any, level: number) {
 export class SaleDetailsComponent implements OnInit {
 
     sale: Sale;
+
     hidden: boolean;
+
+    canDeletePayment: any;
     canPay: boolean;
     canDelete: boolean;
 
     expand = new Proxy({}, {
         get: (target, name) => name in target ? target[name] : false
     });
-    displayedPaymentsColumns = ['index', 'date', 'hour', 'amount'];
+    displayedPaymentsColumns: String[];
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -39,12 +34,22 @@ export class SaleDetailsComponent implements OnInit {
                 private dialog: MatDialog,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-        this.canDelete = this.policy.get('sale', 'canDelete');
-        this.canPay = this.policy.get('sale', 'canPay');
     }
 
 
     ngOnInit(): void {
+        this.canDelete = this.policy.get('sale', 'canDelete');
+        this.canPay = this.policy.get('sale', 'canPay');
+        this.canDeletePayment = this.policy.get('payment', 'canDelete');
+        const displayedPaymentsColumns = ['index', 'date', 'amount'];
+        console.log('hey');
+
+        if (this.canDeletePayment) {
+            displayedPaymentsColumns.push('actions');
+        }
+
+        this.displayedPaymentsColumns = displayedPaymentsColumns;
+
         this.route.params.subscribe(params => {
             this.getSale(+params['id']);
         });
@@ -98,6 +103,17 @@ export class SaleDetailsComponent implements OnInit {
         console.log('closed');
         for (const key in this.expand) {
             this.expand[key] = false;
+        }
+    }
+
+    async deletePayment(id: any) {
+        const res = confirm('Sei sicuro di voler eliminare il pagamento?');
+        if (res) {
+            const [data, error] = await this.service.deletePayment(this.sale.id, id);
+            if (error) {
+                throw error;
+            }
+            this.sale = data;
         }
     }
 }

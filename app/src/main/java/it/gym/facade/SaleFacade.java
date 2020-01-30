@@ -4,13 +4,16 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.ConflictException;
 import it.gym.model.*;
 import it.gym.service.*;
+import org.bouncycastle.crypto.agreement.jpake.JPAKERound1Payload;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.transaction.Transactional;
 import java.util.Date;
@@ -64,8 +67,8 @@ public class SaleFacade {
         return this.saleService.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
     }
 
-    public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Pageable pageable) {
-        return this.saleService.findSalesByCreatedAtGreaterThanEqual(date, pageable);
+    public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Boolean payed, Pageable pageable) {
+        return this.saleService.findSalesByCreatedAtGreaterThanEqual(date, payed, pageable);
     }
 
     public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
@@ -186,5 +189,38 @@ public class SaleFacade {
                     .stream()
                     .map(SalesLineItem::getTrainingBundle)
                     .collect(Collectors.toList());
+    }
+
+    public Sale deletePayment(Long saleId, Long paymentId) {
+        Sale sale = this.findById(saleId);
+        Payment p = sale
+                .getPayments()
+                .stream()
+                .filter(payment -> payment.getId().equals(paymentId))
+                .findFirst()
+                .orElseThrow(() -> new BadRequestException("Questo pagamento non esiste"));
+
+        sale.getPayments().remove(p);
+
+        sale.setAmountPayed(sale.getAmountPayed() - p.getAmount());
+        sale.setPayed(false);
+        sale.setPayedDate(null);
+
+        paymentService.delete(p);
+
+        return this.save(sale);
+    }
+
+    public Page<Sale> getSales(String lastName, Date date, Boolean payed, Pageable pageable) {
+        if (date != null && lastName != null) {
+            return findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, payed, pageable);
+        }
+        else if (lastName != null) {
+            return findSalesByCustomerLastName(lastName, payed, pageable);
+        } else if (date != null) {
+            return findSalesByCreatedAtGreaterThanEqual(date, payed, pageable);
+        } else {
+            return findAll(payed, pageable);
+        }
     }
 }

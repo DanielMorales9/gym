@@ -23,13 +23,6 @@ public class SaleController {
     @Autowired
     private SaleFacade facade;
 
-    @GetMapping
-    @ResponseBody
-    public Page<Sale> findAll(@RequestParam(required = false) Boolean payed,
-                              Pageable pageable) {
-        return facade.findAll(payed, pageable);
-    }
-
     @GetMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<SaleResource> findSaleById(@PathVariable Long id) {
@@ -39,14 +32,40 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/{id}/customer")
+    @GetMapping(path = "/findByCustomer")
     @ResponseBody
-    ResponseEntity<AUserResource> findUserBySaleId(@PathVariable Long id) {
-
-        Sale sale = facade.findById(id);
-
-        return new ResponseEntity<>(new AUserAssembler().toResource(sale.getCustomer()), HttpStatus.OK);
+    public Page<Sale> findUserSales(@RequestParam Long id,
+                                    @RequestParam(required = false)
+                                    @DateTimeFormat(pattern = "dd-MM-yyyy",
+                                            iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                                    @RequestParam(required = false) Boolean payed,
+                                    Pageable pageable) {
+        if (date != null) {
+            return facade.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
+        }
+        else {
+            return facade.findUserSales(id, payed, pageable);
+        }
     }
+
+    @GetMapping
+    @ResponseBody
+    public Page<Sale> findAll(@RequestParam(required = false) Boolean payed,
+                              Pageable pageable) {
+        return facade.findAll(payed, pageable);
+    }
+
+    @GetMapping(path = "/search")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public Page<Sale> findSalesByLastNameAndDate(@RequestParam(required = false) String lastName,
+                                                 @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy",
+                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                                                 @RequestParam(required = false) Boolean payed,
+                                                 Pageable pageable) {
+        return facade.getSales(lastName, date, payed, pageable);
+    }
+
 
     @GetMapping(path = "/{id}/salesLineItems")
     @ResponseBody
@@ -57,68 +76,16 @@ public class SaleController {
         return new ResponseEntity<>(new SalesLineItemAssembler().toResources(sale.getSalesLineItems()), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/findUserSales")
-    @ResponseBody
-    public Page<Sale> findUserSales(@RequestParam Long id,
-                                    @RequestParam(required = false) Boolean payed,
-                                    Pageable pageable) {
-        return facade.findUserSales(id, payed, pageable);
-    }
-
-    @GetMapping(path = "/searchByDateAndId")
-    @ResponseBody
-    public Page<Sale> findSalesByDateAndId(@RequestParam Long id,
-                                           @RequestParam
-                                           @DateTimeFormat(pattern = "dd-MM-yyyy",
-                                                   iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                           @RequestParam(required = false) Boolean payed,
-                                           Pageable pageable) {
-        return facade.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
-    }
-
-    @GetMapping(path = "/searchByDate")
-    @ResponseBody
-    public Page<Sale> findSalesByDate(@RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
-            iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                      Pageable pageable) {
-        return facade.findSalesByCreatedAtGreaterThanEqual(date, pageable);
-    }
-
-    @GetMapping(path = "/searchByLastNameAndDate")
-    @ResponseBody
+    @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<Sale> findSalesByLastNameAndDate(@RequestParam String lastName,
-                                                 @RequestParam @DateTimeFormat(pattern = "dd-MM-yyyy",
-                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                                 @RequestParam(required = false) Boolean payed,
-                                                 Pageable pageable) {
-        return facade.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, payed, pageable);
-    }
-
-    @GetMapping(path = "/searchByLastName")
-    @ResponseBody
-    public Page<Sale> findSalesByCustomerLastName(@RequestParam String lastName,
-                                                  @RequestParam(required = false) Boolean payed,
-                                                  Pageable pageable) {
-        return facade.findSalesByCustomerLastName(lastName, payed, pageable);
-    }
-
-    @GetMapping(path = "/createSale/{customerId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<SaleResource> createSale(@PathVariable Long customerId) {
+    public ResponseEntity<SaleResource> createSale(@RequestParam Long customerId) {
         Sale sale = this.facade.createSale(customerId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/getTotalPrice/{saleId}")
-    public ResponseEntity<SaleResource> getTotalPrice(@PathVariable Long saleId) {
-        Sale sale = this.facade.getTotalPriceBySaleId(saleId);
-        return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
-    }
-
-    @GetMapping(path = "/addSalesLineItem")
+    @PutMapping(value = "/{saleId}/salesLineItems")
     @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<SaleResource> addSalesLineItem(@RequestParam Long saleId,
+    public ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
                                                          @RequestParam Long bundleSpecId,
                                                          @RequestParam(required = false) Long optionId) {
         Sale sale = this.facade.addSalesLineItem(saleId, bundleSpecId, optionId);
@@ -126,7 +93,7 @@ public class SaleController {
     }
 
 
-    @DeleteMapping(path = "/deleteSalesLineItem/{saleId}/{salesLineItemId}")
+    @DeleteMapping(value = "/{saleId}/salesLineItems/{salesLineItemId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
                                                             @PathVariable Long salesLineItemId) {
@@ -134,17 +101,24 @@ public class SaleController {
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/confirmSale/{saleId}")
+    @GetMapping(value = "/{saleId}/confirm")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> confirmSale(@PathVariable Long saleId) {
         Sale sale = this.facade.confirmSale(saleId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
-    @GetMapping(path = "/pay/{saleId}")
+    @GetMapping(value = "/{saleId}/pay")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestParam Double amount) {
         Sale sale = this.facade.paySale(saleId, amount);
+        return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/{saleId}/payments/{paymentId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<SaleResource> deletePayment(@PathVariable Long saleId, @PathVariable Long paymentId) {
+        Sale sale = this.facade.deletePayment(saleId, paymentId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }
 
