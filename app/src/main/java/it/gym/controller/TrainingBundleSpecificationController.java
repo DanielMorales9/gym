@@ -2,12 +2,9 @@ package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.TrainingBundleSpecificationFacade;
-import it.gym.hateoas.SaleAssembler;
-import it.gym.hateoas.SaleResource;
 import it.gym.hateoas.TrainingBundleSpecificationAssembler;
 import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.model.Sale;
 import it.gym.model.TimeOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;

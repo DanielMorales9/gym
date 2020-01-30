@@ -129,11 +129,15 @@ export class BundleSpecDetailsComponent implements OnInit {
     }
 
     async deleteOption(id: any) {
-        const [data, error] = await this.service.deleteOption(this.bundleSpec.id, id);
-        if (error) {
-            this.snackBar.open('Impossibile eliminare opzione in uso');
-            return;
+        if (confirm('Sei sicuro di voler eliminare l\'opzione?')) {
+
+            const [data, error] = await this.service.deleteOption(this.bundleSpec.id, id);
+            if (error) {
+                this.snackBar.open('Impossibile eliminare opzione in uso');
+                return;
+            }
+            this.bundleSpec = data;
         }
-        this.bundleSpec = data;
+
     }
 }
