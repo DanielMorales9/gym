@@ -16,7 +16,6 @@ import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectTrainingBundle;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
@@ -27,7 +26,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     private CourseTrainingBundle courseBundle;
 
     @Autowired
-    ObjectMapper objectMapper;
+    private ObjectMapper objectMapper;
 
     @Before
     public void before() {
