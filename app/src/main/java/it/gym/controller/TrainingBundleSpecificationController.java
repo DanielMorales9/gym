@@ -2,14 +2,18 @@ package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.TrainingBundleSpecificationFacade;
+import it.gym.hateoas.SaleAssembler;
+import it.gym.hateoas.SaleResource;
 import it.gym.hateoas.TrainingBundleSpecificationAssembler;
 import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.Sale;
 import it.gym.model.TimeOption;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -53,6 +57,14 @@ public class TrainingBundleSpecificationController {
                                                                             @RequestBody TimeOption option) {
         ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
         return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+    }
+
+
+    @DeleteMapping(value = "/{id}/options/{optionId}")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(@PathVariable Long id, @PathVariable Long optionId) {
+        ATrainingBundleSpecification b = this.facade.deleteOption(id, optionId);
+        return new ResponseEntity<>(new TrainingBundleSpecificationAssembler().toResource(b), HttpStatus.OK);
     }
 
     @PatchMapping(path = "/{id}")

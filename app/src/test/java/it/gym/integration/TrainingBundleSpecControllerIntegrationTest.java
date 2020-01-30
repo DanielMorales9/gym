@@ -101,6 +101,14 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     }
 
     @Test
+    public void deleteOptionOK() throws Exception {
+        Long optionId = courseBundleSpec.getOptions().get(0).getId();
+        Long specId = courseBundleSpec.getId();
+        mockMvc.perform(delete("/bundleSpecs/" + specId + "/options/"+ optionId))
+                .andExpect(status().isOk());
+    }
+
+    @Test
     public void deleteCourseBundleSpecId_throwsException() throws Exception {
         CourseTrainingBundle bundle = createCourseBundle(1L, getNextMonday(),
                 courseBundleSpec,
