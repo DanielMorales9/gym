@@ -23,7 +23,14 @@ import {
 } from './calendar';
 import localeIt from '@angular/common/locales/it';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
+import * as Hammer from 'hammerjs';
 
+export class MyHammerConfig extends HammerGestureConfig {
+    overrides = <any>{
+        swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
+    };
+}
 registerLocaleData(localeIt);
 
 
@@ -56,7 +63,9 @@ registerLocaleData(localeIt);
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},
-        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'},
+        { provide: HAMMER_GESTURE_CONFIG, useClass: MyHammerConfig },
+
     ],
     exports: [
     ],
