@@ -11,7 +11,8 @@
     <div *cdkVirtualFor="let b of ds;" class="scroll-item">
         <bundle-item [canEdit]="canEdit"
                      [canDelete]="canDelete"
-                     [bundle]="b" (done)="handleEvent($event)"></bundle-item>
+                     [bundle]="b"
+                     (done)="handleEvent($event)"></bundle-item>
     </div>
 </cdk-virtual-scroll-viewport>
 <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>

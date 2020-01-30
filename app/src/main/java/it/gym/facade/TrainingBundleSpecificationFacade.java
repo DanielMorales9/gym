@@ -63,14 +63,6 @@ public class TrainingBundleSpecificationFacade {
         return service.save(spec);
     }
 
-    public Page<ATrainingBundleSpecification> findByNameContainsAndIsDisabled(String query, boolean b, Pageable pageable) {
-        return service.findByNameContainsAndIsDisabled(query, b, pageable);
-    }
-
-    public Page<ATrainingBundleSpecification> findByIsDisabled(boolean b, Pageable pageable) {
-        return service.findByIsDisabled(b, pageable);
-    }
-
     public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
         return service.findAll(pageable);
     }

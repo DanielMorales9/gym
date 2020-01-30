@@ -90,13 +90,15 @@ export class BundlesCustomerComponent implements OnInit {
     async handleEvent($event) {
         if ($event.type === 'info') {
             this.goToDetails($event.bundle);
+        } else if ($event.type === 'edit') {
+            this.service.patch($event.bundle);
         } else {
             console.error(`Operazione non riconosciuta: ${$event.type}`);
         }
     }
 
     private async goToDetails(bundle: any) {
-        await this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent})
+        await this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent});
     }
 
 }

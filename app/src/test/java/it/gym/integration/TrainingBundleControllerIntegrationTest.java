@@ -1,6 +1,7 @@
 package it.gym.integration;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
@@ -8,13 +9,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectTrainingBundle;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
@@ -23,6 +24,9 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     @Autowired private TrainingBundleSpecificationRepository specRepository;
     private PersonalTrainingBundle personalBundle;
     private CourseTrainingBundle courseBundle;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Before
     public void before() {
@@ -94,6 +98,20 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     @Test
     public void whenDeleteOK() throws Exception {
         ResultActions result = mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
+                .andExpect(status().isOk());
+
+        expectTrainingBundle(result, courseBundle);
+
+    }
+
+    @Test
+    public void whenPatchOK() throws Exception {
+
+        courseBundle.setName("Test");
+        courseBundle.setBundleSpec(null);
+        ResultActions result = mockMvc.perform(patch("/bundles/"+courseBundle.getId())
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .content(objectMapper.writeValueAsString(courseBundle)))
                 .andExpect(status().isOk());
 
         expectTrainingBundle(result, courseBundle);

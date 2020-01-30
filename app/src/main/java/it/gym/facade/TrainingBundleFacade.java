@@ -47,4 +47,5 @@ public class TrainingBundleFacade {
     public List<ATrainingBundle> findBundlesBySpecIdNotExpired(Long specId) {
         return service.findBundlesBySpecIdNotExpired(specId);
     }
+
 }
