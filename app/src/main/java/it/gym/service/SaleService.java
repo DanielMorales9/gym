@@ -48,39 +48,38 @@ public class SaleService implements ICrudService<Sale, Long> {
                                                                         Date date,
                                                                         Boolean payed,
                                                                         Pageable pageable) {
-        // TODO merge call
         if (payed == null) {
             return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
         }
         return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqualAndIsPayed(id, date, payed, pageable);
     }
 
-    public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Pageable pageable) {
-        return saleRepository.findSalesByCreatedAtGreaterThanEqual(date, pageable);
+    public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Boolean payed, Pageable pageable) {
+        if (payed == null) {
+            return saleRepository.findSalesByCreatedAtGreaterThanEqual(date, pageable);
+        }
+        return saleRepository.findSalesByCreatedAtGreaterThanEqualAndIsPayed(date, payed, pageable);
     }
 
     public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
                                                                               Date date,
                                                                               Boolean payed,
                                                                               Pageable pageable) {
-        // TODO merge call
         if (payed == null) {
-            return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, pageable);
+            return saleRepository.findSalesByCustomerLastNameContainsAndCreatedAtGreaterThanEqual(lastName, date, pageable);
         }
         return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsPayed(lastName, date,
                 payed, pageable);
     }
 
     public Page<Sale> findSalesByCustomerLastName(String lastName, Boolean payed, Pageable pageable) {
-        // TODO merge call
         if (payed == null) {
-            return saleRepository.findSalesByCustomerLastName(lastName, pageable);
+            return saleRepository.findSalesByCustomerLastNameContains(lastName, pageable);
         }
         return saleRepository.findSalesByCustomerLastNameAndIsPayed(lastName, payed, pageable);
     }
 
     public Page<Sale> findAll(Boolean payed, Pageable pageable) {
-        // TODO merge call
         if (payed == null) {
             return this.findAll(pageable);
         }

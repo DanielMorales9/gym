@@ -19,7 +19,7 @@ import {
     MatToolbarModule
 } from '@angular/material';
 import {ScrollingModule} from '@angular/cdk/scrolling';
-import {OptionSelectItemComponent, OptionSelectModalComponent, BundleSpecSelectItemComponent, CreateSaleComponent} from './sales';
+import {BundleSpecSelectItemComponent, CreateSaleComponent, OptionSelectItemComponent, OptionSelectModalComponent} from './sales';
 import {
     AdminCalendarComponent,
     AdminChangeModalComponent,
@@ -41,10 +41,11 @@ import * as Hammer from 'hammerjs';
 registerLocaleData(localeIt);
 
 export class MyHammerConfig extends HammerGestureConfig {
-    overrides = <any> {
-        swipe: { direction: Hammer.DIRECTION_ALL },
+    overrides = <any>{
+        swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
     };
 }
+
 
 @NgModule({
     imports: [

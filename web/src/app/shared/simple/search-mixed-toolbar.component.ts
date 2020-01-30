@@ -37,9 +37,9 @@ export class SearchMixedToolbar implements OnInit {
                 if (!!event.value) { this.query.date = event.value; }
                 else { delete this.query.date; }
                 break;
-            case this.filterName:
-                if (!!event.value) { this.query[this.filterName] = event.value; }
-                else { delete this.query[this.filterName]; }
+            default:
+                if (event.value === undefined || event.value === null) { delete this.query[this.filterName]; }
+                else { this.query[this.filterName] = event.value; }
                 break;
         }
         this.done.emit(this.query);

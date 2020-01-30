@@ -1,7 +1,9 @@
 <mat-toolbar color="basic" class="calendar-top-toolbar">
+
     <!--    <ng-container *ngIf="!isDesktop() else desktopControls">-->
     <!--        <ng-container *ngTemplateOutlet="mobileControls" ></ng-container>-->
     <!--    </ng-container>-->
+
     <button mat-icon-button mwlCalendarPreviousView
             [view]="view"
             [(viewDate)]="viewDate"
@@ -9,6 +11,7 @@
         <mat-icon fontSet="fas" fontIcon="fa-backward"></mat-icon>
     </button>
     <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):'it' }}</h4>
+
     <!--    <button mat-button-->
     <!--            (click)="onViewDateChanged(MONTH)"-->
     <!--            [class.active]="view === MONTH">-->
@@ -24,6 +27,7 @@
     <!--            [class.active]="view === DAY">-->
     <!--        Giorno-->
     <!--    </button>-->
+
     <button mat-icon-button mwlCalendarNextView
             [view]="view"
             [(viewDate)]="viewDate"

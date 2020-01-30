@@ -94,7 +94,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         if (error) {
             throw error;
         }
-        this.sale = error;
+        this.sale = data;
     }
 
     private async deleteSalesLineItem(id: number) {

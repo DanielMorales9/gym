@@ -8,13 +8,6 @@ export class SalesService {
 
     constructor(private http: HttpClient) {}
 
-    findUserSales(query: any, page: number, size: number): Observable<Object> {
-        query['page'] = page;
-        query['size'] = size;
-        query['sort'] = 'createdAt,desc';
-        return this.http.get('/sales/findUserSales', {params: query});
-    }
-
     get(page: number, size: number, query?: any): Observable<Object> {
         if (!query) {
             query = {};
@@ -27,7 +20,7 @@ export class SalesService {
 
     @to_promise
     createSale(customerId: number): any {
-        return this.http.get(`/sales/createSale/${customerId}`);
+        return this.http.post(`/sales?customerId=${customerId}`, {});
     }
 
     delete(id: number): any {
@@ -35,60 +28,45 @@ export class SalesService {
     }
 
     @to_promise
-    addSalesLineItem(params?: any): any {
-        return this.http.get(`/sales/addSalesLineItem`,{params: params});
+    addSalesLineItem(saleId: number, params?: any): any {
+        return this.http.put(`/sales/${saleId}/salesLineItems`, {}, {params: params});
     }
 
     @to_promise
     deleteSalesLineItem(saleId: number, salesLineItemId: number): any {
-        return this.http.delete(`/sales/deleteSalesLineItem/${saleId}/${salesLineItemId}`);
+        return this.http.delete(`/sales/${saleId}/salesLineItems/${salesLineItemId}`);
     }
 
     confirmSale(id: number): Observable<Object> {
-        return this.http.get(`/sales/confirmSale/${id}`);
+        return this.http.get(`/sales/${id}/confirm`);
     }
 
     findById(saleId: number): Observable<Object> {
         return this.http.get(`/sales/${saleId}`);
     }
 
-    getEndpoint(endpoint: string): Observable<Object> {
-        return this.http.get(endpoint);
-    }
-
     pay(id: number, amount: number): Observable<Object> {
-        return this.http.get(`/sales/pay/${id}?amount=${amount}`);
+        return this.http.get(`/sales/${id}/pay?amount=${amount}`);
     }
 
-    searchByLastName(query: any, page: number, size: number): Observable<Object> {
-        query['page'] = page;
-        query['size'] = size;
-        query['sort'] = 'createdAt,desc';
-
-        return this.http.get('/sales/searchByLastName', {params: query});
-    }
-
-    searchByDateAndId(query: any, page: number, size: number): Observable<Object> {
+    findByCustomer(query: any, page: number, size: number): Observable<Object> {
         query['page'] = page;
         query['size'] = size;
         query['sort'] = 'createdAt,asc';
 
-        return this.http.get('/sales/searchByDateAndId', {params: query});
+        return this.http.get('/sales/findByCustomer', {params: query});
     }
 
-    searchByDate(query: any, page: number, size: number): Observable<Object> {
-        query['page'] = page;
-        query['size'] = size;
-        query['sort'] = 'createdAt,asc';
-        return this.http.get('/sales/searchByDate', {params: query});
-    }
-
-    searchByLastNameAndDate(query: any, page: number, size: number) {
+    search(query: any, page: number, size: number) {
         query['page'] = page;
         query['size'] = size;
         query['sort'] = 'createdAt,asc';
 
-        return this.http.get('/sales/searchByLastNameAndDate', {params: query});
+        return this.http.get('/sales/search', {params: query});
     }
 
+    @to_promise
+    deletePayment(saleId: number, paymentId: number): any {
+        return this.http.delete(`/sales/${saleId}/payments/${paymentId}`);
+    }
 }

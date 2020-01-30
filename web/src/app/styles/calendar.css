@@ -20,10 +20,12 @@
     height: calc(100vh - 96px) !important;
     top: 128px;
     padding: 8px;
+}
+
+.calendar-content {
     overflow-x: hidden;
     overflow-y: scroll;
 }
-
 
 @media (max-width: 599px) {
     .main-calendar {

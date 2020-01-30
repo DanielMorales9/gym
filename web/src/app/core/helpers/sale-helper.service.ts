@@ -22,7 +22,7 @@ export class SaleHelperService extends HelperService<Sale> {
     }
 
     addSalesLineItem(saleId: number, bundleSpecId: any) {
-        return this.service.addSalesLineItem({saleId: saleId, bundleSpecId: bundleSpecId});
+        return this.service.addSalesLineItem(saleId, {bundleSpecId: bundleSpecId});
     }
 
     deleteSalesLineItem(saleId: number, sliId: any) {
@@ -55,16 +55,10 @@ export class SaleHelperService extends HelperService<Sale> {
         }
 
         let observable;
-        if (!!query.id && query.date) {
-            observable = this.service.searchByDateAndId(query, page, size);
-        } else if (!!query.id) {
-            observable = this.service.findUserSales(query, page, size);
-        } else if (!!query.lastName && query.date) {
-            observable = this.service.searchByLastNameAndDate(query, page, size);
-        } else if (!!query.lastName) {
-            observable = this.service.searchByLastName(query, page, size);
-        } else if (query.date) {
-            observable = this.service.searchByDate(query, page, size);
+        if (!!query.id) {
+            observable = this.service.findByCustomer(query, page, size);
+        } else if (!!query.lastName || !!query.date) {
+            observable = this.service.search(query, page, size);
         } else {
             observable = this.service.get(page, size, query);
         }

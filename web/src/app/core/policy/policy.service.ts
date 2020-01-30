@@ -63,6 +63,9 @@ export class PolicyService {
         bundle: {
             canDelete: true,
             canEdit: true
+        },
+        payment: {
+            canDelete: true
         }
     };
 

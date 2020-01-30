@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,8 +21,7 @@ import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -101,17 +101,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void findSaleUserByIdOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/sales/" + sale.getId() + "/customer"))
-                .andExpect(status().isOk());
-        expectUser(result, customer);
-    }
-
-    @Test
     public void whenCreateSaleOK() throws Exception {
-        String path = "/sales/createSale/" + customer.getId();
+        String path = "/sales";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(post(path)
+                .param("customerId", String.valueOf(customer.getId())))
                 .andExpect(status().isOk());
 
         Sale s = repository.findAll()
@@ -133,11 +127,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenAddSliOK() throws Exception {
-        String path = "/sales/addSalesLineItem";
+        String path = String.format("/sales/%d/salesLineItems", sale.getId());
 
-        ResultActions result = mockMvc.perform(get(path)
-                .param("bundleSpecId", personalSpec.getId().toString())
-                .param("saleId", sale.getId().toString()))
+        ResultActions result = mockMvc.perform(put(path)
+                .param("bundleSpecId", personalSpec.getId().toString()))
                 .andExpect(status().isOk());
 
         List<SalesLineItem> sli = sliRepository.findAll();
@@ -159,11 +152,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     @Test
     public void whenAddSliByOptionOK() throws Exception {
         TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
-        String path = "/sales/addSalesLineItem";
+        String path = String.format("/sales/%s/salesLineItems", sale.getId());
 
-        ResultActions result = mockMvc.perform(get(path)
+        ResultActions result = mockMvc.perform(put(path)
                 .param("bundleSpecId", courseSpec.getId().toString())
-                .param("saleId", sale.getId().toString())
                 .param("optionId", option.getId().toString()))
                 .andExpect(status().isOk());
 
@@ -195,7 +187,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenDeleteSliOK() throws Exception {
-        String path = "/sales/deleteSalesLineItem/" + sale.getId() + "/" + sli1.getId();
+        String path = "/sales/" + sale.getId() + "/salesLineItems/" + sli1.getId();
 
         ResultActions result = mockMvc.perform(delete(path))
                 .andExpect(status().isOk());
@@ -220,7 +212,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenConfirmSaleOK() throws Exception {
-        String path = "/sales/confirmSale/" + sale.getId();
+        String path = String.format("/sales/%d/confirm", sale.getId());
 
         ResultActions result = mockMvc.perform(get(path))
                 .andExpect(status().isOk());
@@ -285,32 +277,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenGetTotalPriceOK() throws Exception {
-        String path = "/sales/getTotalPrice/"+sale.getId();
-
-        ResultActions result = mockMvc.perform(get(path))
-                .andExpect(status().isOk());
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(true);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSale(result, expected);
-        expectSalesLineItems(result, sli, "salesLineItems");
-        expectUser(result, customer, "customer");
-
-    }
-
-    @Test
     public void whenSearchByDateAndIdOK() throws Exception {
-        String path = "/sales/searchByDateAndId?id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
+        String path = "/sales/findByCustomer";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("id", String.valueOf(sale.getCustomer().getId()))
+                .param("date", Calendar.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -318,9 +290,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenSearchByDateAndIdAndPayedOK() throws Exception {
-        String path = "/sales/searchByDateAndId?payed=false&id="+sale.getCustomer().getId()+"&date="+Calendar.yesterday("dd-MM-yyyy");
+        String path = "/sales/search";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("payed", String.valueOf(false))
+                .param("id", String.valueOf(sale.getCustomer().getId()))
+                .param("date", Calendar.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -345,7 +320,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenPayOK() throws Exception {
-        String path = "/sales/pay/"+sale.getId()+"?amount="+11.0;
+        String path = "/sales/"+sale.getId()+"/pay?amount="+11.0;
 
         sale.setCompleted(true);
         sale = repository.save(sale);
@@ -375,14 +350,38 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenFindCustomerBySaleOK() throws Exception {
-        String path = "/sales/" + sale.getId() + "/customer";
+    public void whenDeletePaymentOK() throws Exception {
+        Payment p = createPayment(1L, 11.0, new Date());
+        sale.addPayment(p);
+        sale = this.repository.save(sale);
+        p = sale.getPayments().get(0);
+        sale.setCompleted(true);
 
-        ResultActions result = mockMvc.perform(get(path))
+        String path = "/sales/"+sale.getId()+"/payments/"+ p.getId();
+
+        ResultActions result = mockMvc.perform(delete(path))
                 .andExpect(status().isOk());
 
-        expectUser(result, customer);
+        List<SalesLineItem> sli = sliRepository.findAll();
+        List<Payment> payments = payRepository.findAll();
+
+        logger.info(payments.toString());
+
+        Sale expected = new Sale();
+        expected.setId(sale.getId());
+        expected.setAmountPayed(0.);
+        expected.setPayedDate(null);
+        expected.setCompleted(true);
+        expected.setPayed(false);
+        expected.setCustomer(customer);
+        expected.setSalesLineItems(sli);
+
+        expectSalesLineItems(result, sli, "salesLineItems");
+        expectUser(result, customer, "customer");
+        result.andExpect(jsonPath("$.payments").isEmpty());
+
     }
+
 
     @Test
     public void whenFindAllOK() throws Exception {
@@ -406,9 +405,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenFindUserSalesOK() throws Exception {
-        String path = "/sales/findUserSales?id="+customer.getId();
+        String path = "/sales/findByCustomer";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("id",customer.getId().toString()))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -416,9 +416,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenFindUserSalesAndPayedOK() throws Exception {
-        String path = "/sales/findUserSales?payed=false&id="+customer.getId();
+        String path = "/sales/findByCustomer";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("payed", String.valueOf(false))
+                .param("id", customer.getId().toString()))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -426,9 +428,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenSearchByDateOK() throws Exception {
-        String path = "/sales/searchByDate?date="+ Calendar.today("dd-MM-yyyy");
+        String path = "/sales/search";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("date", Calendar.today("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -436,10 +439,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenSearchByLastNameAndDateOK() throws Exception {
-        String path = "/sales/searchByLastNameAndDate?lastName="+customer.getLastName()+"&date="
-                +Calendar.yesterday("dd-MM-yyyy");
+        String path = "/sales/search";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("lastName", customer.getLastName())
+                .param("date", Calendar.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -447,10 +451,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenSearchByLastNameAndDateAndPayedOK() throws Exception {
-        String path = "/sales/searchByLastNameAndDate?payed=false&lastName="+customer.getLastName()+"&date="
-                +Calendar.yesterday("dd-MM-yyyy");
+        String path = "/sales/search";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("payed", String.valueOf(false))
+                .param("lastName", customer.getLastName())
+                .param("date", Calendar.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -458,9 +464,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenSearchByLastNameOK() throws Exception {
-        String path = "/sales/searchByLastName?lastName="+customer.getLastName();
+        String path = "/sales/search";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("lastName", customer.getLastName()))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -468,9 +475,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenSearchByLastNameAndPayedOK() throws Exception {
-        String path = "/sales/searchByLastName?payed=false&lastName="+customer.getLastName();
+        String path = "/sales/search";
 
-        ResultActions result = mockMvc.perform(get(path))
+        ResultActions result = mockMvc.perform(get(path)
+                .param("payed", String.valueOf(false))
+                .param("lastName", customer.getLastName()))
                 .andExpect(status().isOk());
 
         expectSales(result);
