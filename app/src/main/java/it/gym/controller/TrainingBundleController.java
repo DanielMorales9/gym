@@ -52,6 +52,7 @@ public class TrainingBundleController {
         return service.findBundlesBySpecId(specId, pageable);
     }
 
+    // TODO this and the above could be merged into a single call
     @GetMapping("/searchNotExpired")
     @ResponseBody
     public ResponseEntity<List<TrainingBundleResource>> findBySpecsNotExpired(@RequestParam Long specId) {
