@@ -109,6 +109,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     public void whenPatchOK() throws Exception {
 
         courseBundle.setName("Test");
+        courseBundle.setBundleSpec(null);
         ResultActions result = mockMvc.perform(patch("/bundles/"+courseBundle.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(courseBundle)))
