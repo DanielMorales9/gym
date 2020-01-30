@@ -69,7 +69,7 @@ public class SaleController {
 
     @GetMapping(path = "/{id}/salesLineItems")
     @ResponseBody
-    ResponseEntity<List<SalesLineItemResource>> findLinesBySaleId(@PathVariable Long id) {
+    public ResponseEntity<List<SalesLineItemResource>> findLinesBySaleId(@PathVariable Long id) {
 
         Sale sale = facade.findById(id);
 
