@@ -1,110 +1,113 @@
-<calendar-header [view]="view"
-                 [viewDate]="viewDate"
-                 [desktop]="isDesktop()"
-                 (done)="onViewDateChanged($event)"></calendar-header>
+<div class="calendar-content">
 
-<ng-template
-    #currentTimeMarkerTemplate
-    let-columnDate="columnDate"
-    let-dayStartHour="dayStartHour"
-    let-dayStartMinute="dayStartMinute"
-    let-dayEndHour="dayEndHour"
-    let-dayEndMinute="dayEndMinute"
-    let-isVisible="isVisible"
-    let-topPx="topPx"
->
-    <div
-            class="cal-current-time-marker"
-            *ngIf="isVisible && showMarker"
-            [style.top.px]="topPx"
-    ></div>
-</ng-template>
+    <calendar-header [view]="view"
+                     [viewDate]="viewDate"
+                     [desktop]="isDesktop()"
+                     (done)="onViewDateChanged($event)"></calendar-header>
+    <ng-template
+        #currentTimeMarkerTemplate
+        let-columnDate="columnDate"
+        let-dayStartHour="dayStartHour"
+        let-dayStartMinute="dayStartMinute"
+        let-dayEndHour="dayEndHour"
+        let-dayEndMinute="dayEndMinute"
+        let-isVisible="isVisible"
+        let-topPx="topPx">
 
-<ng-template #customCellTemplate let-day="day" let-locale="locale">
-    <div class="cal-cell-top">
-    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0"
-    >{{ day.badgeTotal }}</span
-    >
-        <span class="cal-day-number"
-        >{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span
-        >
-    </div>
-    <div class="cell-totals">
+        <div class="cal-current-time-marker"
+             *ngIf="isVisible && showMarker"
+                [style.top.px]="topPx">
+
+        </div>
+    </ng-template>
+
+    <ng-template #customCellTemplate let-day="day" let-locale="locale">
+        <div class="cal-cell-top">
+    <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">
+        {{ day.badgeTotal }}
+    </span>
+            <span class="cal-day-number">
+                {{ day.date | calendarDate:'monthViewDayNumber':locale }}
+            </span>
+        </div>
+        <div class="cell-totals">
     <span *ngFor="let group of day.eventGroups"
           class="badge badge-{{ group[0] }}">
       {{ group[1].length }}
     </span>
+        </div>
+    </ng-template>
+
+    <!--suppress AngularUndefinedBinding -->
+    <div [ngSwitch]="view" class="main-calendar"
+         (swipeleft)="onSwipeLeft($event)"
+         (swiperight)="onSwipeRight($event)">
+        <mwl-calendar-month-view
+                *ngSwitchCase="MONTH"
+                [viewDate]="viewDate"
+                [events]="events"
+                [refresh]="refresh"
+                locale="it"
+                [weekStartsOn]="weekStartsOn"
+                [activeDayIsOpen]="activeDayIsOpen"
+                [excludeDays]="excludeDays"
+                (dayClicked)="handleEvent('day',$event)"
+                (eventClicked)="handleEvent('info',$event)"
+                (eventTimesChanged)="handleEvent('change',$event)">
+        </mwl-calendar-month-view>
+        <mwl-calendar-week-view
+                *ngSwitchCase="WEEK"
+                [viewDate]="viewDate"
+                [dayStartHour]="dayStartHour"
+                [dayEndHour]="dayEndHour"
+                [events]="events"
+                [excludeDays]="excludeDays"
+                [weekStartsOn]="weekStartsOn"
+                locale="it"
+                [hourSegments]="1"
+                [refresh]="refresh"
+                [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
+                (dayHeaderClicked)="header('header', $event)"
+                (hourSegmentClicked)="handleEvent('hour',$event)"
+                (eventClicked)="handleEvent('info',$event)"
+                (eventTimesChanged)="handleEvent('change',$event)">
+        </mwl-calendar-week-view>
+        <mwl-calendar-day-view
+                *ngSwitchCase="DAY"
+                [viewDate]="viewDate"
+                [events]="events"
+                [refresh]="refresh"
+                [dayStartHour]="dayStartHour"
+                [dayEndHour]="dayEndHour"
+                locale="it"
+                [hourSegments]="1"
+                [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
+                (hourSegmentClicked)="handleEvent('hour', $event)"
+                (eventClicked)="handleEvent('info',$event)"
+                (eventTimesChanged)="handleEvent('change',$event)">
+        </mwl-calendar-day-view>
     </div>
-</ng-template>
 
-<!--suppress AngularUndefinedBinding -->
-<div [ngSwitch]="view" class="main-calendar"
-     (swipeleft)="onSwipeLeft($event)"
-     (swiperight)="onSwipeRight($event)">
-    <mwl-calendar-month-view
-            *ngSwitchCase="MONTH"
-            [viewDate]="viewDate"
-            [events]="events"
-            [refresh]="refresh"
-            locale="it"
-            [weekStartsOn]="weekStartsOn"
-            [activeDayIsOpen]="activeDayIsOpen"
-            [excludeDays]="excludeDays"
-            [cellTemplate]="customCellTemplate"
-            (dayClicked)="handleEvent('day',$event)"
-            (eventClicked)="handleEvent('info',$event)"
-            (beforeViewRender)="beforeMonthViewRender($event)"
-            (eventTimesChanged)="handleEvent('change',$event)">
-    </mwl-calendar-month-view>
-    <mwl-calendar-week-view
-            *ngSwitchCase="WEEK"
-            [viewDate]="viewDate"
-            [dayStartHour]="dayStartHour"
-            [dayEndHour]="dayEndHour"
-            [events]="events"
-            [excludeDays]="excludeDays"
-            [weekStartsOn]="weekStartsOn"
-            locale="it"
-            [hourSegments]="1"
-            [refresh]="refresh"
-            [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
-            (dayHeaderClicked)="header('header', $event)"
-            (hourSegmentClicked)="handleEvent('hour',$event)"
-            (eventClicked)="handleEvent('info',$event)"
-            (eventTimesChanged)="handleEvent('change',$event)">
-    </mwl-calendar-week-view>
-    <mwl-calendar-day-view
-            *ngSwitchCase="DAY"
-            [viewDate]="viewDate"
-            [events]="events"
-            [refresh]="refresh"
-            [dayStartHour]="dayStartHour"
-            [dayEndHour]="dayEndHour"
-            locale="it"
-            [hourSegments]="1"
-            [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
-            (hourSegmentClicked)="handleEvent('hour', $event)"
-            (eventClicked)="handleEvent('info',$event)"
-            (eventTimesChanged)="handleEvent('change',$event)">
-    </mwl-calendar-day-view>
+    <!-- [cellTemplate]="customCellTemplate" -->
+    <!-- (beforeViewRender)="beforeMonthViewRender($event)" -->
+
+    <button
+        #next
+        mwlCalendarNextView
+        (viewDateChange)="onViewDateChanged($event)"
+        [(viewDate)]="viewDate"
+        [view]="view"
+        [excludeDays]="excludeDays"
+        hidden>
+    </button>
+
+    <button
+        #prev
+        mwlCalendarPreviousView
+        (viewDateChange)="onViewDateChanged($event)"
+        [(viewDate)]="viewDate"
+        [view]="view"
+        [excludeDays]="excludeDays"
+        hidden>
+    </button>
 </div>
-
-<button
-    #next
-    mwlCalendarNextView
-    (viewDateChange)="onViewDateChanged($event)"
-    [(viewDate)]="viewDate"
-    [view]="view"
-    [excludeDays]="excludeDays"
-    hidden>
-</button>
-
-<button
-    #prev
-    mwlCalendarPreviousView
-    (viewDateChange)="onViewDateChanged($event)"
-    [(viewDate)]="viewDate"
-    [view]="view"
-    [excludeDays]="excludeDays"
-    hidden>
-</button>

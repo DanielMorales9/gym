@@ -21,6 +21,11 @@
     top: 128px;
     padding: 8px;
     overflow-x: hidden;
+    overflow-y: hidden;
+}
+
+.calendar-content {
+    overflow-x: hidden;
     overflow-y: scroll;
 }
 
@@ -33,6 +38,8 @@
 
     .calendar-top-toolbar {
         top: 56px !important;
+        overflow-x: hidden;
+        overflow-y: hidden;
     }
 
 }

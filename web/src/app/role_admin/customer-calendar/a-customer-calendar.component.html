@@ -1,4 +1,6 @@
-<calendar-header [view]="view"
+<div class="calendar-content">
+
+    <calendar-header [view]="view"
                  [viewDate]="viewDate"
                  [desktop]="isDesktop()"
                  (done)="onViewDateChanged($event)"></calendar-header>
@@ -50,10 +52,8 @@
             [weekStartsOn]="weekStartsOn"
             [activeDayIsOpen]="activeDayIsOpen"
             [excludeDays]="excludeDays"
-            [cellTemplate]="customCellTemplate"
             (dayClicked)="handleEvent('day',$event)"
             (eventClicked)="handleEvent('info',$event)"
-            (beforeViewRender)="beforeMonthViewRender($event)"
             (eventTimesChanged)="handleEvent('change',$event)">
     </mwl-calendar-month-view>
     <mwl-calendar-week-view
@@ -88,6 +88,8 @@
             (eventTimesChanged)="handleEvent('change',$event)">
     </mwl-calendar-day-view>
 </div>
+<!--[cellTemplate]="customCellTemplate"-->
+<!--(beforeViewRender)="beforeMonthViewRender($event)"-->
 
 <button
     #next
@@ -108,3 +110,4 @@
     [excludeDays]="excludeDays"
     hidden>
 </button>
+</div>
