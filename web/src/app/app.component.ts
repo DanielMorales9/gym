@@ -15,15 +15,6 @@ import {Subscription} from 'rxjs';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    current_role_view: number;
-    authenticated: boolean;
-
-    user: User;
-    appName = '';
-    @ViewChild('snav', { static: true }) public snav: MatSidenav;
-    opened = this.shouldBeOpen();
-    private sub: Subscription = new Subscription();
-
     constructor(private service: AppService,
                 private screenService: ScreenService,
                 private router: Router,
@@ -31,11 +22,40 @@ export class AppComponent implements OnInit, OnDestroy {
                 private gymService: GymService) {
     }
 
+    current_role_view: number;
+    authenticated: boolean;
+
+    user: User;
+    appName = '';
+
+    @ViewChild('snav', { static: true })
+    public snav: MatSidenav;
+
+    opened = this.shouldBeOpen();
+    private sub: Subscription = new Subscription();
 
     async ngOnInit(): Promise<void> {
         this.authOnNavigation();
-        const [data, error] = await this.service.authenticate();
+        const [data, _] = await this.service.authenticate();
         await this.onAuthenticate(data);
+    }
+
+    // noinspection JSMethodCanBeStatic
+    private setTitle(...title) {
+        document.title = title.join(' - ');
+    }
+
+    // collect that title data properties from all child routes
+    private getTitle(state, parent) {
+        const data = [];
+        if (parent && parent.snapshot.data && parent.snapshot.data.title) {
+            data.push(parent.snapshot.data.title);
+        }
+
+        if (state && parent) {
+            data.push(... this.getTitle(state, state.firstChild(parent)));
+        }
+        return data;
     }
 
     private async onAuthenticate(authenticated: any) {
@@ -43,11 +63,15 @@ export class AppComponent implements OnInit, OnDestroy {
         if (this.authenticated && !this.user) {
             this.current_role_view = this.service.currentRole;
             this.user = this.service.user;
-            const [data, error] = await this.gymService.getConfig();
-            if (data) {
-                this.appName = data.name;
-                document.title = this.appName;
-            }
+            await this.getGymName();
+        }
+    }
+
+    private async getGymName() {
+        const [data, _] = await this.gymService.getConfig();
+        if (data) {
+            this.appName = data.name;
+            this.setTitle(this.appName);
         }
     }
 
@@ -65,20 +89,13 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     private authOnNavigation() {
-        let sub = this.router.events.subscribe(async event => {
+        const sub = this.router.events.subscribe(async event => {
             if (event instanceof NavigationStart) {
                 const [data, error] = await this.service.authenticate();
                 await this.onAuthenticate(data);
                 await this.closeNav();
-            }
-        });
-        this.sub.add(sub);
-        sub = this.route.queryParams.subscribe(params => {
-            if ('title' in params) {
-                document.title = params['title'];
-            }
-            else {
-                document.title = this.appName;
+                const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
+                this.setTitle(this.appName, ...titles);
             }
         });
         this.sub.add(sub);

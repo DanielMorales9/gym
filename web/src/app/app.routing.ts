@@ -12,10 +12,12 @@ const routes: Routes = [
     { path: 'home', loadChildren: () => import('app/home/home.module').then(m => m.HomeModule) },
 
     { path: 'profile', component: ProfileComponent,
-        canActivate: [AuthGuardService]
+        canActivate: [AuthGuardService],
+        data: {title: 'Profilo'}
     },
     { path: 'settings/gym', component: GymSettingsComponent,
-        canActivate: [AuthGuardService]
+        canActivate: [AuthGuardService],
+        data: {title: 'Impostazioni Palestra' }
     },
     {
         path: 'admin', loadChildren: () => import('app/role_admin/admin.module').then(m => m.AdminModule),
@@ -38,7 +40,10 @@ const routes: Routes = [
             expectedRole: 'C'
         }
     },
-    { path: '**', redirectTo: 'home' }
+    {
+        path: '**', redirectTo: 'home',
+        data: { title: 'Home' }
+    }
 ];
 
 @NgModule({

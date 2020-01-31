@@ -12,17 +12,50 @@ const routes = [
 
     { path: '', children : [
             { path: '', redirectTo: 'sales', pathMatch: 'full'},
-            { path: 'bundleSpecs', component: BundleSpecsComponent },
-            { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
-            { path: 'bundles/:id', component: BundleDetailsComponent },
-            { path: 'customer/bundles', component: BundlesCustomerComponent },
-            { path: 'users', component: UsersComponent },
-            { path: 'users/:id', component: UserDetailsComponent},
-            { path: 'sales', component: SalesComponent },
-            { path: 'sales/buy/:id', component: CreateSaleComponent },
-            { path: 'sales/:id', component: SaleDetailsComponent },
-            { path: 'calendar', component: AdminCalendarComponent },
-            { path: 'calendar/:id', component: ACustomerCalendarComponent },
+            {
+                path: 'bundleSpecs', component: BundleSpecsComponent,
+                data: {title: 'Tipi Pacchetti' }
+            },
+            {
+                path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent,
+                data: {title: 'Dettaglio Tipo Pacchetto' }
+            },
+            {
+                path: 'bundles/:id', component: BundleDetailsComponent,
+                data: {title: 'Dettaglio Pacchetto' }
+            },
+            {
+                path: 'customer/bundles', component: BundlesCustomerComponent,
+                data: {title: 'Pacchetti Utente' }
+            },
+            {
+                path: 'users', component: UsersComponent,
+                data: {title: 'Utenti' }
+            },
+            {
+                path: 'users/:id', component: UserDetailsComponent,
+                data: {title: 'Dettaglio Utente' }
+            },
+            {
+                path: 'sales', component: SalesComponent,
+                data: {title: 'Vendite' }
+            },
+            {
+                path: 'sales/buy/:id', component: CreateSaleComponent,
+                data: {title: 'Crea Vendita' }
+            },
+            {
+                path: 'sales/:id', component: SaleDetailsComponent,
+                data: {title: 'Dettaglio Vendita' }
+            },
+            {
+                path: 'calendar', component: AdminCalendarComponent,
+                data: {title: 'Calendario' }
+            },
+            {
+                path: 'calendar/:id', component: ACustomerCalendarComponent,
+                data: {title: 'Calendario Cliente' }
+            },
             { path: '**', redirectTo: 'bundleSpecs' }
         ]},
 ];

@@ -8,13 +8,34 @@ import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle
 const routes = [
     { path: '', children : [
             { path: '', redirectTo: 'calendar', pathMatch: 'full'},
-            { path: 'calendar', component: TrainerCalendarComponent },
-            { path: 'users', component: UsersComponent },
-            { path: 'users/:id', component: UserDetailsComponent},
-            { path: 'bundleSpecs', component: BundleSpecsComponent },
-            { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
-            { path: 'bundles/:id', component: BundleDetailsComponent },
-            { path: 'customer/bundles', component: BundlesCustomerComponent },
+            {
+                path: 'calendar', component: TrainerCalendarComponent,
+                data: {title: 'Calendario' }
+            },
+            {
+                path: 'users', component: UsersComponent,
+                data: {title: 'Utenti' }
+            },
+            {
+                path: 'users/:id', component: UserDetailsComponent,
+                data: {title: 'Scheda Cliente' }
+            },
+            {
+                path: 'bundleSpecs', component: BundleSpecsComponent,
+                data: {title: 'Tipi Pacchetti' }
+            },
+            {
+                path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent,
+                data: {title: 'Dettaglio Tipo Pacchetto' }
+            },
+            {
+                path: 'bundles/:id', component: BundleDetailsComponent,
+                data: {title: 'Dettaglio Pacchetto' }
+            },
+            {
+                path: 'customer/bundles', component: BundlesCustomerComponent,
+                data: {title: 'Pacchetti Cliente' }
+            },
             { path: '**', redirectTo: 'calendar' }
         ]},
 ];

@@ -8,12 +8,30 @@ import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundle
 const routes = [
     { path: '', children : [
             { path: '', redirectTo: 'calendar', pathMatch: 'full'},
-            { path: 'calendar', component: CustomerCalendarComponent },
-            { path: 'sales', component: SalesComponent },
-            { path: 'sales/:id', component: SaleDetailsComponent },
-            { path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent },
-            { path: 'bundles/:id', component: BundleDetailsComponent },
-            { path: 'bundles', component: BundlesCustomerComponent },
+            {
+                path: 'calendar', component: CustomerCalendarComponent,
+                data: {title: 'Calendario' }
+            },
+            {
+                path: 'sales', component: SalesComponent,
+                data: {title: 'Ordine' }
+            },
+            {
+                path: 'sales/:id', component: SaleDetailsComponent,
+                data: {title: 'Dettaglio Vendita' }
+            },
+            {
+                path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent,
+                data: {title: 'Dettaglio Tipo Pacchetto' }
+            },
+            {
+                path: 'bundles/:id', component: BundleDetailsComponent,
+                data: {title: 'Dettaglio Pacchetto' }
+            },
+            {
+                path: 'bundles', component: BundlesCustomerComponent,
+                data: {title: 'Pacchetti' }
+            },
             { path: '**', redirectTo: 'calendar' }
         ]},
 ];
