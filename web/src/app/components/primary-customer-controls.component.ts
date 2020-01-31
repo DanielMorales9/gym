@@ -8,7 +8,7 @@ import {User} from '../shared/model';
 })
 export class PrimaryCustomerControlsComponent implements OnInit {
 
-    private user: User;
+    user: User;
 
     constructor(private auth: AuthenticationService) {
     }

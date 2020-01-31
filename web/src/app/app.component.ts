@@ -122,11 +122,11 @@ export class AppComponent implements OnInit, OnDestroy {
         }
     }
 
-    private sideBarMode() {
+    sideBarMode() {
         return !this.isDesktop() && this.authenticated ? 'over' : 'side';
     }
 
-    private sideBarOpened() {
+    sideBarOpened() {
         return this.isDesktop() && this.authenticated;
     }
 
