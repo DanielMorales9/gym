@@ -21,6 +21,7 @@ import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
+import {HomeComponent} from './home';
 
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any> {
@@ -54,7 +55,8 @@ registerLocaleData(localeIt);
         MatSelectModule
     ],
     declarations: [
-        CustomerCalendarComponent
+        CustomerCalendarComponent,
+        HomeComponent
     ],
     providers: [
         {provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check'},

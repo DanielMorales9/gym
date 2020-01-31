@@ -7,6 +7,10 @@ import {UserDetailsComponent, UsersComponent} from '../shared/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
 import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
+import {HomeComponent} from './home';
+import {AuthGuardService} from '../core/guards';
+import {ProfileComponent} from '../shared/profile';
+import {GymSettingsComponent} from '../shared/settings';
 
 const routes = [
 
@@ -56,7 +60,21 @@ const routes = [
                 path: 'calendar/:id', component: ACustomerCalendarComponent,
                 data: {title: 'Calendario Cliente' }
             },
-            { path: '**', redirectTo: 'bundleSpecs' }
+            {
+                path: 'profile', component: ProfileComponent,
+                canActivate: [AuthGuardService],
+                data: {title: 'Profilo'}
+            },
+            {
+                path: 'settings/gym', component: GymSettingsComponent,
+                canActivate: [AuthGuardService],
+                data: {title: 'Impostazioni Palestra' }
+            },
+            {
+                path: 'home', component: HomeComponent,
+                data: {title: 'Home' }
+            },
+            { path: '**', redirectTo: 'home' }
         ]},
 ];
 

@@ -5,7 +5,7 @@
             <mat-icon fontSet="fa" fontIcon="fa-bars"></mat-icon>
         </a>
         <h1 class="main-app-name">
-            <a id="main-app-name" routerLink="/">{{ appName }}</a>
+            <a id="main-app-name" (click)="goHome()">{{ appName }}</a>
         </h1>
         <span class="spacer"></span>
         <mat-icon fontSet="fas" fontIcon="fa-sign-in-alt" routerLink="/auth/login" [hidden]="hideLogin()"></mat-icon>

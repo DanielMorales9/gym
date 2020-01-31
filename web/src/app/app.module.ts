@@ -6,7 +6,11 @@ import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
 import {AppService, AuthenticatedService, GlobalErrorHandler, GymService} from './services';
-import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent, SideBarComponent} from './components';
+import {
+    ErrorComponent,
+    PrimaryAdminControlsComponent, PrimaryCustomerControlsComponent, PrimaryTrainerControlsComponent,
+    SideBarComponent
+} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import {
     MatButtonModule,
@@ -24,18 +28,16 @@ import {
     MatTableModule,
     MatToolbarModule
 } from '@angular/material';
-import {ChangePasswordModalComponent} from './components/change-password-modal.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 
 @NgModule({
     declarations: [
         AppComponent,
-        ChangePasswordModalComponent,
+        PrimaryAdminControlsComponent,
+        PrimaryTrainerControlsComponent,
+        PrimaryCustomerControlsComponent,
         ErrorComponent,
-        ProfileComponent,
-        GymSettingsComponent,
-        GymModalComponent,
         SideBarComponent,
         TimeAgoPipe,
     ],
@@ -61,10 +63,6 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         MatTableModule,
         MatCheckboxModule,
         MatSelectModule
-    ],
-    entryComponents: [
-        ChangePasswordModalComponent,
-        GymModalComponent
     ],
     providers: [
         AppService,

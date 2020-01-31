@@ -1,36 +1,4 @@
-<div *ngIf="authenticated">
-    <router-outlet></router-outlet>
-</div>
-<div *ngIf="!authenticated else welcome" class="home">
+<div *ngIf="!authenticated" class="home">
     <h1>Benvenuto</h1>
     <p>Fai login per accedere alla tua area personale</p>
 </div>
-
-
-<ng-template #welcome>
-    <div class="home">
-        <h1>Ciao {{user.firstName}}</h1>
-        <ng-container [ngSwitch]="user.type">
-
-            <ng-container *ngSwitchCase="'C'">
-                <p>
-                    Da qui puoi gestire le tue prenotazioni<br>
-                    Per ulteriori informazioni rivolgiti in segreteria.
-                </p>
-            </ng-container>
-            <ng-container *ngSwitchCase="'T'">
-                <p>
-                    Da qui puoi gestire gli allenamenti<br>
-                    In caso di problemi rivolgiti in segreteria.
-                </p>
-            </ng-container>
-            <ng-container *ngSwitchCase="'A'">
-                <p>
-                    Da qui puoi gestire i tuoi clienti<br>
-                    In caso di problemi rivolgiti al <a href="mailto:dnlmrls9@gmail.com" >fornitore del software</a>
-                </p>
-            </ng-container>
-        </ng-container>
-
-    </div>
-</ng-template>

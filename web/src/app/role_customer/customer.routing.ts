@@ -4,6 +4,10 @@ import {CustomerCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/sales';
 import {BundleSpecDetailsComponent} from '../shared/bundle-specs';
 import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
+import {HomeComponent} from './home';
+import {AuthGuardService} from '../core/guards';
+import {ProfileComponent} from '../shared/profile';
+import {GymSettingsComponent} from '../shared/settings';
 
 const routes = [
     { path: '', children : [
@@ -32,7 +36,21 @@ const routes = [
                 path: 'bundles', component: BundlesCustomerComponent,
                 data: {title: 'Pacchetti' }
             },
-            { path: '**', redirectTo: 'calendar' }
+            {
+                path: 'home', component: HomeComponent,
+                data: {title: 'Home' }
+            },
+            {
+                path: 'profile', component: ProfileComponent,
+                canActivate: [AuthGuardService],
+                data: {title: 'Profilo'}
+            },
+            {
+                path: 'settings/gym', component: GymSettingsComponent,
+                canActivate: [AuthGuardService],
+                data: {title: 'Impostazioni Palestra' }
+            },
+            { path: '**', redirectTo: 'home' }
         ]},
 ];
 

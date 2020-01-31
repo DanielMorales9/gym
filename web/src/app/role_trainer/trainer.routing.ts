@@ -4,6 +4,10 @@ import {TrainerCalendarComponent} from './calendar';
 import {UserDetailsComponent, UsersComponent} from '../shared/users';
 import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
+import {HomeComponent} from './home';
+import {AuthGuardService} from '../core/guards';
+import {GymSettingsComponent} from '../shared/settings';
+import {ProfileComponent} from '../shared/profile';
 
 const routes = [
     { path: '', children : [
@@ -36,7 +40,21 @@ const routes = [
                 path: 'customer/bundles', component: BundlesCustomerComponent,
                 data: {title: 'Pacchetti Cliente' }
             },
-            { path: '**', redirectTo: 'calendar' }
+            {
+                path: 'home', component: HomeComponent,
+                data: {title: 'Home' }
+            },
+            {
+                path: 'profile', component: ProfileComponent,
+                canActivate: [AuthGuardService],
+                data: {title: 'Profilo'}
+            },
+            {
+                path: 'settings/gym', component: GymSettingsComponent,
+                canActivate: [AuthGuardService],
+                data: {title: 'Impostazioni Palestra' }
+            },
+            { path: '**', redirectTo: 'home' }
         ]},
 ];
 @NgModule({

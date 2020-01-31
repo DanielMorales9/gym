@@ -1,17 +1,17 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from '../shared/model';
-import {UserService} from '../core/controllers';
+import {User} from '../model';
+import {UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
-import {UserModalComponent} from '../shared/users';
+import {UserModalComponent} from '../users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
-import {AuthenticationService} from '../core/authentication';
-import {AuthService} from '../core/controllers';
-import {SnackBarService} from '../core/utilities';
-import {UserHelperService} from '../core/helpers';
+import {AuthenticationService} from '../../core/authentication';
+import {AuthService} from '../../core/controllers';
+import {SnackBarService} from '../../core/utilities';
+import {UserHelperService} from '../../core/helpers';
 
 @Component({
     templateUrl: './profile.component.html',
-    styleUrls: ['../styles/root.css', '../styles/card.css'],
+    styleUrls: ['../../styles/root.css', '../../styles/card.css'],
 })
 export class ProfileComponent implements OnInit {
 

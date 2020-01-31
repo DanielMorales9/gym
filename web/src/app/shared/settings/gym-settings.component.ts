@@ -1,13 +1,13 @@
 import {Component, OnInit} from '@angular/core';
-import {Gym} from '../shared/model';
-import {GymService} from '../services';
+import {Gym} from '../model';
+import {GymService} from '../../services';
 import {MatDialog} from '@angular/material';
 import {GymModalComponent} from './gym-modal.component';
-import {SnackBarService} from '../core/utilities';
+import {SnackBarService} from '../../core/utilities';
 
 @Component({
     templateUrl: './gym-settings.component.html',
-    styleUrls: ['../styles/root.css', '../styles/card.css'],
+    styleUrls: ['../../styles/root.css', '../../styles/card.css'],
 })
 export class GymSettingsComponent implements OnInit {
 

@@ -104,7 +104,7 @@ export class AuthenticationService {
         return !!this.storageService.get(this.CREDENTIAL_KEY);
     }
 
-    getCurrentUserRole() {
+    getUserRole() {
         const user = this.getUser();
         this.currentRole = this.computeRole(user);
         return this.currentRole;

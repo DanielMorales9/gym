@@ -3,7 +3,6 @@ import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {AppService, GymService} from './services';
 import {User} from './shared/model';
-import {MatSidenav} from '@angular/material';
 import {ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
 import {SideBarComponent} from './components';
@@ -35,8 +34,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     async ngOnInit(): Promise<void> {
         this.authOnNavigation();
-        const [data, _] = await this.service.authenticate();
-        await this.onAuthenticate(data);
+        await this.authenticate();
     }
 
     // noinspection JSMethodCanBeStatic
@@ -44,7 +42,6 @@ export class AppComponent implements OnInit, OnDestroy {
         document.title = title.join(' - ');
     }
 
-    // collect that title data properties from all child routes
     private getTitle(state, parent) {
         const data = [];
         if (parent && parent.snapshot.data && parent.snapshot.data.title) {
@@ -57,7 +54,8 @@ export class AppComponent implements OnInit, OnDestroy {
         return data;
     }
 
-    private async onAuthenticate(authenticated: any) {
+    private async authenticate() {
+        const [authenticated, _] = await this.service.authenticate();
         this.authenticated = authenticated;
         if (this.authenticated && !this.user) {
             this.current_role_view = this.service.currentRole;
@@ -90,8 +88,7 @@ export class AppComponent implements OnInit, OnDestroy {
     private authOnNavigation() {
         const sub = this.router.events.subscribe(async event => {
             if (event instanceof NavigationStart) {
-                const [data, error] = await this.service.authenticate();
-                await this.onAuthenticate(data);
+                await this.authenticate();
                 await this.closeNav();
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
                 this.setTitle(this.appName, ...titles);
@@ -110,6 +107,13 @@ export class AppComponent implements OnInit, OnDestroy {
 
     isDesktop() {
         return this.screenService.isDesktop();
+    }
+
+    async goHome() {
+        const roleName = this.user.roles
+            .find(value => value.id === this.current_role_view)
+            .name.toLowerCase();
+        await this.router.navigateByUrl(roleName);
     }
 
     async closeNav() {
