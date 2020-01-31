@@ -35,6 +35,7 @@ export class CalendarControlsComponent {
         await this.router.navigate([], {
             relativeTo: this.route,
             queryParams: params,
+            queryParamsHandling: 'merge'
         });
     }
 
