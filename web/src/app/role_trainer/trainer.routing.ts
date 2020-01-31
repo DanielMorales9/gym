@@ -8,13 +8,14 @@ import {HomeComponent} from './home';
 import {AuthGuardService} from '../core/guards';
 import {GymSettingsComponent} from '../shared/settings';
 import {ProfileComponent} from '../shared/profile';
+import {CalendarControlsComponent} from '../shared/calendar';
 
 const routes = [
     { path: '', children : [
             { path: '', redirectTo: 'calendar', pathMatch: 'full'},
             {
                 path: 'calendar', component: TrainerCalendarComponent,
-                data: {title: 'Calendario' }
+                data: {title: 'Calendario', secondary: CalendarControlsComponent }
             },
             {
                 path: 'users', component: UsersComponent,

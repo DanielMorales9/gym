@@ -25,14 +25,18 @@ export class SideBarComponent implements OnInit, OnDestroy {
     @Input() appName: string;
     @Input() isMobile: boolean;
 
+    routerEventSubscription: ISubscription;
+
     @ViewChild('sideNav', { static: true })
     public sideNav: MatSidenav;
 
-    @ViewChild('primaryControls', {static: false, read: ViewContainerRef})
+    @ViewChild('primaryControls', {static: true, read: ViewContainerRef})
     primaryControls: ViewContainerRef;
+    primaryControlComponents: ComponentRef<Component>[] = new Array<ComponentRef<Component>>();
 
-    controlComponents: ComponentRef<Component>[] = new Array<ComponentRef<Component>>();
-    routerEventSubscription: ISubscription;
+    @ViewChild('secondaryControls', {static: false, read: ViewContainerRef})
+    secondaryControls: ViewContainerRef;
+    secondaryControlComponents: ComponentRef<Component>[] = new Array<ComponentRef<Component>>();
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
@@ -42,6 +46,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
         this.routerEventSubscription = this.router.events.subscribe((event) => {
                 if (event instanceof NavigationEnd) {
                     this.updatePrimaryControls(this.router.routerState.snapshot.root);
+                    this.updateSecondaryControls(this.router.routerState.snapshot.root);
                 }
             }
         );
@@ -57,7 +62,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
         if (primary instanceof Type) {
             const factory: ComponentFactory<Component> = this.componentFactoryResolver.resolveComponentFactory(primary);
             const componentRef: ComponentRef<Component> = this.primaryControls.createComponent(factory);
-            this.controlComponents.push(componentRef);
+            this.primaryControlComponents.push(componentRef);
         }
         for (const childSnapshot of snapshot.children) {
             this.updatePrimaryControls(childSnapshot);
@@ -66,28 +71,29 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
     private clearPrimaryControls() {
         this.primaryControls.clear();
-        for (const toolbarComponent of this.controlComponents) {
+        for (const toolbarComponent of this.primaryControlComponents) {
             toolbarComponent.destroy();
         }
     }
 
-    isOnCalendar() {
-        return this.router.url.includes('calendar');
+    private updateSecondaryControls(snapshot: ActivatedRouteSnapshot): void {
+        this.clearSecondaryControls();
+        const secondary: any = snapshot.data.secondary;
+        if (secondary instanceof Type) {
+            const factory: ComponentFactory<Component> = this.componentFactoryResolver.resolveComponentFactory(secondary);
+            const componentRef: ComponentRef<Component> = this.secondaryControls.createComponent(factory);
+            this.secondaryControlComponents.push(componentRef);
+        }
+        for (const childSnapshot of snapshot.children) {
+            this.updateSecondaryControls(childSnapshot);
+        }
     }
 
-    async goToView(view?) {
-        const params = Object.assign({}, this.route.snapshot.queryParams);
-        if (!!view) {
-            params['view'] = view;
+    private clearSecondaryControls() {
+        this.secondaryControls.clear();
+        for (const toolbarComponent of this.secondaryControlComponents) {
+            toolbarComponent.destroy();
         }
-        else {
-            params['viewDate'] = new Date();
-        }
-        const url = this.router.url.split('?')[0];
-        await this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: params,
-        });
     }
 
     async toggle(b?: boolean) {

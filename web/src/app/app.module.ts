@@ -39,7 +39,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         PrimaryCustomerControlsComponent,
         ErrorComponent,
         SideBarComponent,
-        TimeAgoPipe,
+        TimeAgoPipe
     ],
     imports: [
         BrowserModule,

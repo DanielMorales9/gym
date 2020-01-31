@@ -5,32 +5,12 @@
                 <h2> {{ appName }} </h2>
             </mat-toolbar-row>
         </mat-toolbar>
+
         <mat-nav-list>
-            <ng-container *ngIf="isOnCalendar()">
-                <h2 matSubheader>Calendario</h2>
-                <a mat-list-item (click)="goToView()">
-                        <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-calendar-day"></mat-icon>&nbsp;&nbsp;Oggi
-                        </span>
-                </a>
-                <a mat-list-item (click)="goToView('day')">
-                        <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-stream"></mat-icon>&nbsp;&nbsp;Giorno
-                        </span>
-                </a>
-                <a mat-list-item (click)="goToView('week')">
-                        <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-columns"></mat-icon>&nbsp;&nbsp;Settimana
-                        </span>
-                </a>
-                <a mat-list-item (click)="goToView('month')">
-                        <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-table"></mat-icon>&nbsp;&nbsp;Mese
-                        </span>
-                </a>
-            </ng-container>
+            <div #secondaryControls></div>
             <div #primaryControls></div>
         </mat-nav-list>
+
     </mat-sidenav>
 
     <mat-sidenav-content class="main-sidenav-content">

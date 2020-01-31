@@ -1,0 +1,21 @@
+<h2 matSubheader>Operazioni</h2>
+<a mat-list-item *ngIf="canSell" color="basic" (click)="sell()">
+    <span>
+        <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>&nbsp;Acquista
+    </span>
+</a>
+<a mat-list-item *ngIf="canShowBundles" (click)="showBundles()">
+    <span>
+        <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;Pacchetti
+    </span>
+</a>
+<a mat-list-item *ngIf="canShowSales" (click)="showSales()">
+    <span>
+        <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;Ordini
+    </span>
+</a>
+<a mat-list-item *ngIf="canMakeAppointments" color="basic" (click)="makeAppointments()">
+    <span>
+        <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;Appuntamenti
+    </span>
+</a>

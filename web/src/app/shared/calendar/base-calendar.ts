@@ -165,7 +165,9 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.sub.unsubscribe();
+        if (!!this.sub) {
+            this.sub.unsubscribe();
+        }
     }
 
     abstract async getEvents();

@@ -31,7 +31,7 @@ import {
     BundleSpecsComponent,
     FilterComponent,
     ProfileComponent,
-    ChangePasswordModalComponent
+    ChangePasswordModalComponent, CalendarControlsComponent, CalendarCustomerControlsComponent, UserControlsComponent
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -111,7 +111,10 @@ import {GymService} from '../core/utilities';
         BundleModalComponent,
         OptionModalComponent,
         ChangePasswordModalComponent,
-        GymModalComponent
+        GymModalComponent,
+        CalendarControlsComponent,
+        CalendarCustomerControlsComponent,
+        UserControlsComponent,
     ],
     declarations: [
         NoItemComponent,
@@ -154,9 +157,15 @@ import {GymService} from '../core/utilities';
         ProfileComponent,
         GymSettingsComponent,
         GymModalComponent,
-        ChangePasswordModalComponent
+        ChangePasswordModalComponent,
+        CalendarControlsComponent,
+        CalendarCustomerControlsComponent,
+        UserControlsComponent,
     ],
     exports: [
+        CalendarControlsComponent,
+        CalendarCustomerControlsComponent,
+        UserControlsComponent,
         BundleModalComponent,
         NoItemComponent,
         FilterComponent,

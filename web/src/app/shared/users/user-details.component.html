@@ -47,21 +47,6 @@
                 <mat-icon fontSet="fas" fontIcon="fa-key"></mat-icon>&nbsp;Re-Invia Token
             </span>
             </button>
-            <button *ngIf="canSell" mat-button color="basic" (click)="sell()">
-            <span>
-                <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>&nbsp;Acquista
-            </span>
-            </button>
-            <button *ngIf="canShowBundles" mat-button (click)="showBundles()">
-            <span>
-                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;Pacchetti
-            </span>
-            </button>
-            <button *ngIf="canShowSales" mat-button (click)="showSales()">
-            <span>
-                <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;Ordini
-            </span>
-            </button>
             <button *ngIf="canMakeAppointments" mat-button color="basic" (click)="makeAppointments()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;Appuntamenti

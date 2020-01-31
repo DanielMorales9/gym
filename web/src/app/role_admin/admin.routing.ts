@@ -3,7 +3,7 @@ import {RouterModule} from '@angular/router';
 import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/sales';
-import {UserDetailsComponent, UsersComponent} from '../shared/users';
+import {UserControlsComponent, UserDetailsComponent, UsersComponent} from '../shared/users';
 import {ACustomerCalendarComponent} from './customer-calendar';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
 import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
@@ -11,6 +11,7 @@ import {HomeComponent} from './home';
 import {AuthGuardService} from '../core/guards';
 import {ProfileComponent} from '../shared/profile';
 import {GymSettingsComponent} from '../shared/settings';
+import {CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
 
 const routes = [
 
@@ -38,7 +39,9 @@ const routes = [
             },
             {
                 path: 'users/:id', component: UserDetailsComponent,
-                data: {title: 'Dettaglio Utente' }
+                data: {title: 'Dettaglio Utente',
+                    secondary: UserControlsComponent
+                }
             },
             {
                 path: 'sales', component: SalesComponent,
@@ -54,11 +57,11 @@ const routes = [
             },
             {
                 path: 'calendar', component: AdminCalendarComponent,
-                data: {title: 'Calendario' }
+                data: {title: 'Calendario', secondary: CalendarControlsComponent }
             },
             {
                 path: 'calendar/:id', component: ACustomerCalendarComponent,
-                data: {title: 'Calendario Cliente' }
+                data: {title: 'Calendario Cliente', secondary: CalendarCustomerControlsComponent }
             },
             {
                 path: 'profile', component: ProfileComponent,
