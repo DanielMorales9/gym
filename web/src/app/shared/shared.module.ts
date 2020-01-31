@@ -25,7 +25,13 @@ import {
     BundleModalComponent,
     OptionModalComponent,
     FilterSearchToolbar,
-    BundleItemComponent, BundlesCustomerComponent, BundleSpecItemComponent, BundleSpecsComponent, FilterComponent
+    BundleItemComponent,
+    BundlesCustomerComponent,
+    BundleSpecItemComponent,
+    BundleSpecsComponent,
+    FilterComponent,
+    ProfileComponent,
+    ChangePasswordModalComponent, CalendarControlsComponent, CalendarCustomerControlsComponent, UserControlsComponent
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -61,6 +67,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatTreeModule} from '@angular/material/tree';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatTableModule} from '@angular/material/table';
+import {GymModalComponent, GymSettingsComponent} from './settings';
+import {GymService} from '../core/utilities';
 
 @NgModule({
     imports: [
@@ -102,6 +110,11 @@ import {MatTableModule} from '@angular/material/table';
         CustomerDeleteModalComponent,
         BundleModalComponent,
         OptionModalComponent,
+        ChangePasswordModalComponent,
+        GymModalComponent,
+        CalendarControlsComponent,
+        CalendarCustomerControlsComponent,
+        UserControlsComponent,
     ],
     declarations: [
         NoItemComponent,
@@ -141,8 +154,18 @@ import {MatTableModule} from '@angular/material/table';
         BundleSpecItemComponent,
         BundleSpecsComponent,
         FilterComponent,
+        ProfileComponent,
+        GymSettingsComponent,
+        GymModalComponent,
+        ChangePasswordModalComponent,
+        CalendarControlsComponent,
+        CalendarCustomerControlsComponent,
+        UserControlsComponent,
     ],
     exports: [
+        CalendarControlsComponent,
+        CalendarCustomerControlsComponent,
+        UserControlsComponent,
         BundleModalComponent,
         NoItemComponent,
         FilterComponent,
@@ -176,6 +199,7 @@ import {MatTableModule} from '@angular/material/table';
         OptionModalComponent,
         BundleSpecItemComponent,
         BundleSpecsComponent,
+        ProfileComponent
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}

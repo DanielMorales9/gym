@@ -1,0 +1,19 @@
+<mat-sidenav-container class="main-sidenav-container" id="main-sidenav-container">
+    <mat-sidenav class="main-sidenav" #sideNav [opened]="opened" [mode]="mode">
+        <mat-toolbar *ngIf="isMobile">
+            <mat-toolbar-row>
+                <h2> {{ appName }} </h2>
+            </mat-toolbar-row>
+        </mat-toolbar>
+
+        <mat-nav-list>
+            <div #secondaryControls></div>
+            <div #primaryControls></div>
+        </mat-nav-list>
+
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-sidenav-content">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>

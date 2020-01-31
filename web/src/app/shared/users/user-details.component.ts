@@ -18,12 +18,9 @@ export class UserDetailsComponent implements OnInit {
     user: User;
 
     canDelete: boolean;
-    canSell: boolean;
     canEdit: boolean;
     canSendToken: boolean;
     canMakeAppointments: boolean;
-    canShowSales: boolean;
-    canShowBundles: boolean;
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
     private root: string;
@@ -58,11 +55,8 @@ export class UserDetailsComponent implements OnInit {
         const entity = this.USER_TYPE[this.user.type];
         this.canEdit = this.policy.get(entity, 'canEdit');
         this.canDelete = this.policy.get(entity, 'canDelete');
-        this.canSell = this.policy.get(entity, 'canSell');
         this.canSendToken = this.policy.get(entity, 'canSendToken') && !this.user.verified;
-        this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
-        this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
-        this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
+
     }
 
     openEditDialog(): void {
@@ -116,14 +110,6 @@ export class UserDetailsComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user);
     }
 
-    sell() {
-        return this.router.navigate([this.root, 'sales', 'buy', this.user.id]);
-    }
-
-    makeAppointments() {
-        return this.router.navigate([this.root, 'calendar', this.user.id]);
-    }
-
     getRoleName() {
         let name;
         if (!this.user) { return name; }
@@ -142,17 +128,5 @@ export class UserDetailsComponent implements OnInit {
                 break;
         }
         return name;
-    }
-
-    showBundles() {
-        return this.router.navigate([this.root, 'customer', 'bundles'], {queryParams: {
-            id: this.user.id
-            }});
-    }
-
-    showSales() {
-        return this.router.navigate([this.root, 'sales'], {queryParams: {
-                id: this.user.id
-            }});
     }
 }

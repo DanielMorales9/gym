@@ -1,13 +1,13 @@
 import {Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatSelectionList} from '@angular/material';
-import {Gym} from '../shared/model';
-import {rangeValidator} from '../core/functions';
+import {Gym} from '../model';
+import {rangeValidator} from '../../core/functions';
 
 
 @Component({
     templateUrl: './gym-modal.component.html',
-    styleUrls: ['../styles/root.css']
+    styleUrls: ['../../styles/root.css']
 })
 export class GymModalComponent implements OnInit {
 

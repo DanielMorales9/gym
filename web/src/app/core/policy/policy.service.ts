@@ -192,7 +192,7 @@ export class PolicyService {
 
 
     get(entity: string, ...action) {
-        const myPolicy = this.POLICIES[this.auth.getCurrentUserRole() - 1];
+        const myPolicy = this.POLICIES[this.auth.getUserRole() - 1];
         if (entity in myPolicy) {
             let policy = myPolicy[entity];
             let a, index;

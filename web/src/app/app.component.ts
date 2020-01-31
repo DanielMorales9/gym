@@ -3,26 +3,17 @@ import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {AppService, GymService} from './services';
 import {User} from './shared/model';
-import {MatSidenav} from '@angular/material';
 import {ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
+import {SideBarComponent} from './components';
 
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./styles/root.css', './app.component.css']
+    styleUrls: ['./styles/root.css', './styles/app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
-
-    current_role_view: number;
-    authenticated: boolean;
-
-    user: User;
-    appName = '';
-    @ViewChild('snav', { static: true }) public snav: MatSidenav;
-    opened = this.shouldBeOpen();
-    private sub: Subscription = new Subscription();
 
     constructor(private service: AppService,
                 private screenService: ScreenService,
@@ -31,23 +22,53 @@ export class AppComponent implements OnInit, OnDestroy {
                 private gymService: GymService) {
     }
 
+    user: User;
+    appName: string;
+    authenticated: boolean;
+    current_role_view: number;
+
+    @ViewChild('sideBar', { static: true })
+    public sideBar: SideBarComponent;
+
+    private sub: Subscription = new Subscription();
 
     async ngOnInit(): Promise<void> {
         this.authOnNavigation();
-        const [data, error] = await this.service.authenticate();
-        await this.onAuthenticate(data);
+        await this.authenticate();
     }
 
-    private async onAuthenticate(authenticated: any) {
+    // noinspection JSMethodCanBeStatic
+    private setTitle(...title) {
+        document.title = title.join(' - ');
+    }
+
+    private getTitle(state, parent) {
+        const data = [];
+        if (parent && parent.snapshot.data && parent.snapshot.data.title) {
+            data.push(parent.snapshot.data.title);
+        }
+
+        if (state && parent) {
+            data.push(... this.getTitle(state, state.firstChild(parent)));
+        }
+        return data;
+    }
+
+    private async authenticate() {
+        const [authenticated, _] = await this.service.authenticate();
         this.authenticated = authenticated;
         if (this.authenticated && !this.user) {
             this.current_role_view = this.service.currentRole;
             this.user = this.service.user;
-            const [data, error] = await this.gymService.getConfig();
-            if (data) {
-                this.appName = data.name;
-                document.title = this.appName;
-            }
+            await this.getGymName();
+        }
+    }
+
+    private async getGymName() {
+        const [data, _] = await this.gymService.getConfig();
+        if (data) {
+            this.appName = data.name;
+            this.setTitle(this.appName);
         }
     }
 
@@ -61,24 +82,16 @@ export class AppComponent implements OnInit, OnDestroy {
         this.user = undefined;
         this.current_role_view = undefined;
         await this.router.navigateByUrl('/home');
-        await this.snav.close();
+        await this.sideBar.close();
     }
 
     private authOnNavigation() {
-        let sub = this.router.events.subscribe(async event => {
+        const sub = this.router.events.subscribe(async event => {
             if (event instanceof NavigationStart) {
-                const [data, error] = await this.service.authenticate();
-                await this.onAuthenticate(data);
+                await this.authenticate();
                 await this.closeNav();
-            }
-        });
-        this.sub.add(sub);
-        sub = this.route.queryParams.subscribe(params => {
-            if ('title' in params) {
-                document.title = params['title'];
-            }
-            else {
-                document.title = this.appName;
+                const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
+                this.setTitle(this.appName, ...titles);
             }
         });
         this.sub.add(sub);
@@ -96,32 +109,35 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.screenService.isDesktop();
     }
 
-    async closeNav() {
-        if (!this.shouldBeOpen()) {
-            await this.snav.toggle(false);
+    async goHome() {
+        if (this.authenticated) {
+            const roleName = this.user.roles
+                .find(value => value.id === this.current_role_view)
+                .name.toLowerCase();
+            await this.router.navigateByUrl(roleName);
+        }
+        else {
+            await this.router.navigateByUrl('/home');
         }
     }
 
-    private shouldBeOpen() {
+    async closeNav() {
+        if (!this.sideBarOpened()) {
+            await this.sideBar.toggle(false);
+        }
+    }
+
+    sideBarMode() {
+        return !this.isDesktop() && this.authenticated ? 'over' : 'side';
+    }
+
+    sideBarOpened() {
         return this.isDesktop() && this.authenticated;
     }
 
-    isOnCalendar() {
-        return this.router.url.includes('calendar');
-    }
-
-    async goToView(view?) {
-        const params = Object.assign({}, this.route.snapshot.queryParams);
-        if (!!view) {
-            params['view'] = view;
+    async openSideBar() {
+        if (this.authenticated) {
+            await this.sideBar.toggle();
         }
-        else {
-            params['viewDate'] = new Date();
-        }
-        const url = this.router.url.split('?')[0];
-        await this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: params,
-        });
     }
 }
