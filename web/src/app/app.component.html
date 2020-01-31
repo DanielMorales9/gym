@@ -12,12 +12,10 @@
         <mat-icon fontSet="fas" fontIcon="fa-sign-out-alt" (click)="logout()" [hidden]="hideLogout()"></mat-icon>
     </mat-toolbar>
     <side-nav #sideBar
-              [current_role_view]="current_role_view"
               [appName]="appName"
               [opened]="sideBarOpened()"
               [mode]="sideBarMode()"
-              [isMobile]="!isDesktop()"
-              [id]="user?.id">
+              [isMobile]="!isDesktop()">
     </side-nav>
 </div>
 

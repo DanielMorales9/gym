@@ -20,8 +20,6 @@ import {ISubscription} from 'rxjs-compat/Subscription';
 })
 export class SideBarComponent implements OnInit, OnDestroy {
 
-    @Input() id: number;
-    @Input() current_role_view: number;
     @Input() opened: boolean;
     @Input() mode: string;
     @Input() appName: string;
