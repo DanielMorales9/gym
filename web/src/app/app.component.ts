@@ -110,10 +110,15 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     async goHome() {
-        const roleName = this.user.roles
-            .find(value => value.id === this.current_role_view)
-            .name.toLowerCase();
-        await this.router.navigateByUrl(roleName);
+        if (this.authenticated) {
+            const roleName = this.user.roles
+                .find(value => value.id === this.current_role_view)
+                .name.toLowerCase();
+            await this.router.navigateByUrl(roleName);
+        }
+        else {
+            await this.router.navigateByUrl('/home');
+        }
     }
 
     async closeNav() {
