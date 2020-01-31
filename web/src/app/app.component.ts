@@ -6,12 +6,13 @@ import {User} from './shared/model';
 import {MatSidenav} from '@angular/material';
 import {ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
+import {SideBarComponent} from './components';
 
 
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    styleUrls: ['./styles/root.css', './app.component.css']
+    styleUrls: ['./styles/root.css', './styles/app.component.css']
 })
 export class AppComponent implements OnInit, OnDestroy {
 
@@ -22,16 +23,14 @@ export class AppComponent implements OnInit, OnDestroy {
                 private gymService: GymService) {
     }
 
-    current_role_view: number;
-    authenticated: boolean;
-
     user: User;
-    appName = '';
+    appName: string;
+    authenticated: boolean;
+    current_role_view: number;
 
-    @ViewChild('snav', { static: true })
-    public snav: MatSidenav;
+    @ViewChild('sideBar', { static: true })
+    public sideBar: SideBarComponent;
 
-    opened = this.shouldBeOpen();
     private sub: Subscription = new Subscription();
 
     async ngOnInit(): Promise<void> {
@@ -85,7 +84,7 @@ export class AppComponent implements OnInit, OnDestroy {
         this.user = undefined;
         this.current_role_view = undefined;
         await this.router.navigateByUrl('/home');
-        await this.snav.close();
+        await this.sideBar.close();
     }
 
     private authOnNavigation() {
@@ -114,31 +113,22 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     async closeNav() {
-        if (!this.shouldBeOpen()) {
-            await this.snav.toggle(false);
+        if (!this.sideBarOpened()) {
+            await this.sideBar.toggle(false);
         }
     }
 
-    private shouldBeOpen() {
+    private sideBarMode() {
+        return !this.isDesktop() && this.authenticated ? 'over' : 'side';
+    }
+
+    private sideBarOpened() {
         return this.isDesktop() && this.authenticated;
     }
 
-    isOnCalendar() {
-        return this.router.url.includes('calendar');
-    }
-
-    async goToView(view?) {
-        const params = Object.assign({}, this.route.snapshot.queryParams);
-        if (!!view) {
-            params['view'] = view;
+    async openSideBar() {
+        if (this.authenticated) {
+            await this.sideBar.toggle();
         }
-        else {
-            params['viewDate'] = new Date();
-        }
-        const url = this.router.url.split('?')[0];
-        await this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: params,
-        });
     }
 }

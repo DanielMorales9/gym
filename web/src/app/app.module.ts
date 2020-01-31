@@ -6,7 +6,7 @@ import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
 import {AppService, AuthenticatedService, GlobalErrorHandler, GymService} from './services';
-import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent} from './components';
+import {ErrorComponent, GymModalComponent, GymSettingsComponent, ProfileComponent, SideBarComponent} from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
 import {
     MatButtonModule,
@@ -36,6 +36,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         ProfileComponent,
         GymSettingsComponent,
         GymModalComponent,
+        SideBarComponent,
         TimeAgoPipe,
     ],
     imports: [

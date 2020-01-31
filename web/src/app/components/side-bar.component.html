@@ -1,0 +1,138 @@
+<mat-sidenav-container class="main-sidenav-container" id="main-sidenav-container">
+    <mat-sidenav class="main-sidenav" #sideNav [opened]="opened" [mode]="mode">
+        <mat-toolbar *ngIf="isMobile">
+            <mat-toolbar-row>
+                <h2> {{ appName }} </h2>
+            </mat-toolbar-row>
+        </mat-toolbar>
+        <mat-nav-list>
+            <ng-container *ngIf="isOnCalendar()">
+                <h2 matSubheader>Calendario</h2>
+                <a mat-list-item (click)="goToView()">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-calendar-day"></mat-icon>&nbsp;&nbsp;Oggi
+                        </span>
+                </a>
+                <a mat-list-item (click)="goToView('day')">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-stream"></mat-icon>&nbsp;&nbsp;Giorno
+                        </span>
+                </a>
+                <a mat-list-item (click)="goToView('week')">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-columns"></mat-icon>&nbsp;&nbsp;Settimana
+                        </span>
+                </a>
+                <a mat-list-item (click)="goToView('month')">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-table"></mat-icon>&nbsp;&nbsp;Mese
+                        </span>
+                </a>
+            </ng-container>
+            <ng-container [ngSwitch]="current_role_view">
+                <ng-container *ngSwitchCase="1" id="menu-admin">
+                    <h2 matSubheader>Home</h2>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/admin/sales">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Vendite
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/admin/users">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/admin/bundleSpecs">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/admin/calendar">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                    </a>
+                </ng-container>
+                <ng-container *ngSwitchCase="2" id="menu-trainer">
+                    <h2 matSubheader>Home</h2>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/trainer/calendar">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/trainer/users">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>&nbsp;&nbsp;Utenti
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/trainer/bundleSpecs">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                    </a>
+                </ng-container>
+                <ng-container *ngSwitchCase="3" id="menu-customer">
+                    <h2 matSubheader>Home</h2>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/customer/sales" [queryParams]="{id: id}">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/customer/calendar">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;&nbsp;Calendario
+                            </span>
+                    </a>
+                    <a href=# mat-list-item
+                       [routerLinkActive]="['active-link']"
+                       routerLink="/customer/bundles" [queryParams]="{id: id}">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp;&nbsp;Pacchetti
+                            </span>
+                    </a>
+                </ng-container>
+            </ng-container>
+            <div id="menu-account">
+                <h2 matSubheader>Impostazioni</h2>
+                <a href=# mat-list-item
+                   [routerLinkActive]="['active-link']"
+                   routerLink="/profile">
+                            <span>
+                                <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>&nbsp;&nbsp;I miei dettagli
+                            </span>
+                </a>
+            </div>
+            <div id="menu-settings">
+                <a href=# mat-list-item
+                   [routerLinkActive]="['active-link']"
+                   routerLink="/settings/gym">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-store-alt"></mat-icon>&nbsp;&nbsp;La mia palestra
+                        </span>
+                </a>
+            </div>
+        </mat-nav-list>
+    </mat-sidenav>
+
+    <mat-sidenav-content class="main-sidenav-content">
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
