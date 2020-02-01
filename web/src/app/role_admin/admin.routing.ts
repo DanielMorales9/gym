@@ -16,7 +16,6 @@ import {CalendarControlsComponent, CalendarCustomerControlsComponent} from '../s
 const routes = [
 
     { path: '', children : [
-            { path: '', redirectTo: 'sales', pathMatch: 'full'},
             {
                 path: 'bundleSpecs', component: BundleSpecsComponent,
                 data: {title: 'Tipi Pacchetti' }
@@ -39,9 +38,7 @@ const routes = [
             },
             {
                 path: 'users/:id', component: UserDetailsComponent,
-                data: {title: 'Dettaglio Utente',
-                    secondary: UserControlsComponent
-                }
+                data: {title: 'Dettaglio Utente', secondary: UserControlsComponent }
             },
             {
                 path: 'sales', component: SalesComponent,
@@ -71,7 +68,7 @@ const routes = [
             {
                 path: 'settings/gym', component: GymSettingsComponent,
                 canActivate: [AuthGuardService],
-                data: {title: 'Impostazioni Palestra' }
+                data: {title: 'La mia Palestra' }
             },
             {
                 path: 'home', component: HomeComponent,

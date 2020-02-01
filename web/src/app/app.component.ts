@@ -97,14 +97,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.sub.add(sub);
     }
 
-    hideLogin() {
-        return this.router.url.startsWith('/auth') || this.authenticated;
-    }
-
-    hideLogout() {
-        return !this.authenticated;
-    }
-
     isDesktop() {
         return this.screenService.isDesktop();
     }

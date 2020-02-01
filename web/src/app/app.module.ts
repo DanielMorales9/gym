@@ -7,7 +7,7 @@ import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
 import {AppService, AuthenticatedService, GlobalErrorHandler, GymService} from './services';
 import {
-    ErrorComponent,
+    ErrorComponent, NavBarComponent,
     PrimaryAdminControlsComponent, PrimaryCustomerControlsComponent, PrimaryTrainerControlsComponent,
     SideBarComponent
 } from './components';
@@ -39,6 +39,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         PrimaryCustomerControlsComponent,
         ErrorComponent,
         SideBarComponent,
+        NavBarComponent,
         TimeAgoPipe
     ],
     entryComponents: [

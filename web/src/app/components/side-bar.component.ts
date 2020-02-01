@@ -14,7 +14,7 @@ import {MatSidenav} from '@angular/material/sidenav';
 import {ISubscription} from 'rxjs-compat/Subscription';
 
 @Component({
-    selector: 'side-nav',
+    selector: 'side-bar',
     templateUrl: './side-bar.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
 })
