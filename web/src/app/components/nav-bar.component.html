@@ -1,0 +1,11 @@
+<mat-toolbar color="primary" layout="row" class="main-toolbar" id="main-toolbar">
+    <a mat-icon-button (click)="openSideBar()" *ngIf="isMobile">
+        <mat-icon fontSet="fa" fontIcon="fa-bars"></mat-icon>
+    </a>
+    <h1 class="main-app-name">
+        <a id="main-app-name" (click)="goHome()">{{ title }}</a>
+    </h1>
+    <span class="spacer"></span>
+    <mat-icon fontSet="fas" fontIcon="fa-sign-in-alt" routerLink="/auth/login" [hidden]="hideLogin()"></mat-icon>
+    <mat-icon fontSet="fas" fontIcon="fa-sign-out-alt" (click)="doLogout()" [hidden]="hideLogout()"></mat-icon>
+</mat-toolbar>

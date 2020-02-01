@@ -12,7 +12,6 @@ import {CalendarControlsComponent} from '../shared/calendar';
 
 const routes = [
     { path: '', children : [
-            { path: '', redirectTo: 'calendar', pathMatch: 'full'},
             {
                 path: 'calendar', component: TrainerCalendarComponent,
                 data: {title: 'Calendario', secondary: CalendarControlsComponent }
@@ -53,7 +52,7 @@ const routes = [
             {
                 path: 'settings/gym', component: GymSettingsComponent,
                 canActivate: [AuthGuardService],
-                data: {title: 'Impostazioni Palestra' }
+                data: {title: 'Palestra' }
             },
             { path: '**', redirectTo: 'home' }
         ]},
