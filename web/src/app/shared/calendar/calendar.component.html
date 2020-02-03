@@ -110,4 +110,9 @@
         [excludeDays]="excludeDays"
         hidden>
     </button>
+
+    <button type="button" mat-fab color="primary" class="fab-button-add"
+            title="Aggiungi Evento" (click)="handleEvent('hour', {})">
+        <mat-icon>add</mat-icon>
+    </button>
 </div>

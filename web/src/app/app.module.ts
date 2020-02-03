@@ -30,6 +30,7 @@ import {
 } from '@angular/material';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
     declarations: [
@@ -68,7 +69,9 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
         MatDialogModule,
         MatTableModule,
         MatCheckboxModule,
-        MatSelectModule
+        MatSelectModule,
+        NgxMaterialTimepickerModule.setLocale('it-IT')
+
     ],
     providers: [
         AppService,

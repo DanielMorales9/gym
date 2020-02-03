@@ -52,7 +52,12 @@ export class NavBarComponent implements OnInit, OnDestroy {
     }
 
     private setTitle(...titles) {
-        this.title = titles[0];
+        if (this.isMobile) {
+            this.title = titles[0];
+        }
+        else {
+            this.title = titles.reverse().join(' | ');
+        }
     }
 
     private getTitle(state, parent) {

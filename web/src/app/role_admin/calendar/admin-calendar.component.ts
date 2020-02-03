@@ -13,7 +13,7 @@ import {DateService, ScreenService, SnackBarService} from '../../core/utilities'
 
 
 @Component({
-    templateUrl: './admin-calendar.component.html',
+    templateUrl: '../../shared/calendar/calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
 export class AdminCalendarComponent extends BaseCalendar {

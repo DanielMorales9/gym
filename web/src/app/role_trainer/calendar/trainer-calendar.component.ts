@@ -13,8 +13,7 @@ import {DateService, ScreenService, SnackBarService} from '../../core/utilities'
 
 
 @Component({
-    selector: 'trainer-calendar',
-    templateUrl: './trainer-calendar.component.html',
+    templateUrl: '../../shared/calendar/calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
 export class TrainerCalendarComponent extends BaseCalendar {

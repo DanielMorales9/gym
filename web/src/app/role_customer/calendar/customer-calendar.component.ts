@@ -12,7 +12,7 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 
 
 @Component({
-    templateUrl: './customer-calendar.component.html',
+    templateUrl: '../../shared/calendar/calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
 export class CustomerCalendarComponent extends BaseCalendar {

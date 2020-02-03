@@ -8,7 +8,7 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 import {first} from 'rxjs/operators';
 
 @Component({
-    templateUrl: './a-customer-calendar.component.html',
+    templateUrl: '../../shared/calendar/calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
 export class ACustomerCalendarComponent extends BaseCalendar {
