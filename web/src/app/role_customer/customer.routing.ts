@@ -9,6 +9,7 @@ import {AuthGuardService} from '../core/guards';
 import {ProfileComponent} from '../shared/profile';
 import {GymSettingsComponent} from '../shared/settings';
 import {CalendarControlsComponent} from '../shared/calendar';
+import {EventDetailsComponent} from '../shared/events';
 
 const routes = [
     { path: '', children : [
@@ -35,6 +36,10 @@ const routes = [
             {
                 path: 'bundles', component: BundlesCustomerComponent,
                 data: {title: 'Pacchetti' }
+            },
+            {
+                path: 'events/:id', component: EventDetailsComponent,
+                data: {title: 'Dettaglio Evento' }
             },
             {
                 path: 'home', component: HomeComponent,

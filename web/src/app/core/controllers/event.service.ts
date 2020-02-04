@@ -41,7 +41,8 @@ export class EventService {
         return this.http.post(`/events/${gymId}/timeOff?trainerId=${trainerId}`, event);
     }
 
-    deleteHoliday(id: number) {
+    @to_promise
+    deleteHoliday(id: number): any {
         return this.http.delete(`/events/holiday/${id}`);
     }
 
@@ -66,7 +67,8 @@ export class EventService {
         return this.http.post(`/events/${gymId}/course`, event);
     }
 
-    deleteCourseEvent(id: any) {
+    @to_promise
+    deleteCourseEvent(id: any): any {
         return this.http.delete(`/events/course/${id}`);
     }
 
@@ -85,7 +87,13 @@ export class EventService {
         return this.http.get(`/events/training?&startTime=${start}&endTime=${end}`);
     }
 
-    complete(id: number): Observable<any> {
+    @to_promise
+    complete(id: number): any {
         return this.http.get(`/events/${id}/complete`);
+    }
+
+    @to_promise
+    findById(id: number): any {
+        return this.http.get(`/events/${id}`);
     }
 }

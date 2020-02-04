@@ -11,7 +11,7 @@ import {RoleGuardService} from './core/guards';
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
 
-    { path: 'error', component: ErrorComponent },
+    { path: 'error', component: ErrorComponent, data: { title: 'Errore' } },
     { path: 'auth', loadChildren: () => import('app/auth/auth.module').then(m => m.AuthModule) },
     { path: 'home', loadChildren: () => import('app/home/home.module').then(m => m.HomeModule) },
     {

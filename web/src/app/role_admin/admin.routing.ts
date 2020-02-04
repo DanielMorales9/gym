@@ -12,6 +12,7 @@ import {AuthGuardService} from '../core/guards';
 import {ProfileComponent} from '../shared/profile';
 import {GymSettingsComponent} from '../shared/settings';
 import {CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
+import {EventDetailsComponent} from '../shared/events';
 
 const routes = [
 
@@ -59,6 +60,10 @@ const routes = [
             {
                 path: 'calendar/:id', component: ACustomerCalendarComponent,
                 data: {title: 'Calendario Cliente', secondary: CalendarCustomerControlsComponent }
+            },
+            {
+                path: 'events/:id', component: EventDetailsComponent,
+                data: {title: 'Dettaglio Evento' }
             },
             {
                 path: 'profile', component: ProfileComponent,

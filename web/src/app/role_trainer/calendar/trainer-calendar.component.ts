@@ -152,14 +152,14 @@ export class TrainerCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
                 switch (data.type) {
                     case 'confirm':
-                        this.confirmReservation(data);
+                        await this.confirmReservation(data);
                         break;
                     case 'complete':
-                        this.completeReservation(data);
+                        await this.completeReservation(data);
                         break;
                     case 'none':
                         return;
@@ -196,7 +196,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
                         this.deleteReservation(data);
                         break;
                     case 'course':
-                        this.deleteCourseEvent(data);
+                        await this.deleteCourseEvent(data);
                         break;
                     default:
                         break;
@@ -230,22 +230,23 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     }
 
-    private confirmReservation(data: any) {
-        this.facade.confirmReservation(data.eventId)
-            .subscribe(async (_) => {
-                this.snackBar.open('Prenotazione confermata');
-                await this.getEvents();
-            }, (err) => this.snackBar.open(err.error.message));
+    private async confirmReservation(data: any) {
+        const [d, error] = await this.facade.confirmReservation(data.eventId);
+        if (error) {
+            return this.snackBar.open(error.error.message);
+        }
+        this.snackBar.open('Prenotazione confermata');
+        await this.getEvents();
     }
 
-    private completeReservation(data: any) {
-        this.facade.completeEvent(data.eventId)
-            .subscribe(async (_) => {
-                this.snackBar.open('Allenamento completato');
-                await this.getEvents();
-            }, (err) => {
-                this.snackBar.open(err.error.message);
-            });
+    private async completeReservation(data: any) {
+        const [_, err] = await this.facade.completeEvent(data.eventId);
+        if (err) {
+            this.snackBar.open(err.error.message);
+            return;
+        }
+        this.snackBar.open('Allenamento completato');
+        await this.getEvents();
     }
 
     private createTimeOff(data: any, end?: Date) {
@@ -286,12 +287,13 @@ export class TrainerCalendarComponent extends BaseCalendar {
             }, (err) => this.snackBar.open(err.error.message));
     }
 
-    private deleteCourseEvent(data: any) {
-        this.facade.deleteCourseEvent(data.eventId).subscribe( async(_) => {
-            this.snackBar.open('Evento eliminato');
-            await this.getEvents();
-        }, (err) => {
-            this.snackBar.open(err.error.message);
-        });
+    private async deleteCourseEvent(data: any) {
+        const [d, error] = await this.facade.deleteCourseEvent(data.eventId);
+        if (error) {
+            this.snackBar.open(error.error.message);
+            return;
+        }
+        this.snackBar.open('Evento eliminato');
+        await this.getEvents();
     }
 }

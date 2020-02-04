@@ -69,7 +69,24 @@ export class PolicyService {
         },
         payment: {
             canDelete: true
+        },
+        reservation: {
+            canConfirm: true
+        },
+        course: {
+            canDelete: true
+        },
+        personal: {
+            canDelete: true,
+            canComplete: true
+        },
+        timeOff: {
+            canDelete: true
+        },
+        holiday: {
+            canDelete: true
         }
+
     };
 
     TRAINER_POLICY = {
@@ -127,6 +144,22 @@ export class PolicyService {
         bundle: {
             canDelete: false,
             canEdit: false
+        },
+        reservation: {
+            canConfirm: true
+        },
+        course: {
+            canDelete: false
+        },
+        personal: {
+            canDelete: true,
+            canComplete: true
+        },
+        timeOff: {
+            canDelete: true
+        },
+        holiday: {
+            canDelete: false
         }
     };
 

@@ -1,6 +1,7 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
+import {to_promise} from '../functions/decorators';
 
 @Injectable()
 export class ReservationService {
@@ -16,16 +17,13 @@ export class ReservationService {
             {params: params});
     }
 
-    delete(eventId: number, reservationId: number, type?: string) {
-        let endpoint = `/reservations/${reservationId}`;
-        endpoint += `?eventId=${eventId}`;
-        if (type) {
-            endpoint += `&type=${type}`;
-        }
-        return this.http.delete(endpoint);
+    delete(eventId: number, reservationId: number) {
+        const endpoint = `/reservations/${reservationId}`;
+        return this.http.delete(endpoint, { params: { eventId: eventId.toString() }});
     }
 
-    confirm(id: number): Observable<any> {
+    @to_promise
+    confirm(id: number): any {
         return this.http.get(`/reservations/${id}/confirm`);
     }
 

@@ -136,10 +136,10 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             data: this.modalData,
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (data) {
-                if (data.type === 'confirm') { this.confirmReservation(data); }
-                else if (data.type === 'complete') { this.completeReservation(data); }
+                if (data.type === 'confirm') { await this.confirmReservation(data); }
+                else if (data.type === 'complete') { await this.completeReservation(data); }
                 else if (data.type === 'delete') { this.deleteReservation(data); }
                 else { this.createReservation(data); }
             }
@@ -153,7 +153,10 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         if (error) {
             throw error;
         }
-
+        if (data.length === 0) {
+            this.snackBar.open('Non possiedi questo pacchetto');
+            return;
+        }
         const bundleId = data[0].id;
         this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId).subscribe(async (_) => {
             this.snackBar.open('Prenotazione effettuata');
@@ -212,21 +215,22 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             });
     }
 
-    private completeReservation(data) {
-        this.facade.completeEvent(data.eventId)
-            .subscribe(async (_) => {
-                this.snackBar.open('Allenamento completato');
-                await this.getEvents();
-            }, (err) => {
-                this.snackBar.open(err.error.message);
-            });
+    private async completeReservation(data) {
+        const [_, err] = await this.facade.completeEvent(data.eventId);
+        if (err) {
+            this.snackBar.open(err.error.message);
+            return;
+        }
+        this.snackBar.open('Allenamento completato');
+        await this.getEvents();
     }
 
-    private confirmReservation(data) {
-        this.facade.confirmReservation(data.eventId)
-            .subscribe(async (_) => {
-                this.snackBar.open('Prenotazione confermata');
-                await this.getEvents();
-            }, (err) => this.snackBar.open(err.error.message));
+    private async confirmReservation(data) {
+        const [d, error] = await this.facade.confirmReservation(data.eventId);
+        if (error) {
+            return this.snackBar.open(error.error.message);
+        }
+        this.snackBar.open('Prenotazione confermata');
+        await this.getEvents();
     }
 }

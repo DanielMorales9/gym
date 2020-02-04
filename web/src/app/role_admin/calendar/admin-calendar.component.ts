@@ -166,14 +166,14 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
                 switch (data.type) {
                     case 'confirm':
-                        this.confirmReservation(data);
+                        await this.confirmReservation(data);
                         break;
                     case 'complete':
-                        this.completeReservation(data);
+                        await this.completeReservation(data);
                         break;
                     case 'none':
                         return;
@@ -191,7 +191,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             if (!!data) {
                 switch (data.type) {
                     case 'admin':
-                        this.deleteHoliday(data);
+                        await this.deleteHoliday(data);
                         break;
                     case 'trainer':
                         await this.deleteTrainerTimeOff(data);
@@ -200,7 +200,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                         this.deleteReservation(data);
                         break;
                     case 'course':
-                        this.deleteCourseEvent(data);
+                        await this.deleteCourseEvent(data);
                         break;
                     case 'notAllowed':
                         this.snackBar.open('Non può essere cancellata dall\'admin!');
@@ -263,32 +263,32 @@ export class AdminCalendarComponent extends BaseCalendar {
         }
     }
 
-    private deleteHoliday(data) {
-        this.facade.deleteHoliday(data.eventId)
-            .subscribe(async res => {
-                this.snackBar.open('La chiusura è stata eliminata');
-                await this.getEvents();
-            }, err => {
-                this.snackBar.open(err.error.message);
-            });
+    private async deleteHoliday(data) {
+        const [_, err] = await this.facade.deleteHoliday(data.eventId);
+        if (err) {
+            return this.snackBar.open(err.error.message);
+        }
+        this.snackBar.open('La chiusura è stata eliminata');
+        await this.getEvents();
     }
 
-    private completeReservation(data) {
-        this.facade.completeEvent(data.eventId)
-            .subscribe(async (_) => {
-                this.snackBar.open('Allenamento completato');
-                await this.getEvents();
-            }, (err) => {
-                this.snackBar.open(err.error.message);
-            });
+    private async completeReservation(data) {
+        const [_, err] = await this.facade.completeEvent(data.eventId);
+        if (err) {
+            this.snackBar.open(err.error.message);
+            return;
+        }
+        this.snackBar.open('Allenamento completato');
+        await this.getEvents();
     }
 
-    private confirmReservation(data) {
-        this.facade.confirmReservation(data.eventId)
-            .subscribe(async (_) => {
-                this.snackBar.open('Prenotazione confermata');
-                await this.getEvents();
-            }, (err) => this.snackBar.open(err.error.message));
+    private async confirmReservation(data) {
+        const [d, error] = await this.facade.confirmReservation(data.eventId);
+        if (error) {
+            return this.snackBar.open(error.error.message);
+        }
+        this.snackBar.open('Prenotazione confermata');
+        await this.getEvents();
     }
 
     private createCourseEvent(data: any, end: Date) {
@@ -301,12 +301,13 @@ export class AdminCalendarComponent extends BaseCalendar {
             });
     }
 
-    private deleteCourseEvent(data: any) {
-        this.facade.deleteCourseEvent(data.eventId).subscribe( async(_) => {
-            this.snackBar.open('Evento eliminato');
-            await this.getEvents();
-        }, (err) => {
-            this.snackBar.open(err.error.message);
-        });
+    private async deleteCourseEvent(data: any) {
+        const [d, error] = await this.facade.deleteCourseEvent(data.eventId);
+        if (error) {
+            this.snackBar.open(error.error.message);
+            return;
+        }
+        this.snackBar.open('Evento eliminato');
+        await this.getEvents();
     }
 }

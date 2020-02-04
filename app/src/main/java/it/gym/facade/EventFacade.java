@@ -227,4 +227,8 @@ public class EventFacade {
     public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
         return service.findTrainingByInterval(startTime, endTime);
     }
+
+    public AEvent findById(Long id) {
+        return this.service.findById(id);
+    }
 }
