@@ -56,7 +56,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
             this.title = titles[0];
         }
         else {
-            this.title = titles.reverse().join(' | ');
+            this.title = titles.filter(value => !!value).reverse().join(' | ');
         }
     }
 
