@@ -213,25 +213,27 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
                 .param("type", "C"))
                 .andExpect(status().isOk());
 
-        expectTrainingBundleSpec(result, personalBundleSpec, "["+0+"]");
         expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
     }
 
     @Test
     public void whenListWOParameters() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundleSpecs/list")
-                .param("disabled", String.valueOf(true)))
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/list"))
                 .andExpect(status().isOk());
 
-        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
+        expectTrainingBundleSpec(result, personalBundleSpec, "["+0+"]");
+        expectTrainingBundleSpec(result, courseBundleSpec, "["+1+"]");
     }
 
     @Test
     public void whenListWDisabled() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundleSpecs/list"))
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/list")
+                .param("disabled", String.valueOf(false)))
                 .andExpect(status().isOk());
 
-        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
+
+        expectTrainingBundleSpec(result, personalBundleSpec, "["+0+"]");
+        expectTrainingBundleSpec(result, courseBundleSpec, "["+1+"]");
     }
 
     @Test
@@ -241,7 +243,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
                 "&disabled=false"))
                 .andExpect(status().isOk());
 
-        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
+        expectTrainingBundleSpec(result, courseBundleSpec, "content["+0+"]");
     }
 
     @Test
