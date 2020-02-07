@@ -17,10 +17,15 @@
         </div>
         <ng-container *ngIf="modalData.confirm && modalData.complete; else ok">
             <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
-            <button type="button" mat-flat-button color="primary"
+            <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+            </button>
+            <button type="button" mat-flat-button color="accent"
                     *ngIf="!modalData?.event.meta?.reservation.confirmed"
                     (click)="confirm()">Conferma</button>
-            <button type="button" mat-flat-button color="primary"
+            <button type="button" mat-flat-button color="accent"
                     *ngIf="!modalData?.event.meta?.session.completed && modalData?.event.meta?.reservation.confirmed"
                     (click)="complete()">Completa</button>
         </ng-container>
@@ -31,8 +36,13 @@
                 <reserve-course-event [event]="modalData?.event"></reserve-course-event>
             </div>
             <div mat-dialog-actions>
+                <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+                </button>
+                <button (click)="submit()" color="accent" mat-flat-button type="button">Conferma</button>
                 <button (click)="close()" color="basic" mat-flat-button type="button">Cancella</button>
-                <button (click)="submit()" color="primary" mat-flat-button type="button">Conferma</button>
             </div>
         </ng-container>
     </ng-container>
@@ -40,6 +50,11 @@
 
 <ng-template #ok>
     <div mat-dialog-actions>
+        <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+        </button>
         <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
     </div>
 </ng-template>
@@ -50,7 +65,12 @@
     </div>
     <div mat-dialog-actions>
         <button (click)="close()" color="basic" mat-flat-button type="button">Ok</button>
-        <button (click)="cancel()" color="primary" mat-flat-button type="button">Cancella</button>
+        <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+        </button>
+        <button (click)="cancel()" color="warn" mat-flat-button type="button">Cancella</button>
     </div>
 </ng-template>
 

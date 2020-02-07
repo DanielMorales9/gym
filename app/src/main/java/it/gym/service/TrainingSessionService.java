@@ -31,7 +31,4 @@ public class TrainingSessionService implements ICrudService<ATrainingSession, Lo
         return this.repository.findAll();
     }
 
-    public void deleteAll(List<ATrainingSession> sessions) {
-        repository.deleteAll(sessions);
-    }
 }

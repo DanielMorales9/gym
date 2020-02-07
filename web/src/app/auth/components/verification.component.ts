@@ -91,7 +91,7 @@ export class VerificationComponent implements OnInit {
         if (error) {
             await this.router.navigate(['/error'], {queryParams: this.QUERY_PARAMS});
         } else {
-            await this.router.navigateByUrl('/');
+            await this.router.navigateByUrl('/auth/login');
         }
 
     }
@@ -104,7 +104,7 @@ export class VerificationComponent implements OnInit {
         } else {
             const message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`;
             this.snackbar.open(message);
-            return this.router.navigateByUrl('/');
+            return this.router.navigateByUrl('c');
         }
     }
 }

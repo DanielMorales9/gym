@@ -54,7 +54,7 @@ export class BundleSpecDetailsComponent implements OnInit {
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
         this.canEdit = this.policy.get('bundleSpec', 'canEdit');
         this.canMakeOption = this.policy.get('option', 'canCreate');
-        this.canDeleteOption = this.policy.get('option', 'canCreate');
+        this.canDeleteOption = this.policy.get('option', 'canDelete');
     }
 
     editBundleSpec(): void {

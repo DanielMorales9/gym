@@ -9,12 +9,17 @@
         </div>
         <div mat-dialog-actions>
             <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
-            <button type="button" mat-flat-button color="primary"
+            <button type="button" mat-flat-button color="accent"
                     *ngIf="!modalData?.event.meta?.reservation.confirmed"
                     (click)="submit()">Conferma</button>
-            <button type="button" mat-flat-button color="primary"
+            <button type="button" mat-flat-button color="accent"
                     *ngIf="!modalData?.event.meta?.session.completed && modalData?.event.meta?.reservation.confirmed"
                     (click)="submit()">Completa</button>
+            <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+            </button>
         </div>
     </ng-container>
     <ng-container *ngSwitchCase="'admin'">
@@ -23,6 +28,11 @@
         </div>
         <div mat-dialog-actions>
             <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
+            <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+            </button>
         </div>
     </ng-container>
     <ng-container *ngSwitchCase="'trainer'">
@@ -33,6 +43,11 @@
         </div>
         <div mat-dialog-actions>
             <button type="button" mat-flat-button color="basic" (click)="close()">Ok</button>
+            <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+            </button>
         </div>
     </ng-container>
 
@@ -42,6 +57,11 @@
         </div>
         <div mat-dialog-actions>
             <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
+            <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+            </button>
         </div>
     </ng-container>
 </ng-container>

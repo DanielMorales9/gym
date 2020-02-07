@@ -89,7 +89,8 @@ public class TrainingBundleSpecificationController {
 
     @GetMapping(path = "/list")
     @ResponseBody
-    public List<ATrainingBundleSpecification> list(@RequestParam(required = false) Boolean disabled) {
-        return facade.findByIsDisabled(disabled);
+    public List<ATrainingBundleSpecification> list(@RequestParam(required = false) Boolean disabled,
+                                                   @RequestParam(required = false) String type) {
+        return facade.list(disabled, type);
     }
 }

@@ -12,7 +12,7 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 
 
 @Component({
-    templateUrl: './customer-calendar.component.html',
+    templateUrl: '../../shared/calendar/calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
 export class CustomerCalendarComponent extends BaseCalendar {
@@ -140,8 +140,11 @@ export class CustomerCalendarComponent extends BaseCalendar {
         if (error) {
             throw error;
         }
+        if (data.length === 0) {
+            this.snackBar.open('Non possiedi questo pacchetto');
+            return;
+        }
         const bundleId = data[0].id;
-
         this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId).subscribe(async (_) => {
             this.snackBar.open('Prenotazione effettuata');
             await this.getEvents();

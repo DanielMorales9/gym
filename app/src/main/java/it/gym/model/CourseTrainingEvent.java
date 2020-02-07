@@ -19,11 +19,11 @@ public class CourseTrainingEvent extends ATrainingEvent {
 
     public static final String TYPE = "C";
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval=true, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     @JoinColumn(name = "event_id")
     private List<Reservation> reservations;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinTable(
             name="events_sessions",
             uniqueConstraints = @UniqueConstraint(columnNames = {"event_id", "session_id"}),
@@ -96,13 +96,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
     }
 
     @Override
-    public List<ATrainingSession> deleteSessions() {
-        ArrayList<ATrainingSession> mySession = new ArrayList<>(this.sessions.values());
-        sessions = null;
-        return mySession;
-    }
-
-    @Override
     public List<ATrainingBundle> deleteSessionsFromBundles() {
         Collection<ATrainingSession> sess = sessions.values();
         sess.forEach(ATrainingSession::deleteMeFromBundle);
@@ -121,13 +114,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
     @Override
     public void complete() {
         this.sessions.values().forEach(ATrainingSession::complete);
-    }
-
-    @Override
-    public List<Reservation> deleteReservations() {
-        List<Reservation> clone = new ArrayList<>(reservations);
-        reservations = null;
-        return clone;
     }
 
     @Override
@@ -154,7 +140,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
 
     @Override
     public void addReservation(Reservation res) {
-
         if (reservations == null)
             reservations = new ArrayList<>();
 

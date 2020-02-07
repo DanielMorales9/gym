@@ -27,6 +27,14 @@ public class EventController {
 
     @Autowired private EventFacade facade;
 
+    @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<EventResource> findById(@PathVariable Long id) {
+        AEvent res = facade.findById(id);
+
+        return ResponseEntity.ok(new EventAssembler().toResource(res));
+    }
+
     @PostMapping(path = "/{gymId}/holiday")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<EventResource> createHoliday(@PathVariable Long gymId,

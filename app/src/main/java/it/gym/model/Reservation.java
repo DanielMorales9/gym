@@ -6,11 +6,10 @@ import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(name = "reservations")
-@Data
-@EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
 public class Reservation {
 
@@ -50,5 +49,19 @@ public class Reservation {
 
     public void setUser(Customer user) {
         this.user = user;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Reservation that = (Reservation) o;
+        return id.equals(that.id) &&
+                Objects.equals(isConfirmed, that.isConfirmed);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, isConfirmed);
     }
 }

@@ -151,6 +151,7 @@ public class ReservationFacade {
         logger.info("Saving training event");
         eventService.save(evt);
 
+
         logger.info("Adding training session to bundle");
         bundle.addSession(session);
 
@@ -214,8 +215,6 @@ public class ReservationFacade {
         logger.info("Getting session by reservation from event");
         ATrainingSession session = event.getSession(res);
 
-        logger.info(session.toString());
-
         logger.info("Getting bundle from session");
         ATrainingBundle bundle = session.getTrainingBundle();
 
@@ -234,12 +233,6 @@ public class ReservationFacade {
 
             logger.info("Deleting session by reservation from event");
             event.deleteSession(res);
-
-            logger.info("Deleting session");
-            this.sessionService.delete(session);
-
-            logger.info("Deleting reservation");
-            this.service.delete(res);
 
             logger.info("Saving training event");
             this.eventService.save(event);

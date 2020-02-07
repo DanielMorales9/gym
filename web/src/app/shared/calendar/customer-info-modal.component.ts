@@ -1,6 +1,8 @@
 import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {BaseCalendarModal} from './base-calendar-modal';
+import {Router} from '@angular/router';
+import {USER_INDEX} from '../model';
 
 @Component({
     templateUrl: './customer-info-modal.component.html',
@@ -9,6 +11,7 @@ import {BaseCalendarModal} from './base-calendar-modal';
 export class CustomerInfoModalComponent extends BaseCalendarModal {
 
     constructor(public dialogRef: MatDialogRef<CustomerInfoModalComponent>,
+                private router: Router,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = this.data;
@@ -51,5 +54,11 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
             return this.close(message);
         }
         this.close();
+    }
+
+    async info() {
+        const root = USER_INDEX[this.modalData.role];
+        await this.router.navigate([root, 'events', this.modalData.event.meta.id]);
+        this.dialogRef.close();
     }
 }

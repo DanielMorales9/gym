@@ -4,6 +4,7 @@ import {Observable, of} from 'rxjs';
 import {User} from '../../shared/model';
 import {AuthenticationService} from '../authentication';
 import {DateService, GymService} from '../utilities';
+import {to_promise} from '../functions/decorators';
 
 
 @Injectable()
@@ -52,7 +53,7 @@ export class CalendarFacade {
      * BUNDLE API
      */
     getCourses() {
-        return this.specService.list({disabled: false});
+        return this.specService.list({disabled: false, type: 'C'});
     }
 
 
@@ -164,7 +165,7 @@ export class CalendarFacade {
         return this.eventService.getTimesOff(startS,  endS, id);
     }
 
-    deleteTimeOff(id: number, type?: string) {
+    deleteTimeOff(id: number) {
         return this.eventService.deleteTimeOff(id);
     }
 
@@ -199,6 +200,11 @@ export class CalendarFacade {
             }
         }
         return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione'}}));
+    }
+
+    @to_promise
+    deleteOneReservation(eventId: number, id: number): any {
+        return this.reservationService.delete(eventId, id);
     }
 
     createReservationFromBundle(userId: number, bundleId: number, event: any) {
@@ -246,5 +252,9 @@ export class CalendarFacade {
 
     getUserBundleBySpecId(userId: number, specId: any) {
         return this.userService.getBundleBySpecId(userId, specId);
+    }
+
+    findEventById(id: number) {
+        return this.eventService.findById(id);
     }
 }

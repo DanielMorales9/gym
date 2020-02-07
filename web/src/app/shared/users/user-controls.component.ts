@@ -2,23 +2,22 @@ import {Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
-import {User} from '../model';
+import {User, USER_TYPE} from '../model';
 
 @Component({
     templateUrl: './user-controls.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/app.component.css'],
 })
-export class UserControlsComponent implements OnInit{
+export class UserControlsComponent implements OnInit {
 
     user: User;
     canSell: boolean;
     canShowBundles: boolean;
     canShowSales: boolean;
     canMakeAppointments: boolean;
-    canDelete: boolean;
-    private root: string;
+    isCustomer: boolean;
 
-    USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
+    private root: string;
 
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
@@ -38,13 +37,12 @@ export class UserControlsComponent implements OnInit{
                 throw error;
             } else {
                 this.user = data;
-                const entity = this.USER_TYPE[this.user.type];
+                const entity = USER_TYPE[this.user.type];
                 this.canSell = this.policy.get(entity, 'canSell');
                 this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
                 this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
                 this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
-                console.log(this.user);
-                console.log(this.canSell);
+                this.isCustomer = entity === 'customer';
             }
         }
     }

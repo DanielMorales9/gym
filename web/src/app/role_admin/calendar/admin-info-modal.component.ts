@@ -1,6 +1,7 @@
 import {Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     templateUrl: './admin-info-modal.component.html',
@@ -8,7 +9,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 })
 export class AdminInfoModalComponent extends BaseCalendarModal {
 
-    constructor(public dialogRef: MatDialogRef<AdminInfoModalComponent>,
+    constructor(private router: Router,
+                public dialogRef: MatDialogRef<AdminInfoModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = this.data;
@@ -41,4 +43,8 @@ export class AdminInfoModalComponent extends BaseCalendarModal {
         this.dialogRef.close(data);
     }
 
+    async info() {
+        await this.router.navigate(['admin', 'events', this.modalData.event.meta.id]);
+        this.dialogRef.close();
+    }
 }
