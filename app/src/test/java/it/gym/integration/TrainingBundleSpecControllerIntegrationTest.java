@@ -36,14 +36,14 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     @Autowired private TrainingBundleSpecificationRepository repository;
     @Autowired private TrainingBundleRepository bundleRepository;
 
-    private PersonalTrainingBundleSpecification personalBundle;
+    private PersonalTrainingBundleSpecification personalBundleSpec;
     private CourseTrainingBundleSpecification courseBundleSpec;
 
     @Before
     public void before() {
-        personalBundle = createPersonalBundleSpec(1L, "personal", 11);
+        personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
-        personalBundle = repository.save(personalBundle);
+        personalBundleSpec = repository.save(personalBundleSpec);
         courseBundleSpec = repository.save(courseBundleSpec);
     }
 
@@ -55,21 +55,21 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Test
     public void findPersonalBundleSpecIdOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundleSpecs/" + personalBundle.getId()))
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isOk());
         logger.info(bundleRepository.findAll().toString());
-        expectTrainingBundleSpec(result, personalBundle);
+        expectTrainingBundleSpec(result, personalBundleSpec);
     }
 
     @Test
     public void whenPatchOK() throws Exception {
-        personalBundle.setDescription("desco");
+        personalBundleSpec.setDescription("desco");
         ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(patch("/bundleSpecs/"+personalBundle.getId())
+        ResultActions result = mockMvc.perform(patch("/bundleSpecs/"+ personalBundleSpec.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(personalBundle)))
+                .content(objectMapper.writeValueAsString(personalBundleSpec)))
                 .andExpect(status().isOk());
-        expectTrainingBundleSpec(result, personalBundle);
+        expectTrainingBundleSpec(result, personalBundleSpec);
     }
 
     @Test
@@ -81,15 +81,15 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Test
     public void deletePersonalBundleSpecIdOK() throws Exception {
-        mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
+        mockMvc.perform(delete("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isOk());
         assertThat(repository.findAll().size()).isEqualTo(1);
     }
 
     @Test
     public void deletePersonalBundleSpecId_throwException() throws Exception {
-        bundleRepository.save(personalBundle.createTrainingBundle());
-        mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
+        bundleRepository.save(personalBundleSpec.createTrainingBundle());
+        mockMvc.perform(delete("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -123,13 +123,13 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         PersonalTrainingEvent evt = createPersonalEvent(1L, "course", start, end);
-        ATrainingBundle bundle = personalBundle.createTrainingBundle();
+        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle();
         ATrainingSession session = bundle.createSession(evt);
         session.setCompleted(true);
         bundle.addSession(session);
         bundleRepository.save(bundle);
 
-        mockMvc.perform(delete("/bundleSpecs/" + personalBundle.getId()))
+        mockMvc.perform(delete("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
     }
 
@@ -202,8 +202,36 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         ResultActions result = mockMvc.perform(get("/bundleSpecs"))
                 .andExpect(status().isOk());
 
-        expectTrainingBundleSpec(result, personalBundle, "content["+0+"]");
+        expectTrainingBundleSpec(result, personalBundleSpec, "content["+0+"]");
         expectTrainingBundleSpec(result, courseBundleSpec, "content["+1+"]");
+    }
+
+    @Test
+    public void whenListWParameters() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/list")
+                .param("disabled", String.valueOf(false))
+                .param("type", "C"))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, personalBundleSpec, "["+0+"]");
+        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
+    }
+
+    @Test
+    public void whenListWOParameters() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/list")
+                .param("disabled", String.valueOf(true)))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
+    }
+
+    @Test
+    public void whenListWDisabled() throws Exception {
+        ResultActions result = mockMvc.perform(get("/bundleSpecs/list"))
+                .andExpect(status().isOk());
+
+        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
     }
 
     @Test
@@ -213,7 +241,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
                 "&disabled=false"))
                 .andExpect(status().isOk());
 
-        expectTrainingBundleSpec(result, courseBundleSpec, "content["+0+"]");
+        expectTrainingBundleSpec(result, courseBundleSpec, "["+0+"]");
     }
 
     @Test
@@ -229,7 +257,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     public void whenSearchWOParametersOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/search"))
                 .andExpect(status().isOk());
-        expectTrainingBundleSpec(result, personalBundle, "content["+0+"]");
+        expectTrainingBundleSpec(result, personalBundleSpec, "content["+0+"]");
         expectTrainingBundleSpec(result, courseBundleSpec, "content["+1+"]");
     }
 
@@ -237,7 +265,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     public void whenSearchWDisabledFalseOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/search?disabled=false"))
                 .andExpect(status().isOk());
-        expectTrainingBundleSpec(result, personalBundle, "content["+0+"]");
+        expectTrainingBundleSpec(result, personalBundleSpec, "content["+0+"]");
         expectTrainingBundleSpec(result, courseBundleSpec, "content["+1+"]");
     }
 

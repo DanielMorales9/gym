@@ -1,7 +1,6 @@
 package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.controller.EventController;
 import it.gym.model.*;
 import it.gym.repository.*;
 import org.junit.Test;
@@ -309,9 +308,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             if (hasEvent) {
                 event = eventRepository.save(event);
             }
-
-
-
+            
             return this;
         }
 
