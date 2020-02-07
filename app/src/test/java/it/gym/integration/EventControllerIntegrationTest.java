@@ -93,6 +93,14 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
+    public void whenFindByIdReturnsOK() throws Exception {
+        ResultActions result = mockMvc.perform(get("/events/" + event.getId()))
+                .andExpect(status().isOk());
+
+        expectEvent(result, event);
+    }
+
+    @Test
     public void whenCreateHolidayReturnsException() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
