@@ -186,26 +186,14 @@ public class EventFacade {
         if (!event.isSessionDeletable())
             throw new MethodNotAllowedException("Il corso non è cancellabile");
 
-        logger.info("Deleting reservation from event");
-        List<Reservation> reservations = event.deleteReservations();
-
         logger.info("Deleting sessions from bundles");
         List<ATrainingBundle> bundles = event.deleteSessionsFromBundles();
-
-        logger.info("Deleting session from event");
-        List<ATrainingSession> sessions = event.deleteSessions();
 
         logger.info("Deleting training event");
         this.service.delete(event);
 
         logger.info("Saving bundle event");
         this.bundleService.saveAll(bundles);
-
-        logger.info("Deleting reservation");
-        this.reservationService.deleteAll(reservations);
-
-        logger.info("Deleting session");
-        this.sessionService.deleteAll(sessions);
 
         return event;
     }

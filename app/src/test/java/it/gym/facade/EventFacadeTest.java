@@ -127,7 +127,6 @@ public class EventFacadeTest {
         Reservation res = fixture.getReservation();
         CourseTrainingBundle bundle = fixture.getBundle();
         CourseTrainingEvent fixtureEvent = fixture.getEvent();
-        ATrainingSession session = fixture.getSession();
 
         Mockito.doReturn(fixtureEvent).when(service).findById(1L);
 
@@ -135,11 +134,11 @@ public class EventFacadeTest {
 
         Mockito.verify(service).delete(event);
         Mockito.verify(bundleService).saveAll(Collections.singletonList(bundle));
-        Mockito.verify(reservationService).deleteAll(Collections.singletonList(res));
-        Mockito.verify(sessionService).deleteAll(Collections.singletonList(session));
+//        Mockito.verify(reservationService).deleteAll(Collections.singletonList(res));
+//        Mockito.verify(sessionService).deleteAll(Collections.singletonList(session));
 
-        assertThat(event.getReservations()).isNull();
-        assertThat(event.getSessions()).isNull();
+//        assertThat(event.getReservations()).isNull();
+//        assertThat(event.getSessions()).isNull();
         assertThat(event).isNotNull();
     }
 

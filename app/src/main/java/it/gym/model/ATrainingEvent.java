@@ -19,13 +19,12 @@ public abstract class ATrainingEvent extends AEvent {
     @JsonIgnore
     public abstract boolean isSessionDeletable();
     public abstract void addSession(Long reservationId, ATrainingSession session);
-    public abstract List<ATrainingSession> deleteSessions();
+
     public abstract List<ATrainingBundle> deleteSessionsFromBundles();
 
     public abstract void deleteSession(Reservation res);
     @JsonIgnore
     public abstract ATrainingSession getSession(Reservation res);
     public abstract void complete();
-    public abstract List<Reservation> deleteReservations();
 
 }

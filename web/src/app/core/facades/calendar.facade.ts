@@ -53,7 +53,7 @@ export class CalendarFacade {
      * BUNDLE API
      */
     getCourses() {
-        return this.specService.list({disabled: false});
+        return this.specService.list({disabled: false, type: 'C'});
     }
 
 
@@ -165,7 +165,7 @@ export class CalendarFacade {
         return this.eventService.getTimesOff(startS,  endS, id);
     }
 
-    deleteTimeOff(id: number, type?: string) {
+    deleteTimeOff(id: number) {
         return this.eventService.deleteTimeOff(id);
     }
 

@@ -17,6 +17,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Component
@@ -82,8 +83,16 @@ public class TrainingBundleSpecificationFacade {
         return service.save(bundleSpec);
     }
 
-    public List<ATrainingBundleSpecification> findByIsDisabled(Boolean disabled) {
-        return service.findByIsDisabled(disabled);
+    public List<ATrainingBundleSpecification> list(Boolean disabled, String type) {
+        List<ATrainingBundleSpecification> bundles;
+        if (disabled == null)
+            bundles = service.findAll();
+        else
+            bundles = service.findByIsDisabled(disabled);
+
+        if (type != null)
+            bundles = bundles.stream().filter(a -> a.getType().equals(type)).collect(Collectors.toList());
+        return bundles;
     }
 
     public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {

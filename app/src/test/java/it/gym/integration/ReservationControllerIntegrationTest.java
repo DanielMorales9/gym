@@ -1,9 +1,12 @@
 package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.controller.EventController;
 import it.gym.model.*;
 import it.gym.repository.*;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
@@ -22,6 +25,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class ReservationControllerIntegrationTest extends AbstractIntegrationTest {
+
+    private static final Logger logger = LoggerFactory.getLogger(ReservationControllerIntegrationTest.class);
 
     @Autowired private UserRepository userRepository;
     @Autowired private GymRepository gymRepository;
@@ -169,6 +174,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         Reservation reservation = fixture.getReservation();
         CourseTrainingEvent event = fixture.getCourseEvent();
 
+        logger.info(sessionRepository.findAll().toString());
         ResultActions result = mockMvc.perform(delete("/reservations/" + reservation.getId())
                 .param("eventId", String.valueOf(event.getId())))
                 .andExpect(status().isOk());
@@ -182,13 +188,15 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         ATrainingBundle actualBundle = bundleRepository.findAll().get(0);
 
         assertThat(actualEvent).isEqualTo(event);
-        assertThat(actualEvent.getReservations()).isEmpty();
-        assertThat(actualEvent.getSessions()).isEmpty();
+        assertThat(actualEvent.getReservations().size()).isEqualTo(0);
+        assertThat(actualEvent.getSessions().size()).isEqualTo(0);
         assertThat(actualBundle).isEqualTo(fixture.getBundle());
 
         assertThat(eventRepository.findAll()).isNotEmpty();
-        assertThat(sessionRepository.findAll()).isEmpty();
-        assertThat(reservationRepository.findAll()).isEmpty();
+
+        logger.info(sessionRepository.findAll().toString());
+        assertThat(sessionRepository.findAll().size()).isEqualTo(0);
+        assertThat(reservationRepository.findAll().size()).isEqualTo(0);
 
         fixture.tearDown();
     }
@@ -269,6 +277,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                     createCourseBundleSpec(1L, "personal", 11, 1, 111.0);
             spec = specRepository.save(spec);
             bundle = createCourseBundle(1L, getNextMonday(), spec, spec.getOptions().get(0));
+            bundle = bundleRepository.save(bundle);
 
             if (hasEvent) {
                 Date start = getNextMonday();
@@ -285,26 +294,23 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 reservation = createReservation(1L, customer);
                 reservation = reservationRepository.save(reservation);
                 event.addReservation(reservation);
-            }
 
-            if (hasReservation) {
                 session = bundle.createSession(event);
                 bundle.addSession(session);
-            }
+                bundle = bundleRepository.save(bundle);
 
-            bundle = bundleRepository.save(bundle);
-
-            customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
-            customer = userRepository.save(customer);
-
-            if (hasReservation) {
                 session = bundle.getSessions().get(0);
                 event.addSession(reservation.getId(), session);
             }
 
+            customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+            customer = userRepository.save(customer);
+
             if (hasEvent) {
                 event = eventRepository.save(event);
             }
+
+
 
             return this;
         }

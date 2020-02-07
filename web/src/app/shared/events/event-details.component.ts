@@ -130,7 +130,7 @@ export class EventDetailsComponent implements OnInit {
             [data, error] = await this.facade.deleteHoliday(this.event.id);
         }
         else {
-            return;
+            [data, error] = await this.facade.deleteTimeOff(this.event.id);
         }
         if (error) {
             return this.snackBar.open(error.error.message);

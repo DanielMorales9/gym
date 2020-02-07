@@ -50,6 +50,11 @@
 
 <ng-template #ok>
     <div mat-dialog-actions>
+        <button mat-flat-button type="button" color="primary" (click)="info()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+                </span>
+        </button>
         <button mat-flat-button type="button" color="basic" (click)="close()">Ok</button>
     </div>
 </ng-template>

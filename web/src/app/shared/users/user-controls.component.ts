@@ -8,14 +8,15 @@ import {User, USER_TYPE} from '../model';
     templateUrl: './user-controls.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/app.component.css'],
 })
-export class UserControlsComponent implements OnInit{
+export class UserControlsComponent implements OnInit {
 
     user: User;
     canSell: boolean;
     canShowBundles: boolean;
     canShowSales: boolean;
     canMakeAppointments: boolean;
-    canDelete: boolean;
+    isCustomer: boolean;
+
     private root: string;
 
     constructor(protected router: Router,
@@ -41,8 +42,7 @@ export class UserControlsComponent implements OnInit{
                 this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
                 this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
                 this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
-                console.log(this.user);
-                console.log(this.canSell);
+                this.isCustomer = entity === 'customer';
             }
         }
     }

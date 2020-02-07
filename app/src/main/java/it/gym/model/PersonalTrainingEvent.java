@@ -44,13 +44,6 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     }
 
     @Override
-    public List<Reservation> deleteReservations() {
-        List<Reservation> clone = Collections.singletonList(reservation);
-        reservation = null;
-        return clone;
-    }
-
-    @Override
     public ATrainingSession getSession(Reservation res) {
         return session;
     }
@@ -63,13 +56,6 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     @Override
     public void addSession(Long reservationId, ATrainingSession session) {
         this.session = session;
-    }
-
-    @Override
-    public List<ATrainingSession> deleteSessions() {
-        List<ATrainingSession> clone = Collections.singletonList(session);
-        session = null;
-        return clone;
     }
 
     @Override

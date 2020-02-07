@@ -58,6 +58,12 @@
                             </span>
                         </ng-template>
                     </ng-container>
+                    <ng-container *ngSwitchCase="'T'">
+                        <span>
+                            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>&nbsp;Allenatore: {{event?.user.firstName}}
+                            {{event?.user.lastName}}
+                        </span>
+                    </ng-container>
                 </ng-container>
             </div>
             <ng-container *ngIf="event?.type === 'C'">

@@ -1,4 +1,4 @@
-<h2 matSubheader>Operazioni</h2>
+<h2 matSubheader *ngIf="isCustomer">Operazioni</h2>
 <a mat-list-item *ngIf="canSell" color="basic" (click)="sell()">
     <span>
         <mat-icon fontSet="fas" fontIcon="fa-shopping-bag"></mat-icon>&nbsp;Acquista

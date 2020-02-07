@@ -40,7 +40,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     private Trainer trainer;
     private CourseTrainingBundleSpecification courseSpec;
     private CourseTrainingBundle courseBundle;
-    private ATrainingBundle personalBundle;
 
     @Before
     public void before() {
@@ -56,7 +55,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
-        personalBundle = personalSpec.createTrainingBundle();
+        ATrainingBundle personalBundle = personalSpec.createTrainingBundle();
         personalBundle = bundleRepository.save(personalBundle);
         TimeOption option = courseSpec.getOptions().get(0);
         courseBundle = createCourseBundle(1L, start, courseSpec, option);
@@ -306,7 +305,9 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         CourseTrainingEvent event = createCourseEvent(1L, "course", start, end, courseSpec);
 
         ATrainingSession session = courseBundle.createSession(event);
+        ATrainingSession session1 = courseBundle.createSession(event);
         courseBundle.addSession(session);
+        courseBundle.addSession(session1);
 
         Customer customer = createCustomer(1L,
                 "test@test.com",
@@ -317,11 +318,24 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
                 null);
         customer = userRepository.save(customer);
 
+        Customer customer1 = createCustomer(2L,
+                "test1@test1.com",
+                "test",
+                "test1",
+                "test1",
+                true,
+                null);
+        customer1 = userRepository.save(customer1);
+
         Reservation reservation = createReservation(1L, customer);
-        event.setReservations(Collections.singletonList(reservation));
+        event.addReservation(reservation);
+        Reservation reservation1 = createReservation(2L, customer1);
+        event.addReservation(reservation1);
+        event.addSession(reservation.getId(), session);
+        event.addSession(reservation1.getId(), session1);
         event = eventRepository.save(event);
 
-        assertThat(reservationRepository.findAll().size()).isEqualTo(1);
+        assertThat(reservationRepository.findAll().size()).isEqualTo(2);
         ResultActions result = mockMvc.perform(delete("/events/course/" + event.getId()))
                 .andExpect(status().isOk());
 

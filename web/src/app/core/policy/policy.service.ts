@@ -71,7 +71,8 @@ export class PolicyService {
             canDelete: true
         },
         reservation: {
-            canConfirm: true
+            canConfirm: true,
+            canDelete: true
         },
         course: {
             canDelete: true
