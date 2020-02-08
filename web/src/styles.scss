@@ -37,42 +37,7 @@ $md-primary: (
 );
 $my-app-primary: mat-palette($md-primary);
 
-$md-accent: (
-        50 : #edeced,
-        100 : #d1d1d2,
-        200 : #b2b2b5,
-        300 : #939397,
-        400 : #7c7b80,
-        500 : #65646a,
-        600 : #5d5c62,
-        700 : #535257,
-        800 : #49484d,
-        900 : #37363c,
-        A100 : #ad9bf7,
-        A200 : #866bf4,
-        A400 : #572dff,
-        A700 : #4314ff,
-        contrast: (
-                50 : #000000,
-                100 : #000000,
-                200 : #000000,
-                300 : #000000,
-                400 : #ffffff,
-                500 : #ffffff,
-                600 : #ffffff,
-                700 : #ffffff,
-                800 : #ffffff,
-                900 : #ffffff,
-                A100 : #000000,
-                A200 : #000000,
-                A400 : #ffffff,
-                A700 : #ffffff,
-        )
-);
-
-
-
-$my-app-accent: mat-palette($mat-grey, A100, A200, A400);
+$my-app-accent: mat-palette($mat-pink, A100, A200, A400);
 
 $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent);
 @include angular-material-theme($my-app-theme);
