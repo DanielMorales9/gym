@@ -6,4 +6,5 @@ export * from './calendar';
 export * from './simple';
 export * from './events';
 export * from './profile';
+export * from './config';
 

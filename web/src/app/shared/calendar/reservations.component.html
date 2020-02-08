@@ -1,4 +1,10 @@
-<i class="fas fa-user"></i>&nbsp;Ci sono {{events?.length}} prenotati:
+<i class="fas fa-ticket-alt"></i>&nbsp;
+<ng-container *ngIf="events.length > 0 else null;">
+    {{events?.length}} prenotazioni:
+</ng-container>
+<ng-template>
+    Nessuna prenotazione
+</ng-template>
 <ul>
     <li *ngFor="let reservation of events">
         {{reservation?.user.firstName}} {{reservation?.user.lastName}}
