@@ -56,10 +56,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        if (!this.isValidHour(event)) {
-            return this.snackBar.open('Orario non valido');
-        }
-
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open('Non hai pacchetti a disposizione');
         }

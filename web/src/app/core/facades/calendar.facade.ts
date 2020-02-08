@@ -144,14 +144,6 @@ export class CalendarFacade {
         return this.eventService.createTimeOff(gymId, trainerId, {startTime: start, endTime: end, name: name});
     }
 
-    isTimeOffAvailable(date: any) {
-        const gymId = this.gymService.gym.id;
-        const startTime = new Date(date);
-        const endTime = this.dateService.addHour(startTime);
-
-        return this.eventService.isTimeOffAvailable(gymId, {startTime: startTime, endTime: endTime});
-    }
-
     isTimeOffAvailableAllDay(date: Date) {
         const gymId = this.gymService.gym.id;
         const {startTime, endTime} = this.gymService.getGymStartAndEndHour(new Date(date));
