@@ -19,6 +19,16 @@ services:
     restart: always
     container_name: redis
     image: redis:alpine
+#  web:
+#    container_name: web
+#    image: tenentedan9/web:0.0.1-SNAPSHOT
+#    volumes:
+#      - ./web/dist:/var/www/ui:rw
+#    depends_on:
+#      - redis
+#      - postgres
+#    ports:
+#      - "8080:80"
   app:
     restart: always
     container_name: app
