@@ -39,7 +39,6 @@ export class LoginComponent implements OnInit {
         else {
             this.error = true;
         }
-        console.log(this.error);
     }
 
 

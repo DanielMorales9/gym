@@ -117,7 +117,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
             if (!this.sale.completed) {
                 this.saleHelper.delete(this.sale.id)
                     .subscribe(
-                        res => { console.log(res); },
+                        res => {},
                         err => {
                             this.snackbar.open(err.error.message);
                         });

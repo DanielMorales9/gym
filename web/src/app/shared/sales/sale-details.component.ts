@@ -42,7 +42,6 @@ export class SaleDetailsComponent implements OnInit {
         this.canPay = this.policy.get('sale', 'canPay');
         this.canDeletePayment = this.policy.get('payment', 'canDelete');
         const displayedPaymentsColumns = ['index', 'date', 'amount'];
-        console.log('hey');
 
         if (this.canDeletePayment) {
             displayedPaymentsColumns.push('actions');
@@ -100,7 +99,6 @@ export class SaleDetailsComponent implements OnInit {
     }
 
     closeAll() {
-        console.log('closed');
         for (const key in this.expand) {
             this.expand[key] = false;
         }

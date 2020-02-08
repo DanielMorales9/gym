@@ -83,7 +83,6 @@ export class AuthenticationService {
     async logout(): Promise<any> {
         // Customize credentials invalidation here
         const [data, error] = await this.signOut();
-        console.log([data, error]);
         if (!error) {
             this.currentRole = undefined;
             this.storageService.set(this.CREDENTIAL_KEY);

@@ -52,7 +52,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
-        console.log(action, event);
     }
 
     async hour(action: string, event: any) {
@@ -108,7 +107,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 this.openDeleteModal();
                 break;
             default:
-                console.log(action);
                 break;
         }
     }
@@ -181,7 +179,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                console.log(data);
                 this.deleteReservation(data);
             }
         });

@@ -71,7 +71,6 @@ export class GymService {
         const endHour = this.getEndHourByDate(end);
         const dayDuration = endHour - startHour;
         const eventDuration = dayDuration * (end.getDate() - start.getDate()) + (end.getHours() - start.getHours());
-        console.log(dayDuration, eventDuration);
         return dayDuration === eventDuration;
     }
 }

@@ -37,7 +37,6 @@ export class AdminCalendarComponent extends BaseCalendar {
             throw error;
         }
         this.events.push(...data.map(value => this.formatEvent(value)));
-        console.log(this.events);
         this.refreshView();
     }
 
@@ -127,7 +126,6 @@ export class AdminCalendarComponent extends BaseCalendar {
                 this.openChangeModal();
                 break;
             default:
-                console.log(action);
                 break;
         }
     }
@@ -225,7 +223,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private editHoliday(data) {
-        console.log(data);
         this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
             .subscribe(async (_) => {
                 this.snackBar.open('Chiusura confermata');

@@ -113,7 +113,6 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
 
         end.setHours(endTime[0]);
         end.setMinutes(endTime[1]);
-        console.log(start);
         if (this.event.value === 'corso' && this.hasCourses) {
             this.close({
                 start: start,

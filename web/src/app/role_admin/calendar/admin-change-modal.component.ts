@@ -23,7 +23,6 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
     }
 
     private buildForm() {
-        console.log(this.modalData);
         this.form = this.builder.group({
             name: [this.modalData.event.event.meta.name, [Validators.required]]
         });
@@ -36,7 +35,6 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
     submit() {
         const startTime = this.modalData.event.newStart;
         const endTime = this.modalData.event.newEnd;
-        console.log(startTime, endTime);
         this.close({
             eventId: this.modalData.event.event.meta.id,
             start: startTime,

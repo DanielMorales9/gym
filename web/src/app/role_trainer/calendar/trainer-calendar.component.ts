@@ -136,7 +136,6 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 this.openHeaderModal();
                 break;
             default:
-                console.log(action);
                 break;
         }
     }

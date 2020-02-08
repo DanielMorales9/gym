@@ -262,7 +262,6 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 this.change(action, event);
                 break;
             default:
-                console.log('handleEvent');
                 break;
         }
     }

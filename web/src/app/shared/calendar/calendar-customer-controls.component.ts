@@ -25,7 +25,6 @@ export class CalendarCustomerControlsComponent extends CalendarControlsComponent
         const id = +paths[3].split('?')[0];
 
         if (!!id) {
-            console.log(event);
             const [data, error] = await this.userService.findById(id);
             if (error) {
                 throw error;
