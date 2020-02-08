@@ -133,7 +133,7 @@ export class BundleSpecsComponent implements OnInit {
 
     private toggleDisabled(bundleSpec: BundleSpecification) {
         bundleSpec.disabled = !bundleSpec.disabled;
-        this.service.patch(bundleSpec).subscribe(res => console.log(res), err => this.snackbar.open(err.error.message));
+        this.service.patch(bundleSpec).subscribe(res => {}, err => this.snackbar.open(err.error.message));
     }
 
     private modifyBundleSpec(bundleSpec: BundleSpecification) {

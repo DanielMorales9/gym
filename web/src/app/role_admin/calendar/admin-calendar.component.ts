@@ -32,7 +32,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     async getEvents() {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
-
         const [data, error] = await this.facade.getAllEvents(startDay, endDay);
         if (error) {
             throw error;
@@ -127,7 +126,6 @@ export class AdminCalendarComponent extends BaseCalendar {
                 this.openChangeModal();
                 break;
             default:
-                console.log(action);
                 break;
         }
     }
@@ -151,11 +149,13 @@ export class AdminCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(async data => {
             if (!!data) {
-                const end = this.dateService.addHour(data.start);
+                if (!data.end) {
+                    data.end = this.dateService.addHour(data.start);
+                }
                 if (!!data.meta) {
-                    this.createCourseEvent(data, end);
+                    this.createCourseEvent(data);
                 } else {
-                    await this.createHoliday(data, end);
+                    await this.createHoliday(data);
                 }
             }
         });
@@ -223,7 +223,6 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     private editHoliday(data) {
-        console.log(data);
         this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
             .subscribe(async (_) => {
                 this.snackBar.open('Chiusura confermata');
@@ -241,8 +240,8 @@ export class AdminCalendarComponent extends BaseCalendar {
             });
     }
 
-    private async createHoliday(data, end?) {
-        const [_, error] = await this.facade.createHoliday(data.eventName, data.start, end);
+    private async createHoliday(data) {
+        const [_, error] = await this.facade.createHoliday(data.eventName, data.start, data.end);
         if (error) {
             this.snackBar.open(error.error.message);
         }
@@ -291,8 +290,8 @@ export class AdminCalendarComponent extends BaseCalendar {
         await this.getEvents();
     }
 
-    private createCourseEvent(data: any, end: Date) {
-        this.facade.createCourseEvent(data.eventName, data.meta, data.start, end)
+    private createCourseEvent(data: any) {
+        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end)
             .subscribe(async (_) => {
                 this.snackBar.open('Evento creato');
                 await this.getEvents();

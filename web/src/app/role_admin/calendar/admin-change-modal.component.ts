@@ -23,7 +23,6 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
     }
 
     private buildForm() {
-        console.log(this.modalData);
         this.form = this.builder.group({
             name: [this.modalData.event.event.meta.name, [Validators.required]]
         });

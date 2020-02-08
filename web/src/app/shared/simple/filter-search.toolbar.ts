@@ -24,7 +24,6 @@ export class FilterSearchToolbar implements OnInit {
     }
 
     emit(type?, event?) {
-        console.log(type, event);
         switch (type) {
             case 'name':
                 if (this.name !== undefined) { this.query.name = this.name; }
@@ -45,7 +44,6 @@ export class FilterSearchToolbar implements OnInit {
             }
         }
 
-        console.log(this.query);
 
         this.done.emit(this.query);
     }

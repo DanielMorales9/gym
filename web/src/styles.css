@@ -8,3 +8,14 @@ body {
     overflow: hidden;
 }
 
+.timepicker-overlay {
+    z-index: 10000000 !important;
+}
+
+.timepicker-backdrop-overlay {
+    z-index: 10000000 !important;
+}
+
+.ngx-material-timepicker-toggle {
+    padding: 0 0 0 2em;
+}

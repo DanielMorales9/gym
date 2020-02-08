@@ -52,14 +52,9 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
-        console.log(action, event);
     }
 
     async hour(action: string, event: any) {
-        if (!this.isValidHour(event)) {
-            return this.snackBar.open('Orario non valido');
-        }
-
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open('Non hai pacchetti a disposizione');
         }
@@ -112,7 +107,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 this.openDeleteModal();
                 break;
             default:
-                console.log(action);
                 break;
         }
     }
@@ -185,7 +179,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                console.log(data);
                 this.deleteReservation(data);
             }
         });

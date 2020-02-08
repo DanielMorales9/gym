@@ -2,6 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {theme} from '../../shared';
 
 @Component({
     templateUrl: './admin-hour-modal.component.html',
@@ -13,6 +14,7 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
 
     template: any;
     hasCourses: boolean;
+    theme = theme;
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<AdminHourModalComponent>,
@@ -27,11 +29,11 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
         this.template = {};
         this.template['chiusura'] = {
             title: 'Nome chiusura',
-            message: 'Conferma per chiudere la palestra oppure cancella.'
+            message: 'Conferma per chiudere la palestra.'
         };
         this.template['corso'] = {
             title: 'Nome evento corso',
-            message: 'Conferma per creare l\'evento opppure cancella.'
+            message: 'Conferma per creare l\'evento.'
         };
 
     }
@@ -40,6 +42,19 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
         this.form = this.builder.group({
             name: ['', [Validators.required]],
             event: ['', [Validators.required]],
+            date: new FormControl({
+                disabled: !!this.modalData.event.date,
+                value: this.modalData.event ? this.modalData.event.date : ''
+            }, Validators.required),
+            startTime: new FormControl({
+                disabled: !!this.modalData.event.date,
+                value: this.modalData.event.date ?  this.modalData.event.date.getHours() + ':' + this.modalData.event.date.getMinutes() : ''
+            }, Validators.required),
+            endTime: new FormControl({
+                disabled: !!this.modalData.event.date,
+                value: this.modalData.event.date ?  this.modalData.event.date.getHours() + 1 + ':'
+                    + this.modalData.event.date.getMinutes() : ''
+            }, Validators.required),
             course: new FormControl({
                 disabled: true,
                 value: ''}, Validators.required)
@@ -67,6 +82,18 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
         return this.form.get('name');
     }
 
+    get date() {
+        return this.form.get('date');
+    }
+
+    get startTime() {
+        return this.form.get('startTime');
+    }
+
+    get endTime() {
+        return this.form.get('endTime');
+    }
+
     get event() {
         return this.form.get('event');
     }
@@ -76,9 +103,20 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
     }
 
     submit() {
+        const startTime = this.startTime.value.split(':');
+        const endTime = this.endTime.value.split(':');
+
+        const start = new Date(this.date.value);
+        const end = new Date(this.date.value);
+        start.setHours(startTime[0]);
+        start.setMinutes(startTime[1]);
+
+        end.setHours(endTime[0]);
+        end.setMinutes(endTime[1]);
         if (this.event.value === 'corso' && this.hasCourses) {
             this.close({
-                start: new Date(this.modalData.event.date),
+                start: start,
+                end: end,
                 eventName: this.name.value,
                 type: 'course',
                 userId: this.modalData.userId,
@@ -86,7 +124,8 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
             });
         } else if (this.event.value === 'chiusura') {
             this.close({
-                start: new Date(this.modalData.event.date),
+                start: start,
+                end: end,
                 eventName: this.name.value,
                 type: 'admin',
                 userId: this.modalData.userId

@@ -49,7 +49,6 @@ export class OptionSelectModalComponent {
     }
 
     async selectOption(option: any) {
-        console.log(option);
         const isSelected = !this.getSelectOption(option.id);
         this.selected[option.id] = isSelected;
         const id = option.id;

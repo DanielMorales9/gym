@@ -11,7 +11,6 @@ export class SnackBarService {
     constructor(private snackbar: MatSnackBar) {}
 
     open(message: string, action?: string, config?: MatSnackBarConfig) {
-        console.log(message, action, config);
         if (config === undefined) {
             config = this.config;
         }

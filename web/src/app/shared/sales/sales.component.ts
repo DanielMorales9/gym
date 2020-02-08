@@ -67,7 +67,6 @@ export class SalesComponent implements OnInit {
                     this.queryParams.date = new Date(this.queryParams.date);
                 }
             }
-            console.log(this.queryParams);
             this.id = this.queryParams.id;
             this.mixed = this.canDelete && !this.id;
 

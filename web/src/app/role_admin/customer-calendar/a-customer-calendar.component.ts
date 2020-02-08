@@ -64,7 +64,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
-        console.log(action, event);
     }
 
     async hour(action: string, event: any) {
@@ -123,7 +122,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 this.openDeleteModal();
                 break;
             default:
-                console.log(action);
                 break;
         }
     }
@@ -131,7 +129,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     private openInfoModal() {
         this.modalData.confirm = true;
         this.modalData.complete = true;
-        console.log(this.modalData);
         const dialogRef = this.dialog.open(CustomerInfoModalComponent, {
             data: this.modalData,
         });
@@ -197,7 +194,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-                console.log(data);
                 this.deleteReservation(data);
             }
         });

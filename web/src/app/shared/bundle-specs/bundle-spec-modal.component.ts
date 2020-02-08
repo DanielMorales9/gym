@@ -39,7 +39,6 @@ export class BundleSpecModalComponent implements OnInit {
     }
 
     private buildForm(hasBundle: boolean) {
-        console.log(this.bundleSpec);
         this.form = new FormGroup({
             name: new FormControl(this.bundleSpec.name, Validators.required),
             price: new FormControl({

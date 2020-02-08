@@ -28,7 +28,6 @@ export class OptionModalComponent implements OnInit {
     }
 
     private buildForm(hasOption: boolean) {
-        console.log(this.option);
         this.form = new FormGroup({
             name: new FormControl(this.option.name, Validators.required),
             price: new FormControl({

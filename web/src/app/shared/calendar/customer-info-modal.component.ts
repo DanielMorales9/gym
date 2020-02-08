@@ -15,12 +15,9 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = this.data;
-
-        console.log(this.modalData);
     }
 
     submit() {
-        console.log(this.modalData);
         if (this.modalData.event.meta.type === 'course') {
             return this.close(this.modalData);
         }
@@ -47,7 +44,6 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
     }
 
     cancel() {
-        console.log(this.modalData);
         if (this.modalData.event.meta.type === 'course') {
             const message: any = this.modalData.event.meta;
             message.type = 'delete';

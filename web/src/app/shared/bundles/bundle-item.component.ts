@@ -58,7 +58,6 @@ export class BundleItemComponent {
         });
 
         dialogRef.afterClosed().subscribe(res => {
-            console.log(res);
             if (res) {
                 this.done.emit({type: 'edit', bundle: res});
             }
