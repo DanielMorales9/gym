@@ -1,0 +1,98 @@
+/* You can add global styles to this file, and also import other style files */
+@import '~@angular/material/theming';
+
+@include mat-core();
+
+$md-primary: (
+        50 : #e4ecf6,
+        100 : #bccee8,
+        200 : #90aed9,
+        300 : #638ec9,
+        400 : #4175be,
+        500 : #205db2,
+        600 : #1c55ab,
+        700 : #184ba2,
+        800 : #134199,
+        900 : #0b308a,
+        A100 : #b9caff,
+        A200 : #86a3ff,
+        A400 : #537dff,
+        A700 : #3a69ff,
+        contrast: (
+                50 : #000000,
+                100 : #000000,
+                200 : #000000,
+                300 : #000000,
+                400 : #ffffff,
+                500 : #ffffff,
+                600 : #ffffff,
+                700 : #ffffff,
+                800 : #ffffff,
+                900 : #ffffff,
+                A100 : #000000,
+                A200 : #000000,
+                A400 : #ffffff,
+                A700 : #ffffff,
+        )
+);
+$my-app-primary: mat-palette($md-primary);
+
+$md-accent: (
+        50 : #edeced,
+        100 : #d1d1d2,
+        200 : #b2b2b5,
+        300 : #939397,
+        400 : #7c7b80,
+        500 : #65646a,
+        600 : #5d5c62,
+        700 : #535257,
+        800 : #49484d,
+        900 : #37363c,
+        A100 : #ad9bf7,
+        A200 : #866bf4,
+        A400 : #572dff,
+        A700 : #4314ff,
+        contrast: (
+                50 : #000000,
+                100 : #000000,
+                200 : #000000,
+                300 : #000000,
+                400 : #ffffff,
+                500 : #ffffff,
+                600 : #ffffff,
+                700 : #ffffff,
+                800 : #ffffff,
+                900 : #ffffff,
+                A100 : #000000,
+                A200 : #000000,
+                A400 : #ffffff,
+                A700 : #ffffff,
+        )
+);
+
+
+
+$my-app-accent: mat-palette($mat-grey, A100, A200, A400);
+
+$my-app-theme: mat-light-theme($my-app-primary, $my-app-accent);
+@include angular-material-theme($my-app-theme);
+
+html, body { height: 100%; }
+body {
+    margin: 0;
+    font-family: Roboto, "Helvetica Neue", sans-serif;
+    min-height: 100%;
+    overflow: hidden;
+}
+
+.timepicker-overlay {
+    z-index: 10000000 !important;
+}
+
+.timepicker-backdrop-overlay {
+    z-index: 10000000 !important;
+}
+
+.ngx-material-timepicker-toggle {
+    padding: 0 0 0 2em;
+}

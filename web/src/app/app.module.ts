@@ -31,6 +31,8 @@ import {
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
     declarations: [
@@ -70,7 +72,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         MatTableModule,
         MatCheckboxModule,
         MatSelectModule,
-        NgxMaterialTimepickerModule.setLocale('it-IT')
+        NgxMaterialTimepickerModule.setLocale('it-IT'),
+        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
 
     ],
     providers: [
