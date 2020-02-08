@@ -32,12 +32,12 @@ export class AdminCalendarComponent extends BaseCalendar {
     async getEvents() {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
-
         const [data, error] = await this.facade.getAllEvents(startDay, endDay);
         if (error) {
             throw error;
         }
         this.events.push(...data.map(value => this.formatEvent(value)));
+        console.log(this.events);
         this.refreshView();
     }
 

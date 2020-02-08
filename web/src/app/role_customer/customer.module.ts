@@ -10,7 +10,9 @@ import {
     MatDialogModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule, MatOptionModule, MatSelectModule,
+    MatInputModule,
+    MatOptionModule,
+    MatSelectModule,
     MatTabsModule,
     MatToolbarModule
 } from '@angular/material';
@@ -52,7 +54,7 @@ registerLocaleData(localeIt);
         ScrollingModule,
         MatToolbarModule,
         MatOptionModule,
-        MatSelectModule
+        MatSelectModule,
     ],
     declarations: [
         CustomerCalendarComponent,

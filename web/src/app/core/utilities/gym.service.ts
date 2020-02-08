@@ -70,7 +70,8 @@ export class GymService {
         const startHour = this.getStartHourByDate(start);
         const endHour = this.getEndHourByDate(end);
         const dayDuration = endHour - startHour;
-        const eventDuration = end.getHours() - start.getHours();
+        const eventDuration = dayDuration * (end.getDate() - start.getDate()) + (end.getHours() - start.getHours());
+        console.log(dayDuration, eventDuration);
         return dayDuration === eventDuration;
     }
 }

@@ -36,6 +36,7 @@ export class AdminChangeModalComponent extends BaseCalendarModal implements OnIn
     submit() {
         const startTime = this.modalData.event.newStart;
         const endTime = this.modalData.event.newEnd;
+        console.log(startTime, endTime);
         this.close({
             eventId: this.modalData.event.event.meta.id,
             start: startTime,

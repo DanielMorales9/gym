@@ -16,7 +16,6 @@ export class TrainerChangeModalComponent extends BaseCalendarModal implements On
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = data;
-        console.log(this.modalData.event.event.meta.name);
     }
 
     ngOnInit(): void {

@@ -66,6 +66,7 @@ import {MatTreeModule} from '@angular/material/tree';
 import {MatBadgeModule} from '@angular/material/badge';
 import {MatTableModule} from '@angular/material/table';
 import {GymModalComponent, GymSettingsComponent} from './settings';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 
 @NgModule({
     imports: [
@@ -96,6 +97,8 @@ import {GymModalComponent, GymSettingsComponent} from './settings';
         MatTreeModule,
         MatBadgeModule,
         MatTableModule,
+        NgxMaterialTimepickerModule.setLocale('it-IT')
+
     ],
 
     entryComponents: [

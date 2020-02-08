@@ -26,6 +26,8 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 import {HomeComponent} from './home';
+import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {MatDatepickerModule} from '@angular/material/datepicker';
 
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any>{
@@ -53,6 +55,9 @@ registerLocaleData(localeIt);
         MatIconModule,
         MatListModule,
         MatExpansionModule,
+        NgxMaterialTimepickerModule.setLocale('it-IT'),
+        MatDatepickerModule
+
     ],
     declarations: [
         TrainerCalendarComponent,

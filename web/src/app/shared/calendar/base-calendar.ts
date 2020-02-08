@@ -351,12 +351,11 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
         event.eventName = this.EVENT_NAMES[event.type];
 
-        event.badge = this.BADGE_TYPES[event.type];
+        // event.badge = this.BADGE_TYPES[event.type];
         event.type = this.EVENT_TYPES[event.type];
 
-        return {
+        const data = {
             start: startTime,
-            end: endTime,
             title: title,
             color: color,
             actions: isDeletable ? this.ACTIONS : [],
@@ -368,6 +367,10 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
             draggable: false,
             meta: event
         };
+        if (!isAllDay) {
+            data['end'] = endTime;
+        }
+        return data;
     }
 
     beforeMonthViewRender({ body }: {

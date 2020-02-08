@@ -96,19 +96,14 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        this.facade.isTimeOffAvailable(new Date(event.date))
-            .subscribe(res => {
-                this.modalData = {
-                    action: EVENT_TYPES.HOUR,
-                    title: 'Orario di Ferie',
-                    userId: this.user.id,
-                    role: this.role,
-                    event: event
-                };
-                this.openModal(action);
-            }, err => {
-                this.snackBar.open(err.error.message);
-            });
+        this.modalData = {
+            action: EVENT_TYPES.HOUR,
+            title: 'Orario di Ferie',
+            userId: this.user.id,
+            role: this.role,
+            event: event
+        };
+        this.openModal(action);
     }
 
     info(action: string, event: any) {
@@ -175,8 +170,10 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
-                const end = this.dateService.addHour(data.start);
-                this.createTimeOff(data, end);
+                if (data.end) {
+                    data.end = this.dateService.addHour(data.start);
+                }
+                this.createTimeOff(data, data.end);
             }
         });
     }

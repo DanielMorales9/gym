@@ -4,11 +4,14 @@
     <!--    <span aria-hidden="true">&times;</span>-->
     <!--</button>-->
 
-    <div *ngIf="!!modalData?.event" mat-dialog-content>
+    <div mat-dialog-content>
+        <ng-container *ngIf="modalData?.event.date">
         Vuoi prenderti le ferie dalle {{ modalData?.event.date | date : 'HH:mm'}}
         del giorno {{ modalData?.event?.date | date : 'dd/MM/yyyy'}} ?
         <br>
-        <mat-form-field>
+        </ng-container>
+        <div>
+            <mat-form-field>
             <label for="name" class="sr-only">Nome:</label>
             <input name="name"
                    matInput
@@ -21,8 +24,74 @@
                 <div *ngIf="!!name.errors?.required">Nome ferie obbligatorio</div>
             </mat-error>
         </mat-form-field>
+        </div>
+
+        <div *ngIf="!modalData.event.date">
+            <mat-form-field>
+                <label for="date" class="sr-only">Data</label>
+                <input matInput
+                       id="date"
+                       [matDatepicker]="datePicker"
+                       name="date"
+                       formControlName="date"
+                       placeholder="Data"
+                       [ngClass]="{ 'is-invalid': date.touched && date.invalid }">
+                <mat-error *ngIf="date.touched && date.invalid">
+                    <div *ngIf="!!date.errors?.required">Data obbligatoria</div>
+                </mat-error>
+                <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+                <mat-datepicker #datePicker ></mat-datepicker>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="!modalData.event.date">
+            <mat-form-field>
+                <label for="startTime" class="sr-only">Orario inizio</label>
+                <input matInput
+                       id="startTime"
+                       name="startTime"
+                       formControlName="startTime"
+                       placeholder="Orario d'inizio"
+                       [ngxTimepicker]="startTimePicker"
+                       [format]="24"
+                       [ngClass]="{ 'is-invalid': startTime.touched && startTime.invalid }" readonly>
+                <mat-error *ngIf="startTime.touched && startTime.invalid">
+                    <div *ngIf="!!startTime.errors?.required">Orario obbligatoria</div>
+                </mat-error>
+                <ngx-material-timepicker-toggle matSuffix [for]="startTimePicker">
+                    <svg style="width: 1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px" ngxMaterialTimepickerToggleIcon>
+                        <path d="M 12 2 C 6.4889971 2 2 6.4889971 2 12 C 2 17.511003                   6.4889971 22 12 22 C 17.511003 22 22 17.511003 22 12 C 22 6.4889971 17.511003 2 12 2 z M 12 4 C 16.430123 4 20 7.5698774 20 12 C 20 16.430123 16.430123 20 12 20 C 7.5698774 20 4 16.430123 4 12 C 4 7.5698774 7.5698774 4 12 4 z M 11 6 L 11 12.414062 L 15.292969 16.707031 L 16.707031 15.292969 L 13 11.585938 L 13 6 L 11 6 z"></path>
+                    </svg>
+                </ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #startTimePicker [theme]="theme"></ngx-material-timepicker>
+            </mat-form-field>
+        </div>
+
+        <div *ngIf="!modalData.event.date">
+            <mat-form-field>
+                <label for="endTime" class="sr-only">Orario fine</label>
+                <input matInput
+                       id="endTime"
+                       name="endTime"
+                       formControlName="endTime"
+                       placeholder="Orario di fine"
+                       [ngxTimepicker]="endTimePicker"
+                       [format]="24"
+                       [ngClass]="{ 'is-invalid': endTime.touched && endTime.invalid }" readonly>
+                <mat-error *ngIf="endTime.touched && endTime.invalid">
+                    <div *ngIf="!!endTime.errors?.required">Orario obbligatoria</div>
+                </mat-error>
+                <ngx-material-timepicker-toggle matSuffix [for]="endTimePicker">
+                    <svg style="width: 1em" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24px" height="24px" ngxMaterialTimepickerToggleIcon>
+                        <path d="M 12 2 C 6.4889971 2 2 6.4889971 2 12 C 2 17.511003                   6.4889971 22 12 22 C 17.511003 22 22 17.511003 22 12 C 22 6.4889971 17.511003 2 12 2 z M 12 4 C 16.430123 4 20 7.5698774 20 12 C 20 16.430123 16.430123 20 12 20 C 7.5698774 20 4 16.430123 4 12 C 4 7.5698774 7.5698774 4 12 4 z M 11 6 L 11 12.414062 L 15.292969 16.707031 L 16.707031 15.292969 L 13 11.585938 L 13 6 L 11 6 z"></path>
+                    </svg>
+                </ngx-material-timepicker-toggle>
+                <ngx-material-timepicker #endTimePicker [theme]="theme"></ngx-material-timepicker>
+            </mat-form-field>
+        </div>
+
         <br>
-        Conferma per chiudere la palestra oppure cancella.
+        Conferma le ferie.
     </div>
     <div mat-dialog-actions>
         <button type="button" mat-flat-button color="basic" (click)="close()">Cancella</button>

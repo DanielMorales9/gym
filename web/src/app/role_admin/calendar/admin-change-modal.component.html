@@ -5,9 +5,8 @@
 <!--    </button>-->
     <div mat-dialog-content>
         <div *ngIf="!!modalData?.event">
-            Vuoi chiudere la palestra dalle {{ modalData?.event.newStart | date : 'HH:mm'}}
-            alle {{ modalData?.event.newEnd | date : 'HH:mm'}}
-            del giorno {{ modalData?.event?.newStart | date : 'dd/MM/yyyy'}} ?
+            Vuoi chiudere la palestra dalle {{ modalData?.event.newStart | date : 'dd/MM HH:mm'}}
+            alle {{ modalData?.event.newEnd | date : 'dd/MM HH:mm'}}?
             <br>
             <mat-form-field>
                 <label for="name" class="sr-only">Nome:</label>

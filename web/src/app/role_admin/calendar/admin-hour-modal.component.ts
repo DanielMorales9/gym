@@ -103,7 +103,6 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
     }
 
     submit() {
-        console.log(this.date.value);
         const startTime = this.startTime.value.split(':');
         const endTime = this.endTime.value.split(':');
 
