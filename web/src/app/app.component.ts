@@ -60,12 +60,13 @@ export class AppComponent implements OnInit, OnDestroy {
         if (this.authenticated && !this.user) {
             this.current_role_view = this.service.currentRole;
             this.user = this.service.user;
-            await this.getGymName();
+            await this.getAppName();
         }
     }
 
-    private async getGymName() {
+    private async getAppName() {
         const [data, _] = await this.gymService.getConfig();
+        console.log(data);
         if (data) {
             this.appName = data.name;
             this.setTitle(this.appName);
