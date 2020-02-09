@@ -37,7 +37,7 @@ $md-primary: (
 );
 $my-app-primary: mat-palette($md-primary);
 
-$my-app-accent: mat-palette($mat-pink, A100, A200, A400);
+$my-app-accent: mat-palette($mat-pink, A200, A100, A400);
 
 $my-app-theme: mat-light-theme($my-app-primary, $my-app-accent);
 @include angular-material-theme($my-app-theme);
