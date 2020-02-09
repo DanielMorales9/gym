@@ -32,7 +32,7 @@ export class SendChangePasswordTokenComponent implements OnInit {
             this.buildForm();
             const message = 'Ti abbiamo inviato un link per modificare la tua password.';
             this.snackbar.open(message);
-            await this.router.navigateByUrl('/home');
+            await this.router.navigateByUrl('/auth');
         }
     }
 
