@@ -17,26 +17,30 @@
 }
 
 .main-calendar {
-    height: calc(100vh - 96px) !important;
+    /*height: calc(100vh - 96px) !important;*/
     top: 128px;
     padding: 8px;
+    overflow-y: scroll;
 }
 
 .calendar-content {
-    overflow-x: hidden;
-    overflow-y: scroll;
+    overflow: hidden;
 }
 
 @media (max-width: 599px) {
     .main-calendar {
         top: 112px;
-        height: calc(100vh - 84px) !important;
+        /*height: calc(100vh - 84px) !important;*/
     }
 
     .calendar-top-toolbar {
         top: 56px !important;
     }
 
+}
+
+.calendar-header {
+    overflow: hidden;
 }
 
 .cell-totals {
