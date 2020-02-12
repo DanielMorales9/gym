@@ -19,7 +19,6 @@ public class EventAssembler extends ResourceAssemblerSupport<AEvent, EventResour
     public EventResource toResource(AEvent event) {
         EventResource res =  new EventResource(event);
         res.add(linkTo(AEvent.class).slash("events").slash(event.getId()).withSelfRel());
-        logger.info(event.toString());
         return res;
     }
 }

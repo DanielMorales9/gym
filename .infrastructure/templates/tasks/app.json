@@ -2,7 +2,7 @@
   {
     "essential": true,
     "image": "${image_url}",
-    "memory": 384,
+    "memory": 468,
     "name": "${container_name}",
     "portMappings": [
       {

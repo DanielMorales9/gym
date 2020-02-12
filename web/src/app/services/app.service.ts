@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core';
 import {User} from '../shared/model';
-import {AuthenticatedService} from './authenticated.service';
 import {AuthenticationService} from '../core/authentication';
 
 @Injectable({
@@ -13,8 +12,7 @@ export class AppService {
     credentials: {username: string, password: string};
     user: User;
 
-    constructor(private auth: AuthenticationService,
-                private authenticatedService: AuthenticatedService) {
+    constructor(private auth: AuthenticationService) {
         this.loadAuthenticationInfo();
         this.getCurrentRoleView();
     }
@@ -29,7 +27,6 @@ export class AppService {
         } else {
             this.discardSession();
         }
-        this.authenticatedService.setAuthenticated(this.authenticated);
         return [this.authenticated, err];
     }
 
@@ -47,7 +44,6 @@ export class AppService {
         this.user = new User();
         this.currentRole = undefined;
         this.authenticated = false;
-        this.authenticatedService.setAuthenticated(this.authenticated);
     }
 
     async logout() {

@@ -6,14 +6,14 @@ import {
     PrimaryCustomerControlsComponent,
     PrimaryTrainerControlsComponent
 } from './components';
-import {RoleGuardService} from './core/guards';
+import {NoAuthGuardService, RoleGuardService} from './core/guards';
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
 
     { path: 'error', component: ErrorComponent, data: { title: 'Errore' } },
-    { path: 'auth', loadChildren: () => import('app/auth/auth.module').then(m => m.AuthModule) },
-    { path: 'home', loadChildren: () => import('app/home/home.module').then(m => m.HomeModule) },
+    { path: 'auth', loadChildren: () => import('app/auth/auth.module').then(m => m.AuthModule),
+        canActivate: [NoAuthGuardService] },
     {
         path: 'admin', loadChildren: () => import('app/role_admin/admin.module').then(m => m.AdminModule),
         canActivate: [RoleGuardService],
@@ -38,7 +38,7 @@ const routes: Routes = [
             primary: PrimaryCustomerControlsComponent
         }
     },
-    { path: '**', redirectTo: 'home' }
+    { path: '**', redirectTo: 'auth' }
 ];
 
 @NgModule({

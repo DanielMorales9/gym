@@ -33,12 +33,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         }
         this.events.push(...data.map(value => this.formatEvent(value, false)));
 
-        [data, error] = await this.facade.getHoliday(startDay, endDay);
-        if (error) {
-            throw error;
-        }
-        this.events.push(...data.map(value => this.formatEvent(value, false)));
-
         [data, error] = await this.facade.getCourseEvents(startDay, endDay);
         if (error) {
             throw error;

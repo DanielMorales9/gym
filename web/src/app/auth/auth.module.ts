@@ -3,8 +3,15 @@ import {CommonModule} from '@angular/common';
 import {AuthRouting} from './auth.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {SharedModule} from '../shared/shared.module';
-import {LoginComponent, ModifyPasswordComponent, SendChangePasswordTokenComponent, VerificationComponent} from './components';
+import {
+    HomeComponent,
+    LoginComponent,
+    ModifyPasswordComponent,
+    SendChangePasswordTokenComponent,
+    VerificationComponent
+} from './components';
 import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({
     imports: [
@@ -15,12 +22,14 @@ import {MatFormFieldModule, MatInputModule} from '@angular/material';
         AuthRouting,
         MatFormFieldModule,
         MatInputModule,
+        MatButtonModule,
     ],
     declarations: [
         LoginComponent,
         VerificationComponent,
         SendChangePasswordTokenComponent,
-        ModifyPasswordComponent
+        ModifyPasswordComponent,
+        HomeComponent
     ]
 })
 export class AuthModule { }

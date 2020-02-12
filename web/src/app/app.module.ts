@@ -5,10 +5,12 @@ import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
-import {AppService, AuthenticatedService, GlobalErrorHandler, GymService} from './services';
+import {AppService, GlobalErrorHandler, GymService} from './services';
 import {
     ErrorComponent, NavBarComponent,
-    PrimaryAdminControlsComponent, PrimaryCustomerControlsComponent, PrimaryTrainerControlsComponent,
+    PrimaryAdminControlsComponent,
+    PrimaryCustomerControlsComponent,
+    PrimaryTrainerControlsComponent,
     SideBarComponent
 } from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
@@ -78,7 +80,6 @@ import { environment } from '../environments/environment';
     ],
     providers: [
         AppService,
-        AuthenticatedService,
         GymService,
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
