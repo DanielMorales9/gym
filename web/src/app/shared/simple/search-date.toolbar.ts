@@ -20,7 +20,7 @@ export class SearchDateToolbar implements OnInit {
     date: FormControl;
 
     ngOnInit(): void {
-        this.date = new FormControl(this.query.date || undefined);
+        this.date = new FormControl(this.query ? this.query.date || undefined : undefined);
     }
 
     emit(type, event) {

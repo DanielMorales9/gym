@@ -12,8 +12,8 @@ import {
 const routes: Routes = [
     { path: 'login', component: LoginComponent, data: {title: 'Login'} },
     { path: 'verification', component: VerificationComponent},
-    { path: 'sendChangePasswordToken', data: {title: 'Resetta password'}, component: SendChangePasswordTokenComponent},
-    { path: 'modifyPassword', component: ModifyPasswordComponent, data: {title: 'Modifica password'}},
+    { path: 'sendChangePasswordToken', data: {title: 'Resetta password', back: true}, component: SendChangePasswordTokenComponent},
+    { path: 'modifyPassword', component: ModifyPasswordComponent, data: {title: 'Modifica password', back: true}},
     { path: 'home', component: HomeComponent, data: {title: 'Benvenuto'}},
     { path: '**', redirectTo: 'home' }
 ];

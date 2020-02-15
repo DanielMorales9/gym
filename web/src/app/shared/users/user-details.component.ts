@@ -20,7 +20,6 @@ export class UserDetailsComponent implements OnInit {
     canDelete: boolean;
     canEdit: boolean;
     canSendToken: boolean;
-    canMakeAppointments: boolean;
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
     private root: string;
@@ -91,7 +90,7 @@ export class UserDetailsComponent implements OnInit {
                 this.snackbar.open(err.error.message);
             }
             else {
-                await this.router.navigate([this.root, 'users']);
+                await this.router.navigate([this.root, 'users'], {replaceUrl: true});
             }
         }
     }

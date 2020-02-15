@@ -49,27 +49,32 @@ export class SalesComponent implements OnInit {
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
 
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
         this.canSell = this.policy.get('sale', 'canSell') && !!this.id;
 
-        this.initQueryParams();
+        const param = await this.route.params.pipe(first()).toPromise();
+        this.id = +param['id'];
+        this.initQueryParams(this.id);
+
     }
 
     private initQueryParams(id?) {
-        this.route.queryParams.pipe(first()).subscribe(params => {
+        this.route.queryParams.pipe(first()).subscribe(async params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
                 if (!!this.queryParams.date) {
                     this.queryParams.date = new Date(this.queryParams.date);
                 }
             }
-            this.id = this.queryParams.id;
-            this.mixed = this.canDelete && !this.id;
 
+            if (!!id || !!this.id) {
+                this.queryParams.id = this.id || id;
+            }
+            this.mixed = this.canDelete && !this.id;
             this.search(this.queryParams);
         });
     }
@@ -82,6 +87,7 @@ export class SalesComponent implements OnInit {
         this.router.navigate(
             [],
             {
+                replaceUrl: true,
                 relativeTo: this.route,
                 queryParams: this.queryParams,
             });

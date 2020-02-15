@@ -19,19 +19,19 @@ const routes = [
             },
             {
                 path: 'sales', component: SalesComponent,
-                data: {title: 'Ordine' }
+                data: {title: 'Ordini'}
             },
             {
                 path: 'sales/:id', component: SaleDetailsComponent,
-                data: {title: 'Dettaglio Vendita' }
+                data: {title: 'Dettaglio Vendita', back: true }
             },
             {
                 path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent,
-                data: {title: 'Dettaglio Tipo Pacchetto' }
+                data: {title: 'Dettaglio Tipo Pacchetto', back: true }
             },
             {
                 path: 'bundles/:id', component: BundleDetailsComponent,
-                data: {title: 'Dettaglio Pacchetto' }
+                data: {title: 'Dettaglio Pacchetto', back: true }
             },
             {
                 path: 'bundles', component: BundlesCustomerComponent,
@@ -39,7 +39,7 @@ const routes = [
             },
             {
                 path: 'events/:id', component: EventDetailsComponent,
-                data: {title: 'Dettaglio Evento' }
+                data: {title: 'Dettaglio Evento', back: true }
             },
             {
                 path: 'home', component: HomeComponent,

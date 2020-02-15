@@ -16,6 +16,7 @@ export class GlobalErrorHandler implements ErrorHandler {
 
 
         this.router.navigate(['/error'], {
+            replaceUrl: true,
             queryParams: {
                 title: 'Errore sconosciuto',
                 message: message

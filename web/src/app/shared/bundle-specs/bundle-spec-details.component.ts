@@ -77,7 +77,10 @@ export class BundleSpecDetailsComponent implements OnInit {
     deleteBundle() {
         const confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundleSpec.name}?`);
         if (confirmed) {
-            this.service.delete(this.bundleSpec.id).subscribe(_ => this.router.navigateByUrl('/'));
+            this.service.delete(this.bundleSpec.id).subscribe(_ =>
+                this.router.navigateByUrl('/', {
+                replaceUrl: true
+            }));
         }
     }
 

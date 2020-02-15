@@ -68,6 +68,7 @@ export class UsersComponent implements OnInit {
         this.router.navigate(
             [],
             {
+                replaceUrl: true,
                 relativeTo: this.activatedRoute,
                 queryParams: this.queryParams,
             });

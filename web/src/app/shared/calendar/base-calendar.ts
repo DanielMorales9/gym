@@ -457,6 +457,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
             {
                 relativeTo: this.activatedRoute,
                 queryParams: this.queryParams,
+                replaceUrl: true,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
     }

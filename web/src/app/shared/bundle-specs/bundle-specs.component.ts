@@ -66,6 +66,7 @@ export class BundleSpecsComponent implements OnInit {
             [],
             {
                 relativeTo: this.route,
+                replaceUrl: true,
                 queryParams: this.queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
@@ -150,7 +151,8 @@ export class BundleSpecsComponent implements OnInit {
 
     private goToList(bundleSpec: any) {
         this.router.navigate(['admin', 'bundles'],
-            {queryParams: {
+            {
+                queryParams: {
                     specId: bundleSpec.id
                 }});
     }

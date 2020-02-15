@@ -74,7 +74,9 @@ export class SaleDetailsComponent implements OnInit {
             this.helper.delete(this.sale.id)
                 .subscribe(_ => {
                     this.snackbar.open('Vendita eliminata per il cliente ' + this.sale.customer.lastName + '!');
-                    return this.router.navigateByUrl('/');
+                    return this.router.navigateByUrl('/', {
+                        replaceUrl: true,
+                    });
                 });
         }
     }
@@ -91,11 +93,16 @@ export class SaleDetailsComponent implements OnInit {
     }
 
     async goToBundleSpecDetails(id: number) {
-        await this.router.navigate(['bundleSpecs', id], {relativeTo: this.route.parent});
+        await this.router.navigate(['bundleSpecs', id], {
+            replaceUrl: true,
+            relativeTo: this.route.parent
+        });
     }
 
     async goToBundleDetails(id: number) {
-        await this.router.navigate(['bundles', id], {relativeTo: this.route.parent});
+        await this.router.navigate(['bundles', id], {
+            relativeTo: this.route.parent
+        });
     }
 
     closeAll() {
