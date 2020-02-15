@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 
 @Component
@@ -59,5 +60,9 @@ public class UserFacade {
 
     public Page<AUser> findAll(Pageable pageable) {
         return service.findAll(pageable);
+    }
+
+    public List<AUser> findUserByEventId(Long eventId) {
+        return service.findUserEvent(eventId);
     }
 }

@@ -74,4 +74,14 @@ public class UserController {
         return facade.findByLastName(query, pageable);
     }
 
+    @GetMapping(path = "/events")
+    @ResponseBody
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
+    public ResponseEntity<List<AUserResource>> findUserPerEvent(@RequestParam Long eventId) {
+        List<AUser> user = facade.findUserByEventId(eventId);
+        return ResponseEntity.ok(new AUserAssembler().toResources(user));
+
+    }
+
+
 }

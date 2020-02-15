@@ -1,0 +1,18 @@
+<h5 mat-dialog-title>Prenota Clienti</h5>
+
+<div mat-dialog-content>
+    <mat-selection-list>
+        <mat-list-option *ngFor="let user of users"
+                         [disableRipple]="true"
+                         (click)="selectUser(user.id)"
+                         [selected]="selected[user.id]">
+            {{user?.firstName || 'Loading...'}} {{user?.lastName || 'Loading...'}}
+        </mat-list-option>
+    </mat-selection-list>
+
+    <no-item [hidden]="users?.length > 0" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
+</div>
+<div mat-dialog-actions>
+    <button mat-flat-button type="button" color="basic" (click)="close()">Annulla</button>
+    <button mat-flat-button type="button" color="primary" (click)="submit()">Conferma</button>
+</div>

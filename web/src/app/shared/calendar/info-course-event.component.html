@@ -1,8 +1,8 @@
 <ng-container>
     <i class="fas fa-calendar-week"></i>
-    {{event?.meta?.name}} dalle
-    {{ event?.start | date :  'dd-MM-yyyy HH:mm'}}
-    alle {{ event?.end | date :  'dd-MM-yyyy HH:mm'}}.
+    {{event?.meta?.name}} giorno {{ event?.start | date :  'dd-MM-yyyy' }} dalle
+    {{ event?.start | date :  'HH:mm'}}
+    alle {{ event?.end | date :  'HH:mm'}}.
     <br>
     <reservations [events]="event?.meta.reservations"></reservations>
 </ng-container>

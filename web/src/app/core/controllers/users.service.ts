@@ -56,4 +56,9 @@ export class UserService {
         return this.http.get(`/customers/${userId}/currentTrainingBundles`,
             {params: {specId: specId}});
     }
+
+    @to_promise
+    getUsersByEventId(eventId: any): any {
+        return this.http.get(`/users/events/`, {params: {eventId: eventId}});
+    }
 }

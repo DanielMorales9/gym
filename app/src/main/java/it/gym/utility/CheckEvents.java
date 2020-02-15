@@ -28,6 +28,6 @@ public class CheckEvents {
 
     public static void checkPast(Date startTime) {
         if (startTime.before(new Date()))
-            throw new BadRequestException("Orario non valido");
+            throw new BadRequestException("Non è possibile prenotare");
     }
 }
