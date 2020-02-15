@@ -4,14 +4,13 @@ import {CreateSaleComponent} from './sales';
 import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/sales';
 import {UserControlsComponent, UserDetailsComponent, UsersComponent} from '../shared/users';
-import {ACustomerCalendarComponent} from './customer-calendar';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
 import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
 import {HomeComponent} from './home';
 import {AuthGuardService} from '../core/guards';
 import {ProfileComponent} from '../shared/profile';
 import {GymSettingsComponent} from '../shared/settings';
-import {CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
+import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
 
 const routes = [
@@ -30,8 +29,8 @@ const routes = [
                 data: {title: 'Dettaglio Pacchetto', back: true }
             },
             {
-                path: 'customer/bundles', component: BundlesCustomerComponent,
-                data: {title: 'Pacchetti Utente', back: true }
+                path: 'customer/:id/bundles', component: BundlesCustomerComponent,
+                data: {title: 'Pacchetti Cliente', back: true }
             },
             {
                 path: 'users', component: UsersComponent,
@@ -42,20 +41,20 @@ const routes = [
                 data: {title: 'Dettaglio Utente', secondary: UserControlsComponent }
             },
             {
-                path: 'sales', component: SalesComponent,
-                data: {title: 'Vendite'}
-            },
-            {
-                path: 'sales/:id', component: SalesComponent,
-                data: {title: 'Vendite', back: true}
-            },
-            {
                 path: 'sales/buy/:id', component: CreateSaleComponent,
                 data: {title: 'Crea Vendita', back: true}
             },
             {
+                path: 'sales', component: SalesComponent,
+                data: {title: 'Vendite'}
+            },
+            {
                 path: 'sales/:id', component: SaleDetailsComponent,
                 data: {title: 'Dettaglio Vendita', back: true}
+            },
+            {
+                path: 'customer/:id/sales', component: SalesComponent,
+                data: {title: 'Ordini Cliente', back: true}
             },
             {
                 path: 'calendar', component: AdminCalendarComponent,

@@ -16,3 +16,4 @@ export * from './info-course-event.component';
 export * from './reserve-course-event.component';
 export * from './info-personal-event.component';
 export * from './reservations.component';
+export * from './a-customer-calendar.component';

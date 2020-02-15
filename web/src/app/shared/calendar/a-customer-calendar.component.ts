@@ -1,14 +1,16 @@
 import {Component} from '@angular/core';
-import {BaseCalendar, CustomerInfoModalComponent} from '../../shared/calendar';
+import {BaseCalendar} from './base-calendar';
+import {CustomerDeleteModalComponent} from './customer-delete-modal.component';
+import {CustomerHourModalComponent} from './customer-hour-modal.component';
+import {CustomerInfoModalComponent} from './customer-info-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
-import {CustomerHourModalComponent, CustomerDeleteModalComponent} from '../../shared/calendar';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {first} from 'rxjs/operators';
 
 @Component({
-    templateUrl: '../../shared/calendar/calendar.component.html',
+    templateUrl: './calendar.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
 })
 export class ACustomerCalendarComponent extends BaseCalendar {

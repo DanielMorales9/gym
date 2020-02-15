@@ -1,14 +1,16 @@
 resource "aws_db_instance" "postgres" {
-  name                   = var.postgres_db
-  engine                 = "postgres"
-  engine_version         = "10.5"
+  name                = var.postgres_db
+  engine              = "postgres"
+  engine_version      = "10.10"
+  deletion_protection = true
+
   instance_class         = var.rds_instance
   allocated_storage      = 5
   storage_encrypted      = false
   multi_az               = var.multi_az
   vpc_security_group_ids = [aws_security_group.rds_security_group.id]
   db_subnet_group_name   = aws_db_subnet_group.rds_db_subnet_group.name
-  parameter_group_name   = "default.postgres10"
+  parameter_group_name   = aws_db_parameter_group.default.name
 
   storage_type        = "gp2"
   username            = var.postgres_username
@@ -27,6 +29,21 @@ resource "aws_db_instance" "postgres" {
   tags = {
     Name    = "db"
     Project = var.app_name
+  }
+}
+
+resource "aws_db_parameter_group" "default" {
+  name   = "${var.postgres_db}-postgres10"
+  family = "postgres10"
+
+  parameter {
+    name  = "log_min_duration_statement"
+    value = 0
+  }
+
+  parameter {
+    name  = "log_statement"
+    value = "all"
   }
 }
 

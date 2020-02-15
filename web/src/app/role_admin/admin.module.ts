@@ -32,7 +32,6 @@ import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
 import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared/shared.module';
-import {ACustomerCalendarComponent} from './customer-calendar';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
@@ -87,7 +86,6 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdminHourModalComponent,
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
-        ACustomerCalendarComponent,
         OptionSelectModalComponent,
         HomeComponent
     ],

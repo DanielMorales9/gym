@@ -1,6 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {
+    ACustomerCalendarComponent,
     BundleItemComponent,
     BundleModalComponent,
     BundlesCustomerComponent,
@@ -100,7 +101,6 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         NgxMaterialTimepickerModule.setLocale('it-IT')
 
     ],
-
     entryComponents: [
         UserModalComponent,
         PaySaleModalComponent,
@@ -120,6 +120,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
     declarations: [
         NoItemComponent,
         GymClosedComponent,
+        ACustomerCalendarComponent,
         InfoCourseEventComponent,
         ReserveCourseEventComponent,
         InfoPersonalEventComponent,
@@ -203,7 +204,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         BundleSpecItemComponent,
         BundleSpecsComponent,
         ProfileComponent,
-        EventDetailsComponent
+        EventDetailsComponent,
+        ACustomerCalendarComponent
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}

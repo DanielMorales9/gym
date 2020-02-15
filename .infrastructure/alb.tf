@@ -84,7 +84,9 @@ resource "aws_alb_listener_rule" "api" {
   }
 
   condition {
-    path_pattern = ["/api/*"]
+    path_pattern {
+      values = ["/api/*"]
+    }
   }
 }
 

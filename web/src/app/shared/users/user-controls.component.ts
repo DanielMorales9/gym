@@ -56,12 +56,10 @@ export class UserControlsComponent implements OnInit {
     }
 
     showBundles() {
-        return this.router.navigate([this.root, 'customer', 'bundles'], {
-            queryParams: { id: this.user.id }
-        });
+        return this.router.navigate([this.root, 'customer', this.user.id, 'bundles']);
     }
 
     showSales() {
-        return this.router.navigate([this.root, 'sales', this.user.id]);
+        return this.router.navigate([this.root, 'customer', this.user.id, 'sales']);
     }
 }

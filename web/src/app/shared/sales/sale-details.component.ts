@@ -94,7 +94,6 @@ export class SaleDetailsComponent implements OnInit {
 
     async goToBundleSpecDetails(id: number) {
         await this.router.navigate(['bundleSpecs', id], {
-            replaceUrl: true,
             relativeTo: this.route.parent
         });
     }

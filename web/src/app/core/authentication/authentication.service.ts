@@ -34,6 +34,12 @@ export class AuthenticationService {
         'C': 3
     };
 
+    private TYPE2NAME = {
+        'A': 'admin',
+        'T': 'trainer',
+        'C': 'customer'
+    };
+
     constructor(private http: HttpClient,
                 private storageService: StorageService) { }
 
@@ -137,5 +143,14 @@ export class AuthenticationService {
     @to_promise
     private findUserByEmail(email: string): any {
         return this.http.get(`/users/findByEmail?email=${email}`);
+    }
+
+    getUserRoleName() {
+        const user = this.getUser();
+        if (user.type) {
+            return this.TYPE2NAME[this.user.type];
+        } else {
+            return 'customer';
+        }
     }
 }

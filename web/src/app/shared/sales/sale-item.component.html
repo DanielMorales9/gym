@@ -6,12 +6,12 @@
             </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">
-            {{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || 'Loading...'}}
+            {{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || ''}}
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mat-ex-panel-body">
         <div class="panel-body-description">
-            <span>Cliente:&nbsp;{{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || 'Loading...'}}</span>
+            <span>Cliente:&nbsp;{{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || ''}}</span>
         </div>
         <div class="panel-content">
         <span>

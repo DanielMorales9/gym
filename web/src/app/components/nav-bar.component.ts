@@ -84,7 +84,7 @@ export class NavBarComponent implements OnInit, OnDestroy {
         return this.authenticated || (!this.router.url.startsWith('/auth/home') && this.router.url.startsWith('/auth') );
     }
 
-    hideLogout() {
+    hide() {
         return !this.authenticated;
     }
 

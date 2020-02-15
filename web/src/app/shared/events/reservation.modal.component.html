@@ -6,7 +6,7 @@
                          [disableRipple]="true"
                          (click)="selectUser(user.id)"
                          [selected]="selected[user.id]">
-            {{user?.firstName || 'Loading...'}} {{user?.lastName || 'Loading...'}}
+            {{user?.firstName || 'Loading...'}} {{user?.lastName || ''}}
         </mat-list-option>
     </mat-selection-list>
 

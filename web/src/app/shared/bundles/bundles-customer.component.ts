@@ -44,12 +44,15 @@ export class BundlesCustomerComponent implements OnInit {
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         this.getPolicies();
-        this.initQueryParams();
+        const param = await this.route.params.pipe(first()).toPromise();
+        this.id = +param['id'];
+
+        this.initQueryParams(this.id);
     }
 
-    private initQueryParams() {
+    private initQueryParams(id?) {
         this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
@@ -57,7 +60,9 @@ export class BundlesCustomerComponent implements OnInit {
                     this.queryParams.date = new Date(this.queryParams.date);
                 }
             }
-            this.id = this.queryParams.id;
+            if (!!id) {
+                this.queryParams.id = id;
+            }
             this.search(this.queryParams);
         });
     }

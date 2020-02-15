@@ -10,5 +10,10 @@
     </h1>
     <span class="spacer"></span>
     <mat-icon fontSet="fas" fontIcon="fa-sign-in-alt" routerLink="/auth/login" [hidden]="hideLogin()"></mat-icon>
-    <mat-icon fontSet="fas" fontIcon="fa-sign-out-alt" (click)="doLogout()" [hidden]="hideLogout()"></mat-icon>
+    <mat-menu #matMenu>
+        <button mat-menu-item (click)="doLogout()">Logout</button>
+    </mat-menu>
+    <button mat-icon-button [matMenuTriggerFor]="matMenu" [hidden]="hide()">
+        <mat-icon>more_vert</mat-icon>
+    </button>
 </mat-toolbar>

@@ -35,6 +35,7 @@ import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
+import {MatMenuModule} from '@angular/material/menu';
 
 @NgModule({
     declarations: [
@@ -75,7 +76,8 @@ import { environment } from '../environments/environment';
         MatCheckboxModule,
         MatSelectModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
-        ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production })
+        ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
+        MatMenuModule
 
     ],
     providers: [
