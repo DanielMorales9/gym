@@ -1,16 +1,7 @@
-import {
-    Component,
-    ComponentFactory,
-    ComponentFactoryResolver,
-    ComponentRef, EventEmitter,
-    Input, OnDestroy,
-    OnInit, Output,
-    Type,
-    ViewChild,
-    ViewContainerRef
-} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {Component, ComponentFactoryResolver, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ISubscription} from 'rxjs-compat/Subscription';
+import {Location} from '@angular/common';
 
 @Component({
     selector: 'nav-bar',
@@ -28,23 +19,19 @@ export class NavBarComponent implements OnInit, OnDestroy {
     @Output() snav = new EventEmitter();
 
     title: string;
+    isBack: boolean;
     sub: ISubscription;
-
-    // @ViewChild('primaryControls', {static: true, read: ViewContainerRef})
-    // primaryControls: ViewContainerRef;
-    // primaryControlComponents: ComponentRef<Component>[] = new Array<ComponentRef<Component>>();
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
+                private location: Location,
                 private componentFactoryResolver: ComponentFactoryResolver) {}
 
     ngOnInit(): void {
         this.title = this.appName;
         this.sub = this.router.events.subscribe((event) => {
-            // if (event instanceof NavigationEnd) {
-            //     this.updatePrimaryControls(this.router.routerState.snapshot.root);
-            // }
             if (event instanceof NavigationEnd) {
+                this.isBack = this.getBack(this.router.routerState, this.router.routerState.root);
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
                 this.setTitle(...titles, this.appName);
             }
@@ -72,29 +59,22 @@ export class NavBarComponent implements OnInit, OnDestroy {
         return data;
     }
 
+    private getBack(state, parent) {
+
+        if (parent && parent.snapshot.data && parent.snapshot.data.back) {
+            return parent.snapshot.data.back;
+        }
+
+        if (state && parent) {
+            return this.getBack(state, state.firstChild(parent));
+        }
+
+    }
+
     ngOnDestroy(): void {
         this.sub.unsubscribe();
     }
 
-    // private updatePrimaryControls(snapshot: ActivatedRouteSnapshot): void {
-    //     this.clearPrimaryControls();
-    //     const primary: any = snapshot.data.nav;
-    //     if (primary instanceof Type) {
-    //         const factory: ComponentFactory<Component> = this.componentFactoryResolver.resolveComponentFactory(primary);
-    //         const componentRef: ComponentRef<Component> = this.primaryControls.createComponent(factory);
-    //         this.primaryControlComponents.push(componentRef);
-    //     }
-    //     for (const childSnapshot of snapshot.children) {
-    //         this.updatePrimaryControls(childSnapshot);
-    //     }
-    // }
-    //
-    // private clearPrimaryControls() {
-    //     if (this.primaryControls) { this.primaryControls.clear(); }
-    //     for (const toolbarComponent of this.primaryControlComponents) {
-    //         toolbarComponent.destroy();
-    //     }
-    // }
 
     openSideBar() {
         this.snav.emit();
@@ -114,5 +94,9 @@ export class NavBarComponent implements OnInit, OnDestroy {
 
     goHome() {
         this.home.emit();
+    }
+
+    back() {
+        this.location.back();
     }
 }

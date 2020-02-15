@@ -174,7 +174,9 @@ export class EventDetailsComponent implements OnInit {
             return this.snackBar.open(error.error.message);
         }
         const root = this.route.parent.parent.snapshot.routeConfig.path;
-        await this.router.navigate([root, 'calendar']);
+        await this.router.navigate([root, 'calendar'], {
+            replaceUrl: true,
+        });
     }
 
     isDisabledCompleted() {

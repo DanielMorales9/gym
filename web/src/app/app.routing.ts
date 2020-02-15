@@ -11,7 +11,7 @@ import {NoAuthGuardService, RoleGuardService} from './core/guards';
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
 
-    { path: 'error', component: ErrorComponent, data: { title: 'Errore' } },
+    { path: 'error', component: ErrorComponent, data: { title: 'Errore', back: true } },
     { path: 'auth', loadChildren: () => import('app/auth/auth.module').then(m => m.AuthModule),
         canActivate: [NoAuthGuardService] },
     {

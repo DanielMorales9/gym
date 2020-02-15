@@ -88,7 +88,9 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
         if (error) {
             throw error;
         }
-        await this.router.navigateByUrl('/');
+        await this.router.navigateByUrl('/', {
+            replaceUrl: true,
+        });
     }
 
     private async editBundle(res: any) {
@@ -101,7 +103,10 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
 
     async goToBundleSPec() {
         await this.router.navigate(['bundleSpecs', this.bundle.bundleSpec.id],
-            {relativeTo: this.route.parent});
+            {
+                replaceUrl: true,
+                relativeTo: this.route.parent
+            });
     }
 
     private getPolicies() {

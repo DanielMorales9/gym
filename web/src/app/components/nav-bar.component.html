@@ -1,6 +1,9 @@
 <mat-toolbar color="primary" layout="row" class="main-toolbar" id="main-toolbar">
-    <a mat-icon-button (click)="openSideBar()" *ngIf="isMobile">
+    <a mat-icon-button (click)="openSideBar()" *ngIf="isMobile && !isBack">
         <mat-icon fontSet="fa" fontIcon="fa-bars"></mat-icon>
+    </a>
+    <a mat-icon-button (click)="back()" *ngIf="isMobile && isBack">
+        <mat-icon>arrow_back</mat-icon>
     </a>
     <h1 class="main-app-name">
         <a id="main-app-name" (click)="goHome()">{{ title }}</a>

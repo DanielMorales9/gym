@@ -40,7 +40,7 @@ export class VerificationComponent implements OnInit {
         if (err) {
             if (err.status === 404) {
                 this.snackbar.open(err.error.message);
-                await this.router.navigateByUrl('/auth/login');
+                await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
             } else if (err.status < 500) {
                 this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
@@ -49,7 +49,7 @@ export class VerificationComponent implements OnInit {
         else {
             this.user = data;
             if (this.user.verified) {
-                await this.router.navigateByUrl('/');
+                await this.router.navigateByUrl('/', {replaceUrl: true});
             }
         }
     }
@@ -89,9 +89,9 @@ export class VerificationComponent implements OnInit {
         [data, error] = await this.auth.authenticate(auth_credentials);
 
         if (error) {
-            await this.router.navigate(['/error'], {queryParams: this.QUERY_PARAMS});
+            await this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS});
         } else {
-            await this.router.navigateByUrl('/auth/login');
+            await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
         }
 
     }
@@ -104,7 +104,7 @@ export class VerificationComponent implements OnInit {
         } else {
             const message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`;
             this.snackbar.open(message);
-            return this.router.navigateByUrl('c');
+            return this.router.navigateByUrl('/', {replaceUrl: true});
         }
     }
 }

@@ -45,7 +45,6 @@ export class BundlesCustomerComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
         this.getPolicies();
         this.initQueryParams();
     }
@@ -71,6 +70,7 @@ export class BundlesCustomerComponent implements OnInit {
         this.router.navigate(
             [],
             {
+                replaceUrl: true,
                 relativeTo: this.route,
                 queryParams: this.queryParams,
             });
@@ -98,7 +98,9 @@ export class BundlesCustomerComponent implements OnInit {
     }
 
     private async goToDetails(bundle: any) {
-        await this.router.navigate(['bundles', bundle.id], {relativeTo: this.route.parent});
+        await this.router.navigate(['bundles', bundle.id], {
+            relativeTo: this.route.parent
+        });
     }
 
 }

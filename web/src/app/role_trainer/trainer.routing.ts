@@ -10,40 +10,41 @@ import {GymSettingsComponent} from '../shared/settings';
 import {ProfileComponent} from '../shared/profile';
 import {CalendarControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
+import {SalesComponent} from '../shared/sales';
 
 const routes = [
     { path: '', children : [
             {
                 path: 'calendar', component: TrainerCalendarComponent,
-                data: {title: 'Calendario', secondary: CalendarControlsComponent }
+                data: {title: 'Calendario', secondary: CalendarControlsComponent}
             },
             {
                 path: 'users', component: UsersComponent,
-                data: {title: 'Utenti' }
+                data: {title: 'Utenti'}
             },
             {
                 path: 'users/:id', component: UserDetailsComponent,
-                data: {title: 'Scheda Cliente' }
+                data: {title: 'Scheda Cliente'}
             },
             {
                 path: 'bundleSpecs', component: BundleSpecsComponent,
-                data: {title: 'Tipi Pacchetti' }
+                data: {title: 'Tipi Pacchetti'}
             },
             {
                 path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent,
-                data: {title: 'Dettaglio Tipo Pacchetto' }
+                data: {title: 'Dettaglio Tipo Pacchetto', back: true }
             },
             {
                 path: 'bundles/:id', component: BundleDetailsComponent,
-                data: {title: 'Dettaglio Pacchetto' }
+                data: {title: 'Dettaglio Pacchetto', back: true }
             },
             {
                 path: 'events/:id', component: EventDetailsComponent,
-                data: {title: 'Dettaglio Evento' }
+                data: {title: 'Dettaglio Evento', back: true }
             },
             {
                 path: 'customer/bundles', component: BundlesCustomerComponent,
-                data: {title: 'Pacchetti Cliente' }
+                data: {title: 'Pacchetti Cliente', back: true }
             },
             {
                 path: 'home', component: HomeComponent,
@@ -57,7 +58,7 @@ const routes = [
             {
                 path: 'settings/gym', component: GymSettingsComponent,
                 canActivate: [AuthGuardService],
-                data: {title: 'Palestra' }
+                data: {title: 'Palestra'}
             },
             { path: '**', redirectTo: 'home' }
         ]},

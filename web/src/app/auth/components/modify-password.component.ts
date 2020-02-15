@@ -37,7 +37,7 @@ export class ModifyPasswordComponent implements OnInit {
         if (err) {
             if (err.status === 404) {
                 this.snackbar.open(err.error.message);
-                await this.router.navigateByUrl('/auth/login');
+                await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
             } else if (err.status < 500) {
                 this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
@@ -58,7 +58,7 @@ export class ModifyPasswordComponent implements OnInit {
         } else {
             const message = `${this.user.firstName} la tua password è stata modificata con successo!`;
             this.snackbar.open(message);
-            return this.router.navigateByUrl('/');
+            return this.router.navigateByUrl('/', {replaceUrl: true});
         }
     }
 

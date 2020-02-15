@@ -70,6 +70,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
             [],
             {
                 relativeTo: this.route,
+                replaceUrl: true,
                 queryParams: this.queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
@@ -144,7 +145,9 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         this.saleHelper.confirmSale(this.sale.id)
             .subscribe( (res: Sale) => {
                 this.sale = res;
-                return this.router.navigate(['admin', 'sales', this.sale.id]);
+                return this.router.navigate(['admin', 'sales', this.sale.id], {
+                    replaceUrl: true
+                });
             }, err => {
                 this.snackbar.open(err.error.message);
             });

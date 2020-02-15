@@ -23,15 +23,15 @@ const routes = [
             },
             {
                 path: 'bundleSpecs/:id', component: BundleSpecDetailsComponent,
-                data: {title: 'Dettaglio Tipo Pacchetto' }
+                data: {title: 'Dettaglio Tipo Pacchetto', back: true }
             },
             {
                 path: 'bundles/:id', component: BundleDetailsComponent,
-                data: {title: 'Dettaglio Pacchetto' }
+                data: {title: 'Dettaglio Pacchetto', back: true }
             },
             {
                 path: 'customer/bundles', component: BundlesCustomerComponent,
-                data: {title: 'Pacchetti Utente' }
+                data: {title: 'Pacchetti Utente', back: true }
             },
             {
                 path: 'users', component: UsersComponent,
@@ -43,27 +43,31 @@ const routes = [
             },
             {
                 path: 'sales', component: SalesComponent,
-                data: {title: 'Vendite' }
+                data: {title: 'Vendite'}
+            },
+            {
+                path: 'sales/:id', component: SalesComponent,
+                data: {title: 'Vendite', back: true}
             },
             {
                 path: 'sales/buy/:id', component: CreateSaleComponent,
-                data: {title: 'Crea Vendita' }
+                data: {title: 'Crea Vendita', back: true}
             },
             {
                 path: 'sales/:id', component: SaleDetailsComponent,
-                data: {title: 'Dettaglio Vendita' }
+                data: {title: 'Dettaglio Vendita', back: true}
             },
             {
                 path: 'calendar', component: AdminCalendarComponent,
-                data: {title: 'Calendario', secondary: CalendarControlsComponent }
+                data: {title: 'Calendario', secondary: CalendarControlsComponent}
             },
             {
                 path: 'calendar/:id', component: ACustomerCalendarComponent,
-                data: {title: 'Calendario Cliente', secondary: CalendarCustomerControlsComponent }
+                data: {title: 'Calendario Cliente', secondary: CalendarCustomerControlsComponent, back: true}
             },
             {
                 path: 'events/:id', component: EventDetailsComponent,
-                data: {title: 'Dettaglio Evento' }
+                data: {title: 'Dettaglio Evento', back: true }
             },
             {
                 path: 'profile', component: ProfileComponent,
