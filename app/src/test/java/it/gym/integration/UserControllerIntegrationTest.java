@@ -135,4 +135,12 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
     }
 
+    @Test
+    public void whenFindUsersByEventIdThenOk() throws Exception {
+        mockMvc.perform(get("/users/events")
+                .param("eventId", String.valueOf(1)))
+                .andExpect(status().isOk());
+
+    }
+
 }
