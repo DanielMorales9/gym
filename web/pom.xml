@@ -85,6 +85,7 @@
                 <artifactId>dockerfile-maven-plugin</artifactId>
                 <version>1.4.9</version>
                 <configuration>
+                    <googleContainerRegistryEnabled>false</googleContainerRegistryEnabled>
                     <repository>${docker.image.prefix}/${project.artifactId}</repository>
                     <tag>${project.version}</tag>
                 </configuration>

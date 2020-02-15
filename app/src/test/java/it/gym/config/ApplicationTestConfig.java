@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -95,10 +96,11 @@ public class ApplicationTestConfig {
 
     @Bean
     public Flyway flyway(DataSource dataSource) {
-        Flyway flyway = new Flyway();
-        flyway.setLocations(DB_MIGRATION_TENANTS);
-        flyway.setDataSource(dataSource);
-        flyway.setSchemas("public");
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .schemas("public")
+                .locations(DB_MIGRATION_TENANTS)
+                .load();
         flyway.migrate();
         return flyway;
     }

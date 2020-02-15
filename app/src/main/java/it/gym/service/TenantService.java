@@ -29,9 +29,6 @@ public class TenantService {
     @Autowired
     private DataSource dataSource;
 
-    @Autowired
-    private Flyway flyway;
-
     public Boolean existsByTenant(Tenant tenant) {
         return repository.existsBySchemaName(tenant.getSchemaName());
     }
@@ -58,9 +55,11 @@ public class TenantService {
         tenant = this.setTenantSchema(tenant);
         tenant = repository.save(tenant);
         String schema = tenant.getSchemaName();
-        flyway.setLocations(FlywayConfig.DB_MIGRATION_TENANTS);
-        flyway.setDataSource(dataSource);
-        flyway.setSchemas(schema);
+        Flyway flyway = Flyway.configure()
+                .dataSource(dataSource)
+                .schemas(schema)
+                .locations(FlywayConfig.DB_MIGRATION_TENANTS)
+                .load();
         flyway.migrate();
         return tenant;
     }

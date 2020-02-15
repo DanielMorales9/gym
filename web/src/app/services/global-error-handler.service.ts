@@ -1,5 +1,6 @@
 import {ErrorHandler, Injectable, Injector} from '@angular/core';
 import {Router} from '@angular/router';
+import {environment} from '../../environments/environment.prod';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -11,7 +12,9 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     handleError(err) {
-        console.error(err);
+        if (!environment.production) {
+            console.error(err);
+        }
         const message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
 
 
