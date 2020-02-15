@@ -75,11 +75,14 @@ export class PolicyService {
             canDelete: true
         },
         course: {
-            canDelete: true
+            canDelete: true,
+            canConfirm: false,
+            canBookAll: true,
         },
         personal: {
             canDelete: true,
-            canComplete: true
+            canComplete: true,
+            canConfirm: true,
         },
         timeOff: {
             canDelete: true
@@ -147,14 +150,17 @@ export class PolicyService {
             canEdit: false
         },
         reservation: {
-            canConfirm: true
+            canConfirm: true,
+            canDelete: true
         },
         course: {
-            canDelete: false
+            canDelete: false,
+            canBookAll: true,
         },
         personal: {
             canDelete: true,
-            canComplete: true
+            canComplete: true,
+            canConfirm: true,
         },
         timeOff: {
             canDelete: true
@@ -219,6 +225,10 @@ export class PolicyService {
         bundle: {
             canDelete: false,
             canEdit: false
+        },
+        personal: {},
+        course: {
+            canBook: true,
         }
     };
 

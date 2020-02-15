@@ -140,7 +140,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     private async createReservation(d) {
         const userId = d.userId;
         const specId = d.event.meta.specification.id;
-        const [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
+        let [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
         if (error) {
             throw error;
         }
@@ -149,14 +149,13 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             return;
         }
         const bundleId = data[0].id;
-        this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId).subscribe(async (_) => {
-            this.snackBar.open('Prenotazione effettuata');
-            await this.getEvents();
-        }, err => {
-            if (err) {
-                this.snackBar.open(err.error.message);
-            }
-        });
+        [data, error] = await this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId);
+        if (error) {
+            this.snackBar.open(error.error.message);
+            return;
+        }
+        this.snackBar.open('Prenotazione effettuata');
+        await this.getEvents();
     }
 
     private openHourModal() {

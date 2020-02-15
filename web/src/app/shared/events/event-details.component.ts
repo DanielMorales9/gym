@@ -3,6 +3,9 @@ import {CalendarFacade} from '../../core/facades';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PolicyService} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
+import {MatDialog} from '@angular/material/dialog';
+import {ReservationModalComponent} from './reservation.modal.component';
+import {AuthenticationService} from '../../core/authentication';
 
 @Component({
     templateUrl: './event-details.component.html',
@@ -11,6 +14,10 @@ import {SnackBarService} from '../../core/utilities';
 export class EventDetailsComponent implements OnInit {
 
     event: any;
+    users: any;
+    userSelected = new Map<number, boolean>();
+    userReservation = new Map<number, number>();
+    userBundle = new Map<number, any>();
 
     EVENT_TYPES = {
         P: 'Allenamento Personale',
@@ -31,10 +38,14 @@ export class EventDetailsComponent implements OnInit {
     canDelete: boolean;
     canDeleteEvent: boolean;
     canCompleteEvent: boolean;
+    canBook: boolean;
+    canBookAll: boolean;
 
     constructor(private facade: CalendarFacade,
                 private route: ActivatedRoute,
+                private dialog: MatDialog,
                 private router: Router,
+                private auth: AuthenticationService,
                 private snackBar: SnackBarService,
                 private policy: PolicyService) {
     }
@@ -50,13 +61,37 @@ export class EventDetailsComponent implements OnInit {
         }
 
         this.displayedPaymentsColumns = displayedPaymentsColumns;
+
+        if (this.event.type === 'C') {
+            await this.computeMaps(id);
+        }
+    }
+
+    private async computeMaps(id: number) {
+        const [data, error] = await this.facade.getUsersByEventId(id);
+        if (error) {
+            return;
+        }
+        this.event.reservations.forEach(v => {
+            this.userReservation[v.user.id] = v.id;
+            this.userSelected[v.user.id] = true;
+        });
+        this.users = data;
+        let bundle;
+        for (let i = 0; i < this.users.length; i++) {
+            bundle = this.users[i].currentTrainingBundles
+                .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
+            this.userBundle[this.users[i].id] = bundle;
+        }
     }
 
     private getPolicy() {
-        this.canConfirm = this.policy.get('reservation', 'canConfirm') && this.isTraining();
         this.canDelete = this.policy.get('reservation', 'canDelete');
         this.canCompleteEvent = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canComplete') && this.isTraining();
         this.canDeleteEvent = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canDelete');
+        this.canConfirm = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canConfirm');
+        this.canBook = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canBook');
+        this.canBookAll = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canBookAll');
     }
 
     isTraining() {
@@ -78,13 +113,16 @@ export class EventDetailsComponent implements OnInit {
         }
     }
 
-    async deleteReservation(id: any) {
+    async removeReservation(id: any) {
         const [data, error] = await this.facade.deleteOneReservation(this.event.id, id);
         if (error) {
             throw error;
         }
-        await this.findById(this.event.id);
+    }
 
+    async deleteReservation(id: any) {
+        await this.removeReservation(id);
+        await this.findById(this.event.id);
     }
 
     async confirm() {
@@ -119,18 +157,18 @@ export class EventDetailsComponent implements OnInit {
     }
 
     async deleteEvent() {
-        let [data, error] = [undefined, undefined];
+        let [_, error] = [undefined, undefined];
         if (this.event.type === 'C') {
-            [data, error] = await this.facade.deleteCourseEvent(this.event.id);
+            [_, error] = await this.facade.deleteCourseEvent(this.event.id);
         }
         else if (this.event.type === 'P') {
-            [data, error] = await this.facade.deleteOneReservation(this.event.id, this.event.reservation.id);
+            [_, error] = await this.facade.deleteOneReservation(this.event.id, this.event.reservation.id);
         }
         else if (this.event.type === 'H') {
-            [data, error] = await this.facade.deleteHoliday(this.event.id);
+            [_, error] = await this.facade.deleteHoliday(this.event.id);
         }
         else {
-            [data, error] = await this.facade.deleteTimeOff(this.event.id);
+            [_, error] = await this.facade.deleteTimeOff(this.event.id);
         }
         if (error) {
             return this.snackBar.open(error.error.message);
@@ -154,5 +192,57 @@ export class EventDetailsComponent implements OnInit {
             }
         }
         await this.findById(this.event.id);
+    }
+
+    async reserveFromEvent(userId, bundleId) {
+        const [data, error] = await this.facade
+            .createReservationFromEvent(userId, this.event.id, bundleId);
+        if (error) {
+            this.snackBar.open(error.error.message);
+        }
+        return data;
+    }
+
+    bookAll() {
+        const dialogRef = this.dialog.open(ReservationModalComponent, {
+            data: {
+                users: this.users,
+                selected: Object.assign({}, this.userSelected)
+            }
+        });
+
+        dialogRef.afterClosed().subscribe(async res => {
+            if (res) {
+                for (const userId in res) {
+                    await this.updateReservations(userId, res);
+                }
+                await this.findById(this.event.id);
+            }
+        });
+
+    }
+
+    private async updateReservations(userId: string, res) {
+        if (this.userSelected[userId] !== res[userId]) {
+            if (res[userId]) {
+                const bundleId = this.userBundle[userId].id;
+                const data = await this.reserveFromEvent(userId, bundleId);
+                this.userReservation[userId] = data.id;
+            } else {
+                await this.removeReservation(this.userReservation[userId]);
+                this.userReservation[userId] = undefined;
+            }
+            this.userSelected[userId] = res[userId];
+        }
+    }
+
+    async book() {
+        const user = this.auth.getUser();
+        const bundle = user.currentTrainingBundles
+            .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
+        if (bundle) {
+            await this.reserveFromEvent(user.id, bundle.id);
+            await this.findById(this.event.id);
+        }
     }
 }

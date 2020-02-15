@@ -47,17 +47,16 @@ public class ReservationFacade {
 
     private void simpleReservationChecks(Gym gym, Customer customer, ATrainingBundle bundle, Date startTime,
                                          Date endTime,
-                                         String roleName) {
+                                         boolean checkIsReservedOnTime,
+                                         boolean checkIsPast) {
 
-        if ("CUSTOMER".equals(roleName))
-            checkPast(startTime);
+        if (checkIsPast) checkPast(startTime);
 
         gymService.checkGymHours(gym, startTime, endTime);
 
         checkBundleIsReservable(customer, bundle);
 
-        if ("CUSTOMER".equals(roleName))
-            isReservedOnTime(startTime, gym);
+        if (checkIsReservedOnTime) isReservedOnTime(startTime, gym);
 
         List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
@@ -84,7 +83,10 @@ public class ReservationFacade {
         Customer customer = this.customerService.findById(customerId);
         ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
 
-        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(), roleName);
+        boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
+        boolean checkIsPast = "CUSTOMER".equals(roleName);
+        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(),
+                checkIsReservedOnTime, checkIsPast);
     }
 
     private List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
@@ -166,12 +168,15 @@ public class ReservationFacade {
                                          Long customerId,
                                          Long bundleId,
                                          Event event,
-                                         String role) {
+                                         String roleName) {
         Gym gym = this.gymService.findById(gymId);
         Customer customer = this.customerService.findById(customerId);
         ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
 
-        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(), role);
+        boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
+        boolean checkIsPast = "CUSTOMER".equals(roleName);
+        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(),
+                checkIsReservedOnTime, checkIsPast);
 
         logger.info("Creating personal training event");
         ATrainingEvent evt = createPersonalTrainingEvent(bundle, event);
@@ -183,14 +188,15 @@ public class ReservationFacade {
                                                           Long customerId,
                                                           Long eventId,
                                                           Long bundleId,
-                                                          String role) {
+                                                          String roleName) {
         Gym gym = this.gymService.findById(gymId);
         Customer customer = this.customerService.findById(customerId);
         ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
 
         ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
 
-        simpleReservationChecks(gym, customer, bundle, evt.getStartTime(), evt.getEndTime(), role);
+        boolean checkIsPast = "CUSTOMER".equals(roleName);
+        simpleReservationChecks(gym, customer, bundle, evt.getStartTime(), evt.getEndTime(), false, checkIsPast);
 
         return makeReservation(customer, bundle, evt);
     }

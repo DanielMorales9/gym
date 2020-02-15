@@ -23,7 +23,7 @@ import {
     InfoPersonalEventComponent,
     NoItemComponent,
     OptionModalComponent,
-    ProfileComponent,
+    ProfileComponent, ReservationModalComponent,
     ReservationsComponent,
     ReserveCourseEventComponent,
     SalesComponent,
@@ -115,6 +115,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         CalendarControlsComponent,
         CalendarCustomerControlsComponent,
         UserControlsComponent,
+        ReservationModalComponent
     ],
     declarations: [
         NoItemComponent,
@@ -161,7 +162,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         CalendarControlsComponent,
         CalendarCustomerControlsComponent,
         UserControlsComponent,
-        EventDetailsComponent
+        EventDetailsComponent,
+        ReservationModalComponent,
     ],
     exports: [
         CalendarControlsComponent,

@@ -49,6 +49,10 @@ export class CalendarFacade {
         return this.gymService.getConfig();
     }
 
+    getUsersByEventId(eventId) {
+        return this.userService.getUsersByEventId(eventId);
+    }
+
     /**
      * BUNDLE API
      */
@@ -204,7 +208,7 @@ export class CalendarFacade {
         return this.reservationService.createReservationFromBundle(gymId, userId, bundleId, event);
     }
 
-    createReservationFromEvent(userId: number, eventId: number, bundleId: number) {
+    createReservationFromEvent(userId: any, eventId: number, bundleId: number) {
         const gymId = this.gymService.gym.id;
         return this.reservationService.createReservationFromEvent(gymId,
             {customerId: userId, eventId: eventId, bundleId: bundleId});

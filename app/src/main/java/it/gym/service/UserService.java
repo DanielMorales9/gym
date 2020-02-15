@@ -59,4 +59,8 @@ public class UserService implements ICrudService<AUser, Long> {
     public Page<AUser> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
+
+    public List<AUser> findUserEvent(Long eventId) {
+        return repository.findUserByEventId(eventId);
+    }
 }
