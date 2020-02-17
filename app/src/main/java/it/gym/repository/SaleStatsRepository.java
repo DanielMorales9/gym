@@ -15,13 +15,13 @@ public interface SaleStatsRepository extends JpaRepository<Sale, String> {
     @Query(value =
             "select to_char(to_timestamp (date_part('month', createdat)\\:\\:text, 'MM'), 'TMMonth') as month," +
             "       date_part('year', createdat) as year," +
-            "       date_part('month', createdat) as month_num," +
+            "       date_part('month', createdat) as monthnum," +
             "       sum(total_price) as totalprice, " +
             "       sum(amount_payed) as amountpayed " +
             "from sales " +
             "where createdat > date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +
-            "group by month, month_num, year " +
-            "order by month_num, year desc;", nativeQuery = true)
+            "group by month, monthnum, year " +
+            "order by year, monthnum;", nativeQuery = true)
     List<SaleTimeStatistics> getSalesByMonthInterval(String timeInterval);
 
     @Query(value =
