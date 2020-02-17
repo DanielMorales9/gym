@@ -7,3 +7,4 @@ export * from './bundles-not-disabled.service';
 export * from './abundle.service';
 export * from './auth.service';
 export * from './bundle.service';
+export * from './stats.service';

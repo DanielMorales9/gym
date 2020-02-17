@@ -47,4 +47,5 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     Page<Sale> findSalesByIsPayed(Boolean payed, Pageable pageable);
 
     Page<Sale> findSalesByCreatedAtGreaterThanEqualAndIsPayed(Date date, Boolean payed, Pageable pageable);
+
 }

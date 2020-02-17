@@ -36,6 +36,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {MatMenuModule} from '@angular/material/menu';
+import {ChartsModule} from 'ng2-charts';
 
 @NgModule({
     declarations: [
@@ -77,8 +78,7 @@ import {MatMenuModule} from '@angular/material/menu';
         MatSelectModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        MatMenuModule
-
+        MatMenuModule,
     ],
     providers: [
         AppService,

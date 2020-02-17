@@ -30,7 +30,7 @@
     </a>
 </div>
 <div id="menu-account">
-    <h2 matSubheader>Impostazioni</h2>
+    <h2 matSubheader>Profilo</h2>
     <a href=# mat-list-item
        [routerLinkActive]="['active-link']"
        routerLink="/admin/profile">
@@ -38,8 +38,16 @@
             <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>&nbsp;&nbsp;I miei dettagli
         </span>
     </a>
+    <a href=# mat-list-item
+       [routerLinkActive]="['active-link']"
+       routerLink="/admin/stats">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-chart-line"></mat-icon>&nbsp;&nbsp;Statistiche
+        </span>
+    </a>
 </div>
 <div id="menu-settings">
+    <h2 matSubheader>Impostazioni</h2>
     <a href=# mat-list-item
        [routerLinkActive]="['active-link']"
        routerLink="/admin/settings/gym">

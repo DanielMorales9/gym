@@ -12,6 +12,7 @@ import {ProfileComponent} from '../shared/profile';
 import {GymSettingsComponent} from '../shared/settings';
 import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
+import {StatsComponent} from './stats';
 
 const routes = [
 
@@ -77,6 +78,10 @@ const routes = [
                 path: 'settings/gym', component: GymSettingsComponent,
                 canActivate: [AuthGuardService],
                 data: {title: 'La mia Palestra' }
+            },
+            {
+                path: 'stats', component: StatsComponent,
+                data: {title: 'Statistiche' }
             },
             {
                 path: 'home', component: HomeComponent,

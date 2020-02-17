@@ -19,3 +19,13 @@ mat-card-actions {
 .card-section {
     padding: 16px 16px 0px 16px;
 }
+
+.summary-footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.summary-footer-text {
+    font-size: 14px;
+    color: rgba(0, 0, 0, 0.54);
+}
