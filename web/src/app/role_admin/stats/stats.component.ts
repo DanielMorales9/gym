@@ -19,6 +19,7 @@ export class StatsComponent implements OnInit {
     'P': 'Allenamento Personalizzato',
     'C': 'Corsi'
   };
+
   private INTERVAL_NAME = {
     '1 week': '1 Settimana',
     '1 month': '1 Mese',
