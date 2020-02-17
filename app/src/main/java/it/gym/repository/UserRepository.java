@@ -28,5 +28,6 @@ public interface UserRepository extends JpaRepository<AUser, Long> {
             nativeQuery=true)
     List<AUser> findUserByEventId(Long eventId);
 
+    @Query(value = "select u.* from users as u where u.user_type = :type", nativeQuery = true)
     List<AUser> findAllByType(String type);
 }

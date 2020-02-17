@@ -37,6 +37,7 @@ public class ReservationFacade {
     @Autowired private TrainingSessionService sessionService;
     @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
+    @Qualifier("mailService")
     @Autowired private MailService mailService;
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
@@ -57,7 +58,7 @@ public class ReservationFacade {
 
         checkBundleIsReservable(customer, bundle);
 
-        if (checkIsReservedOnTime && isOnTime(startTime, gym)) {
+        if (checkIsReservedOnTime && isNotOnTime(startTime, gym)) {
             throw new BadRequestException(
                     String.format("E' necessario prenotare almeno %s ore prima",
                             gym.getReservationBeforeHours() ));
@@ -104,7 +105,7 @@ public class ReservationFacade {
         return expiredBundles;
     }
 
-    public boolean isOnTime(Date startTime, Gym gym) {
+    public boolean isNotOnTime(Date startTime, Gym gym) {
         logger.info("Checking whether the date is before certain amount of hours");
         Date date = DateUtils.addHours(startTime, - gym.getReservationBeforeHours());
         Date now = new Date();
@@ -225,7 +226,7 @@ public class ReservationFacade {
                         "Rivolgiti in segreteria per maggiori informazioni");
             }
             else if (isAPersonal) {
-                if (isOnTime(event.getStartTime(), gym)) {
+                if (isNotOnTime(event.getStartTime(), gym)) {
                     sendDeleteReservationAttemptEmail(email, event);
                     throw new BadRequestException(
                             String.format("E' necessario annullare una prenotazione almeno %s ore prima. " +

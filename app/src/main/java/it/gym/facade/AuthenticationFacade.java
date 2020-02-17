@@ -34,6 +34,7 @@ public class AuthenticationFacade {
     private static final String EMAIL_REGISTRATION_EX_MESSAGE = "Non è stato possibile inviare l'email a %s %s";
 
     @Autowired
+    @Qualifier("mailService")
     private MailService mailService;
 
     @Autowired

@@ -171,11 +171,13 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     public void whenDeleteReservationOnCourseEventReturnsOK() throws Exception {
         CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(true, true);
         Reservation reservation = fixture.getReservation();
+        Gym gym = fixture.getGym();
         CourseTrainingEvent event = fixture.getCourseEvent();
 
         logger.info(sessionRepository.findAll().toString());
         ResultActions result = mockMvc.perform(delete("/reservations/" + reservation.getId())
-                .param("eventId", String.valueOf(event.getId())))
+                .param("eventId", String.valueOf(event.getId()))
+                .param("gymId", String.valueOf(gym.getId())))
                 .andExpect(status().isOk());
 
         expectReservation(result, reservation);
@@ -208,9 +210,11 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         Customer customer = fixture.getCustomer();
         Reservation reservation = fixture.getReservation();
         PersonalTrainingEvent event = fixture.getPersonalEvent();
+        Gym gym = fixture.getGym();
 
         ResultActions result = mockMvc.perform(delete("/reservations/" + reservation.getId())
-                .param( "eventId", String.valueOf(event.getId())))
+                .param( "eventId", String.valueOf(event.getId()))
+                .param( "gymId", String.valueOf(gym.getId())))
                 .andExpect(status().isOk());
 
         expectReservation(result, reservation);

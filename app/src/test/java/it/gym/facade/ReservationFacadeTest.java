@@ -36,6 +36,7 @@ public class ReservationFacadeTest {
     @Qualifier("trainingSessionService")
     @MockBean private TrainingSessionService sessionService;
     @MockBean private UserService userService;
+    @MockBean @Qualifier("mailService") private MailService mailService;
 
     static {
         System.setProperty("reservationBeforeHours", "2");
@@ -57,14 +58,14 @@ public class ReservationFacadeTest {
     public void isOnTime() {
         Date start = getNextMonday();
         Gym gym = createGym(1L);
-        facade.isOnTime(start, gym);
+        facade.isNotOnTime(start, gym);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test()
     public void isNotOnTime() {
         Date start = new Date();
         Gym gym = createGym(1L);
-        facade.isOnTime(start, gym);
+        assertThat(facade.isNotOnTime(start, gym)).isTrue();
     }
 
     @Test
@@ -397,11 +398,14 @@ public class ReservationFacadeTest {
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
         event.addSession(res.getId(), session);
+        Gym gym = personalEventFixture.getGym();
+        Long gymId = gym.getId();
 
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
+        Mockito.doReturn(gym).when(gymService).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, null, null, "CUSTOMER");
+        Reservation actual = facade.deleteReservation(1L, 1L, gymId, null, "CUSTOMER");
 
         Reservation expected = createReservation(1L, customer);
         assertThat(actual).isEqualTo(expected);
