@@ -12,7 +12,7 @@ import {
     BundleSpecsService,
     EventService,
     ReservationService,
-    SalesService, UserService
+    SalesService, StatsService, UserService
 } from './controllers';
 import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
 import {
@@ -45,6 +45,7 @@ import {CalendarFacade} from './facades';
         },
         CalendarFacade,
         HttpCacheService,
+        StatsService,
         ApiPrefixInterceptor,
         CacheInterceptor,
         AuthService,

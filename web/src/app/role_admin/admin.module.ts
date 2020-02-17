@@ -38,6 +38,9 @@ import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-brow
 import * as Hammer from 'hammerjs';
 import {HomeComponent} from './home';
 import {NgxMaterialTimepickerComponent, NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import { StatsComponent } from './stats';
+import {ChartsModule} from 'ng2-charts';
+import {MatMenuModule} from '@angular/material/menu';
 
 registerLocaleData(localeIt);
 
@@ -74,7 +77,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         MatSnackBarModule,
         ScrollingModule,
         MatCheckboxModule,
-        NgxMaterialTimepickerModule.setLocale('it-IT')
+        NgxMaterialTimepickerModule.setLocale('it-IT'),
+        ChartsModule,
+        MatMenuModule
     ],
     declarations: [
         BundleSpecSelectItemComponent,
@@ -87,7 +92,9 @@ export class MyHammerConfig extends HammerGestureConfig {
         AdminInfoModalComponent,
         AdminDeleteModalComponent,
         OptionSelectModalComponent,
-        HomeComponent
+        StatsComponent,
+        HomeComponent,
+        StatsComponent
     ],
     providers: [
         { provide: MAT_CHECKBOX_CLICK_ACTION, useValue: 'check' },
