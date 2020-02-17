@@ -70,10 +70,12 @@ public class ReservationController {
     @DeleteMapping(path = "/{reservationId}")
     public ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
                                                       @RequestParam Long eventId,
+                                                      @RequestParam Long gymId,
                                                       Principal principal) {
 
         Role r = facade.getRoleFromPrincipal(principal);
-        Reservation res = facade.deleteReservation(eventId, reservationId, r.getName());
+        String email = principal.getName();
+        Reservation res = facade.deleteReservation(eventId, reservationId, gymId, email, r.getName());
 
         return ResponseEntity.ok(new ReservationAssembler().toResource(res));
     }

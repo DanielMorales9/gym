@@ -28,4 +28,5 @@ public interface UserRepository extends JpaRepository<AUser, Long> {
             nativeQuery=true)
     List<AUser> findUserByEventId(Long eventId);
 
+    List<AUser> findAllByType(String type);
 }

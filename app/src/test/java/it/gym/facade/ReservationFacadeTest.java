@@ -57,14 +57,14 @@ public class ReservationFacadeTest {
     public void isOnTime() {
         Date start = getNextMonday();
         Gym gym = createGym(1L);
-        facade.isReservedOnTime(start, gym);
+        facade.isOnTime(start, gym);
     }
 
     @Test(expected = BadRequestException.class)
     public void isNotOnTime() {
         Date start = new Date();
         Gym gym = createGym(1L);
-        facade.isReservedOnTime(start, gym);
+        facade.isOnTime(start, gym);
     }
 
     @Test
@@ -368,7 +368,7 @@ public class ReservationFacadeTest {
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, "ADMIN");
+        Reservation actual = facade.deleteReservation(1L, 1L, null, null, "ADMIN");
 
         Reservation expected = createReservation(1L, customer);
         assertThat(actual).isEqualTo(expected);
@@ -401,7 +401,7 @@ public class ReservationFacadeTest {
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, "CUSTOMER");
+        Reservation actual = facade.deleteReservation(1L, 1L, null, null, "CUSTOMER");
 
         Reservation expected = createReservation(1L, customer);
         assertThat(actual).isEqualTo(expected);
@@ -435,7 +435,7 @@ public class ReservationFacadeTest {
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, "ADMIN");
+        Reservation actual = facade.deleteReservation(1L, 1L, null, null, "ADMIN");
 
         Reservation expected = createReservation(1L, customer);
         // reservation to course automatically confirmed
