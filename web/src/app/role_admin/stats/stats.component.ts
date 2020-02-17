@@ -34,7 +34,6 @@ export class StatsComponent implements OnInit {
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartData: ChartDataSets[] = [{data: []}];
-  public showBarChart = false;
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -54,14 +53,13 @@ export class StatsComponent implements OnInit {
   public pieChartType: ChartType = 'pie';
   public pieChartLegend = true;
   public pieChartData: ChartDataSets[] = [{data: []}];
-  public showPieChart = false;
   public pieChartColors = [
     {
       backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)'],
     },
   ];
-  private totalPrice: number;
-  private amountPayed: number;
+  totalPrice: number;
+  amountPayed: number;
   intervalName: string;
 
   constructor(private statsService: StatsService) { }
@@ -83,7 +81,6 @@ export class StatsComponent implements OnInit {
     this.barChart.datasets = this.barChartData;
     this.barChart.labels = this.barChartLabels;
     this.barChart.chart.update();
-    this.showBarChart = true;
   }
 
 
@@ -99,7 +96,6 @@ export class StatsComponent implements OnInit {
     this.pieChart.datasets = this.pieChartData;
     this.pieChart.labels = this.pieChartLabels;
     this.pieChart.chart.update();
-    this.showPieChart = true;
 
     this.totalPrice = d.map(v => v.totalprice).reduce((previousValue, currentValue) => previousValue + currentValue);
     this.amountPayed = d.map(v => v.amountpayed).reduce((previousValue, currentValue) => previousValue + currentValue);
