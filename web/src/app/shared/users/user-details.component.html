@@ -12,6 +12,10 @@
                     <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;&nbsp;
                     <a href="mailto:{{user?.email}}">{{user?.email || 'Loading...'}}</a>
                 </div>
+                <div *ngIf="user?.phoneNumber">
+                    <mat-icon fontSet="fas" fontIcon="fa-phone"></mat-icon>&nbsp;&nbsp;
+                    <a href="tel:{{user?.phoneNumber}}">{{user?.phoneNumber || 'Loading...'}}</a>
+                </div>
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-calendar"></mat-icon>&nbsp;&nbsp;
                     Membro dal &nbsp;<span [innerHTML]="getUserCreatedAt()"></span>

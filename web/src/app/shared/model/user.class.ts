@@ -15,6 +15,7 @@ export class User {
     weight: number;
     roles: Role[];
     currentTrainingBundles: any;
+    phoneNumber: string;
 
     constructor() {
         this.roles = [];

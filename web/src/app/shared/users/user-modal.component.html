@@ -47,6 +47,21 @@
                 </mat-error>
             </mat-form-field>
         </div>
+        <div>
+            <mat-form-field>
+                <label for="phone" class="sr-only">Telefono</label>
+                <input name="phone"
+                       matInput
+                       placeholder="Telefono"
+                       id="phone"
+                       [ngClass]="{ 'is-invalid': phone.touched && phone.invalid }"
+                       type="text"
+                       formControlName="phone"/>
+                <mat-error *ngIf="phone.touched && phone.invalid">
+                    <div *ngIf="!!phone.errors?.pattern">Numero di telefono non valido</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
         <div *ngIf="canShowRole">
             <mat-form-field>
                 <label for="role" ><b>Ruolo</b></label>
