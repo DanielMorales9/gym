@@ -41,6 +41,7 @@ import {NgxMaterialTimepickerComponent, NgxMaterialTimepickerModule} from 'ngx-m
 import { StatsComponent } from './stats';
 import {ChartsModule} from 'ng2-charts';
 import {MatMenuModule} from '@angular/material/menu';
+import {MatTabsModule} from '@angular/material/tabs';
 
 registerLocaleData(localeIt);
 
@@ -79,7 +80,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         MatCheckboxModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
         ChartsModule,
-        MatMenuModule
+        MatMenuModule,
+        MatTabsModule
     ],
     declarations: [
         BundleSpecSelectItemComponent,

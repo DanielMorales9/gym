@@ -1,6 +1,6 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {BaseChartDirective, Label} from 'ng2-charts';
+import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
 
 @Component({
@@ -14,6 +14,9 @@ export class StatsComponent implements OnInit {
 
   @ViewChild('barChart', {static: true, read: BaseChartDirective})
   public barChart: BaseChartDirective;
+
+  @ViewChild('lineChart', {static: true, read: BaseChartDirective})
+  public lineChart: BaseChartDirective;
 
   private BUNDLE_TYPE_NAME = {
     'P': 'Allenamento Personalizzato',
@@ -59,6 +62,20 @@ export class StatsComponent implements OnInit {
       backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)'],
     },
   ];
+
+  public lineChartData: ChartDataSets[] = [{data: []}];
+  public lineChartLabels: Label[] = [];
+  public lineChartOptions: ChartOptions = {
+    responsive: true
+  };
+  public lineChartColors: Color[] = [
+    {
+      backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)'],
+    },
+  ];
+  public lineChartLegend = true;
+  public lineChartType: ChartType = 'line';
+
   totalPrice: number;
   amountPayed: number;
   intervalName: string;
@@ -84,7 +101,6 @@ export class StatsComponent implements OnInit {
     this.barChart.chart.update();
   }
 
-
   private async getSalesByBundleType(interval?) {
 
     const [d, error] = await this.statsService.getSalesByBundleType(interval);
@@ -102,6 +118,24 @@ export class StatsComponent implements OnInit {
     this.amountPayed = d.map(v => v.amountpayed).reduce((previousValue, currentValue) => previousValue + currentValue);
   }
 
+  private async getReservationsByWeek(interval?) {
+
+    const [d, error] = await this.statsService.getReservationsByWeek(interval);
+    if (error) {
+      throw error;
+    }
+    this.lineChartLabels.length = 0;
+    this.lineChartLabels = d.map(v => v.numreservations);
+    this.lineChartData = [];
+    for (const key in this.BUNDLE_TYPE_NAME) {
+      const data = d.filter(v => v.type === key).map(v => v.week);
+      this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key]});
+    }
+    this.lineChart.datasets = this.lineChartData;
+    this.lineChart.labels = this.lineChartLabels;
+    this.lineChart.chart.update();
+  }
+
   async update(interval?: string) {
     if (!interval) {
       interval = '3 months';
@@ -109,5 +143,6 @@ export class StatsComponent implements OnInit {
     this.intervalName = this.INTERVAL_NAME[interval];
     await this.getSalesByMonths(interval);
     await this.getSalesByBundleType(interval);
+    await this.getReservationsByWeek(interval);
   }
 }
