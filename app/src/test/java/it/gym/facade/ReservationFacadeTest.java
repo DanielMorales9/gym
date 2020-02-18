@@ -36,6 +36,7 @@ public class ReservationFacadeTest {
     @Qualifier("trainingSessionService")
     @MockBean private TrainingSessionService sessionService;
     @MockBean private UserService userService;
+    @MockBean @Qualifier("mailService") private MailService mailService;
 
     static {
         System.setProperty("reservationBeforeHours", "2");
@@ -57,14 +58,14 @@ public class ReservationFacadeTest {
     public void isOnTime() {
         Date start = getNextMonday();
         Gym gym = createGym(1L);
-        facade.isReservedOnTime(start, gym);
+        facade.isNotOnTime(start, gym);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test()
     public void isNotOnTime() {
         Date start = new Date();
         Gym gym = createGym(1L);
-        facade.isReservedOnTime(start, gym);
+        assertThat(facade.isNotOnTime(start, gym)).isTrue();
     }
 
     @Test
@@ -364,11 +365,14 @@ public class ReservationFacadeTest {
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
         event.addSession(res.getId(), session);
+        Gym gym = personalEventFixture.getGym();
+        Long gymId = gym.getId();
 
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
+        Mockito.doReturn(gym).when(gymService).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, "ADMIN");
+        Reservation actual = facade.deleteReservation(1L, 1L, gymId, customer.getEmail(), "ADMIN");
 
         Reservation expected = createReservation(1L, customer);
         assertThat(actual).isEqualTo(expected);
@@ -397,11 +401,14 @@ public class ReservationFacadeTest {
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
         event.addSession(res.getId(), session);
+        Gym gym = personalEventFixture.getGym();
+        Long gymId = gym.getId();
 
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
+        Mockito.doReturn(gym).when(gymService).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, "CUSTOMER");
+        Reservation actual = facade.deleteReservation(1L, 1L, gymId, null, "CUSTOMER");
 
         Reservation expected = createReservation(1L, customer);
         assertThat(actual).isEqualTo(expected);
@@ -417,6 +424,7 @@ public class ReservationFacadeTest {
         CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(11, true);
 
         Date start = fixture.getStart();
+        Gym gym = fixture.getGym();
         Date end = fixture.getEnd();
         Customer customer = fixture.getCustomer();
         ATrainingBundle bundle = fixture.getBundle();
@@ -434,8 +442,10 @@ public class ReservationFacadeTest {
 
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
+        Mockito.doReturn(gym).when(gymService).findById(1L);
 
-        Reservation actual = facade.deleteReservation(1L, 1L, "ADMIN");
+        String email = fixture.getCustomer().getEmail();
+        Reservation actual = facade.deleteReservation(1L, 1L, gym.getId(), email, "ADMIN");
 
         Reservation expected = createReservation(1L, customer);
         // reservation to course automatically confirmed

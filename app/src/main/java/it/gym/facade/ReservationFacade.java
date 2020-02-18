@@ -37,6 +37,8 @@ public class ReservationFacade {
     @Autowired private TrainingSessionService sessionService;
     @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
+    @Qualifier("mailService")
+    @Autowired private MailService mailService;
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
         return customer.getCurrentTrainingBundles()
@@ -56,7 +58,11 @@ public class ReservationFacade {
 
         checkBundleIsReservable(customer, bundle);
 
-        if (checkIsReservedOnTime) isReservedOnTime(startTime, gym);
+        if (checkIsReservedOnTime && isNotOnTime(startTime, gym)) {
+            throw new BadRequestException(
+                    String.format("E' necessario prenotare almeno %s ore prima",
+                            gym.getReservationBeforeHours() ));
+        }
 
         List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
@@ -99,13 +105,11 @@ public class ReservationFacade {
         return expiredBundles;
     }
 
-    public void isReservedOnTime(Date startTime, Gym gym) {
+    public boolean isNotOnTime(Date startTime, Gym gym) {
         logger.info("Checking whether the date is before certain amount of hours");
         Date date = DateUtils.addHours(startTime, - gym.getReservationBeforeHours());
         Date now = new Date();
-        if (date.before(now))
-            throw new BadRequestException(
-                    String.format("E' necessario prenotare almeno %s ore prima", gym.getReservationBeforeHours() ));
+        return date.before(now);
     }
 
     public Role getRoleFromPrincipal(Principal principal) {
@@ -201,8 +205,9 @@ public class ReservationFacade {
         return makeReservation(customer, bundle, evt);
     }
 
-    public Reservation deleteReservation(Long eventId, Long reservationId, String roleName) {
+    public Reservation deleteReservation(Long eventId, Long reservationId, Long gymId, String email, String roleName) {
         logger.info("Getting reservation by id");
+        Gym gym = this.gymService.findById(gymId);
         ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
         Reservation res = this.service.findById(reservationId);
 
@@ -211,12 +216,31 @@ public class ReservationFacade {
 
         boolean eitherCompletedOrConfirmed = isReservationConfirmed || isSessionConfirmed;
         boolean isPastEvt = isPast(event.getStartTime());
+        boolean onTime = isNotOnTime(event.getStartTime(), gym);
         boolean youAreCustomer = "CUSTOMER".equals(roleName);
         boolean isAPersonal = "P".equals(event.getType());
 
-        if (youAreCustomer && eitherCompletedOrConfirmed && isPastEvt && isAPersonal)
-            throw new BadRequestException("La prenotazione non può essere annullata. " +
-                    "Rivolgiti in segreteria per annullare");
+        if (youAreCustomer) {
+            if (isPastEvt) {
+                sendDeleteReservationAttemptEmail(email, event);
+                throw new BadRequestException("Non è possibile annulare una prenotazione ad un allenamento passato. " +
+                        "Rivolgiti in segreteria per maggiori informazioni");
+            }
+            else if (isAPersonal) {
+                if (onTime) {
+                    sendDeleteReservationAttemptEmail(email, event);
+                    throw new BadRequestException(
+                            String.format("E' necessario annullare una prenotazione almeno %s ore prima. " +
+                                          "Rivolgiti in segreteria per maggiori informazioni",
+                                    gym.getReservationBeforeHours()));
+                }
+                else if (eitherCompletedOrConfirmed) {
+                    sendDeleteReservationAttemptEmail(email, event);
+                    throw new BadRequestException("Una prenotazione completata o confermata non può essere annullata. " +
+                            "Rivolgiti in segreteria per maggiori informazioni");
+                }
+            }
+        }
 
         logger.info("Getting session by reservation from event");
         ATrainingSession session = event.getSession(res);
@@ -246,6 +270,26 @@ public class ReservationFacade {
         }
 
         return res;
+    }
+
+    private void sendDeleteReservationAttemptEmail(String email, ATrainingEvent event) {
+        AUser customer = userService.findByEmail(email);
+        List<AUser> admins = userService.findAllAdmins();
+
+        String subject = String.format("Tentativo di annullamento prenotatione di %s %s",
+                customer.getFirstName(), customer.getLastName());
+
+        String message = String.format(
+                        "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n" +
+                        "Verifica lo stato dellla prenotazione al seguente" +
+                        " link https://www.goodfellas.fitness/admin/events/%s\n",
+                customer.getFirstName(), customer.getLastName(),
+                event.getName(), event.getStartTime(), event.getEndTime(),
+                event.getId());
+        admins.forEach(a -> {
+            mailService.sendSimpleMail(a.getEmail(), subject,
+                    String.format("Gentile %s %s,\n\n%s",  a.getFirstName(), a.getLastName(), message));
+        });
     }
 
     public Reservation confirm(Long reservationId) {

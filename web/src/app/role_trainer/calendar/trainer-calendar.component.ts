@@ -271,7 +271,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 this.snackBar.open('Prenotazione è stata eliminata');
                 await this.getEvents();
             }, err => {
-                this.snackBar.open(err.error.message);
+                this.snackBar.open(err.error.message, undefined, {duration: 5000});
             });
     }
 

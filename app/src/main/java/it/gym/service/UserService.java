@@ -63,4 +63,8 @@ public class UserService implements ICrudService<AUser, Long> {
     public List<AUser> findUserEvent(Long eventId) {
         return repository.findUserByEventId(eventId);
     }
+
+    public List<AUser> findAllAdmins() {
+        return repository.findAllByType("A");
+    }
 }

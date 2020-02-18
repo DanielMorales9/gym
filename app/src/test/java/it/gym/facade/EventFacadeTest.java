@@ -54,6 +54,10 @@ public class EventFacadeTest {
     private EventService service;
     @MockBean
     private EventRepository repository;
+    @MockBean
+    @Qualifier("mailService")
+    private MailService mailService;
+
 
     @TestConfiguration
     static class EventFacadeTestContextConfiguration {

@@ -38,7 +38,7 @@ public class AuthenticationFacadeTest {
 
     @MockBean private UserService userService;
     @MockBean private GymService gymService;
-    @MockBean private MailService mailService;
+    @MockBean @Qualifier("mailService") private MailService mailService;
     @MockBean private BCryptPasswordEncoder passwordEncoder;
     @MockBean private RoleService roleService;
     @MockBean

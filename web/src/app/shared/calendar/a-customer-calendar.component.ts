@@ -201,7 +201,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 await this.getEvents();
             }, err => {
                 if (err.error) {
-                    this.snackBar.open(err.error.message);
+                    this.snackBar.open(err.error.message, undefined, {duration: 5000});
                 }
             });
     }
