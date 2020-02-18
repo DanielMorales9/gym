@@ -45,6 +45,7 @@ export class UserModalComponent implements OnInit {
         config['firstName'] = [this.user.firstName, [Validators.required]];
         config['lastName'] = [this.user.lastName, [Validators.required]];
         config['email'] = [this.user.email, [Validators.required, Validators.email]];
+        config['phone'] = [this.user.phoneNumber, [Validators.pattern(/\d{10}/)]];
         if (this.canShowHeightAndWeight) {
             config['height'] = [this.user.height, [
                 Validators.max(300),
@@ -81,6 +82,10 @@ export class UserModalComponent implements OnInit {
         return this.form.get('email');
     }
 
+    get phone() {
+        return this.form.get('phone');
+    }
+
     get type() {
         return this.form.get('type');
     }
@@ -91,6 +96,7 @@ export class UserModalComponent implements OnInit {
         this.user.firstName = this.firstName.value;
         this.user.lastName = this.lastName.value;
         this.user.email = this.email.value;
+        this.user.phoneNumber = this.phone.value;
 
         if (this.height && this.weight) {
             this.user.height = this.height.value;

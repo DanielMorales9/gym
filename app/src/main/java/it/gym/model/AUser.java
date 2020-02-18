@@ -60,6 +60,9 @@ public abstract class AUser implements DefaultRoles {
     @Size(min = 2, max = 30)
     protected String lastName;
 
+    @Column(name = "phone_number")
+    protected String phoneNumber;
+
     @Column(name = "createdat", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -130,6 +133,14 @@ public abstract class AUser implements DefaultRoles {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
     }
 
     public List<Role> getRoles() {
