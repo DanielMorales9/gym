@@ -216,6 +216,7 @@ public class ReservationFacade {
 
         boolean eitherCompletedOrConfirmed = isReservationConfirmed || isSessionConfirmed;
         boolean isPastEvt = isPast(event.getStartTime());
+        boolean onTime = isNotOnTime(event.getStartTime(), gym);
         boolean youAreCustomer = "CUSTOMER".equals(roleName);
         boolean isAPersonal = "P".equals(event.getType());
 
@@ -226,12 +227,12 @@ public class ReservationFacade {
                         "Rivolgiti in segreteria per maggiori informazioni");
             }
             else if (isAPersonal) {
-                if (isNotOnTime(event.getStartTime(), gym)) {
+                if (onTime) {
                     sendDeleteReservationAttemptEmail(email, event);
                     throw new BadRequestException(
                             String.format("E' necessario annullare una prenotazione almeno %s ore prima. " +
                                           "Rivolgiti in segreteria per maggiori informazioni",
-                                    gym.getReservationBeforeHours() ));
+                                    gym.getReservationBeforeHours()));
                 }
                 else if (eitherCompletedOrConfirmed) {
                     sendDeleteReservationAttemptEmail(email, event);
@@ -279,15 +280,15 @@ public class ReservationFacade {
                 customer.getFirstName(), customer.getLastName());
 
         String message = String.format(
-                        "Il cliente %s %s ha tentato di annulare la prenotazione dalle %s alle %s.\n" +
+                        "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n" +
                         "Verifica lo stato dellla prenotazione al seguente" +
                         " link https://www.goodfellas.fitness/admin/events/%s\n",
                 customer.getFirstName(), customer.getLastName(),
-                event.getStartTime(), event.getEndTime(),
+                event.getName(), event.getStartTime(), event.getEndTime(),
                 event.getId());
         admins.forEach(a -> {
             mailService.sendSimpleMail(a.getEmail(), subject,
-                    String.format("Gentile %s,\n%s", message, a.getFirstName()));
+                    String.format("Gentile %s %s,\n\n%s",  a.getFirstName(), a.getLastName(), message));
         });
     }
 

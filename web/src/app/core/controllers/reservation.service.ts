@@ -18,9 +18,9 @@ export class ReservationService {
             {params: params});
     }
 
-    delete(eventId: number, reservationId: number) {
+    delete(eventId: any, reservationId: any, gymId) {
         const endpoint = `/reservations/${reservationId}`;
-        return this.http.delete(endpoint, { params: { eventId: eventId.toString() }});
+        return this.http.delete(endpoint, { params: { eventId: eventId, gymId: gymId }});
     }
 
     @to_promise
