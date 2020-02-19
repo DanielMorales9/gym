@@ -1,5 +1,6 @@
 package it.gym.controller;
 
+import it.gym.pojo.ReservationDayOfWeekStatistics;
 import it.gym.pojo.ReservationTimeStatistics;
 import it.gym.pojo.SaleBundleStatistics;
 import it.gym.pojo.SaleTimeStatistics;
@@ -39,5 +40,12 @@ public class StatisticsController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<ReservationTimeStatistics> getReservationsByWeek(@RequestParam String interval) {
         return eventStatsRepository.getReservationsByWeek(interval);
+    }
+
+    @GetMapping("/getReservationsByDayOfWeek")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public List<ReservationDayOfWeekStatistics> getReservationsByDayOfWeek(@RequestParam String interval) {
+        return eventStatsRepository.getReservationsByDayOfWeek(interval);
     }
 }

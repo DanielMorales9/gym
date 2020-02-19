@@ -18,6 +18,9 @@ export class StatsComponent implements OnInit {
   @ViewChild('lineChart', {static: true, read: BaseChartDirective})
   public lineChart: BaseChartDirective;
 
+  @ViewChild('barChartDay', {static: true, read: BaseChartDirective})
+  public barChartDay: BaseChartDirective;
+
   private BUNDLE_TYPE_NAME = {
     'P': 'Allenamento Personalizzato',
     'C': 'Corsi'
@@ -31,6 +34,16 @@ export class StatsComponent implements OnInit {
     '1 year': '1 Anno'
   };
 
+  private DAY_OF_WEEK_NAME = {
+    1: 'Lunedì',
+    2: 'Martedì',
+    3: 'Mercoledì',
+    4: 'Giovedì',
+    5: 'Venerdì',
+    6: 'Sabato',
+    0: 'Domenica',
+  };
+
   public barChartOptions: ChartOptions = {
     responsive: true
   };
@@ -38,6 +51,20 @@ export class StatsComponent implements OnInit {
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartData: ChartDataSets[] = [{data: []}];
+  public barChartDayOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          stacked: true,
+        }
+      ]
+    }
+  };
+  public barChartDayLabels: Label[] = [];
+  public barChartDayType: ChartType = 'bar';
+  public barChartDayLegend = true;
+  public barChartDayData: ChartDataSets[] = [{data: []}];
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -66,7 +93,14 @@ export class StatsComponent implements OnInit {
   public lineChartData: ChartDataSets[] = [{data: []}];
   public lineChartLabels: Label[] = [];
   public lineChartOptions: ChartOptions = {
-    responsive: true
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          stacked: true,
+        }
+      ]
+    }
   };
   public lineChartColors: Color[] = [
     {
@@ -125,15 +159,37 @@ export class StatsComponent implements OnInit {
       throw error;
     }
     this.lineChartLabels.length = 0;
-    this.lineChartLabels = d.map(v => v.numreservations);
+    this.lineChartLabels = d.map(v => v.week)
+        .filter((v, i, a) => a.indexOf(v) === i)
+        .sort();
     this.lineChartData = [];
     for (const key in this.BUNDLE_TYPE_NAME) {
-      const data = d.filter(v => v.type === key).map(v => v.week);
-      this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key]});
+      const data = d.filter(v => v.type === key).map(v => v.numreservations);
+      this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
     }
     this.lineChart.datasets = this.lineChartData;
     this.lineChart.labels = this.lineChartLabels;
     this.lineChart.chart.update();
+  }
+
+  private async getReservationsByDayOfWeek(interval?) {
+    const [d, error] = await this.statsService.getReservationsByDayOfWeek(interval);
+    if (error) {
+      throw error;
+    }
+    this.barChartDayLabels.length = 0;
+    this.barChartDayLabels = d.map(v => v.dayofweek)
+        .filter((v, i, a) => a.indexOf(v) === i)
+        .sort()
+        .map(v => this.DAY_OF_WEEK_NAME[v]);
+    this.barChartDayData = [];
+    for (const key in this.BUNDLE_TYPE_NAME) {
+      const data = d.filter(v => v.type === key).map(v => v.numreservations);
+      this.barChartDayData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
+    }
+    this.barChartDay.datasets = this.barChartDayData;
+    this.barChartDay.labels = this.barChartDayLabels;
+    this.barChartDay.chart.update();
   }
 
   async update(interval?: string) {
@@ -144,5 +200,6 @@ export class StatsComponent implements OnInit {
     await this.getSalesByMonths(interval);
     await this.getSalesByBundleType(interval);
     await this.getReservationsByWeek(interval);
+    await this.getReservationsByDayOfWeek(interval);
   }
 }

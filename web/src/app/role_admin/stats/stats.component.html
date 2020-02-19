@@ -4,7 +4,7 @@
             <mat-card>
                 <mat-card-header>
                     <mat-card-subtitle>
-                        Vendite ogni {{intervalName || 'Loading...'}} mese
+                        Vendite - {{intervalName || 'Loading...'}}
                     </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
@@ -27,13 +27,7 @@
                     </div>
                 </div>
                 <mat-card-actions>
-                    <button mat-button [matMenuTriggerFor]="menu">Intervallo</button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="update('1 month')">1 Mese</button>
-                        <button mat-menu-item (click)="update('3 months')">3 Mesi</button>
-                        <button mat-menu-item (click)="update('6 months')">6 Mesi</button>
-                        <button mat-menu-item (click)="update('1 year')">1 Anno</button>
-                    </mat-menu>
+                    <ng-container *ngTemplateOutlet="interval"></ng-container>
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -43,7 +37,7 @@
             <mat-card>
                 <mat-card-header>
                     <mat-card-subtitle>
-                        Vendite per pacchetto
+                        Vendite per pacchetto - {{intervalName || 'Loading...'}}
                     </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
@@ -67,13 +61,7 @@
                     </div>
                 </div>
                 <mat-card-actions>
-                    <button mat-button [matMenuTriggerFor]="menu">Intervallo</button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="update('1 month')">1 Mese</button>
-                        <button mat-menu-item (click)="update('3 months')">3 Mesi</button>
-                        <button mat-menu-item (click)="update('6 months')">6 Mesi</button>
-                        <button mat-menu-item (click)="update('1 year')">1 Anno</button>
-                    </mat-menu>
+                    <ng-container *ngTemplateOutlet="interval"></ng-container>
                 </mat-card-actions>
             </mat-card>
         </div>
@@ -83,7 +71,7 @@
             <mat-card>
                 <mat-card-header>
                     <mat-card-subtitle>
-                        Prenotazioni Settimanali
+                        Prenotazioni Settimanali - {{intervalName || 'Loading...'}}
                     </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
@@ -100,15 +88,45 @@
                     </div>
                 </mat-card-content>
                 <mat-card-actions>
-                    <button mat-button [matMenuTriggerFor]="menu">Intervallo</button>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="update('1 month')">1 Mese</button>
-                        <button mat-menu-item (click)="update('3 months')">3 Mesi</button>
-                        <button mat-menu-item (click)="update('6 months')">6 Mesi</button>
-                        <button mat-menu-item (click)="update('1 year')">1 Anno</button>
-                    </mat-menu>
+                    <ng-container *ngTemplateOutlet="interval"></ng-container>
                 </mat-card-actions>
             </mat-card>
         </div>
     </mat-tab>
+    <mat-tab label="Prenotazioni per Giorno">
+        <div class="card-container">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-subtitle>
+                        Prenotazioni per giorno della settimana - {{intervalName || 'Loading...'}}
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <div style="display: block">
+                        <canvas baseChart #barChartDay
+                                [datasets]="barChartDayData"
+                                [labels]="barChartDayLabels"
+                                [options]="barChartDayOptions"
+                                [legend]="barChartDayLegend"
+                                [chartType]="barChartDayType">
+                        </canvas>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions>
+                    <ng-container *ngTemplateOutlet="interval"></ng-container>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </mat-tab>
+
 </mat-tab-group>
+
+<ng-template #interval>
+    <button mat-button [matMenuTriggerFor]="menu">Intervallo</button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="update('1 month')">1 Mese</button>
+        <button mat-menu-item (click)="update('3 months')">3 Mesi</button>
+        <button mat-menu-item (click)="update('6 months')">6 Mesi</button>
+        <button mat-menu-item (click)="update('1 year')">1 Anno</button>
+    </mat-menu>
+</ng-template>
