@@ -161,6 +161,7 @@ export class StatsComponent implements OnInit {
     this.lineChartLabels.length = 0;
     this.lineChartLabels = d.map(v => v.week)
         .filter((v, i, a) => a.indexOf(v) === i)
+        .map(v => 'Sett. ' + v)
         .sort();
     this.lineChartData = [];
     for (const key in this.BUNDLE_TYPE_NAME) {
