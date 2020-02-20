@@ -50,7 +50,8 @@ public class ReservationFacade {
     private void simpleReservationChecks(Gym gym, Customer customer, ATrainingBundle bundle, Date startTime,
                                          Date endTime,
                                          boolean checkIsReservedOnTime,
-                                         boolean checkIsPast) {
+                                         boolean checkIsPast,
+                                         boolean checkNumEvents) {
 
         if (checkIsPast) checkPast(startTime);
 
@@ -67,6 +68,22 @@ public class ReservationFacade {
         List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
         hasHolidays(events);
+
+        if (checkNumEvents) {
+            isTimeAvailable(gym, events);
+        }
+
+    }
+
+    private void isTimeAvailable(Gym gym, List<AEvent> events) {
+        long nEventCount = events
+                .stream()
+                .filter(e -> "P".equals(e.getType()) || "C".equals(e.getType()))
+                .count();
+        if (gym.getNumEvents() <= nEventCount) {
+            throw new BadRequestException("Non abbiamo posti disponibili per questo orario," +
+                    " prova con un altro orario");
+        }
     }
 
     private void isEventReservable(ATrainingEvent event) {
@@ -80,7 +97,8 @@ public class ReservationFacade {
             List<ATrainingBundle> expiredBundles = deleteExpiredBundles(customer);
             customer.addToPreviousTrainingBundles(expiredBundles);
             customerService.save(customer);
-            throw new MethodNotAllowedException("Hai completato tutte le sessioni di allenamento disponibili in questo pacchetto");
+            throw new MethodNotAllowedException("Hai completato tutte le sessioni " +
+                    "di allenamento disponibili in questo pacchetto");
         }
     }
 
@@ -91,8 +109,10 @@ public class ReservationFacade {
 
         boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
         boolean checkIsPast = "CUSTOMER".equals(roleName);
-        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(),
-                checkIsReservedOnTime, checkIsPast);
+        boolean checkNumEvents = "CUSTOMER".equals(roleName);
+        simpleReservationChecks(gym, customer, bundle,
+                event.getStartTime(), event.getEndTime(),
+                checkIsReservedOnTime, checkIsPast, checkNumEvents);
     }
 
     private List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
@@ -178,9 +198,12 @@ public class ReservationFacade {
         ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
 
         boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
-        boolean checkIsPast = "CUSTOMER".equals(roleName);
+        boolean checkIsPast = checkIsReservedOnTime;
+        boolean checkNumEvents = checkIsPast;
         simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(),
-                checkIsReservedOnTime, checkIsPast);
+                checkIsReservedOnTime,
+                checkIsPast,
+                checkNumEvents);
 
         logger.info("Creating personal training event");
         ATrainingEvent evt = createPersonalTrainingEvent(bundle, event);
@@ -200,7 +223,10 @@ public class ReservationFacade {
         ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
 
         boolean checkIsPast = "CUSTOMER".equals(roleName);
-        simpleReservationChecks(gym, customer, bundle, evt.getStartTime(), evt.getEndTime(), false, checkIsPast);
+        boolean checkIsReservedOnTime = checkIsPast;
+        boolean checkNumEvents = checkIsPast;
+        simpleReservationChecks(gym, customer, bundle, evt.getStartTime(), evt.getEndTime(),
+                checkIsReservedOnTime, checkIsPast, checkNumEvents);
 
         return makeReservation(customer, bundle, evt);
     }

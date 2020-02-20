@@ -54,5 +54,4 @@ public class GymService implements ICrudService<Gym, Long> {
         if (isOk)
             throw new BadRequestException("La palestra è chiusa in questo orario");
     }
-
 }

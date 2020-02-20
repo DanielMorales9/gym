@@ -24,14 +24,6 @@ export class GymModalComponent implements OnInit {
         this.buildForm();
     }
 
-    // get dayStartHour() {
-    //     return this.form.get('dayStartHour');
-    // }
-    //
-    // get dayEndHour() {
-    //     return this.form.get('dayEndHour');
-    // }
-
     get mondayStartHour() {
         return this.form.get('mondayStartHour');
     }
@@ -124,15 +116,20 @@ export class GymModalComponent implements OnInit {
         return this.form.get('reservationBeforeHours');
     }
 
+    get numEvents() {
+        return this.form.get('numEvents');
+    }
+
     buildForm() {
         const hourValidators = [Validators.required, Validators.min(0), Validators.max(24)];
+        const validatorOrOpts = [Validators.required, Validators.min(0)];
 
         this.form = new FormGroup({
             name: new FormControl(this.gym.name, [Validators.required]),
             mondayOpen: new FormControl(this.gym.mondayOpen, [Validators.required]),
             reservationBeforeHours: new FormControl({
                 value: this.gym.reservationBeforeHours
-            }, hourValidators),
+            }, validatorOrOpts),
             mondayStartHour: new FormControl({
                 disabled: !this.gym.mondayOpen,
                 value: this.gym.mondayStartHour
@@ -195,6 +192,9 @@ export class GymModalComponent implements OnInit {
                 disabled: !this.gym.sundayOpen,
                 value: this.gym.sundayEndHour
             }, hourValidators),
+            numEvents: new FormControl({
+                value: this.gym.numEvents
+            }, validatorOrOpts),
         }, [
             rangeValidator('mondayStartHour', 'mondayEndHour').bind(this),
             rangeValidator('tuesdayStartHour', 'tuesdayEndHour').bind(this),

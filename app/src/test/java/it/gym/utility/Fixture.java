@@ -64,6 +64,7 @@ public class Fixture {
         gym.setSaturdayOpen(true);
         gym.setSundayOpen(false);
         gym.setReservationBeforeHours(6);
+        gym.setNumEvents(2);
         return gym;
     }
 
@@ -220,6 +221,7 @@ public class Fixture {
         option.setNumber(number);
         option.setId(1L);
         option.setPrice(price);
+        option.setCreatedAt(new Date());
         option.setName("myOption");
         specs.addOption(option);
         specs.setMaxCustomers(maxCustomers);

@@ -227,7 +227,12 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
                 this.view = CalendarView.Day;
                 break;
             default:
-                this.view = CalendarView.Month;
+                if (this.isDesktop()) {
+                    this.view = CalendarView.Week;
+                }
+                else {
+                    this.view = CalendarView.Day;
+                }
                 break;
         }
     }
@@ -402,7 +407,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
         if (this.isCustomer() && me) {
             return `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
         } else {
-            return `Allenamento ${startHour} - ${endHour} di ${event['reservation']['user']['lastName']}`;
+            return `${event['reservation']['user']['lastName']} ~ Personal (${startHour} - ${endHour})`;
         }
     }
 

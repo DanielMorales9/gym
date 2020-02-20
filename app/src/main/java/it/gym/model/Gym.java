@@ -27,6 +27,15 @@ public class Gym {
 
     private String name;
 
+    @Column(name="full_name")
+    private String fullName;
+
+    @Column(name="theme_color")
+    private String themeColor;
+
+    @Column(name="background_color")
+    private String backgroundColor;
+
     @Column(name="monday_start_hour")
     private Integer mondayStartHour;
 
@@ -100,6 +109,9 @@ public class Gym {
 
     @Column(name="reservation_before_hours")
     private Integer reservationBeforeHours;
+
+    @Column(name="n_events")
+    private Integer numEvents;
 
     @PrePersist
     protected void prePersist() {
@@ -404,7 +416,39 @@ public class Gym {
         return reservationBeforeHours;
     }
 
+    public Integer getNumEvents() {
+        return numEvents;
+    }
+
+    public void setNumEvents(Integer nEvents) {
+        this.numEvents = nEvents;
+    }
+
     public void setReservationBeforeHours(Integer reservationsBeforeHours) {
         this.reservationBeforeHours = reservationsBeforeHours;
+    }
+
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public String getThemeColor() {
+        return this.themeColor;
+    }
+
+    public void setThemeColor(String themeColor) {
+        this.themeColor = themeColor;
+    }
+
+    public String getBackgroundColor() {
+        return this.backgroundColor;
+    }
+
+    public void setBackgroundColor(String backgroundColor) {
+        this.backgroundColor = backgroundColor;
     }
 }

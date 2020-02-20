@@ -332,9 +332,25 @@
                        [ngClass]="{ 'is-invalid': reservationBeforeHours.touched && reservationBeforeHours.invalid }"
                        formControlName="reservationBeforeHours"/>
                 <mat-error *ngIf="reservationBeforeHours.touched && reservationBeforeHours.invalid">
-                    <div *ngIf="!!reservationBeforeHours.errors?.required">Orario di chiusura obbligatorio</div>
-                    <div *ngIf="!!reservationBeforeHours.errors?.min">Orario di chiusura inferiore a 0</div>
-                    <div *ngIf="!!reservationBeforeHours.errors?.max">Orario di chiusura superiore a 24</div>
+                    <div *ngIf="!!reservationBeforeHours.errors?.required">Valore obbligatorio</div>
+                    <div *ngIf="!!reservationBeforeHours.errors?.min">Valore inferiore a 0</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+
+            <mat-form-field>
+                <label for="numEvents" class="sr-only">Numero di eventi contemporanei</label>
+                <input name="numEvents"
+                       matInput
+                       placeholder="Numero di eventi contemporanei"
+                       id="numEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': numEvents.touched && numEvents.invalid }"
+                       formControlName="numEvents"/>
+                <mat-error *ngIf="numEvents.touched && numEvents.invalid">
+                    <div *ngIf="!!numEvents.errors?.required">Numero di eventi obbligatorio</div>
+                    <div *ngIf="!!numEvents.errors?.min">Numero di eventi inferiore a 0</div>
                 </mat-error>
             </mat-form-field>
         </div>

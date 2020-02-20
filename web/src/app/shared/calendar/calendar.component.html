@@ -55,29 +55,33 @@
                     (eventClicked)="handleEvent('info',$event)"
                     (eventTimesChanged)="handleEvent('change',$event)">
             </mwl-calendar-month-view>
-            <button type="button" mat-fab color="primary" class="fab-button-add"
-                    title="Aggiungi Evento" (click)="handleEvent('hour', {})">
-                <mat-icon>add</mat-icon>
-            </button>
+            <ng-container *ngTemplateOutlet="button">
+
+            </ng-container>
         </ng-container>
 
-        <mwl-calendar-week-view
-                *ngSwitchCase="WEEK"
-                [viewDate]="viewDate"
-                [dayStartHour]="dayStartHour"
-                [dayEndHour]="dayEndHour"
-                [events]="events"
-                [excludeDays]="excludeDays"
-                [weekStartsOn]="weekStartsOn"
-                locale="it"
-                [hourSegments]="1"
-                [refresh]="refresh"
-                [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
-                (dayHeaderClicked)="header('header', $event)"
-                (hourSegmentClicked)="handleEvent('hour',$event)"
-                (eventClicked)="handleEvent('info',$event)"
-                (eventTimesChanged)="handleEvent('change',$event)">
-        </mwl-calendar-week-view>
+        <ng-container>
+            <mwl-calendar-week-view
+                    *ngSwitchCase="WEEK"
+                    [viewDate]="viewDate"
+                    [dayStartHour]="dayStartHour"
+                    [dayEndHour]="dayEndHour"
+                    [events]="events"
+                    [excludeDays]="excludeDays"
+                    [weekStartsOn]="weekStartsOn"
+                    locale="it"
+                    [hourSegments]="1"
+                    [refresh]="refresh"
+                    [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
+                    (dayHeaderClicked)="header('header', $event)"
+                    (hourSegmentClicked)="handleEvent('hour',$event)"
+                    (eventClicked)="handleEvent('info',$event)"
+                    (eventTimesChanged)="handleEvent('change',$event)">
+            </mwl-calendar-week-view>
+            <ng-container *ngTemplateOutlet="button">
+
+            </ng-container>
+        </ng-container>
         <mwl-calendar-day-view
                 *ngSwitchCase="DAY"
                 [viewDate]="viewDate"
@@ -118,3 +122,10 @@
     </button>
 
 </div>
+
+<ng-template #button>
+    <button type="button" mat-fab color="primary" class="fab-button-add"
+            title="Aggiungi Evento" (click)="handleEvent('hour', {})">
+        <mat-icon>add</mat-icon>
+    </button>
+</ng-template>

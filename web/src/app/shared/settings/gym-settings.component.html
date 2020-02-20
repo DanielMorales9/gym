@@ -63,7 +63,10 @@
             </table>
             <div style="margin-top: 1rem;">
                 <h6>Prenotazioni</h6>
-                <span>I clienti possono prenotare fino a {{gym?.reservationBeforeHours|| '...'}} ore prima</span>
+                <ul>
+                    <li>I clienti possono prenotare fino a {{gym?.reservationBeforeHours|| '...'}} ore prima</li>
+                    <li>Sono ammessi {{gym?.numEvents|| '...'}} eventi contemporantei</li>
+                </ul>
             </div>
         </mat-card-content>
         <mat-card-actions>

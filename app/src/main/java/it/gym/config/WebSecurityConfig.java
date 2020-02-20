@@ -74,6 +74,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         "/user",
                         "/logout",
                         "/authentication/**",
+                        "/gyms/**",
                         "/login",
                         "/actuator/*").permitAll()
                 .anyRequest().authenticated()

@@ -1,6 +1,7 @@
 package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.repository.*;
 import org.junit.Test;
@@ -22,6 +23,7 @@ import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.testcontainers.shaded.org.apache.commons.lang.time.DateUtils.addDays;
 
 public class ReservationControllerIntegrationTest extends AbstractIntegrationTest {
 
@@ -39,7 +41,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Test
     @Transactional
     public void whenCreateReservationFromBundleReturnsOK() throws Exception {
-        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(false, false);
+        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(14, false, false);
         Long gymId = fixture.getGym().getId();
         Customer customer = fixture.getCustomer();
         ATrainingBundle bundle = fixture.getBundle();
@@ -74,7 +76,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Test
     @Transactional
     public void whenCreateReservationFromEventReturnsOK() throws Exception {
-        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(false, true);
+        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(7, false, true);
         Long gymId = fixture.getGym().getId();
         Customer customer = fixture.getCustomer();
         CourseTrainingEvent event = fixture.getCourseEvent();
@@ -100,7 +102,8 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Test
     @Transactional
     public void whenIsAvailableReturnsOK() throws Exception {
-        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(false, false);
+        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(28,
+                false, false);
         Long gymId = fixture.getGym().getId();
         Customer customer = fixture.getCustomer();
         ATrainingBundle bundle = fixture.getBundle();
@@ -129,7 +132,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Test
     @Transactional
     public void whenConfirmCourseEventReservationReturnsOK() throws Exception {
-        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(true, true);
+        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(0, true, true);
         Reservation reservation = fixture.getReservation();
 
         ResultActions result = mockMvc.perform(get("/reservations/"+reservation.getId()+"/confirm"))
@@ -149,7 +152,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Test
     @Transactional
     public void whenConfirmPersonalEventReservationReturnsOK() throws Exception {
-        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(true, true);
+        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(0, true, true);
         Reservation reservation = fixture.getReservation();
 
         ResultActions result = mockMvc.perform(get("/reservations/"+ reservation.getId() +"/confirm"))
@@ -169,7 +172,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Test
     @Transactional
     public void whenDeleteReservationOnCourseEventReturnsOK() throws Exception {
-        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(true, true);
+        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(0, true, true);
         Reservation reservation = fixture.getReservation();
         Gym gym = fixture.getGym();
         CourseTrainingEvent event = fixture.getCourseEvent();
@@ -206,7 +209,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     @Transactional
     public void whenDeleteReservationOnPersonalEventThenOK() throws Exception {
 
-        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(true, true);
+        PersonalTrainingEventFixture fixture = new PersonalTrainingEventFixture().invoke(0, true, true);
         Customer customer = fixture.getCustomer();
         Reservation reservation = fixture.getReservation();
         PersonalTrainingEvent event = fixture.getPersonalEvent();
@@ -261,7 +264,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             return session;
         }
 
-        public CourseTrainingEventFixture invoke(boolean hasReservation, boolean hasEvent) {
+        public CourseTrainingEventFixture invoke(int days, boolean hasReservation, boolean hasEvent) {
             gym = createGym(1L);
             gym = gymRepository.save(gym);
 
@@ -283,7 +286,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             bundle = bundleRepository.save(bundle);
 
             if (hasEvent) {
-                Date start = getNextMonday();
+                Date start = addDays(getNextMonday(), days);
                 Date end = addHours(start, 1);
                 event = new CourseTrainingEvent();
                 event.setId(1L);
@@ -372,7 +375,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             return end;
         }
 
-        public PersonalTrainingEventFixture invoke(boolean hasReservation, boolean hasEvent) {
+        public PersonalTrainingEventFixture invoke(int days, boolean hasReservation, boolean hasEvent) {
 
             gym = createGym(1L);
             gym = gymRepository.save(gym);
@@ -392,7 +395,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             spec = specRepository.save(spec);
             bundle = createPersonalBundle(1L, spec);
 
-            start = getNextMonday();
+            start = addDays(getNextMonday(), days);
             end = addHours(start, 1);
 
 

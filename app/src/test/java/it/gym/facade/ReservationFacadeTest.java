@@ -83,7 +83,7 @@ public class ReservationFacadeTest {
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
-        facade.isAvailable(1L, 1L, 1L, event, "CUSTOMER");
+        facade.isAvailable(1L, 1L, 1L, event, "ADMIN");
     }
 
     @Test
@@ -117,7 +117,7 @@ public class ReservationFacadeTest {
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(bundleService).save(any(ATrainingBundle.class));
 
-        Reservation actual = facade.createReservation(1L, 1L, 1L, event, "CUSTOMER");
+        Reservation actual = facade.createReservation(1L, 1L, 1L, event, "ADMIN");
 
         Mockito.verify(gymService).findById(1L);
         Mockito.verify(customerService).findById(1L);
@@ -221,7 +221,7 @@ public class ReservationFacadeTest {
                 customer.getId(),
                 event.getId(),
                 course.getId(),
-                "CUSTOMER");
+                "ADMIN");
 
         Mockito.verify(gymService).findById(1L);
         Mockito.verify(customerService).findById(1L);
@@ -263,7 +263,7 @@ public class ReservationFacadeTest {
                 customer.getId(),
                 event.getId(),
                 course.getId(),
-                "CUSTOMER");
+                "ADMIN");
 
         Mockito.verify(gymService).findById(1L);
         Mockito.verify(customerService).findById(1L);

@@ -116,12 +116,12 @@ export class CustomerCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(data => {
+        dialogRef.afterClosed().subscribe(async data => {
             if (data) {
                 if (data.type === 'delete') {
                     this.deleteReservation(data);
                 } else {
-                    this.createReservation(data);
+                    await this.createReservation(data);
                 }
             }
         });
@@ -141,7 +141,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         const bundleId = data[0].id;
         [data, error] = await this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId);
         if (error) {
-            this.snackBar.open(error.error.message);
+            this.snackBar.open(error.error.message, undefined,  {duration: 5000});
             return;
         }
         this.snackBar.open('Prenotazione effettuata');
