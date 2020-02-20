@@ -1,7 +1,12 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
-import {BaseChartDirective, Label} from 'ng2-charts';
+import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
+
+function insertAt(array, index, ...elementsArray) {
+  array.splice(index, 0, ...elementsArray);
+}
+
 
 @Component({
   templateUrl: './stats.component.html',
@@ -14,6 +19,12 @@ export class StatsComponent implements OnInit {
 
   @ViewChild('barChart', {static: true, read: BaseChartDirective})
   public barChart: BaseChartDirective;
+
+  @ViewChild('lineChart', {static: true, read: BaseChartDirective})
+  public lineChart: BaseChartDirective;
+
+  @ViewChild('barChartDay', {static: true, read: BaseChartDirective})
+  public barChartDay: BaseChartDirective;
 
   private BUNDLE_TYPE_NAME = {
     'P': 'Allenamento Personalizzato',
@@ -28,6 +39,16 @@ export class StatsComponent implements OnInit {
     '1 year': '1 Anno'
   };
 
+  private DAY_OF_WEEK_NAME = {
+    1: 'Lunedì',
+    2: 'Martedì',
+    3: 'Mercoledì',
+    4: 'Giovedì',
+    5: 'Venerdì',
+    6: 'Sabato',
+    0: 'Domenica',
+  };
+
   public barChartOptions: ChartOptions = {
     responsive: true
   };
@@ -35,6 +56,20 @@ export class StatsComponent implements OnInit {
   public barChartType: ChartType = 'bar';
   public barChartLegend = true;
   public barChartData: ChartDataSets[] = [{data: []}];
+  public barChartDayOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          stacked: true,
+        }
+      ]
+    }
+  };
+  public barChartDayLabels: Label[] = [];
+  public barChartDayType: ChartType = 'bar';
+  public barChartDayLegend = true;
+  public barChartDayData: ChartDataSets[] = [{data: []}];
 
   public pieChartOptions: ChartOptions = {
     responsive: true,
@@ -59,11 +94,33 @@ export class StatsComponent implements OnInit {
       backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)'],
     },
   ];
+
+  public lineChartData: ChartDataSets[] = [{data: []}];
+  public lineChartLabels: Label[] = [];
+  public lineChartOptions: ChartOptions = {
+    responsive: true,
+    scales: {
+      yAxes: [
+        {
+          stacked: true,
+        }
+      ]
+    }
+  };
+  public lineChartColors: Color[] = [
+    {
+      backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)'],
+    },
+  ];
+  public lineChartLegend = true;
+  public lineChartType: ChartType = 'line';
+
   totalPrice: number;
   amountPayed: number;
   intervalName: string;
 
   constructor(private statsService: StatsService) { }
+
 
   async ngOnInit(): Promise<void> {
     await this.update();
@@ -84,7 +141,6 @@ export class StatsComponent implements OnInit {
     this.barChart.chart.update();
   }
 
-
   private async getSalesByBundleType(interval?) {
 
     const [d, error] = await this.statsService.getSalesByBundleType(interval);
@@ -102,6 +158,66 @@ export class StatsComponent implements OnInit {
     this.amountPayed = d.map(v => v.amountpayed).reduce((previousValue, currentValue) => previousValue + currentValue);
   }
 
+  private async getReservationsByWeek(interval?) {
+
+    const [d, error] = await this.statsService.getReservationsByWeek(interval);
+    if (error) {
+      throw error;
+    }
+    this.lineChartLabels.length = 0;
+    // tslint:disable-next-line:radix
+    // this.lineChartLabels
+    const labels  = d.map(v => parseInt(v.week, undefined))
+        .filter((v, i, a) => a.indexOf(v) === i);
+    labels.sort((a, b) => a.week - b.week);
+    this.lineChartLabels = labels.map(v => 'Sett. ' + v);
+    this.lineChartData = [];
+
+    for (const key in this.BUNDLE_TYPE_NAME) {
+
+      let data = d.filter(v => v.type === key);
+      data.forEach(v => v.week = parseInt(v.week, undefined));
+      const labels_dict = {};
+
+      data = data.map(v => labels_dict[v.week] = v.numreservations);
+
+      for (let i = 0; i < labels.length; i++) {
+        if (!labels_dict[labels[i]]) {
+          labels_dict[labels[i]] = 0;
+        }
+      }
+
+      data = labels.map(v => labels_dict[v]);
+      this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
+    }
+
+    this.lineChart.datasets = this.lineChartData;
+    this.lineChart.labels = this.lineChartLabels;
+    this.lineChart.chart.update();
+  }
+
+  private async getReservationsByDayOfWeek(interval?) {
+    const [d, error] = await this.statsService.getReservationsByDayOfWeek(interval);
+    if (error) {
+      throw error;
+    }
+    this.barChartDayLabels.length = 0;
+    let labels = d.map(v => v.dayofweek)
+        .filter((v, i, a) => a.indexOf(v) === i);
+    labels.sort();
+    labels = labels.map(v => this.DAY_OF_WEEK_NAME[v]);
+    this.barChartDayLabels = labels;
+
+    this.barChartDayData = [];
+    for (const key in this.BUNDLE_TYPE_NAME) {
+      const data = d.filter(v => v.type === key).map(v => v.numreservations);
+      this.barChartDayData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
+    }
+    this.barChartDay.datasets = this.barChartDayData;
+    this.barChartDay.labels = this.barChartDayLabels;
+    this.barChartDay.chart.update();
+  }
+
   async update(interval?: string) {
     if (!interval) {
       interval = '3 months';
@@ -109,5 +225,7 @@ export class StatsComponent implements OnInit {
     this.intervalName = this.INTERVAL_NAME[interval];
     await this.getSalesByMonths(interval);
     await this.getSalesByBundleType(interval);
+    await this.getReservationsByWeek(interval);
+    await this.getReservationsByDayOfWeek(interval);
   }
 }

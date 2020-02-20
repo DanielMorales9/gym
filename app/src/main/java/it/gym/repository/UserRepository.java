@@ -14,7 +14,7 @@ public interface UserRepository extends JpaRepository<AUser, Long> {
 
     AUser findByEmail(String email);
 
-    Page<AUser> findByLastName(String query, Pageable pageable);
+    Page<AUser> findByLastNameContaining(String query, Pageable pageable);
 
     @Query(value =
             "select u.* " +

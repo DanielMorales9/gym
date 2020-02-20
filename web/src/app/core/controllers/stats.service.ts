@@ -18,4 +18,14 @@ export class StatsService {
     public getSalesByBundleType(interval): any {
         return this.http.get('/stats/getSaleByBundleType', {params: {interval: interval}});
     }
+
+    @to_promise
+    public getReservationsByWeek(interval: any): any {
+        return this.http.get('/stats/getReservationsByWeek', {params: {interval: interval}});
+    }
+
+    @to_promise
+    public getReservationsByDayOfWeek(interval: any): any {
+        return this.http.get('/stats/getReservationsByDayOfWeek', {params: {interval: interval}});
+    }
 }

@@ -53,7 +53,7 @@ public class UserService implements ICrudService<AUser, Long> {
     }
 
     public Page<AUser> findByLastName(String query, Pageable pageable) {
-        return repository.findByLastName(query, pageable);
+        return repository.findByLastNameContaining(query, pageable);
     }
 
     public Page<AUser> findAll(Pageable pageable) {
