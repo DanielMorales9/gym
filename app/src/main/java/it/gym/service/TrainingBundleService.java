@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,7 +44,7 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return this.repository.findATrainingBundleByBundleSpec(spec);
     }
 
-    public Page<ATrainingBundle> findBundlesBySpecId(Long id, Pageable pageable) {
+    public Page<ATrainingBundle> findBundlesBySpecId(Long id,  Pageable pageable) {
         return this.repository.findATrainingBundleByBundleSpec_Id(id, pageable);
     }
 
@@ -51,12 +52,15 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         this.repository.deleteAll(bundles);
     }
 
-    public List<ATrainingBundle> findBundlesBySpecIdNotExpired(Long specId) {
-        return repository.findATrainingBundleByBundleSpec_Id(specId).stream()
-                .filter(bundle -> !bundle.isExpired()).collect(Collectors.toList());
-    }
-
     public void saveAll(List<ATrainingBundle> bundles) {
         repository.saveAll(bundles);
+    }
+
+    public Page<ATrainingBundle> findBundlesByExpiredAtGreaterThan(Date time, Pageable pageable) {
+        return repository.findBundlesByExpiredAtGreaterThan(time, pageable);
+    }
+
+    public Page<ATrainingBundle> findBundlesByCreatedAtGreaterThan(Date time, Pageable pageable) {
+        return repository.findBundlesByCreatedAtGreaterThan(time, pageable);
     }
 }

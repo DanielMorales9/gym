@@ -87,15 +87,6 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenSearchNotExpiredOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundles/searchNotExpired?specId="+courseBundle
-                .getBundleSpec().getId()))
-                .andExpect(status().isOk());
-
-        expectTrainingBundle(result, courseBundle, "["+0+"]");
-    }
-
-    @Test
     public void whenDeleteOK() throws Exception {
         ResultActions result = mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
                 .andExpect(status().isOk());
