@@ -3,17 +3,17 @@ import {Bundle} from '../model';
 import {BundleService} from '../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
-import {BundleCustomerHelperService, QueryableDatasource} from '../../core/helpers';
+import {BundleCustomerHelperService, BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
 import {first} from 'rxjs/operators';
 
 @Component({
-    templateUrl: './bundles-customer.component.html',
+    templateUrl: './bundles.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class BundlesCustomerComponent implements OnInit {
+export class BundlesComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
@@ -34,7 +34,7 @@ export class BundlesCustomerComponent implements OnInit {
     selected = undefined;
 
     constructor(private service: BundleService,
-                private helper: BundleCustomerHelperService,
+                private helper: BundleHelperService,
                 private route: ActivatedRoute,
                 private router: Router,
                 private dialog: MatDialog,
@@ -46,9 +46,6 @@ export class BundlesCustomerComponent implements OnInit {
 
     async ngOnInit(): Promise<void> {
         this.getPolicies();
-        const param = await this.route.params.pipe(first()).toPromise();
-        this.id = +param['id'];
-
         this.initQueryParams(this.id);
     }
 
@@ -56,12 +53,9 @@ export class BundlesCustomerComponent implements OnInit {
         this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
-                if (!!this.queryParams.date) {
-                    this.queryParams.date = new Date(this.queryParams.date);
+                if (!!this.queryParams.time) {
+                    this.queryParams.time = new Date(this.queryParams.time);
                 }
-            }
-            if (!!id) {
-                this.queryParams.id = id;
             }
             this.search(this.queryParams);
         });

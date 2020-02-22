@@ -17,4 +17,6 @@ public interface TrainingBundleRepository extends JpaRepository<ATrainingBundle,
     Page<ATrainingBundle> findATrainingBundleByBundleSpec_Id(Long id, Pageable pageable);
     Page<ATrainingBundle> findBundlesByExpiredAtGreaterThan(Date time, Pageable pageable);
     Page<ATrainingBundle> findBundlesByCreatedAtGreaterThan(Date time, Pageable pageable);
+    Page<ATrainingBundle> findBundlesByExpiredAtNotNull(Pageable pageable);
+    Page<ATrainingBundle> findBundlesByExpiredAtNull(Pageable pageable);
 }

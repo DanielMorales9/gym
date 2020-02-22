@@ -63,4 +63,12 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
     public Page<ATrainingBundle> findBundlesByCreatedAtGreaterThan(Date time, Pageable pageable) {
         return repository.findBundlesByCreatedAtGreaterThan(time, pageable);
     }
+
+    public Page<ATrainingBundle> findBundlesByNotExpired(Pageable pageable) {
+        return repository.findBundlesByExpiredAtNull(pageable);
+    }
+
+    public Page<ATrainingBundle> findBundlesByExpired(Pageable pageable) {
+        return repository.findBundlesByExpiredAtNotNull(pageable);
+    }
 }

@@ -5,7 +5,7 @@ import {AdminCalendarComponent} from './calendar';
 import {SaleDetailsComponent, SalesComponent} from '../shared/sales';
 import {UserControlsComponent, UserDetailsComponent, UsersComponent} from '../shared/users';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
-import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
+import {BundleDetailsComponent, BundlesComponent, BundlesCustomerComponent} from '../shared/bundles';
 import {HomeComponent} from './home';
 import {AuthGuardService} from '../core/guards';
 import {ProfileComponent} from '../shared/profile';
@@ -28,6 +28,10 @@ const routes = [
             {
                 path: 'bundles/:id', component: BundleDetailsComponent,
                 data: {title: 'Dettaglio Pacchetto', back: true }
+            },
+            {
+                path: 'bundles', component: BundlesComponent,
+                data: {title: 'Pacchetti' }
             },
             {
                 path: 'customer/:id/bundles', component: BundlesCustomerComponent,

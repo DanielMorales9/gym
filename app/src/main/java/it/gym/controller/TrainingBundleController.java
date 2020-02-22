@@ -51,12 +51,12 @@ public class TrainingBundleController {
     @ResponseBody
     public Page<ATrainingBundle> search(@RequestParam(required = false) Long specId,
                                         @RequestParam(required = false) Boolean expired,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                iso = DateTimeFormat.ISO.DATE_TIME) Date time,
+                                        @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy",
+                                                iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                         Pageable pageable) {
         Page<ATrainingBundle> bundles;
 
-         bundles = service.search(specId, expired, time, pageable);
+         bundles = service.search(specId, expired, date, pageable);
 
          return bundles;
     }

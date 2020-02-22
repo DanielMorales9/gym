@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule} from '@angular/router';
 import {TrainerCalendarComponent} from './calendar';
 import {UserControlsComponent, UserDetailsComponent, UsersComponent} from '../shared/users';
-import {BundleDetailsComponent, BundlesCustomerComponent} from '../shared/bundles';
+import {BundleDetailsComponent, BundlesComponent, BundlesCustomerComponent} from '../shared/bundles';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
 import {HomeComponent} from './home';
 import {AuthGuardService} from '../core/guards';
@@ -10,7 +10,6 @@ import {GymSettingsComponent} from '../shared/settings';
 import {ProfileComponent} from '../shared/profile';
 import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
-import {SalesComponent} from '../shared/sales';
 
 const routes = [
     { path: '', children : [
@@ -21,6 +20,10 @@ const routes = [
             {
                 path: 'users', component: UsersComponent,
                 data: {title: 'Utenti'}
+            },
+            {
+                path: 'bundles', component: BundlesComponent,
+                data: {title: 'Pacchetti' }
             },
             {
                 path: 'users/:id', component: UserDetailsComponent,

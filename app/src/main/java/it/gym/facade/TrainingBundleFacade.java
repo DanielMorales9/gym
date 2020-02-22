@@ -47,6 +47,14 @@ public class TrainingBundleFacade {
         else if (time != null) {
             bundles = service.findBundlesByCreatedAtGreaterThan(time, pageable);
         }
+        else if (expired != null) {
+            if (expired) {
+                bundles = service.findBundlesByExpired(pageable);
+            }
+            else {
+                bundles = service.findBundlesByNotExpired(pageable);
+            }
+        }
         else {
             bundles = service.findAll(pageable);
         }
