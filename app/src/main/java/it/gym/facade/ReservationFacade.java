@@ -95,11 +95,44 @@ public class ReservationFacade {
     private void checkBundleIsReservable(Customer customer, ATrainingBundle bundle) {
         if (bundle.isExpired()) {
             List<ATrainingBundle> expiredBundles = deleteExpiredBundles(customer);
+            expiredBundles.forEach(trainingBundle -> trainingBundle.setExpiredAt(new Date()));
             customer.addToPreviousTrainingBundles(expiredBundles);
             customerService.save(customer);
+            sendExpiredBundleEmail(customer, bundle);
             throw new MethodNotAllowedException("Hai completato tutte le sessioni " +
                     "di allenamento disponibili in questo pacchetto");
         }
+    }
+
+    private void sendExpiredBundleEmail(Customer customer, ATrainingBundle bundle) {
+        List<AUser> admins = userService.findAllAdmins();
+
+        String subject = String.format("Notifica Terminazione Pacchetto di allenamento  %s",
+                bundle.getName());
+
+        String adminMessage = String.format(
+                "Il cliente %s %s ha terminato il pacchetto %s.\n" +
+                "Verifica lo stato del pacchetto al seguente" +
+                " link https://www.goodfellas.fitness/admin/bundle/%s\n",
+                customer.getFirstName(), customer.getLastName(),
+                bundle.getName(), bundle.getId());
+
+        String customerMessage = String.format(
+                "Gentile %s %s,\n" +
+                "Hai terminato il pacchetto %s.\n" +
+                "Verifica lo stato del pacchetto al seguente" +
+                " link https://www.goodfellas.fitness/customer/bundle/%s.\n" +
+                "Rivolgiti in segreteria per rinnovare il tuo pacchetto o sceglierne un altro.",
+                customer.getFirstName(), customer.getLastName(),
+                bundle.getName(), bundle.getId());
+
+        mailService.sendSimpleMail(customer.getEmail(), subject, customerMessage);
+
+        admins.forEach(a -> {
+            mailService.sendSimpleMail(a.getEmail(), subject,
+                    String.format("Gentile %s %s,\n\n%s",
+                            a.getFirstName(), a.getLastName(), adminMessage));
+        });
     }
 
     public void isAvailable(Long gymId, Long customerId, Long bundleId, Event event, String roleName) {
