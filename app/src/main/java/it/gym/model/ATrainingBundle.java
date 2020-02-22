@@ -43,6 +43,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Column(name = "expired_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date expiredAt;
+
     @ManyToOne
     @JoinColumn(name = "bundle_spec_bundle_spec_id")
     private ATrainingBundleSpecification bundleSpec;
@@ -102,6 +106,15 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
+
+    public Date getExpiredAt() {
+        return expiredAt;
+    }
+
+    public void setExpiredAt(Date expiredAt) {
+        this.expiredAt = expiredAt;
+    }
+
 
     @PrePersist
     protected void prePersist() {

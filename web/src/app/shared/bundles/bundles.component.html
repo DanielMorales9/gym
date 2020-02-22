@@ -1,0 +1,17 @@
+<search-date [query]="query"
+              [filters]="filters"
+              [filterName]="filterName"
+              [selected]="selected"
+              datePlaceholder="Cerca per data"
+              (done)="search($event)"></search-date>
+
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
+
+    <div *cdkVirtualFor="let b of ds;" class="scroll-item">
+        <bundle-item [canEdit]="canEdit"
+                     [canDelete]="canDelete"
+                     [bundle]="b"
+                     (done)="handleEvent($event)"></bundle-item>
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>

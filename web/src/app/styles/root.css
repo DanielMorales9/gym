@@ -11,6 +11,10 @@ mat-card {
     color: green;
 }
 
+.blue-light {
+    color: blue;
+}
+
 .space-between {
     display: flex;
     flex-direction: row;

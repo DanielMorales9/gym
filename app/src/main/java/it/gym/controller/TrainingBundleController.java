@@ -9,13 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.List;
+import java.util.Date;
 
 @RepositoryRestController
 @RequestMapping("/bundles")
@@ -48,16 +49,16 @@ public class TrainingBundleController {
 
     @GetMapping("/search")
     @ResponseBody
-    public Page<ATrainingBundle> findBySpecs(@RequestParam Long specId, Pageable pageable) {
-        return service.findBundlesBySpecId(specId, pageable);
-    }
+    public Page<ATrainingBundle> search(@RequestParam(required = false) Long specId,
+                                        @RequestParam(required = false) Boolean expired,
+                                        @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy",
+                                                iso = DateTimeFormat.ISO.DATE_TIME) Date date,
+                                        Pageable pageable) {
+        Page<ATrainingBundle> bundles;
 
-    // TODO this and the above could be merged into a single call
-    @GetMapping("/searchNotExpired")
-    @ResponseBody
-    public ResponseEntity<List<TrainingBundleResource>> findBySpecsNotExpired(@RequestParam Long specId) {
-        List<ATrainingBundle> bundles = service.findBundlesBySpecIdNotExpired(specId);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResources(bundles));
+         bundles = service.search(specId, expired, date, pageable);
+
+         return bundles;
     }
 
     @PatchMapping(path = "/{id}")
@@ -65,6 +66,12 @@ public class TrainingBundleController {
                                                         HttpServletRequest request) throws IOException {
         ATrainingBundle bundle = service.findById(id);
         bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
+        if (bundle.isExpired()) {
+            bundle.setExpiredAt(new Date());
+        }
+        else {
+            bundle.setExpiredAt(null);
+        }
         bundle = service.save(bundle);
         return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
     }

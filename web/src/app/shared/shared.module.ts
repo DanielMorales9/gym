@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {
     ACustomerCalendarComponent,
     BundleItemComponent,
-    BundleModalComponent,
+    BundleModalComponent, BundlesComponent,
     BundlesCustomerComponent,
     BundleSpecDetailsComponent,
     BundleSpecItemComponent,
@@ -165,6 +165,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         UserControlsComponent,
         EventDetailsComponent,
         ReservationModalComponent,
+        BundlesComponent,
     ],
     exports: [
         CalendarControlsComponent,
@@ -186,7 +187,6 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         CalendarButtonToolbar,
         SimpleSearchToolbar,
         SearchMixedToolbar,
-        SearchDateToolbar,
         FilterSearchToolbar,
         SaleItemComponent,
         PaySaleModalComponent,
@@ -205,7 +205,10 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         BundleSpecsComponent,
         ProfileComponent,
         EventDetailsComponent,
-        ACustomerCalendarComponent
+        ACustomerCalendarComponent,
+        BundlesComponent,
+        SearchDateToolbar,
+
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}

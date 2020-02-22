@@ -8,7 +8,6 @@ import {PolicyService} from '../../core/policy';
 import {BundleType} from '../model';
 
 @Component({
-    selector: 'bundle-spec-details',
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
 })
@@ -47,6 +46,38 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
         if (error) { throw error; }
         this.bundle = data;
 
+    }
+
+    isExpired() {
+        if (!!this.bundle) {
+            return this.bundle.expiredAt;
+        }
+        return false;
+    }
+
+    isNotActive() {
+        if (!!this.bundle) {
+            if (this.bundle.type === 'C') {
+                return !this.bundle.startTime;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    isValid() {
+        if (!!this.bundle) {
+            if (!this.isExpired()) {
+                if (this.bundle.type === 'C') {
+                    return !!this.bundle.startTime;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     getBundleType() {

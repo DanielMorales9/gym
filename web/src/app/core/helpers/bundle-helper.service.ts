@@ -16,6 +16,11 @@ export class BundleHelperService extends HelperService<Bundle> {
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
+        if (!!query.date) {
+            query = Object.assign({}, query);
+            const date = new Date(query.date);
+            query.date = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
+        }
         return this.service.search(query, page, size);
     }
 

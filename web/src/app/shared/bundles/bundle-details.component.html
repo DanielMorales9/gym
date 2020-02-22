@@ -7,18 +7,24 @@
         <mat-card-content>
             <div class="summary-info">
                 <div>
-                    <span class="green-light" [hidden]="bundle?.expired">
-                        <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Valido
-                    </span>
+                <span class="blue-light" *ngIf="isNotActive()">
+                    <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Non Attivo
+                </span>
 
-                    <span class="red-light" [hidden]="!bundle?.expired">
-                        <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Scaduto
-                    </span>
+                        <span class="green-light" *ngIf="isValid()">
+                    <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Attivo
+                </span>
+                        <span class="red-light" *ngIf="isExpired()">
+                    <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Scaduto
+                </span>
                 </div>
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
                 </div>
-
+                <div *ngIf="!!bundle?.expiredAt">
+                    <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>
+                    Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
+                </div>
                 <ng-container [ngSwitch]="bundle?.type">
 
                     <ng-container *ngSwitchCase="PERSONAL">
@@ -27,15 +33,19 @@
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="COURSE">
-                        <div>
-                            <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
-                        </div>
-                        <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
-                        </div>
-                        <div>
-                            <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.bundleSpec.maxCustomers}}
-                        </div>
+                        <ng-container *ngIf="!!bundle?.startTime">
+                            <div>
+                                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
+                                Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
+                            </div>
+                            <div>
+                                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
+                                Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
+                            </div>
+                            <div>
+                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.bundleSpec.maxCustomers}}
+                            </div>
+                        </ng-container>
                     </ng-container>
                 </ng-container>
             </div>
@@ -83,7 +93,7 @@
             </button>
             <button *ngIf="canEdit" mat-button (click)="edit()">
                 <span>
-                    <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                    <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Attiva
                 </span>
             </button>
             <button *ngIf="canDelete" mat-button color="warn" (click)="delete()">
