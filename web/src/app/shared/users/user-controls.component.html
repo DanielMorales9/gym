@@ -14,8 +14,15 @@
         <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;Ordini
     </span>
 </a>
-<a mat-list-item *ngIf="canMakeAppointments" color="basic" (click)="makeAppointments()">
+<a mat-list-item *ngIf="canMakeAppointments" (click)="makeAppointments()">
     <span>
         <mat-icon fontSet="far" fontIcon="fa-calendar-alt"></mat-icon>&nbsp;Appuntamenti
     </span>
+</a>
+<a mat-list-item
+   *ngIf="canShowStats"
+   (click)="showStats()">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-chart-line"></mat-icon>&nbsp;&nbsp;Risultati
+        </span>
 </a>

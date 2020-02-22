@@ -15,8 +15,9 @@ export class UserControlsComponent implements OnInit {
     canShowBundles: boolean;
     canShowSales: boolean;
     canMakeAppointments: boolean;
-    isCustomer: boolean;
+    canShowStats: boolean;
 
+    isCustomer: boolean;
     private root: string;
 
     constructor(protected router: Router,
@@ -42,6 +43,7 @@ export class UserControlsComponent implements OnInit {
                 this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
                 this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
                 this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
+                this.canShowStats = this.policy.get(entity, 'canShow', 'stats');
                 this.isCustomer = entity === 'customer';
             }
         }
@@ -61,5 +63,9 @@ export class UserControlsComponent implements OnInit {
 
     showSales() {
         return this.router.navigate([this.root, 'customer', this.user.id, 'sales']);
+    }
+
+    showStats() {
+        return this.router.navigate([this.root, 'customer', this.user.id, 'stats']);
     }
 }

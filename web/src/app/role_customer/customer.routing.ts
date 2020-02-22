@@ -10,6 +10,7 @@ import {ProfileComponent} from '../shared/profile';
 import {GymSettingsComponent} from '../shared/settings';
 import {CalendarControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
+import {CustomerStatsComponent} from '../shared/stats';
 
 const routes = [
     { path: '', children : [
@@ -40,6 +41,10 @@ const routes = [
             {
                 path: 'events/:id', component: EventDetailsComponent,
                 data: {title: 'Dettaglio Evento', back: true }
+            },
+            {
+                path: 'stats', component: CustomerStatsComponent,
+                data: {title: 'Risultati'}
             },
             {
                 path: 'home', component: HomeComponent,

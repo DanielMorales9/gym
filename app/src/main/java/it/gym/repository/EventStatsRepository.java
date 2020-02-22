@@ -24,6 +24,17 @@ public interface EventStatsRepository extends JpaRepository<AEvent, String> {
     List<ReservationTimeStatistics> getReservationsByWeek(String timeInterval);
 
     @Query(value =
+            "select date_part('week', e.start_time) as week, e.type as type, " +
+                    "count(e.type) as numreservations " +
+            "from events as e, reservations as r " +
+            "where (e.reservation_res_id = r.res_id or e.event_id = r.event_id) " +
+                " and e.start_time > date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval)" +
+                " and r.user_user_id = :id " +
+                "group by week, e.type " +
+                "order by week;", nativeQuery = true)
+    List<ReservationTimeStatistics> getCustomerReservationsByWeek(Long id, String timeInterval);
+
+    @Query(value =
             "select extract(dow from e.start_time) as dayofweek, e.type as type, count(e.type) as numreservations " +
             "from events as e left join reservations r on e.event_id = r.event_id " +
             "where e.start_time > date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +

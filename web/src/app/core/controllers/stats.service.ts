@@ -28,4 +28,10 @@ export class StatsService {
     public getReservationsByDayOfWeek(interval: any): any {
         return this.http.get('/stats/getReservationsByDayOfWeek', {params: {interval: interval}});
     }
+
+    @to_promise
+    public getCustomerReservationsByWeek(id: any, interval: any): any {
+        return this.http.get('/stats/getCustomerReservationsByWeek',
+            {params: {interval: interval, id: id}});
+    }
 }

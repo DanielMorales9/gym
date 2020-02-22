@@ -13,6 +13,7 @@ import {GymSettingsComponent} from '../shared/settings';
 import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
 import {StatsComponent} from './stats';
+import {CustomerStatsComponent} from '../shared/stats';
 
 const routes = [
 
@@ -38,6 +39,10 @@ const routes = [
                 data: {title: 'Pacchetti Cliente', back: true }
             },
             {
+                path: 'customer/:id/stats', component: CustomerStatsComponent,
+                data: {title: 'Risultati', back: true }
+            },
+            {
                 path: 'users', component: UsersComponent,
                 data: {title: 'Utenti' }
             },
@@ -59,7 +64,11 @@ const routes = [
             },
             {
                 path: 'customer/:id/sales', component: SalesComponent,
-                data: {title: 'Ordini Cliente', back: true}
+                data: {title: 'Ordini Cliente', back: true, }
+            },
+            {
+                path: 'customer/:id/stats', component: CustomerStatsComponent,
+                data: {title: 'Risultati Cliente', back: true, secondary: UserControlsComponent }
             },
             {
                 path: 'calendar', component: AdminCalendarComponent,
