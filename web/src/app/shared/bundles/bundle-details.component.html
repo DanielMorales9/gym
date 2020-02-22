@@ -21,6 +21,10 @@
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
                 </div>
+                <div *ngIf="!!bundle?.expiredAt">
+                    <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>
+                    Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
+                </div>
                 <ng-container [ngSwitch]="bundle?.type">
 
                     <ng-container *ngSwitchCase="PERSONAL">
@@ -44,10 +48,6 @@
                         </ng-container>
                     </ng-container>
                 </ng-container>
-                <div *ngIf="!!bundle?.expiredAt">
-                    <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>
-                    Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
-                </div>
             </div>
             <mat-expansion-panel class='expansion-list'
                                  [class.mat-expansion-panel]="false"
