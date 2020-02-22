@@ -68,6 +68,9 @@ import {MatBadgeModule} from '@angular/material/badge';
 import {MatTableModule} from '@angular/material/table';
 import {GymModalComponent, GymSettingsComponent} from './settings';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
+import {CustomerStatsComponent} from './stats';
+import {MatTabsModule} from '@angular/material/tabs';
+import {ChartsModule} from 'ng2-charts';
 
 @NgModule({
     imports: [
@@ -98,7 +101,9 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         MatTreeModule,
         MatBadgeModule,
         MatTableModule,
-        NgxMaterialTimepickerModule.setLocale('it-IT')
+        NgxMaterialTimepickerModule.setLocale('it-IT'),
+        MatTabsModule,
+        ChartsModule
 
     ],
     entryComponents: [
@@ -166,6 +171,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         EventDetailsComponent,
         ReservationModalComponent,
         BundlesComponent,
+        CustomerStatsComponent
     ],
     exports: [
         CalendarControlsComponent,
@@ -208,7 +214,7 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
         ACustomerCalendarComponent,
         BundlesComponent,
         SearchDateToolbar,
-
+        CustomerStatsComponent
     ],
     providers: [
         {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}

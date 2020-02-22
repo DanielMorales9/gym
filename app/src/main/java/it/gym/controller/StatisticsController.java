@@ -14,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/stats")
+@PreAuthorize("isAuthenticated()")
 public class StatisticsController {
 
     @Autowired
@@ -40,6 +41,13 @@ public class StatisticsController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public List<ReservationTimeStatistics> getReservationsByWeek(@RequestParam String interval) {
         return eventStatsRepository.getReservationsByWeek(interval);
+    }
+
+    @GetMapping("/getCustomerReservationsByWeek")
+    @ResponseBody
+    public List<ReservationTimeStatistics> getCustomerReservationsByWeek(@RequestParam Long id,
+                                                                         @RequestParam String interval) {
+        return eventStatsRepository.getCustomerReservationsByWeek(id, interval);
     }
 
     @GetMapping("/getReservationsByDayOfWeek")

@@ -48,7 +48,8 @@ export class PolicyService {
             canMakeAppointments: true,
             canShow: {
                 bundles: true,
-                sales: true
+                sales: true,
+                stats: true
             }
         },
         trainer: {
@@ -130,7 +131,8 @@ export class PolicyService {
             canMakeAppointments: true,
             canShow: {
                 bundles: true,
-                sales: false
+                sales: false,
+                stats: true
             }
         },
         trainer: {
@@ -207,7 +209,8 @@ export class PolicyService {
             canMakeAppointments: false,
             canShow: {
                 bundles: true,
-                sales: false
+                sales: false,
+                stats: true
             }
         },
         trainer: {

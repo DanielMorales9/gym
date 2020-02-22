@@ -4,7 +4,6 @@ import {BundleService} from '../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleCustomerHelperService, QueryableDatasource} from '../../core/helpers';
-import {Subscription} from 'rxjs';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
 import {first} from 'rxjs/operators';
