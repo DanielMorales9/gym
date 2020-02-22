@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {Bundle, BundleType} from '../model';
+import {BundleType} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
 
 @Component({
@@ -63,5 +63,37 @@ export class BundleItemComponent {
             }
         });
 
+    }
+
+    isExpired() {
+        if (!!this.bundle) {
+            return this.bundle.expiredAt;
+        }
+        return false;
+    }
+
+    isNotActive() {
+        if (!!this.bundle) {
+            if (this.bundle.type === 'C') {
+                return !this.bundle.startTime;
+            }
+            else {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    isValid() {
+        if (!!this.bundle) {
+            if (!this.isExpired()) {
+                if (this.bundle.type === 'C') {
+                    return !!this.bundle.startTime;
+                } else {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }

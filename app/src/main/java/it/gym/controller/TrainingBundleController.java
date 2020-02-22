@@ -66,6 +66,12 @@ public class TrainingBundleController {
                                                         HttpServletRequest request) throws IOException {
         ATrainingBundle bundle = service.findById(id);
         bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
+        if (bundle.isExpired()) {
+            bundle.setExpiredAt(new Date());
+        }
+        else {
+            bundle.setExpiredAt(null);
+        }
         bundle = service.save(bundle);
         return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
     }
