@@ -68,7 +68,7 @@ export class EventDetailsComponent implements OnInit {
     }
 
     private async computeMaps(id: number) {
-        const [data, error] = await this.facade.getUsersByEventId(id);
+        let [data, error] = await this.facade.getUsersByEventId(id);
         if (error) {
             return;
         }
@@ -79,6 +79,11 @@ export class EventDetailsComponent implements OnInit {
         this.users = data;
         let bundle;
         for (let i = 0; i < this.users.length; i++) {
+            [data, error] = await this.facade.getCurrentTrainingBundles(this.users[i].id);
+            if (error) {
+                throw error;
+            }
+            this.users[i].currentTrainingBundles = data;
             bundle = this.users[i].currentTrainingBundles
                 .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
             this.userBundle[this.users[i].id] = bundle;
@@ -240,6 +245,11 @@ export class EventDetailsComponent implements OnInit {
 
     async book() {
         const user = this.auth.getUser();
+        const [data, error] = await this.facade.getCurrentTrainingBundles(user.id);
+        if (error) {
+            throw error;
+        }
+        user.currentTrainingBundles = data;
         const bundle = user.currentTrainingBundles
             .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
         if (bundle) {

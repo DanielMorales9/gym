@@ -54,6 +54,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingBundle")
     private List<ATrainingSession> sessions;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private Customer customer;
+
     public abstract String getType();
     public abstract Boolean isDeletable();
 
@@ -115,6 +119,13 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         this.expiredAt = expiredAt;
     }
 
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
 
     @PrePersist
     protected void prePersist() {
@@ -139,4 +150,5 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     public int hashCode() {
         return Objects.hash(id, name);
     }
+
 }

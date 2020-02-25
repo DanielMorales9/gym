@@ -78,11 +78,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         sliRepository.deleteAll();
         payRepository.deleteAll();
         repository.deleteAll();
+        bundleRepository.deleteAll();
+        bundleSpecRepository.deleteAll();
         userRepository.deleteAll();
         roleRepository.deleteAll();
         gymRepository.deleteAll();
-        bundleRepository.deleteAll();
-        bundleSpecRepository.deleteAll();
     }
 
     @Test
@@ -203,7 +203,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expectSale(result, expected);
         result = result.andExpect(jsonPath("$.salesLineItems").value(sli));
         expectUser(result, customer, "customer");
-        result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(sliRepository.findAll()).isEmpty();
         logger.info(bundleRepository.findAll().toString());
         assertThat(bundleRepository.findAll().size()).isEqualTo(0);
@@ -269,7 +268,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         Customer c = customer;
         expectUser(result, c, "customer");
-        result.andExpect(jsonPath("$.customer.currentTrainingBundles").isEmpty());
         assertThat(repository.findAll()).isEmpty();
         assertThat(sliRepository.findAll()).isEmpty();
         assertThat(bundleRepository.findAll().size()).isEqualTo(0);

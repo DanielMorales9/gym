@@ -36,11 +36,7 @@ const routes = [
             },
             {
                 path: 'customer/:id/bundles', component: BundlesCustomerComponent,
-                data: {title: 'Pacchetti Cliente', back: true }
-            },
-            {
-                path: 'customer/:id/stats', component: CustomerStatsComponent,
-                data: {title: 'Risultati', back: true }
+                data: {title: 'Pacchetti Cliente', back: true, secondary: UserControlsComponent }
             },
             {
                 path: 'users', component: UsersComponent,
@@ -64,7 +60,7 @@ const routes = [
             },
             {
                 path: 'customer/:id/sales', component: SalesComponent,
-                data: {title: 'Ordini Cliente', back: true, }
+                data: {title: 'Ordini Cliente', back: true, secondary: UserControlsComponent }
             },
             {
                 path: 'customer/:id/stats', component: CustomerStatsComponent,

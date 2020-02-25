@@ -3,8 +3,10 @@ package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
+import it.gym.repository.CustomerRepository;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
+import it.gym.utility.Fixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
 
+    @Autowired private CustomerRepository customerRepository;
     @Autowired private TrainingBundleRepository repository;
     @Autowired private TrainingBundleSpecificationRepository specRepository;
     private PersonalTrainingBundle personalBundle;
@@ -31,6 +34,16 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     @Before
     public void before() {
 
+        Customer customer = createCustomer(1L,
+                "user@user.com",
+                "",
+                "customer",
+                "customer",
+                true,
+                null);
+
+        customer = customerRepository.save(customer);
+
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
         CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
 
@@ -40,7 +53,9 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         TimeOption option = courseBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
 
         courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
+        courseBundle.setCustomer(customer);
         personalBundle = createPersonalBundle(1L, personalBundleSpec);
+        personalBundle.setCustomer(customer);
 
         personalBundle = repository.save(personalBundle);
         courseBundle = repository.save(courseBundle);
@@ -50,6 +65,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     public void after() {
         repository.deleteAll();
         specRepository.deleteAll();
+        customerRepository.deleteAll();
     }
 
     @Test
@@ -100,6 +116,8 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
         courseBundle.setName("Test");
         courseBundle.setBundleSpec(null);
+        courseBundle.setCustomer(null);
+
         ResultActions result = mockMvc.perform(patch("/bundles/"+courseBundle.getId())
                 .contentType(MediaType.APPLICATION_JSON_VALUE)
                 .content(objectMapper.writeValueAsString(courseBundle)))

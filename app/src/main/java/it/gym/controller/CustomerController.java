@@ -59,11 +59,15 @@ public class CustomerController {
     @GetMapping(path = "/{id}/currentTrainingBundles")
     @ResponseBody
     public List<ATrainingBundle> findBundles(@PathVariable Long id,
-                                             @RequestParam Long specId) {
-        return service.findById(id).getCurrentTrainingBundles()
+                                             @RequestParam(required = false) Long specId) {
+        List<ATrainingBundle> bundles = service.findById(id).getCurrentTrainingBundles();
+        if (specId != null) {
+            bundles = bundles
                 .stream()
                 .filter(b -> b.getBundleSpec().getId().equals(specId))
                 .collect(Collectors.toList());
+        }
+        return bundles;
     }
 
 }

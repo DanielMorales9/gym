@@ -31,6 +31,10 @@
             <div>
                 <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
             </div>
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-user-tag"></mat-icon>&nbsp;
+                {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
+            </div>
             <ng-container [ngSwitch]="bundle?.type">
                 <ng-container *ngSwitchCase="PERSONAL">
                     <div>
@@ -65,7 +69,7 @@
         </button>
         <button mat-button *ngIf="canEdit && bundle?.type ==='C'" (click)="edit()">
             <span>
-                <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Attiva
+                <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;{{isNotActive()? 'Attiva' : 'Modifica'}}
             </span>
         </button>
         <button *ngIf="bundle?.deletable && canDelete" mat-button color="warn" (click)="delete()">
