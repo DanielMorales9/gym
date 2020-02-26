@@ -49,6 +49,8 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
         PersonalTrainingBundle ptb = new PersonalTrainingBundle();
         ptb.setName(this.getName());
         ptb.setBundleSpec(this);
+        ptb.setUnlimitedDeletions(this.getUnlimitedDeletions());
+        ptb.setNumDeletions(this.getNumDeletions());
         return ptb;
     }
 

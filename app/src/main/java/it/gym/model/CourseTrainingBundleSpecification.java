@@ -44,6 +44,8 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
         CourseTrainingBundle ctb = new CourseTrainingBundle();
         ctb.setName(this.getName());
         ctb.setBundleSpec(this);
+        ctb.setUnlimitedDeletions(this.getUnlimitedDeletions());
+        ctb.setNumDeletions(this.getNumDeletions());
         return ctb;
     }
 

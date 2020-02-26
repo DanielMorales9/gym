@@ -270,12 +270,21 @@ public class ReservationFacade {
         ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
         Reservation res = this.service.findById(reservationId);
 
-        boolean isSessionConfirmed = event.getSession(res).getCompleted();
-        boolean isReservationConfirmed = res.getConfirmed();
+        logger.info("Getting session by reservation from event");
+        ATrainingSession session = event.getSession(res);
+        logger.info("Getting bundle from session");
+        ATrainingBundle bundle = session.getTrainingBundle();
 
-        boolean eitherCompletedOrConfirmed = isReservationConfirmed || isSessionConfirmed;
+        boolean canCancel;
+        if (!bundle.getUnlimitedDeletions()) {
+            canCancel = bundle.getNumDeletions() > 0;
+        }
+        else {
+            canCancel = true;
+        }
+
         boolean isPastEvt = isPast(event.getStartTime());
-        boolean onTime = isNotOnTime(event.getStartTime(), gym);
+        boolean notOnTime = isNotOnTime(event.getStartTime(), gym);
         boolean youAreCustomer = "CUSTOMER".equals(roleName);
         boolean isAPersonal = "P".equals(event.getType());
 
@@ -286,26 +295,24 @@ public class ReservationFacade {
                         "Rivolgiti in segreteria per maggiori informazioni");
             }
             else if (isAPersonal) {
-                if (onTime) {
+                if (notOnTime) {
                     sendDeleteReservationAttemptEmail(email, event);
                     throw new BadRequestException(
                             String.format("E' necessario annullare una prenotazione almeno %s ore prima. " +
                                           "Rivolgiti in segreteria per maggiori informazioni",
                                     gym.getReservationBeforeHours()));
                 }
-                else if (eitherCompletedOrConfirmed) {
+                else if (!canCancel) {
                     sendDeleteReservationAttemptEmail(email, event);
-                    throw new BadRequestException("Una prenotazione completata o confermata non può essere annullata. " +
+                    throw new BadRequestException("Hai terminato il numero massimo di cancellazioni. " +
                             "Rivolgiti in segreteria per maggiori informazioni");
+
+                }
+                else {
+                    bundle.setNumDeletions(bundle.getNumDeletions()-1);
                 }
             }
         }
-
-        logger.info("Getting session by reservation from event");
-        ATrainingSession session = event.getSession(res);
-
-        logger.info("Getting bundle from session");
-        ATrainingBundle bundle = session.getTrainingBundle();
 
         logger.info("Deleting session from bundle");
         session.deleteMeFromBundle();

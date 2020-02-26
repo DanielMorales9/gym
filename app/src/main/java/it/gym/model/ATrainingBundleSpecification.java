@@ -47,9 +47,23 @@ public abstract class ATrainingBundleSpecification {
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
+    @Column(name = "unlimited_deletions")
+    private Boolean unlimitedDeletions;
+
+    @Column(name = "n_deletions")
+    private Integer numDeletions;
+
     public abstract String getType();
 
     public abstract ATrainingBundle createTrainingBundle();
+
+    public Integer getNumDeletions() {
+        return numDeletions;
+    }
+
+    public void setNumDeletions(Integer numDeletions) {
+        this.numDeletions = numDeletions;
+    }
 
     public Long getId() {
         return id;
@@ -91,6 +105,15 @@ public abstract class ATrainingBundleSpecification {
         this.createdAt = createdAt;
     }
 
+
+    public Boolean getUnlimitedDeletions() {
+        return unlimitedDeletions;
+    }
+
+    public void setUnlimitedDeletions(Boolean unlimitedDeletions) {
+        this.unlimitedDeletions = unlimitedDeletions;
+    }
+
     @PrePersist
     protected void prePersist() {
         this.createdAt = new Date();
@@ -103,4 +126,5 @@ public abstract class ATrainingBundleSpecification {
                 ", Descrizione: " +
                 this.description;
     }
+
 }

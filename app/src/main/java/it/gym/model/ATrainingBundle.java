@@ -58,6 +58,12 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
     @JoinColumn(name = "user_id")
     private Customer customer;
 
+    @Column(name = "unlimited_deletions")
+    private Boolean unlimitedDeletions;
+
+    @Column(name = "n_deletions")
+    private Integer numDeletions;
+
     public abstract String getType();
     public abstract Boolean isDeletable();
 
@@ -68,8 +74,16 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     public abstract ATrainingSession createSession(ATrainingEvent event);
     public abstract boolean assignOption(Long optionId);
-
     public abstract void addSession(ATrainingSession session);
+
+
+    public Integer getNumDeletions() {
+        return numDeletions;
+    }
+
+    public void setNumDeletions(Integer numDeletions) {
+        this.numDeletions = numDeletions;
+    }
 
     public Long getId() {
         return id;
@@ -125,6 +139,14 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public Boolean getUnlimitedDeletions() {
+        return unlimitedDeletions;
+    }
+
+    public void setUnlimitedDeletions(Boolean unlimitedDeletions) {
+        this.unlimitedDeletions = unlimitedDeletions;
     }
 
     @PrePersist
