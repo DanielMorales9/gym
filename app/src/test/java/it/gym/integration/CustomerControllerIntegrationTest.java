@@ -75,11 +75,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get("/customers")).andExpect(status().isOk());
         expectUser(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
-        List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
-        for (int i = 0; i < bundles.size(); i++) {
-            expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
-                    "content[0].currentTrainingBundles["+i+"]");
-        }
     }
 
     @Test
@@ -88,12 +83,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectUser(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
-        List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
-        for (int i = 0; i < bundles.size(); i++) {
-            expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
-                    "content[0].currentTrainingBundles["+i+"]");
-        }
-
     }
 
     @Test
@@ -102,12 +91,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         expectUser(result, customer, "content[0]");
         expectCustomerRoles(result, roles, "content[0].roles");
-        List<ATrainingBundle> bundles = customer.getCurrentTrainingBundles();
-        for (int i = 0; i < bundles.size(); i++) {
-            expectTrainingBundle(result, (PersonalTrainingBundle) bundles.get(i),
-                    "content[0].currentTrainingBundles["+i+"]");
-        }
-
     }
 
     @Test

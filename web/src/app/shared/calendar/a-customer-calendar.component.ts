@@ -63,6 +63,13 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
+        const [d, error] = await this.facade.getCurrentTrainingBundles(this.user.id);
+        if (error) {
+            throw error;
+        }
+        console.log(d);
+        this.user.currentTrainingBundles = d;
+
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} ha pacchetti a disposizione`);
         }

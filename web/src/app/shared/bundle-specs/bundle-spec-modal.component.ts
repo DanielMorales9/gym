@@ -14,6 +14,7 @@ export class BundleSpecModalComponent implements OnInit {
     form: FormGroup;
     showPersonal: boolean;
     showCourse: boolean;
+    showNumDeletions: boolean;
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<BundleSpecModalComponent>,
@@ -34,6 +35,8 @@ export class BundleSpecModalComponent implements OnInit {
             this.showCourse = true;
             this.showPersonal = false;
         }
+
+        this.showNumDeletions = !this.bundleSpec.unlimitedDeletions;
 
         this.buildForm(hasBundle);
     }
@@ -66,6 +69,20 @@ export class BundleSpecModalComponent implements OnInit {
             }, [
                 Validators.required,
                 Validators.pattern(/^\d+$/)
+            ]),
+            unlimitedDeletions: new FormControl({
+                value: this.bundleSpec.unlimitedDeletions,
+                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL
+            }, [
+                Validators.required
+            ]),
+            numDeletions: new FormControl({
+                value: this.bundleSpec.numDeletions,
+                disabled: !this.bundleSpec.unlimitedDeletions
+            }, [
+                Validators.required,
+                Validators.pattern(/^\d+$/),
+                Validators.min(0)
             ])
         });
 
@@ -88,10 +105,30 @@ export class BundleSpecModalComponent implements OnInit {
             }
             this.form.updateValueAndValidity();
         });
+
+        this.unlimitedDeletions.valueChanges.subscribe(val => {
+            if (val === false) {
+                this.showNumDeletions = true;
+                this.numDeletions.enable();
+            }
+            else {
+                this.showNumDeletions = false;
+                this.numDeletions.disable();
+            }
+            this.form.updateValueAndValidity();
+        });
     }
 
     get name() {
         return this.form.get('name');
+    }
+
+    get unlimitedDeletions() {
+        return this.form.get('unlimitedDeletions');
+    }
+
+    get numDeletions() {
+        return this.form.get('numDeletions');
     }
 
     get price() {
@@ -125,10 +162,16 @@ export class BundleSpecModalComponent implements OnInit {
             bundle = new PersonalBundleSpecification();
             bundle.numSessions = this.numSessions.value;
             bundle.price = this.price.value;
+            bundle.unlimitedDeletions = this.unlimitedDeletions.value;
         }
         else {
             bundle = new CourseBundleSpecification();
             bundle.maxCustomers = this.maxCustomers.value;
+            bundle.unlimitedDeletions = true;
+        }
+
+        if (!bundle.unlimitedDeletions) {
+            bundle.numDeletions = this.numDeletions.value;
         }
 
         bundle.id = this.bundleSpec.id;

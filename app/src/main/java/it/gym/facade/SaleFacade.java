@@ -106,6 +106,7 @@ public class SaleFacade {
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
         ATrainingBundle bundle = bundleSpec.createTrainingBundle();
         boolean ret = bundle.assignOption(optionId);
+        bundle.setCustomer(sale.getCustomer());
         if (!ret) {
             throw new BadRequestException("L'opzione indicata non è disponibile");
         }

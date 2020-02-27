@@ -142,6 +142,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
             public final Double price = 1.0;
             public final String type = "P";
             public final Integer numSessions = 11;
+            public final Boolean unlimitedDeletions = true;
+            public final Integer numDeletions = 0;
         };
 
         PersonalTrainingBundleSpecification expected = new PersonalTrainingBundleSpecification();
@@ -150,6 +152,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         expected.setDescription("pacchetto");
         expected.setDisabled(false);
         expected.setPrice(1.0);
+        expected.setUnlimitedDeletions(true);
+        expected.setNumDeletions(0);
 
         ObjectMapper objectMapper = new ObjectMapper();
         String json = objectMapper.writeValueAsString(randomObj);
@@ -280,6 +284,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
             public final Double price = 1.0;
             public final String type = "C";
             public final Integer maxCustomers = 11;
+            public final Boolean unlimitedDeletions = true;
+            public final Integer numDeletions = 0;
         };
 
         CourseTrainingBundleSpecification expected = new CourseTrainingBundleSpecification();
@@ -287,6 +293,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         expected.setDescription("pacchetto");
         expected.setDisabled(false);
         expected.setMaxCustomers(11);
+        expected.setUnlimitedDeletions(true);
+        expected.setNumDeletions(0);
         TimeOption o = new TimeOption();
         o.setPrice(1.0);
         o.setNumber(1);

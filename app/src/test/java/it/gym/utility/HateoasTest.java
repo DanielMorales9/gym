@@ -115,7 +115,10 @@ public class HateoasTest {
                                                 String p) throws Exception {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
-        result.andExpect(jsonPath("$"+prefix+"numSessions").value(bundle.getNumSessions()));
+        result
+                .andExpect(jsonPath("$"+prefix+"numSessions").value(bundle.getNumSessions()))
+                .andExpect(jsonPath("$"+prefix+"unlimitedDeletions").value(bundle.getUnlimitedDeletions()))
+                .andExpect(jsonPath("$"+prefix+"numDeletions").value(bundle.getNumDeletions()));
     }
 
     public static void expectTrainingBundleSpec(ResultActions result,
@@ -128,8 +131,7 @@ public class HateoasTest {
                                                 String p) throws Exception {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
-        result
-                .andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()));
+        result.andExpect(jsonPath("$"+prefix+"maxCustomers").value(bundle.getMaxCustomers()));
     }
 
     public static void expectSale(ResultActions result, Sale sale) throws Exception {
@@ -204,8 +206,11 @@ public class HateoasTest {
     private static void expectATrainingBundle(ResultActions result,
                                               ATrainingBundle trainingBundle,
                                               String prefix) throws Exception {
-        result.andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
-                .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()));
+        result
+                .andExpect(jsonPath("$"+prefix+"id").value(trainingBundle.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(trainingBundle.getName()))
+                .andExpect(jsonPath("$"+prefix+"unlimitedDeletions").value(trainingBundle.getUnlimitedDeletions()))
+                .andExpect(jsonPath("$"+prefix+"numDeletions").value(trainingBundle.getNumDeletions()));
     }
 
     public static void expectTrainingBundle(ResultActions result,

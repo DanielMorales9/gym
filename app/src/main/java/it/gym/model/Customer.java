@@ -29,16 +29,15 @@ public class Customer extends AUser {
     @JoinTable(name="current_users_bundles",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
             inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
-    @JsonProperty(value = "currentTrainingBundles")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private List<ATrainingBundle> currentTrainingBundles;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name="previous_users_bundles",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
             inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
-    @JsonProperty(value = "previousTrainingBundles")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
@@ -90,7 +89,8 @@ public class Customer extends AUser {
     }
 
     public void deleteBundle(ATrainingBundle bundle) {
-        this.currentTrainingBundles.remove(bundle);
+        if (this.currentTrainingBundles != null) this.currentTrainingBundles.remove(bundle);
+        if (this.previousTrainingBundles != null) this.previousTrainingBundles.remove(bundle);
     }
 
     public void addToPreviousTrainingBundles(List<ATrainingBundle> bundles) {

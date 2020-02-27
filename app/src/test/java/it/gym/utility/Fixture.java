@@ -85,6 +85,8 @@ public class Fixture {
         specs.setNumSessions(numSessions);
         specs.setPrice(111.0);
         specs.setDisabled(false);
+        specs.setNumDeletions(0);
+        specs.setUnlimitedDeletions(true);
         return specs;
     }
 
@@ -103,6 +105,8 @@ public class Fixture {
         pt.setName("Winter Pack");
         pt.setBundleSpec(spec);
         pt.setId(id);
+        pt.setNumDeletions(0);
+        pt.setUnlimitedDeletions(true);
         return pt;
     }
 
@@ -217,6 +221,8 @@ public class Fixture {
         specs.setDescription("Description");
         specs.setId(l);
         specs.setName(name);
+        specs.setUnlimitedDeletions(true);
+        specs.setNumDeletions(0);
         TimeOption option = new TimeOption();
         option.setNumber(number);
         option.setId(1L);
@@ -238,6 +244,8 @@ public class Fixture {
         pt.setEndTime(addMonths(startTime, option.getNumber()));
         pt.setOption(option);
         pt.setBundleSpec(spec);
+        pt.setNumDeletions(0);
+        pt.setUnlimitedDeletions(true);
         pt.setId(l);
         return pt;
     }

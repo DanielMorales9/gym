@@ -18,6 +18,7 @@
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
                 </div>
+
                 <ng-container [ngSwitch]="bundleSpec?.type">
 
                     <ng-container *ngSwitchCase="PERSONAL">
@@ -26,6 +27,13 @@
                         </div>
                         <div>
                             <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundleSpec?.numSessions}}
+                        </div>
+
+                        <div *ngIf="bundleSpec?.unlimitedDeletions">
+                            <mat-icon fontSet="fas" fontIcon="fa-infinity"></mat-icon>&nbsp;Cancellazioni illimitate
+                        </div>
+                        <div *ngIf="!bundleSpec?.unlimitedDeletions && bundleSpec?.numDeletions">
+                            <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundleSpec?.numDeletions}}
                         </div>
                     </ng-container>
                     <ng-container *ngSwitchCase="COURSE">

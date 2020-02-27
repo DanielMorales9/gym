@@ -53,6 +53,10 @@ export class CalendarFacade {
         return this.userService.getUsersByEventId(eventId);
     }
 
+    getCurrentTrainingBundles(id) {
+        return this.userService.getCurrentTrainingBundles(id);
+    }
+
     /**
      * BUNDLE API
      */
