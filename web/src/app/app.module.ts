@@ -1,4 +1,4 @@
-import {BrowserModule} from '@angular/platform-browser';
+import {BrowserModule, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
 import {ErrorHandler, NgModule} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
@@ -36,7 +36,8 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {MatMenuModule} from '@angular/material/menu';
-import {ChartsModule} from 'ng2-charts';
+import {LY_THEME, LY_THEME_NAME, LyHammerGestureConfig} from '@alyle/ui';
+import {MinimaDark, MinimaLight} from '@alyle/ui/themes/minima';
 
 @NgModule({
     declarations: [
@@ -78,13 +79,13 @@ import {ChartsModule} from 'ng2-charts';
         MatSelectModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        MatMenuModule,
+        MatMenuModule
     ],
     providers: [
         AppService,
         GymService,
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
-        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+        { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
     ],
     bootstrap: [AppComponent]
 })

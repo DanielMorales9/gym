@@ -14,9 +14,9 @@ public class Manifest {
 
     List<Icon> icons;
 
-    static String display = "standalone";
-    static String scope = "/";
-    static String start_url = "/";
+    String display = "standalone";
+    String scope = "/";
+    String start_url = "/";
 
     public List<Icon> getIcons() {
         return icons;
@@ -42,15 +42,15 @@ public class Manifest {
         this.background_color = background_color;
     }
 
-    public static String getDisplay() {
+    public String getDisplay() {
         return display;
     }
 
-    public static String getScope() {
+    public String getScope() {
         return scope;
     }
 
-    public static String getStart_url() {
+    public String getStart_url() {
         return start_url;
     }
 

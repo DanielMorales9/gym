@@ -1,12 +1,17 @@
 <div class="card-container">
     <mat-card>
-        <mat-card-header>
+        <mat-card-title-group>
+            <img *ngIf="!!image_src" mat-card-avatar [alt]="image_name" [src]="image_src" (click)="openImageDialog()">
             <mat-card-title>{{user?.firstName || 'Loading...'}} {{user?.lastName || ''}}</mat-card-title>
-        </mat-card-header>
+        </mat-card-title-group>
         <mat-card-content>
             <div class="summary-info">
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-user-tag"></mat-icon>&nbsp;{{getRoleName()}}
+                </div>
+                <div>
+                    <mat-icon fontSet="fas" fontIcon="fa-{{user?.gender ? 'venus' : 'mars'}}"></mat-icon>&nbsp;&nbsp;
+                    {{user?.gender ? 'Donna' : 'Uomo'}}
                 </div>
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-envelope"></mat-icon>&nbsp;&nbsp;

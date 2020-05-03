@@ -66,4 +66,12 @@ export class UserService {
     getCurrentTrainingBundles(id: any): any {
         return this.http.get(`/customers/${id}/currentTrainingBundles`);
     }
+
+    uploadImage(id: number, data: FormData, param: any) {
+        return this.http.post(`/users/${id}/image`, data, param);
+    }
+
+    retrieveImage(id: number) {
+        return this.http.get(`/users/${id}/image`);
+    }
 }

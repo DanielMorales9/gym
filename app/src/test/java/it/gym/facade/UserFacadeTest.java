@@ -2,6 +2,7 @@ package it.gym.facade;
 
 import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
+import it.gym.repository.ImageRepository;
 import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;
 import it.gym.utility.Fixture;
@@ -29,6 +30,9 @@ public class UserFacadeTest {
     @MockBean
     @Qualifier("verificationTokenService")
     private VerificationTokenService tokenService;
+
+    @MockBean
+    private ImageRepository imageRepository;
 
     @Autowired
     private UserFacade userFacade;

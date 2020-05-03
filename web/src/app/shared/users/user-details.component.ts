@@ -7,6 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
+import {ImageModalComponent} from '../profile';
 
 
 @Component({
@@ -20,6 +21,8 @@ export class UserDetailsComponent implements OnInit {
     canDelete: boolean;
     canEdit: boolean;
     canSendToken: boolean;
+    image_src: any;
+    image_name: 'Immagine Profilo';
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
     private root: string;
@@ -36,7 +39,6 @@ export class UserDetailsComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
-
         this.route.params.subscribe(async params => {
             const id = params['id'];
             const [data, error] = await this.service.findById(id);
@@ -45,6 +47,7 @@ export class UserDetailsComponent implements OnInit {
             }
             else {
                 this.user = data;
+                this.getAvatar();
                 this.getPolicies();
             }
         });
@@ -127,5 +130,20 @@ export class UserDetailsComponent implements OnInit {
                 break;
         }
         return name;
+    }
+
+    getAvatar() {
+        this.service.retrieveImage(this.user.id).subscribe((res: any) => {
+            this.image_src = `data:${res.type};base64,${res.picByte}`;
+        }, err => {
+            const gender = this.user.gender ? 'woman' : 'man';
+            this.image_src = `https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
+        });
+    }
+
+    openImageDialog() {
+        const dialogRef = this.dialog.open(ImageModalComponent, {
+            data: this.image_src
+        });
     }
 }

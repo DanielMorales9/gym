@@ -16,6 +16,7 @@ export class UserModalComponent implements OnInit {
     method: string;
 
     canShowRole = false;
+    canShowGender = true;
     canShowHeightAndWeight = false;
 
     user: User;
@@ -46,6 +47,7 @@ export class UserModalComponent implements OnInit {
         config['lastName'] = [this.user.lastName, [Validators.required]];
         config['email'] = [this.user.email, [Validators.required, Validators.email]];
         config['phone'] = [this.user.phoneNumber, [Validators.pattern(/\d{10}/)]];
+
         if (this.canShowHeightAndWeight) {
             config['height'] = [this.user.height, [
                 Validators.max(300),
@@ -57,6 +59,10 @@ export class UserModalComponent implements OnInit {
 
         if (this.canShowRole) {
             config['type'] = [this.user.type, [Validators.required]];
+        }
+
+        if (this.canShowGender) {
+            config['gender'] = [this.user.gender, [Validators.required]];
         }
 
         this.form = this.builder.group(config);
@@ -90,6 +96,10 @@ export class UserModalComponent implements OnInit {
         return this.form.get('type');
     }
 
+    get gender() {
+        return this.form.get('gender');
+    }
+
     submit() {
 
         delete this.user.roles;
@@ -105,6 +115,10 @@ export class UserModalComponent implements OnInit {
 
         if (this.type) {
             this.user.type = this.type.value;
+        }
+
+        if (this.gender) {
+            this.user.gender = this.gender.value === 'true';
         }
 
         this.user.currentTrainingBundles = undefined;

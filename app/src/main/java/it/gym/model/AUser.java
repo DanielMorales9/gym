@@ -46,6 +46,9 @@ public abstract class AUser implements DefaultRoles {
     @Email(message = "Invalid Email")
     protected String email;
 
+    @Column(name = "gender")
+    protected Boolean gender;
+
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     protected String password;
@@ -76,6 +79,11 @@ public abstract class AUser implements DefaultRoles {
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "role_id"))
     private List<Role> roles;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,
+            fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Image image;
 
     public abstract String getType();
 
@@ -169,4 +177,19 @@ public abstract class AUser implements DefaultRoles {
         isVerified = verified;
     }
 
+    public void setGender(boolean gender) {
+        this.gender = gender;
+    }
+
+    public Boolean isGender() {
+        return gender;
+    }
+
+    public Image getImage() {
+        return image;
+    }
+
+    public void setImage(Image image) {
+        this.image = image;
+    }
 }

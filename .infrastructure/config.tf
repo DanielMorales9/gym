@@ -9,7 +9,7 @@ provider "aws" {
 # =======================================
 terraform {
   backend "s3" {
-    bucket  = "gms-app"
+    bucket  = "gms-app1"
     key     = "terraform.tfstate"
     region  = "eu-central-1"
     encrypt = true

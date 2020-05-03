@@ -1,5 +1,10 @@
 import {Role} from './role.class';
-import {Gym} from './gym.class';
+
+export class Image {
+    name: string;
+    pic_byte: any;
+    type: string;
+}
 
 export class User {
     id: number;
@@ -16,6 +21,8 @@ export class User {
     roles: Role[];
     currentTrainingBundles: any;
     phoneNumber: string;
+    image: Image;
+    gender: boolean;
 
     constructor() {
         this.roles = [];

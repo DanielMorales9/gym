@@ -1,0 +1,44 @@
+<div style="padding: 24px">
+    <form role="form">
+        <button type="button" class="close" (click)="submit()">
+            <span aria-hidden="true">&times;</span>
+        </button>
+
+        <h5>Carica Immagine del profilo</h5>
+        <div ly-dialog-content [px]="0" >
+
+            <div *ngIf="cropper.isLoaded">
+                <div style="display: flex; justify-content: space-around;">
+                    <button (click)="cropper.zoomIn()" ly-button appearance="icon"><ly-icon>zoom_in</ly-icon></button>
+                    <button (click)="cropper.zoomOut()" ly-button appearance="icon"><ly-icon>zoom_out</ly-icon></button>
+                    <button (click)="cropper.center()" ly-button appearance="icon"><ly-icon>filter_center_focus</ly-icon></button>
+                    <button (click)="cropper.rotate(-90)" ly-button appearance="icon"><ly-icon>rotate_90_degrees_ccw</ly-icon>
+                    </button>
+                </div>
+                <div style="display: flex; justify-content: space-around;">
+
+                    <button (click)="cropper.fit()" ly-button>Fit</button>
+                    <button (click)="cropper.fitToScreen()" ly-button>Fit to screen</button>
+                    <button (click)="cropper.setScale(1)" ly-button>1:1</button>
+                </div>
+            </div>
+
+            <ly-img-cropper [withClass]="classes.cropper"
+                            [config]="myConfig"
+                            [(scale)]="scale"
+                            (cropped)="onCropped($event)"
+                            (loaded)="onLoaded($event)"
+                            (error)="onError($event)"
+            >
+                <span>Drag and drop image</span>
+            </ly-img-cropper>
+
+        </div>
+
+        <div *ngIf="cropper.isLoaded" style="display: flex; justify-content: 'flex-end'" mat-dialog-actions>
+            <button mat-button color="basic" (click)="dialogRef.close()">Cancella</button>
+            <button mat-button color="primary" (click)="dialogRef.close(cropper.crop())">Fatto</button>
+        </div>
+    </form>
+
+</div>

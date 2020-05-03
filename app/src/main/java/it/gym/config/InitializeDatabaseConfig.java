@@ -160,6 +160,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setName(name);
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
+        p.setUnlimitedDeletions(Boolean.TRUE);
         TimeOption option = new TimeOption();
         option.setPrice(111.0);
         option.setName("option");
@@ -174,6 +175,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setName(name);
         p.setDescription("Questo è un pacchetto di Personal Training");
         p.setDisabled(false);
+        p.setUnlimitedDeletions(Boolean.TRUE);
         p.setPrice(111.0);
         p.setNumSessions(11);
         return p;

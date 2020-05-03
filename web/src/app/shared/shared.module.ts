@@ -25,6 +25,8 @@ import {
     NoItemComponent,
     OptionModalComponent,
     ProfileComponent, ReservationModalComponent,
+    ImageModalComponent,
+    ImageCropModalComponent,
     ReservationsComponent,
     ReserveCourseEventComponent,
     SalesComponent,
@@ -71,6 +73,14 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {CustomerStatsComponent} from './stats';
 import {MatTabsModule} from '@angular/material/tabs';
 import {ChartsModule} from 'ng2-charts';
+import {LyImageCropperModule} from '@alyle/ui/image-cropper';
+import {LySliderModule} from '@alyle/ui/slider';
+import {LY_THEME, LY_THEME_NAME, LyHammerGestureConfig, LyTheme2, StyleRenderer} from '@alyle/ui';
+import {MinimaDark, MinimaLight} from '@alyle/ui/themes/minima';
+import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import {LyButtonModule} from '@alyle/ui/button';
+import {LyIconModule} from '@alyle/ui/icon';
+import {LyDialogModule} from '@alyle/ui/dialog';
 
 @NgModule({
     imports: [
@@ -103,8 +113,12 @@ import {ChartsModule} from 'ng2-charts';
         MatTableModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
         MatTabsModule,
-        ChartsModule
-
+        ChartsModule,
+        LyImageCropperModule,
+        LySliderModule,
+        LyButtonModule,
+        LyIconModule,
+        LyDialogModule
     ],
     entryComponents: [
         UserModalComponent,
@@ -120,7 +134,9 @@ import {ChartsModule} from 'ng2-charts';
         CalendarControlsComponent,
         CalendarCustomerControlsComponent,
         UserControlsComponent,
-        ReservationModalComponent
+        ReservationModalComponent,
+        ImageModalComponent,
+        ImageCropModalComponent
     ],
     declarations: [
         NoItemComponent,
@@ -171,7 +187,9 @@ import {ChartsModule} from 'ng2-charts';
         EventDetailsComponent,
         ReservationModalComponent,
         BundlesComponent,
-        CustomerStatsComponent
+        CustomerStatsComponent,
+        ImageModalComponent,
+        ImageCropModalComponent,
     ],
     exports: [
         CalendarControlsComponent,
@@ -214,10 +232,19 @@ import {ChartsModule} from 'ng2-charts';
         ACustomerCalendarComponent,
         BundlesComponent,
         SearchDateToolbar,
-        CustomerStatsComponent
+        CustomerStatsComponent,
+        ImageModalComponent,
+        ImageCropModalComponent,
     ],
     providers: [
-        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'}
+        [ LyTheme2 ],
+        [ StyleRenderer ],
+        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'},
+        { provide: LY_THEME_NAME, useValue: 'minima-light' },
+        { provide: LY_THEME, useClass: MinimaLight, multi: true }, // name: `minima-light`
+        { provide: LY_THEME, useClass: MinimaDark, multi: true }, // name: `minima-dark`
+        // Gestures
+        { provide: HAMMER_GESTURE_CONFIG, useClass: LyHammerGestureConfig }
     ]
 
 })

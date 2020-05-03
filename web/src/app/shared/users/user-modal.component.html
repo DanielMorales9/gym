@@ -112,6 +112,23 @@
                 </mat-form-field>
             </div>
         </div>
+        <div *ngIf="canShowGender">
+            <mat-form-field>
+                <label for="gender" ><b>Sesso</b></label>
+                <mat-select
+                        id="gender"
+                        formControlName="gender"
+                        [ngClass]="{ 'is-invalid': gender.touched && gender.invalid }"
+                >
+                    <mat-option value='false'>Uomo</mat-option>
+                    <mat-option value="true">Donna</mat-option>
+                </mat-select>
+                <mat-error *ngIf="gender.touched && gender.invalid">
+                    <div *ngIf="!!gender.errors?.required">Sesso obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+
     </div>
     <div mat-dialog-actions>
         <button type="submit" mat-flat-button color="accent">Invia</button>
