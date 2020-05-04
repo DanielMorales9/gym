@@ -7,7 +7,7 @@ import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
 import {AppService, GlobalErrorHandler, GymService} from './services';
 import {
-    ErrorComponent, NavBarComponent,
+    ErrorComponent, MenuControlsComponent, NavBarComponent,
     PrimaryAdminControlsComponent,
     PrimaryCustomerControlsComponent,
     PrimaryTrainerControlsComponent,
@@ -54,6 +54,7 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
         SideBarComponent,
         NavBarComponent,
         TimeAgoExtendsPipe,
+        MenuControlsComponent
     ],
     entryComponents: [
         PrimaryAdminControlsComponent,

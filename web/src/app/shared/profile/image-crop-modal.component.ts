@@ -40,8 +40,8 @@ export class ImageCropModalComponent implements AfterViewInit {
 
     @ViewChild(LyImageCropper, { static: true }) cropper: LyImageCropper;
     myConfig: ImgCropperConfig = {
-        width: 150, // Default `250`
-        height: 150, // Default `200`
+        width: 250, // Default `250`
+        height: 250, // Default `200`
         type: 'image/png' // Or you can also use `image/jpeg`
     };
 

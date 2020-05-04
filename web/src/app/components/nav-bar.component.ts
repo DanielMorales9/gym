@@ -80,16 +80,16 @@ export class NavBarComponent implements OnInit, OnDestroy {
         this.snav.emit();
     }
 
-    hideLogin() {
-        return this.authenticated || (!this.router.url.startsWith('/auth/home') && this.router.url.startsWith('/auth') );
-    }
-
-    hide() {
+    hideMenu() {
         return !this.authenticated;
     }
 
     doLogout() {
         this.logout.emit();
+    }
+
+    hideLogin() {
+        return this.authenticated || (!this.router.url.startsWith('/auth/home') && this.router.url.startsWith('/auth') );
     }
 
     goHome() {

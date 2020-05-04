@@ -4,3 +4,4 @@ export * from './nav-bar.component';
 export * from './primary-admin-controls.component';
 export * from './primary-trainer-controls.component';
 export * from './primary-customer-controls.component';
+export * from './menu-controls.component';

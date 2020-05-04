@@ -22,30 +22,3 @@
         </span>
     </a>
 </div>
-<div id="menu-account">
-    <h2 matSubheader>Profilo</h2>
-    <a href=# mat-list-item
-       [routerLinkActive]="['active-link']"
-       routerLink="/customer/profile">
-        <span>
-            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>&nbsp;&nbsp;I miei dettagli
-        </span>
-    </a>
-    <a href=# mat-list-item
-       [routerLinkActive]="['active-link']"
-       routerLink="/customer/stats" [queryParams]="{id: user?.id}">
-        <span>
-            <mat-icon fontSet="fas" fontIcon="fa-chart-line"></mat-icon>&nbsp;&nbsp;Risultati
-        </span>
-    </a>
-</div>
-<div id="menu-settings">
-    <h2 matSubheader>Impostazioni</h2>
-    <a href=# mat-list-item
-       [routerLinkActive]="['active-link']"
-       routerLink="/customer/settings/gym">
-        <span>
-            <mat-icon fontSet="fas" fontIcon="fa-store-alt"></mat-icon>&nbsp;&nbsp;La mia palestra
-        </span>
-    </a>
-</div>
