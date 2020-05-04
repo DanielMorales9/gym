@@ -34,7 +34,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
     primaryControls: ViewContainerRef;
     primaryControlComponents: ComponentRef<Component>[] = new Array<ComponentRef<Component>>();
 
-    @ViewChild('secondaryControls', {static: false, read: ViewContainerRef})
+    @ViewChild('secondaryControls', {static: true, read: ViewContainerRef})
     secondaryControls: ViewContainerRef;
     secondaryControlComponents: ComponentRef<Component>[] = new Array<ComponentRef<Component>>();
 
