@@ -77,7 +77,7 @@ import {LyImageCropperModule} from '@alyle/ui/image-cropper';
 import {LySliderModule} from '@alyle/ui/slider';
 import {LY_THEME, LY_THEME_NAME, LyHammerGestureConfig, LyTheme2, StyleRenderer} from '@alyle/ui';
 import {MinimaDark, MinimaLight} from '@alyle/ui/themes/minima';
-import {HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
+import {HAMMER_GESTURE_CONFIG, HammerModule} from '@angular/platform-browser';
 import {LyButtonModule} from '@alyle/ui/button';
 import {LyIconModule} from '@alyle/ui/icon';
 import {LyDialogModule} from '@alyle/ui/dialog';
@@ -118,7 +118,8 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         LySliderModule,
         LyButtonModule,
         LyIconModule,
-        LyDialogModule
+        LyDialogModule,
+        HammerModule
     ],
     entryComponents: [
         UserModalComponent,

@@ -34,7 +34,7 @@ import localeIt from '@angular/common/locales/it';
 import {SharedModule} from '../shared/shared.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
-import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
+import {HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 import {HomeComponent} from './home';
 import {NgxMaterialTimepickerComponent, NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
@@ -81,7 +81,8 @@ export class MyHammerConfig extends HammerGestureConfig {
         NgxMaterialTimepickerModule.setLocale('it-IT'),
         ChartsModule,
         MatMenuModule,
-        MatTabsModule
+        MatTabsModule,
+        HammerModule
     ],
     declarations: [
         BundleSpecSelectItemComponent,

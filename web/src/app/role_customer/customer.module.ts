@@ -21,7 +21,7 @@ import {CustomerCalendarComponent} from './calendar';
 import localeIt from '@angular/common/locales/it';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
-import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
+import {HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 import {HomeComponent} from './home';
 
@@ -55,6 +55,7 @@ registerLocaleData(localeIt);
         MatToolbarModule,
         MatOptionModule,
         MatSelectModule,
+        HammerModule
     ],
     declarations: [
         CustomerCalendarComponent,

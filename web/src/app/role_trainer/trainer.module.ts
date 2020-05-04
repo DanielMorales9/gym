@@ -23,7 +23,7 @@ import {
 } from './calendar';
 import localeIt from '@angular/common/locales/it';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
-import {HAMMER_GESTURE_CONFIG, HammerGestureConfig} from '@angular/platform-browser';
+import {HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
 import {HomeComponent} from './home';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
@@ -56,8 +56,8 @@ registerLocaleData(localeIt);
         MatListModule,
         MatExpansionModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
-        MatDatepickerModule
-
+        MatDatepickerModule,
+        HammerModule
     ],
     declarations: [
         TrainerCalendarComponent,

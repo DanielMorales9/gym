@@ -1,5 +1,5 @@
-import {BrowserModule, HAMMER_GESTURE_CONFIG} from '@angular/platform-browser';
-import {ErrorHandler, NgModule} from '@angular/core';
+import {BrowserModule, HammerModule} from '@angular/platform-browser';
+import {ErrorHandler, NgModule, Pipe} from '@angular/core';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
@@ -36,8 +36,13 @@ import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { environment } from '../environments/environment';
 import {MatMenuModule} from '@angular/material/menu';
-import {LY_THEME, LY_THEME_NAME, LyHammerGestureConfig} from '@alyle/ui';
-import {MinimaDark, MinimaLight} from '@alyle/ui/themes/minima';
+
+// tslint:disable-next-line:use-pipe-transform-interface
+@Pipe({
+    name: 'timeAgo',
+    pure: false
+})
+export class TimeAgoExtendsPipe extends TimeAgoPipe {}
 
 @NgModule({
     declarations: [
@@ -48,7 +53,7 @@ import {MinimaDark, MinimaLight} from '@alyle/ui/themes/minima';
         ErrorComponent,
         SideBarComponent,
         NavBarComponent,
-        TimeAgoPipe
+        TimeAgoExtendsPipe,
     ],
     entryComponents: [
         PrimaryAdminControlsComponent,
@@ -79,7 +84,8 @@ import {MinimaDark, MinimaLight} from '@alyle/ui/themes/minima';
         MatSelectModule,
         NgxMaterialTimepickerModule.setLocale('it-IT'),
         ServiceWorkerModule.register('ngsw-worker.js', {enabled: environment.production}),
-        MatMenuModule
+        MatMenuModule,
+        HammerModule,
     ],
     providers: [
         AppService,
