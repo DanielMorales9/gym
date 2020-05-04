@@ -3,12 +3,14 @@ import {FormBuilder, FormGroup} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {CourseBundle, CourseBundleSpecification, Sale} from '../../shared/model';
 import {SalesService} from '../../core/controllers';
+import {takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../../shared/base-component';
 
 @Component({
     templateUrl: './option-select-modal.component.html',
     styleUrls: ['../../styles/root.css']
 })
-export class OptionSelectModalComponent {
+export class OptionSelectModalComponent extends BaseComponent {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessuna Opzione disponibile';
     form: FormGroup;
@@ -23,6 +25,7 @@ export class OptionSelectModalComponent {
                 private service: SalesService,
                 public dialogRef: MatDialogRef<OptionSelectModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
+        super();
 
         dialogRef.disableClose = true;
         this.spec = this.data.spec;
@@ -84,7 +87,7 @@ export class OptionSelectModalComponent {
         this.dialogRef.close({selected: this.selected, sale: this.sale});
     }
 
-    private async deleteSalesLineItem(id: any) {
+    private deleteSalesLineItem(id: any) {
         const salesLineId = this.sale
             .salesLineItems
             .map(line => [line.id, (line.trainingBundle as CourseBundle).option.id])
@@ -92,22 +95,18 @@ export class OptionSelectModalComponent {
             .map(line => line[0])[0];
 
         if (salesLineId) {
-            const [data, error] = await this.service.deleteSalesLineItem(this.sale.id, salesLineId);
-            if (error) {
-                throw error;
-            }
-            this.sale = data;
+            this.service.deleteSalesLineItem(this.sale.id, salesLineId)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe((res: any) => this.sale = res);
         }
     }
 
-    private async addSalesLineItem(id: any) {
-        const [data, error] = await this.service.addSalesLineItem(this.sale.id, {
+    private addSalesLineItem(id: any) {
+        this.service.addSalesLineItem(this.sale.id, {
             bundleSpecId: this.spec.id,
             optionId: id
-        });
-        if (error) {
-            throw error;
-        }
-        this.sale = data;
+        }).pipe(takeUntil(this.unsubscribe$))
+          .subscribe((res: any) => this.sale = res);
+
     }
 }

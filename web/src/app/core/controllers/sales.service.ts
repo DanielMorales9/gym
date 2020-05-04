@@ -18,8 +18,7 @@ export class SalesService {
         return this.http.get('/sales', {params: query});
     }
 
-    @to_promise
-    createSale(customerId: number): any {
+    createSale(customerId: number) {
         return this.http.post(`/sales?customerId=${customerId}`, {});
     }
 
@@ -27,13 +26,12 @@ export class SalesService {
         return this.http.delete(`/sales/${id}`);
     }
 
-    @to_promise
-    addSalesLineItem(saleId: number, params?: any): any {
+    addSalesLineItem(saleId: number, params?: any) {
         return this.http.put(`/sales/${saleId}/salesLineItems`, {}, {params: params});
     }
 
-    @to_promise
-    deleteSalesLineItem(saleId: number, salesLineItemId: number): any {
+
+    deleteSalesLineItem(saleId: number, salesLineItemId: number) {
         return this.http.delete(`/sales/${saleId}/salesLineItems/${salesLineItemId}`);
     }
 
