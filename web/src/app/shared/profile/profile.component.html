@@ -60,9 +60,7 @@
             </button>
             <input #file type="file" hidden (change)="fileChange($event)" placeholder="Upload file" accept=".jpg">
             <button mat-button color="accent" (click)="file.click()">
-                <span>
-                    <mat-icon fontSet="fas" fontIcon="fa-user-ninja"></mat-icon>&nbsp;Carica immagine
-                </span>
+                    <mat-icon>add_photo_alternate</mat-icon>&nbsp;Carica immagine
             </button>
         </mat-card-actions>
     </mat-card>
