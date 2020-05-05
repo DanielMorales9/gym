@@ -31,7 +31,7 @@ export class LoginComponent implements OnInit {
         };
         const [data, error] = await this.auth.login(this.credentials);
         if (data) {
-            const roleId = this.auth.getUserRole();
+            const roleId = this.auth.getPrincipalRole();
             const roleName = data.roles.find(value => value.id === roleId).name.toLowerCase();
             this.error = false;
             await this.router.navigateByUrl(roleName);

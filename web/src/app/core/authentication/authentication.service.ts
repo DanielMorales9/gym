@@ -24,6 +24,7 @@ export class AuthenticationService {
 
     private readonly CREDENTIAL_KEY = 'credentials';
     private readonly USER_KEY = 'user';
+    private readonly ROLE_KEY = 'role';
 
     private user: User;
     private remember: boolean;
@@ -38,6 +39,18 @@ export class AuthenticationService {
         'A': 'admin',
         'T': 'trainer',
         'C': 'customer'
+    };
+
+    private INDEX2NAME = [
+        'admin',
+        'trainer',
+        'customer'
+    ];
+
+    private ROLE2NAME = {
+        'ADMIN': 'Amministratore',
+        'TRAINER': 'Allenatore',
+        'CUSTOMER': 'Cliente'
     };
 
     constructor(private http: HttpClient,
@@ -109,13 +122,13 @@ export class AuthenticationService {
         return !!this.storageService.get(this.CREDENTIAL_KEY);
     }
 
-    getUserRole() {
+    getPrincipalRole() {
         const user = this.getUser();
-        this.currentRole = this.computeRole(user);
+        this.currentRole = this.getRoleByUser(user);
         return this.currentRole;
     }
 
-    computeRole(user: User) {
+    getRoleByUser(user: User) {
         if (user.type) {
             return this.TYPE2INDEX[this.user.type];
         } else {
@@ -123,11 +136,46 @@ export class AuthenticationService {
         }
     }
 
+    getCurrentUserRole() {
+        if (!this.currentRole) {
+
+            this.currentRole = this.getPrincipalRole();
+            this.setCurrentUserRole(this.currentRole);
+        }
+        return this.currentRole;
+    }
+
+    isCurrentUserRole(expectedRole: string) {
+        const idx = this.TYPE2INDEX[expectedRole];
+        return this.getCurrentUserRole() === idx;
+    }
+
     getUser(): User {
         if (!this.user) {
             this.user = this.storageService.get(this.USER_KEY) || {};
         }
         return this.user;
+    }
+
+    getUserRoleName() {
+        const idx = this.getCurrentUserRole();
+        console.log(idx);
+        return this.INDEX2NAME[idx - 1];
+    }
+
+    getRoles(): any[] {
+        return (this.getUser().roles || []).map(v => new Object({id: v.id, name: this.ROLE2NAME[v.name]}));
+    }
+
+    setCurrentUserRole(idx?: number) {
+        this.currentRole = idx;
+        this.storageService.set(this.ROLE_KEY, this.currentRole);
+    }
+
+    private getDefaultRole() {
+        const user = this.getUser();
+        this.currentRole = this.getRoleByUser(user);
+        return this.currentRole;
     }
 
     @to_promise
@@ -143,14 +191,5 @@ export class AuthenticationService {
     @to_promise
     private findUserByEmail(email: string): any {
         return this.http.get(`/users/findByEmail?email=${email}`);
-    }
-
-    getUserRoleName() {
-        const user = this.getUser();
-        if (user.type) {
-            return this.TYPE2NAME[this.user.type];
-        } else {
-            return 'customer';
-        }
     }
 }

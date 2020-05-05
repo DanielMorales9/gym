@@ -42,7 +42,7 @@ export class CalendarFacade {
     }
 
     getRole() {
-        return this.auth.getUserRole();
+        return this.auth.getCurrentUserRole();
     }
 
     getConfig() {
@@ -249,7 +249,7 @@ export class CalendarFacade {
     }
 
     getRoleByUser(user: User) {
-        return this.auth.computeRole(user);
+        return this.auth.getRoleByUser(user);
     }
 
     getUserBundleBySpecId(userId: number, specId: any) {
