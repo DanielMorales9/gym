@@ -6,14 +6,15 @@ import {SnackBarService} from '../../core/utilities';
 import {BundleService, BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
 import {OptionSelectModalComponent} from './option-select-modal.component';
-import {first} from 'rxjs/operators';
+import {first, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../../shared/base-component';
 
 
 @Component({
     templateUrl: './create-sale.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css']
 })
-export class CreateSaleComponent implements OnInit, OnDestroy {
+export class CreateSaleComponent extends BaseComponent implements OnInit, OnDestroy {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
@@ -38,6 +39,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
                 private dialog: MatDialog,
                 private router: Router,
                 private route: ActivatedRoute) {
+        super();
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
     }
 
@@ -78,38 +80,31 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.destroy();
+        super.ngOnDestroy();
     }
 
-    private async createSale() {
-        const [data, error] = await this.saleHelper.createSale(this.id);
-        if (error) {
-            throw error;
-        }
-        else {
-            this.sale = data;
-        }
+    private createSale() {
+        this.saleHelper.createSale(this.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((res: any) => this.sale = res);
     }
 
-    private async addSalesLineItem(id: number) {
-        const [data, error] = await this.saleHelper.addSalesLineItem(this.sale.id, id);
-        if (error) {
-            throw error;
-        }
-        this.sale = data;
+    private addSalesLineItem(id: number) {
+        this.saleHelper.addSalesLineItem(this.sale.id, id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((res: any) => this.sale = res);
     }
 
-    private async deleteSalesLineItem(id: number) {
+    private deleteSalesLineItem(id: number) {
         const salesLineId = this.sale
             .salesLineItems
             .map(line => [line.id, line.bundleSpecification.id])
             .filter(line => line[1] === id)
             .map(line => line[0])[0];
 
-        const [data, error] = await this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId);
-        if (error) {
-            this.snackbar.open(error.error.message);
-        }
-        this.sale = data;
+        this.saleHelper.deleteSalesLineItem(this.sale.id, salesLineId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((res: any) => this.sale = res, error => this.snackbar.open(error.error.message));
     }
 
     private destroy() {
@@ -158,11 +153,11 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         this.selected[spec.id] = isSelected;
 
         if (spec.type === BundleType.COURSE) {
-            await this.openDialog(spec);
+            this.openDialog(spec);
         } else if (isSelected) {
-            await this.addSalesLineItem(spec.id);
+            this.addSalesLineItem(spec.id);
         } else {
-            await this.deleteSalesLineItem(spec.id);
+            this.deleteSalesLineItem(spec.id);
         }
 
     }
@@ -178,7 +173,7 @@ export class CreateSaleComponent implements OnInit, OnDestroy {
         return isSelected;
     }
 
-    private async openDialog(spec) {
+    private openDialog(spec) {
         const title = 'Scegli Opzione';
 
         const dialogRef = this.dialog.open(OptionSelectModalComponent, {

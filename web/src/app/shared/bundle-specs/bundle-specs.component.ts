@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
 import {BundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -7,7 +7,6 @@ import {BundleSpecsService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {Subscription} from 'rxjs';
 import {first} from 'rxjs/operators';
 
 @Component({
@@ -36,8 +35,8 @@ export class BundleSpecsComponent implements OnInit {
 
     constructor(private service: BundleSpecsService,
                 private router: Router,
-                private dialog: MatDialog,
                 private route: ActivatedRoute,
+                private dialog: MatDialog,
                 private helper: BundleSpecHelperService,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {

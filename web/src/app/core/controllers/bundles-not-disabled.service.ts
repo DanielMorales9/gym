@@ -1,10 +1,10 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {ABundleService} from './abundle.service';
+import {DataSourceService} from './data-source.service';
 
 @Injectable()
-export class BundlesNotDisabledService extends ABundleService {
+export class BundlesNotDisabledService extends DataSourceService {
 
     constructor(private http: HttpClient) {
         super();

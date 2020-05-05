@@ -4,7 +4,7 @@
                 'red-light': isExpired(),
                 'blue-light': isNotActive()}">
             <a (click)="goToInfo()">
-                {{bundle?.name || 'Loading...'}}
+                {{bundle?.name || 'Loading...'}} - {{bundle?.customer.firstName}} {{bundle?.customer.lastName}}
             </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">

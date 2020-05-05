@@ -12,14 +12,14 @@ import {
     BundleSpecsService,
     EventService,
     ReservationService,
-    SalesService, StatsService, UserService
+    SalesService, StatsService, UserService, WorkoutService
 } from './controllers';
 import {DateService, GymService, ScreenService, SnackBarService} from './utilities';
 import {
     BundleSpecHelperService,
     SaleHelperService,
     UserHelperService,
-    BundleHelperService, BundleCustomerHelperService,
+    BundleHelperService, BundleCustomerHelperService, WorkoutHelperService,
 } from './helpers';
 import {PolicyService} from './policy';
 import {CalendarFacade} from './facades';
@@ -70,6 +70,8 @@ import {CalendarFacade} from './facades';
         BundleSpecHelperService,
         BundleHelperService,
         BundleCustomerHelperService,
+        WorkoutService,
+        WorkoutHelperService,
         PolicyService
     ]
 })

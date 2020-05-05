@@ -1,0 +1,39 @@
+<div class="card-container">
+    <mat-card>
+        <mat-card-header>
+            <mat-card-title>{{workout?.name || 'Loading...'}}</mat-card-title>
+            <mat-card-subtitle>
+                <mat-icon fontSet="fas" fontIcon="fa-tags"></mat-icon>&nbsp;
+                {{ workout?.tag1 }}
+                {{ workout?.tag2 }}
+                {{ workout?.tag3 }}
+            </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+            <div *ngIf="workout?.template else work">
+                <mat-icon fontSet="fas" fontIcon="fa-file-word"></mat-icon>&nbsp;Template
+            </div>
+            <div style="margin-top: 8px"> {{ workout?.description || 'Loading...' }} </div>
+        </mat-card-content>
+        <mat-card-actions>
+            <ng-container *ngIf="canEdit">
+                <button mat-button color="primary" (click)="editBundleSpec()">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+                </span>
+                </button>
+            </ng-container>
+            <ng-container *ngIf="canDelete">
+                <button mat-button color="warn" (click)="deleteBundle()">
+                <span>
+                    <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
+                </span>
+                </button>
+            </ng-container>
+        </mat-card-actions>
+    </mat-card>
+</div>
+
+<ng-template #work>
+    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Allenamento
+</ng-template>
