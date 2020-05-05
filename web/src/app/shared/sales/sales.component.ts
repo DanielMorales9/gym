@@ -132,7 +132,6 @@ export class SalesComponent implements OnInit {
 
     private goToDetails(sale: Sale) {
         const roleName = this.auth.getUserRoleName();
-        console.log(roleName);
         this.router.navigate([roleName, 'sales', sale.id]);
     }
 

@@ -1,6 +1,7 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../core/authentication';
+import {Role} from '../shared/model';
 
 @Component({
     selector: 'menu',
@@ -13,8 +14,14 @@ export class MenuControlsComponent {
     @Input() hideMenu;
     @Output() logout = new EventEmitter();
 
+
     constructor(private auth: AuthenticationService,
-                private router: Router) {}
+                private router: Router) {
+    }
+
+    getRoles() {
+        return this.auth.getRoles().sort(a => a.id);
+    }
 
     doLogout() {
         this.logout.emit();
@@ -33,6 +40,23 @@ export class MenuControlsComponent {
     }
 
     showStats() {
-        return this.auth.getUserRole() % 2 === 1;
+        return this.auth.getCurrentUserRole() % 2 === 1;
+    }
+
+    switchRole(id: number) {
+        this.auth.setCurrentUserRole(id);
+        this.router.navigateByUrl(this.auth.getUserRoleName());
+    }
+
+    showRole(number: number) {
+        return this.getRoles().filter(r => r.id === number).length === 1;
+    }
+
+    showRoles() {
+        return this.getRoles().length > 1;
+    }
+
+    isCurrentRole(number: number) {
+        return this.auth.getCurrentUserRole() === number;
     }
 }

@@ -32,7 +32,7 @@ export class AppService {
 
 
     private getCurrentRoleView() {
-        this.currentRole = this.auth.getUserRole();
+        this.currentRole = this.auth.getCurrentUserRole();
     }
 
     private loadAuthenticationInfo() {

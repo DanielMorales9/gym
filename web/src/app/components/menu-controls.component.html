@@ -3,8 +3,26 @@
     <button mat-menu-item (click)="goToProfile()"><mat-icon>account_circle</mat-icon>&nbsp;Account</button>
     <button mat-menu-item (click)="gotToStats()" *ngIf="showStats()" ><mat-icon>show_chart</mat-icon>&nbsp;Statistiche</button>
     <button mat-menu-item (click)="goToGym()"><mat-icon>store</mat-icon>&nbsp;La mia palestra</button>
+    <button mat-menu-item *ngIf="showRoles()" [matMenuTriggerFor]="views">
+        <mat-icon>remove_red_eye</mat-icon>&nbsp;Cambia vista
+    </button>
     <button mat-menu-item (click)="doLogout()"><mat-icon>logout</mat-icon>&nbsp;Logout</button>
 </mat-menu>
 <button mat-icon-button [matMenuTriggerFor]="matMenu" [hidden]="hideMenu">
     <mat-icon>more_vert</mat-icon>
 </button>
+
+<mat-menu #views="matMenu">
+    <button *ngIf="showRole(1)" [disabled]="isCurrentRole(1)"
+            mat-menu-item (click)="switchRole(1)">
+        &nbsp;Admin
+    </button>
+    <button *ngIf="showRole(2)" [disabled]="isCurrentRole(2)"
+            mat-menu-item (click)="switchRole(2)">
+        &nbsp;Trainer
+    </button>
+    <button *ngIf="showRole(3)" [disabled]="isCurrentRole(3)"
+            mat-menu-item (click)="switchRole(3)">
+        &nbsp;Cliente
+    </button>
+</mat-menu>
