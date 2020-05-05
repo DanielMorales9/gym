@@ -3,16 +3,18 @@
         <mat-card-header>
             <mat-card-title>{{workout?.name || 'Loading...'}}</mat-card-title>
             <mat-card-subtitle>
-                <mat-icon fontSet="fas" fontIcon="fa-tags"></mat-icon>&nbsp;
                 {{ workout?.tag1 }}
-                {{ workout?.tag2 }}
-                {{ workout?.tag3 }}
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
             <span style="white-space: pre;" [innerHTML]="workout?.description"></span>
             <div *ngIf="workout?.template else work" style="margin-top: 8px;">
                 <mat-icon fontSet="fas" fontIcon="fa-file-word"></mat-icon>Template
+            </div>
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-tags"></mat-icon>&nbsp;
+                {{ workout?.tag2 }}
+                {{ workout?.tag3 }}
             </div>
         </mat-card-content>
         <mat-card-actions>
