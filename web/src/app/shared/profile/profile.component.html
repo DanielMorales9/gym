@@ -58,7 +58,7 @@
                     <mat-icon fontSet="fas" fontIcon="fa-key"></mat-icon>&nbsp;Cambia Password
                 </span>
             </button>
-            <input #file type="file" hidden (change)="fileChange($event)" placeholder="Upload file" accept=".jpg">
+            <input #file type="file" hidden (change)="fileChange($event)" placeholder="Upload file" accept=".jpg,.png">
             <button mat-button color="accent" (click)="file.click()">
                     <mat-icon>add_photo_alternate</mat-icon>&nbsp;Carica immagine
             </button>
