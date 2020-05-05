@@ -11,7 +11,7 @@ import {ProfileComponent} from '../shared/profile';
 import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
 import {CustomerStatsComponent} from '../shared/stats';
-import {WorkoutsComponent} from '../shared/workout';
+import {WorkoutDetailsComponent, WorkoutsComponent} from '../shared/workout';
 
 const routes = [
     { path: '', children : [
@@ -61,7 +61,11 @@ const routes = [
             },
             {
                 path: 'workouts', component: WorkoutsComponent,
-                data: {title: 'Workout', back: true}
+                data: {title: 'Workout'}
+            },
+            {
+                path: 'workouts/:id', component: WorkoutDetailsComponent,
+                data: {title: 'Dettaglio Workout', back: true}
             },
             {
                 path: 'home', component: HomeComponent,

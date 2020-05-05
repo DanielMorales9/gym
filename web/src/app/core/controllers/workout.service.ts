@@ -40,8 +40,7 @@ export class WorkoutService extends DataSourceService {
         return this.http.get(`/workouts/${id}`);
     }
 
-    list(param: any): any {
-        return this.http.get(`/workouts/list`, {params: param});
+    getTags(): any {
+        return this.http.get(`/workouts/tags`);
     }
-
 }

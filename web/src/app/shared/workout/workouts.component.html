@@ -7,7 +7,10 @@
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
     <div *cdkVirtualFor="let b of ds;" class="scroll-item">
-        {{b}}
+        <workout-item [workout]="b"
+                          [canDelete]="canDelete"
+                          [canEdit]="canEdit"
+                          (done)="handleEvent($event)"></workout-item>
     </div>
 </cdk-virtual-scroll-viewport>
 <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>

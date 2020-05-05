@@ -43,10 +43,6 @@ public class Workout {
     @Column(name = "created_at")
     private Date createdAt;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated_at")
-    private Date updatedAt;
-
     public Long getId() {
         return id;
     }
@@ -69,14 +65,6 @@ public class Workout {
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
     }
 
     public String getDescription() {
@@ -114,11 +102,6 @@ public class Workout {
     @PrePersist
     protected void prePersist() {
         this.createdAt = new Date();
-    }
-
-    @PreUpdate
-    protected void preUpdate() {
-        this.updatedAt = new Date();
     }
 
     public boolean isTemplate() {

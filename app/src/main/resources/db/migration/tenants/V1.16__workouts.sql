@@ -6,8 +6,7 @@ CREATE TABLE workouts (
     tag2 text,
     tag3 text,
     is_template boolean NOT NULL,
-    created_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    created_at timestamp without time zone NOT NULL
 );
 
 ALTER TABLE workouts OWNER TO goodfellas;

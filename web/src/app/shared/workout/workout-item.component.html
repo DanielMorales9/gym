@@ -1,0 +1,35 @@
+<mat-expansion-panel [class.mat-expansion-panel]="false">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            <a (click)="goToInfo()">
+                {{workout?.name || 'Loading...'}}
+            </a>
+        </mat-panel-title>
+        <mat-panel-description class="panel-header-description">
+            {{workout?.tag1 || 'Loading...'}} {{workout?.tag2}} {{workout?.tag3}}
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="mat-ex-panel-body">
+
+        <div class="panel-body-description">
+            <span>{{workout?.description || 'Loading...'}}</span>
+        </div>
+    </div>
+    <div class="panel-actions">
+        <button mat-button color="primary" (click)="goToInfo()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
+            </span>
+        </button>
+        <button mat-button color="basic" *ngIf="canDelete" (click)="editWorkout()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
+            </span>
+        </button><button mat-button color="warn" *ngIf="canDelete" (click)="deleteWorkout()">
+            <span>
+                <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
+            </span>
+        </button>
+    </div>
+</mat-expansion-panel>
+<mat-divider></mat-divider>

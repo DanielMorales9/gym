@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.util.List;
 
 @RestController
 @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
@@ -38,16 +39,22 @@ public class WorkoutController {
         return facade.findAll(pageable);
     }
 
+    @GetMapping(path = "/tags")
+    @ResponseBody
+    public List<String> getTags() {
+        return facade.getTags();
+    }
+
     @PostMapping
     @ResponseBody
-    public ResponseEntity<WorkoutResource> create(Workout w) {
+    public ResponseEntity<WorkoutResource> create(@RequestBody Workout w) {
          w = facade.save(w);
         return new ResponseEntity<>(new WorkoutAssembler().toResource(w), HttpStatus.OK);
     }
 
-    @DeleteMapping
+    @DeleteMapping(path = "/{id}")
     @ResponseBody
-    public ResponseEntity<String> delete(Long id) {
+    public ResponseEntity<String> delete(@PathVariable Long id) {
         facade.deleteById(id);
         return new ResponseEntity<>(HttpStatus.OK);
     }
@@ -63,11 +70,11 @@ public class WorkoutController {
 
     @GetMapping("/search")
     @ResponseBody
-    public Page<Workout> search(@RequestParam(required = false) String query,
-                                @RequestParam(required = false) String filter,
+    public Page<Workout> search(@RequestParam(required = false) String name,
+                                @RequestParam(required = false) String tag,
                                 @RequestParam(required = false) Boolean isTemplate,
                                 Pageable pageable) {
-        return facade.search(query, filter, isTemplate, pageable);
+        return facade.search(name, tag, isTemplate, pageable);
     }
 
 }

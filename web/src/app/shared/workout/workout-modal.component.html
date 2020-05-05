@@ -1,0 +1,76 @@
+<form [formGroup]="form" role="form" novalidate (ngSubmit)="form.valid && submit()">
+    <h5 mat-dialog-title>{{data.title}}</h5>
+    <div mat-dialog-content>
+        <div>
+            <mat-form-field>
+                <label for="name" class="sr-only">Nome</label>
+                <input type="text"
+                       matInput
+                       placeholder="Nome"
+                       id="name"
+                       name="name"
+                       formControlName="name"
+                       [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
+                <mat-error *ngIf="name.touched && name.invalid">
+                    <div *ngIf="!!name.errors?.required">
+                        Nome del Workout obbligatorio
+                    </div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="description" class="sr-only">Descrizione Workout</label>
+                <textarea placeholder="Descrizione"
+                          matInput
+                          id="description"
+                          name="description"
+                          formControlName="description"
+                          [ngClass]="{ 'is-invalid': description.touched && description.invalid }"></textarea>
+                <mat-error *ngIf="description.touched && description.invalid">
+                    <div *ngIf="!!description.errors?.required">Descrizione del workout obbligatoria</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="tag1" class="sr-only">Tag 1</label>
+                <input placeholder="Tag 1"
+                       matInput
+                       id="tag1"
+                       name="tag_1"
+                       formControlName="tag1"
+                       [ngClass]="{ 'is-invalid': tag1.touched && tag1.invalid }">
+                <mat-error *ngIf="tag1.touched && tag1.invalid">
+                    <div *ngIf="!!tag1.errors?.required">Un tag obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="tag2" class="sr-only">Tag 2</label>
+                <input placeholder="Tag 2"
+                       matInput
+                       id="tag2"
+                       name="tag_2"
+                       formControlName="tag2"
+                       [ngClass]="{ 'is-invalid': tag2.touched && tag2.invalid }">
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
+                <label for="tag3" class="sr-only">Tag 3</label>
+                <input placeholder="Tag 3"
+                       matInput
+                       id="tag3"
+                       name="tag_3"
+                       formControlName="tag3"
+                       [ngClass]="{ 'is-invalid': tag3.touched && tag3.invalid }">
+            </mat-form-field>
+        </div>
+
+    </div>
+    <div mat-dialog-actions>
+        <button type="submit" mat-flat-button color="accent">Invia</button>
+    </div>
+</form>

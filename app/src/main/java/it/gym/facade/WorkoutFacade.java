@@ -1,8 +1,11 @@
 package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.controller.AuthenticationController;
 import it.gym.model.Workout;
 import it.gym.service.WorkoutService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -12,12 +15,15 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @Transactional
 public class WorkoutFacade {
+
+    private static final Logger logger = LoggerFactory.getLogger(WorkoutFacade.class);
 
     @Autowired
     private WorkoutService service;
@@ -52,6 +58,16 @@ public class WorkoutFacade {
     }
 
     public Page<Workout> search(String name, String tag, Boolean isTemplate, Pageable pageable) {
+        if (name != null) {
+            logger.info(name);
+        }
+        if (tag != null) {
+            logger.info(tag);
+        }
+        if (isTemplate != null) {
+            logger.info(isTemplate.toString());
+        }
+
         // all query params
         if (tag != null && name != null) {
             return filterAndPageWorkoutsByQueryParams(name, tag, isTemplate, pageable);
@@ -94,5 +110,14 @@ public class WorkoutFacade {
                                     workout.getTag3().equals(filter))
                 .collect(Collectors.toList());
         return new PageImpl<>(workouts, pageable, workouts.size());
+    }
+
+    public List<String> getTags() {
+        return this.findAll().stream()
+                .map(workout -> Arrays.asList(workout.getTag1(), workout.getTag2(), workout.getTag3()))
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .distinct()
+                .collect(Collectors.toList());
     }
 }

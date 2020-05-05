@@ -43,11 +43,11 @@ public class WorkoutService implements ICrudService<Workout, Long> {
     }
 
     public Page<Workout> searchByNameAndTemplate(String query, Boolean isTemplate, Pageable pageable) {
-        return repo.findByNameContainsAndTemplateIs(query, isTemplate, pageable);
+        return repo.findByNameContainsAndIsTemplateIs(query, isTemplate, pageable);
     }
 
     public Page<Workout> filterByNameAndTemplate(String query, Boolean isTemplate, Pageable pageable) {
-        return repo.findByTag1EqualsOrTag2EqualsOrTag3EqualsAndTemplateIs(query, query, query, isTemplate, pageable);
+        return repo.findByTag1EqualsOrTag2EqualsOrTag3EqualsAndIsTemplateIs(query, query, query, isTemplate, pageable);
     }
 
     public Page<Workout> searchByName(String query, Pageable pageable) {
@@ -59,6 +59,6 @@ public class WorkoutService implements ICrudService<Workout, Long> {
     }
 
     public Page<Workout> findByIsTemplate(Boolean isTemplate, Pageable pageable) {
-        return repo.findByTemplateIs(isTemplate, pageable);
+        return repo.findByIsTemplateIs(isTemplate, pageable);
     }
 }

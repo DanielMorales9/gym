@@ -28,15 +28,16 @@ export abstract class BundleSpecification {
     }
 }
 
-export abstract class Workout {
+export class Workout {
     id: number;
     name: string;
     description: string;
     tag1: string;
     tag2: string;
     tag3: string;
-    isTemplate: boolean;
-
+    template: boolean;
+    createdAt: Date;
+    updatedAt: Date;
 
     constructor() {
 
