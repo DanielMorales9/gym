@@ -35,10 +35,6 @@ public class EventFacade {
     @Qualifier("trainingBundleSpecificationService")
     @Autowired private TrainingBundleSpecificationService specService;
 
-    @Qualifier("trainingSessionService")
-    @Autowired private TrainingSessionService sessionService;
-    @Autowired private ReservationService reservationService;
-
     public List<AEvent> findAllEventsByInterval(Date startTime, Date endTime) {
         return service.findAllEvents(startTime, endTime);
     }
