@@ -2,11 +2,11 @@ import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
 import {BundleSpecification} from '../../shared/model';
-import {ABundleService} from './abundle.service';
+import {DataSourceService} from './data-source.service';
 import {to_promise} from '../functions/decorators';
 
 @Injectable()
-export class BundleSpecsService extends ABundleService {
+export class BundleSpecsService extends DataSourceService {
 
     constructor(private http: HttpClient) {
         super();

@@ -34,7 +34,7 @@ public class WorkoutController {
 
     @GetMapping
     @ResponseBody
-    public Page<Workout> findById(Pageable pageable) {
+    public Page<Workout> findAll(Pageable pageable) {
         return facade.findAll(pageable);
     }
 
@@ -61,11 +61,11 @@ public class WorkoutController {
         return ResponseEntity.ok(new WorkoutAssembler().toResource(w));
     }
 
-    @PatchMapping("/search")
+    @GetMapping("/search")
     @ResponseBody
-    public Page<Workout> search(@RequestParam String query,
-                                @RequestParam String filter,
-                                @RequestParam Boolean isTemplate,
+    public Page<Workout> search(@RequestParam(required = false) String query,
+                                @RequestParam(required = false) String filter,
+                                @RequestParam(required = false) Boolean isTemplate,
                                 Pageable pageable) {
         return facade.search(query, filter, isTemplate, pageable);
     }

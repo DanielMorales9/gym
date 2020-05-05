@@ -90,6 +90,11 @@ export class PolicyService {
         },
         holiday: {
             canDelete: true
+        },
+        workout: {
+            canCreate: true,
+            canDelete: true,
+            canEdit: true,
         }
 
     };
@@ -169,6 +174,11 @@ export class PolicyService {
         },
         holiday: {
             canDelete: false
+        },
+        workout: {
+            canCreate: true,
+            canDelete: true,
+            canEdit: true,
         }
     };
 

@@ -28,9 +28,26 @@ export abstract class BundleSpecification {
     }
 }
 
+export abstract class Workout {
+    id: number;
+    name: string;
+    description: string;
+    tag1: string;
+    tag2: string;
+    tag3: string;
+    isTemplate: boolean;
+
+
+    constructor() {
+
+    }
+}
+
+
+
 export class PersonalBundleSpecification extends BundleSpecification {
     numSessions: number;
-    price: number
+    price: number;
 
     constructor() {
         super();

@@ -37,7 +37,7 @@ import {
     UserDetailsComponent,
     UserItemComponent,
     UserModalComponent,
-    UsersComponent
+    UsersComponent, WorkoutsComponent
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -191,6 +191,7 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         CustomerStatsComponent,
         ImageModalComponent,
         ImageCropModalComponent,
+        WorkoutsComponent
     ],
     exports: [
         CalendarControlsComponent,
@@ -236,6 +237,7 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         CustomerStatsComponent,
         ImageModalComponent,
         ImageCropModalComponent,
+        WorkoutsComponent
     ],
     providers: [
         [ LyTheme2 ],
