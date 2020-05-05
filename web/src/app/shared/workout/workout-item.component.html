@@ -6,13 +6,15 @@
             </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">
-            {{workout?.tag1 || 'Loading...'}} {{workout?.tag2}} {{workout?.tag3}}
+             {{workout?.tag2}} {{workout?.tag3}}
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mat-ex-panel-body">
-
+        <div style="margin-bottom: 8px;">
+            <span>{{workout?.tag1 || 'Loading...'}}</span>
+        </div>
         <div class="panel-body-description">
-            <span>{{workout?.description || 'Loading...'}}</span>
+            <span style="white-space: pre;" [innerHTML]="workout?.description"></span>
         </div>
     </div>
     <div class="panel-actions">
