@@ -154,8 +154,21 @@ export class StatsComponent implements OnInit {
     this.pieChart.labels = this.pieChartLabels;
     this.pieChart.chart.update();
 
-    this.totalPrice = d.map(v => v.totalprice).reduce((previousValue, currentValue) => previousValue + currentValue);
-    this.amountPayed = d.map(v => v.amountpayed).reduce((previousValue, currentValue) => previousValue + currentValue);
+    const prices = d.map(v => v.totalprice) || [];
+    const amounts = d.map(v => v.amountpayed) || [];
+    if (prices.length > 0) {
+      this.totalPrice = prices.reduce((previousValue, currentValue) => previousValue + currentValue);
+    }
+    else {
+      this.totalPrice = 0;
+    }
+
+    if (amounts.length > 0) {
+      this.amountPayed = amounts.reduce((previousValue, currentValue) => previousValue + currentValue);
+    }
+    else {
+      this.amountPayed = 0;
+    }
   }
 
   private async getReservationsByWeek(interval?) {
