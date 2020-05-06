@@ -1,7 +1,6 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import it.gym.exception.BadRequestException;
 import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 

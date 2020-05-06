@@ -7,7 +7,6 @@ import lombok.Generated;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.util.ArrayList;
 import java.util.Date;
 
 @Entity
