@@ -9,6 +9,7 @@ import lombok.Generated;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -51,6 +52,10 @@ public abstract class ATrainingSession {
     @Column(name = "is_completed")
     private Boolean isCompleted;
 
+    @OneToMany
+    @JoinColumn(name = "session_id")
+    private List<Workout> workouts;
+
     public boolean getCompleted() {
         return isCompleted;
     }
@@ -63,6 +68,7 @@ public abstract class ATrainingSession {
     public abstract boolean isDeletable();
     public abstract void complete();
     public abstract void deleteMeFromBundle();
+    public abstract void addWorkout(Workout w);
 
     public Long getId() {
         return id;
@@ -95,5 +101,13 @@ public abstract class ATrainingSession {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public List<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
     }
 }

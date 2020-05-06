@@ -134,6 +134,12 @@
                     <mat-icon fontSet="fas" fontIcon="fa-check-double"></mat-icon>&nbsp;Complete
                 </span>
             </button>
+            <button mat-button color="basic" (click)="assignWorkout()"
+                    *ngIf="canAssignWorkout">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Assegna Programma
+                </span>
+            </button>
             <button mat-button color="warn" (click)="deleteEvent()" *ngIf="canDeleteEvent">
                 <span>
                     <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina

@@ -1,0 +1,22 @@
+<filter-search
+        [filters]="filters"
+        [filterName]="filterName"
+        [selected]="selected"
+        [query]="query" text="Cerca per nome" (done)="search($event)">
+</filter-search>
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="186" class="scroll-viewport">
+
+    <div *cdkVirtualFor="let b of ds" class="scroll-item">
+        <workout-select-item
+                        [workout]="b"
+                        [selected]="selected[b?.id]"
+                        (done)="selectWorkout(b?.id)"></workout-select-item>
+    </div>
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE"></no-item>
+<button type="button" mat-fab color="primary" class="fab-button-add"
+        title="Conferma Vendità" (click)="confirmSession()">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-check"></mat-icon>
+        </span>
+</button>

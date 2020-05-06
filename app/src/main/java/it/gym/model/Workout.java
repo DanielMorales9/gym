@@ -111,4 +111,15 @@ public class Workout {
     public void setTemplate(boolean template) {
         isTemplate = template;
     }
+
+    public Workout createFromTemplate() {
+        Workout w = new Workout();
+        w.setDescription(this.description);
+        w.setName(this.name);
+        w.setTag1(this.tag1);
+        w.setTag2(this.tag2);
+        w.setTag3(this.tag3);
+        w.setTemplate(false);
+        return w;
+    }
 }

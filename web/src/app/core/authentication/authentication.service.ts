@@ -159,7 +159,6 @@ export class AuthenticationService {
 
     getUserRoleName() {
         const idx = this.getCurrentUserRole();
-        console.log(idx);
         return this.INDEX2NAME[idx - 1];
     }
 

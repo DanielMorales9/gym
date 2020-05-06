@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
@@ -38,6 +39,7 @@ public abstract class AEvent {
 
     @Column(name="name")
     private String name;
+
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_time")
@@ -80,6 +82,7 @@ public abstract class AEvent {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
 
     @Override
     public String toString() {

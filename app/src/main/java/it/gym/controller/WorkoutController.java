@@ -77,4 +77,12 @@ public class WorkoutController {
         return facade.search(name, tag, isTemplate, pageable);
     }
 
+    @GetMapping("/{id}/assign")
+    @ResponseBody
+    public ResponseEntity<String> assign(@PathVariable Long id, @RequestParam Long eventId) {
+        facade.assign(id, eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
 }

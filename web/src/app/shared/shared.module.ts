@@ -3,7 +3,8 @@ import {CommonModule} from '@angular/common';
 import {
     ACustomerCalendarComponent,
     BundleItemComponent,
-    BundleModalComponent, BundlesComponent,
+    BundleModalComponent,
+    BundlesComponent,
     BundlesCustomerComponent,
     BundleSpecDetailsComponent,
     BundleSpecItemComponent,
@@ -16,7 +17,8 @@ import {
     DeleteHolidayEventComponent,
     DeletePersonalEventComponent,
     DeleteReservationCourseEventComponent,
-    DeleteTimeOffEventComponent, EventDetailsComponent,
+    DeleteTimeOffEventComponent,
+    EventDetailsComponent,
     FilterComponent,
     FilterSearchToolbar,
     GymClosedComponent,
@@ -24,7 +26,8 @@ import {
     InfoPersonalEventComponent,
     NoItemComponent,
     OptionModalComponent,
-    ProfileComponent, ReservationModalComponent,
+    ProfileComponent,
+    ReservationModalComponent,
     ImageModalComponent,
     ImageCropModalComponent,
     ReservationsComponent,
@@ -37,7 +40,13 @@ import {
     UserDetailsComponent,
     UserItemComponent,
     UserModalComponent,
-    UsersComponent, WorkoutsComponent, WorkoutModalComponent, WorkoutItemComponent, WorkoutDetailsComponent
+    UsersComponent,
+    WorkoutsComponent,
+    WorkoutModalComponent,
+    WorkoutItemComponent,
+    WorkoutDetailsComponent,
+    AssignWorkoutsComponent,
+    WorkoutSelectItemComponent
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -195,7 +204,9 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutsComponent,
         WorkoutModalComponent,
         WorkoutItemComponent,
-        WorkoutDetailsComponent
+        WorkoutDetailsComponent,
+        AssignWorkoutsComponent,
+        WorkoutSelectItemComponent
     ],
     exports: [
         CalendarControlsComponent,
@@ -244,7 +255,9 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutsComponent,
         WorkoutModalComponent,
         WorkoutItemComponent,
-        WorkoutDetailsComponent
+        WorkoutDetailsComponent,
+        AssignWorkoutsComponent,
+        WorkoutSelectItemComponent
     ],
     providers: [
         [ LyTheme2 ],

@@ -1,12 +1,17 @@
 package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.controller.AuthenticationController;
+import it.gym.exception.BadRequestException;
+import it.gym.model.ATrainingSession;
+import it.gym.model.PersonalTrainingEvent;
 import it.gym.model.Workout;
+import it.gym.service.EventService;
+import it.gym.service.TrainingSessionService;
 import it.gym.service.WorkoutService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -15,9 +20,11 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Component
 @Transactional
@@ -27,6 +34,14 @@ public class WorkoutFacade {
 
     @Autowired
     private WorkoutService service;
+
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    @Qualifier("trainingSessionService")
+    private TrainingSessionService sessionService;
+
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -105,9 +120,9 @@ public class WorkoutFacade {
                 .filter(workout -> (isTemplate == null) || workout.isTemplate() == isTemplate)
                 .filter(workout -> workout.getName().contains(name))
                 .filter(workout ->
-                                    workout.getTag1().equals(filter) ||
-                                    workout.getTag2().equals(filter) ||
-                                    workout.getTag3().equals(filter))
+                        (workout.getTag1() != null && workout.getTag1().equals(filter)) ||
+                                (workout.getTag2() != null && workout.getTag2().equals(filter)) ||
+                                (workout.getTag3() != null && workout.getTag3().equals(filter)))
                 .collect(Collectors.toList());
         return new PageImpl<>(workouts, pageable, workouts.size());
     }
@@ -119,5 +134,17 @@ public class WorkoutFacade {
                 .filter(Objects::nonNull)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public void assign(Long id, Long eventId) {
+        Workout w = this.findById(id);
+        if (!w.isTemplate()) {
+            throw new BadRequestException(String.format("Workout %s non può essere assegnato", w.getName()));
+        }
+
+        PersonalTrainingEvent evt = (PersonalTrainingEvent) eventService.findById(eventId);
+        evt.assignWorkout(w);
+        ATrainingSession session = evt.getSession();
+        sessionService.save(session);
     }
 }

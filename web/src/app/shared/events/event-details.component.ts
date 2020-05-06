@@ -40,6 +40,7 @@ export class EventDetailsComponent implements OnInit {
     canCompleteEvent: boolean;
     canBook: boolean;
     canBookAll: boolean;
+    canAssignWorkout: boolean;
 
     constructor(private facade: CalendarFacade,
                 private route: ActivatedRoute,
@@ -97,6 +98,7 @@ export class EventDetailsComponent implements OnInit {
         this.canConfirm = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canConfirm');
         this.canBook = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canBook');
         this.canBookAll = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canBookAll');
+        this.canAssignWorkout = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canAssignWorkout');
     }
 
     isTraining() {
@@ -256,5 +258,9 @@ export class EventDetailsComponent implements OnInit {
             await this.reserveFromEvent(user.id, bundle.id);
             await this.findById(this.event.id);
         }
+    }
+
+    assignWorkout() {
+        this.router.navigate(['assignWorkout'], {relativeTo: this.route});
     }
 }

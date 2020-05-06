@@ -115,6 +115,11 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     }
 
     @Override
+    public void assignWorkout(Workout w) {
+        session.addWorkout(w);
+    }
+
+    @Override
     public String toString() {
         return "PersonalEvent{" +
                 "startTime" + this.getStartTime() +
