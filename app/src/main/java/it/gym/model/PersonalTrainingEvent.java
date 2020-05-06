@@ -1,6 +1,7 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import it.gym.exception.BadRequestException;
 import lombok.Generated;
 import org.springframework.hateoas.ExposesResourceFor;
 
@@ -41,6 +42,11 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     @Override
     public void complete() {
         this.session.complete();
+    }
+
+    @Override
+    public void removeWorkout(Workout w) {
+        this.session.removeWorkout(w);
     }
 
     @Override

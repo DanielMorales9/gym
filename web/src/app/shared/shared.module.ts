@@ -46,7 +46,7 @@ import {
     WorkoutItemComponent,
     WorkoutDetailsComponent,
     AssignWorkoutsComponent,
-    WorkoutSelectItemComponent
+    WorkoutSelectItemComponent, ProgrammeComponent
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -206,6 +206,7 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutItemComponent,
         WorkoutDetailsComponent,
         AssignWorkoutsComponent,
+        ProgrammeComponent,
         WorkoutSelectItemComponent
     ],
     exports: [
@@ -257,6 +258,7 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutItemComponent,
         WorkoutDetailsComponent,
         AssignWorkoutsComponent,
+        ProgrammeComponent,
         WorkoutSelectItemComponent
     ],
     providers: [

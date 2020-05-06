@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +53,7 @@ public abstract class ATrainingSession {
     @Column(name = "is_completed")
     private Boolean isCompleted;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "session_id")
     private List<Workout> workouts;
 
@@ -68,7 +69,6 @@ public abstract class ATrainingSession {
     public abstract boolean isDeletable();
     public abstract void complete();
     public abstract void deleteMeFromBundle();
-    public abstract void addWorkout(Workout w);
 
     public Long getId() {
         return id;
@@ -109,5 +109,17 @@ public abstract class ATrainingSession {
 
     public void setWorkouts(List<Workout> workouts) {
         this.workouts = workouts;
+    }
+
+    public void addWorkout(Workout w) {
+        Workout child = w.createFromTemplate();
+        if (this.getWorkouts() == null) {
+            this.setWorkouts(new ArrayList<>());
+        }
+        this.getWorkouts().add(child);
+    }
+
+    public void removeWorkout(Workout w) {
+        this.getWorkouts().remove(w);
     }
 }

@@ -85,4 +85,12 @@ public class WorkoutController {
 
     }
 
+    @DeleteMapping("/{id}/remove")
+    @ResponseBody
+    public ResponseEntity<String> remove(@PathVariable Long id, @RequestParam Long eventId) {
+        facade.remove(id, eventId);
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
 }

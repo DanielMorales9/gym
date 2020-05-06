@@ -124,6 +124,12 @@ public class CourseTrainingEvent extends ATrainingEvent {
     }
 
     @Override
+    public void removeWorkout(Workout w) {
+        // TODO not implemented
+        throw new BadRequestException("Funzionalità non ancora supportata");
+    }
+
+    @Override
     @JsonIgnore
     public ATrainingSession getSession(Reservation res) {
         return sessions.get(res.getId());

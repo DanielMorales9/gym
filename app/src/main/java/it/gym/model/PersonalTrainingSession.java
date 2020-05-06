@@ -28,15 +28,6 @@ public class PersonalTrainingSession extends ATrainingSession {
     }
 
     @Override
-    public void addWorkout(Workout w) {
-        w.createFromTemplate();
-        if (this.getWorkouts() == null) {
-            this.setWorkouts(new ArrayList<>());
-        }
-        this.getWorkouts().add(w);
-    }
-
-    @Override
     public boolean isDeletable() {
         return !this.getCompleted();
     }

@@ -147,4 +147,18 @@ public class WorkoutFacade {
         ATrainingSession session = evt.getSession();
         sessionService.save(session);
     }
+
+    public void remove(Long id, Long eventId) {
+        Workout w = this.findById(id);
+
+        if (w.isTemplate()) {
+            throw new BadRequestException(String.format("Workout %s non può essere rimosso", w.getName()));
+        }
+
+        PersonalTrainingEvent evt = (PersonalTrainingEvent) eventService.findById(eventId);
+        evt.removeWorkout(w);
+        ATrainingSession session = evt.getSession();
+        sessionService.save(session);
+        this.deleteById(id);
+    }
 }

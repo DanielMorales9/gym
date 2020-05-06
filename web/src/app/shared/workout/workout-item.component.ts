@@ -11,7 +11,7 @@ export class WorkoutItemComponent {
     constructor(private dialog: MatDialog) {
     }
 
-
+    @Input() open: boolean;
     @Input() workout: any;
     @Input() canDelete: boolean;
     @Input() canEdit: boolean;
@@ -22,7 +22,7 @@ export class WorkoutItemComponent {
 
 
     openDialog(): void {
-        const title = 'Modifica Pacchetto';
+        const title = 'Modifica Workout';
 
         const dialogRef = this.dialog.open(WorkoutModalComponent, {
             data: {
