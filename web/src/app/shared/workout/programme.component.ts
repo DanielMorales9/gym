@@ -85,7 +85,6 @@ export class ProgrammeComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(res => {
-            console.log(res);
             if (res) {
                 this.service.patch(res)
                     .subscribe(_ => this.findById(this.event.id),

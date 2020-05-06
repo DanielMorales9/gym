@@ -58,18 +58,6 @@ export class ImageCropModalComponent implements AfterViewInit {
         });
     }
 
-    onCropped(e: ImgCropperEvent) {
-        console.log('Cropped img: ', e);
-    }
-
-    onLoaded(e: ImgCropperEvent) {
-        console.log('Img ready for cropper', e);
-    }
-
-    onError(e: ImgCropperErrorEvent) {
-        console.warn(`'${e.name}' is not a valid image`, e);
-    }
-
 
     submit() {
         this.dialogRef.close();

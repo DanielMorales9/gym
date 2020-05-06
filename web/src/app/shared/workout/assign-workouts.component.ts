@@ -113,10 +113,6 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
             }
         }).filter(v => !!v);
 
-        console.log(this.selected);
-        console.log(selected);
-
-
         forkJoin(
             selected.map(workout => {
                 return this.service.assign(this.id.toString(), workout)

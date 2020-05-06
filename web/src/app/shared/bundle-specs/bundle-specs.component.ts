@@ -103,7 +103,6 @@ export class BundleSpecsComponent implements OnInit {
                 this.goToList($event.bundleSpec);
                 break;
             default:
-                console.error(`Operazione non riconosciuta: ${$event.type}`);
                 break;
         }
     }

@@ -91,8 +91,6 @@ export class BundlesComponent implements OnInit {
             this.goToDetails($event.bundle);
         } else if ($event.type === 'edit') {
             this.service.patch($event.bundle);
-        } else {
-            console.error(`Operazione non riconosciuta: ${$event.type}`);
         }
     }
 

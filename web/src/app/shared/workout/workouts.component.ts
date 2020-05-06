@@ -103,7 +103,6 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
                 this.goToDetails($event.workout);
                 break;
             default:
-                console.error(`Operazione non riconosciuta: ${$event.type}`);
                 break;
         }
     }

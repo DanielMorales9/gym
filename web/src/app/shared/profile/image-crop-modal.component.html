@@ -25,11 +25,7 @@
 
             <ly-img-cropper [withClass]="classes.cropper"
                             [config]="myConfig"
-                            [(scale)]="scale"
-                            (cropped)="onCropped($event)"
-                            (loaded)="onLoaded($event)"
-                            (error)="onError($event)"
-            >
+                            [(scale)]="scale">
                 <span>Drag and drop image</span>
             </ly-img-cropper>
 

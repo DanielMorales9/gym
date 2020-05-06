@@ -20,4 +20,8 @@ platformBrowserDynamic()
 
       // Otherise, log the boot error
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+        if (environment.production) {
+            console.log(err);
+        }
+    });

@@ -59,7 +59,6 @@ export class CustomerCalendarComponent extends BaseCalendar {
         if (error) {
             throw error;
         }
-        console.log(d);
         this.user.currentTrainingBundles = d;
 
         if (!this.user.currentTrainingBundles) {
