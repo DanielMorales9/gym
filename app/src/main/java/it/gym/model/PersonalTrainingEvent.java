@@ -44,6 +44,11 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     }
 
     @Override
+    public void removeWorkout(Workout w) {
+        this.session.removeWorkout(w);
+    }
+
+    @Override
     public ATrainingSession getSession(Reservation res) {
         return session;
     }
@@ -112,6 +117,11 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     @Override
     public int hashCode() {
         return super.hashCode();
+    }
+
+    @Override
+    public void assignWorkout(Workout w) {
+        session.addWorkout(w);
     }
 
     @Override

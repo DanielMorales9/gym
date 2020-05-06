@@ -145,9 +145,9 @@ export class AuthenticationService {
         return this.currentRole;
     }
 
-    isCurrentUserRole(expectedRole: string) {
+    hasRole(expectedRole: any) {
         const idx = this.TYPE2INDEX[expectedRole];
-        return this.getCurrentUserRole() === idx;
+        return this.getRoles().filter( v => v.id === idx).length === 1;
     }
 
     getUser(): User {
@@ -159,7 +159,6 @@ export class AuthenticationService {
 
     getUserRoleName() {
         const idx = this.getCurrentUserRole();
-        console.log(idx);
         return this.INDEX2NAME[idx - 1];
     }
 

@@ -43,4 +43,16 @@ export class WorkoutService extends DataSourceService {
     getTags(): any {
         return this.http.get(`/workouts/tags`);
     }
+
+    assign(id: string, workoutId: any) {
+        return this.http.get(`/workouts/${workoutId}/assign`, {params: {
+                eventId: id
+            }});
+    }
+
+    deleteFromEvent(eventId: any, wId: any) {
+        return this.http.delete(`/workouts/${wId}/remove`, {params: {
+                eventId: eventId
+        }});
+    }
 }

@@ -8,7 +8,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -50,6 +52,10 @@ public abstract class ATrainingSession {
 
     @Column(name = "is_completed")
     private Boolean isCompleted;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "session_id")
+    private List<Workout> workouts;
 
     public boolean getCompleted() {
         return isCompleted;
@@ -95,5 +101,25 @@ public abstract class ATrainingSession {
 
     public void setStartTime(Date startTime) {
         this.startTime = startTime;
+    }
+
+    public List<Workout> getWorkouts() {
+        return workouts;
+    }
+
+    public void setWorkouts(List<Workout> workouts) {
+        this.workouts = workouts;
+    }
+
+    public void addWorkout(Workout w) {
+        Workout child = w.createFromTemplate();
+        if (this.getWorkouts() == null) {
+            this.setWorkouts(new ArrayList<>());
+        }
+        this.getWorkouts().add(child);
+    }
+
+    public void removeWorkout(Workout w) {
+        this.getWorkouts().remove(w);
     }
 }

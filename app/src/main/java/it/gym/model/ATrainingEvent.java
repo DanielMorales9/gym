@@ -16,6 +16,8 @@ public abstract class ATrainingEvent extends AEvent {
     public abstract void addReservation(Reservation res);
     public abstract void deleteReservation(Reservation res);
 
+    public abstract void assignWorkout(Workout w);
+
     @JsonIgnore
     public abstract boolean isSessionDeletable();
     public abstract void addSession(Long reservationId, ATrainingSession session);
@@ -27,4 +29,5 @@ public abstract class ATrainingEvent extends AEvent {
     public abstract ATrainingSession getSession(Reservation res);
     public abstract void complete();
 
+    public abstract void removeWorkout(Workout w);
 }

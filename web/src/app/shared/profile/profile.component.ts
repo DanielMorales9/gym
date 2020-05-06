@@ -80,7 +80,6 @@ export class ProfileComponent implements OnInit {
     }
 
     fileChange($event: Event) {
-        console.log($event);
         // @ts-ignore
         const selectedFile = $event.target.files[0];
 

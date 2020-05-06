@@ -62,6 +62,7 @@ public class RestConfig extends RepositoryRestConfigurerAdapter {
                 CourseTrainingBundleSpecification.class,
                 CourseTrainingBundle.class,
                 CourseTrainingSession.class,
+                Workout.class,
                 TimeOption.class,
                 PersonalTrainingBundleSpecification.class,
                 PersonalTrainingBundle.class,

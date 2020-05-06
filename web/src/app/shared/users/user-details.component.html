@@ -1,7 +1,8 @@
 <div class="card-container">
     <mat-card>
         <mat-card-title-group>
-            <img *ngIf="!!image_src" mat-card-avatar [alt]="image_name" [src]="image_src" (click)="openImageDialog()">
+            <img style="width: 80px; height: 80px;"
+                 *ngIf="!!image_src" mat-card-avatar [alt]="image_name" [src]="image_src" (click)="openImageDialog()">
             <mat-card-title>{{user?.firstName || 'Loading...'}} {{user?.lastName || ''}}</mat-card-title>
         </mat-card-title-group>
         <mat-card-content>

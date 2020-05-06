@@ -39,6 +39,7 @@ public abstract class AEvent {
     @Column(name="name")
     private String name;
 
+
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_time")
     private Date startTime;
@@ -80,6 +81,7 @@ public abstract class AEvent {
     public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
+
 
     @Override
     public String toString() {

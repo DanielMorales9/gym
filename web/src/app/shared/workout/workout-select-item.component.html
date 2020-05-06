@@ -1,0 +1,25 @@
+<mat-card>
+    <mat-card-header>
+        <mat-card-title>
+            {{workout?.name || 'Loading...'}}
+        </mat-card-title>
+        <mat-card-subtitle class="card-list-subtitle">
+            {{workout?.tag2}} {{workout?.tag3}}
+        </mat-card-subtitle>
+        <mat-checkbox class="card-list-checkbox"
+                      (change)="selectWorkout()"
+                      [checked]="selected">
+        </mat-checkbox>
+    </mat-card-header>
+    <mat-card-content>
+        <div class="card-list-content">
+            <div style="margin-bottom: 8px;">
+                <span>{{workout?.tag1 || 'Loading...'}}</span>
+            </div>
+            <div class="panel-body-description">
+                <span style="white-space: pre;" [innerHTML]="workout?.description"></span>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>
+<mat-divider></mat-divider>

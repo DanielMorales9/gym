@@ -84,6 +84,7 @@ export class PolicyService {
             canDelete: true,
             canComplete: true,
             canConfirm: true,
+            canAssignWorkout: true,
         },
         timeOff: {
             canDelete: true
@@ -168,6 +169,7 @@ export class PolicyService {
             canDelete: true,
             canComplete: true,
             canConfirm: true,
+            canAssignWorkout: true,
         },
         timeOff: {
             canDelete: true
