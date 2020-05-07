@@ -8,8 +8,7 @@ export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    @to_promise
-    findById(id: number): any {
+    findById(id: number): Observable<any> {
         return this.http.get(`/users/${id}`);
     }
 

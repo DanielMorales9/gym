@@ -8,6 +8,8 @@ import {SnackBarService} from '../../core/utilities';
 import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {ImageModalComponent} from '../profile/image-modal.component';
+import {catchError, first, map, switchMap} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 
 @Component({
@@ -39,17 +41,13 @@ export class UserDetailsComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
-        this.route.params.subscribe(async params => {
-            const id = params['id'];
-            const [data, error] = await this.service.findById(id);
-            if (error) {
-                throw error;
-            }
-            else {
-                this.user = data;
+        this.route.params.pipe(
+            first(),
+            switchMap(params => this.service.findById(params['id']))
+        ).subscribe(value => {
+                this.user = value;
                 this.getAvatar();
                 this.getPolicies();
-            }
         });
     }
 

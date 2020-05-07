@@ -7,7 +7,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
-import {first} from 'rxjs/operators';
+import {catchError, first, map, switchMap} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 @Component({
     templateUrl: './calendar.component.html',
@@ -44,15 +45,12 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async getUser() {
-        const params = await this.activatedRoute.params.pipe(first()).toPromise();
-        const id = +params['id'];
-        const [data, error] = await this.facade.findUserById(id);
-        if (error) {
-            throw error;
-        }
-        else {
-            this.user = data;
-        }
+         await this.activatedRoute.params.pipe(
+             first(),
+             switchMap(params => this.facade.findUserById(+params['id'])),
+             catchError(r => throwError(r)),
+             map(r => this.user = r)
+         ).toPromise();
     }
 
     async getRole() {

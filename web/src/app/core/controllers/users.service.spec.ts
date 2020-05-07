@@ -81,38 +81,4 @@ describe('UserService', () => {
         expect(res).toEqual(user);
         done();
     });
-
-    describe ('testing #findUserById', () => {
-        it('it should return an empty user', async done => {
-            const promise = userService.findById(1);
-            const req = backend.expectOne({
-                url: '/users/1',
-                method: 'GET'
-            });
-            req.flush({});
-            const [res, error] = await promise;
-            expect(res).toEqual({});
-            done();
-        });
-
-        it('it should return a 404 error', async done => {
-            const emsg = 'deliberate 404 error';
-            const promise = userService.findById(1);
-            const req = backend.expectOne({
-                url: '/users/1',
-                method: 'GET'
-            });
-
-            req.flush(emsg, { status: 404, statusText: 'Not Found' });
-
-            const [data, error] = await promise;
-            expect(error.status).toEqual(404, 'status');
-            expect(error.error).toEqual(emsg, 'message');
-            done();
-        });
-    });
-
-
-
-
 });
