@@ -38,7 +38,7 @@ export class CalendarFacade {
     }
 
     findUserById(id: number) {
-        return this.userService.findById(id);
+        return this.userService.findUserById(id);
     }
 
     getRole() {

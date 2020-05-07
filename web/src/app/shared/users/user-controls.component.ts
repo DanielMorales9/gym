@@ -34,7 +34,7 @@ export class UserControlsComponent implements OnInit {
         const id = +paths[3].split('?')[0];
         this.root = paths[1];
         if (!!id) {
-            this.userService.findById(id).subscribe(data => {
+            this.userService.findUserById(id).subscribe(data => {
                 this.user = data;
                 this.getPolicy();
             }, err => { throw err; });

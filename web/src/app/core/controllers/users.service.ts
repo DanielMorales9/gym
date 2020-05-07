@@ -1,14 +1,16 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {to_promise} from '../functions/decorators';
+import {filter, switchMap} from 'rxjs/operators';
+import {User} from '../../shared/model';
 
 @Injectable()
 export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    findById(id: number): Observable<any> {
+    findUserById(id: number): Observable<any> {
         return this.http.get(`/users/${id}`);
     }
 
@@ -24,8 +26,7 @@ export class UserService {
         return this.http.patch(`/users/${user.id}`, user);
     }
 
-    @to_promise
-    delete(id: number): any {
+    deleteUser(id: number): any {
         return this.http.delete(`/users/${id}`);
     }
 
@@ -66,5 +67,11 @@ export class UserService {
 
     retrieveImage(id: number) {
         return this.http.get(`/users/${id}/image`);
+    }
+
+    deleteUserWithConfirmation(user: User): Observable<any> {
+        return of(confirm(`Vuoi rimuovere l'utente ${user.firstName} ${user.lastName}?`))
+            .pipe(filter(a => !!a),
+                switchMap(c => this.deleteUser(user.id)));
     }
 }

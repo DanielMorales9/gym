@@ -9,7 +9,7 @@ import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {ImageModalComponent} from '../profile/image-modal.component';
 import {catchError, filter, first, map, switchMap} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import {of, throwError} from 'rxjs';
 
 
 @Component({
@@ -43,7 +43,7 @@ export class UserDetailsComponent implements OnInit {
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
         this.route.params.pipe(
             first(),
-            switchMap(params => this.service.findById(params['id']))
+            switchMap(params => this.service.findUserById(params['id']))
         ).subscribe(value => {
                 this.user = value;
                 this.getAvatar();
@@ -77,17 +77,11 @@ export class UserDetailsComponent implements OnInit {
         );
     }
 
-    async deleteUser() {
-        const confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
-        if (confirmed) {
-            const [data, err] = await this.service.delete(this.user.id);
-            if (err) {
-                this.snackbar.open(err.error.message);
-            }
-            else {
-                await this.router.navigate([this.root, 'users'], {replaceUrl: true});
-            }
-        }
+    deleteUser() {
+        return this.service.deleteUserWithConfirmation(this.user)
+            .subscribe(res => this.router.navigate([this.root, 'users'], {replaceUrl: true}),
+                err => this.snackbar.open(err.error.message)
+            );
     }
 
 

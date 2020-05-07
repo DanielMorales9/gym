@@ -27,7 +27,7 @@ export class CalendarCustomerControlsComponent extends CalendarControlsComponent
         const id = +paths[3].split('?')[0];
 
         if (!!id) {
-            this.userService.findById(id)
+            this.userService.findUserById(id)
                 .subscribe(data => this.user = data,err => {
                     throw err;
                 });

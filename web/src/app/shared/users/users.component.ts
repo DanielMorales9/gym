@@ -11,7 +11,8 @@ import {SnackBarService} from '../../core/utilities';
 import {UserHelperService, QueryableDatasource} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {first} from 'rxjs/operators/first';
-import {map} from 'rxjs/operators';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
     templateUrl: './users.component.html',
@@ -112,16 +113,11 @@ export class UsersComponent implements OnInit {
         }
     }
 
-    private async deleteUser(user: User) {
-        const confirmed = confirm(`Vuoi rimuovere l'utente ${user.firstName} ${user.lastName}?`);
-        if (confirmed) {
-            const [data, err] = await this.service.delete(user.id);
-            if (err) {
-                this.snackbar.open(err.error.message);
-            } else {
-                this.search();
-            }
-        }
+    private deleteUser(user: User) {
+        return this.service.deleteUserWithConfirmation(user)
+            .subscribe(res => this.search(),
+                err => this.snackbar.open(err.error.message)
+            );
     }
 
     private patchUser(user: User) {
