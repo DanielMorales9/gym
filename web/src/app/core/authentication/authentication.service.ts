@@ -4,8 +4,9 @@ import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
 import {StorageService} from './storage.service';
-import {map} from 'rxjs/operators';
+import {catchError, map} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
+import {Observable, of} from 'rxjs';
 
 
 export interface Credentials {
@@ -119,13 +120,12 @@ export class AuthenticationService {
 
     private async getPrincipal() {
         let principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
-        let error;
         if (!principal) {
-            [principal, error] = await this.signIn();
+            principal = await this.signIn().pipe(catchError(err => of(null))).toPromise();
             this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, principal, this.TTL);
         }
 
-        return [principal, error];
+        return [principal, !principal];
     }
 
     /**
@@ -213,8 +213,7 @@ export class AuthenticationService {
         return this.currentRole;
     }
 
-    @to_promise
-    private signIn(): any {
+    private signIn(): Observable<any> {
         return this.http.get('/user');
     }
 
