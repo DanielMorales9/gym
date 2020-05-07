@@ -4,6 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
 import {StorageService} from './storage.service';
+import {map} from 'rxjs/operators';
 
 
 export interface Credentials {
@@ -24,11 +25,16 @@ export class AuthenticationService {
 
     private readonly CREDENTIAL_KEY = 'credentials';
     private readonly USER_KEY = 'user';
+    private readonly USER_EXPIRE_KEY = 'user_ttl';
+    private readonly PRINCIPAL_EXPIRE_KEY = 'principal_ttl';
     private readonly ROLE_KEY = 'role';
+    private readonly GYM_EXPIRE_KEY: 'gym_ttl';
 
+    private readonly TTL = 10000;
     private user: User;
     private remember: boolean;
     private currentRole: number;
+
     private TYPE2INDEX = {
         'A': 1,
         'T': 2,
@@ -46,7 +52,6 @@ export class AuthenticationService {
         'trainer',
         'customer'
     ];
-
     private ROLE2NAME = {
         'ADMIN': 'Amministratore',
         'TRAINER': 'Allenatore',
@@ -64,17 +69,32 @@ export class AuthenticationService {
     async login(credentials?: Credentials): Promise<any> {
         let [data, error] = await this.authenticate(credentials);
         if (!error) {
-            [data, error] = await this.findUserByEmail(data['principal']['username']);
-            if (!error) {
-                this.user = data;
-                this.storageService.set(this.USER_KEY, this.user, this.remember);
-            }
-            else {
-                [data, error] = [this.user, undefined];
+            [data, error] = await this.getUserDetails(data['principal']['username']);
+        }
+        return [data, error];
+    }
+
+    private async getUserDetails(username) {
+        let [data, error] = await this.getUserByEmail(username);
+        if (!error) {
+            this.user = data;
+            this.storageService.set(this.USER_KEY, this.user, this.remember);
+        } else {
+            [data, error] = [this.user, undefined];
+        }
+        return [data, error];
+    }
+
+    private async getUserByEmail(username) {
+        let user = this.getWithExpiry(this.USER_EXPIRE_KEY);
+        let error;
+        if (!(!!user && user.email === username)) {
+            [user, error] = await this.findUserByEmail(username);
+            if (!!user) {
+                this.setWithExpiry(this.USER_EXPIRE_KEY, user, this.TTL);
             }
         }
-
-        return [data, error];
+        return [user, error];
     }
 
     /**
@@ -87,12 +107,24 @@ export class AuthenticationService {
         if (credentials) {
             this.storageService.set(this.CREDENTIAL_KEY, credentials, this.remember);
         }
-
-        const [data, error] = await this.signIn();
-        if (error) {
+        const [data , error] = await this.getPrincipal();
+        if (!!error) {
             this.storageService.set(this.CREDENTIAL_KEY);
         }
-        return [data, error];
+
+        return [data , error];
+    }
+
+
+    private async getPrincipal() {
+        let principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
+        let error;
+        if (!principal) {
+            [principal, error] = await this.signIn();
+            this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, principal, this.TTL);
+        }
+
+        return [principal, error];
     }
 
     /**
@@ -106,6 +138,9 @@ export class AuthenticationService {
             this.currentRole = undefined;
             this.storageService.set(this.CREDENTIAL_KEY);
             this.storageService.set(this.USER_KEY);
+            localStorage.removeItem(this.USER_EXPIRE_KEY);
+            localStorage.removeItem(this.PRINCIPAL_EXPIRE_KEY);
+            localStorage.removeItem(this.GYM_EXPIRE_KEY);
         }
         return [data, error];
     }
@@ -196,4 +231,53 @@ export class AuthenticationService {
         const user = this.getUser() as any;
         return !!user && Object(user.keys).length > 0;
     }
+
+    async getGym(): Promise<any> {
+        let gym = this.getWithExpiry(this.GYM_EXPIRE_KEY);
+        let error;
+        if (!gym) {
+            [gym, error] = await this.getConfig();
+            if (!!gym) {
+                this.setWithExpiry(this.GYM_EXPIRE_KEY, gym, this.TTL);
+            }
+        }
+
+        return [gym, error];
+    }
+
+    setWithExpiry(key, value, ttl) {
+        const now = new Date();
+
+        // `item` is an object which contains the original value
+        // as well as the time when it's supposed to expire
+        const item = {
+            value: value,
+            expiry: now.getTime() + ttl
+        };
+        localStorage.setItem(key, JSON.stringify(item));
+    }
+
+    getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key);
+        // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null;
+        }
+        const item = JSON.parse(itemStr);
+        const now = new Date();
+        // compare the expiry time of the item with the current time
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, delete the item from storage
+            // and return null
+            localStorage.removeItem(key);
+            return null;
+        }
+        return item.value;
+    }
+
+    @to_promise
+    getConfig(): any {
+        return this.http.get(`/gyms`);
+    }
+
 }

@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {GymService} from './services';
 import {ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
 import {SideBarComponent} from './components';
 import {AuthenticationService} from './core/authentication';
+import {filter, throttleTime} from 'rxjs/operators';
 
 
 @Component({
@@ -18,8 +18,7 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
                 private router: Router,
-                private route: ActivatedRoute,
-                private gymService: GymService) {
+                private route: ActivatedRoute) {
     }
 
     appName: string;
@@ -30,7 +29,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     private sub: Subscription = new Subscription();
 
-    private static setTitle(...title) {
+    private setTitle(...title) {
         document.title = title.join(' - ');
     }
 
@@ -58,16 +57,16 @@ export class AppComponent implements OnInit, OnDestroy {
     private async authenticate() {
         const [data, err] = await this.auth.login();
         this.authenticated = !!data;
-        if (this.authenticated && this.hasUser()) {
+        if (this.authenticated) {
             await this.getAppName();
         }
     }
 
     private async getAppName() {
-        const [data, _] = await this.gymService.getConfig();
+        const [data, _] = await this.auth.getGym();
         if (data) {
             this.appName = data.name;
-            AppComponent.setTitle(this.appName);
+            this.setTitle(this.appName);
         }
     }
 
@@ -83,13 +82,13 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     private authOnNavigation() {
-        const sub = this.router.events.subscribe(async event => {
-            if (event instanceof NavigationStart) {
+        const sub = this.router.events
+            .pipe(filter(event => event instanceof NavigationStart))
+            .subscribe(async event => {
                 await this.authenticate();
                 await this.closeNav();
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
-                AppComponent.setTitle(this.appName, ...titles);
-            }
+                this.setTitle(this.appName, ...titles);
         });
         this.sub.add(sub);
     }
