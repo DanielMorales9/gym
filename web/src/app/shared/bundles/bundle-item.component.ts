@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {BundleType} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
@@ -7,6 +7,7 @@ import {BundleModalComponent} from './bundle-modal.component';
     selector: 'bundle-item',
     templateUrl: './bundle-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleItemComponent {
 

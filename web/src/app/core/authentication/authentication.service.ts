@@ -5,6 +5,7 @@ import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
 import {StorageService} from './storage.service';
 import {map} from 'rxjs/operators';
+import {environment} from '../../../environments/environment';
 
 
 export interface Credentials {
@@ -30,7 +31,7 @@ export class AuthenticationService {
     private readonly ROLE_KEY = 'role';
     private readonly GYM_EXPIRE_KEY: 'gym_ttl';
 
-    private readonly TTL = 10000;
+    private readonly TTL = environment.production ? 10000 : 1000;
     private user: User;
     private remember: boolean;
     private currentRole: number;

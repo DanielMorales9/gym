@@ -1,9 +1,11 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 
 @Component({
     selector: 'filter-search',
     templateUrl: './filter-search.toolbar.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
+    styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class FilterSearchToolbar implements OnInit {
     @Input() query: any;

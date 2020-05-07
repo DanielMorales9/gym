@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {WorkoutModalComponent} from './workout-modal.component';
 
@@ -6,6 +6,8 @@ import {WorkoutModalComponent} from './workout-modal.component';
     selector: 'workout-item',
     templateUrl: './workout-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class WorkoutItemComponent {
     constructor(private dialog: MatDialog) {

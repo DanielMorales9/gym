@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
 import {User} from '../model';
@@ -8,6 +8,8 @@ import {User} from '../model';
     selector: 'user-item',
     templateUrl: './user-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
+
 })
 export class UserItemComponent {
 
