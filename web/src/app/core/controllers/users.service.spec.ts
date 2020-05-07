@@ -25,18 +25,6 @@ describe('UserService', () => {
         backend.verify();
     });
 
-    it('testing #findByEmail', async done => {
-        const promise = userService.findByEmail('admin');
-        const req = backend.expectOne({
-            url: '/users/findByEmail?email=admin',
-            method: 'GET'
-        });
-        req.flush({});
-        const [data, error] = await promise;
-        expect(data).toEqual({});
-        done();
-    });
-
     it('testing #get', done => {
         userService.get(1, 5).subscribe(res => {
             expect(res).toEqual([user]);
@@ -65,20 +53,5 @@ describe('UserService', () => {
         user.id = 1;
         user.createdAt = 'now';
         req.flush([user]);
-    });
-
-    it('testing #patch', async done => {
-        const user = new User();
-        user.id = 1;
-        const promise = userService.patch(user);
-        const req = backend.expectOne({
-            url: '/users/1',
-            method: 'PATCH'
-        });
-        user.firstName = 'Daniel';
-        req.flush(user);
-        const [res, error] = await promise;
-        expect(res).toEqual(user);
-        done();
     });
 });

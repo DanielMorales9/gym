@@ -12,11 +12,6 @@ export class UserService {
         return this.http.get(`/users/${id}`);
     }
 
-    @to_promise
-    findByEmail(email: string): any {
-        return this.http.get(`/users/findByEmail?email=${email}`);
-    }
-
     get(page: number, size: number): any {
         return this.http.get(`/users?page=${page}&size=${size}&sort=lastName`);
     }
@@ -25,8 +20,7 @@ export class UserService {
         return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
     }
 
-    @to_promise
-    patch(user): any {
+    patchUser(user): Observable<Object> {
         return this.http.patch(`/users/${user.id}`, user);
     }
 

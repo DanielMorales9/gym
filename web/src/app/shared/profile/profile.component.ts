@@ -12,6 +12,8 @@ import {ImageModalComponent} from './image-modal.component';
 import {ImageCropModalComponent} from './image-crop-modal.component';
 import {LyDialog} from '@alyle/ui/dialog';
 import {ImgCropperEvent} from '@alyle/ui/image-cropper';
+import {filter, switchMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
     templateUrl: './profile.component.html',
@@ -47,16 +49,18 @@ export class ProfileComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(async (user: User) => {
-            if (user) {
-                const [data, error] = await this.userService.patch(user);
-                if (error) {
-                    this.snackbar.open(error.error.message);
-                } else {
-                    this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
-                }
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(
+                switchMap(user => {
+                    if (user) {
+                        return this.userService.patchUser(user);
+                    }
+                    return of(null);
+                }),
+                filter(res => res !== null)
+            )
+            .subscribe((user: User) => this.snackbar.open(`L'utente ${user.lastName} è stato modificato`),
+                    error => this.snackbar.open(error.error.message));
     }
 
     getUserCreatedAt() {

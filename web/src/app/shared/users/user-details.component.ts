@@ -8,7 +8,7 @@ import {SnackBarService} from '../../core/utilities';
 import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {ImageModalComponent} from '../profile/image-modal.component';
-import {catchError, first, map, switchMap} from 'rxjs/operators';
+import {catchError, filter, first, map, switchMap} from 'rxjs/operators';
 import {throwError} from 'rxjs';
 
 
@@ -60,7 +60,6 @@ export class UserDetailsComponent implements OnInit {
     }
 
     openEditDialog(): void {
-
         const dialogRef = this.dialog.open(UserModalComponent, {
             data: {
                 title: 'Modifica Utente',
@@ -69,18 +68,13 @@ export class UserDetailsComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(user => {
-            if (user) { this.patchUser(user); }
-        });
-    }
-
-    private async patchUser(user: User) {
-        const [data, error] = await this.service.patch(user);
-        if (error) {
-            this.snackbar.open(error.error.message);
-        } else {
-            this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
-        }
+        dialogRef.afterClosed().pipe(
+            filter( r => !!r),
+            switchMap(u => this.service.patchUser(u)),
+            ).subscribe(
+                (u: User) => this.snackbar.open(`L'utente ${u.lastName} è stato modificato`),
+                error => this.snackbar.open(error.error.message)
+        );
     }
 
     async deleteUser() {
