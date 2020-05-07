@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {ScreenService} from './core/utilities';
+import {GymService, ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
 import {SideBarComponent} from './components';
 import {AuthenticationService} from './core/authentication';
@@ -17,6 +17,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
+                private gymService: GymService,
                 private router: Router,
                 private route: ActivatedRoute) {
     }

@@ -277,7 +277,7 @@ export class AuthenticationService {
 
     @to_promise
     getConfig(): any {
-        return this.http.get(`/gyms`);
+        return this.http.get(`/gyms`).pipe(map(v => v[0]));
     }
 
 }
