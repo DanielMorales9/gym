@@ -191,4 +191,9 @@ export class AuthenticationService {
     private findUserByEmail(email: string): any {
         return this.http.get(`/users/findByEmail?email=${email}`);
     }
+
+    hasUser() {
+        const user = this.getUser() as any;
+        return !!user && Object(user.keys).length > 0;
+    }
 }

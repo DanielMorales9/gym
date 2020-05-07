@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {AppService, GymService} from './services';
-import {User} from './shared/model';
+import {GymService} from './services';
 import {ScreenService} from './core/utilities';
 import {Subscription} from 'rxjs';
 import {SideBarComponent} from './components';
+import {AuthenticationService} from './core/authentication';
 
 
 @Component({
@@ -15,31 +15,28 @@ import {SideBarComponent} from './components';
 })
 export class AppComponent implements OnInit, OnDestroy {
 
-    constructor(private service: AppService,
+    constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
                 private router: Router,
                 private route: ActivatedRoute,
                 private gymService: GymService) {
     }
 
-    user: User;
     appName: string;
     authenticated: boolean;
-    current_role_view: number;
 
     @ViewChild('sideBar', { static: true })
     public sideBar: SideBarComponent;
 
     private sub: Subscription = new Subscription();
 
+    private static setTitle(...title) {
+        document.title = title.join(' - ');
+    }
+
     async ngOnInit(): Promise<void> {
         this.authOnNavigation();
         await this.authenticate();
-    }
-
-    // noinspection JSMethodCanBeStatic
-    private setTitle(...title) {
-        document.title = title.join(' - ');
     }
 
     private getTitle(state, parent) {
@@ -54,12 +51,14 @@ export class AppComponent implements OnInit, OnDestroy {
         return data;
     }
 
+    private getCurrentRole() {
+        return this.auth.getCurrentUserRole();
+    }
+
     private async authenticate() {
-        const [authenticated, _] = await this.service.authenticate();
-        this.authenticated = authenticated;
-        if (this.authenticated && !this.user) {
-            this.current_role_view = this.service.currentRole;
-            this.user = this.service.user;
+        const [data, err] = await this.auth.login();
+        this.authenticated = !!data;
+        if (this.authenticated && this.hasUser()) {
             await this.getAppName();
         }
     }
@@ -68,7 +67,7 @@ export class AppComponent implements OnInit, OnDestroy {
         const [data, _] = await this.gymService.getConfig();
         if (data) {
             this.appName = data.name;
-            this.setTitle(this.appName);
+            AppComponent.setTitle(this.appName);
         }
     }
 
@@ -77,10 +76,8 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     async logout() {
-        await this.service.logout();
+        await this.auth.logout();
         this.authenticated = false;
-        this.user = undefined;
-        this.current_role_view = undefined;
         await this.router.navigateByUrl('/auth');
         await this.sideBar.close();
     }
@@ -91,7 +88,7 @@ export class AppComponent implements OnInit, OnDestroy {
                 await this.authenticate();
                 await this.closeNav();
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
-                this.setTitle(this.appName, ...titles);
+                AppComponent.setTitle(this.appName, ...titles);
             }
         });
         this.sub.add(sub);
@@ -102,9 +99,9 @@ export class AppComponent implements OnInit, OnDestroy {
     }
 
     async goHome() {
-        if (this.authenticated) {
-            const roleName = this.user.roles
-                .find(value => value.id === this.current_role_view)
+        if (this.authenticated && this.hasUser()) {
+            const roleName = this.getUser().roles
+                .find(value => value.id === this.getCurrentRole())
                 .name.toLowerCase();
             await this.router.navigateByUrl(roleName);
         }
@@ -131,5 +128,13 @@ export class AppComponent implements OnInit, OnDestroy {
         if (this.authenticated) {
             await this.sideBar.toggle();
         }
+    }
+
+    private getUser() {
+        return this.auth.getUser();
+    }
+
+    private hasUser() {
+        return this.auth.hasUser();
     }
 }

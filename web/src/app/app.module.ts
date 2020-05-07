@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
-import {AppService, GlobalErrorHandler, GymService} from './services';
+import {GlobalErrorHandler, GymService} from './services';
 import {
     ErrorComponent, MenuControlsComponent, NavBarComponent,
     PrimaryAdminControlsComponent,
@@ -89,7 +89,6 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
         HammerModule,
     ],
     providers: [
-        AppService,
         GymService,
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
