@@ -4,6 +4,9 @@ import {GymService} from '../../services';
 import {MatDialog} from '@angular/material';
 import {GymModalComponent} from './gym-modal.component';
 import {SnackBarService} from '../../core/utilities';
+import {Observable} from 'rxjs';
+import {filter, first, map, share, switchMap, take, takeUntil} from 'rxjs/operators';
+import {AuthenticationService} from '../../core/authentication';
 
 @Component({
     templateUrl: './gym-settings.component.html',
@@ -15,21 +18,19 @@ export class GymSettingsComponent implements OnInit {
     canEdit: boolean;
 
     constructor(private gymService: GymService,
+                private authService: AuthenticationService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
+        this.authService.getConfig()
+            .pipe(
+                take(1),
+                share()
+            )
+            .subscribe(res => this.gym = res);
         this.canEdit = this.gymService.canEdit();
     }
 
-    async ngOnInit(): Promise<void> {
-        const [data, error] = await this.gymService.getConfig();
-
-        if (error) {
-            throw error;
-        }
-        else {
-            this.gym = data;
-        }
-    }
+    ngOnInit(): void {}
 
     openDialog(): void {
 
@@ -37,8 +38,8 @@ export class GymSettingsComponent implements OnInit {
             data: this.gym
         });
 
-        dialogRef.afterClosed().subscribe((gym) => {
-            if (gym) { this.gymService.patch(gym).subscribe((g: Gym) => this.gym = g); }
-        });
+        dialogRef.afterClosed()
+            .pipe(filter(v => !!v),
+                switchMap(gym => this.gymService.patch(gym))).subscribe(r => this.gym = r);
     }
 }

@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
 import {StorageService} from './storage.service';
-import {catchError, map} from 'rxjs/operators';
+import {catchError, map, throttleTime} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {Observable, of} from 'rxjs';
 
@@ -121,7 +121,9 @@ export class AuthenticationService {
     private async getPrincipal() {
         let principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
         if (!principal) {
-            principal = await this.signIn().pipe(catchError(err => of(null))).toPromise();
+            principal = await this.signIn()
+                .pipe(catchError(err => of(null)))
+                .toPromise();
             this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, principal, this.TTL);
         }
 
@@ -234,15 +236,14 @@ export class AuthenticationService {
 
     async getGym(): Promise<any> {
         let gym = this.getWithExpiry(this.GYM_EXPIRE_KEY);
-        let error;
         if (!gym) {
-            [gym, error] = await this.getConfig();
+            gym = await this.getConfig().toPromise();
             if (!!gym) {
                 this.setWithExpiry(this.GYM_EXPIRE_KEY, gym, this.TTL);
             }
         }
 
-        return [gym, error];
+        return [gym, !gym];
     }
 
     setWithExpiry(key, value, ttl) {
@@ -275,9 +276,11 @@ export class AuthenticationService {
         return item.value;
     }
 
-    @to_promise
     getConfig(): any {
-        return this.http.get(`/gyms`).pipe(map(v => v[0]));
+        return this.http.get(`/gyms`).pipe(
+            throttleTime(100),
+            map((res: Object) => res[0])
+        );
     }
 
 }
