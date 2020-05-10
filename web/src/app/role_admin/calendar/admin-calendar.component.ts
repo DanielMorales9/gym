@@ -39,10 +39,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                 map(r => r.map(v => this.formatEvent(v)))
             )
             .subscribe(r => {
-                this.events = [];
-                r.forEach((o: any) => {
-                    this.events.push(...o.map(v => this.formatEvent(v)));
-                });
+                this.events = r;
                 this.refreshView();
             });
     }
