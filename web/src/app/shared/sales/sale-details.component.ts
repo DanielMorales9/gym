@@ -7,12 +7,15 @@ import {SaleHelperService} from '../../core/helpers';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {PolicyService} from '../../core/policy';
+import {of} from 'rxjs';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './sale-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
 })
-export class SaleDetailsComponent implements OnInit {
+export class SaleDetailsComponent extends BaseComponent implements OnInit {
 
     sale: Sale;
 
@@ -34,6 +37,7 @@ export class SaleDetailsComponent implements OnInit {
                 private dialog: MatDialog,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
+        super();
     }
 
 
@@ -86,20 +90,24 @@ export class SaleDetailsComponent implements OnInit {
             sale: this.sale
             }});
 
-        dialogRef.afterClosed().subscribe(res => {
-            if (res) { this.service.pay(res.sale.id, res.amount).subscribe((value: Sale) => this.getSale(value.id));
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this.unsubscribe$),
+                filter(v => !!v),
+                switchMap(v => this.service.pay(v.sale.id, v.amount))
+            )
+        .subscribe(
+            (value: Sale) => this.getSale(value.id)
+        );
     }
 
-    async goToBundleSpecDetails(id: number) {
-        await this.router.navigate(['bundleSpecs', id], {
+    goToBundleSpecDetails(id: number) {
+        this.router.navigate(['bundleSpecs', id], {
             relativeTo: this.route.parent
         });
     }
 
-    async goToBundleDetails(id: number) {
-        await this.router.navigate(['bundles', id], {
+    goToBundleDetails(id: number) {
+        this.router.navigate(['bundles', id], {
             relativeTo: this.route.parent
         });
     }
@@ -110,14 +118,12 @@ export class SaleDetailsComponent implements OnInit {
         }
     }
 
-    async deletePayment(id: any) {
-        const res = confirm('Sei sicuro di voler eliminare il pagamento?');
-        if (res) {
-            const [data, error] = await this.service.deletePayment(this.sale.id, id);
-            if (error) {
-                throw error;
-            }
-            this.sale = data;
-        }
+    deletePayment(id: any) {
+        of(confirm('Sei sicuro di voler eliminare il pagamento?'))
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                switchMap(v => this.service.deletePayment(this.sale.id, id))
+            )
+            .subscribe((data: Sale) => this.sale = data);
     }
 }
