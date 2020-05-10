@@ -189,10 +189,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     private async initCalendarConfig() {
-        const [config, error] = await this.facade.getConfig().toPromise();
-        if (error) {
-            throw error;
-        }
+        const config = await this.facade.getConfig().toPromise();
         this.gym = config;
         this.dayStartHour = 24;
         this.dayEndHour = 0;

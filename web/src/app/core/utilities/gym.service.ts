@@ -41,7 +41,6 @@ export class GymService {
 
     getConfig(): Observable<any> {
         return this.http.get(`/gyms`).pipe(
-            throttleTime(100),
             map((res: Object) => {
             this.gym = res[0];
             return res[0];

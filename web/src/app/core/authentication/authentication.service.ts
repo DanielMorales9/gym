@@ -32,7 +32,7 @@ export class AuthenticationService {
     private readonly ROLE_KEY = 'role';
     private readonly GYM_EXPIRE_KEY: 'gym_ttl';
 
-    private readonly TTL = environment.production ? 10000 : 1000;
+    private readonly TTL = environment.production ? 10000 : 0;
     private user: User;
     private remember: boolean;
     private currentRole: number;
