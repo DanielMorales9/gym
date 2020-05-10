@@ -6,12 +6,15 @@ import {MatDialog} from '@angular/material';
 import {PolicyService} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {WorkoutModalComponent} from './workout-modal.component';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
+import {of} from 'rxjs';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './workout-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
 })
-export class WorkoutDetailsComponent implements OnInit {
+export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
 
     workout: Workout;
 
@@ -24,13 +27,14 @@ export class WorkoutDetailsComponent implements OnInit {
                 private policy: PolicyService,
                 private snackBar: SnackBarService,
                 private route: ActivatedRoute) {
+        super();
     }
 
     ngOnInit(): void {
         this.getPolicies();
 
-        this.route.params.subscribe(async params => {
-            await this.getWorkout(+params['id']);
+        this.route.params.subscribe( params => {
+            this.getWorkout(+params['id']);
         });
     }
 
@@ -49,21 +53,25 @@ export class WorkoutDetailsComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(res => {
-            if (res) {
-                this.service.patchWorkout(res).subscribe((v: any) => this.workout = v);
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(v => !!v),
+                switchMap(v => this.service.patchWorkout(v)))
+            .subscribe((res: Workout) => this.workout = res);
     }
 
     deleteBundle() {
-        const confirmed = confirm(`Vuoi eliminare il workout ${this.workout.name}?`);
-        if (confirmed) {
-            this.service.deleteWorkout(this.workout.id).subscribe(_ =>
+        of(confirm(`Vuoi eliminare il workout ${this.workout.name}?`))
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(a => !!a),
+                switchMap(v => this.service.deleteWorkout(this.workout.id))
+            )
+            .subscribe(_ =>
                 this.router.navigateByUrl('/', {
                     replaceUrl: true
                 }));
-        }
     }
 
     private getWorkout(id: number) {

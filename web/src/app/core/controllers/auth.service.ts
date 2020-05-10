@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../shared/model';
 import {to_promise} from '../functions/decorators';
+import {Observable} from 'rxjs';
 
 @Injectable()
 export class AuthService {
@@ -18,8 +19,7 @@ export class AuthService {
         return this.http.get('/authentication/getUserFromVerificationToken', {params: {token: token}});
     }
 
-    @to_promise
-    registration(user: User): any {
+    registration(user: User): Observable<any> {
         return this.http.post(`/authentication/registration`, user);
     }
 
@@ -28,8 +28,7 @@ export class AuthService {
         return this.http.get('/authentication/resendToken', {params: {token: token}});
     }
 
-    @to_promise
-    resendTokenAnonymous(id: number): any {
+    resendTokenAnonymous(id: number): Observable<any> {
         return this.http.get(`/authentication/resendTokenAnonymous?id=${id}`);
     }
 

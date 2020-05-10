@@ -22,7 +22,7 @@ export class ReservationModalComponent {
         this.selected = this.data.selected;
     }
 
-    async close() {
+    close() {
         this.dialogRef.close();
     }
 
