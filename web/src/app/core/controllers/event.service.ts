@@ -8,19 +8,16 @@ export class EventService {
 
     constructor(private http: HttpClient) {}
 
-    @to_promise
-    getTimesOff(start: string, end: string, id: number): any {
+    getTimesOff(start: string, end: string, id: number): Observable<any> {
         return this.http.get(`/events/timeOff?trainerId=${id}&startTime=${start}&endTime=${end}`);
     }
 
-    @to_promise
-    deleteTimeOff(id: number): any {
+    deleteTimeOff(id: number): Observable<any> {
         const endpoint = `/events/timeOff/${id}`;
         return this.http.delete(endpoint);
     }
 
-    @to_promise
-    getAllEvents(start: string, end: string): any {
+    getAllEvents(start: string, end: string): Observable<any> {
         return this.http.get(`/events?startTime=${start}&endTime=${end}`);
     }
 
@@ -32,8 +29,7 @@ export class EventService {
         return this.http.post(`/events/${gymId}/holiday/isAvailable`, event);
     }
 
-    @to_promise
-    createHoliday(gymId: any, event: { name: string; startTime: Date; endTime: Date }): any {
+    createHoliday(gymId: any, event: { name: string; startTime: Date; endTime: Date }): Observable<any> {
         return this.http.post(`/events/${gymId}/holiday`, event);
     }
 
@@ -41,21 +37,19 @@ export class EventService {
         return this.http.post(`/events/${gymId}/timeOff?trainerId=${trainerId}`, event);
     }
 
-    @to_promise
-    deleteHoliday(id: number): any {
+    deleteHoliday(id: number): Observable<any> {
         return this.http.delete(`/events/holiday/${id}`);
     }
 
-    editHoliday(gymId: number, id: any, event: { name: string; startTime: Date; endTime: Date }) {
+    editHoliday(gymId: number, id: any, event: { name: string; startTime: Date; endTime: Date }): Observable<any> {
         return this.http.patch(`/events/${gymId}/holiday/${id}`, event);
     }
 
-    canEdit(gymId: any, event: { startTime: any; endTime: any }) {
+    canEdit(gymId: any, event: { startTime: any; endTime: any }): Observable<any> {
         return this.http.post(`/events/${gymId}/canEdit`, event);
     }
 
-    @to_promise
-    getHolidays(start: any, end: any): any {
+    getHolidays(start: any, end: any): Observable<any> {
         return this.http.get(`/events/holiday?startTime=${start}&endTime=${end}`);
     }
 
@@ -67,23 +61,19 @@ export class EventService {
         return this.http.post(`/events/${gymId}/course`, event);
     }
 
-    @to_promise
-    deleteCourseEvent(id: any): any {
+    deleteCourseEvent(id: any): Observable<any> {
         return this.http.delete(`/events/course/${id}`);
     }
 
-    @to_promise
-    getCourseEvents(start: string, end: string): any {
+    getCourseEvents(start: string, end: string): Observable<any> {
         return this.http.get(`/events/course?startTime=${start}&endTime=${end}`);
     }
 
-    @to_promise
-    getCustomerEvents(id: any, start: string, end: string): any {
+    getCustomerEvents(id: any, start: string, end: string): Observable<any> {
         return this.http.get(`/events/personal?customerId=${id}&startTime=${start}&endTime=${end}`);
     }
 
-    @to_promise
-    getTrainingEvents(start: string, end: string): any {
+    getTrainingEvents(start: string, end: string): Observable<any> {
         return this.http.get(`/events/training?&startTime=${start}&endTime=${end}`);
     }
 
@@ -91,8 +81,7 @@ export class EventService {
         return this.http.get(`/events/${id}/complete`);
     }
 
-    @to_promise
-    findById(id: number): any {
+    findById(id: number): Observable<any> {
         return this.http.get(`/events/${id}`);
     }
 }

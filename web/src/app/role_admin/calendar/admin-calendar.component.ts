@@ -10,6 +10,7 @@ import {AdminDeleteModalComponent} from './admin-delete-modal.component';
 import {AdminChangeModalComponent} from './admin-change-modal.component';
 import {AdminHourModalComponent} from './admin-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
+import {filter, map, takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -29,15 +30,21 @@ export class AdminCalendarComponent extends BaseCalendar {
         super(facade, router, snackBar, activatedRoute, screenService);
     }
 
-    async getEvents() {
+    getEvents() {
         this.events = [];
         const {startDay, endDay} = this.getStartAndEndTimeByView();
-        const [data, error] = await this.facade.getAllEvents(startDay, endDay);
-        if (error) {
-            throw error;
-        }
-        this.events.push(...data.map(value => this.formatEvent(value)));
-        this.refreshView();
+        this.facade.getAllEvents(startDay, endDay)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(r => r.map(v => this.formatEvent(v)))
+            )
+            .subscribe(r => {
+                this.events = [];
+                r.forEach((o: any) => {
+                    this.events.push(...o.map(v => this.formatEvent(v)));
+                });
+                this.refreshView();
+            });
     }
 
     header(action: string, event: any) {
@@ -65,20 +72,20 @@ export class AdminCalendarComponent extends BaseCalendar {
         this.openModal(action);
     }
 
-    async hour(action: string, event: any) {
-        const [data, error] = await this.facade.getCourses();
-        if (error) {
-            return this.snackBar.open(error.error.message);
-        }
-        event.courses = data;
-        this.modalData = {
-            action: EVENT_TYPES.HOUR,
-            title: 'Crea Evento',
-            userId: this.user.id,
-            role: this.role,
-            event: event
-        };
-        this.openModal(action);
+    hour(action: string, event: any) {
+        this.facade.getCourses()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(data => {
+                event.courses = data;
+                this.modalData = {
+                    action: EVENT_TYPES.HOUR,
+                    title: 'Crea Evento',
+                    userId: this.user.id,
+                    role: this.role,
+                    event: event
+                };
+                this.openModal(action);
+            }, err => this.snackBar.open(err.error.message));
 
     }
 
@@ -135,11 +142,10 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(async data => {
-            if (!!data) {
-                await this.createHoliday(data);
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(
+                filter(data => !!data)
+            ).subscribe(r => this.createHoliday(r));
     }
 
     private openHourModal() {
@@ -147,7 +153,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(async data => {
+        dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
                 if (!data.end) {
                     data.end = this.dateService.addHour(data.start);
@@ -155,7 +161,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                 if (!!data.meta) {
                     this.createCourseEvent(data);
                 } else {
-                    await this.createHoliday(data);
+                    this.createHoliday(data);
                 }
             }
         });
@@ -166,14 +172,14 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(async data => {
+        dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
                 switch (data.type) {
                     case 'confirm':
                         this.confirmReservation(data);
                         break;
                     case 'complete':
-                        await this.completeEvent(data);
+                        this.completeEvent(data);
                         break;
                     case 'none':
                         return;
@@ -187,20 +193,20 @@ export class AdminCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(async data => {
+        dialogRef.afterClosed().subscribe(data => {
             if (!!data) {
                 switch (data.type) {
                     case 'admin':
-                        await this.deleteHoliday(data);
+                        this.deleteHoliday(data);
                         break;
                     case 'trainer':
-                        await this.deleteTrainerTimeOff(data);
+                        this.deleteTimeOff(data);
                         break;
                     case 'reservation':
                         this.deleteReservation(data);
                         break;
                     case 'course':
-                        await this.deleteCourseEvent(data);
+                        this.deleteCourseEvent(data);
                         break;
                     case 'notAllowed':
                         this.snackBar.open('Non può essere cancellata dall\'admin!');
@@ -220,64 +226,5 @@ export class AdminCalendarComponent extends BaseCalendar {
                 this.editHoliday(data);
             }
         });
-    }
-
-    private editHoliday(data) {
-        this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
-            .subscribe(async (_) => {
-                this.snackBar.open('Chiusura confermata');
-                await this.getEvents();
-            }, (err) => this.snackBar.open(err.error.message));
-    }
-
-    private async createHoliday(data) {
-        const [_, error] = await this.facade.createHoliday(data.eventName, data.start, data.end);
-        if (error) {
-            this.snackBar.open(error.error.message);
-        }
-        else {
-            this.snackBar.open('Chiusura confermata');
-            await this.getEvents();
-        }
-    }
-
-    private async deleteTrainerTimeOff(data) {
-        const [_, error] = await this.facade.deleteTimeOff(data.eventId);
-        if (error) {
-            this.snackBar.open(error.error.message);
-        }
-        else {
-            this.snackBar.open('Ferie cancellate');
-            await this.getEvents();
-        }
-    }
-
-    private async deleteHoliday(data) {
-        const [_, err] = await this.facade.deleteHoliday(data.eventId);
-        if (err) {
-            return this.snackBar.open(err.error.message);
-        }
-        this.snackBar.open('La chiusura è stata eliminata');
-        await this.getEvents();
-    }
-
-    private createCourseEvent(data: any) {
-        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end)
-            .subscribe(async (_) => {
-                this.snackBar.open('Evento creato');
-                await this.getEvents();
-            }, (err) => {
-                this.snackBar.open(err.error.message);
-            });
-    }
-
-    private async deleteCourseEvent(data: any) {
-        const [d, error] = await this.facade.deleteCourseEvent(data.eventId);
-        if (error) {
-            this.snackBar.open(error.error.message);
-            return;
-        }
-        this.snackBar.open('Evento eliminato');
-        await this.getEvents();
     }
 }

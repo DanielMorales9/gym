@@ -60,12 +60,12 @@ export class CalendarFacade {
     /**
      * BUNDLE API
      */
-    getCourses() {
-        return this.specService.list({disabled: false, type: 'C'});
+    getCourses(): Observable<any> {
+        return this.specService.listBundleSpecs({disabled: false, type: 'C'});
     }
 
 
-    getCustomerEvents(id: number, startTime: any, endTime: any) {
+    getCustomerEvents(id: number, startTime: any, endTime: any): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getCustomerEvents(id, startS, endS);
@@ -75,19 +75,19 @@ export class CalendarFacade {
      * EVENTS API
      */
 
-    getAllEvents(startTime: any, endTime: any) {
+    getAllEvents(startTime: any, endTime: any): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getAllEvents(startS, endS);
     }
 
-    getCourseEvents(startTime: any, endTime: any) {
+    getCourseEvents(startTime: any, endTime: any): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getCourseEvents(startS, endS);
     }
 
-    getTrainingEvents(startTime: any, endTime: any) {
+    getTrainingEvents(startTime: any, endTime: any): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getTrainingEvents(startS, endS);
@@ -103,7 +103,7 @@ export class CalendarFacade {
         return this.eventService.isHolidayAvailable(gymId, {startTime: startTime, endTime: endTime});
     }
 
-    createHoliday(eventName: any, start: Date, end: Date) {
+    createHoliday(eventName: any, start: Date, end: Date): Observable<any> {
         const gymId = this.gymService.gym.id;
         if (!end) {
             const {startTime, endTime} = this.gymService.getGymStartAndEndHour(start);
@@ -114,7 +114,7 @@ export class CalendarFacade {
         return this.eventService.createHoliday(gymId, {name: eventName, startTime: start, endTime: end});
     }
 
-    deleteHoliday(id: any) {
+    deleteHoliday(id: any): Observable<any> {
         return this.eventService.deleteHoliday(id);
     }
 
@@ -131,7 +131,7 @@ export class CalendarFacade {
     }
 
 
-    getHoliday(startTime: any, endTime: any): any {
+    getHoliday(startTime: any, endTime: any): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getHolidays(startS, endS);
@@ -159,13 +159,13 @@ export class CalendarFacade {
         return this.eventService.isTimeOffAvailable(gymId, {startTime: startTime, endTime: endTime});
     }
 
-    getTimesOff(startTime: any, endTime: any, id: number) {
+    getTimesOff(startTime: any, endTime: any, id: number): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
         return this.eventService.getTimesOff(startS,  endS, id);
     }
 
-    deleteTimeOff(id: number) {
+    deleteTimeOff(id: number): Observable<any> {
         return this.eventService.deleteTimeOff(id);
     }
 
@@ -243,7 +243,7 @@ export class CalendarFacade {
         return this.eventService.createCourseEvent(gymId, {name: name, id: meta, startTime: start, endTime: end});
     }
 
-    deleteCourseEvent(id: any) {
+    deleteCourseEvent(id: any): Observable<any> {
         return this.eventService.deleteCourseEvent(id);
     }
 
@@ -255,7 +255,7 @@ export class CalendarFacade {
         return this.userService.getCustomerBundleBySpecId(userId, specId);
     }
 
-    findEventById(id: number) {
+    findEventById(id: number): Observable<any> {
         return this.eventService.findById(id);
     }
 }
