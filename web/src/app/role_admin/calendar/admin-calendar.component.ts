@@ -173,7 +173,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                         this.confirmReservation(data);
                         break;
                     case 'complete':
-                        await this.completeReservation(data);
+                        await this.completeEvent(data);
                         break;
                     case 'none':
                         return;
@@ -230,16 +230,6 @@ export class AdminCalendarComponent extends BaseCalendar {
             }, (err) => this.snackBar.open(err.error.message));
     }
 
-    private deleteReservation(data) {
-        this.facade.deleteReservation(data)
-            .subscribe(async _ => {
-                this.snackBar.open('Prenotazione è stata eliminata');
-                await this.getEvents();
-            }, err => {
-                this.snackBar.open(err.error.message, undefined, {duration: 5000});
-            });
-    }
-
     private async createHoliday(data) {
         const [_, error] = await this.facade.createHoliday(data.eventName, data.start, data.end);
         if (error) {
@@ -268,16 +258,6 @@ export class AdminCalendarComponent extends BaseCalendar {
             return this.snackBar.open(err.error.message);
         }
         this.snackBar.open('La chiusura è stata eliminata');
-        await this.getEvents();
-    }
-
-    private async completeReservation(data) {
-        const [_, err] = await this.facade.completeEvent(data.eventId);
-        if (err) {
-            this.snackBar.open(err.error.message);
-            return;
-        }
-        this.snackBar.open('Allenamento completato');
         await this.getEvents();
     }
 

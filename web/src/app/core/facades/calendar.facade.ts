@@ -184,8 +184,8 @@ export class CalendarFacade {
         return this.reservationService.confirmReservation(id);
     }
 
-    completeEvent(id: number) {
-        return this.eventService.complete(id);
+    completeEvent(id: number): Observable<any> {
+        return this.eventService.completeEvent(id);
     }
 
     deleteReservation(data: any, id?: number) {
@@ -213,7 +213,7 @@ export class CalendarFacade {
         return this.reservationService.createReservationFromBundle(gymId, userId, bundleId, event);
     }
 
-    createReservationFromEvent(userId: any, eventId: number, bundleId: number) {
+    createReservationFromEvent(userId: any, eventId: number, bundleId: number): Observable<any> {
         const gymId = this.gymService.gym.id;
         return this.reservationService.createReservationFromEvent(gymId,
             {customerId: userId, eventId: eventId, bundleId: bundleId});
@@ -251,7 +251,7 @@ export class CalendarFacade {
         return this.auth.getRoleByUser(user);
     }
 
-    getUserBundleBySpecId(userId: number, specId: any) {
+    getUserBundleBySpecId(userId: number, specId: any): Observable<any> {
         return this.userService.getBundleBySpecId(userId, specId);
     }
 

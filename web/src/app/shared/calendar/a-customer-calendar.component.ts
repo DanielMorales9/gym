@@ -45,12 +45,12 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async getUser() {
-         await this.activatedRoute.params.pipe(
-             first(),
-             switchMap(params => this.facade.findUserById(+params['id'])),
-             catchError(r => throwError(r)),
-             map(r => this.user = r)
-         ).toPromise();
+        await this.activatedRoute.params.pipe(
+            first(),
+            switchMap(params => this.facade.findUserById(+params['id'])),
+            catchError(r => throwError(r)),
+            map(r => this.user = r)
+        ).toPromise();
     }
 
     async getRole() {
@@ -61,8 +61,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        const d = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
-        this.user.currentTrainingBundles = d;
+        this.user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
 
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} ha pacchetti a disposizione`);
@@ -133,32 +132,11 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         dialogRef.afterClosed().subscribe(async data => {
             if (data) {
                 if (data.type === 'confirm') { this.confirmReservation(data); }
-                else if (data.type === 'complete') { await this.completeReservation(data); }
+                else if (data.type === 'complete') { this.completeEvent(data); }
                 else if (data.type === 'delete') { this.deleteReservation(data); }
                 else { this.createReservation(data); }
             }
         });
-    }
-
-    private async createReservation(d) {
-        const userId = d.userId;
-        const specId = d.event.meta.specification.id;
-        let [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
-        if (error) {
-            throw error;
-        }
-        if (data.length === 0) {
-            this.snackBar.open('Non possiedi questo pacchetto');
-            return;
-        }
-        const bundleId = data[0].id;
-        [data, error] = await this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId);
-        if (error) {
-            this.snackBar.open(error.error.message);
-            return;
-        }
-        this.snackBar.open('Prenotazione effettuata');
-        await this.getEvents();
     }
 
     private openHourModal() {
@@ -168,17 +146,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-
-                this.facade.createReservationFromBundle(data.userId, data.bundleId,
-                    { startTime: data.startTime, endTime: data.endTime })
-                    .subscribe(async res => {
-                        this.snackBar.open('Prenotazione effettuata');
-                        await this.getEvents();
-                    }, err => {
-                        if (err.error) {
-                            this.snackBar.open(err.error.message);
-                        }
-                    });
+                this.createReservationFromBundle(data);
             }
         });
     }
@@ -194,28 +162,4 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             }
         });
     }
-
-    private deleteReservation(data) {
-        this.facade.deleteReservation(data, this.user.id)
-            .subscribe(async res => {
-                this.snackBar.open('La Prenotazione è stata eliminata');
-                await this.getEvents();
-            }, err => {
-                if (err.error) {
-                    this.snackBar.open(err.error.message, undefined, {duration: 5000});
-                }
-            });
-    }
-
-    private async completeReservation(data) {
-        const [_, err] = await this.facade.completeEvent(data.eventId);
-        if (err) {
-            this.snackBar.open(err.error.message);
-            return;
-        }
-        this.snackBar.open('Allenamento completato');
-        await this.getEvents();
-    }
-
-
 }

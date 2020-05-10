@@ -207,23 +207,18 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         return true;
     }
 
-    async complete() {
+    completeEvent() {
         if (this.event.type === 'P') {
-            const [data, error] = await this.facade.completeEvent(this.event.id);
-            if (error) {
-                this.snackBar.open(error.error.message);
-            }
+            this.facade.completeEvent(this.event.id)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(async r => await this.findById(this.event.id),
+                        error => this.snackBar.open(error.error.message));
         }
-        await this.findById(this.event.id);
     }
 
-    async reserveFromEvent(userId, bundleId) {
-        const [data, error] = await this.facade
-            .createReservationFromEvent(userId, this.event.id, bundleId);
-        if (error) {
-            this.snackBar.open(error.error.message);
-        }
-        return data;
+    reserveFromEvent(userId, bundleId): Observable<any> {
+        return this.facade.createReservationFromEvent(userId, this.event.id, bundleId)
+            .pipe(takeUntil(this.unsubscribe$));
     }
 
     bookAll() {
@@ -249,8 +244,9 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         if (this.userSelected[userId] !== res[userId]) {
             if (res[userId]) {
                 const bundleId = this.userBundle[userId].id;
-                const data = await this.reserveFromEvent(userId, bundleId);
-                this.userReservation[userId] = data.id;
+                this.reserveFromEvent(userId, bundleId)
+                    .subscribe(r => this.userReservation[userId] = r.id);
+
             } else {
                 this.removeReservation(this.userReservation[userId])
                     .subscribe(r => this.userReservation[userId] = undefined);
@@ -261,13 +257,12 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     async book() {
         const user = this.auth.getUser();
-        const data = await this.facade.getCurrentTrainingBundles(user.id).toPromise();
-        user.currentTrainingBundles = data;
+        user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(user.id).toPromise();
         const bundle = user.currentTrainingBundles
             .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
         if (bundle) {
-            await this.reserveFromEvent(user.id, bundle.id);
-            await this.findById(this.event.id);
+            this.reserveFromEvent(user.id, bundle.id)
+                .subscribe(async d => await this.findById(this.event.id));
         }
     }
 

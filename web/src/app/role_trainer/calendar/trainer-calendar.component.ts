@@ -10,6 +10,7 @@ import {TrainerDeleteModalComponent} from './trainer-delete-modal.component';
 import {TrainerChangeModalComponent} from './trainer-change-modal.component';
 import {TrainerHourModalComponent} from './trainer-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
+import {takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -153,7 +154,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
                         this.confirmReservation(data);
                         break;
                     case 'complete':
-                        await this.completeReservation(data);
+                        this.completeEvent(data);
                         break;
                     case 'none':
                         return;
@@ -226,16 +227,6 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
     }
 
-    private async completeReservation(data: any) {
-        const [_, err] = await this.facade.completeEvent(data.eventId);
-        if (err) {
-            this.snackBar.open(err.error.message);
-            return;
-        }
-        this.snackBar.open('Allenamento completato');
-        await this.getEvents();
-    }
-
     private createTimeOff(data: any, end?: Date) {
         this.facade.createTimeOff(data.userId, data.name, data.start, end)
             .subscribe(async (_) => {
@@ -254,16 +245,6 @@ export class TrainerCalendarComponent extends BaseCalendar {
             this.snackBar.open('Ferie eliminate con successo');
             await this.getEvents();
         }
-    }
-
-    private deleteReservation(data: any) {
-        this.facade.deleteReservation(data)
-            .subscribe(async _ => {
-                this.snackBar.open('Prenotazione è stata eliminata');
-                await this.getEvents();
-            }, err => {
-                this.snackBar.open(err.error.message, undefined, {duration: 5000});
-            });
     }
 
     private editTimeOff(data) {

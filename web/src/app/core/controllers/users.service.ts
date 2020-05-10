@@ -45,8 +45,7 @@ export class UserService {
         return this.http.get('/customers/bundles', {params: query});
     }
 
-    @to_promise
-    getBundleBySpecId(userId: number, specId: any): any {
+    getBundleBySpecId(userId: number, specId: any): Observable<any> {
         return this.http.get(`/customers/${userId}/currentTrainingBundles`,
             {params: {specId: specId}});
     }

@@ -12,8 +12,7 @@ export class ReservationService {
         return this.http.post(`/reservations/${gymId}?customerId=${userId}&bundleId=${bundleId}`, event);
     }
 
-    @to_promise
-    createReservationFromEvent(gymId: number, params): any {
+    createReservationFromEvent(gymId: number, params): Observable<any> {
         return this.http.get(`/reservations/${gymId}`,
             {params: params});
     }
