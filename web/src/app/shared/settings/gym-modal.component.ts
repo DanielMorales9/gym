@@ -20,7 +20,7 @@ export class GymModalComponent implements OnInit {
                 @Inject(MAT_DIALOG_DATA) public data: any) {
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.gym = this.data;
         this.buildForm();
     }
