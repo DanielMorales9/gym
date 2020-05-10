@@ -39,13 +39,13 @@ export class UserService {
         return this.http.get(`/customers?page=${page}&size=${size}&sort=lastName`);
     }
 
-    getBundles(query: any, page: number, size: number) {
+    getCustomerBundles(query: any, page: number, size: number) {
         query['page'] = page;
         query['size'] = size;
         return this.http.get('/customers/bundles', {params: query});
     }
 
-    getBundleBySpecId(userId: number, specId: any): Observable<any> {
+    getCustomerBundleBySpecId(userId: number, specId: any): Observable<any> {
         return this.http.get(`/customers/${userId}/currentTrainingBundles`,
             {params: {specId: specId}});
     }

@@ -86,7 +86,7 @@ export class ProgrammeComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.service.patch(res)
+                this.service.patchWorkout(res)
                     .subscribe(_ => this.findById(this.event.id),
                         err => this.snackBar.open(err.err.message));
             }
@@ -95,7 +95,7 @@ export class ProgrammeComponent implements OnInit {
     }
 
     deleteWorkout(workout) {
-        this.service.deleteFromEvent(this.event.id, workout.id)
+        this.service.deleteWorkoutFromEvent(this.event.id, workout.id)
             .subscribe(res => {
                 if (this.event.session.workouts.length > 1) {
                     this.findById(this.event.id);
@@ -109,7 +109,7 @@ export class ProgrammeComponent implements OnInit {
     deleteProgramme() {
         forkJoin(
             this.event.session.workouts.map(workout => {
-                return this.service.deleteFromEvent(this.event.id.toString(), workout.id)
+                return this.service.deleteWorkoutFromEvent(this.event.id.toString(), workout.id)
                     .pipe( map( w => w));
             })
         ).subscribe(res => this.location.back(),

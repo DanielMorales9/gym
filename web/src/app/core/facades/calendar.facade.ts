@@ -252,7 +252,7 @@ export class CalendarFacade {
     }
 
     getUserBundleBySpecId(userId: number, specId: any): Observable<any> {
-        return this.userService.getBundleBySpecId(userId, specId);
+        return this.userService.getCustomerBundleBySpecId(userId, specId);
     }
 
     findEventById(id: number) {

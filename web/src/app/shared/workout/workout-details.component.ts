@@ -51,7 +51,7 @@ export class WorkoutDetailsComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
-                this.service.patch(res).subscribe((v: any) => this.workout = v);
+                this.service.patchWorkout(res).subscribe((v: any) => this.workout = v);
             }
         });
     }
@@ -59,7 +59,7 @@ export class WorkoutDetailsComponent implements OnInit {
     deleteBundle() {
         const confirmed = confirm(`Vuoi eliminare il workout ${this.workout.name}?`);
         if (confirmed) {
-            this.service.delete(this.workout.id).subscribe(_ =>
+            this.service.deleteWorkout(this.workout.id).subscribe(_ =>
                 this.router.navigateByUrl('/', {
                     replaceUrl: true
                 }));
@@ -67,6 +67,6 @@ export class WorkoutDetailsComponent implements OnInit {
     }
 
     private getWorkout(id: number) {
-        this.service.findById(id).subscribe(res => this.workout = res);
+        this.service.findWorkoutById(id).subscribe(res => this.workout = res);
     }
 }

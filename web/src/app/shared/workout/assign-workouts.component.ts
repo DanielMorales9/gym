@@ -55,7 +55,7 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
     }
 
     private getTags() {
-        this.service.getTags()
+        this.service.getWorkoutTags()
             .subscribe(res => {
                 if (res) {
                     res = res.map(v => new Object({value: v, name: v}));
@@ -115,7 +115,7 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
 
         forkJoin(
             selected.map(workout => {
-                return this.service.assign(this.id.toString(), workout)
+                return this.service.assignWorkout(this.id.toString(), workout)
                     .pipe( map( w => w));
             })
         ).subscribe(res => this.location.back(),
