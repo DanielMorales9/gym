@@ -5,7 +5,9 @@ import {Gym, User} from '../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
-import {ScreenService} from '../../core/utilities';
+import {ScreenService, SnackBarService} from '../../core/utilities';
+import {BaseComponent} from '../base-component';
+import {takeUntil} from 'rxjs/operators';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -31,12 +33,14 @@ interface EventGroupMeta {
 }
 
 @Injectable()
-export abstract class BaseCalendar implements OnInit, OnDestroy {
+export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy {
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
+                          public snackBar: SnackBarService,
                           public activatedRoute: ActivatedRoute,
                           public screenService: ScreenService) {
+        super();
     }
     private sub: Subscription;
 
@@ -450,6 +454,18 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
 
     refreshView() {
         this.refresh.next();
+    }
+
+    protected confirmReservation(data) {
+        this.facade.confirmReservation(data.eventId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(
+                async r => {
+                    this.snackBar.open('Prenotazione confermata');
+                    await this.getEvents();
+                },
+                err => this.snackBar.open(err.error.message)
+            );
     }
 
     private async updateQueryParams() {

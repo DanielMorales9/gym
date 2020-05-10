@@ -18,13 +18,12 @@ export class ReservationService {
             {params: params});
     }
 
-    delete(eventId: any, reservationId: any, gymId) {
+    deleteReservation(eventId: any, reservationId: any, gymId): Observable<any> {
         const endpoint = `/reservations/${reservationId}`;
         return this.http.delete(endpoint, { params: { eventId: eventId, gymId: gymId }});
     }
 
-    @to_promise
-    confirm(id: number): any {
+    confirmReservation(id: number): Observable<any> {
         return this.http.get(`/reservations/${id}/confirm`);
     }
 

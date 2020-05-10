@@ -21,12 +21,12 @@ export class AdminCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
                 private dateService: DateService,
-                private snackBar: SnackBarService,
+                public snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public screenService: ScreenService,
                 public router: Router,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute, screenService);
+        super(facade, router, snackBar, activatedRoute, screenService);
     }
 
     async getEvents() {
@@ -170,7 +170,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             if (!!data) {
                 switch (data.type) {
                     case 'confirm':
-                        await this.confirmReservation(data);
+                        this.confirmReservation(data);
                         break;
                     case 'complete':
                         await this.completeReservation(data);
@@ -278,15 +278,6 @@ export class AdminCalendarComponent extends BaseCalendar {
             return;
         }
         this.snackBar.open('Allenamento completato');
-        await this.getEvents();
-    }
-
-    private async confirmReservation(data) {
-        const [d, error] = await this.facade.confirmReservation(data.eventId);
-        if (error) {
-            return this.snackBar.open(error.error.message);
-        }
-        this.snackBar.open('Prenotazione confermata');
         await this.getEvents();
     }
 

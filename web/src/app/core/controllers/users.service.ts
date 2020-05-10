@@ -51,13 +51,11 @@ export class UserService {
             {params: {specId: specId}});
     }
 
-    @to_promise
-    getUsersByEventId(eventId: any): any {
+    getUsersByEventId(eventId: any): Observable<any> {
         return this.http.get(`/users/events/`, {params: {eventId: eventId}});
     }
 
-    @to_promise
-    getCurrentTrainingBundles(id: any): any {
+    getCurrentTrainingBundles(id: any): Observable<any> {
         return this.http.get(`/customers/${id}/currentTrainingBundles`);
     }
 

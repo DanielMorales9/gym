@@ -53,7 +53,7 @@ export class CalendarFacade {
         return this.userService.getUsersByEventId(eventId);
     }
 
-    getCurrentTrainingBundles(id) {
+    getCurrentTrainingBundles(id): Observable<any> {
         return this.userService.getCurrentTrainingBundles(id);
     }
 
@@ -180,8 +180,8 @@ export class CalendarFacade {
      * RESERVATION API
      */
 
-    confirmReservation(id: number) {
-        return this.reservationService.confirm(id);
+    confirmReservation(id: number): Observable<any> {
+        return this.reservationService.confirmReservation(id);
     }
 
     completeEvent(id: number) {
@@ -192,21 +192,20 @@ export class CalendarFacade {
         // TODO implement simpler logic
         const gymId = this.gymService.gym.id;
         if ('reservation' in data) {
-            return this.reservationService.delete(data.id, data.reservation.id, gymId);
+            return this.reservationService.deleteReservation(data.id, data.reservation.id, gymId);
         }
         else if ('reservations' in data && !!id) {
             const myReservations = data.reservations.filter(a => a.user.id === id);
             if (myReservations.length > 0) {
-                return this.reservationService.delete(data.id, myReservations[0].id, gymId);
+                return this.reservationService.deleteReservation(data.id, myReservations[0].id, gymId);
             }
         }
         return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione'}}));
     }
 
-    @to_promise
-    deleteOneReservation(eventId: number, id: number): any {
+    deleteOneReservation(eventId: number, id: number): Observable<any> {
         const gymId = this.gymService.gym.id;
-        return this.reservationService.delete(eventId, id, gymId);
+        return this.reservationService.deleteReservation(eventId, id, gymId);
     }
 
     createReservationFromBundle(userId: number, bundleId: number, event: any) {

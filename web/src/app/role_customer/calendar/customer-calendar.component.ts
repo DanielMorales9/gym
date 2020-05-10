@@ -18,12 +18,12 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 export class CustomerCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
-                private snackBar: SnackBarService,
+                public snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute, screenService);
+        super(facade, router, snackBar, activatedRoute, screenService);
     }
 
     async getEvents() {
@@ -55,10 +55,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        const [d, error] = await this.facade.getCurrentTrainingBundles(this.user.id);
-        if (error) {
-            throw error;
-        }
+        const d = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
         this.user.currentTrainingBundles = d;
 
         if (!this.user.currentTrainingBundles) {

@@ -17,12 +17,12 @@ import {throwError} from 'rxjs';
 export class ACustomerCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
-                private snackBar: SnackBarService,
+                public snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute, screenService);
+        super(facade, router, snackBar, activatedRoute, screenService);
     }
 
     async getEvents() {
@@ -61,11 +61,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        const [d, error] = await this.facade.getCurrentTrainingBundles(this.user.id);
-        if (error) {
-            throw error;
-        }
-
+        const d = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
         this.user.currentTrainingBundles = d;
 
         if (!this.user.currentTrainingBundles) {
@@ -136,7 +132,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(async data => {
             if (data) {
-                if (data.type === 'confirm') { await this.confirmReservation(data); }
+                if (data.type === 'confirm') { this.confirmReservation(data); }
                 else if (data.type === 'complete') { await this.completeReservation(data); }
                 else if (data.type === 'delete') { this.deleteReservation(data); }
                 else { this.createReservation(data); }
@@ -221,12 +217,5 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         await this.getEvents();
     }
 
-    private async confirmReservation(data) {
-        const [d, error] = await this.facade.confirmReservation(data.eventId);
-        if (error) {
-            return this.snackBar.open(error.error.message);
-        }
-        this.snackBar.open('Prenotazione confermata');
-        await this.getEvents();
-    }
+
 }
