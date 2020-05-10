@@ -7,8 +7,9 @@ import {MatDialog} from '@angular/material/dialog';
 import {ReservationModalComponent} from './reservation.modal.component';
 import {AuthenticationService} from '../../core/authentication';
 import {BaseComponent} from '../base-component';
-import {map, mergeMap, takeUntil} from 'rxjs/operators';
+import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
+import {dateComparator} from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-tools';
 
 @Component({
     templateUrl: './event-details.component.html',
@@ -57,21 +58,24 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         super();
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         const id = +this.route.snapshot.params['id'];
-        await this.findById(id);
-        this.getPolicy();
+        this.findById(id).subscribe(
+            r => {
+                this.getPolicy();
+                if (r.type === 'C') {
+                    this.computeMaps(id);
+                }
 
-        const displayedPaymentsColumns = ['index', 'confirmed', 'customer'];
-        if (this.canDelete) {
-            displayedPaymentsColumns.push('actions');
-        }
+                const displayedPaymentsColumns = ['index', 'confirmed', 'customer'];
+                if (this.canDelete) {
+                    displayedPaymentsColumns.push('actions');
+                }
 
-        this.displayedPaymentsColumns = displayedPaymentsColumns;
+                this.displayedPaymentsColumns = displayedPaymentsColumns;
 
-        if (this.event.type === 'C') {
-            this.computeMaps(id);
-        }
+            }
+        );
     }
 
     private computeMaps(id: number) {
@@ -116,13 +120,14 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         return this.event.type === 'P' || this.event.type === 'C';
     }
 
-
-    private async findById(id: number) {
-        const [data, error] = await this.facade.findEventById(id);
-        if (error) {
-            throw error;
-        }
-        this.event = data;
+    private findById(id: number): Observable<any> {
+        return this.facade.findEventById(id)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(r => {
+                    this.event = r;
+                    return r;
+                }));
     }
 
     getType() {
@@ -136,10 +141,10 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe$));
     }
 
-    async deleteReservation(id: any) {
+    deleteReservation(id: any) {
         this.removeReservation(id)
             .subscribe(r => r);
-        await this.findById(this.event.id);
+        this.findById(this.event.id);
     }
 
     async confirm() {
@@ -150,7 +155,8 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             reservations = [this.event.reservation];
         }
         forkJoin(reservations.map(r => this.confirmReservation(r.id)))
-            .subscribe(async r =>  await this.findById(this.event.id));
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(r =>  this.findById(this.event.id));
     }
 
     private confirmReservation(id: any) {
@@ -171,26 +177,23 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         return true;
     }
 
-    async deleteEvent() {
-        let [_, error] = [undefined, undefined];
+    deleteEvent() {
+        let o;
         if (this.event.type === 'C') {
-            [_, error] = await this.facade.deleteCourseEvent(this.event.id);
+            o = this.facade.deleteCourseEvent(this.event.id);
         }
         else if (this.event.type === 'P') {
-            this.removeReservation(this.event.reservation.id)
-                .subscribe(r => this.goBack(),
-                        err => this.snackBar.open(err.error.message));
+            o = this.removeReservation(this.event.reservation.id);
         }
         else if (this.event.type === 'H') {
-            [_, error] = await this.facade.deleteHoliday(this.event.id);
+            o = this.facade.deleteHoliday(this.event.id);
         }
         else {
-            [_, error] = await this.facade.deleteTimeOff(this.event.id);
+            o = this.facade.deleteTimeOff(this.event.id);
         }
-        if (error) {
-            return this.snackBar.open(error.error.message);
-        }
-        this.goBack();
+        o.pipe(takeUntil(this.unsubscribe$))
+            .subscribe( r => this.goBack(),
+                err => this.snackBar.open(err.error.message));
     }
 
     private goBack() {
@@ -211,8 +214,8 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         if (this.event.type === 'P') {
             this.facade.completeEvent(this.event.id)
                 .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(async r => await this.findById(this.event.id),
-                        error => this.snackBar.open(error.error.message));
+                .subscribe(r => this.findById(this.event.id),
+                    error => this.snackBar.open(error.error.message));
         }
     }
 
@@ -234,7 +237,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
                 for (const userId in res) {
                     await this.updateReservations(userId, res);
                 }
-                await this.findById(this.event.id);
+                this.findById(this.event.id);
             }
         });
 
@@ -255,15 +258,17 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         }
     }
 
-    async book() {
+    book() {
         const user = this.auth.getUser();
-        user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(user.id).toPromise();
-        const bundle = user.currentTrainingBundles
-            .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
-        if (bundle) {
-            this.reserveFromEvent(user.id, bundle.id)
-                .subscribe(async d => await this.findById(this.event.id));
-        }
+        this.facade.getCurrentTrainingBundles(user.id)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(r => r.filter(v => v.bundleSpec.id === this.event.specification.id)[0]),
+                filter(b => !!b),
+                switchMap( bundle => this.reserveFromEvent(user.id, bundle.id))
+            )
+            .subscribe(d => this.findById(this.event.id));
+
     }
 
     assignWorkout() {

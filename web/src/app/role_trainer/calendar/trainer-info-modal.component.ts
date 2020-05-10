@@ -39,9 +39,9 @@ export class TrainerInfoModalComponent extends BaseCalendarModal {
         });
     }
 
-    async info() {
+    info() {
         const root = USER_INDEX[this.modalData.role];
-        await this.router.navigate([root, 'events', this.modalData.event.meta.id]);
+        this.router.navigate([root, 'events', this.modalData.event.meta.id]);
         this.dialogRef.close();
     }
 }

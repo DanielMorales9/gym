@@ -43,8 +43,8 @@ export class AdminInfoModalComponent extends BaseCalendarModal {
         this.dialogRef.close(data);
     }
 
-    async info() {
-        await this.router.navigate(['admin', 'events', this.modalData.event.meta.id]);
+    info() {
+        this.router.navigate(['admin', 'events', this.modalData.event.meta.id]);
         this.dialogRef.close();
     }
 }

@@ -1,4 +1,4 @@
-import {of, Subject, Subscription, throwError} from 'rxjs';
+import {Subject, throwError} from 'rxjs';
 import {ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../model';
@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
-import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
+import {catchError, filter, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -42,7 +42,6 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                           public screenService: ScreenService) {
         super();
     }
-    private sub: Subscription;
 
     MONTH = CalendarView.Month;
     WEEK = CalendarView.Week;
@@ -71,14 +70,6 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         C: 'course',
         P: 'reservation'
     };
-
-    BADGE_TYPES = {
-        H: 'light',
-        T: 'secondary',
-        C: 'primary',
-        P: 'info'
-    };
-
     EVENT_COLOR = {
         H: CALENDAR_COLUMNS.RED,
         T: CALENDAR_COLUMNS.RED,
@@ -95,8 +86,8 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         },*/
         {
             label: '<i class="fa fa-fw fa-times"></i>',
-            onClick: async ({event}: { event: CalendarEvent }): Promise<void> => {
-                await this.handleEvent(EVENT_TYPES.DELETE, event);
+            onClick: ({event}: { event: CalendarEvent }): void => {
+                this.handleEvent(EVENT_TYPES.DELETE, event);
             }
         }
     ];
@@ -116,14 +107,10 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     showMarker = true;
     events: CalendarEvent[];
 
-    refresh: Subject<any> = new Subject();
+    refresh: Subject<any>;
 
     @ViewChild('next', { static: true }) next: ElementRef<HTMLElement>;
     @ViewChild('prev', { static: true }) prev: ElementRef<HTMLElement>;
-
-    static isNotPast(date) {
-        return date >= new Date();
-    }
 
     static getPersonalEventColor(event: any) {
         return (event.reservation.confirmed) ? (event.session.completed) ?
@@ -148,70 +135,70 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         return this.screenService.isDesktop();
     }
 
-    async ngOnInit(): Promise<void> {
-        this.events = [];
+    ngOnInit(): void {
+        this.refresh = new Subject();
+
         this.initView();
         this.initViewDate();
-        await this.initCalendarConfig();
-        await this.getUser();
-        await this.getRole();
-        await this.updateQueryParams();
-        await this.getEvents();
-        this.sub = this.activatedRoute.queryParams.subscribe(async params => {
-            const hasView = 'view' in params;
-            const hasViewDate = 'viewDate' in params;
-            if (hasView && hasViewDate) {
+        this.initCalendarConfig();
+        this.getUser();
+        this.getRole();
+        this.updateQueryParams();
+
+        this.activatedRoute.queryParams
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(params => 'view' in params && 'viewDate' in params),
+                throttleTime(300)
+            )
+            .subscribe(params => {
+                this.events = [];
                 this.view = params['view'];
                 this.viewDate = new Date(params['viewDate']);
-                await this.getEvents();
-            }
-        });
+                this.getEvents();
+            });
     }
 
-    ngOnDestroy(): void {
-        if (!!this.sub) {
-            this.sub.unsubscribe();
-        }
-    }
-
-    abstract async getEvents();
+    abstract getEvents();
 
     abstract delete(action: string, event: CalendarEvent);
     abstract info(action: string, event: CalendarEvent);
     abstract header(action: string, event: CalendarEvent);
-    abstract async hour(action: string, event: CalendarEvent);
+    abstract hour(action: string, event: CalendarEvent);
     abstract change(action: string, event: CalendarEvent);
 
     abstract openModal(action: string);
 
-    protected async getUser() {
+    protected getUser() {
         this.user = this.facade.getUser();
     }
 
-    protected async getRole() {
+    protected getRole() {
         this.role = this.facade.getRole();
     }
 
-    private async initCalendarConfig() {
-        const config = await this.facade.getConfig().toPromise();
-        this.gym = config;
-        this.dayStartHour = 24;
-        this.dayEndHour = 0;
-        this.excludeDays = [];
+    private initCalendarConfig() {
+        this.facade.getConfig().pipe(
+            takeUntil(this.unsubscribe$)
+        ).subscribe(config => {
+            this.gym = config;
+            this.dayStartHour = 24;
+            this.dayEndHour = 0;
+            this.excludeDays = [];
 
-        // tslint:disable-next-line:forin
-        for (const key in this.DAY_OF_WEEK) {
-            if (!config[key + 'Open']) {
-                this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
-            } else {
-                this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
-                this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
+            // tslint:disable-next-line:forin
+            for (const key in this.DAY_OF_WEEK) {
+                if (!config[key + 'Open']) {
+                    this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
+                } else {
+                    this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
+                    this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
+                }
+
             }
 
-        }
-
-        this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
-
+            this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
+        });
     }
 
     private initView() {
@@ -247,7 +234,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         }
     }
 
-    async handleEvent(action: string, event: any): Promise<void> {
+    handleEvent(action: string, event: any): void {
         switch (action) {
             case EVENT_TYPES.DELETE:
                 this.delete(action, event);
@@ -256,13 +243,13 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 this.info(action, event);
                 break;
             case EVENT_TYPES.HOUR:
-                await this.hour(action, event);
+                this.hour(action, event);
                 break;
             case EVENT_TYPES.HEADER:
                 this.header(action, event);
                 break;
             case EVENT_TYPES.DAY:
-                await this.day(action, event);
+                this.day(action, event);
                 break;
             case EVENT_TYPES.CHANGE:
                 this.change(action, event);
@@ -272,24 +259,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         }
     }
 
-    isGymOpenOnDate(date) {
-        return this.facade.isGymOpenOnDate(date);
-    }
-
-    isInGymHours(start, end?) {
-        const gymStartHour = this.facade.getStartHourByDate(start);
-        const gymEndHour = this.facade.getEndHourByDate(start);
-        const startHour = start.getHours();
-        let endHour = startHour;
-        if (end) { endHour = end.getHours(); }
-        return gymStartHour <= startHour && endHour <= gymEndHour;
-    }
-
-    isValidHour(event: any) {
-        return BaseCalendar.isNotPast(event.date) && this.isGymOpenOnDate(event.date) && this.isInGymHours(event.date);
-    }
-
-    getStartAndEndTimeByView() {
+    public getStartAndEndTimeByView() {
         let startDay;
         let endDay;
         const month = this.viewDate.getMonth();
@@ -420,32 +390,32 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         return this.user.type === 'A';
     }
 
-    async onViewDateChanged(viewOrDate?) {
+    onViewDateChanged(viewOrDate?) {
         if (viewOrDate instanceof Date) {
             this.viewDate = viewOrDate;
         } else {
             this.view = viewOrDate;
         }
         this.activeDayIsOpen = false;
-        await this.updateQueryParams();
+        this.updateQueryParams();
     }
 
-    async day(action: string, event: any): Promise<void> {
+    day(action: string, event: any): void {
         if (this.viewDate.getTime() === event.day.date.getTime()) {
             if (this.activeDayIsOpen || event.day.events.length === 0) {
-                await this.getEvents();
+                this.getEvents();
                 this.view = this.DAY;
                 this.activeDayIsOpen = true;
-                await this.updateQueryParams();
+                this.updateQueryParams();
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
         } else {
             this.viewDate = event.day.date;
             if (!this.activeDayIsOpen) {
                 if (event.day.events.length === 0) {
-                    await this.getEvents();
+                    this.getEvents();
                     this.view = this.DAY;
-                    await this.updateQueryParams();
+                    this.updateQueryParams();
                 }
             }
             this.activeDayIsOpen = !this.activeDayIsOpen;
@@ -453,28 +423,28 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     refreshView() {
-        this.refresh.next();
+        if (this.refresh) {
+            this.refresh.next();
+        }
     }
 
     protected confirmReservation(data) {
         this.facade.confirmReservation(data.eventId)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
-                async r => {
+                r => {
                     this.snackBar.open('Prenotazione confermata');
-                    await this.getEvents();
-                },
-                err => this.snackBar.open(err.error.message)
-            );
+                    this.getEvents();
+                }, err => this.snackBar.open(err.error()));
     }
 
     protected completeEvent(data) {
         this.facade.completeEvent(data.eventId)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(async res => {
-                this.snackBar.open('Allenamento completato');
-                await this.getEvents();
-            }, err => this.snackBar.open(err.error.message));
+            .subscribe(res => {
+                    this.snackBar.open('Allenamento completato');
+                    this.getEvents();
+                }, err => this.snackBar.open(err.error.message));
     }
 
     protected createReservation(d) {
@@ -491,18 +461,18 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                     return this.facade.createReservationFromEvent(d.userId, d.event.meta.id, res[0].id);
                 })
             )
-            .subscribe(async res => {
-                this.snackBar.open('Prenotazione effettuata');
-                await this.getEvents();
-            }, e => this.snackBar.open(e.message || e.error.message, undefined,  {duration: 5000}));
+            .subscribe(res => {
+                    this.snackBar.open('Prenotazione effettuata');
+                    this.getEvents();
+                }, e => this.snackBar.open(e.message || e.error.message, undefined,  {duration: 5000}));
     }
 
     protected createReservationFromBundle({userId, bundleId, startTime, endTime}) {
         this.facade.createReservationFromBundle(userId, bundleId,
             { startTime: startTime, endTime: endTime })
-            .subscribe(async res => {
+            .subscribe(res => {
                 this.snackBar.open('Prenotazione effettuata');
-                await this.getEvents();
+                this.getEvents();
             }, err => {
                 if (err.error) {
                     this.snackBar.open(err.error.message);
@@ -512,9 +482,9 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     protected deleteReservation(data) {
         this.facade.deleteReservation(data, this.user.id)
-            .subscribe(async res => {
+            .subscribe(res => {
                 this.snackBar.open('La Prenotazione è stata eliminata');
-                await this.getEvents();
+                this.getEvents();
             }, err => {
                 if (err.error) {
                     this.snackBar.open(err.error.message, undefined, {duration: 5000});
@@ -523,9 +493,85 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
 
-    private async updateQueryParams() {
+    protected deleteTimeOff(data) {
+        this.facade.deleteTimeOff(data.eventId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(res => {
+                this.snackBar.open('Ferie cancellate');
+                this.getEvents();
+            }, err => {
+                this.snackBar.open(err.error.message);
+            });
+    }
+
+    protected createHoliday(data) {
+        this.facade.createHoliday(data.eventName, data.start, data.end)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(res => {
+                    this.snackBar.open('Chiusura confermata');
+                    this.getEvents();
+                }, err => this.snackBar.open(err.error.message));
+    }
+
+    protected deleteHoliday(data) {
+        this.facade.deleteHoliday(data.eventId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(r => {
+                    this.snackBar.open('La chiusura è stata eliminata');
+                    this.getEvents();
+                }, err => this.snackBar.open(err.error.message));
+    }
+
+    protected deleteCourseEvent(data: any) {
+        this.facade.deleteCourseEvent(data.eventId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(res => {
+                    this.snackBar.open('Evento eliminato');
+                    this.getEvents();
+                }, error => this.snackBar.open(error.error.message));
+    }
+
+    protected createCourseEvent(data: any) {
+        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe( r => {
+                this.snackBar.open('Evento creato');
+                this.getEvents();
+            }, (err) => {
+                this.snackBar.open(err.error.message);
+            });
+    }
+
+    protected editHoliday(data) {
+        this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(res => {
+                    this.snackBar.open('Chiusura confermata');
+                    this.getEvents();
+                }, (err) => this.snackBar.open(err.error.message));
+    }
+
+    protected editTimeOff(data) {
+        this.facade.editTimeOff(data.eventId, data.start, data.end, data.eventName)
+            .subscribe( res => {
+                    this.snackBar.open('Ferie richieste');
+                    this.getEvents();
+                }, (err) => this.snackBar.open(err.error.message));
+    }
+
+    protected createTimeOff(data: any, end?: Date) {
+        this.facade.createTimeOff(data.userId, data.name, data.start, end)
+            .subscribe(res => {
+                this.snackBar.open('Ferie richieste');
+                this.getEvents();
+            }, (err) => {
+                this.snackBar.open(err.error.message);
+            });
+    }
+
+    private updateQueryParams() {
         this.queryParams = {view: this.view, viewDate: this.viewDate};
-        await this.router.navigate(
+        this.router.navigate(
             [],
             {
                 relativeTo: this.activatedRoute,

@@ -4,6 +4,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
+import {forkJoin} from 'rxjs';
+import {map, takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -21,50 +23,51 @@ export class CustomerCalendarComponent extends BaseCalendar {
         super(facade, router, snackBar, activatedRoute, screenService);
     }
 
-    async getEvents() {
+    getEvents() {
         this.events = [];
 
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        let [data, error] = await this.facade.getCustomerEvents(this.user.id, startDay, endDay);
-        if (error) {
-            throw error;
-        }
-        this.events.push(...data.map(value => this.formatEvent(value)));
+        const events = [];
+        let data = this.facade.getCustomerEvents(this.user.id, startDay, endDay);
+        events.push(data);
+        data = this.facade.getHoliday(startDay, endDay);
+        events.push(data);
+        data = this.facade.getCourseEvents(startDay, endDay);
+        events.push(data);
+        forkJoin(events)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(r => {
+                this.events = [];
+                r.forEach((o: any) => {
+                    this.events.push(...o.map(v => this.formatEvent(v)));
+                });
+                this.refreshView();
+            });
 
-        [data, error] = await this.facade.getHoliday(startDay, endDay);
-        if (error) {
-            throw error;
-        }
-        this.events.push(...data.map(value => this.formatEvent(value)));
-
-        [data, error] = await this.facade.getCourseEvents(startDay, endDay);
-        if (error) {
-            throw error;
-        }
-        this.events.push(...data.map(value => this.formatEvent(value)));
-        this.refreshView();
     }
 
     header(action: string, event: any) {
     }
 
-    async hour(action: string, event: any) {
-        this.user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
+    hour(action: string, event: any) {
+        this.facade.getCurrentTrainingBundles(this.user.id)
+            .subscribe(res => {
+                this.user.currentTrainingBundles = res;
+                if (!this.user.currentTrainingBundles) {
+                    return this.snackBar.open('Non hai pacchetti a disposizione');
+                }
 
-        if (!this.user.currentTrainingBundles) {
-            return this.snackBar.open('Non hai pacchetti a disposizione');
-        }
-
-        event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
-        this.modalData = {
-            action: action,
-            title: 'Prenota il tuo allenamento!',
-            userId: this.user.id,
-            role: this.role,
-            event: event
-        };
-        this.openModal(action);
+                event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
+                this.modalData = {
+                    action: action,
+                    title: 'Prenota il tuo allenamento!',
+                    userId: this.user.id,
+                    role: this.role,
+                    event: event
+                };
+                this.openModal(action);
+            });
     }
 
     change(action: string, event: any) {}
@@ -113,7 +116,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
             data: this.modalData
         });
 
-        dialogRef.afterClosed().subscribe(async data => {
+        dialogRef.afterClosed().subscribe( data => {
             if (data) {
                 if (data.type === 'delete') {
                     this.deleteReservation(data);

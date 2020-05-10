@@ -8,8 +8,9 @@ import {CalendarFacade} from '../../core/facades';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {WorkoutService} from '../../core/controllers';
 import {forkJoin} from 'rxjs';
-import {map} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {Location} from '@angular/common';
+import {BaseComponent} from '../base-component';
 
 
 @Component({
@@ -21,7 +22,7 @@ import {Location} from '@angular/common';
         '../../styles/card.css'
     ],
 })
-export class ProgrammeComponent implements OnInit {
+export class ProgrammeComponent extends BaseComponent implements OnInit {
 
     event: any;
     users: any;
@@ -46,11 +47,12 @@ export class ProgrammeComponent implements OnInit {
                 private snackBar: SnackBarService,
                 private service: WorkoutService,
                 private policy: PolicyService) {
+        super();
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         const id = +this.route.snapshot.params['id'];
-        await this.findById(id);
+        this.findById(id);
         this.getPolicy();
 
     }
@@ -60,12 +62,10 @@ export class ProgrammeComponent implements OnInit {
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }
 
-    private async findById(id: number) {
-        const [data, error] = await this.facade.findEventById(id);
-        if (error) {
-            throw error;
-        }
-        this.event = data;
+    private findById(id: number) {
+        this.facade.findEventById(id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(data => this.event = data);
     }
 
     getType() {

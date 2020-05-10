@@ -49,8 +49,7 @@ export class BundleSpecsService extends DataSourceService {
         return this.http.post(`/bundleSpecs/${id}/options`, obj);
     }
 
-    @to_promise
-    list(param: any): any {
+    listBundleSpecs(param: any): Observable<any> {
         return this.http.get(`/bundleSpecs/list`, {params: param});
     }
 

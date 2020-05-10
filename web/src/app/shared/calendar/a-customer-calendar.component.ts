@@ -7,8 +7,9 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
-import {catchError, first, map, switchMap} from 'rxjs/operators';
-import {throwError} from 'rxjs';
+import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {forkJoin, of, throwError} from 'rxjs';
+import {User} from '../model';
 
 @Component({
     templateUrl: './calendar.component.html',
@@ -25,58 +26,75 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         super(facade, router, snackBar, activatedRoute, screenService);
     }
 
-    async getEvents() {
+    getEvents() {
         this.events = [];
 
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        let [data, error] = await this.facade.getCustomerEvents(this.user.id, startDay, endDay);
-        if (error) {
-            throw error;
+        const events = [];
+        let obs;
+        if (!!this.user) {
+            obs = this.getUserFromRouteParams();
         }
-        this.events.push(...data.map(value => this.formatEvent(value, false)));
+        else {
+            obs = of(this.user);
+        }
 
-        [data, error] = await this.facade.getCourseEvents(startDay, endDay);
-        if (error) {
-            throw error;
-        }
-        this.events.push(...data.map(value => this.formatEvent(value, false)));
-        this.refreshView();
+        let data = obs
+            .pipe(switchMap((r: User) => this.facade.getCustomerEvents(r.id, startDay, endDay)));
+        events.push(data);
+
+        data = this.facade.getCourseEvents(startDay, endDay);
+        events.push(data);
+
+        forkJoin(events)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(r => {
+                this.events = [];
+                r.forEach((o: any) => {
+                    this.events.push(...o.map(v => this.formatEvent(v)));
+                });
+                this.refreshView();
+            });
     }
 
-    async getUser() {
-        await this.activatedRoute.params.pipe(
-            first(),
+    private getUserFromRouteParams() {
+        return this.activatedRoute.params.pipe(
+            filter(params => 'id' in params),
             switchMap(params => this.facade.findUserById(+params['id'])),
             catchError(r => throwError(r)),
-            map(r => this.user = r)
-        ).toPromise();
-    }
-
-    async getRole() {
-        this.role = this.facade.getRoleByUser(this.user);
+            map(r => {
+                this.user = r;
+                return r;
+            }),
+            map(r => {
+                this.role = this.facade.getRoleByUser(r);
+                return r;
+            })
+        );
     }
 
     header(action: string, event: any) {
     }
 
-    async hour(action: string, event: any) {
-        this.user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
+    hour(action: string, event: any) {
+        this.facade.getCurrentTrainingBundles(this.user.id).subscribe( res => {
+            this.user.currentTrainingBundles = res;
+            if (!this.user.currentTrainingBundles) {
+                return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} non ha pacchetti a disposizione`);
+            }
 
-        if (!this.user.currentTrainingBundles) {
-            return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} ha pacchetti a disposizione`);
-        }
-
-        event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
-        event.user = this.user;
-        this.modalData = {
-            action: action,
-            title: `Prenota l\'allenamento per ${this.user.firstName} ${this.user.lastName}!`,
-            userId: this.user.id,
-            role: this.role,
-            event: event
-        };
-        this.openModal(action);
+            event.bundles = this.user.currentTrainingBundles.filter(v => v.type !== 'C');
+            event.user = this.user;
+            this.modalData = {
+                action: action,
+                title: `Prenota l\'allenamento per ${this.user.firstName} ${this.user.lastName}!`,
+                userId: this.user.id,
+                role: this.role,
+                event: event
+            };
+            this.openModal(action);
+        });
     }
 
     change(action: string, event: any) {}
@@ -129,7 +147,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             data: this.modalData,
         });
 
-        dialogRef.afterClosed().subscribe(async data => {
+        dialogRef.afterClosed().subscribe( data => {
             if (data) {
                 if (data.type === 'confirm') { this.confirmReservation(data); }
                 else if (data.type === 'complete') { this.completeEvent(data); }
