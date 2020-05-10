@@ -21,7 +21,7 @@ export class BundleCustomerHelperService extends HelperService<Bundle> {
             const date = new Date(query.date);
             query.date = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
         }
-        return this.service.getBundles(query, page, size);
+        return this.service.getCustomerBundles(query, page, size);
     }
 
     preProcessResources(resources: Bundle[]): Bundle[] {

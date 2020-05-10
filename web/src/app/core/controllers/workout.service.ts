@@ -15,16 +15,6 @@ export class WorkoutService extends DataSourceService {
         return this.http.get(`/workouts?page=${page}&size=${size}&sort=name`);
     }
 
-
-    patch(workout: Workout): Observable<Object> {
-        return this.http.patch(`/workouts/${workout.id}`, workout);
-    }
-
-    post(workout: Workout): Observable<Object> {
-        return this.http.post('/workouts', workout);
-    }
-
-
     search(query: any, page: number, size: number): Observable<Object> {
         query['page'] = page;
         query['size'] = size;
@@ -32,25 +22,33 @@ export class WorkoutService extends DataSourceService {
         return this.http.get('/workouts/search', {params: query});
     }
 
-    delete(id: number) {
+    patchWorkout(workout: Workout): Observable<Object> {
+        return this.http.patch(`/workouts/${workout.id}`, workout);
+    }
+
+    postWorkout(workout: Workout): Observable<Object> {
+        return this.http.post('/workouts', workout);
+    }
+
+    deleteWorkout(id: number) {
         return this.http.delete(`/workouts/${id}`);
     }
 
-    findById(id: number): any {
+    findWorkoutById(id: number): any {
         return this.http.get(`/workouts/${id}`);
     }
 
-    getTags(): any {
+    getWorkoutTags(): any {
         return this.http.get(`/workouts/tags`);
     }
 
-    assign(id: string, workoutId: any) {
+    assignWorkout(id: string, workoutId: any) {
         return this.http.get(`/workouts/${workoutId}/assign`, {params: {
                 eventId: id
             }});
     }
 
-    deleteFromEvent(eventId: any, wId: any) {
+    deleteWorkoutFromEvent(eventId: any, wId: any) {
         return this.http.delete(`/workouts/${wId}/remove`, {params: {
                 eventId: eventId
         }});

@@ -1,21 +1,17 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {to_promise} from '../functions/decorators';
+import {filter, switchMap} from 'rxjs/operators';
+import {User} from '../../shared/model';
 
 @Injectable()
 export class UserService {
 
     constructor(private http: HttpClient) {}
 
-    @to_promise
-    findById(id: number): any {
+    findUserById(id: number): Observable<any> {
         return this.http.get(`/users/${id}`);
-    }
-
-    @to_promise
-    findByEmail(email: string): any {
-        return this.http.get(`/users/findByEmail?email=${email}`);
     }
 
     get(page: number, size: number): any {
@@ -26,13 +22,11 @@ export class UserService {
         return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
     }
 
-    @to_promise
-    patch(user): any {
+    patchUser(user): Observable<Object> {
         return this.http.patch(`/users/${user.id}`, user);
     }
 
-    @to_promise
-    delete(id: number): any {
+    deleteUser(id: number): any {
         return this.http.delete(`/users/${id}`);
     }
 
@@ -45,25 +39,22 @@ export class UserService {
         return this.http.get(`/customers?page=${page}&size=${size}&sort=lastName`);
     }
 
-    getBundles(query: any, page: number, size: number) {
+    getCustomerBundles(query: any, page: number, size: number) {
         query['page'] = page;
         query['size'] = size;
         return this.http.get('/customers/bundles', {params: query});
     }
 
-    @to_promise
-    getBundleBySpecId(userId: number, specId: any): any {
+    getCustomerBundleBySpecId(userId: number, specId: any): Observable<any> {
         return this.http.get(`/customers/${userId}/currentTrainingBundles`,
             {params: {specId: specId}});
     }
 
-    @to_promise
-    getUsersByEventId(eventId: any): any {
+    getUsersByEventId(eventId: any): Observable<any> {
         return this.http.get(`/users/events/`, {params: {eventId: eventId}});
     }
 
-    @to_promise
-    getCurrentTrainingBundles(id: any): any {
+    getCurrentTrainingBundles(id: any): Observable<any> {
         return this.http.get(`/customers/${id}/currentTrainingBundles`);
     }
 
@@ -73,5 +64,11 @@ export class UserService {
 
     retrieveImage(id: number) {
         return this.http.get(`/users/${id}/image`);
+    }
+
+    deleteUserWithConfirmation(user: User): Observable<any> {
+        return of(confirm(`Vuoi rimuovere l'utente ${user.firstName} ${user.lastName}?`))
+            .pipe(filter(a => !!a),
+                switchMap(c => this.deleteUser(user.id)));
     }
 }

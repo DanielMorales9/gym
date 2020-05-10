@@ -1,10 +1,11 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {CalendarView} from 'angular-calendar';
 
 @Component({
     selector: 'calendar-header',
     templateUrl: './calendar-header.toolbar.html',
-    styleUrls: ['../../styles/calendar.css', '../../styles/root.css']
+    styleUrls: ['../../styles/calendar.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarHeaderToolbar {
 

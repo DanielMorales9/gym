@@ -3,7 +3,7 @@
         <mat-card-title>{{gym?.name || 'Loading...'}}</mat-card-title>
         <mat-card-content>
             <h6>Orario della palestra</h6>
-            <table>
+            <table *ngIf="gym">
                 <tr>
                     <td>Lunedì</td>
                     <td>

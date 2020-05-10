@@ -3,6 +3,7 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatSelectionList} from '@angular/material';
 import {Gym} from '../model';
 import {rangeValidator} from '../../core/functions';
+import {Observable} from 'rxjs';
 
 
 @Component({
@@ -17,10 +18,10 @@ export class GymModalComponent implements OnInit {
 
     constructor(public dialogRef: MatDialogRef<GymModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.gym = this.data;
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
+        this.gym = this.data;
         this.buildForm();
     }
 

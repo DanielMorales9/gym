@@ -87,8 +87,7 @@ export class EventService {
         return this.http.get(`/events/training?&startTime=${start}&endTime=${end}`);
     }
 
-    @to_promise
-    complete(id: number): any {
+    completeEvent(id: number): Observable<any> {
         return this.http.get(`/events/${id}/complete`);
     }
 

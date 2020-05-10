@@ -11,6 +11,8 @@ import {SnackBarService} from '../../core/utilities';
 import {UserHelperService, QueryableDatasource} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {first} from 'rxjs/operators/first';
+import {filter, map, switchMap} from 'rxjs/operators';
+import {of} from 'rxjs';
 
 @Component({
     templateUrl: './users.component.html',
@@ -111,26 +113,20 @@ export class UsersComponent implements OnInit {
         }
     }
 
-    private async deleteUser(user: User) {
-        const confirmed = confirm(`Vuoi rimuovere l'utente ${user.firstName} ${user.lastName}?`);
-        if (confirmed) {
-            const [data, err] = await this.service.delete(user.id);
-            if (err) {
-                this.snackbar.open(err.error.message);
-            } else {
-                this.search();
-            }
-        }
+    private deleteUser(user: User) {
+        return this.service.deleteUserWithConfirmation(user)
+            .subscribe(res => this.search(),
+                err => this.snackbar.open(err.error.message)
+            );
     }
 
-    private async patchUser(user: User) {
-        const [data, error] = await this.service.patch(user);
-        if (error) {
-            this.snackbar.open(error.error.message);
-        } else {
-            this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
-        }
-        this.search();
+    private patchUser(user: User) {
+        this.service.patchUser(user).subscribe((res: User) => {
+                this.snackbar.open(`L'utente ${res.lastName} è stato modificato`);
+                this.search();
+            },
+            error => this.snackbar.open(error.error.message)
+        );
     }
 
     private async createUser(user: User) {

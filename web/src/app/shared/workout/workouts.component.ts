@@ -54,7 +54,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
     }
 
     private getTags() {
-        this.service.getTags()
+        this.service.getWorkoutTags()
             .subscribe(res => {
                 if (res) {
                     res = res.map(v => new Object({value: v, name: v}));
@@ -123,7 +123,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
 
     private createWorkout(w: Workout) {
         delete w.id;
-        this.service.post(w).subscribe(_ => {
+        this.service.postWorkout(w).subscribe(_ => {
             const message = `Il workout ${w.name} è stato creato`;
             this.snackbar.open(message);
             this.search();
@@ -131,7 +131,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
     }
 
     private deleteWorkout(id: any) {
-        this.service.delete(id).subscribe(_ => {
+        this.service.deleteWorkout(id).subscribe(_ => {
             const message = `Il workout è stato cancellato`;
             this.snackbar.open(message);
             this.search();
@@ -139,7 +139,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
     }
 
     private editWorkout(w: any) {
-        this.service.patch(w).subscribe(_ => {
+        this.service.patchWorkout(w).subscribe(_ => {
             const message = `Il workout ${w.name} è stato modificato`;
             this.snackbar.open(message);
             this.search();

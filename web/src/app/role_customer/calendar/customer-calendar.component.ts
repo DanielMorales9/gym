@@ -1,10 +1,5 @@
 import {Component} from '@angular/core';
-import {
-    BaseCalendar,
-    CustomerDeleteModalComponent,
-    CustomerHourModalComponent,
-    CustomerInfoModalComponent
-} from '../../shared/calendar';
+import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
@@ -18,12 +13,12 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 export class CustomerCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
-                private snackBar: SnackBarService,
+                public snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute, screenService);
+        super(facade, router, snackBar, activatedRoute, screenService);
     }
 
     async getEvents() {
@@ -55,11 +50,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        const [d, error] = await this.facade.getCurrentTrainingBundles(this.user.id);
-        if (error) {
-            throw error;
-        }
-        this.user.currentTrainingBundles = d;
+        this.user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
 
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open('Non hai pacchetti a disposizione');
@@ -127,31 +118,10 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 if (data.type === 'delete') {
                     this.deleteReservation(data);
                 } else {
-                    await this.createReservation(data);
+                    this.createReservation(data);
                 }
             }
         });
-    }
-
-    private async createReservation(d) {
-        const userId = d.userId;
-        const specId = d.event.meta.specification.id;
-        let [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
-        if (error) {
-            throw error;
-        }
-        if (data.length === 0) {
-            this.snackBar.open('Non possiedi questo pacchetto');
-            return;
-        }
-        const bundleId = data[0].id;
-        [data, error] = await this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId);
-        if (error) {
-            this.snackBar.open(error.error.message, undefined,  {duration: 5000});
-            return;
-        }
-        this.snackBar.open('Prenotazione effettuata');
-        await this.getEvents();
     }
 
     private openHourModal() {
@@ -161,17 +131,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-
-                this.facade.createReservationFromBundle(data.userId, data.bundleId,
-                    { startTime: data.startTime, endTime: data.endTime })
-                    .subscribe(async res => {
-                        this.snackBar.open('Prenotazione effettuata');
-                        await this.getEvents();
-                    }, err => {
-                        if (err.error) {
-                            this.snackBar.open(err.error.message);
-                        }
-                    });
+                this.createReservationFromBundle(data);
             }
         });
     }
@@ -187,17 +147,5 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 this.deleteReservation(data);
             }
         });
-    }
-
-    private deleteReservation(data) {
-        this.facade.deleteReservation(data, this.user.id)
-            .subscribe(async res => {
-                this.snackBar.open('La Prenotazione è stata eliminata');
-                await this.getEvents();
-            }, err => {
-                if (err.error) {
-                    this.snackBar.open(err.error.message, undefined, {duration: 5000});
-                }
-            });
     }
 }

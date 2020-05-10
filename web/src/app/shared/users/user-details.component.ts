@@ -8,6 +8,8 @@ import {SnackBarService} from '../../core/utilities';
 import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {ImageModalComponent} from '../profile/image-modal.component';
+import {catchError, filter, first, map, switchMap} from 'rxjs/operators';
+import {of, throwError} from 'rxjs';
 
 
 @Component({
@@ -39,17 +41,13 @@ export class UserDetailsComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
-        this.route.params.subscribe(async params => {
-            const id = params['id'];
-            const [data, error] = await this.service.findById(id);
-            if (error) {
-                throw error;
-            }
-            else {
-                this.user = data;
+        this.route.params.pipe(
+            first(),
+            switchMap(params => this.service.findUserById(params['id']))
+        ).subscribe(value => {
+                this.user = value;
                 this.getAvatar();
                 this.getPolicies();
-            }
         });
     }
 
@@ -62,7 +60,6 @@ export class UserDetailsComponent implements OnInit {
     }
 
     openEditDialog(): void {
-
         const dialogRef = this.dialog.open(UserModalComponent, {
             data: {
                 title: 'Modifica Utente',
@@ -71,31 +68,20 @@ export class UserDetailsComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(user => {
-            if (user) { this.patchUser(user); }
-        });
+        dialogRef.afterClosed().pipe(
+            filter( r => !!r),
+            switchMap(u => this.service.patchUser(u)),
+            ).subscribe(
+                (u: User) => this.snackbar.open(`L'utente ${u.lastName} è stato modificato`),
+                error => this.snackbar.open(error.error.message)
+        );
     }
 
-    private async patchUser(user: User) {
-        const [data, error] = await this.service.patch(user);
-        if (error) {
-            this.snackbar.open(error.error.message);
-        } else {
-            this.snackbar.open(`L'utente ${user.lastName} è stato modificato`);
-        }
-    }
-
-    async deleteUser() {
-        const confirmed = confirm(`Vuoi rimuovere l'utente ${this.user.firstName} ${this.user.lastName}?`);
-        if (confirmed) {
-            const [data, err] = await this.service.delete(this.user.id);
-            if (err) {
-                this.snackbar.open(err.error.message);
-            }
-            else {
-                await this.router.navigate([this.root, 'users'], {replaceUrl: true});
-            }
-        }
+    deleteUser() {
+        return this.service.deleteUserWithConfirmation(this.user)
+            .subscribe(res => this.router.navigate([this.root, 'users'], {replaceUrl: true}),
+                err => this.snackbar.open(err.error.message)
+            );
     }
 
 

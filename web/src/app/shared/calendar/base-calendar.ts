@@ -1,11 +1,13 @@
-import {Subject, Subscription} from 'rxjs';
+import {of, Subject, Subscription, throwError} from 'rxjs';
 import {ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../model';
 import {EVENT_TYPES} from './event-types.enum';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
-import {ScreenService} from '../../core/utilities';
+import {ScreenService, SnackBarService} from '../../core/utilities';
+import {BaseComponent} from '../base-component';
+import {catchError, map, switchMap, takeUntil} from 'rxjs/operators';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -31,12 +33,14 @@ interface EventGroupMeta {
 }
 
 @Injectable()
-export abstract class BaseCalendar implements OnInit, OnDestroy {
+export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy {
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
+                          public snackBar: SnackBarService,
                           public activatedRoute: ActivatedRoute,
                           public screenService: ScreenService) {
+        super();
     }
     private sub: Subscription;
 
@@ -189,10 +193,7 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     }
 
     private async initCalendarConfig() {
-        const [config, error] = await this.facade.getConfig();
-        if (error) {
-            throw error;
-        }
+        const config = await this.facade.getConfig().toPromise();
         this.gym = config;
         this.dayStartHour = 24;
         this.dayEndHour = 0;
@@ -454,6 +455,73 @@ export abstract class BaseCalendar implements OnInit, OnDestroy {
     refreshView() {
         this.refresh.next();
     }
+
+    protected confirmReservation(data) {
+        this.facade.confirmReservation(data.eventId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(
+                async r => {
+                    this.snackBar.open('Prenotazione confermata');
+                    await this.getEvents();
+                },
+                err => this.snackBar.open(err.error.message)
+            );
+    }
+
+    protected completeEvent(data) {
+        this.facade.completeEvent(data.eventId)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(async res => {
+                this.snackBar.open('Allenamento completato');
+                await this.getEvents();
+            }, err => this.snackBar.open(err.error.message));
+    }
+
+    protected createReservation(d) {
+        const userId = d.userId;
+        const specId = d.event.meta.specification.id;
+        this.facade.getUserBundleBySpecId(userId, specId)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                catchError(err => throwError(err)),
+                switchMap(res => {
+                    if (res.length === 0) {
+                        throw Error('Non possiedi questo pacchetto');
+                    }
+                    return this.facade.createReservationFromEvent(d.userId, d.event.meta.id, res[0].id);
+                })
+            )
+            .subscribe(async res => {
+                this.snackBar.open('Prenotazione effettuata');
+                await this.getEvents();
+            }, e => this.snackBar.open(e.message || e.error.message, undefined,  {duration: 5000}));
+    }
+
+    protected createReservationFromBundle({userId, bundleId, startTime, endTime}) {
+        this.facade.createReservationFromBundle(userId, bundleId,
+            { startTime: startTime, endTime: endTime })
+            .subscribe(async res => {
+                this.snackBar.open('Prenotazione effettuata');
+                await this.getEvents();
+            }, err => {
+                if (err.error) {
+                    this.snackBar.open(err.error.message);
+                }
+            });
+    }
+
+    protected deleteReservation(data) {
+        this.facade.deleteReservation(data, this.user.id)
+            .subscribe(async res => {
+                this.snackBar.open('La Prenotazione è stata eliminata');
+                await this.getEvents();
+            }, err => {
+                if (err.error) {
+                    this.snackBar.open(err.error.message, undefined, {duration: 5000});
+                }
+            });
+    }
+
 
     private async updateQueryParams() {
         this.queryParams = {view: this.view, viewDate: this.viewDate};

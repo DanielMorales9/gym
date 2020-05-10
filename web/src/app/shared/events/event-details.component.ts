@@ -6,12 +6,15 @@ import {SnackBarService} from '../../core/utilities';
 import {MatDialog} from '@angular/material/dialog';
 import {ReservationModalComponent} from './reservation.modal.component';
 import {AuthenticationService} from '../../core/authentication';
+import {BaseComponent} from '../base-component';
+import {map, mergeMap, takeUntil} from 'rxjs/operators';
+import {forkJoin, Observable} from 'rxjs';
 
 @Component({
     templateUrl: './event-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
 })
-export class EventDetailsComponent implements OnInit {
+export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     event: any;
     users: any;
@@ -51,6 +54,7 @@ export class EventDetailsComponent implements OnInit {
                 private auth: AuthenticationService,
                 private snackBar: SnackBarService,
                 private policy: PolicyService) {
+        super();
     }
 
     async ngOnInit(): Promise<void> {
@@ -66,31 +70,33 @@ export class EventDetailsComponent implements OnInit {
         this.displayedPaymentsColumns = displayedPaymentsColumns;
 
         if (this.event.type === 'C') {
-            await this.computeMaps(id);
+            this.computeMaps(id);
         }
     }
 
-    private async computeMaps(id: number) {
-        let [data, error] = await this.facade.getUsersByEventId(id);
-        if (error) {
-            return;
-        }
+    private computeMaps(id: number) {
         this.event.reservations.forEach(v => {
             this.userReservation[v.user.id] = v.id;
             this.userSelected[v.user.id] = true;
         });
-        this.users = data;
-        let bundle;
-        for (let i = 0; i < this.users.length; i++) {
-            [data, error] = await this.facade.getCurrentTrainingBundles(this.users[i].id);
-            if (error) {
-                throw error;
-            }
-            this.users[i].currentTrainingBundles = data;
-            bundle = this.users[i].currentTrainingBundles
-                .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
-            this.userBundle[this.users[i].id] = bundle;
-        }
+
+        this.facade.getUsersByEventId(id)
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                mergeMap((users: any) => {
+                    const allIds = users.map(user => this.facade.getCurrentTrainingBundles(user.id));
+                    return forkJoin(...allIds).pipe(
+                        map((idArr) => {
+                            users.forEach((eachUser, index) => {
+                                eachUser.currentTrainingBundles = idArr[index];
+                                this.userBundle[eachUser.id] = idArr[index]
+                                    .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
+                            });
+                            return users;
+                        })
+                    );
+                })
+            ).subscribe(res => this.users = res);
     }
 
     private getPolicy() {
@@ -125,34 +131,31 @@ export class EventDetailsComponent implements OnInit {
         }
     }
 
-    async removeReservation(id: any) {
-        const [data, error] = await this.facade.deleteOneReservation(this.event.id, id);
-        if (error) {
-            throw error;
-        }
+    removeReservation(id: any): Observable<any> {
+        return this.facade.deleteOneReservation(this.event.id, id)
+            .pipe(takeUntil(this.unsubscribe$));
     }
 
     async deleteReservation(id: any) {
-        await this.removeReservation(id);
+        this.removeReservation(id)
+            .subscribe(r => r);
         await this.findById(this.event.id);
     }
 
     async confirm() {
+        let reservations;
         if (this.event.type === 'C') {
-            for (const res of this.event.reservations) {
-                const [data, error] = await this.confirmReservation(res.id);
-            }
+            reservations = this.event.reservations;
         } else if (this.event.type === 'P') {
-            const [data, error] = await this.confirmReservation(this.event.reservation.id);
-            if (error) {
-                throw error;
-            }
+            reservations = [this.event.reservation];
         }
-        await this.findById(this.event.id);
+        forkJoin(reservations.map(r => this.confirmReservation(r.id)))
+            .subscribe(async r =>  await this.findById(this.event.id));
     }
 
-    private async confirmReservation(id: any) {
-        return await this.facade.confirmReservation(id);
+    private confirmReservation(id: any) {
+        return this.facade.confirmReservation(id)
+            .pipe(takeUntil(this.unsubscribe$));
     }
 
     isDisabledConfirmed() {
@@ -174,7 +177,9 @@ export class EventDetailsComponent implements OnInit {
             [_, error] = await this.facade.deleteCourseEvent(this.event.id);
         }
         else if (this.event.type === 'P') {
-            [_, error] = await this.facade.deleteOneReservation(this.event.id, this.event.reservation.id);
+            this.removeReservation(this.event.reservation.id)
+                .subscribe(r => this.goBack(),
+                        err => this.snackBar.open(err.error.message));
         }
         else if (this.event.type === 'H') {
             [_, error] = await this.facade.deleteHoliday(this.event.id);
@@ -185,8 +190,12 @@ export class EventDetailsComponent implements OnInit {
         if (error) {
             return this.snackBar.open(error.error.message);
         }
+        this.goBack();
+    }
+
+    private goBack() {
         const root = this.route.parent.parent.snapshot.routeConfig.path;
-        await this.router.navigate([root, 'calendar'], {
+        this.router.navigate([root, 'calendar'], {
             replaceUrl: true,
         });
     }
@@ -198,23 +207,18 @@ export class EventDetailsComponent implements OnInit {
         return true;
     }
 
-    async complete() {
+    completeEvent() {
         if (this.event.type === 'P') {
-            const [data, error] = await this.facade.completeEvent(this.event.id);
-            if (error) {
-                this.snackBar.open(error.error.message);
-            }
+            this.facade.completeEvent(this.event.id)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(async r => await this.findById(this.event.id),
+                        error => this.snackBar.open(error.error.message));
         }
-        await this.findById(this.event.id);
     }
 
-    async reserveFromEvent(userId, bundleId) {
-        const [data, error] = await this.facade
-            .createReservationFromEvent(userId, this.event.id, bundleId);
-        if (error) {
-            this.snackBar.open(error.error.message);
-        }
-        return data;
+    reserveFromEvent(userId, bundleId): Observable<any> {
+        return this.facade.createReservationFromEvent(userId, this.event.id, bundleId)
+            .pipe(takeUntil(this.unsubscribe$));
     }
 
     bookAll() {
@@ -240,11 +244,12 @@ export class EventDetailsComponent implements OnInit {
         if (this.userSelected[userId] !== res[userId]) {
             if (res[userId]) {
                 const bundleId = this.userBundle[userId].id;
-                const data = await this.reserveFromEvent(userId, bundleId);
-                this.userReservation[userId] = data.id;
+                this.reserveFromEvent(userId, bundleId)
+                    .subscribe(r => this.userReservation[userId] = r.id);
+
             } else {
-                await this.removeReservation(this.userReservation[userId]);
-                this.userReservation[userId] = undefined;
+                this.removeReservation(this.userReservation[userId])
+                    .subscribe(r => this.userReservation[userId] = undefined);
             }
             this.userSelected[userId] = res[userId];
         }
@@ -252,16 +257,12 @@ export class EventDetailsComponent implements OnInit {
 
     async book() {
         const user = this.auth.getUser();
-        const [data, error] = await this.facade.getCurrentTrainingBundles(user.id);
-        if (error) {
-            throw error;
-        }
-        user.currentTrainingBundles = data;
+        user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(user.id).toPromise();
         const bundle = user.currentTrainingBundles
             .filter(v => v.bundleSpec.id === this.event.specification.id)[0];
         if (bundle) {
-            await this.reserveFromEvent(user.id, bundle.id);
-            await this.findById(this.event.id);
+            this.reserveFromEvent(user.id, bundle.id)
+                .subscribe(async d => await this.findById(this.event.id));
         }
     }
 

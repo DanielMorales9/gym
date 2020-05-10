@@ -4,6 +4,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
 import {Subscription} from 'rxjs-compat/Subscription';
 import {CalendarControlsComponent} from './calendar-controls.component';
+import {catchError, map} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 @Component({
     templateUrl: './calendar-customer-controls.component.html',
@@ -20,16 +22,15 @@ export class CalendarCustomerControlsComponent extends CalendarControlsComponent
     }
 
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         const paths = this.router.url.split('/');
         const id = +paths[3].split('?')[0];
 
         if (!!id) {
-            const [data, error] = await this.userService.findById(id);
-            if (error) {
-                throw error;
-            }
-            this.user = data;
+            this.userService.findUserById(id)
+                .subscribe(data => this.user = data,err => {
+                    throw err;
+                });
         }
     }
 

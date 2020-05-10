@@ -7,7 +7,8 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
-import {first} from 'rxjs/operators';
+import {catchError, first, map, switchMap} from 'rxjs/operators';
+import {throwError} from 'rxjs';
 
 @Component({
     templateUrl: './calendar.component.html',
@@ -16,12 +17,12 @@ import {first} from 'rxjs/operators';
 export class ACustomerCalendarComponent extends BaseCalendar {
 
     constructor(private dialog: MatDialog,
-                private snackBar: SnackBarService,
+                public snackBar: SnackBarService,
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, activatedRoute, screenService);
+        super(facade, router, snackBar, activatedRoute, screenService);
     }
 
     async getEvents() {
@@ -44,15 +45,12 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async getUser() {
-        const params = await this.activatedRoute.params.pipe(first()).toPromise();
-        const id = +params['id'];
-        const [data, error] = await this.facade.findUserById(id);
-        if (error) {
-            throw error;
-        }
-        else {
-            this.user = data;
-        }
+        await this.activatedRoute.params.pipe(
+            first(),
+            switchMap(params => this.facade.findUserById(+params['id'])),
+            catchError(r => throwError(r)),
+            map(r => this.user = r)
+        ).toPromise();
     }
 
     async getRole() {
@@ -63,12 +61,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     async hour(action: string, event: any) {
-        const [d, error] = await this.facade.getCurrentTrainingBundles(this.user.id);
-        if (error) {
-            throw error;
-        }
-
-        this.user.currentTrainingBundles = d;
+        this.user.currentTrainingBundles = await this.facade.getCurrentTrainingBundles(this.user.id).toPromise();
 
         if (!this.user.currentTrainingBundles) {
             return this.snackBar.open(`Il cliente ${this.user.firstName} ${this.user.lastName} ha pacchetti a disposizione`);
@@ -138,33 +131,12 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(async data => {
             if (data) {
-                if (data.type === 'confirm') { await this.confirmReservation(data); }
-                else if (data.type === 'complete') { await this.completeReservation(data); }
+                if (data.type === 'confirm') { this.confirmReservation(data); }
+                else if (data.type === 'complete') { this.completeEvent(data); }
                 else if (data.type === 'delete') { this.deleteReservation(data); }
                 else { this.createReservation(data); }
             }
         });
-    }
-
-    private async createReservation(d) {
-        const userId = d.userId;
-        const specId = d.event.meta.specification.id;
-        let [data, error] = await this.facade.getUserBundleBySpecId(userId, specId);
-        if (error) {
-            throw error;
-        }
-        if (data.length === 0) {
-            this.snackBar.open('Non possiedi questo pacchetto');
-            return;
-        }
-        const bundleId = data[0].id;
-        [data, error] = await this.facade.createReservationFromEvent(d.userId, d.event.meta.id, bundleId);
-        if (error) {
-            this.snackBar.open(error.error.message);
-            return;
-        }
-        this.snackBar.open('Prenotazione effettuata');
-        await this.getEvents();
     }
 
     private openHourModal() {
@@ -174,17 +146,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         dialogRef.afterClosed().subscribe(data => {
             if (data) {
-
-                this.facade.createReservationFromBundle(data.userId, data.bundleId,
-                    { startTime: data.startTime, endTime: data.endTime })
-                    .subscribe(async res => {
-                        this.snackBar.open('Prenotazione effettuata');
-                        await this.getEvents();
-                    }, err => {
-                        if (err.error) {
-                            this.snackBar.open(err.error.message);
-                        }
-                    });
+                this.createReservationFromBundle(data);
             }
         });
     }
@@ -199,36 +161,5 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 this.deleteReservation(data);
             }
         });
-    }
-
-    private deleteReservation(data) {
-        this.facade.deleteReservation(data, this.user.id)
-            .subscribe(async res => {
-                this.snackBar.open('La Prenotazione è stata eliminata');
-                await this.getEvents();
-            }, err => {
-                if (err.error) {
-                    this.snackBar.open(err.error.message, undefined, {duration: 5000});
-                }
-            });
-    }
-
-    private async completeReservation(data) {
-        const [_, err] = await this.facade.completeEvent(data.eventId);
-        if (err) {
-            this.snackBar.open(err.error.message);
-            return;
-        }
-        this.snackBar.open('Allenamento completato');
-        await this.getEvents();
-    }
-
-    private async confirmReservation(data) {
-        const [d, error] = await this.facade.confirmReservation(data.eventId);
-        if (error) {
-            return this.snackBar.open(error.error.message);
-        }
-        this.snackBar.open('Prenotazione confermata');
-        await this.getEvents();
     }
 }
