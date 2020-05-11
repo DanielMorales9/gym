@@ -23,7 +23,7 @@ export class CalendarControlsComponent {
                 protected route: ActivatedRoute) {
     }
 
-    async goToView(view?) {
+    goToView(view?) {
         const params = Object.assign({}, this.route.snapshot.queryParams);
         if (!!view) {
             params['view'] = view;
@@ -32,7 +32,7 @@ export class CalendarControlsComponent {
             params['viewDate'] = new Date();
         }
         const url = this.router.url.split('?')[0];
-        await this.router.navigate([], {
+        this.router.navigate([], {
             relativeTo: this.route,
             queryParams: params,
             queryParamsHandling: 'merge',

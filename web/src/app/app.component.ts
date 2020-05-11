@@ -78,16 +78,16 @@ export class AppComponent implements OnInit, OnDestroy {
     async logout() {
         await this.auth.logout();
         this.authenticated = false;
-        await this.router.navigateByUrl('/auth');
-        await this.sideBar.close();
+        this.router.navigateByUrl('/auth');
+        this.sideBar.close();
     }
 
     private authOnNavigation() {
         const sub = this.router.events
             .pipe(filter(event => event instanceof NavigationStart))
             .subscribe(async event => {
+                this.closeNav();
                 await this.authenticate();
-                await this.closeNav();
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
                 this.setTitle(this.appName, ...titles);
         });
@@ -98,21 +98,21 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.screenService.isDesktop();
     }
 
-    async goHome() {
+    goHome() {
         if (this.authenticated && this.hasUser()) {
             const roleName = this.getUser().roles
                 .find(value => value.id === this.getCurrentRole())
                 .name.toLowerCase();
-            await this.router.navigateByUrl(roleName);
+            this.router.navigateByUrl(roleName);
         }
         else {
-            await this.router.navigateByUrl('/auth');
+            this.router.navigateByUrl('/auth');
         }
     }
 
-    async closeNav() {
+    closeNav() {
         if (!this.sideBarOpened()) {
-            await this.sideBar.toggle(false);
+            this.sideBar.toggle(false);
         }
     }
 
@@ -124,9 +124,9 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.isDesktop() && this.authenticated;
     }
 
-    async openSideBar() {
+    openSideBar() {
         if (this.authenticated) {
-            await this.sideBar.toggle();
+            this.sideBar.toggle();
         }
     }
 

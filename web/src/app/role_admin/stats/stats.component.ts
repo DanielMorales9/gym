@@ -2,6 +2,9 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
+import {map, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../../shared/base-component';
+import {forkJoin} from 'rxjs';
 
 function insertAt(array, index, ...elementsArray) {
   array.splice(index, 0, ...elementsArray);
@@ -12,7 +15,7 @@ function insertAt(array, index, ...elementsArray) {
   templateUrl: './stats.component.html',
   styleUrls: ['../../styles/root.css', '../../styles/card.css']
 })
-export class StatsComponent implements OnInit {
+export class StatsComponent extends BaseComponent implements OnInit {
 
   @ViewChild('pieChart', {static: true, read: BaseChartDirective})
   public pieChart: BaseChartDirective;
@@ -119,126 +122,128 @@ export class StatsComponent implements OnInit {
   amountPayed: number;
   intervalName: string;
 
-  constructor(private statsService: StatsService) { }
-
-
-  async ngOnInit(): Promise<void> {
-    await this.update();
+  constructor(private statsService: StatsService) {
+    super();
   }
 
-  private async getSalesByMonths(interval?) {
-    const [d, error] = await this.statsService.getSalesByMonths(interval);
-    if (error) {
-      throw error;
-    }
-    this.barChartLabels = d.map(v => v.month);
-    this.barChartData = [
-        {data: d.map(v => v.totalprice), label: 'Totale'},
-      {data: d.map(v => v.amountpayed), label: 'Pagato'}
-    ];
-    this.barChart.datasets = this.barChartData;
-    this.barChart.labels = this.barChartLabels;
-    this.barChart.chart.update();
+
+  ngOnInit(): void {
+    this.updateCharts();
   }
 
-  private async getSalesByBundleType(interval?) {
+  private getSalesByMonths(interval?) {
+    return this.statsService.getSalesByMonths(interval)
+        .pipe(map(d => {
+          this.barChartLabels = d.map(v => v.month);
 
-    const [d, error] = await this.statsService.getSalesByBundleType(interval);
-    if (error) {
-      throw error;
-    }
-    this.pieChartLabels.length = 0;
-    this.pieChartLabels = d.map(v => this.BUNDLE_TYPE_NAME[v.bundletype]);
-    this.pieChartData = [{data: d.map(v => v.totalprice), label: 'Totale'}];
-    this.pieChart.datasets = this.pieChartData;
-    this.pieChart.labels = this.pieChartLabels;
-    this.pieChart.chart.update();
-
-    const prices = d.map(v => v.totalprice) || [];
-    const amounts = d.map(v => v.amountpayed) || [];
-    if (prices.length > 0) {
-      this.totalPrice = prices.reduce((previousValue, currentValue) => previousValue + currentValue);
-    }
-    else {
-      this.totalPrice = 0;
-    }
-
-    if (amounts.length > 0) {
-      this.amountPayed = amounts.reduce((previousValue, currentValue) => previousValue + currentValue);
-    }
-    else {
-      this.amountPayed = 0;
-    }
+          this.barChartData = [
+            {data: d.map(v => v.totalprice), label: 'Totale'},
+            {data: d.map(v => v.amountpayed), label: 'Pagato'}
+          ];
+          this.barChart.datasets = this.barChartData;
+          this.barChart.labels = this.barChartLabels;
+          this.barChart.chart.update();
+        }));
   }
 
-  private async getReservationsByWeek(interval?) {
+  private getSalesByBundleType(interval?) {
 
-    const [d, error] = await this.statsService.getReservationsByWeek(interval);
-    if (error) {
-      throw error;
-    }
-    this.lineChartLabels.length = 0;
-    // tslint:disable-next-line:radix
-    // this.lineChartLabels
-    const labels  = d.map(v => parseInt(v.week, undefined))
-        .filter((v, i, a) => a.indexOf(v) === i);
-    labels.sort((a, b) => a.week - b.week);
-    this.lineChartLabels = labels.map(v => 'Sett. ' + v);
-    this.lineChartData = [];
+    return this.statsService.getSalesByBundleType(interval)
+        .pipe(takeUntil(this.unsubscribe$),
+            map(d => {
+              this.pieChartLabels.length = 0;
+              this.pieChartLabels = d.map(v => this.BUNDLE_TYPE_NAME[v.bundletype]);
+              this.pieChartData = [{data: d.map(v => v.totalprice), label: 'Totale'}];
+              this.pieChart.datasets = this.pieChartData;
+              this.pieChart.labels = this.pieChartLabels;
+              this.pieChart.chart.update();
 
-    for (const key in this.BUNDLE_TYPE_NAME) {
+              const prices = d.map(v => v.totalprice) || [];
+              const amounts = d.map(v => v.amountpayed) || [];
+              if (prices.length > 0) {
+                this.totalPrice = prices.reduce((previousValue, currentValue) => previousValue + currentValue);
+              }
+              else {
+                this.totalPrice = 0;
+              }
 
-      let data = d.filter(v => v.type === key);
-      data.forEach(v => v.week = parseInt(v.week, undefined));
-      const labels_dict = {};
-
-      data = data.map(v => labels_dict[v.week] = v.numreservations);
-
-      for (let i = 0; i < labels.length; i++) {
-        if (!labels_dict[labels[i]]) {
-          labels_dict[labels[i]] = 0;
-        }
-      }
-
-      data = labels.map(v => labels_dict[v]);
-      this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
-    }
-
-    this.lineChart.datasets = this.lineChartData;
-    this.lineChart.labels = this.lineChartLabels;
-    this.lineChart.chart.update();
+              if (amounts.length > 0) {
+                this.amountPayed = amounts.reduce((previousValue, currentValue) => previousValue + currentValue);
+              }
+              else {
+                this.amountPayed = 0;
+              }
+            }));
   }
 
-  private async getReservationsByDayOfWeek(interval?) {
-    const [d, error] = await this.statsService.getReservationsByDayOfWeek(interval);
-    if (error) {
-      throw error;
-    }
-    this.barChartDayLabels.length = 0;
-    let labels = d.map(v => v.dayofweek)
-        .filter((v, i, a) => a.indexOf(v) === i);
-    labels.sort();
-    labels = labels.map(v => this.DAY_OF_WEEK_NAME[v]);
-    this.barChartDayLabels = labels;
+  private getReservationsByWeek(interval?) {
 
-    this.barChartDayData = [];
-    for (const key in this.BUNDLE_TYPE_NAME) {
-      const data = d.filter(v => v.type === key).map(v => v.numreservations);
-      this.barChartDayData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
-    }
-    this.barChartDay.datasets = this.barChartDayData;
-    this.barChartDay.labels = this.barChartDayLabels;
-    this.barChartDay.chart.update();
+    return this.statsService.getReservationsByWeek(interval)
+        .pipe(map(d => {
+          this.lineChartLabels.length = 0;
+          // tslint:disable-next-line:radix
+          // this.lineChartLabels
+          const labels  = d.map(v => parseInt(v.week, undefined))
+              .filter((v, i, a) => a.indexOf(v) === i);
+          labels.sort((a, b) => a.week - b.week);
+          this.lineChartLabels = labels.map(v => 'Sett. ' + v);
+          this.lineChartData = [];
+
+          for (const key in this.BUNDLE_TYPE_NAME) {
+
+            let data = d.filter(v => v.type === key);
+            data.forEach(v => v.week = parseInt(v.week, undefined));
+            const labels_dict = {};
+
+            data = data.map(v => labels_dict[v.week] = v.numreservations);
+
+            for (let i = 0; i < labels.length; i++) {
+              if (!labels_dict[labels[i]]) {
+                labels_dict[labels[i]] = 0;
+              }
+            }
+
+            data = labels.map(v => labels_dict[v]);
+            this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
+          }
+
+          this.lineChart.datasets = this.lineChartData;
+          this.lineChart.labels = this.lineChartLabels;
+          this.lineChart.chart.update();
+        }));
   }
 
-  async update(interval?: string) {
+  private getReservationsByDayOfWeek(interval?) {
+    return this.statsService.getReservationsByDayOfWeek(interval)
+        .pipe(map((d: any) => {
+          this.barChartDayLabels.length = 0;
+          let labels = d.map(v => v.dayofweek)
+              .filter((v, i, a) => a.indexOf(v) === i);
+          labels.sort();
+          labels = labels.map(v => this.DAY_OF_WEEK_NAME[v]);
+          this.barChartDayLabels = labels;
+
+          this.barChartDayData = [];
+          for (const key in this.BUNDLE_TYPE_NAME) {
+            const data = d.filter(v => v.type === key).map(v => v.numreservations);
+            this.barChartDayData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
+          }
+          this.barChartDay.datasets = this.barChartDayData;
+          this.barChartDay.labels = this.barChartDayLabels;
+          this.barChartDay.chart.update();
+        }));
+  }
+
+  updateCharts(interval?: string) {
     if (!interval) {
       interval = '3 months';
     }
     this.intervalName = this.INTERVAL_NAME[interval];
-    await this.getSalesByMonths(interval);
-    await this.getSalesByBundleType(interval);
-    await this.getReservationsByWeek(interval);
-    await this.getReservationsByDayOfWeek(interval);
+    const o = [];
+    o.push(this.getSalesByMonths(interval));
+    o.push(this.getSalesByBundleType(interval));
+    o.push(this.getReservationsByWeek(interval));
+    o.push(this.getReservationsByDayOfWeek(interval));
+    forkJoin(o).pipe(takeUntil(this.unsubscribe$)).subscribe(v => v);
   }
 }
