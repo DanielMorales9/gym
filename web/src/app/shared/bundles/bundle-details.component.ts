@@ -3,21 +3,23 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {PolicyService} from '../../core/policy';
 import {BundleType} from '../model';
+import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
+import {SnackBarService} from '../../core/utilities';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
 })
-export class BundleDetailsComponent implements OnInit, OnDestroy {
+export class BundleDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
 
     PERSONAL = BundleType.PERSONAL;
     COURSE   = BundleType.COURSE;
 
     bundle: any;
-    private sub: Subscription;
 
     canEdit: boolean;
     canDelete: boolean;
@@ -26,26 +28,26 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
     constructor(private service: BundleService,
                 private dialog: MatDialog,
                 private router: Router,
+                private snackBar: SnackBarService,
                 private policy: PolicyService,
                 private route: ActivatedRoute) {
+        super();
     }
 
     ngOnInit(): void {
-        this.sub = this.route.params.subscribe(async params => {
-            await this.getBundle(+params['id']);
-            this.getPolicies();
-        });
+        this.route.params
+            .pipe(first(),
+            takeUntil(this.unsubscribe$),
+                switchMap(params => this.getBundle(+params['id'])))
+            .subscribe(d => {
+                this.bundle = d;
+                this.getPolicies();
+            });
     }
 
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
-    }
 
-    private async getBundle(id: number) {
-        const [data, error] = await this.service.findById(id);
-        if (error) { throw error; }
-        this.bundle = data;
-
+    private getBundle(id: number): Observable<any> {
+        return this.service.findById(id);
     }
 
     isExpired() {
@@ -107,33 +109,32 @@ export class BundleDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        dialogRef.afterClosed().subscribe(async res => {
-            if (res) {
-                await this.editBundle(res);
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(takeUntil(this.unsubscribe$),
+                filter(v => !!v),
+                switchMap(v => this.editBundle(v)),
+                switchMap(v => this.getBundle(this.bundle.id))
+            )
+            .subscribe(v => this.bundle = v,
+                err => this.snackBar.open(err.error.message));
     }
 
-    async delete() {
-        const [data, error] = await this.service.delete(this.bundle.id);
-        if (error) {
-            throw error;
-        }
-        await this.router.navigateByUrl('/', {
-            replaceUrl: true,
-        });
+    deleteBundle() {
+        this.service.deleteBundle(this.bundle.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(r => {
+                this.router.navigateByUrl('/', {
+                    replaceUrl: true,
+                });
+            });
     }
 
-    private async editBundle(res: any) {
-        const [data, error] = await this.service.patch(this.bundle);
-        if (error) {
-            throw error;
-        }
-        await this.getBundle(this.bundle.id);
+    private editBundle(res: any): Observable<any> {
+        return this.service.patchBundle(this.bundle);
     }
 
-    async goToBundleSPec() {
-        await this.router.navigate(['bundleSpecs', this.bundle.bundleSpec.id],
+    goToBundleSPec() {
+        this.router.navigate(['bundleSpecs', this.bundle.bundleSpec.id],
             {
                 replaceUrl: true,
                 relativeTo: this.route.parent

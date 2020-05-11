@@ -136,7 +136,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         }
     }
 
-    removeReservation(id: any): Observable<any> {
+    private removeReservation(id: any): Observable<any> {
         return this.facade.deleteOneReservation(this.event.id, id)
             .pipe(takeUntil(this.unsubscribe$));
     }
@@ -147,7 +147,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         this.findById(this.event.id);
     }
 
-    async confirm() {
+    confirm() {
         let reservations;
         if (this.event.type === 'C') {
             reservations = this.event.reservations;
@@ -232,10 +232,10 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(async res => {
+        dialogRef.afterClosed().subscribe(res => {
             if (res) {
                 for (const userId in res) {
-                    await this.updateReservations(userId, res);
+                    this.updateReservations(userId, res);
                 }
                 this.findById(this.event.id);
             }
@@ -243,7 +243,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     }
 
-    private async updateReservations(userId: string, res) {
+    private updateReservations(userId: string, res) {
         if (this.userSelected[userId] !== res[userId]) {
             if (res[userId]) {
                 const bundleId = this.userBundle[userId].id;

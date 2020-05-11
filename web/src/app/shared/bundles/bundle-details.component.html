@@ -100,7 +100,7 @@
                 <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;{{isNotActive()? 'Attiva' : 'Modifica'}}
                 </span>
             </button>
-            <button *ngIf="canDelete" mat-button color="warn" (click)="delete()">
+            <button *ngIf="canDelete" mat-button color="warn" (click)="deleteBundle()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
             </span>

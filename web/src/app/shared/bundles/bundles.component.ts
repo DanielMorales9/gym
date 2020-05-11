@@ -3,17 +3,17 @@ import {Bundle} from '../model';
 import {BundleService} from '../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
-import {BundleCustomerHelperService, BundleHelperService, QueryableDatasource} from '../../core/helpers';
-import {Subscription} from 'rxjs';
+import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
-import {first} from 'rxjs/operators';
+import {first, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './bundles.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class BundlesComponent implements OnInit {
+export class BundlesComponent extends BaseComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
@@ -40,25 +40,29 @@ export class BundlesComponent implements OnInit {
                 private dialog: MatDialog,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-
+        super();
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.getPolicies();
         this.initQueryParams(this.id);
     }
 
     private initQueryParams(id?) {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            if (Object.keys(params).length > 0) {
-                if (!!this.queryParams.time) {
-                    this.queryParams.time = new Date(this.queryParams.time);
+        this.route.queryParams
+            .pipe(
+                first(),
+                takeUntil(this.unsubscribe$))
+            .subscribe(params => {
+                this.queryParams = Object.assign({}, params);
+                if (Object.keys(params).length > 0) {
+                    if (!!this.queryParams.time) {
+                        this.queryParams.time = new Date(this.queryParams.time);
+                    }
                 }
-            }
-            this.search(this.queryParams);
-        });
+                this.search(this.queryParams);
+            });
     }
 
     private updateQueryParams(event?) {
@@ -86,16 +90,18 @@ export class BundlesComponent implements OnInit {
         this.canEdit = this.policy.get('bundle', 'canEdit');
     }
 
-    async handleEvent($event) {
+    handleEvent($event) {
         if ($event.type === 'info') {
             this.goToDetails($event.bundle);
         } else if ($event.type === 'edit') {
-            this.service.patch($event.bundle);
+            this.service.patchBundle($event.bundle)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(undefined, err => this.snackbar.open(err.error.message));
         }
     }
 
-    private async goToDetails(bundle: any) {
-        await this.router.navigate(['bundles', bundle.id], {
+    private goToDetails(bundle: any) {
+        this.router.navigate(['bundles', bundle.id], {
             relativeTo: this.route.parent
         });
     }

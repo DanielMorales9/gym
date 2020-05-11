@@ -11,14 +11,15 @@ import {SnackBarService} from '../../core/utilities';
 import {UserHelperService, QueryableDatasource} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {first} from 'rxjs/operators/first';
-import {filter, map, switchMap} from 'rxjs/operators';
-import {of} from 'rxjs';
+import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
+import {Observable, of} from 'rxjs';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './users.component.html',
     styleUrls: ['../../styles/search-list.css']
 })
-export class UsersComponent implements OnInit {
+export class UsersComponent extends BaseComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
 
@@ -44,6 +45,7 @@ export class UsersComponent implements OnInit {
                 private policy: PolicyService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
+        super();
         this.currentUserId = this.auth.getUser().id;
         this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
     }
@@ -59,9 +61,11 @@ export class UsersComponent implements OnInit {
     }
 
     private initQueryParams() {
-        this.activatedRoute.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.search(this.queryParams);
+        this.activatedRoute.queryParams
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(params => {
+                this.queryParams = Object.assign({}, params);
+                this.search(this.queryParams);
         });
     }
 
@@ -84,9 +88,17 @@ export class UsersComponent implements OnInit {
             },
         });
 
-        dialogRef.afterClosed().subscribe(user => {
-            if (user) { this.createUser(user); }
-        });
+        dialogRef.afterClosed()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(v => !v),
+                switchMap(r => this.createUser(r))
+            )
+            .subscribe(user => {
+                const message = `L'utente ${user.lastName} è stato creato`;
+                this.snackbar.open(message);
+                this.search();
+            }, err => this.snackbar.open(err.error.message));
     }
 
     search($event?) {
@@ -129,17 +141,8 @@ export class UsersComponent implements OnInit {
         );
     }
 
-    private async createUser(user: User) {
-        const [data, err] = await this.authService.registration(user);
-        if (err) {
-            if (err.status === 500) {
-                this.snackbar.open(err.error.message);
-            } else { throw err; }
-        } else {
-            const message = `L'utente ${user.lastName} è stato creato`;
-            this.snackbar.open(message);
-        }
-        this.search();
+    private createUser(user: User): Observable<any> {
+        return this.authService.registration(user);
     }
 
     itsMe(id: any) {

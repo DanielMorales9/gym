@@ -12,14 +12,15 @@ import {ImageModalComponent} from './image-modal.component';
 import {ImageCropModalComponent} from './image-crop-modal.component';
 import {LyDialog} from '@alyle/ui/dialog';
 import {ImgCropperEvent} from '@alyle/ui/image-cropper';
-import {filter, switchMap} from 'rxjs/operators';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './profile.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
 })
-export class ProfileComponent implements OnInit {
+export class ProfileComponent extends BaseComponent implements OnInit {
 
     user: User;
     image_src: any;
@@ -32,6 +33,7 @@ export class ProfileComponent implements OnInit {
                 private dialog: MatDialog,
                 private _cd: ChangeDetectorRef,
                 private _dialog: LyDialog) {
+        super();
     }
 
     ngOnInit(): void {
@@ -67,20 +69,18 @@ export class ProfileComponent implements OnInit {
         return UserHelperService.getUserCreatedAt(this.user);
     }
 
-    async openPasswordDialog() {
+    openPasswordDialog() {
         const dialogRef = this.dialog.open(ChangePasswordModalComponent);
 
-        const passwordForm = await dialogRef.afterClosed().toPromise();
-
-        if (passwordForm) {
-            const [data, err] = await this.authService.changePassword(this.user.id, passwordForm);
-            if (err) {
-                this.snackbar.open(err.error.message);
-            } else {
+        dialogRef.afterClosed()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(v => !!v),
+                switchMap(v => this.authService.changePassword(this.user.id, v)))
+            .subscribe(r => {
                 const message = `${this.user.firstName}, la tua password è stata cambiata con successo!`;
                 this.snackbar.open(message);
-            }
-        }
+            }, err => this.snackbar.open(err.error.message));
     }
 
     fileChange($event: Event) {
@@ -91,7 +91,9 @@ export class ProfileComponent implements OnInit {
             data: $event,
             width: 320,
             disableClose: true
-        }).afterClosed.subscribe((result?: ImgCropperEvent) => {
+        }).afterClosed
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((result?: ImgCropperEvent) => {
             if (result) {
                 const cropped = result.dataURL;
                 this._cd.markForCheck();
@@ -121,12 +123,14 @@ export class ProfileComponent implements OnInit {
     }
 
     getAvatar() {
-        this.userService.retrieveImage(this.user.id).subscribe((res: any) => {
-            this.image_src = `data:${res.type};base64,${res.picByte}`;
-        }, err => {
-            const gender = this.user.gender ? 'woman' : 'man';
-            this.image_src = `https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
-        });
+        this.userService.retrieveImage(this.user.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((res: any) => {
+                this.image_src = `data:${res.type};base64,${res.picByte}`;
+            }, err => {
+                const gender = this.user.gender ? 'woman' : 'man';
+                this.image_src = `https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
+            });
     }
 
     getRoleName() {
