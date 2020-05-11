@@ -7,13 +7,16 @@ import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {PolicyService} from '../../core/policy';
 import {OptionModalComponent} from './option-modal.component';
 import {SnackBarService} from '../../core/utilities';
+import {of} from 'rxjs';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../base-component';
 
 @Component({
     selector: 'bundle-spec-details',
     templateUrl: './bundle-spec-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
 })
-export class BundleSpecDetailsComponent implements OnInit {
+export class BundleSpecDetailsComponent extends BaseComponent implements OnInit {
     PERSONAL = BundleType.PERSONAL;
     COURSE   = BundleType.COURSE;
 
@@ -32,6 +35,7 @@ export class BundleSpecDetailsComponent implements OnInit {
                 private policy: PolicyService,
                 private snackBar: SnackBarService,
                 private route: ActivatedRoute) {
+        super();
     }
 
     ngOnInit(): void {
@@ -44,8 +48,12 @@ export class BundleSpecDetailsComponent implements OnInit {
 
         this.displayedPaymentsColumns = displayedPaymentsColumns;
 
-        this.route.params.subscribe(async params => {
-            await this.getBundleSpec(+params['id']);
+        this.route.params
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                switchMap(params => this.getBundleSpec(+params['id'])))
+            .subscribe(res => {
+                this.bundleSpec = res;
         });
     }
 
@@ -67,32 +75,31 @@ export class BundleSpecDetailsComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(res => {
-            if (res) {
-                this.service.patch(res).subscribe((v: CourseBundleSpecification|PersonalBundleSpecification) => this.bundleSpec = v);
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(v => !!v),
+                switchMap(v => this.service.patchBundleSpecs(v)))
+            .subscribe((v: CourseBundleSpecification|PersonalBundleSpecification) => this.bundleSpec = v);
     }
 
     deleteBundle() {
-        const confirmed = confirm(`Vuoi eliminare il pacchetto ${this.bundleSpec.name}?`);
-        if (confirmed) {
-            this.service.delete(this.bundleSpec.id).subscribe(_ =>
+        of(confirm(`Vuoi eliminare il pacchetto ${this.bundleSpec.name}?`))
+            .pipe(takeUntil(this.unsubscribe$), filter(v => !!v),
+                switchMap(v => this.service.deleteBundleSpecs(this.bundleSpec.id)))
+                .subscribe(_ =>
                 this.router.navigateByUrl('/', {
-                replaceUrl: true
-            }));
-        }
+                    replaceUrl: true
+                }));
     }
 
     toggleDisabled() {
         this.bundleSpec.disabled = !this.bundleSpec.disabled;
-        this.service.patch(this.bundleSpec);
+        this.service.patchBundleSpecs(this.bundleSpec);
     }
 
-    private async getBundleSpec(id: number) {
-        const [data, error] = await this.service.findById(id);
-        if (error) { throw error; }
-        this.bundleSpec = data;
+    private getBundleSpec(id: number) {
+        return this.service.findBundleSpecById(id);
     }
 
     getBundleType() {
@@ -122,25 +129,25 @@ export class BundleSpecDetailsComponent implements OnInit {
             }
         });
 
-        dialogRef.afterClosed().subscribe(async res => {
-            if (res) {
-                const [data, error] = await this.service.createOption(this.bundleSpec.id, res);
-                if (error) { throw error; }
-                this.bundleSpec = data;
-            }
-        });
+        dialogRef.afterClosed()
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(v => !!v),
+                switchMap(res => this.service.createOption(this.bundleSpec.id, res)))
+            .subscribe(res => {
+                this.bundleSpec = res;
+            });
     }
 
-    async deleteOption(id: any) {
-        if (confirm('Sei sicuro di voler eliminare l\'opzione?')) {
-
-            const [data, error] = await this.service.deleteOption(this.bundleSpec.id, id);
-            if (error) {
-                this.snackBar.open('Impossibile eliminare opzione in uso');
-                return;
-            }
-            this.bundleSpec = data;
-        }
-
+    deleteOption(id: any) {
+        of(confirm('Sei sicuro di voler eliminare l\'opzione?'))
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                switchMap(v => this.service.deleteOption(this.bundleSpec.id, id))
+            )
+            .subscribe(
+                data => this.bundleSpec = data,
+                error => this.snackBar.open('Impossibile eliminare opzione in uso'));
     }
+
 }

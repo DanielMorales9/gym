@@ -268,7 +268,7 @@ export class AuthenticationService {
         const now = new Date();
         // compare the expiry time of the item with the current time
         if (now.getTime() > item.expiry) {
-            // If the item is expired, delete the item from storage
+            // If the item is expired, deleteBundleSpecs the item from storage
             // and return null
             localStorage.removeItem(key);
             return null;

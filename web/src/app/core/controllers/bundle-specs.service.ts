@@ -12,7 +12,7 @@ export class BundleSpecsService extends DataSourceService {
         super();
     }
 
-    patch(bundle: BundleSpecification): Observable<Object> {
+    patchBundleSpecs(bundle: BundleSpecification): Observable<Object> {
         return this.http.patch(`/bundleSpecs/${bundle.id}`, bundle);
     }
 
@@ -35,17 +35,15 @@ export class BundleSpecsService extends DataSourceService {
         return this.http.get(endpoint);
     }
 
-    delete(id: number) {
+    deleteBundleSpecs(id: number): Observable<any> {
         return this.http.delete(`/bundleSpecs/${id}`);
     }
 
-    @to_promise
-    findById(id: number): any {
+    findBundleSpecById(id: number): Observable<any> {
         return this.http.get(`/bundleSpecs/${id}`);
     }
 
-    @to_promise
-    createOption(id: any, obj: any): any {
+    createOption(id: any, obj: any): Observable<any> {
         return this.http.post(`/bundleSpecs/${id}/options`, obj);
     }
 
@@ -53,8 +51,7 @@ export class BundleSpecsService extends DataSourceService {
         return this.http.get(`/bundleSpecs/list`, {params: param});
     }
 
-    @to_promise
-    deleteOption(specId: number, optionId: number): any {
+    deleteOption(specId: number, optionId: number): Observable<any> {
         return this.http.delete(`/bundleSpecs/${specId}/options/${optionId}`);
     }
 }
