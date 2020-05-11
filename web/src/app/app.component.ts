@@ -2,10 +2,11 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {GymService, ScreenService} from './core/utilities';
-import {Subscription} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {SideBarComponent} from './components';
 import {AuthenticationService} from './core/authentication';
-import {filter, throttleTime} from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
+import {BaseComponent} from './shared/base-component';
 
 
 @Component({
@@ -13,13 +14,14 @@ import {filter, throttleTime} from 'rxjs/operators';
     templateUrl: './app.component.html',
     styleUrls: ['./styles/root.css', './styles/app.component.css']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
                 private gymService: GymService,
                 private router: Router,
                 private route: ActivatedRoute) {
+        super();
     }
 
     appName: string;
@@ -28,15 +30,13 @@ export class AppComponent implements OnInit, OnDestroy {
     @ViewChild('sideBar', { static: true })
     public sideBar: SideBarComponent;
 
-    private sub: Subscription = new Subscription();
-
     private setTitle(...title) {
         document.title = title.join(' - ');
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.authOnNavigation();
-        await this.authenticate();
+        this.authenticate();
     }
 
     private getTitle(state, parent) {
@@ -55,64 +55,74 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.auth.getCurrentUserRole();
     }
 
-    private async authenticate() {
-        const [data, err] = await this.auth.login();
-        this.authenticated = !!data;
-        if (this.authenticated) {
-            await this.getAppName();
-        }
+    private authenticate() {
+        return this.auth.login()
+            .pipe(map(data => {
+
+                    this.authenticated = !!data;
+                    return data;
+                }
+        ));
     }
 
-    private async getAppName() {
-        const [data, _] = await this.auth.getGym();
-        if (data) {
-            this.appName = data.name;
-            this.setTitle(this.appName);
-        }
+    private getAppName(): Observable<any> {
+        return this.auth.getGym()
+            .pipe(
+                map(data => {
+                if (!!data) {
+                    this.appName = data.name;
+                    this.setTitle(this.appName);
+                }
+                return data;
+            }));
     }
 
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
-    }
-
-    async logout() {
-        await this.auth.logout();
-        this.authenticated = false;
-        await this.router.navigateByUrl('/auth');
-        await this.sideBar.close();
+    logout() {
+        this.auth.logout()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(
+            _ => {
+                this.authenticated = false;
+                this.router.navigateByUrl('/auth');
+                this.sideBar.close();
+            }
+        );
     }
 
     private authOnNavigation() {
-        const sub = this.router.events
-            .pipe(filter(event => event instanceof NavigationStart))
-            .subscribe(async event => {
-                await this.authenticate();
-                await this.closeNav();
+        this.router.events
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                filter(event => event instanceof NavigationStart),
+                switchMap(s => this.authenticate()),
+                switchMap(s => this.getAppName())
+            )
+            .subscribe(_ => {
+                this.closeNav();
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
                 this.setTitle(this.appName, ...titles);
         });
-        this.sub.add(sub);
     }
 
     isDesktop() {
         return this.screenService.isDesktop();
     }
 
-    async goHome() {
+    goHome() {
         if (this.authenticated && this.hasUser()) {
             const roleName = this.getUser().roles
                 .find(value => value.id === this.getCurrentRole())
                 .name.toLowerCase();
-            await this.router.navigateByUrl(roleName);
+            this.router.navigateByUrl(roleName);
         }
         else {
-            await this.router.navigateByUrl('/auth');
+            this.router.navigateByUrl('/auth');
         }
     }
 
-    async closeNav() {
+    closeNav() {
         if (!this.sideBarOpened()) {
-            await this.sideBar.toggle(false);
+            this.sideBar.toggle(false);
         }
     }
 
@@ -124,9 +134,9 @@ export class AppComponent implements OnInit, OnDestroy {
         return this.isDesktop() && this.authenticated;
     }
 
-    async openSideBar() {
+    openSideBar() {
         if (this.authenticated) {
-            await this.sideBar.toggle();
+            this.sideBar.toggle();
         }
     }
 

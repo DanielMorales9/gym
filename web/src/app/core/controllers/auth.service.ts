@@ -9,13 +9,11 @@ export class AuthService {
 
     constructor(private http: HttpClient) {}
 
-    @to_promise
-    forgotPassword(email: string): any {
+    forgotPassword(email: string): Observable<any> {
         return this.http.get(`/authentication/forgotPassword?email=${email}`);
     }
 
-    @to_promise
-    getUserFromVerificationToken(token: any): any {
+    getUserFromVerificationToken(token: any): Observable<any> {
         return this.http.get('/authentication/getUserFromVerificationToken', {params: {token: token}});
     }
 
@@ -23,8 +21,7 @@ export class AuthService {
         return this.http.post(`/authentication/registration`, user);
     }
 
-    @to_promise
-    resendToken(token: string): any {
+    resendToken(token: string): Observable<any> {
         return this.http.get('/authentication/resendToken', {params: {token: token}});
     }
 
@@ -32,18 +29,15 @@ export class AuthService {
         return this.http.get(`/authentication/resendTokenAnonymous?id=${id}`);
     }
 
-    @to_promise
-    changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }): any {
+    changePassword(id: number, form: { password: string; oldPassword: string, confirmPassword: string }): Observable<any> {
         return this.http.post(`/authentication/changePassword/${id}`, form);
     }
 
-    @to_promise
-    changePasswordAnonymous(id: number, form: { password: string; oldPassword: string, confirmPassword: string }): any {
+    changePasswordAnonymous(id: number, form: { password: string; oldPassword: string, confirmPassword: string }): Observable<any> {
         return this.http.post(`/authentication/changePasswordAnonymous/${id}`, form);
     }
 
-    @to_promise
-    confirmRegistration(credentials): any {
+    confirmRegistration(credentials): Observable<any> {
         return this.http.post( `/authentication/confirmRegistration`, credentials);
     }
 }

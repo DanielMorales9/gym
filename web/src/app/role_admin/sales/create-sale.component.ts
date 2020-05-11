@@ -49,9 +49,9 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
     }
 
     private getId() {
-        this.sub = this.route.params.subscribe(async params => {
+        this.sub = this.route.params.subscribe(params => {
             this.id = +params['id'];
-            await this.createSale();
+            this.createSale();
         });
     }
 
@@ -148,7 +148,7 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
             });
     }
 
-    async selectBundleSpec(spec: any) {
+    selectBundleSpec(spec: any) {
         const isSelected = !this.getSelectBundle(spec.id);
         this.selected[spec.id] = isSelected;
 

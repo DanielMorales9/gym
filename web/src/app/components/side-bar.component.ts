@@ -96,11 +96,11 @@ export class SideBarComponent implements OnInit, OnDestroy {
         }
     }
 
-    async toggle(b?: boolean) {
-        await this.sideNav.toggle(b);
+    toggle(b?: boolean) {
+        this.sideNav.toggle(b);
     }
 
-    async close() {
-        await this.sideNav.close();
+    close() {
+        this.sideNav.close();
     }
 }

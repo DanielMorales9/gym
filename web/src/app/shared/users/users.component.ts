@@ -91,7 +91,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
         dialogRef.afterClosed()
             .pipe(
                 takeUntil(this.unsubscribe$),
-                filter(v => !v),
+                filter(v => !!v),
                 switchMap(r => this.createUser(r))
             )
             .subscribe(user => {

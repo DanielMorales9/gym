@@ -2,12 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService, Credentials} from '../../core/authentication';
+import {takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../../shared/base-component';
 
 @Component({
     templateUrl: './login.component.html',
     styleUrls: ['../../styles/root.css', './auth.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent extends BaseComponent implements OnInit {
 
     error = false;
     form: FormGroup;
@@ -17,28 +19,32 @@ export class LoginComponent implements OnInit {
     constructor(private auth: AuthenticationService,
                 private builder: FormBuilder,
                 private router: Router) {
+        super();
     }
 
     ngOnInit(): void {
         this.buildForm();
     }
 
-    async login() {
+    login() {
         this.credentials = {
             username: this.email.value,
             password: this.password.value,
             remember: false
         };
-        const [data, error] = await this.auth.login(this.credentials);
-        if (data) {
-            const roleId = this.auth.getPrincipalRole();
-            const roleName = data.roles.find(value => value.id === roleId).name.toLowerCase();
-            this.error = false;
-            await this.router.navigateByUrl(roleName);
-        }
-        else {
-            this.error = true;
-        }
+        this.auth.login(this.credentials)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(data => {
+                if (!!data) {
+                    const roleId = this.auth.getPrincipalRole();
+                    const roleName = data.roles.find(value => value.id === roleId).name.toLowerCase();
+                    this.error = false;
+                    this.router.navigateByUrl(roleName);
+                }
+                else {
+                    this.error = true;
+                }
+            });
     }
 
 

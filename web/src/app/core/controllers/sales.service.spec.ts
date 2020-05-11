@@ -35,7 +35,7 @@ describe('SalesService', () => {
         req.flush([]);
     });
 
-    it('testing #delete', done => {
+    it('testing #deleteBundleSpecs', done => {
         const query = 'query';
         salesService.delete(1)
             .subscribe(res => {

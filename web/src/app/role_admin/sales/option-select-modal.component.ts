@@ -51,33 +51,33 @@ export class OptionSelectModalComponent extends BaseComponent {
         return isSelected;
     }
 
-    async selectOption(option: any) {
+    selectOption(option: any) {
         const isSelected = !this.getSelectOption(option.id);
         this.selected[option.id] = isSelected;
         const id = option.id;
 
-        await this.addOrDelete(isSelected, id);
+        this.addOrDelete(isSelected, id);
     }
 
-    private async addOrDelete(isSelected: boolean, id: number) {
+    private addOrDelete(isSelected: boolean, id: number) {
         if (isSelected) {
-            await this.addSalesLineItem(id);
+            this.addSalesLineItem(id);
         } else {
-            await this.deleteSalesLineItem(id);
+            this.deleteSalesLineItem(id);
         }
     }
 
-    async close() {
+    close() {
         let key;
         // tslint:disable-next-line:prefer-const
         for (let k in this.selected) {
             key = +k;
             if (!!this.backupSelected[key]) {
                 if (this.backupSelected[key] !== this.selected[key]) {
-                    await this.addOrDelete(this.backupSelected[key], key);
+                    this.addOrDelete(this.backupSelected[key], key);
                 }
             } else {
-                await this.addOrDelete(false, key);
+                this.addOrDelete(false, key);
             }
         }
         this.dialogRef.close({selected: this.backupSelected, sale: this.sale});
