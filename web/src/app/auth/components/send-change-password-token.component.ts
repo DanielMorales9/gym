@@ -23,17 +23,13 @@ export class SendChangePasswordTokenComponent implements OnInit {
         this.buildForm();
     }
 
-    async forgotPassword() {
-        const [data, err] = await this.authService.forgotPassword(this.email.value);
-        if (err) {
-            this.errorMessage = err.error.message;
-        }
-        else {
+    forgotPassword() {
+        this.authService.forgotPassword(this.email.value).pipe().subscribe(res => {
             this.buildForm();
             const message = 'Ti abbiamo inviato un link per modificare la tua password.';
             this.snackbar.open(message);
-            await this.router.navigateByUrl('/auth', {replaceUrl: true});
-        }
+            this.router.navigateByUrl('/auth', {replaceUrl: true});
+        }, err => this.errorMessage = err.error.message);
     }
 
     get email() {

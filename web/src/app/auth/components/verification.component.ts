@@ -6,13 +6,15 @@ import {passwordMatchValidator} from '../../core/functions';
 import {AuthenticationService} from '../../core/authentication';
 import {AuthService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
+import {switchMap, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../../shared/base-component';
 
 
 @Component({
     templateUrl: './verification.component.html',
     styleUrls: ['../../styles/root.css', './auth.css']
 })
-export class VerificationComponent implements OnInit {
+export class VerificationComponent extends BaseComponent implements OnInit {
 
     user: User;
     form: FormGroup;
@@ -28,30 +30,31 @@ export class VerificationComponent implements OnInit {
                 private snackbar: SnackBarService,
                 private activatedRoute: ActivatedRoute,
                 private router: Router) {
+        super();
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.user = new User();
         this.buildForm();
 
         this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
+        this.userFromToken();
+    }
 
-        const [data, err] = await this.authService.getUserFromVerificationToken(this.token);
-        if (err) {
+    private userFromToken() {
+        this.authService.getUserFromVerificationToken(this.token)
+            .pipe(takeUntil(this.unsubscribe$)).subscribe(res => {
+            this.user = res;
+            this.buildForm();
+        }, err => {
             if (err.status === 404) {
                 this.snackbar.open(err.error.message);
-                await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
+                this.router.navigateByUrl('/auth/login', {replaceUrl: true});
             } else if (err.status < 500) {
                 this.resendTokenMessage = err.error.message;
                 this.toResendToken = true;
-            } else { throw err; }
-        }
-        else {
-            this.user = data;
-            if (this.user.verified) {
-                await this.router.navigateByUrl('/', {replaceUrl: true});
             }
-        }
+        });
     }
 
     get password() {
@@ -76,35 +79,32 @@ export class VerificationComponent implements OnInit {
             });
     }
 
-    async confirmRegistration() {
+    confirmRegistration() {
         this.user.password = this.password.value;
         this.user.confirmPassword = this.confirmPassword.value;
         const credentials = {email: this.user.email, password: this.user.password};
-        let [data, error] = await this.authService.confirmRegistration(credentials);
+        this.authService.confirmRegistration(credentials)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(async (data: User) => {
+                const auth_credentials = {username: data.email, password: this.user.password, remember: false};
+                const [d, error] = await this.auth.authenticate(auth_credentials);
+                    if (error) {
+                        await this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS});
+                    } else {
+                        await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
+                    }
 
-        if (error) { throw error; }
-
-        data = data as User;
-        const auth_credentials = {username: data.email, password: this.user.password, remember: false};
-        [data, error] = await this.auth.authenticate(auth_credentials);
-
-        if (error) {
-            await this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS});
-        } else {
-            await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
-        }
-
+            });
     }
 
 
-    async resendToken() {
-        const [data, err] = await this.authService.resendToken(this.token);
-        if (err) {
-            throw err;
-        } else {
-            const message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`;
-            this.snackbar.open(message);
-            return this.router.navigateByUrl('/', {replaceUrl: true});
-        }
+    resendToken() {
+        this.authService.resendToken(this.token)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(r => {
+                const message = `${this.user.firstName}, il tuo token è stato re-inviato, <br>Controlla la posta elettronica!`;
+                this.snackbar.open(message);
+                return this.router.navigateByUrl('/', {replaceUrl: true});
+            });
     }
 }
