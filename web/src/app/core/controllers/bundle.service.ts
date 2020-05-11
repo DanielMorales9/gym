@@ -20,18 +20,15 @@ export class BundleService {
         return this.http.get(`/bundles/search`, {params: query});
     }
 
-    @to_promise
-    findById(id: number): any {
+    findById(id: number): Observable<any> {
         return this.http.get(`/bundles/${id}`);
     }
 
-    @to_promise
-    delete(id: number): any {
+    deleteBundle(id: number): Observable<any> {
         return this.http.delete(`/bundles/${id}`);
     }
 
-    @to_promise
-    patch(bundle: any): any {
+    patchBundle(bundle: any): Observable<any> {
         return this.http.patch(`/bundles/${bundle.id}`, bundle);
     }
 

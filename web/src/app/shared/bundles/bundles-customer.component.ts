@@ -6,13 +6,14 @@ import {SnackBarService} from '../../core/utilities';
 import {BundleCustomerHelperService, QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
-import {first} from 'rxjs/operators';
+import {first, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './bundles-customer.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class BundlesCustomerComponent implements OnInit {
+export class BundlesCustomerComponent extends BaseComponent implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
@@ -39,16 +40,19 @@ export class BundlesCustomerComponent implements OnInit {
                 private dialog: MatDialog,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-
+        super();
         this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.getPolicies();
-        const param = await this.route.params.pipe(first()).toPromise();
-        this.id = +param['id'];
-
-        this.initQueryParams(this.id);
+        this.route.params.pipe(
+            first(),
+            takeUntil(this.unsubscribe$))
+        .subscribe(param => {
+            this.id = +param['id'];
+            this.initQueryParams(this.id);
+        });
     }
 
     private initQueryParams(id?) {
@@ -91,16 +95,18 @@ export class BundlesCustomerComponent implements OnInit {
         this.canEdit = this.policy.get('bundle', 'canEdit');
     }
 
-    async handleEvent($event) {
+    handleEvent($event) {
         if ($event.type === 'info') {
             this.goToDetails($event.bundle);
         } else if ($event.type === 'edit') {
-            this.service.patch($event.bundle);
+            this.service.patchBundle($event.bundle)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(undefined, err => this.snackbar.open(err.error.message));
         }
     }
 
-    private async goToDetails(bundle: any) {
-        await this.router.navigate(['bundles', bundle.id], {
+    private goToDetails(bundle: any) {
+        this.router.navigate(['bundles', bundle.id], {
             relativeTo: this.route.parent
         });
     }

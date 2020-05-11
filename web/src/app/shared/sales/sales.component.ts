@@ -4,16 +4,17 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SalesService} from '../../core/controllers';
 import {AuthenticationService} from '../../core/authentication';
 import {SnackBarService} from '../../core/utilities';
-import {SaleHelperService, QueryableDatasource} from '../../core/helpers';
+import {QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
-import {first} from 'rxjs/operators';
+import {first, takeUntil} from 'rxjs/operators';
+import {BaseComponent} from '../base-component';
 
 
 @Component({
     templateUrl: './sales.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
 })
-export class SalesComponent implements OnInit {
+export class SalesComponent extends BaseComponent implements OnInit {
 
     private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
 
@@ -45,38 +46,47 @@ export class SalesComponent implements OnInit {
                 private route: ActivatedRoute,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
+        super();
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
         this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
     }
 
-    async ngOnInit(): Promise<void> {
+    ngOnInit(): void {
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
+        this.getPolicy();
 
+        this.route.params
+            .pipe(first(),
+                takeUntil(this.unsubscribe$))
+            .subscribe(params => {
+                this.id = +params['id'];
+                this.initQueryParams(this.id);
+            });
+    }
+
+    private getPolicy() {
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
         this.canSell = this.policy.get('sale', 'canSell') && !!this.id;
-
-        const param = await this.route.params.pipe(first()).toPromise();
-        this.id = +param['id'];
-        this.initQueryParams(this.id);
-
     }
 
     private initQueryParams(id?) {
-        this.route.queryParams.pipe(first()).subscribe(async params => {
-            this.queryParams = Object.assign({}, params);
-            if (Object.keys(params).length > 0) {
-                if (!!this.queryParams.date) {
-                    this.queryParams.date = new Date(this.queryParams.date);
+        this.route.queryParams
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(params => {
+                this.queryParams = Object.assign({}, params);
+                if (Object.keys(params).length > 0) {
+                    if (!!this.queryParams.date) {
+                        this.queryParams.date = new Date(this.queryParams.date);
+                    }
                 }
-            }
 
-            if (!!id || !!this.id) {
-                this.queryParams.id = this.id || id;
-            }
-            this.mixed = this.canDelete && !this.id;
-            this.search(this.queryParams);
-        });
+                if (!!id || !!this.id) {
+                    this.queryParams.id = this.id || id;
+                }
+                this.mixed = this.canDelete && !this.id;
+                this.search(this.queryParams);
+            });
     }
 
     private updateQueryParams(event?) {
