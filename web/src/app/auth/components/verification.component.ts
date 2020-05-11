@@ -84,16 +84,17 @@ export class VerificationComponent extends BaseComponent implements OnInit {
         this.user.confirmPassword = this.confirmPassword.value;
         const credentials = {email: this.user.email, password: this.user.password};
         this.authService.confirmRegistration(credentials)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(async (data: User) => {
-                const auth_credentials = {username: data.email, password: this.user.password, remember: false};
-                const [d, error] = await this.auth.authenticate(auth_credentials);
-                    if (error) {
-                        await this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS});
+            .pipe(takeUntil(this.unsubscribe$),
+                switchMap(data => {
+                    const auth_credentials = {username: data.email, password: this.user.password, remember: false};
+                    return this.auth.authenticate(auth_credentials);
+                }))
+            .subscribe(d => {
+                    if (!d) {
+                        this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS});
                     } else {
-                        await this.router.navigateByUrl('/auth/login', {replaceUrl: true});
+                        this.router.navigateByUrl('/auth/login', {replaceUrl: true});
                     }
-
             });
     }
 

@@ -4,7 +4,7 @@ import {HttpClient} from '@angular/common/http';
 import {to_promise} from '../functions/decorators';
 import {User} from '../../shared/model';
 import {StorageService} from './storage.service';
-import {catchError, map, throttleTime} from 'rxjs/operators';
+import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {Observable, of} from 'rxjs';
 
@@ -68,35 +68,48 @@ export class AuthenticationService {
      * @param credentials The login parameters.
      * @return The user data.
      */
-    async login(credentials?: Credentials): Promise<any> {
-        let [data, error] = await this.authenticate(credentials);
-        if (!error) {
-            [data, error] = await this.getUserDetails(data['principal']['username']);
-        }
-        return [data, error];
-    }
-
-    private async getUserDetails(username) {
-        let [data, error] = await this.getUserByEmail(username);
-        if (!error) {
-            this.user = data;
-            this.storageService.set(this.USER_KEY, this.user, this.remember);
-        } else {
-            [data, error] = [this.user, undefined];
-        }
-        return [data, error];
-    }
-
-    private async getUserByEmail(username) {
-        let user = this.getWithExpiry(this.USER_EXPIRE_KEY);
-        let error;
-        if (!(!!user && user.email === username)) {
-            [user, error] = await this.findUserByEmail(username);
-            if (!!user) {
-                this.setWithExpiry(this.USER_EXPIRE_KEY, user, this.TTL);
+    login(credentials?: Credentials): Observable<any> {
+        return this.authenticate(credentials).pipe(switchMap(
+            data => {
+                if (!!data) {
+                    return this.getUserDetails(data['principal']['username']);
+                }
+                return of(data);
             }
+        ));
+    }
+
+    private getUserDetails(username): Observable<any> {
+        return this.getUserByEmail(username).pipe(
+            catchError(err => of(null)),
+            map(v => {
+                if (!!v) {
+                    this.user = v;
+                    this.storageService.set(this.USER_KEY, this.user, this.remember);
+                }
+                return v;
+            })
+        );
+    }
+
+    private getUserByEmail(username): Observable<any> {
+        const user = this.getWithExpiry(this.USER_EXPIRE_KEY);
+        let res;
+        if (!(!!user && user.email === username)) {
+            res = this.findUserByEmail(username).pipe(
+                catchError(err => of(null)),
+                map(u => {
+                    if (!!u) {
+                        this.setWithExpiry(this.USER_EXPIRE_KEY, u, this.TTL);
+                    }
+                    return u;
+                }
+            ));
         }
-        return [user, error];
+        else {
+            res = of(user);
+        }
+        return res;
     }
 
     /**
@@ -104,48 +117,58 @@ export class AuthenticationService {
      * @param credentials The login parameters.
      * @return The principal data.
      */
-    async authenticate(credentials?: Credentials): Promise<any> {
+    authenticate(credentials?: Credentials): Observable<any> {
         this.remember = credentials ? credentials.remember : false;
         if (credentials) {
             this.storageService.set(this.CREDENTIAL_KEY, credentials, this.remember);
         }
-        const [data , error] = await this.getPrincipal();
-        if (!!error) {
-            this.storageService.set(this.CREDENTIAL_KEY);
-        }
-
-        return [data , error];
+        return this.getPrincipal()
+            .pipe(map(v => {
+            if (!!v) {
+                this.storageService.set(this.CREDENTIAL_KEY);
+            }
+            return v;
+        }));
     }
 
 
-    private async getPrincipal() {
-        let principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
+    private getPrincipal(): Observable<any> {
+        const principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
+        let ret;
         if (!principal) {
-            principal = await this.signIn()
-                .pipe(catchError(err => of(null)))
-                .toPromise();
-            this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, principal, this.TTL);
+            ret = this.signIn()
+                .pipe(catchError(err => of(undefined)),
+                    map(v => {
+                        if (!!v) {
+                            this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, v, this.TTL);
+                        }
+                        return v;
+                    }));
+
+        }
+        else {
+            ret = of(principal);
         }
 
-        return [principal, !principal];
+        return ret;
     }
 
     /**
      * Logs out the user and clear credentials.
      * @return True if the user was logged out successfully.
      */
-    async logout(): Promise<any> {
+    logout(): Observable<any> {
         // Customize credentials invalidation here
-        const [data, error] = await this.signOut();
-        if (!error) {
-            this.currentRole = undefined;
-            this.storageService.set(this.CREDENTIAL_KEY);
-            this.storageService.set(this.USER_KEY);
-            localStorage.removeItem(this.USER_EXPIRE_KEY);
-            localStorage.removeItem(this.PRINCIPAL_EXPIRE_KEY);
-            localStorage.removeItem(this.GYM_EXPIRE_KEY);
-        }
-        return [data, error];
+        return this.signOut().pipe(map( _ => {
+                this.currentRole = undefined;
+                this.storageService.set(this.CREDENTIAL_KEY);
+                this.storageService.set(this.USER_KEY);
+                localStorage.removeItem(this.USER_EXPIRE_KEY);
+                localStorage.removeItem(this.PRINCIPAL_EXPIRE_KEY);
+                localStorage.removeItem(this.GYM_EXPIRE_KEY);
+
+            }
+        ));
     }
 
     public getAuthorizationHeader() {
@@ -219,13 +242,11 @@ export class AuthenticationService {
         return this.http.get('/user');
     }
 
-    @to_promise
-    private signOut(): any {
+    private signOut(): Observable<any> {
         return this.http.get('/logout');
     }
 
-    @to_promise
-    private findUserByEmail(email: string): any {
+    private findUserByEmail(email: string): Observable<any> {
         return this.http.get(`/users/findByEmail?email=${email}`);
     }
 
@@ -234,16 +255,22 @@ export class AuthenticationService {
         return !!user && Object(user.keys).length > 0;
     }
 
-    async getGym(): Promise<any> {
-        let gym = this.getWithExpiry(this.GYM_EXPIRE_KEY);
+    getGym(): Observable<any> {
+        let res;
+        const gym = this.getWithExpiry(this.GYM_EXPIRE_KEY);
+
         if (!gym) {
-            gym = await this.getConfig().toPromise();
-            if (!!gym) {
-                this.setWithExpiry(this.GYM_EXPIRE_KEY, gym, this.TTL);
-            }
+            res = this.getConfig()
+                .pipe(map(v => {
+                    this.setWithExpiry(this.GYM_EXPIRE_KEY, v, this.TTL);
+                    return v;
+            }));
+        }
+        else {
+            res = of(gym);
         }
 
-        return [gym, !gym];
+        return res;
     }
 
     setWithExpiry(key, value, ttl) {
