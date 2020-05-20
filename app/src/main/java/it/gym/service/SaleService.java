@@ -1,16 +1,14 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.*;
+import it.gym.model.Sale;
 import it.gym.repository.SaleRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -152,8 +150,7 @@ public class SaleService implements ICrudService<Sale, Long> {
     }
 
     private Page<Sale> initAssociation(Page<Sale> page) {
-        page.forEach(Sale::eager);
-        return page;
+        return page.map(Sale::eager);
     }
 
 }
