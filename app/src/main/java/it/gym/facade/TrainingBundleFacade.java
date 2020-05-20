@@ -32,34 +32,7 @@ public class TrainingBundleFacade {
     }
 
     public Page<ATrainingBundle> search(Long specId, Boolean expired, Date time, Pageable pageable) {
-        Page<ATrainingBundle> bundles;
-        if (specId != null) {
-            bundles = service.findBundlesBySpecId(specId, pageable);
-        }
-        else if (expired != null && time != null) {
-            if (expired) {
-                bundles = service.findBundlesByExpiredAtGreaterThan(time, pageable);
-            }
-            else {
-                bundles = service.findBundlesByCreatedAtGreaterThan(time, pageable);
-            }
-        }
-        else if (time != null) {
-            bundles = service.findBundlesByCreatedAtGreaterThan(time, pageable);
-        }
-        else if (expired != null) {
-            if (expired) {
-                bundles = service.findBundlesByExpired(pageable);
-            }
-            else {
-                bundles = service.findBundlesByNotExpired(pageable);
-            }
-        }
-        else {
-            bundles = service.findAll(pageable);
-        }
-        return bundles;
-
+        return service.search(specId, expired, time, pageable);
     }
 
     public Page<ATrainingBundle> findAll(Pageable pageable) {

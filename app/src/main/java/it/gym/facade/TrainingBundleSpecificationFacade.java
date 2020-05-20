@@ -54,15 +54,7 @@ public class TrainingBundleSpecificationFacade {
     }
 
     public Page<ATrainingBundleSpecification> findByNameContains(String name, Boolean disabled, Pageable pageable) {
-        if (disabled == null && name == null)
-            return service.findAll(pageable);
-        else if (disabled == null) {
-            return service.findByNameContains(name, pageable);
-        } if (name == null) {
-            return service.findByIsDisabled(disabled, pageable);
-        } else {
-            return service.findByNameAndIsDisabled(name, disabled, pageable);
-        }
+       return this.service.search(name, disabled, pageable);
     }
 
     public ATrainingBundleSpecification save(ATrainingBundleSpecification spec) {
@@ -84,15 +76,7 @@ public class TrainingBundleSpecificationFacade {
     }
 
     public List<ATrainingBundleSpecification> list(Boolean disabled, String type) {
-        List<ATrainingBundleSpecification> bundles;
-        if (disabled == null)
-            bundles = service.findAll();
-        else
-            bundles = service.findByIsDisabled(disabled);
-
-        if (type != null)
-            bundles = bundles.stream().filter(a -> a.getType().equals(type)).collect(Collectors.toList());
-        return bundles;
+        return this.service.list(disabled, type);
     }
 
     public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
