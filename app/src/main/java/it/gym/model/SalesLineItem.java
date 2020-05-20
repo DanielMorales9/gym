@@ -6,13 +6,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "sales_lines")
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class SalesLineItem {
+public class SalesLineItem implements Serializable, Eager {
     @Id
     @SequenceGenerator(name = "sales_lines_line_id_seq",
             sequenceName = "sales_lines_line_id_seq", allocationSize = 1)
@@ -54,5 +55,11 @@ public class SalesLineItem {
 
     Double getSubTotal() {
         return this.trainingBundle.getPrice();
+    }
+
+    @Override
+    public void eager() {
+        this.getTrainingBundle().eager();
+        this.getBundleSpecification().eager();
     }
 }

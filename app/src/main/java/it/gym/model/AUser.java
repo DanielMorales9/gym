@@ -33,7 +33,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class AUser implements DefaultRoles, Serializable {
+public abstract class AUser implements DefaultRoles, Serializable, Eager {
 
     @Id
     @SequenceGenerator(name = "users_user_id_seq",
@@ -192,5 +192,10 @@ public abstract class AUser implements DefaultRoles, Serializable {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    @Override
+    public void eager() {
+        this.getRoles().forEach(Role::eager);
     }
 }

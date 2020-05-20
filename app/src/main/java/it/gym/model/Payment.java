@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -13,7 +14,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Payment {
+public class Payment implements Serializable, Eager {
 
     @Id
     @SequenceGenerator(name = "payment_id_seq",
@@ -58,4 +59,8 @@ public class Payment {
         this.createdAt = new Date();
     }
 
+    @Override
+    public void eager() {
+        return;
+    }
 }

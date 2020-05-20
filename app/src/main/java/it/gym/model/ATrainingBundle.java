@@ -8,6 +8,7 @@ import lombok.Generated;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -27,7 +28,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
+public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Serializable, Eager {
 
     @Id
     @SequenceGenerator(name = "bundles_bundle_id_seq",
@@ -173,4 +174,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle> {
         return Objects.hash(id, name);
     }
 
+    @Override
+    public void eager() {
+        this.getSessions().forEach(ATrainingSession::eager);
+    }
 }

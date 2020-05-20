@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -27,7 +28,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingSession {
+public abstract class ATrainingSession implements Serializable, Eager {
 
     @Id
     @SequenceGenerator(name = "sessions_session_id_seq",
@@ -121,5 +122,10 @@ public abstract class ATrainingSession {
 
     public void removeWorkout(Workout w) {
         this.getWorkouts().remove(w);
+    }
+
+    @Override
+    public void eager() {
+        this.getWorkouts().forEach(Workout::eager);
     }
 }

@@ -12,7 +12,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Role implements Serializable {
+public class Role implements Serializable, Eager {
 
     @Id
     @SequenceGenerator(name = "roles_role_id_seq",
@@ -49,4 +49,8 @@ public class Role implements Serializable {
         this.name = name;
     }
 
+    @Override
+    public void eager() {
+        return;
+    }
 }
