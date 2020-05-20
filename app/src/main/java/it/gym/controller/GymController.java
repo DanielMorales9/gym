@@ -27,6 +27,7 @@ public class GymController {
 
     @Autowired
     private GymService service;
+
     @Autowired
     private ObjectMapper objectMapper;
 
