@@ -33,7 +33,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class AUser implements DefaultRoles, Serializable, Eager {
+public abstract class AUser implements DefaultRoles, Serializable, Eager<AUser> {
 
     @Id
     @SequenceGenerator(name = "users_user_id_seq",
@@ -195,7 +195,8 @@ public abstract class AUser implements DefaultRoles, Serializable, Eager {
     }
 
     @Override
-    public void eager() {
+    public AUser eager() {
         this.getRoles().forEach(Role::eager);
+        return this;
     }
 }

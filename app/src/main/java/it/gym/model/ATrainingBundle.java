@@ -28,7 +28,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Serializable, Eager {
+public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Serializable, Eager<ATrainingBundle> {
 
     @Id
     @SequenceGenerator(name = "bundles_bundle_id_seq",
@@ -175,7 +175,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     }
 
     @Override
-    public void eager() {
+    public ATrainingBundle eager() {
         this.getSessions().forEach(ATrainingSession::eager);
+        return this;
     }
 }

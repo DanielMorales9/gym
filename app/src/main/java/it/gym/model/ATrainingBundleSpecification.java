@@ -26,7 +26,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingBundleSpecification implements Serializable, Eager {
+public abstract class ATrainingBundleSpecification implements Serializable, Eager<ATrainingBundleSpecification> {
 
     @Id
     @SequenceGenerator(name = "bundle_specs_spec_id_seq",

@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated
-public class TimeOption implements Serializable, Eager {
+public class TimeOption implements Serializable, Eager<TimeOption> {
 
     @Id
     @SequenceGenerator(name = "options_id_seq",
@@ -81,7 +81,7 @@ public class TimeOption implements Serializable, Eager {
     }
 
     @Override
-    public void eager() {
-        return;
+    public TimeOption eager() {
+        return this;
     }
 }

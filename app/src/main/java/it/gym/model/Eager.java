@@ -2,7 +2,7 @@ package it.gym.model;
 
 import java.util.List;
 
-public interface Eager {
+public interface Eager<T> {
 
-    public void eager();
+    public T eager();
 }

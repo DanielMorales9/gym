@@ -55,7 +55,7 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     }
 
     @Override
-    public void eager() {
-        return;
+    public PersonalTrainingBundleSpecification eager() {
+        return this;
     }
 }

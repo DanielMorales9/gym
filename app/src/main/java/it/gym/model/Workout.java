@@ -13,7 +13,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Workout implements Serializable, Eager {
+public class Workout implements Serializable, Eager<Workout> {
 
     @Id
     @SequenceGenerator(name = "workout_id_seq",
@@ -125,7 +125,7 @@ public class Workout implements Serializable, Eager {
     }
 
     @Override
-    public void eager() {
-        return;
+    public Workout eager() {
+        return this;
     }
 }

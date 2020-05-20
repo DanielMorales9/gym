@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Sale implements Serializable, Eager {
+public class Sale implements Serializable, Eager<Sale> {
 
     @Id
     @SequenceGenerator(name = "sales_sale_id_seq",
@@ -215,10 +215,11 @@ public class Sale implements Serializable, Eager {
     }
 
     @Override
-    public void eager() {
+    public Sale eager() {
         this.getCustomer().eager();
         this.getSalesLineItems().forEach(SalesLineItem::eager);
         this.getPayments().forEach(Payment::eager);
         this.getTotalPrice();
+        return this;
     }
 }

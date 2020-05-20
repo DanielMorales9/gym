@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class SalesLineItem implements Serializable, Eager {
+public class SalesLineItem implements Serializable, Eager<SalesLineItem> {
     @Id
     @SequenceGenerator(name = "sales_lines_line_id_seq",
             sequenceName = "sales_lines_line_id_seq", allocationSize = 1)
@@ -58,8 +58,9 @@ public class SalesLineItem implements Serializable, Eager {
     }
 
     @Override
-    public void eager() {
+    public SalesLineItem eager() {
         this.getTrainingBundle().eager();
         this.getBundleSpecification().eager();
+        return this;
     }
 }

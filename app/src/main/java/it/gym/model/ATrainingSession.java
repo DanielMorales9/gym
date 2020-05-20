@@ -28,7 +28,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingSession implements Serializable, Eager {
+public abstract class ATrainingSession implements Serializable, Eager<ATrainingSession> {
 
     @Id
     @SequenceGenerator(name = "sessions_session_id_seq",
@@ -125,7 +125,8 @@ public abstract class ATrainingSession implements Serializable, Eager {
     }
 
     @Override
-    public void eager() {
+    public ATrainingSession eager() {
         this.getWorkouts().forEach(Workout::eager);
+        return this;
     }
 }

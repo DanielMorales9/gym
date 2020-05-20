@@ -14,7 +14,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Payment implements Serializable, Eager {
+public class Payment implements Serializable, Eager<Payment> {
 
     @Id
     @SequenceGenerator(name = "payment_id_seq",
@@ -60,7 +60,7 @@ public class Payment implements Serializable, Eager {
     }
 
     @Override
-    public void eager() {
-        return;
+    public Payment eager() {
+        return this;
     }
 }
