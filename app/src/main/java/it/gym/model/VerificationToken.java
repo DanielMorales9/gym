@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,7 +14,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class VerificationToken {
+public class VerificationToken implements Serializable {
 
     public static final int EXPIRATION = 60 * 24;
 

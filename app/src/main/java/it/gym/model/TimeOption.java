@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -12,7 +13,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated
-public class TimeOption {
+public class TimeOption implements Serializable, Eager<TimeOption> {
 
     @Id
     @SequenceGenerator(name = "options_id_seq",
@@ -77,5 +78,10 @@ public class TimeOption {
     @PrePersist
     public void prePersist() {
         this.createdAt = new Date();
+    }
+
+    @Override
+    public TimeOption eager() {
+        return this;
     }
 }

@@ -1,7 +1,6 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -100,7 +99,7 @@ public class Customer extends AUser {
         this.previousTrainingBundles.addAll(bundles);
     }
 
-        @Override
+    @Override
     public List<Role> defaultRoles() {
         return Collections.singletonList(
                 new Role(3L, "CUSTOMER"));
@@ -117,5 +116,4 @@ public class Customer extends AUser {
             return !this.currentTrainingBundles.isEmpty();
         else return false;
     }
-
 }

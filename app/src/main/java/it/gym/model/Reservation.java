@@ -5,13 +5,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
 @Table(name = "reservations")
 @Generated //exclude coverage analysis on generated methods
-public class Reservation {
+public class Reservation implements Serializable {
 
     @Id
     @SequenceGenerator(name = "reservations_res_id_seq",

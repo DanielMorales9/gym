@@ -54,4 +54,8 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
         return ptb;
     }
 
+    @Override
+    public PersonalTrainingBundleSpecification eager() {
+        return this;
+    }
 }

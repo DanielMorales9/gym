@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
@@ -14,7 +15,7 @@ import java.util.TimeZone;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Gym {
+public class Gym implements Serializable, Eager<Gym> {
 
     private static final String LOCALE = "Europe/Rome";
 
@@ -450,5 +451,10 @@ public class Gym {
 
     public void setBackgroundColor(String backgroundColor) {
         this.backgroundColor = backgroundColor;
+    }
+
+    @Override
+    public Gym eager() {
+        return this;
     }
 }

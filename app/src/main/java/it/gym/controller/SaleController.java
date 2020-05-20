@@ -40,12 +40,7 @@ public class SaleController {
                                             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                     @RequestParam(required = false) Boolean payed,
                                     Pageable pageable) {
-        if (date != null) {
-            return facade.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
-        }
-        else {
-            return facade.findUserSales(id, payed, pageable);
-        }
+        return facade.findAllUserSales(id, date, payed, pageable);
     }
 
     @GetMapping

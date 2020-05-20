@@ -7,6 +7,7 @@ import lombok.Generated;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -14,7 +15,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Tenant {
+public class Tenant implements Serializable {
 
     @Id
     @GeneratedValue(generator = "uuid")

@@ -53,32 +53,6 @@ public class SaleFacade {
         saleService.delete(sale);
     }
 
-    public Page<Sale> findUserSales(Long id, Boolean payed, Pageable pageable) {
-        return this.saleService.findUserSales(id, payed, pageable);
-    }
-
-    public Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id,
-                                                                        Date date,
-                                                                        Boolean payed,
-                                                                        Pageable pageable) {
-        return this.saleService.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, payed, pageable);
-    }
-
-    public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Boolean payed, Pageable pageable) {
-        return this.saleService.findSalesByCreatedAtGreaterThanEqual(date, payed, pageable);
-    }
-
-    public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
-                                                                              Date date,
-                                                                              Boolean payed,
-                                                                              Pageable pageable) {
-        return this.saleService.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date,
-                payed, pageable);
-    }
-
-    public Page<Sale> findSalesByCustomerLastName(String lastName, Boolean payed, Pageable pageable) {
-        return this.saleService.findSalesByCustomerLastName(lastName, payed, pageable);
-    }
 
     public Page<Sale> findAll(Boolean payed, Pageable pageable) {
         return this.saleService.findAll(payed, pageable);
@@ -210,15 +184,10 @@ public class SaleFacade {
     }
 
     public Page<Sale> getSales(String lastName, Date date, Boolean payed, Pageable pageable) {
-        if (date != null && lastName != null) {
-            return findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(lastName, date, payed, pageable);
-        }
-        else if (lastName != null) {
-            return findSalesByCustomerLastName(lastName, payed, pageable);
-        } else if (date != null) {
-            return findSalesByCreatedAtGreaterThanEqual(date, payed, pageable);
-        } else {
-            return findAll(payed, pageable);
-        }
+        return this.saleService.getSales(lastName, date, payed, pageable);
+    }
+
+    public Page<Sale> findAllUserSales(Long id, Date date, Boolean payed, Pageable pageable) {
+        return this.saleService.findAllUserSales(id, date, payed, pageable);
     }
 }

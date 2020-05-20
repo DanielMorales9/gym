@@ -4,6 +4,10 @@ import it.gym.exception.NotFoundException;
 import it.gym.model.AUser;
 import it.gym.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,16 +24,41 @@ public class UserService implements ICrudService<AUser, Long> {
     @Autowired
     private UserRepository repository;
 
+
+    @Caching (
+            put = {
+                    @CachePut(value = "users-single", key = "#result.id"),
+                    @CachePut(value = "users-email", key = "#result.email"),
+            },
+            evict = {
+                    @CacheEvict(value = "users-all", allEntries = true),
+                    @CacheEvict(value = "users-search", allEntries = true)
+            }
+    )
     @Override
     public AUser save(AUser var1) {
         return this.repository.save(var1);
     }
 
+    @Caching (
+            put = {
+                    @CachePut(value = "users-single", key = "#result.id"),
+                    @CachePut(value = "users-email", key = "#result.email"),
+            }
+    )
     @Override
     public AUser findById(Long var1) {
         return this.repository.findById(var1).orElseThrow(() -> new NotFoundException(USER, var1));
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "users-single", key = "#var1.id"),
+                    @CacheEvict(value = "users-email", key = "#var1.email"),
+                    @CacheEvict(value = "users-all", allEntries = true),
+                    @CacheEvict(value = "users-search", allEntries = true)
+            }
+    )
     @Override
     public void delete(AUser var1) {
         this.repository.delete(var1);
@@ -40,10 +69,25 @@ public class UserService implements ICrudService<AUser, Long> {
         return this.repository.findAll();
     }
 
+    @Caching (
+            put = {
+                    @CachePut(value = "users-single", key = "#result.id"),
+                    @CachePut(value = "users-email", key = "#result.email"),
+            }
+    )
     public AUser findByEmail(String email) {
         return this.repository.findByEmail(email);
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "users-single", key = "#id"),
+                    @CacheEvict(value = "users-email", allEntries = true),
+                    @CacheEvict(value = "users-all", allEntries = true),
+                    @CacheEvict(value = "users-search", allEntries = true),
+
+            }
+    )
     public void deleteById(Long id) {
         this.repository.deleteById(id);
     }
@@ -52,10 +96,12 @@ public class UserService implements ICrudService<AUser, Long> {
         return this.repository.findByEmail(email) != null;
     }
 
-    public Page<AUser> findByLastName(String query, Pageable pageable) {
-        return repository.findByLastNameContaining(query, pageable);
+    @Cacheable(value = "users-search")
+    public Page<AUser> findByName(String query, Pageable pageable) {
+        return repository.findByLastNameContainingOrFirstNameContaining(query, query, pageable);
     }
 
+    @Cacheable(value = "users-all")
     public Page<AUser> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }

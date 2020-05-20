@@ -5,13 +5,15 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="roles")
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Role {
+public class Role implements Serializable, Eager<Role> {
+
     @Id
     @SequenceGenerator(name = "roles_role_id_seq",
             sequenceName = "roles_role_id_seq", allocationSize = 1)
@@ -47,4 +49,8 @@ public class Role {
         this.name = name;
     }
 
+    @Override
+    public Role eager() {
+        return this;
+    }
 }

@@ -7,6 +7,7 @@ import lombok.Generated;
 import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.Objects;
 
@@ -27,7 +28,7 @@ import java.util.Objects;
 @DiscriminatorColumn(name="type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @Generated //exclude coverage analysis on generated methods
-public abstract class AEvent {
+public abstract class AEvent implements Serializable {
 
     @Id
     @SequenceGenerator(name = "events_event_id_seq",

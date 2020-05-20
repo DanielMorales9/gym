@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
@@ -12,7 +13,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public class Workout {
+public class Workout implements Serializable, Eager<Workout> {
 
     @Id
     @SequenceGenerator(name = "workout_id_seq",
@@ -121,5 +122,10 @@ public class Workout {
         w.setTag3(this.tag3);
         w.setTemplate(false);
         return w;
+    }
+
+    @Override
+    public Workout eager() {
+        return this;
     }
 }

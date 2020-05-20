@@ -4,13 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.UserFacade;
 import it.gym.hateoas.*;
 import it.gym.model.AUser;
-import it.gym.model.Gym;
 import it.gym.model.Image;
 import it.gym.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -67,7 +65,8 @@ public class UserController {
 
     @PostMapping("/{id}/image")
     public ResponseEntity<AUserResource> uploadImage(@PathVariable("id") Long id,
-                                                     @RequestParam("imageFile") MultipartFile file) throws IOException {
+                                                     @RequestParam("imageFile") MultipartFile file)
+            throws IOException {
         AUser u = facade.uploadImage(id, file);
         return ResponseEntity.ok(new AUserAssembler().toResource(u));
     }
@@ -88,7 +87,7 @@ public class UserController {
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
     public Page<AUser> searchByLastName(@RequestParam String query, Pageable pageable) {
-        return facade.findByLastName(query, pageable);
+        return facade.findByName(query, pageable);
     }
 
     @GetMapping(path = "/events")

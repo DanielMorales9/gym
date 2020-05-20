@@ -66,8 +66,8 @@ public class UserFacade {
         return this.service.findByEmail(email);
     }
 
-    public Page<AUser> findByLastName(String query, Pageable pageable) {
-        return service.findByLastName(query, pageable);
+    public Page<AUser> findByName(String query, Pageable pageable) {
+        return service.findByName(query, pageable);
     }
 
     public Page<AUser> findAll(Pageable pageable) {

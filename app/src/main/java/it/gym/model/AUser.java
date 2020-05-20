@@ -13,6 +13,7 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +33,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class AUser implements DefaultRoles {
+public abstract class AUser implements DefaultRoles, Serializable, Eager<AUser> {
 
     @Id
     @SequenceGenerator(name = "users_user_id_seq",
@@ -191,5 +192,11 @@ public abstract class AUser implements DefaultRoles {
 
     public void setImage(Image image) {
         this.image = image;
+    }
+
+    @Override
+    public AUser eager() {
+        this.getRoles().forEach(Role::eager);
+        return this;
     }
 }
