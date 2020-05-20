@@ -58,7 +58,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     private authenticate() {
         return this.auth.login()
             .pipe(map(data => {
-
                     this.authenticated = !!data;
                     return data;
                 }

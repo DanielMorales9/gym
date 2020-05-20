@@ -124,10 +124,10 @@ export class AuthenticationService {
         }
         return this.getPrincipal()
             .pipe(map(v => {
-            if (!!v) {
-                this.storageService.set(this.CREDENTIAL_KEY);
-            }
-            return v;
+                if (!v) {
+                    this.storageService.set(this.CREDENTIAL_KEY);
+                }
+                return v;
         }));
     }
 

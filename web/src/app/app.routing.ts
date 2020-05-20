@@ -7,6 +7,7 @@ import {
     PrimaryTrainerControlsComponent
 } from './components';
 import {NoAuthGuardService, RoleGuardService} from './core/guards';
+import {environment} from '../environments/environment';
 
 const routes: Routes = [
     { path: '', pathMatch: 'full', redirectTo: 'home'},
@@ -42,7 +43,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-    imports: [RouterModule.forRoot(routes)],
+    imports: [RouterModule.forRoot(routes, { enableTracing: !environment.production })],
     exports: [RouterModule],
     providers: []
 })
