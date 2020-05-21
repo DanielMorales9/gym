@@ -27,6 +27,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     getEvents() {
+        console.log("getEvents");
         this.events = [];
 
         const {startDay, endDay} = this.getStartAndEndTimeByView();
@@ -40,22 +41,26 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             obs = of(this.user);
         }
 
-        let data = obs
-            .pipe(switchMap((r: User) => this.facade.getCustomerEvents(r.id, startDay, endDay)));
-        events.push(data);
+        obs.pipe(takeUntil(this.unsubscribe$))
+            .subscribe(user => {
+                let data = this.facade.getCustomerEvents(user.id, startDay, endDay);
+                events.push(data);
 
-        data = this.facade.getCourseEvents(startDay, endDay);
-        events.push(data);
+                data = this.facade.getCourseEvents(startDay, endDay);
+                events.push(data);
 
-        forkJoin(events)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(r => {
-                this.events = [];
-                r.forEach((o: any) => {
-                    this.events.push(...o.map(v => this.formatEvent(v)));
-                });
-                this.refreshView();
-            });
+                forkJoin(events)
+                    .pipe(takeUntil(this.unsubscribe$))
+                    .subscribe(r => {
+                        console.log(r);
+                        this.events = [];
+                        r.forEach((o: any) => {
+                            this.events.push(...o.map(v => this.formatEvent(v)));
+                        });
+                        console.log(this.events);
+                        this.refreshView();
+                    });
+        });
     }
 
     private getUserFromRouteParams() {
@@ -64,6 +69,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             switchMap(params => this.facade.findUserById(+params['id'])),
             catchError(r => throwError(r)),
             map(r => {
+                console.log(r);
                 this.user = r;
                 return r;
             }),
