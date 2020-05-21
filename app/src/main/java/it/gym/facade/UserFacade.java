@@ -10,6 +10,8 @@ import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -78,6 +80,7 @@ public class UserFacade {
         return service.findUserEvent(eventId);
     }
 
+    @CacheEvict(value = "profile_pictures", key="#id")
     public AUser uploadImage(Long id, MultipartFile file) throws IOException {
         AUser user = this.findById(id);
         Image image1 = user.getImage();
@@ -91,6 +94,7 @@ public class UserFacade {
         return this.save(user);
     }
 
+    @CachePut(value = "profile_pictures", key="#id", condition="#result.error")
     public Image retrieveImage(Long id) throws DataFormatException, IOException {
         AUser user = this.findById(id);
         Image image = user.getImage();

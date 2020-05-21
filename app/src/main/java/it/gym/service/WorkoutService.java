@@ -66,26 +66,6 @@ public class WorkoutService implements ICrudService<Workout, Long> {
         return repo.findAll(pageable);
     }
 
-    public Page<Workout> searchByNameAndTemplate(String query, Boolean isTemplate, Pageable pageable) {
-        return repo.findByNameContainsAndIsTemplateIs(query, isTemplate, pageable);
-    }
-
-    public Page<Workout> filterByNameAndTemplate(String query, Boolean isTemplate, Pageable pageable) {
-        return repo.findByTag1EqualsOrTag2EqualsOrTag3EqualsAndIsTemplateIs(query, query, query, isTemplate, pageable);
-    }
-
-    public Page<Workout> searchByName(String query, Pageable pageable) {
-        return repo.findByNameContains(query, pageable);
-    }
-
-    public Page<Workout> filterByName(String query, Pageable pageable) {
-        return repo.findByTag1EqualsOrTag2EqualsOrTag3Equals(query, query, query, pageable);
-    }
-
-    public Page<Workout> findByIsTemplate(Boolean isTemplate, Pageable pageable) {
-        return repo.findByIsTemplateIs(isTemplate, pageable);
-    }
-
     public Page<Workout> search(String name, String tag, Boolean isTemplate, Pageable pageable) {
         Page<Workout> page;
 
@@ -122,11 +102,6 @@ public class WorkoutService implements ICrudService<Workout, Long> {
 
     }
 
-
-    private Page<Workout> initAssociation(Page<Workout> page) {
-        return page.map(Workout::eager);
-    }
-
     private Page<Workout> filterAndPageWorkoutsByQueryParams(String name, String filter, Boolean isTemplate, Pageable pageable) {
         List<Workout> workouts = findAll()
                 .stream()
@@ -139,4 +114,29 @@ public class WorkoutService implements ICrudService<Workout, Long> {
                 .collect(Collectors.toList());
         return new PageImpl<>(workouts, pageable, workouts.size());
     }
+
+    private Page<Workout> initAssociation(Page<Workout> page) {
+        return page.map(Workout::eager);
+    }
+
+    public Page<Workout> searchByNameAndTemplate(String query, Boolean isTemplate, Pageable pageable) {
+        return repo.findByNameContainsAndIsTemplateIs(query, isTemplate, pageable);
+    }
+
+    public Page<Workout> filterByNameAndTemplate(String query, Boolean isTemplate, Pageable pageable) {
+        return repo.findByTag1EqualsOrTag2EqualsOrTag3EqualsAndIsTemplateIs(query, query, query, isTemplate, pageable);
+    }
+
+    public Page<Workout> searchByName(String query, Pageable pageable) {
+        return repo.findByNameContains(query, pageable);
+    }
+
+    public Page<Workout> filterByName(String query, Pageable pageable) {
+        return repo.findByTag1EqualsOrTag2EqualsOrTag3Equals(query, query, query, pageable);
+    }
+
+    public Page<Workout> findByIsTemplate(Boolean isTemplate, Pageable pageable) {
+        return repo.findByIsTemplateIs(isTemplate, pageable);
+    }
+
 }
