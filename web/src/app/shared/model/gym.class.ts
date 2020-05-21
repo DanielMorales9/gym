@@ -24,7 +24,20 @@ export interface Gym {
     saturdayStartHour;
     saturdayEndHour;
     saturdayOpen;
+
+    sundayNumEvents;
+    mondayNumEvents;
+    tuesdayNumEvents;
+    wednesdayNumEvents;
+    thursdayNumEvents;
+    fridayNumEvents;
+    saturdayNumEvents;
+
+    minutesBetweenEvents;
     reservationBeforeHours;
     numEvents;
+
+    backgroundColor;
+    fullName;
 
 }
