@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
@@ -73,58 +72,7 @@ public class WorkoutFacade {
     }
 
     public Page<Workout> search(String name, String tag, Boolean isTemplate, Pageable pageable) {
-        if (name != null) {
-            logger.info(name);
-        }
-        if (tag != null) {
-            logger.info(tag);
-        }
-        if (isTemplate != null) {
-            logger.info(isTemplate.toString());
-        }
-
-        // all query params
-        if (tag != null && name != null) {
-            return filterAndPageWorkoutsByQueryParams(name, tag, isTemplate, pageable);
-        }
-
-        // name or template
-        if (name != null && isTemplate != null) {
-            return service.searchByNameAndTemplate(name, isTemplate, pageable);
-        }
-        if (name != null) {
-            return service.searchByName(name, pageable);
-        }
-
-        // tag or template
-        if (tag != null && isTemplate != null) {
-            return service.filterByNameAndTemplate(tag, isTemplate, pageable);
-        }
-        if (tag != null) {
-            return service.filterByName(tag, pageable);
-        }
-
-        // only template or all
-        if (isTemplate != null) {
-            return service.findByIsTemplate(isTemplate, pageable);
-        }
-        else {
-            return service.findAll(pageable);
-        }
-
-    }
-
-    private Page<Workout> filterAndPageWorkoutsByQueryParams(String name, String filter, Boolean isTemplate, Pageable pageable) {
-        List<Workout> workouts = service.findAll()
-                .stream()
-                .filter(workout -> (isTemplate == null) || workout.isTemplate() == isTemplate)
-                .filter(workout -> workout.getName().contains(name))
-                .filter(workout ->
-                        (workout.getTag1() != null && workout.getTag1().equals(filter)) ||
-                                (workout.getTag2() != null && workout.getTag2().equals(filter)) ||
-                                (workout.getTag3() != null && workout.getTag3().equals(filter)))
-                .collect(Collectors.toList());
-        return new PageImpl<>(workouts, pageable, workouts.size());
+        return this.service.search(name, tag, isTemplate, pageable);
     }
 
     public List<String> getTags() {
