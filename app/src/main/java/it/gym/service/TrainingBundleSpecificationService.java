@@ -26,7 +26,7 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
 
     @Caching(
             put = {
-                    @CachePut(value = "specs-single", key = "#var1.id"),
+                    @CachePut(value = "specs-single", key = "#var1.id", condition="#result != null"),
             },
             evict = {
                     @CacheEvict(value = "specs-all", allEntries = true),
@@ -40,7 +40,7 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
 
     @Caching (
             put = {
-                    @CachePut(value = "sales-single", key = "#var1"),
+                    @CachePut(value = "sales-single", key = "#var1", condition="#result != null"),
             }
     )
     public ATrainingBundleSpecification findById(Long var1) {

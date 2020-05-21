@@ -3,7 +3,10 @@ package it.gym.service;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
+import it.gym.pojo.Icon;
+import it.gym.pojo.Manifest;
 import it.gym.repository.GymRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -11,6 +14,7 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +28,7 @@ public class GymService implements ICrudService<Gym, Long> {
 
     @Caching(
             put = {
-                    @CachePut(value = "gyms-single", key = "#result.id"),
+                    @CachePut(value = "gyms-single", key = "#result.id", condition="#result != null"),
             },
             evict = {
                     @CacheEvict(value = "gyms-all", allEntries = true)
@@ -35,7 +39,7 @@ public class GymService implements ICrudService<Gym, Long> {
         return this.gymRepository.save(var1);
     }
 
-    @CachePut(value = "gyms-single", key = "#result.id")
+    @CachePut(value = "gyms-single", key = "#result.id", condition="#result != null")
     @Override
     public Gym findById(Long var1) {
         return this.gymRepository.findById(var1).orElseThrow(() -> new NotFoundException("La palestra non esiste"));
@@ -72,4 +76,28 @@ public class GymService implements ICrudService<Gym, Long> {
         if (isOk)
             throw new BadRequestException("La palestra è chiusa in questo orario");
     }
+
+    public Manifest getManifest() {
+        Gym gym = this.findAll().get(0);
+
+        Manifest manifest = new Manifest();
+        manifest.setName(gym.getFullName());
+        manifest.setShort_name(gym.getName());
+        manifest.setTheme_color(gym.getThemeColor());
+        manifest.setBackground_color(gym.getBackgroundColor());
+
+        ArrayList<Icon> icons = new ArrayList<>();
+        Icon icon0 = new Icon("/src/assets/icons/android-chrome-192x192.png", "192x192", "image/png");
+        Icon icon1 = new Icon("/src/assets/icons/android-chrome-512x512.png", "512x512", "image/png");
+        Icon icon2 = new Icon("/src/assets/icons/favicon-16x16.png", "16x16", "image/png");
+        Icon icon3 = new Icon("/src/assets/icons/favicon-32x32.png", "32x32", "image/png");
+        icons.add(icon0);
+        icons.add(icon1);
+        icons.add(icon2);
+        icons.add(icon3);
+
+        manifest.setIcons(icons);
+        return manifest;
+    }
+
 }

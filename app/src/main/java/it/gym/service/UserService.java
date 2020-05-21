@@ -27,8 +27,8 @@ public class UserService implements ICrudService<AUser, Long> {
 
     @Caching (
             put = {
-                    @CachePut(value = "users-single", key = "#result.id"),
-                    @CachePut(value = "users-email", key = "#result.email"),
+                    @CachePut(value = "users-single", key = "#result.id", condition="#result != null"),
+                    @CachePut(value = "users-email", key = "#result.email", condition="#result != null"),
             },
             evict = {
                     @CacheEvict(value = "users-all", allEntries = true),
@@ -42,8 +42,8 @@ public class UserService implements ICrudService<AUser, Long> {
 
     @Caching (
             put = {
-                    @CachePut(value = "users-single", key = "#result.id"),
-                    @CachePut(value = "users-email", key = "#result.email"),
+                    @CachePut(value = "users-single", key = "#result.id", condition="#result != null"),
+                    @CachePut(value = "users-email", key = "#result.email", condition="#result != null"),
             }
     )
     @Override
@@ -71,8 +71,8 @@ public class UserService implements ICrudService<AUser, Long> {
 
     @Caching (
             put = {
-                    @CachePut(value = "users-single", key = "#result.id"),
-                    @CachePut(value = "users-email", key = "#result.email"),
+                    @CachePut(value = "users-single", key = "#result.id", condition="#result != null"),
+                    @CachePut(value = "users-email", key = "#result.email", condition="#result != null"),
             }
     )
     public AUser findByEmail(String email) {

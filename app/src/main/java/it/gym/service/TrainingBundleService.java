@@ -26,7 +26,7 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
 
     @Caching(
             put = {
-                    @CachePut(value = "bundles-single", key = "#result.id")
+                    @CachePut(value = "bundles-single", key = "#result.id", condition="#result != null")
             },
             evict = {
                     @CacheEvict(value = "bundles-all", allEntries = true)
@@ -36,7 +36,7 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return this.repository.save(var1);
     }
 
-    @CachePut(value = "bundles-single", key = "#result.id")
+    @CachePut(value = "bundles-single", key = "#result.id", condition="#result != null")
     public ATrainingBundle findById(Long var1) {
         return this.repository.findById(var1).orElseThrow(() -> new NotFoundException("Pacchetto", var1));
     }
@@ -56,12 +56,12 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return this.repository.findAll();
     }
 
-    @CachePut(value = "bundles-all")
+    @CachePut(value = "bundles-all", condition="#result != null")
     public Page<ATrainingBundle> findAll(Pageable pageable) {
         return this.repository.findAll(pageable);
     }
 
-    @CachePut(value = "bundles-search")
+    @CachePut(value = "bundles-search", condition="#result != null")
     public Page<ATrainingBundle> search(Long specId, Boolean expired, Date time, Pageable pageable) {
         Page<ATrainingBundle> bundles;
         if (specId != null) {

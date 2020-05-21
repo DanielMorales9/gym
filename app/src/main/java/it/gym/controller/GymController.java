@@ -7,6 +7,7 @@ import it.gym.model.Gym;
 import it.gym.pojo.Icon;
 import it.gym.pojo.Manifest;
 import it.gym.service.GymService;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,29 +48,8 @@ public class GymController {
     @GetMapping("/manifest.webmanifest")
     @ResponseBody
     public Manifest getManifest() {
-        Gym gym = service.findAll().get(0);
-
-        Manifest manifest = new Manifest();
-        manifest.setName(gym.getFullName());
-        manifest.setShort_name(gym.getName());
-        manifest.setTheme_color(gym.getThemeColor());
-        manifest.setBackground_color(gym.getBackgroundColor());
-
-        ArrayList<Icon> icons = new ArrayList<>();
-        Icon icon0 = new Icon("/src/assets/icons/android-chrome-192x192.png", "192x192", "image/png");
-        Icon icon1 = new Icon("/src/assets/icons/android-chrome-512x512.png", "512x512", "image/png");
-        Icon icon2 = new Icon("/src/assets/icons/favicon-16x16.png", "16x16", "image/png");
-        Icon icon3 = new Icon("/src/assets/icons/favicon-32x32.png", "32x32", "image/png");
-        icons.add(icon0);
-        icons.add(icon1);
-        icons.add(icon2);
-        icons.add(icon3);
-
-        manifest.setIcons(icons);
-        logger.info(manifest.toString());
-        return manifest;
+        return service.getManifest();
     }
-
     @PatchMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<GymResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
