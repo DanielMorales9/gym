@@ -67,24 +67,26 @@ public class ReservationFacade {
                             gym.getReservationBeforeHours() ));
         }
 
-        List<AEvent> events = getEventsLargerThanInterval(gym, startTime, endTime);
+        List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
         hasHolidays(events);
 
         if (checkNumEvents) {
-            isTimeAvailable(gym, startTime, events);
+            isTimeAvailable(gym, startTime, endTime);
         }
 
     }
 
-    private List<AEvent> getEventsLargerThanInterval(Gym gym, Date startTime, Date endTime) {
+    private Long checkOverlappingEvents(Gym gym, Date startTime, Date endTime) {
         Integer minutesBetweenEvents = gym.getMinutesBetweenEvents();
         int minutes = minutesBetweenEvents != null ? minutesBetweenEvents : 0;
 
         Date rangeStart = addMinutes(startTime, -minutes);
         Date rangeEnd = addMinutes(endTime, minutes);
 
-        return this.eventService.findAllEventsLargerThanInterval(rangeStart, rangeEnd);
+        return eventService.findOverlappingEvents(rangeStart, rangeEnd).stream()
+                .filter(e -> "P".equals(e.getType()) || "C".equals(e.getType())).count();
+
     }
 
     @NotNull
@@ -96,11 +98,8 @@ public class ReservationFacade {
         return cal.getTime();
     }
 
-    private void isTimeAvailable(Gym gym, Date day, List<AEvent> events) {
-        long nEventCount = events
-                .stream()
-                .filter(e -> "P".equals(e.getType()) || "C".equals(e.getType()))
-                .count();
+    private void isTimeAvailable(Gym gym, Date day, Date end) {
+        Long nEventCount = this.checkOverlappingEvents(gym, day, end);
         if (gym.getNumEvents(day) <= nEventCount) {
             throw new BadRequestException("Non abbiamo posti disponibili in questo orario");
         }
