@@ -328,9 +328,6 @@ public class ReservationFacade {
                             "Rivolgiti in segreteria per maggiori informazioni");
 
                 }
-                else {
-                    bundle.setNumDeletions(bundle.getNumDeletions()-1);
-                }
             }
         }
 
