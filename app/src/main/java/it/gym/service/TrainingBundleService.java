@@ -3,9 +3,13 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.Sale;
 import it.gym.repository.CourseTrainingBundleRepository;
 import it.gym.repository.TrainingBundleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,14 +24,30 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
     @Autowired
     private TrainingBundleRepository repository;
 
+    @Caching(
+            put = {
+                    @CachePut(value = "bundles-single", key = "#result.id")
+            },
+            evict = {
+                    @CacheEvict(value = "bundles-all", allEntries = true)
+            }
+    )
     public ATrainingBundle save(ATrainingBundle var1) {
         return this.repository.save(var1);
     }
 
+    @CachePut(value = "bundles-single", key = "#result.id")
     public ATrainingBundle findById(Long var1) {
         return this.repository.findById(var1).orElseThrow(() -> new NotFoundException("Pacchetto", var1));
     }
 
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "bundles-single", key = "#var1.id"),
+                    @CacheEvict(value = "bundles-all", allEntries = true),
+                    @CacheEvict(value = "bundles-search", allEntries = true)
+            }
+    )
     public void delete(ATrainingBundle var1) {
         this.repository.delete(var1);
     }
@@ -36,9 +56,64 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return this.repository.findAll();
     }
 
+    @CachePut(value = "bundles-all")
     public Page<ATrainingBundle> findAll(Pageable pageable) {
         return this.repository.findAll(pageable);
     }
+
+    @CachePut(value = "bundles-search")
+    public Page<ATrainingBundle> search(Long specId, Boolean expired, Date time, Pageable pageable) {
+        Page<ATrainingBundle> bundles;
+        if (specId != null) {
+            bundles = this.findBundlesBySpecId(specId, pageable);
+        }
+        else if (expired != null && time != null) {
+            if (expired) {
+                bundles = this.findBundlesByExpiredAtGreaterThan(time, pageable);
+            }
+            else {
+                bundles = this.findBundlesByCreatedAtGreaterThan(time, pageable);
+            }
+        }
+        else if (time != null) {
+            bundles = this.findBundlesByCreatedAtGreaterThan(time, pageable);
+        }
+        else if (expired != null) {
+            if (expired) {
+                bundles = this.findBundlesByExpired(pageable);
+            }
+            else {
+                bundles = this.findBundlesByNotExpired(pageable);
+            }
+        }
+        else {
+            bundles = this.findAll(pageable);
+        }
+        return initAssociation(bundles);
+    }
+
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "bundles-single", allEntries = true),
+                    @CacheEvict(value = "bundles-all", allEntries = true),
+                    @CacheEvict(value = "bundles-search", allEntries = true)
+            }
+    )
+    public void deleteAll(List<ATrainingBundle> bundles) {
+        this.repository.deleteAll(bundles);
+    }
+
+    @Caching(
+            evict = {
+                    @CacheEvict(value = "bundles-single", allEntries = true),
+                    @CacheEvict(value = "bundles-all", allEntries = true),
+                    @CacheEvict(value = "bundles-search", allEntries = true)
+            }
+    )
+    public void saveAll(List<ATrainingBundle> bundles) {
+        repository.saveAll(bundles);
+    }
+
 
     public List<ATrainingBundle> findBundlesBySpec(ATrainingBundleSpecification spec) {
         return this.repository.findATrainingBundleByBundleSpec(spec);
@@ -46,14 +121,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
 
     public Page<ATrainingBundle> findBundlesBySpecId(Long id,  Pageable pageable) {
         return this.repository.findATrainingBundleByBundleSpec_Id(id, pageable);
-    }
-
-    public void deleteAll(List<ATrainingBundle> bundles) {
-        this.repository.deleteAll(bundles);
-    }
-
-    public void saveAll(List<ATrainingBundle> bundles) {
-        repository.saveAll(bundles);
     }
 
     public Page<ATrainingBundle> findBundlesByExpiredAtGreaterThan(Date time, Pageable pageable) {
@@ -71,4 +138,9 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
     public Page<ATrainingBundle> findBundlesByExpired(Pageable pageable) {
         return repository.findBundlesByExpiredAtNotNull(pageable);
     }
+
+    private Page<ATrainingBundle> initAssociation(Page<ATrainingBundle> page) {
+        return page.map(ATrainingBundle::eager);
+    }
+
 }

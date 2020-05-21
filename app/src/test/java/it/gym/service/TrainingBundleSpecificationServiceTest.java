@@ -79,10 +79,4 @@ public class TrainingBundleSpecificationServiceTest {
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));
     }
 
-    @Test
-    public void deleteById() {
-        this.service.deleteById(1L);
-        Mockito.verify(repository).deleteById(1L);
-    }
-
 }

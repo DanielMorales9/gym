@@ -53,7 +53,6 @@ public class SaleFacade {
         saleService.delete(sale);
     }
 
-
     public Page<Sale> findAll(Boolean payed, Pageable pageable) {
         return this.saleService.findAll(payed, pageable);
     }
