@@ -25,7 +25,7 @@ public class SaleService implements ICrudService<Sale, Long> {
 
     @Caching(
             put = {
-                    @CachePut(value = "sales-single", key = "#var1.id"),
+                    @CachePut(value = "sales-single", key = "#var1.id", condition="#result != null"),
             },
             evict = {
                     @CacheEvict(value = "sales-all", allEntries = true),
@@ -39,7 +39,7 @@ public class SaleService implements ICrudService<Sale, Long> {
 
     @Caching (
             put = {
-                    @CachePut(value = "sales-single", key = "#sale"),
+                    @CachePut(value = "sales-single", key = "#sale", condition="#result != null"),
             }
     )
     public Sale findById(Long sale) {

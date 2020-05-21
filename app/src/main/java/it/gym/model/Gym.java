@@ -100,6 +100,33 @@ public class Gym implements Serializable, Eager<Gym> {
     @Column(name="sunday_open")
     private boolean sundayOpen;
 
+    @Column(name="monday_num_events")
+    private Integer mondayNumEvents;
+
+    @Column(name="tuesday_num_events")
+    private Integer tuesdayNumEvents;
+
+    @Column(name="wednesday_num_events")
+    private Integer wednesdayNumEvents;
+
+    @Column(name="thursday_num_events")
+    private Integer thursdayNumEvents;
+
+    @Column(name="friday_num_events")
+    private Integer fridayNumEvents;
+
+    @Column(name="saturday_num_events")
+    private Integer saturdayNumEvents;
+
+    @Column(name="sunday_num_events")
+    private Integer sundayNumEvents;
+
+    @Column(name="n_events")
+    private Integer numEvents;
+
+    @Column(name="minutes_between_events")
+    private Integer minutesBetweenEvents;
+
     @Column(name = "createdat", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
@@ -111,8 +138,8 @@ public class Gym implements Serializable, Eager<Gym> {
     @Column(name="reservation_before_hours")
     private Integer reservationBeforeHours;
 
-    @Column(name="n_events")
-    private Integer numEvents;
+    public Gym() {
+    }
 
     @PrePersist
     protected void prePersist() {
@@ -417,6 +444,39 @@ public class Gym implements Serializable, Eager<Gym> {
         return reservationBeforeHours;
     }
 
+    public Integer getNumEvents(Date day) {
+        Calendar c = Calendar.getInstance();
+        c.setTime(day);
+        int dayOfWeek = c.get(Calendar.DAY_OF_WEEK);
+        Integer numEvents;
+        switch (dayOfWeek) {
+            case Calendar.SUNDAY:
+                numEvents = this.sundayNumEvents;
+                break;
+            case Calendar.MONDAY:
+                numEvents = this.mondayNumEvents;
+                break;
+            case Calendar.TUESDAY:
+                numEvents = this.tuesdayNumEvents;
+                break;
+            case Calendar.WEDNESDAY:
+                numEvents = this.wednesdayNumEvents;
+                break;
+            case Calendar.THURSDAY:
+                numEvents = this.thursdayNumEvents;
+                break;
+            case Calendar.FRIDAY:
+                numEvents = this.fridayNumEvents;
+                break;
+            case Calendar.SATURDAY:
+                numEvents = this.saturdayNumEvents;
+                break;
+            default:
+                numEvents = 0;
+        }
+        return numEvents != null? numEvents: this.numEvents;
+    }
+
     public Integer getNumEvents() {
         return numEvents;
     }
@@ -456,5 +516,69 @@ public class Gym implements Serializable, Eager<Gym> {
     @Override
     public Gym eager() {
         return this;
+    }
+
+    public Integer getMondayNumEvents() {
+        return mondayNumEvents;
+    }
+
+    public void setMondayNumEvents(Integer mondayNumEvents) {
+        this.mondayNumEvents = mondayNumEvents;
+    }
+
+    public Integer getTuesdayNumEvents() {
+        return tuesdayNumEvents;
+    }
+
+    public void setTuesdayNumEvents(Integer tuesdayNumEvents) {
+        this.tuesdayNumEvents = tuesdayNumEvents;
+    }
+
+    public Integer getWednesdayNumEvents() {
+        return wednesdayNumEvents;
+    }
+
+    public void setWednesdayNumEvents(Integer wednesdayNumEvents) {
+        this.wednesdayNumEvents = wednesdayNumEvents;
+    }
+
+    public Integer getThursdayNumEvents() {
+        return thursdayNumEvents;
+    }
+
+    public void setThursdayNumEvents(Integer thursdayNumEvents) {
+        this.thursdayNumEvents = thursdayNumEvents;
+    }
+
+    public Integer getFridayNumEvents() {
+        return fridayNumEvents;
+    }
+
+    public void setFridayNumEvents(Integer fridayNumEvents) {
+        this.fridayNumEvents = fridayNumEvents;
+    }
+
+    public Integer getSaturdayNumEvents() {
+        return saturdayNumEvents;
+    }
+
+    public void setSaturdayNumEvents(Integer saturdayNumEvents) {
+        this.saturdayNumEvents = saturdayNumEvents;
+    }
+
+    public Integer getSundayNumEvents() {
+        return sundayNumEvents;
+    }
+
+    public void setSundayNumEvents(Integer sundayNumEvents) {
+        this.sundayNumEvents = sundayNumEvents;
+    }
+
+    public Integer getMinutesBetweenEvents() {
+        return minutesBetweenEvents;
+    }
+
+    public void setMinutesBetweenEvents(Integer minutesBetweenEvents) {
+        this.minutesBetweenEvents = minutesBetweenEvents;
     }
 }

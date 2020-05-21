@@ -18,6 +18,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.time.DayOfWeek;
+import java.util.ArrayList;
 import java.util.List;
 
 @Component
@@ -81,17 +82,13 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
 
             List<Role> roles = retrieveRoles();
 
-            Gym gym;
             if (userService.findByEmail(ADMIN_EMAIL) == null) {
-                gym = createAndSaveGym();
-                createAndSaveAdmin(gym, roles);
-            }
-            else {
-                gym = gymService.findById(1L);
+                createAndSaveGym();
+                createAndSaveAdmin(roles);
             }
 
-            createAndSaveCustomer(gym, roles.subList(2, 3));
-            createAndSaveTrainer(gym, roles.subList(1, 2));
+            createAndSaveCustomer(new ArrayList<>(roles.subList(2, 3)));
+            createAndSaveTrainer(new ArrayList<>(roles.subList(1, 2)));
             createAndSavePersonalBundleSpecification();
             createAndSaveCourseBundleSpecification();
         }
@@ -127,19 +124,19 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
             specService.createTrainingBundleSpecification(createPersonalBundleSpecification(name));
     }
 
-    private void createAndSaveTrainer(Gym gym, List<Role> roles) {
+    private void createAndSaveTrainer(List<Role> roles) {
         String password = passwordEncoder.encode(ADMIN_PASSWORD);
         Trainer trainer = createTrainer(password, roles);
         if (!userService.existsByEmail(trainer.getEmail())) userService.save(trainer);
     }
 
-    private void createAndSaveCustomer(Gym gym, List<Role> roles) {
+    private void createAndSaveCustomer(List<Role> roles) {
         String password = passwordEncoder.encode(ADMIN_PASSWORD);
         Customer customer = createCustomer(password, roles);
         if (!userService.existsByEmail(customer.getEmail())) userService.save(customer);
     }
 
-    private void createAndSaveAdmin(Gym gym, List<Role> roles) {
+    private void createAndSaveAdmin(List<Role> roles) {
         String password = passwordEncoder.encode(ADMIN_PASSWORD);
         Admin admin = createAdmin(password, roles);
         if (!userService.existsByEmail(admin.getEmail())) userService.save(admin);

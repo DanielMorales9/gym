@@ -59,6 +59,21 @@
                     <div *ngIf="!!mondayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
                 </mat-error>
             </mat-form-field>
+
+            <mat-form-field>
+                <label for="mondayNumEvents" class="sr-only">Numero di prenotazionira di Lunedì</label>
+                <input name="mondayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Lunedì"
+                       id="mondayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': mondayNumEvents.touched && mondayNumEvents.invalid }"
+                       formControlName="mondayNumEvents"/>
+                <mat-error *ngIf="mondayNumEvents.touched && mondayNumEvents.invalid">
+                    <div *ngIf="!!mondayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!mondayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
+                </mat-error>
+            </mat-form-field>
         </div>
         <div>
             <mat-form-field>
@@ -100,6 +115,21 @@
                     <div *ngIf="!!tuesdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
                     <div *ngIf="!!tuesdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
                     <div *ngIf="!!tuesdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="tuesdayNumEvents" class="sr-only">Numero di prenotazionia di Martedì</label>
+                <input name="tuesdayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Martedì"
+                       id="tuesdayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': tuesdayNumEvents.touched && tuesdayNumEvents.invalid }"
+                       formControlName="tuesdayNumEvents"/>
+                <mat-error *ngIf="tuesdayNumEvents.touched && tuesdayNumEvents.invalid">
+                    <div *ngIf="!!tuesdayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!tuesdayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -146,6 +176,21 @@
                     <div *ngIf="!!wednesdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
                 </mat-error>
             </mat-form-field>
+
+            <mat-form-field>
+                <label for="wednesdayNumEvents" class="sr-only">Numero di prenotazionidi Mercoledì</label>
+                <input name="wednesdayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Mercoledì"
+                       id="wednesdayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': wednesdayNumEvents.touched && wednesdayNumEvents.invalid }"
+                       formControlName="wednesdayNumEvents"/>
+                <mat-error *ngIf="wednesdayNumEvents.touched && wednesdayNumEvents.invalid">
+                    <div *ngIf="!!wednesdayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!wednesdayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
+                </mat-error>
+            </mat-form-field>
         </div>
 
         <div>
@@ -188,6 +233,21 @@
                     <div *ngIf="!!thursdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
                     <div *ngIf="!!thursdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
                     <div *ngIf="!!thursdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="thursdayNumEvents" class="sr-only">Numero di prenotazionia di Giovedì</label>
+                <input name="thursdayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Giovedì"
+                       id="thursdayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': thursdayNumEvents.touched && thursdayNumEvents.invalid }"
+                       formControlName="thursdayNumEvents"/>
+                <mat-error *ngIf="thursdayNumEvents.touched && thursdayNumEvents.invalid">
+                    <div *ngIf="!!thursdayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!thursdayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -233,6 +293,21 @@
                     <div *ngIf="!!fridayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
                 </mat-error>
             </mat-form-field>
+
+            <mat-form-field>
+                <label for="fridayNumEvents" class="sr-only">Numero di prenotazionia di Venerdì</label>
+                <input name="fridayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Venerdì"
+                       id="fridayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': fridayNumEvents.touched && fridayNumEvents.invalid }"
+                       formControlName="fridayNumEvents"/>
+                <mat-error *ngIf="fridayNumEvents.touched && fridayNumEvents.invalid">
+                    <div *ngIf="!!fridayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!fridayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
+                </mat-error>
+            </mat-form-field>
         </div>
         <div>
             <mat-form-field>
@@ -274,6 +349,21 @@
                     <div *ngIf="!!saturdayEndHour.errors?.min">Orario di chiusura inferiore a 0</div>
                     <div *ngIf="!!saturdayEndHour.errors?.max">Orario di chiusura superiore a 24</div>
                     <div *ngIf="!!saturdayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field>
+                <label for="saturdayNumEvents" class="sr-only">Numero di prenotazionira di Sabato</label>
+                <input name="saturdayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Sabato"
+                       id="saturdayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': saturdayNumEvents.touched && saturdayNumEvents.invalid }"
+                       formControlName="saturdayNumEvents"/>
+                <mat-error *ngIf="saturdayNumEvents.touched && saturdayNumEvents.invalid">
+                    <div *ngIf="!!saturdayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!saturdayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
                 </mat-error>
             </mat-form-field>
         </div>
@@ -319,9 +409,23 @@
                     <div *ngIf="!!sundayEndHour.errors?.range">Orario di chiusura inferiore ad apertura</div>
                 </mat-error>
             </mat-form-field>
+
+            <mat-form-field>
+                <label for="sundayNumEvents" class="sr-only">Numero di prenotazioni di Domenica</label>
+                <input name="sundayNumEvents"
+                       matInput
+                       placeholder="Prenotazioni di Domenica"
+                       id="sundayNumEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': sundayNumEvents.touched && sundayNumEvents.invalid }"
+                       formControlName="sundayNumEvents"/>
+                <mat-error *ngIf="sundayNumEvents.touched && sundayNumEvents.invalid">
+                    <div *ngIf="!!sundayNumEvents.errors?.required">Numero prenotazioni obbligatorie</div>
+                    <div *ngIf="!!sundayNumEvents.errors?.min">Numero prenotazioni inferiore a 0</div>
+                </mat-error>
+            </mat-form-field>
         </div>
         <div>
-
             <mat-form-field>
                 <label for="reservationBeforeHours" class="sr-only">Prenotazioni prima</label>
                 <input name="reservationBeforeHours"
@@ -338,12 +442,28 @@
             </mat-form-field>
         </div>
         <div>
+            <mat-form-field>
+                <label for="minutesBetweenEvents" class="sr-only">Minuti fra due eventi</label>
+                <input name="minutesBetweenEvents"
+                       matInput
+                       placeholder="Minuti fra due eventi"
+                       id="minutesBetweenEvents"
+                       type="number"
+                       [ngClass]="{ 'is-invalid': minutesBetweenEvents.touched && minutesBetweenEvents.invalid }"
+                       formControlName="minutesBetweenEvents"/>
+                <mat-error *ngIf="minutesBetweenEvents.touched && minutesBetweenEvents.invalid">
+                    <div *ngIf="!!minutesBetweenEvents.errors?.required">Valore obbligatorio</div>
+                    <div *ngIf="!!minutesBetweenEvents.errors?.min">Valore inferiore a 0</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
 
             <mat-form-field>
-                <label for="numEvents" class="sr-only">Numero di eventi contemporanei</label>
+                <label for="numEvents" class="sr-only">Default Numero di eventi contemporanei</label>
                 <input name="numEvents"
                        matInput
-                       placeholder="Numero di eventi contemporanei"
+                       placeholder="Default Numero di eventi contemporanei"
                        id="numEvents"
                        type="number"
                        [ngClass]="{ 'is-invalid': numEvents.touched && numEvents.invalid }"

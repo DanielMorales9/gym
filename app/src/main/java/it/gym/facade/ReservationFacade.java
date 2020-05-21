@@ -7,6 +7,7 @@ import it.gym.pojo.Event;
 import it.gym.service.*;
 import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.apache.commons.lang3.time.DateUtils;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.security.Principal;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -70,19 +72,36 @@ public class ReservationFacade {
         hasHolidays(events);
 
         if (checkNumEvents) {
-            isTimeAvailable(gym, events);
+            isTimeAvailable(gym, startTime, endTime);
         }
 
     }
 
-    private void isTimeAvailable(Gym gym, List<AEvent> events) {
-        long nEventCount = events
-                .stream()
-                .filter(e -> "P".equals(e.getType()) || "C".equals(e.getType()))
-                .count();
-        if (gym.getNumEvents() <= nEventCount) {
-            throw new BadRequestException("Non abbiamo posti disponibili per questo orario," +
-                    " prova con un altro orario");
+    private Long checkOverlappingEvents(Gym gym, Date startTime, Date endTime) {
+        Integer minutesBetweenEvents = gym.getMinutesBetweenEvents();
+        int minutes = minutesBetweenEvents != null ? minutesBetweenEvents : 0;
+
+        Date rangeStart = addMinutes(startTime, -minutes);
+        Date rangeEnd = addMinutes(endTime, minutes);
+
+        return eventService.findOverlappingEvents(rangeStart, rangeEnd).stream()
+                .filter(e -> "P".equals(e.getType()) || "C".equals(e.getType())).count();
+
+    }
+
+    @NotNull
+    private Date addMinutes(Date time, int minutes) {
+        Calendar cal;
+        cal = Calendar.getInstance();
+        cal.setTime(time);
+        cal.add(Calendar.MINUTE, minutes);
+        return cal.getTime();
+    }
+
+    private void isTimeAvailable(Gym gym, Date day, Date end) {
+        Long nEventCount = this.checkOverlappingEvents(gym, day, end);
+        if (gym.getNumEvents(day) <= nEventCount) {
+            throw new BadRequestException("Non abbiamo posti disponibili in questo orario");
         }
     }
 
@@ -307,9 +326,6 @@ public class ReservationFacade {
                     throw new BadRequestException("Hai terminato il numero massimo di cancellazioni. " +
                             "Rivolgiti in segreteria per maggiori informazioni");
 
-                }
-                else {
-                    bundle.setNumDeletions(bundle.getNumDeletions()-1);
                 }
             }
         }

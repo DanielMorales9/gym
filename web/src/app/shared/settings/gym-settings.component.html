@@ -2,13 +2,25 @@
     <mat-card>
         <mat-card-title>{{gym?.name || 'Loading...'}}</mat-card-title>
         <mat-card-content>
-            <h6>Orario della palestra</h6>
+            <h6>Tabella della palestra</h6>
             <table *ngIf="gym">
+                <thead>
+                <tr>
+                    <th colspan="2">Orari</th>
+                    <th>Eventi contemporanei</th>
+                </tr>
+
+                </thead>
                 <tr>
                     <td>Lunedì</td>
                     <td>
-                        <span *ngIf="gym?.mondayOpen;else closed">
-                            {{gym?.mondayStartHour || 'Loading...'}} - {{gym?.mondayEndHour || 'Loading...'}}
+                        <span *ngIf="gym?.mondayNumEvents;else defaultEvents">
+                            {{gym?.mondayNumEvents || 'Loading...'}}
+                        </span>
+                    </td>
+                    <td align="right">
+                        <span *ngIf="gym?.mondayNumEvents;else defaultEvents">
+                            {{gym?.mondayNumEvents || 'Loading...'}}
                         </span>
                     </td>
                 </tr>
@@ -19,12 +31,22 @@
                             {{gym?.tuesdayStartHour || 'Loading...'}} - {{gym?.tuesdayEndHour || 'Loading...'}}
                         </span>
                     </td>
+                    <td align="right">
+                        <span *ngIf="gym?.tuesdayNumEvents;else defaultEvents">
+                            {{gym?.tuesdayNumEvents || 'Loading...'}}
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td>Mercoledì</td>
                     <td>
                         <span *ngIf="gym?.wednesdayOpen;else closed">
                             {{gym?.wednesdayStartHour || 'Loading...'}} - {{gym?.wednesdayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                    <td align="right">
+                        <span *ngIf="gym?.wednesdayNumEvents;else defaultEvents">
+                            {{gym?.wednesdayNumEvents || 'Loading...'}}
                         </span>
                     </td>
                 </tr>
@@ -35,12 +57,22 @@
                             {{gym?.thursdayStartHour || 'Loading...'}} - {{gym?.thursdayEndHour || 'Loading...'}}
                         </span>
                     </td>
+                    <td align="right">
+                        <span *ngIf="gym?.thursdayNumEvents;else defaultEvents">
+                            {{gym?.thursdayNumEvents || 'Loading...'}}
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td>Venerdì</td>
                     <td>
                         <span *ngIf="gym?.fridayOpen;else closed">
                             {{gym?.fridayStartHour || 'Loading...'}} - {{gym?.fridayEndHour || 'Loading...'}}
+                        </span>
+                    </td>
+                    <td align="right">
+                        <span *ngIf="gym?.fridayNumEvents;else defaultEvents">
+                            {{gym?.fridayNumEvents || 'Loading...'}}
                         </span>
                     </td>
                 </tr>
@@ -51,6 +83,11 @@
                             {{gym?.saturdayStartHour || 'Loading...'}} - {{gym?.saturdayEndHour || 'Loading...'}}
                         </span>
                     </td>
+                    <td align="right">
+                        <span *ngIf="gym?.saturdayNumEvents;else defaultEvents">
+                            {{gym?.saturdayNumEvents || 'Loading...'}}
+                        </span>
+                    </td>
                 </tr>
                 <tr>
                     <td>Domenica</td>
@@ -59,13 +96,20 @@
                             {{gym?.sundayStartHour || 'Loading...'}} - {{gym?.sundayEndHour || 'Loading...'}}
                         </span>
                     </td>
+                    <td align="right">
+                        <span *ngIf="gym?.sundayNumEvents;else defaultEvents">
+                            {{gym?.sundayNumEvents || 'Loading...'}}
+                        </span>
+                    </td>
                 </tr>
             </table>
             <div style="margin-top: 1rem;">
                 <h6>Prenotazioni</h6>
                 <ul>
-                    <li>I clienti possono prenotare fino a {{gym?.reservationBeforeHours|| '...'}} ore prima</li>
-                    <li>Sono ammessi {{gym?.numEvents|| '...'}} eventi contemporantei</li>
+                    <li>I clienti possono prenotare un appuntamento fino a {{gym?.reservationBeforeHours|| '...'}} ore prima</li>
+                    <li>I clienti possono disdire un appuntamento fino a {{gym?.reservationBeforeHours|| '...'}} ore prima</li>
+                    <li *ngIf="gym?.numEvents">Normalmente, sono ammessi {{gym?.numEvents|| '...'}} eventi contemporantei</li>
+                    <li>Minuti fra due eventi non contemporanei (COVID-19): {{gym?.minutesBetweenEvents|| 0}}</li>
                 </ul>
             </div>
         </mat-card-content>
@@ -82,3 +126,4 @@
 </div>
 
 <ng-template #closed>Chiuso</ng-template>
+<ng-template #defaultEvents>{{gym?.numEvents|| '...'}}</ng-template>
