@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "npm install -g @angular/cli@9.1.4",
     "start": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --disableHostCheck --no-live-reload",
+    "startp": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --disableHostCheck --no-live-reload --prod",
     "build": "ng build --prod --extract-css=false",
     "test": "ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
