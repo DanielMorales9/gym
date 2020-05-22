@@ -22,6 +22,10 @@
                     <mat-icon fontSet="fas" fontIcon="fa-phone"></mat-icon>&nbsp;&nbsp;
                     <a href="tel:{{user?.phoneNumber}}">{{user?.phoneNumber || 'Loading...'}}</a>
                 </div>
+                <div *ngIf="user?.phoneNumber">
+                    <mat-icon fontSet="fab" fontIcon="fa-whatsapp"></mat-icon>&nbsp;&nbsp;
+                    <a href="https://wa.me/39{{user?.phoneNumber}}">Chatta</a>
+                </div>
                 <div>
                     <mat-icon fontSet="fa" fontIcon="fa-calendar"></mat-icon>&nbsp;&nbsp;
                     Membro dal &nbsp;<span [innerHTML]="getUserCreatedAt()"></span>
