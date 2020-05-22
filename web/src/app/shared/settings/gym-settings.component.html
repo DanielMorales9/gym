@@ -14,8 +14,8 @@
                 <tr>
                     <td>Lunedì</td>
                     <td>
-                        <span *ngIf="gym?.mondayNumEvents;else defaultEvents">
-                            {{gym?.mondayNumEvents || 'Loading...'}}
+                        <span *ngIf="gym?.mondayOpen;else closed">
+                            {{gym?.mondayStartHour || 'Loading...'}} - {{gym?.mondayEndHour || 'Loading...'}}
                         </span>
                     </td>
                     <td align="right">
