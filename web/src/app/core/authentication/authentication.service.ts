@@ -69,7 +69,7 @@ export class AuthenticationService {
      * @return The user data.
      */
     login(credentials?: Credentials): Observable<any> {
-        return this.authenticate(credentials).pipe(throttleTime(1000), switchMap(
+        return this.authenticate(credentials).pipe(throttleTime(300), switchMap(
             data => {
                 if (!!data) {
                     return this.getUserDetails(data['principal']['username']);
@@ -305,7 +305,7 @@ export class AuthenticationService {
 
     getConfig(): any {
         return this.http.get(`/gyms`).pipe(
-            throttleTime(100),
+            throttleTime(300),
             map((res: Object) => res[0])
         );
     }
