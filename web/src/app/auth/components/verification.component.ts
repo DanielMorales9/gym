@@ -1,4 +1,4 @@
-import {ActivatedRoute, Router} from '@angular/router';
+import {ActivatedRoute, ParamMap, Router} from '@angular/router';
 import {Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -6,7 +6,7 @@ import {passwordMatchValidator} from '../../core/functions';
 import {AuthenticationService} from '../../core/authentication';
 import {AuthService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
-import {switchMap, takeUntil} from 'rxjs/operators';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
 
 
@@ -36,14 +36,17 @@ export class VerificationComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.user = new User();
         this.buildForm();
-
-        this.token = this.activatedRoute.snapshot.queryParamMap.get('token');
-        this.userFromToken();
+        const tokenSub = this.activatedRoute.queryParamMap.pipe(takeUntil(this.unsubscribe$));
+        this.userFromToken(tokenSub);
     }
 
-    private userFromToken() {
-        this.authService.getUserFromVerificationToken(this.token)
-            .pipe(takeUntil(this.unsubscribe$)).subscribe(res => {
+    private userFromToken(tokenSub) {
+        tokenSub.pipe(map((params: ParamMap) => {
+            this.token = params.get('token');
+            return this.token;
+            }),
+            switchMap(r => this.authService.getUserFromVerificationToken(r)))
+            .subscribe(res => {
             this.user = res;
             this.buildForm();
         }, err => {
@@ -84,18 +87,9 @@ export class VerificationComponent extends BaseComponent implements OnInit {
         this.user.confirmPassword = this.confirmPassword.value;
         const credentials = {email: this.user.email, password: this.user.password};
         this.authService.confirmRegistration(credentials)
-            .pipe(takeUntil(this.unsubscribe$),
-                switchMap(data => {
-                    const auth_credentials = {username: data.email, password: this.user.password, remember: false};
-                    return this.auth.authenticate(auth_credentials);
-                }))
-            .subscribe(d => {
-                    if (!d) {
-                        this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS});
-                    } else {
-                        this.router.navigateByUrl('/auth/login', {replaceUrl: true});
-                    }
-            });
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(d => this.router.navigateByUrl('/auth/login', {replaceUrl: true}),
+            d => this.router.navigate(['/error'], {replaceUrl: true, queryParams: this.QUERY_PARAMS}));
     }
 
 
