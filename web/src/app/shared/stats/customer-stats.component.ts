@@ -2,10 +2,11 @@ import {Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
-import {first, map, takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import 'rxjs/add/operator/toPromise';
 import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
+import {AuthenticationService} from '../../core/authentication';
 
 
 function insertAt(array, index, ...elementsArray) {
@@ -69,16 +70,18 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
   intervalName: string;
 
   constructor(private statsService: StatsService,
+              private authService: AuthenticationService,
               private route: ActivatedRoute) {
     super();
   }
 
 
   ngOnInit(): void {
-    this.id = this.route.snapshot.paramMap.get('id');
+    this.id = this.route.snapshot.paramMap.get('id') || this.route.snapshot.queryParamMap.get('id');
 
-    const params = this.route.snapshot.queryParamMap.get('id');
-    this.id = params || this.id;
+    if (!this.id) {
+      this.id = this.authService.getUser().id;
+    }
     this.update();
   }
 
