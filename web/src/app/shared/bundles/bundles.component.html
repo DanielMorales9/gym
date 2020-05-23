@@ -7,7 +7,7 @@
 
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
-    <div *cdkVirtualFor="let b of ds;" class="scroll-item">
+    <div *cdkVirtualFor="let b of ds; trackBy: trackBy" class="scroll-item">
         <bundle-item [canEdit]="canEdit"
                      [canDelete]="canDelete"
                      [bundle]="b"

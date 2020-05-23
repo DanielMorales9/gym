@@ -105,4 +105,8 @@ export class BundlesComponent extends BaseComponent implements OnInit {
             relativeTo: this.route.parent
         });
     }
+
+    trackBy(index, item) {
+        return item ? item.id : index;
+    }
 }

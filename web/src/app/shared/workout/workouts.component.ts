@@ -149,4 +149,8 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
     private goToDetails(workout: any) {
         this.router.navigate(['./', workout.id], {relativeTo: this.route});
     }
+
+    trackBy(index, item) {
+        return item ? item.id : index;
+    }
 }

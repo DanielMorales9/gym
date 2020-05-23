@@ -1,6 +1,6 @@
 <simple-search [query]="query" text="Cerca utenti per cognome" (done)="search($event)"></simple-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
-    <div *cdkVirtualFor="let u of ds;" class="scroll-item">
+    <div *cdkVirtualFor="let u of ds; trackBy: trackBy"  class="scroll-item">
         <user-item [user]="u"
                    [canEdit]="canEdit"
                    [canDelete]="canDelete && itsMe(u?.id)"
