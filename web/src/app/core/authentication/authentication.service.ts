@@ -69,7 +69,7 @@ export class AuthenticationService {
      * @return The user data.
      */
     login(credentials?: Credentials): Observable<any> {
-        return this.authenticate(credentials).pipe(throttleTime(300), switchMap(
+        return this.authenticate(credentials).pipe(switchMap(
             data => {
                 if (!!data) {
                     return this.getUserDetails(data['principal']['username']);
@@ -137,7 +137,7 @@ export class AuthenticationService {
         let ret;
         if (!principal) {
             ret = this.signIn()
-                .pipe(catchError(err => of(undefined)),
+                .pipe(throttleTime(300), catchError(err => of(undefined)),
                     map(v => {
                         if (!!v) {
                             this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, v, this.TTL);

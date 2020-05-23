@@ -1,6 +1,8 @@
 import {Injectable} from '@angular/core';
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from '@angular/router';
 import {AuthenticationService} from '../authentication';
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
 
 
 @Injectable()
@@ -8,11 +10,16 @@ export class NoAuthGuardService implements CanActivate {
 
     constructor(public auth: AuthenticationService, public router: Router) {}
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        const auth = this.auth.isAuthenticated();
-        if (auth) {
-            this.router.navigateByUrl(this.auth.getUserRoleName());
-        }
-        return !auth;
+    private static getAuthority(auth) {
+        return auth.authorities[0].authority.toLowerCase();
+    }
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        return this.auth.authenticate().pipe(map(auth => {
+            if (auth) {
+                this.router.navigateByUrl(NoAuthGuardService.getAuthority(auth));
+            }
+            return !auth;
+        }));
     }
 }

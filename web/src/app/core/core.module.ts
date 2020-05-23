@@ -4,7 +4,7 @@ import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/h
 import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, LoaderInterceptor, XhrInterceptor} from './http';
 import {LoaderComponent, LoaderService} from './loader';
 import {MatProgressBarModule} from '@angular/material';
-import {AuthGuardService, NoAuthGuardService, RoleGuardService} from './guards';
+import {NoAuthGuardService, RoleGuardService} from './guards';
 import {
     AuthService,
     BundleService,
@@ -52,7 +52,6 @@ import {CalendarFacade} from './facades';
         BundleService,
         LoaderInterceptor,
         LoaderService,
-        AuthGuardService,
         NoAuthGuardService,
         RoleGuardService,
         ScreenService,

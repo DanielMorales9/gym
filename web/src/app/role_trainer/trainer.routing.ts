@@ -5,7 +5,6 @@ import {UserControlsComponent, UserDetailsComponent, UsersComponent} from '../sh
 import {BundleDetailsComponent, BundlesComponent, BundlesCustomerComponent} from '../shared/bundles';
 import {BundleSpecDetailsComponent, BundleSpecsComponent} from '../shared/bundle-specs';
 import {HomeComponent} from './home';
-import {AuthGuardService} from '../core/guards';
 import {GymSettingsComponent} from '../shared/settings';
 import {ProfileComponent} from '../shared/profile';
 import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerControlsComponent} from '../shared/calendar';
@@ -82,12 +81,10 @@ const routes = [
             },
             {
                 path: 'profile', component: ProfileComponent,
-                canActivate: [AuthGuardService],
                 data: {title: 'Profilo'}
             },
             {
                 path: 'settings/gym', component: GymSettingsComponent,
-                canActivate: [AuthGuardService],
                 data: {title: 'Palestra'}
             },
             { path: '**', redirectTo: 'home' }
