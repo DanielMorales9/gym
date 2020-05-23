@@ -206,4 +206,8 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
         });
 
     }
+
+    trackBy(index, item) {
+        return item ? item.id : index;
+    }
 }

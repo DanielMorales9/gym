@@ -148,4 +148,8 @@ export class SalesComponent extends BaseComponent implements OnInit {
     sell() {
         return this.router.navigate([this.root, 'sales', 'buy', this.id]);
     }
+
+    trackBy(index, item) {
+        return item ? item.id : index;
+    }
 }

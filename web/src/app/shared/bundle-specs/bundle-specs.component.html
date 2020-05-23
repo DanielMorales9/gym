@@ -6,7 +6,7 @@
 </filter-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
-    <div *cdkVirtualFor="let b of ds;" class="scroll-item">
+    <div *cdkVirtualFor="let b of ds; trackBy: trackBy" class="scroll-item">
         <bundle-spec-item [bundleSpec]="b"
                           [canDelete]="canDelete"
                           [canDisable]="canDisable"

@@ -78,7 +78,7 @@ export class BundleSpecModalComponent implements OnInit {
             ]),
             numDeletions: new FormControl({
                 value: this.bundleSpec.numDeletions,
-                disabled: !this.bundleSpec.unlimitedDeletions
+                disabled: !!this.bundleSpec.unlimitedDeletions
             }, [
                 Validators.required,
                 Validators.pattern(/^\d+$/),
@@ -107,6 +107,7 @@ export class BundleSpecModalComponent implements OnInit {
         });
 
         this.unlimitedDeletions.valueChanges.subscribe(val => {
+            console.log(val);
             if (val === false) {
                 this.showNumDeletions = true;
                 this.numDeletions.enable();
@@ -153,6 +154,7 @@ export class BundleSpecModalComponent implements OnInit {
 
     submit() {
         const bundle = this.getBundleFromForm();
+        console.log('closed');
         this.dialogRef.close(bundle);
     }
 

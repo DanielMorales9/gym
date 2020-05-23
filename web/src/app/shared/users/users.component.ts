@@ -50,7 +50,6 @@ export class UsersComponent extends BaseComponent implements OnInit {
         this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
     }
 
-
     ngOnInit(): void {
         this.type = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
 
@@ -151,5 +150,9 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
     private goToDetails(user: any) {
         return this.router.navigate([this.type, 'users', user.id]);
+    }
+
+    trackBy(index, item) {
+        return item ? item.id : index;
     }
 }

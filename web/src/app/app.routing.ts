@@ -19,7 +19,7 @@ const routes: Routes = [
         path: 'admin', loadChildren: () => import('app/role_admin/admin.module').then(m => m.AdminModule),
         canActivate: [RoleGuardService],
         data: {
-            expectedRole: 'A',
+            expectedRole: 'ADMIN',
             primary: PrimaryAdminControlsComponent
         }
     },
@@ -27,7 +27,7 @@ const routes: Routes = [
         path: 'trainer', loadChildren: () => import('app/role_trainer/trainer.module').then(m => m.TrainerModule),
         canActivate: [RoleGuardService],
         data: {
-            expectedRole: 'T',
+            expectedRole: 'TRAINER',
             primary: PrimaryTrainerControlsComponent
         }
     },
@@ -35,7 +35,7 @@ const routes: Routes = [
         path: 'customer', loadChildren: () => import('app/role_customer/customer.module').then(m => m.CustomerModule),
         canActivate: [RoleGuardService],
         data: {
-            expectedRole: 'C',
+            expectedRole: 'CUSTOMER',
             primary: PrimaryCustomerControlsComponent
         }
     },

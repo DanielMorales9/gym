@@ -160,4 +160,8 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
                     specId: bundleSpec.id
                 }});
     }
+
+    trackBy(index, item) {
+        return item ? item.id : index;
+    }
 }
