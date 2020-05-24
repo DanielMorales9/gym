@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 
@@ -77,6 +78,8 @@ public class GymService implements ICrudService<Gym, Long> {
             throw new BadRequestException("La palestra è chiusa in questo orario");
     }
 
+
+    @Cacheable(value = "manifest")
     public Manifest getManifest() {
         Gym gym = this.findAll().get(0);
 
