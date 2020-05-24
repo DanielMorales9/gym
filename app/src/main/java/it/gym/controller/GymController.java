@@ -50,6 +50,7 @@ public class GymController {
     public Manifest getManifest() {
         return service.getManifest();
     }
+
     @PatchMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<GymResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {

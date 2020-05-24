@@ -1,6 +1,8 @@
 package it.gym.pojo;
 
-public class Icon {
+import java.io.Serializable;
+
+public class Icon implements Serializable {
 
     String src;
     String sizes;

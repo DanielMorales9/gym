@@ -2,10 +2,11 @@ package it.gym.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 @Data
-public class Manifest {
+public class Manifest implements Serializable {
 
     String name;
     String short_name;
