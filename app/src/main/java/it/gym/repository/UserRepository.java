@@ -14,7 +14,8 @@ public interface UserRepository extends JpaRepository<AUser, Long> {
 
     AUser findByEmail(String email);
 
-    Page<AUser> findByLastNameContainingOrFirstNameContaining(String query, String query1, Pageable pageable);
+    @Query(value = "select u from AUser as u where concat(lower(u.firstName), ' ', lower(u.lastName)) LIKE %:query%")
+    Page<AUser> findByLastNameContainingOrFirstNameContaining(String query, Pageable pageable);
 
     @Query(value =
             "select u.* " +

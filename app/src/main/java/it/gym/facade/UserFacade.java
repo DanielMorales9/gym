@@ -69,6 +69,7 @@ public class UserFacade {
     }
 
     public Page<AUser> findByName(String query, Pageable pageable) {
+        query = query.toLowerCase();
         return service.findByName(query, pageable);
     }
 

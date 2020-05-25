@@ -93,11 +93,14 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             .pipe(
                 takeUntil(this.unsubscribe$),
                 filter(event => event instanceof NavigationStart),
+                map(v => {
+                    this.closeNav();
+                    return v;
+                }),
                 switchMap(s => this.authenticate()),
                 switchMap(s => this.getAppName())
             )
             .subscribe(_ => {
-                this.closeNav();
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
                 this.setTitle(this.appName, ...titles);
         });

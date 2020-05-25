@@ -98,7 +98,7 @@ public class UserService implements ICrudService<AUser, Long> {
 
     @Cacheable(value = "users-search")
     public Page<AUser> findByName(String query, Pageable pageable) {
-        return repository.findByLastNameContainingOrFirstNameContaining(query, query, pageable);
+        return repository.findByLastNameContainingOrFirstNameContaining(query, pageable);
     }
 
     @Cacheable(value = "users-all")
