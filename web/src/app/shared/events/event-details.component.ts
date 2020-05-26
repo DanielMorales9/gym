@@ -272,7 +272,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     assignWorkout() {
-        this.router.navigate(['assignWorkout'], {relativeTo: this.route});
+        this.router.navigate(['session', this.event.session.id, 'assignWorkout'], {relativeTo: this.route});
     }
 
     hasWorkout() {
@@ -283,6 +283,6 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     goToWorkout() {
-        this.router.navigate(['programme'], {relativeTo: this.route});
+        this.router.navigate(['session', this.event.session.id, 'programme'], {relativeTo: this.route});
     }
 }

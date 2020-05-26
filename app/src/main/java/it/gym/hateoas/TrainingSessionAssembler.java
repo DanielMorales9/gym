@@ -20,8 +20,6 @@ public class TrainingSessionAssembler extends ResourceAssemblerSupport<ATraining
         TrainingSessionResource resource = new TrainingSessionResource(session);
         resource.add(linkTo(TrainingSessionRepository.class).slash("sessions")
                 .slash(session.getId()).withSelfRel());
-        resource.add(linkTo(TrainingBundleRepository.class).slash("bundles")
-                .slash(session.getTrainingBundle().getId()).withRel("bundles"));
         return resource;
     }
 }

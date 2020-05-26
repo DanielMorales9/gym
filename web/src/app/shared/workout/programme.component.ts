@@ -52,7 +52,8 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         const id = +this.route.snapshot.params['id'];
-        this.findById(id);
+        const sessionId = +this.route.snapshot.params['sessionId'];
+        this.findEventById(id);
         this.getPolicy();
 
     }
@@ -62,7 +63,7 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }
 
-    private findById(id: number) {
+    private findEventById(id: number) {
         this.facade.findEventById(id)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(data => this.event = data);
@@ -87,7 +88,7 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
                 this.service.patchWorkout(res)
-                    .subscribe(_ => this.findById(this.event.id),
+                    .subscribe(_ => this.findEventById(this.event.id),
                         err => this.snackBar.open(err.err.message));
             }
         });
@@ -98,7 +99,7 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
         this.service.deleteWorkoutFromEvent(this.event.id, workout.id)
             .subscribe(res => {
                 if (this.event.session.workouts.length > 1) {
-                    this.findById(this.event.id);
+                    this.findEventById(this.event.id);
                 }
                 else {
                     this.location.back();
