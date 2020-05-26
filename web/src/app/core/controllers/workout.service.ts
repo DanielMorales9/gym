@@ -42,15 +42,15 @@ export class WorkoutService extends DataSourceService {
         return this.http.get(`/workouts/tags`);
     }
 
-    assignWorkout(id: string, workoutId: any) {
-        return this.http.get(`/workouts/${workoutId}/assign`, {params: {
-                eventId: id
+    assignWorkout(sessionId: string, workoutId: any) {
+        return this.http.get(`/trainingSessions/${sessionId}/workouts`, {params: {
+                workoutId: workoutId
             }});
     }
 
-    deleteWorkoutFromEvent(eventId: any, wId: any) {
-        return this.http.delete(`/workouts/${wId}/remove`, {params: {
-                eventId: eventId
+    deleteWorkoutFromSession(sessionId: any, wId: any) {
+        return this.http.delete(`/trainingSessions/${sessionId}/workouts`, {params: {
+                workoutId: wId
         }});
     }
 }

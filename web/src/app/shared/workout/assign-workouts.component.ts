@@ -19,9 +19,7 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
 
     sub: any;
 
-    eventId: number;
     query: any;
-    event: any;
 
     private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
@@ -51,7 +49,6 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
 
     private getId() {
         this.sub = this.route.params.subscribe(params => {
-            this.eventId = +params['eventId'];
             this.sessionId = +params['sessionId'];
         });
     }
@@ -117,7 +114,7 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
 
         forkJoin(
             selected.map(workout => {
-                return this.service.assignWorkout(this.eventId.toString(), workout)
+                return this.service.assignWorkout(this.sessionId.toString(), workout)
                     .pipe( map( w => w));
             })
         ).subscribe(res => this.location.back(),
