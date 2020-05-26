@@ -67,11 +67,11 @@ const routes = [
                 data: {title: 'Dettaglio Workout', back: true}
             },
             {
-                path: 'events/:id/assignWorkout', component: AssignWorkoutsComponent,
+                path: 'events/:id/sessions/:sessionId/assignWorkout', component: AssignWorkoutsComponent,
                 data: {title: 'Assegna Workout', back: true }
             },
             {
-                path: 'events/:id/programme', component: ProgrammeComponent,
+                path: 'events/:id/sessions/:sessionId/programme', component: ProgrammeComponent,
                 data: {title: 'Programma di Allenamento', back: true }
             },
 
