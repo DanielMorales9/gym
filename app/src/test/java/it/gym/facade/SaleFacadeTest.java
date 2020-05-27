@@ -83,7 +83,7 @@ public class SaleFacadeTest {
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
         mockSaveMethod();
-        Sale sale = saleFacade.addSalesLineItem(1L, 1L, null);
+        Sale sale = saleFacade.addSalesLineItem(1L, 1L, 1L);
         assertThat(sale.getSalesLineItems().size()).isEqualTo(1);
         assertThat(sale.getTotalPrice()).isEqualTo(111.0);
     }
@@ -100,7 +100,7 @@ public class SaleFacadeTest {
         Sale mockSale = createSale(1L, customer);
         CourseTrainingBundleSpecification bundleSpec = createCourseBundleSpec(1L,
                 "course", 11, 1, 111.);
-        TimePurchaseOption option = bundleSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+        APurchaseOption option = bundleSpec.getOptions().get(0);
 
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(bundleSpec).when(bundleSpecService).findById(1L);
