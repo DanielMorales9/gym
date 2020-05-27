@@ -23,6 +23,7 @@ export abstract class BundleSpecification {
     description: string;
     disabled: boolean;
     type: string;
+    options: Option[];
 
     constructor() {
 
@@ -48,9 +49,6 @@ export class Workout {
 
 
 export class PersonalBundleSpecification extends BundleSpecification {
-    numSessions: number;
-    price: number;
-
     constructor() {
         super();
         this.type = BundleSpecificationType.PERSONAL;
@@ -58,8 +56,6 @@ export class PersonalBundleSpecification extends BundleSpecification {
 }
 
 export class CourseBundleSpecification extends BundleSpecification {
-    options: Option[];
-
     constructor() {
         super();
         this.type = BundleSpecificationType.COURSE;
@@ -71,6 +67,8 @@ export abstract class Bundle {
     name: string;
     expired: boolean;
     type: string;
+    option: Option;
+
 
     protected constructor() {
     }
@@ -88,14 +86,13 @@ export class PersonalBundle extends Bundle {
     }
 
     getPrice() {
-        return this.bundleSpec.price;
+        return this.option.price;
     }
 }
 
 export class CourseBundle extends Bundle {
 
     bundleSpec: CourseBundleSpecification;
-    option: Option;
     startTime: number;
     endTime: number;
 
