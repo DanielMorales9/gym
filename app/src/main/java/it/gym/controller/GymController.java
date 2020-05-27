@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -36,13 +37,13 @@ public class GymController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
         Gym gym = service.findById(id);
-        return ResponseEntity.ok(new GymAssembler().toResource(gym));
+        return ResponseEntity.ok(new GymAssembler().toModel(gym));
     }
 
     @GetMapping
-    public ResponseEntity<List<GymResource>> findGyms() {
+    public ResponseEntity<CollectionModel<GymResource>> findGyms() {
         List<Gym> gym = service.findAll();
-        return ResponseEntity.ok(new GymAssembler().toResources(gym));
+        return ResponseEntity.ok(new GymAssembler().toCollectionModel(gym));
     }
 
     @GetMapping("/manifest.webmanifest")
@@ -57,6 +58,6 @@ public class GymController {
         Gym gym = service.findById(id);
         gym = objectMapper.readerForUpdating(gym).readValue(request.getReader());
         gym = service.save(gym);
-        return ResponseEntity.ok(new GymAssembler().toResource(gym));
+        return ResponseEntity.ok(new GymAssembler().toModel(gym));
     }
 }

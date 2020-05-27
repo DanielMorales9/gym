@@ -2,13 +2,13 @@ package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.gym.model.*;
-import org.springframework.hateoas.ResourceSupport;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class SaleResource extends ResourceSupport {
+public class SaleResource extends RepresentationModel<SaleResource> {
 
     private final Long id;
     private final Double amountPayed;
@@ -89,7 +89,7 @@ public class SaleResource extends ResourceSupport {
         return salesLineItems;
     }
 
-    private static class SaleCustomer extends ResourceSupport {
+    private static class SaleCustomer extends RepresentationModel<SaleCustomer> {
 
         private final Long id;
         private final String firstName;
@@ -115,7 +115,7 @@ public class SaleResource extends ResourceSupport {
         }
     }
 
-    private static class SalesLineItemResource extends ResourceSupport {
+    private static class SalesLineItemResource extends RepresentationModel<SalesLineItemResource> {
 
         private final Long id;
         private final SalesLineItemTrainingBundle trainingBundle;
@@ -141,7 +141,7 @@ public class SaleResource extends ResourceSupport {
         }
     }
 
-    private static class SalesLineItemTrainingBundle extends ResourceSupport {
+    private static class SalesLineItemTrainingBundle extends RepresentationModel<SalesLineItemTrainingBundle> {
 
         private final Long id;
         private final String name;
@@ -167,7 +167,7 @@ public class SaleResource extends ResourceSupport {
         }
     }
 
-    private static class SalesLineItemTrainingBundleSpecification extends ResourceSupport {
+    private static class SalesLineItemTrainingBundleSpecification extends RepresentationModel<SalesLineItemTrainingBundleSpecification> {
 
         private final Long id;
         private final String name;
@@ -187,7 +187,7 @@ public class SaleResource extends ResourceSupport {
         }
     }
 
-    private static class SalesLineItemTrainingBundleOption extends ResourceSupport {
+    private static class SalesLineItemTrainingBundleOption extends RepresentationModel<SalesLineItemTrainingBundleOption> {
 
         private final Long id;
         private final Double price;

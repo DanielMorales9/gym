@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestConfig {
 
-
     @Bean
     public Jackson2ObjectMapperBuilder objectMapperBuilder() {
         return new Jackson2ObjectMapperBuilder() {

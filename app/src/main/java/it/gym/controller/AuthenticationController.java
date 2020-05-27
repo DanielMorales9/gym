@@ -30,7 +30,7 @@ public class AuthenticationController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AUserResource> registration(@Valid @RequestBody AUser user) {
         AUser u = facade.register(user);
-        return ResponseEntity.ok(new AUserAssembler().toResource(u));
+        return ResponseEntity.ok(new AUserAssembler().toModel(u));
 
     }
 
@@ -39,48 +39,48 @@ public class AuthenticationController {
     public ResponseEntity<AUserResource> confirmRegistration(@RequestBody Credentials credentials) {
         logger.info("About to verify password for user");
         AUser user = facade.confirmRegistration(credentials.getEmail(), credentials.getPassword());
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
     @PostMapping("/changePasswordAnonymous/{id}")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<AUserResource> changePasswordAnonymous(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.facade.changePassword(id, form);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
     @PostMapping("/changePassword/{id}")
     public ResponseEntity<AUserResource> changePassword(@PathVariable Long id, @RequestBody PasswordForm form) {
         AUser user = this.facade.changePassword(id, form);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/getUserFromVerificationToken")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<AUserResource> getUserFromVerificationToken(@RequestParam String token) {
         AUser user = this.facade.getUserFromVerificationToken(token);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/forgotPassword")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<AUserResource> forgotPassword(@RequestParam String email) {
         AUser user = facade.forgotPassword(email);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/resendTokenAnonymous")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<AUserResource> resendTokenAnonymous(@RequestParam("id") Long id) {
         AUser user = facade.resendAnonymousToken(id);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
     @GetMapping(path = "/resendToken")
     @PreAuthorize("isAnonymous()")
     public ResponseEntity<AUserResource> resendToken(@RequestParam("token") String existingToken) {
         AUser user = facade.resendToken(existingToken);
-        return new ResponseEntity<>(new AUserAssembler().toResource(user), HttpStatus.OK);
+        return new ResponseEntity<>(new AUserAssembler().toModel(user), HttpStatus.OK);
     }
 
 }

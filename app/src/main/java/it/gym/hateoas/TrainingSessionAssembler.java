@@ -4,11 +4,11 @@ import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingSession;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingSessionRepository;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class TrainingSessionAssembler extends ResourceAssemblerSupport<ATrainingSession,
+public class TrainingSessionAssembler extends RepresentationModelAssemblerSupport<ATrainingSession,
         TrainingSessionResource> {
 
     public TrainingSessionAssembler() {
@@ -16,7 +16,7 @@ public class TrainingSessionAssembler extends ResourceAssemblerSupport<ATraining
     }
 
     @Override
-    public TrainingSessionResource toResource(ATrainingSession session) {
+    public TrainingSessionResource toModel(ATrainingSession session) {
         return new TrainingSessionResource(session);
     }
 }

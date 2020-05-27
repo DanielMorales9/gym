@@ -1,16 +1,16 @@
 package it.gym.hateoas;
 
 import it.gym.model.Image;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-public class ImageAssembler extends ResourceAssemblerSupport<Image, ImageResource> {
+public class ImageAssembler extends RepresentationModelAssemblerSupport<Image, ImageResource> {
 
     public ImageAssembler(){
         super(Image.class, ImageResource.class);
     }
 
     @Override
-    public ImageResource toResource(Image user) {
+    public ImageResource toModel(Image user) {
         ImageResource resource = new ImageResource(user);
         return resource;
     }

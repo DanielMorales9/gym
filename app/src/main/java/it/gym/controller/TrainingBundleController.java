@@ -38,13 +38,13 @@ public class TrainingBundleController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleResource> findById(@PathVariable Long id) {
         ATrainingBundle bundle = service.findById(id);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
+        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
         ATrainingBundle bundle = service.deleteById(id);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
+        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
     }
 
     @GetMapping("/search")
@@ -70,6 +70,6 @@ public class TrainingBundleController {
             bundle.terminate();
         }
         bundle = service.save(bundle);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toResource(bundle));
+        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
     }
 }

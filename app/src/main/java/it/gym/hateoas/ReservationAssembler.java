@@ -2,11 +2,11 @@ package it.gym.hateoas;
 
 import it.gym.model.Reservation;
 import it.gym.repository.ReservationRepository;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class ReservationAssembler extends ResourceAssemblerSupport<Reservation,
+public class ReservationAssembler extends RepresentationModelAssemblerSupport<Reservation,
         ReservationResource> {
 
     public ReservationAssembler() {
@@ -14,7 +14,7 @@ public class ReservationAssembler extends ResourceAssemblerSupport<Reservation,
     }
 
     @Override
-    public ReservationResource toResource(Reservation reservation) {
+    public ReservationResource toModel(Reservation reservation) {
         ReservationResource resource = new ReservationResource(reservation);
         resource.add(linkTo(ReservationRepository.class).slash("reservations")
                 .slash(reservation.getId()).withSelfRel());

@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -33,7 +34,7 @@ public class EventController {
     public ResponseEntity<EventResource> findById(@PathVariable Long id) {
         AEvent res = facade.findById(id);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(res));
+        return ResponseEntity.ok(new EventAssembler().toModel(res));
     }
 
     @GetMapping(path = "/{eventId}/complete")
@@ -44,7 +45,7 @@ public class EventController {
         logger.info("completing session");
         AEvent event = facade.complete(eventId);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(event));
+        return ResponseEntity.ok(new EventAssembler().toModel(event));
     }
 
     @PostMapping(path = "/{gymId}/holiday")
@@ -55,7 +56,7 @@ public class EventController {
 
         AEvent holiday = facade.createHoliday(gymId, event);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(holiday));
+        return ResponseEntity.ok(new EventAssembler().toModel(holiday));
 
     }
 
@@ -66,7 +67,7 @@ public class EventController {
 
         AEvent holiday = facade.delete(id);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(holiday));
+        return ResponseEntity.ok(new EventAssembler().toModel(holiday));
 
     }
 
@@ -79,7 +80,7 @@ public class EventController {
 
         AEvent holiday = facade.editEvent(gymId, id, event);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(holiday));
+        return ResponseEntity.ok(new EventAssembler().toModel(holiday));
 
     }
 
@@ -118,7 +119,7 @@ public class EventController {
 
         AEvent timeOff = facade.createTimeOff(gymId, trainerId, event);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+        return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
 
     }
 
@@ -131,7 +132,7 @@ public class EventController {
 
         logger.info("Returning CourseEvent");
         logger.info(course.toString());
-        return ResponseEntity.ok(new EventAssembler().toResource(course));
+        return ResponseEntity.ok(new EventAssembler().toModel(course));
 
     }
 
@@ -141,7 +142,7 @@ public class EventController {
 
         AEvent timeOff = facade.deleteEvent(id);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+        return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
 
     }
 
@@ -151,7 +152,7 @@ public class EventController {
 
         AEvent timeOff = facade.delete(id);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+        return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
 
     }
 
@@ -164,7 +165,7 @@ public class EventController {
 
         AEvent timeOff = facade.editEvent(gymId, id, event);
 
-        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+        return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
 
     }
 
@@ -181,25 +182,26 @@ public class EventController {
 
     }
 
+
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
-                                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                               iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                               Date startTime,
-                                                                       @RequestParam(value = "endTime")
-                                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                               iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                               Date endTime,
-                                                                       @RequestParam(value = "types")
-                                                                               HashSet<String> types,
-                                                                       @RequestParam(required = false)
-                                                                               Long customerId,
-                                                                       @RequestParam(required = false)
-                                                                               Long trainerId) {
+    public ResponseEntity<CollectionModel<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
+                                                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                                              iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                                              Date startTime,
+                                                                                  @RequestParam(value = "endTime")
+                                                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                                              iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                                              Date endTime,
+                                                                                  @RequestParam(value = "types")
+                                                                                              HashSet<String> types,
+                                                                                  @RequestParam(required = false)
+                                                                                              Long customerId,
+                                                                                  @RequestParam(required = false)
+                                                                                              Long trainerId) {
         List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
 
-        return ResponseEntity.ok(new EventAssembler().toResources(res));
+        return ResponseEntity.ok(new EventAssembler().toCollectionModel(res));
     }
 
 }

@@ -2,19 +2,18 @@ package it.gym.hateoas;
 
 import it.gym.model.Role;
 import it.gym.repository.RoleRepository;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class RoleAssembler extends ResourceAssemblerSupport<Role, RoleResource> {
-
+public class RoleAssembler extends RepresentationModelAssemblerSupport<Role, RoleResource> {
 
     public RoleAssembler() {
         super(Role.class, RoleResource.class);
     }
 
     @Override
-    public RoleResource toResource(Role role) {
+    public RoleResource toModel(Role role) {
         RoleResource resource = new RoleResource(role);
         resource.add(linkTo(RoleRepository.class).slash("roles")
                 .slash(role.getId()).withSelfRel());
