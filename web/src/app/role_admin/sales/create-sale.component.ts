@@ -152,9 +152,8 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
         const isSelected = !this.getSelectBundle(spec.id);
         this.selected[spec.id] = isSelected;
 
-        if (spec.type === BundleType.COURSE) {
-            this.openDialog(spec);
-        } else if (isSelected) {
+        this.openDialog(spec);
+        if (isSelected) {
             this.addSalesLineItem(spec.id);
         } else {
             this.deleteSalesLineItem(spec.id);

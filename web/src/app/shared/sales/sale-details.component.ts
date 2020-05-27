@@ -62,11 +62,7 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
         this.helper.findById(id).subscribe((res: Sale) => {
             this.sale = res;
             this.sale.salesLineItems.forEach(value => {
-                if (value.trainingBundle.type === 'P') {
-                    value.price = (value.bundleSpecification as PersonalBundleSpecification).price;
-                } else {
-                    value.price = (value.trainingBundle as CourseBundle).option.price;
-                }
+                value.price = value.trainingBundle.option.price;
             });
         });
     }
