@@ -82,7 +82,7 @@ public class SaleController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> addSalesLineItem(@PathVariable Long saleId,
                                                          @RequestParam Long bundleSpecId,
-                                                         @RequestParam(required = false) Long optionId) {
+                                                         @RequestParam Long optionId) {
         Sale sale = this.facade.addSalesLineItem(saleId, bundleSpecId, optionId);
         return new ResponseEntity<>(new SaleAssembler().toResource(sale), HttpStatus.OK);
     }

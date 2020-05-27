@@ -28,8 +28,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     @Override
     public Boolean isExpired() {
         Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        PersonalTrainingBundleSpecification spec = ((PersonalTrainingBundleSpecification) this.getBundleSpec());
-        return spec.getNumSessions().equals(size);
+        return getOption().getNumber().equals(size);
     }
 
     @Override
@@ -44,7 +43,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Override
     public Double getPrice() {
-        return ((PersonalTrainingBundleSpecification) this.getBundleSpec()).getPrice();
+        return getOption().getPrice();
     }
 
     @Override
@@ -58,14 +57,10 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public boolean assignOption(Long optionId) {
-        return true;
-    }
-
-    @Override
     public void addSession(ATrainingSession session) {
         if (this.getSessions() == null) {
             this.setSessions(new ArrayList<>());
+            this.activateBundle(session.getStartTime());
         }
 
         this.getSessions().add(session);

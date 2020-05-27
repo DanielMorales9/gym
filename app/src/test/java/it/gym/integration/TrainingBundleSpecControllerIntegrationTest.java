@@ -45,6 +45,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
         personalBundleSpec = repository.save(personalBundleSpec);
         courseBundleSpec = repository.save(courseBundleSpec);
+        logger.info(personalBundleSpec.toString());
+        logger.info(courseBundleSpec.toString());
     }
 
     @After
@@ -88,7 +90,11 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Test
     public void deletePersonalBundleSpecId_throwException() throws Exception {
-        bundleRepository.save(personalBundleSpec.createTrainingBundle());
+        APurchaseOption purchaseOption = personalBundleSpec.getOptions().get(0);
+        Long optionId = purchaseOption.getId();
+        logger.info(purchaseOption.toString());
+        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle(optionId);
+        bundleRepository.save(bundle);
         mockMvc.perform(delete("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
     }
@@ -112,7 +118,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     public void deleteCourseBundleSpecId_throwsException() throws Exception {
         CourseTrainingBundle bundle = createCourseBundle(1L, getNextMonday(),
                 courseBundleSpec,
-                courseBundleSpec.getOptions().toArray(new TimeOption[] {})[0]);
+                courseBundleSpec.getOptions().toArray(new TimePurchaseOption[] {})[0]);
         bundleRepository.save(bundle);
         mockMvc.perform(delete("/bundleSpecs/" + courseBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
@@ -123,7 +129,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         PersonalTrainingEvent evt = createPersonalEvent(1L, "course", start, end);
-        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle();
+        Long optionId = personalBundleSpec.getOptions().get(0).getId();
+        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle(optionId);
         ATrainingSession session = bundle.createSession(evt);
         session.setCompleted(true);
         bundle.addSession(session);
@@ -147,11 +154,16 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         };
 
         PersonalTrainingBundleSpecification expected = new PersonalTrainingBundleSpecification();
-        expected.setNumSessions(11);
         expected.setName("pacchetto");
         expected.setDescription("pacchetto");
         expected.setDisabled(false);
-        expected.setPrice(1.0);
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        APurchaseOption option = new BundlePurchaseOption();
+        option.setNumber(11);
+        option.setPrice(111.0);
+        option.setName(expected.getName());
+        options.add(option);
+        expected.setOptions(options);
         expected.setUnlimitedDeletions(true);
         expected.setNumDeletions(0);
 
@@ -180,6 +192,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
             public final Integer number = 1;
             public final String name = "One Month Option";
             public final Double price = 111.0;
+            public final String type = "T";
         };
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -193,8 +206,9 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
                 repository.findById(courseBundleSpec.getId()).get();
 
         expectTrainingBundleSpec(result, expected);
-        ArrayList<TimeOption> options = new ArrayList<>(courseBundleSpec.getOptions());
-        options.sort((o1, o2) -> (int) (o2.getId() - o1.getId()));
+        ArrayList<APurchaseOption> options = new ArrayList<>(courseBundleSpec.getOptions());
+        options.sort((o1, o2) -> (int) (
+                o2.getId() - o1.getId()));
         logger.info(options.toString());
         for (int i = 0; i < options.size(); i++) {
             expectOption(result, options.get(i), "options["+i+"]");
@@ -295,7 +309,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         expected.setMaxCustomers(11);
         expected.setUnlimitedDeletions(true);
         expected.setNumDeletions(0);
-        TimeOption o = new TimeOption();
+        TimePurchaseOption o = new TimePurchaseOption();
         o.setPrice(1.0);
         o.setNumber(1);
         expected.addOption(o);

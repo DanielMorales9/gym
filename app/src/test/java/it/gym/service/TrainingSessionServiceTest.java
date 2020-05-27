@@ -1,7 +1,9 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.*;
+import it.gym.model.ATrainingSession;
+import it.gym.model.PersonalTrainingBundle;
+import it.gym.model.PersonalTrainingSession;
 import it.gym.repository.TrainingSessionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,8 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static it.gym.utility.Fixture.createPersonalBundle;
-import static it.gym.utility.Fixture.createPersonalTrainingSession;
+import static it.gym.utility.Fixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -41,13 +42,15 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPersonalTrainingSession(1L, createPersonalBundle(1L, null)));
+        PersonalTrainingBundle p = createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11));
+        this.service.save(createPersonalTrainingSession(1L, p));
         Mockito.verify(repository).save(any(ATrainingSession.class));
     }
 
     @Test
     public void findById() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, null));
+        PersonalTrainingBundle p = createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11));
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, p);
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(session));
         ATrainingSession u = this.service.findById(1L);
         assertThat(u).isEqualTo(session);
@@ -56,7 +59,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findAll() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, null));
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11)));
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(session));
         List<ATrainingSession> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(session));
@@ -70,7 +73,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L, null));
+        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11)));
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingSession.class));
     }

@@ -2,13 +2,17 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.gym.exception.BadRequestException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 
 
 @JsonTypeInfo(
@@ -26,7 +30,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingBundleSpecification implements Serializable, Eager<ATrainingBundleSpecification> {
+public abstract class  ATrainingBundleSpecification implements Serializable, Eager<ATrainingBundleSpecification> {
 
     @Id
     @SequenceGenerator(name = "bundle_specs_spec_id_seq",
@@ -54,9 +58,45 @@ public abstract class ATrainingBundleSpecification implements Serializable, Eage
     @Column(name = "n_deletions")
     private Integer numDeletions;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bundle_spec_id", nullable = false)
+    private List<APurchaseOption> options;
+
+    public List<APurchaseOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<APurchaseOption> options) {
+        this.options = options;
+    }
+
+    public void addOption(APurchaseOption option) {
+        if (this.options == null) {
+            this.options = new ArrayList<>();
+        }
+        this.options.add(option);
+    }
+
     public abstract String getType();
 
-    public abstract ATrainingBundle createTrainingBundle();
+    public abstract ATrainingBundle createTrainingBundle(Long optionId);
+
+    public void setOption(Long optionId, ATrainingBundle bundle) {
+        List<APurchaseOption> options = this.getOptions();
+        if (options == null) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
+        }
+        Optional<APurchaseOption> op = options
+                .stream()
+                .filter(o -> o.getId().equals(optionId))
+                .findFirst();
+
+        if (!op.isPresent()) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
+        }
+
+        bundle.setOption(op.get());
+    }
 
     public Integer getNumDeletions() {
         return numDeletions;
@@ -106,13 +146,21 @@ public abstract class ATrainingBundleSpecification implements Serializable, Eage
         this.createdAt = createdAt;
     }
 
-
     public Boolean getUnlimitedDeletions() {
         return unlimitedDeletions;
     }
 
     public void setUnlimitedDeletions(Boolean unlimitedDeletions) {
         this.unlimitedDeletions = unlimitedDeletions;
+    }
+
+    @Override
+    public ATrainingBundleSpecification eager() {
+        if (options != null)
+            options.forEach(APurchaseOption::eager);
+        else
+            options = new ArrayList<>();
+        return this;
     }
 
     @PrePersist

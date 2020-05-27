@@ -14,6 +14,13 @@ spring:
     show-sql: false
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        temp:
+          use_jdbc_metadata_defaults: false
 
   mail:
     host: smtp.gmail.com

@@ -116,7 +116,6 @@ public class HateoasTest {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
         result
-                .andExpect(jsonPath("$"+prefix+"numSessions").value(bundle.getNumSessions()))
                 .andExpect(jsonPath("$"+prefix+"unlimitedDeletions").value(bundle.getUnlimitedDeletions()))
                 .andExpect(jsonPath("$"+prefix+"numDeletions").value(bundle.getNumDeletions()));
     }
@@ -291,11 +290,11 @@ public class HateoasTest {
 
     }
 
-    public static void expectOption(ResultActions result, TimeOption timeOption) throws Exception {
+    public static void expectOption(ResultActions result, TimePurchaseOption timeOption) throws Exception {
         expectOption(result, timeOption, null);
     }
 
-    public static void expectOption(ResultActions result, TimeOption timeOption, String p) throws Exception {
+    public static void expectOption(ResultActions result, APurchaseOption timeOption, String p) throws Exception {
         String prefix = handlePrefix(p);
         result.andExpect(jsonPath("$"+prefix+"id").value(timeOption.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(timeOption.getName()))

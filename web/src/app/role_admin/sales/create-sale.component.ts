@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {BundleSpecification, BundleType, Sale} from '../../shared/model';
+import {BundleSpecification, Sale} from '../../shared/model';
 import {BundleSpecHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {SnackBarService} from '../../core/utilities';
 import {BundleService, BundleSpecsService} from '../../core/controllers';
@@ -149,16 +149,9 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
     }
 
     selectBundleSpec(spec: any) {
-        const isSelected = !this.getSelectBundle(spec.id);
-        this.selected[spec.id] = isSelected;
+        this.selected[spec.id] = !this.getSelectBundle(spec.id);
 
-        if (spec.type === BundleType.COURSE) {
-            this.openDialog(spec);
-        } else if (isSelected) {
-            this.addSalesLineItem(spec.id);
-        } else {
-            this.deleteSalesLineItem(spec.id);
-        }
+        this.openDialog(spec);
 
     }
 

@@ -103,7 +103,7 @@ public class AuthenticationFacadeTest {
                 .when(userService).save(any());
         AUser user = facade.changePassword(1L,
                 new PasswordForm("a", "b", "b"));
-        assertThat(user.getPassword()).isEqualTo("c");
+        assertThat(user.getPassword().equals("c")).isTrue();
     }
 
     @Test(expected = BadRequestException.class)

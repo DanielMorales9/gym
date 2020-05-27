@@ -44,13 +44,6 @@ export class BundleSpecModalComponent implements OnInit {
     private buildForm(hasBundle: boolean) {
         this.form = new FormGroup({
             name: new FormControl(this.bundleSpec.name, Validators.required),
-            price: new FormControl({
-                value: this.bundleSpec.price,
-                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL || !!this.bundleSpec.price
-            }, [
-                Validators.required,
-                Validators.pattern(/^\d+\.?\d{0,2}$/)
-            ]),
             description: new FormControl(this.bundleSpec.description, Validators.required),
             type: new FormControl({
                 value: this.bundleSpec.type,
@@ -62,13 +55,6 @@ export class BundleSpecModalComponent implements OnInit {
             }, [
                 Validators.required,
                 Validators.min(2)
-            ]),
-            numSessions: new FormControl({
-                value: this.bundleSpec.numSessions,
-                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL || !!this.bundleSpec.numSessions
-            }, [
-                Validators.required,
-                Validators.pattern(/^\d+$/)
             ]),
             unlimitedDeletions: new FormControl({
                 value: this.bundleSpec.unlimitedDeletions,
@@ -91,16 +77,12 @@ export class BundleSpecModalComponent implements OnInit {
                 this.showCourse = false;
                 this.showPersonal = true;
 
-                this.numSessions.enable();
-                this.price.enable();
                 this.maxCustomers.disable();
             }
             else {
                 this.showCourse = true;
                 this.showPersonal = false;
 
-                this.numSessions.disable();
-                this.price.disable();
                 this.maxCustomers.enable();
             }
             this.form.updateValueAndValidity();
@@ -132,14 +114,6 @@ export class BundleSpecModalComponent implements OnInit {
         return this.form.get('numDeletions');
     }
 
-    get price() {
-        return this.form.get('price');
-    }
-
-    get numSessions() {
-        return this.form.get('numSessions');
-    }
-
     get description() {
         return this.form.get('description');
     }
@@ -162,8 +136,6 @@ export class BundleSpecModalComponent implements OnInit {
         let bundle;
         if (this.type.value === BundleSpecificationType.PERSONAL) {
             bundle = new PersonalBundleSpecification();
-            bundle.numSessions = this.numSessions.value;
-            bundle.price = this.price.value;
             bundle.unlimitedDeletions = this.unlimitedDeletions.value;
         }
         else {

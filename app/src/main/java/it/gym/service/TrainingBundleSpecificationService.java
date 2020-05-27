@@ -40,7 +40,7 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
 
     @Caching (
             put = {
-                    @CachePut(value = "sales-single", key = "#var1", condition="#result != null"),
+                    @CachePut(value = "specs-single", key = "#var1", condition="#result != null"),
             }
     )
     public ATrainingBundleSpecification findById(Long var1) {
@@ -50,7 +50,7 @@ public class TrainingBundleSpecificationService implements ICrudService<ATrainin
 
     @Cacheable(value = "specs-all")
     public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
+        return initAssociation(repository.findAll(pageable));
     }
 
     @Cacheable(value = "specs-search")

@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,7 +36,7 @@ public class SaleTest {
 
         CourseTrainingBundleSpecification expectedSpecs =
                 createCourseBundleSpec(1L, "Course", 11, 1, 111.);
-        TimeOption option = expectedSpecs.getOptions().get(0);
+        APurchaseOption option = expectedSpecs.getOptions().get(0);
         CourseTrainingBundle expectedBundle = createCourseBundle(start, expectedSpecs, option);
         SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
 
@@ -162,20 +163,23 @@ public class SaleTest {
 
     private SalesLineItem addPersonalToSalesLineItem(Sale sale) {
         ATrainingBundleSpecification spec = createPersonalBundleSpecification();
-        ATrainingBundle a = spec.createTrainingBundle();
+        APurchaseOption option = spec.getOptions().get(0);
+        Long optionId = spec.getOptions().get(0).getId();
+        ATrainingBundle a = spec.createTrainingBundle(optionId);
+        a.setOption(option);
         return sale.addSalesLineItem(a);
     }
 
     private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
         CourseTrainingBundleSpecification spec =
                 createCourseBundleSpec(1L, "Course", 11, 1, 111.);
-        TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+        APurchaseOption option = spec.getOptions().get(0);
         ATrainingBundle a = createCourseBundle(start, spec, option);
         return sale.addSalesLineItem(a);
     }
 
 
-    private CourseTrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec, TimeOption option) {
+    private CourseTrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec, APurchaseOption option) {
         CourseTrainingBundle p = new CourseTrainingBundle();
         p.setName("Course");
         p.setBundleSpec(spec);
@@ -207,8 +211,14 @@ public class SaleTest {
         p.setName("Personal");
         p.setDescription("Description");
         p.setDisabled(false);
-        p.setPrice(111.0);
-        p.setNumSessions(11);
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        APurchaseOption option = new BundlePurchaseOption();
+        option.setNumber(11);
+        option.setId((long) 1);
+        option.setPrice(111.0);
+        option.setName(p.getName());
+        options.add(option);
+        p.setOptions(options);
         return p;
     }
 

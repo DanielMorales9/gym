@@ -49,38 +49,6 @@
             </mat-form-field>
         </div>
         <ng-container *ngIf="showPersonal">
-            <div>
-                <mat-form-field>
-                    <label for="price" class="sr-only">Prezzo</label>
-                    <input placeholder="Prezzo&nbsp;&euro;"
-                           matInput
-                           id="price"
-                           name="price"
-                           formControlName="price"
-                           [ngClass]="{ 'is-invalid': price.touched && price.invalid }"
-                    />
-                    <mat-error *ngIf="price.touched && price.invalid">
-                        <div *ngIf="!!price.errors?.required">Prezzo del pacchetto obbligatorio</div>
-                        <div *ngIf="!!price.errors?.pattern">Prezzo del pacchetto non valido</div>
-                    </mat-error>
-                </mat-form-field>
-            </div>
-
-            <div>
-                <mat-form-field>
-                    <label for="numSessions" class="sr-only">Numero di Sessioni</label>
-                    <input placeholder="Numero di sessioni"
-                           matInput
-                           id="numSessions"
-                           name="numSessions"
-                           formControlName="numSessions"
-                           [ngClass]="{ 'is-invalid': numSessions.touched && numSessions.invalid }" />
-                    <mat-error *ngIf="numSessions.touched && numSessions.invalid">
-                        <div *ngIf="!!numSessions.errors?.required">Numero di sessioni obbligatori</div>
-                        <div *ngIf="!!numSessions.errors?.pattern">Il numero di sessioni deve essere intero</div>
-                    </mat-error>
-                </mat-form-field>
-            </div>
 
             <div>
                 <label for="unlimitedDeletions" class="sr-only">Cancellazioni illimitate</label>

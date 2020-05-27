@@ -77,12 +77,8 @@ public class SaleFacade {
     public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Long optionId) {
         Sale sale = this.findById(saleId);
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
-        ATrainingBundle bundle = bundleSpec.createTrainingBundle();
-        boolean ret = bundle.assignOption(optionId);
+        ATrainingBundle bundle = bundleSpec.createTrainingBundle(optionId);
         bundle.setCustomer(sale.getCustomer());
-        if (!ret) {
-            throw new BadRequestException("L'opzione indicata non è disponibile");
-        }
 
         sale.addSalesLineItem(bundle);
         return this.save(sale);
@@ -157,9 +153,9 @@ public class SaleFacade {
 
     private List<ATrainingBundle> getDeletableBundles(Sale sale) {
         return sale.getSalesLineItems()
-                    .stream()
-                    .map(SalesLineItem::getTrainingBundle)
-                    .collect(Collectors.toList());
+                .stream()
+                .map(SalesLineItem::getTrainingBundle)
+                .collect(Collectors.toList());
     }
 
     public Sale deletePayment(Long saleId, Long paymentId) {

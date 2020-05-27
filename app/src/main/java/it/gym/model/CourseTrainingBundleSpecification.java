@@ -5,9 +5,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 
 @Entity
 @DiscriminatorValue(value="C")
@@ -21,10 +21,6 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Column(name="max_customers")
     private Integer maxCustomers;
-
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bundle_spec_id", nullable = false)
-    private List<TimeOption> options;
 
     public Integer getMaxCustomers() {
         return maxCustomers;
@@ -40,33 +36,19 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     }
 
     @Override
-    public ATrainingBundle createTrainingBundle() {
+    public ATrainingBundle createTrainingBundle(Long optionId) {
         CourseTrainingBundle ctb = new CourseTrainingBundle();
         ctb.setName(this.getName());
         ctb.setBundleSpec(this);
         ctb.setUnlimitedDeletions(this.getUnlimitedDeletions());
         ctb.setNumDeletions(this.getNumDeletions());
+        setOption(optionId, ctb);
         return ctb;
-    }
-
-    public List<TimeOption> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<TimeOption> options) {
-        this.options = options;
-    }
-
-    public void addOption(TimeOption option) {
-        if (this.options == null) {
-            this.options = new ArrayList<>();
-        }
-        this.options.add(option);
     }
 
     @Override
     public CourseTrainingBundleSpecification eager() {
-        this.getOptions().forEach(TimeOption::eager);
+        super.eager();
         return this;
     }
 }

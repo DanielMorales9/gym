@@ -1,5 +1,7 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonSubTypes;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -8,12 +10,22 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
+@JsonTypeInfo(
+        use = JsonTypeInfo.Id.NAME,
+        property = "type",
+        visible = true)
+@JsonSubTypes({
+        @JsonSubTypes.Type(value = TimePurchaseOption.class, name="T"),
+        @JsonSubTypes.Type(value = BundlePurchaseOption.class, name="B"),
+})
 @Entity
-@Table(name = "options")
+@Table(name="options")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="option_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
 @EqualsAndHashCode
-@Generated
-public class TimeOption implements Serializable, Eager<TimeOption> {
+@Generated //exclude coverage analysis on generated methods
+public abstract class APurchaseOption implements Serializable, Eager<APurchaseOption> {
 
     @Id
     @SequenceGenerator(name = "options_id_seq",
@@ -25,14 +37,14 @@ public class TimeOption implements Serializable, Eager<TimeOption> {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "number", nullable = false)
-    private Integer number;
-
     @Column(name = "price", nullable = false)
     private Double price;
 
     @Column(name = "created_at", nullable = false)
     private Date createdAt;
+
+    @Column(name = "number")
+    private Integer number;
 
     public Integer getNumber() {
         return number;
@@ -42,8 +54,13 @@ public class TimeOption implements Serializable, Eager<TimeOption> {
         this.number = number;
     }
 
+    public abstract String getType();
+
+    public abstract Double getPrice(ATrainingBundle bundle);
+    public abstract Boolean isExpired(ATrainingBundle bundle);
+
     public Double getPrice() {
-        return price;
+        return this.price;
     }
 
     public void setPrice(Double price) {
@@ -66,7 +83,6 @@ public class TimeOption implements Serializable, Eager<TimeOption> {
         this.createdAt = createdAt;
     }
 
-
     public String getName() {
         return name;
     }
@@ -81,7 +97,8 @@ public class TimeOption implements Serializable, Eager<TimeOption> {
     }
 
     @Override
-    public TimeOption eager() {
+    public APurchaseOption eager() {
         return this;
     }
+
 }
