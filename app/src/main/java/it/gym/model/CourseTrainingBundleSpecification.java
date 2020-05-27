@@ -47,7 +47,7 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
 
     @Override
     public CourseTrainingBundleSpecification eager() {
-        this.getOptions().forEach(APurchaseOption::eager);
+        super.eager();
         return this;
     }
 }

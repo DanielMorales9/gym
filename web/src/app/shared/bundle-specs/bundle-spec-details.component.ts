@@ -133,7 +133,10 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
             .pipe(
                 takeUntil(this.unsubscribe$),
                 filter(v => !!v),
-                switchMap(res => this.service.createOption(this.bundleSpec.id, res)))
+                switchMap(res => {
+                    console.log(res);
+                    return this.service.createOption(this.bundleSpec.id, res);
+                }))
             .subscribe(res => {
                 this.bundleSpec = res;
             });

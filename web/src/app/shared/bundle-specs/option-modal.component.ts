@@ -11,11 +11,12 @@ export class OptionModalComponent implements OnInit {
 
     option: Option;
     form: FormGroup;
+    numberDescription = 'Numero';
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<OptionModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
-        this.option = this.data.bundle;
+        this.option = new Option();
     }
 
     ngOnInit(): void {
@@ -37,6 +38,12 @@ export class OptionModalComponent implements OnInit {
                 Validators.required,
                 Validators.pattern(/^\d+\.?\d{0,2}$/)
             ]),
+            type: new FormControl({
+                value: this.option.type,
+                disabled: !!this.option.type
+            }, [
+                Validators.required
+            ]),
             number: new FormControl({
                 value: this.option.number,
                 disabled: !!this.option.number
@@ -44,6 +51,14 @@ export class OptionModalComponent implements OnInit {
                 Validators.required,
                 Validators.pattern(/^\d+$/)
             ])
+        });
+        this.type.valueChanges.subscribe(val => {
+            console.log(val);
+            if (val === 'B') {
+                this.numberDescription = 'Numero di sessioni';
+            } else {
+                this.numberDescription = 'Numero di mesi';
+            }
         });
     }
 
@@ -59,16 +74,22 @@ export class OptionModalComponent implements OnInit {
         return this.form.get('number');
     }
 
+    get type() {
+        return this.form.get('type');
+    }
+
     submit() {
-        const bundle = this.getBundleFromForm();
+        const bundle = this.getOptionFromForm();
         this.dialogRef.close(bundle);
     }
 
-    private getBundleFromForm(): Option {
+    private getOptionFromForm(): Option {
         const option = new Option();
         option.id = this.option.id;
         option.name = this.name.value;
         option.price = this.price.value;
+        option.type = this.type.value;
+        console.log(option.type);
         option.number = this.number.value;
         return option;
     }

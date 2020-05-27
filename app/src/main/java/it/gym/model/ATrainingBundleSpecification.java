@@ -127,13 +127,21 @@ public abstract class  ATrainingBundleSpecification implements Serializable, Eag
         this.createdAt = createdAt;
     }
 
-
     public Boolean getUnlimitedDeletions() {
         return unlimitedDeletions;
     }
 
     public void setUnlimitedDeletions(Boolean unlimitedDeletions) {
         this.unlimitedDeletions = unlimitedDeletions;
+    }
+
+    @Override
+    public ATrainingBundleSpecification eager() {
+        if (options != null)
+            options.forEach(APurchaseOption::eager);
+        else
+            options = new ArrayList<>();
+        return this;
     }
 
     @PrePersist

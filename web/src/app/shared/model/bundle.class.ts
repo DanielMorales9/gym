@@ -14,6 +14,7 @@ export class Option {
     number: number;
     price: number;
     createdAt: Date;
+    type: string;
 }
 
 export abstract class BundleSpecification {

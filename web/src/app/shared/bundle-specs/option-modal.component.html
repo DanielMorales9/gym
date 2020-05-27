@@ -3,6 +3,22 @@
     <div mat-dialog-content>
         <div>
             <mat-form-field>
+                <label for="type"><b>Tipo</b></label>
+                <mat-select
+                        id="type"
+                        type="text"
+                        formControlName="type"
+                        [ngClass]="{ 'is-invalid': type.touched && type.invalid }">
+                    <mat-option value="B">Pacchetto</mat-option>
+                    <mat-option value="T">A Tempo</mat-option>
+                </mat-select>
+                <mat-error *ngIf="type.touched && type.invalid">
+                    <div *ngIf="!!type.errors?.required">Tipo obbligatorio</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
+        <div>
+            <mat-form-field>
                 <label for="name" class="sr-only">Nome</label>
                 <input type="text"
                        matInput
@@ -37,8 +53,8 @@
 
         <div>
             <mat-form-field>
-                <label for="number" class="sr-only">Numero di mesi</label>
-                <input placeholder="Numero di mesi"
+                <label for="number" class="sr-only">{{numberDescription}}</label>
+                <input [placeholder]="numberDescription"
                        matInput
                        id="number"
                        name="number"

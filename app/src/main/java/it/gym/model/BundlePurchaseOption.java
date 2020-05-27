@@ -22,7 +22,7 @@ public class BundlePurchaseOption extends APurchaseOption {
 
     @Override
     public String getType() {
-        return "T";
+        return "B";
     }
 
     @Override
