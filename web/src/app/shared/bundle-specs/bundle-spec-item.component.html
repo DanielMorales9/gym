@@ -30,10 +30,9 @@
 
                 <ng-container *ngSwitchCase="PERSONAL">
                     <div>
-                        <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundleSpec?.price}}&euro;
-                    </div>
-                    <div>
-                        <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundleSpec?.numSessions}}
+                        <ng-container *ngIf="bundleSpec?.options.length > 0 else noOptions;">
+                            <mat-icon fontSet="fas" fontIcon="fa-list-ol"></mat-icon>&nbsp;{{bundleSpec?.options.length}} Opzione/i
+                        </ng-container>
                     </div>
                 </ng-container>
                 <ng-container *ngSwitchCase="COURSE">

@@ -22,12 +22,6 @@
                 <ng-container [ngSwitch]="bundleSpec?.type">
 
                     <ng-container *ngSwitchCase="PERSONAL">
-                        <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-money-check-alt"></mat-icon>Prezzo&nbsp;{{bundleSpec?.price}}&euro;
-                        </div>
-                        <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>Sessioni&nbsp;{{bundleSpec?.numSessions}}
-                        </div>
 
                         <div *ngIf="bundleSpec?.unlimitedDeletions">
                             <mat-icon fontSet="fas" fontIcon="fa-infinity"></mat-icon>&nbsp;Cancellazioni illimitate
@@ -35,6 +29,12 @@
                         <div *ngIf="!bundleSpec?.unlimitedDeletions && bundleSpec?.numDeletions">
                             <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundleSpec?.numDeletions}}
                         </div>
+
+                        <ng-container *ngIf="bundleSpec?.options.length == 0;">
+                            <div>
+                                <mat-icon fontSet="fa" fontIcon="fa-list-ol"></mat-icon>&nbsp;Nessuna opzione disponibile
+                            </div>
+                        </ng-container>
                     </ng-container>
                     <ng-container *ngSwitchCase="COURSE">
                         <div>
@@ -48,7 +48,7 @@
                     </ng-container>
                 </ng-container>
             </div>
-            <ng-container *ngIf="bundleSpec?.type == COURSE">
+            <ng-container>
                 <mat-expansion-panel *ngIf="bundleSpec?.options.length > 0"
                                      class='expansion-list'
                                      [class.mat-expansion-panel]="false">
@@ -108,7 +108,7 @@
                 </span>
                 </button>
             </ng-container>
-            <ng-container *ngIf="canMakeOption && bundleSpec?.type == COURSE">
+            <ng-container *ngIf="canMakeOption">
                 <button mat-button (click)="createOption()">
                 <span>
                     <mat-icon fontSet="fas" fontIcon="fa-plus"></mat-icon>&nbsp;Opzione
