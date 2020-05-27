@@ -172,6 +172,7 @@ public class AuthenticationControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
+    @WithAnonymousUser
     public void whenResendToken_OK() throws Exception {
         ResultActions result = mockMvc
                 .perform(get("/authentication/resendToken?token="+token.getToken()))
