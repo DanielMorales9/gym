@@ -3,7 +3,7 @@ package it.gym.facade;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.*;
-import it.gym.repository.OptionRepository;
+import it.gym.repository.PurchaseOptionRepository;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
 import org.slf4j.Logger;
@@ -28,7 +28,7 @@ public class TrainingBundleSpecificationFacade {
     private TrainingBundleSpecificationService service;
 
     @Autowired
-    private OptionRepository repository;
+    private PurchaseOptionRepository repository;
 
     @Autowired
     @Qualifier("trainingBundleService")
@@ -68,7 +68,8 @@ public class TrainingBundleSpecificationFacade {
     }
 
     public ATrainingBundleSpecification createOptionToBundleSpec(Long id, APurchaseOption option) {
-        CourseTrainingBundleSpecification bundleSpec = (CourseTrainingBundleSpecification) this.service.findById(id);
+        ATrainingBundleSpecification bundleSpec;
+        bundleSpec = this.service.findById(id);
         bundleSpec.addOption(option);
         return service.save(bundleSpec);
     }
@@ -78,7 +79,7 @@ public class TrainingBundleSpecificationFacade {
     }
 
     public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
-        CourseTrainingBundleSpecification c = (CourseTrainingBundleSpecification) this.findById(id);
+        ATrainingBundleSpecification c = this.findById(id);
         APurchaseOption o = this.repository.findById(optionId).orElseThrow(() -> new NotFoundException("Opzione non trovata"));
         c.getOptions().remove(o);
         repository.delete(o);

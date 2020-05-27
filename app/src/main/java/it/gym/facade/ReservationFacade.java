@@ -229,7 +229,6 @@ public class ReservationFacade {
         logger.info("Saving training event");
         eventService.save(evt);
 
-
         logger.info("Adding training session to bundle");
         bundle.addSession(session);
 

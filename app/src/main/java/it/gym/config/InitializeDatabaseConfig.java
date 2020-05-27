@@ -173,8 +173,14 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setDescription("Questo è un pacchetto di Personal Training");
         p.setDisabled(false);
         p.setUnlimitedDeletions(Boolean.TRUE);
-        p.setPrice(111.0);
-        p.setNumSessions(11);
+
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        APurchaseOption option = new BundlePurchaseOption();
+        option.setNumber(11);
+        option.setPrice(111.0);
+        option.setName(p.getName());
+        options.add(option);
+        p.setOptions(options);
         return p;
     }
 

@@ -18,9 +18,10 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Column(name = "end_time")
     private Date endTime;
 
-    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
-    @JoinColumn(name = "option_id")
-    private APurchaseOption option;
+    @Override
+    public Double getPrice() {
+        return this.getOption().getPrice(this);
+    }
 
     public Date getEndTime() {
         return endTime;
@@ -30,14 +31,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
         this.endTime = endTime;
     }
 
-    public APurchaseOption getOption() {
-        return option;
-    }
-
-    public void setOption(APurchaseOption option) {
-        this.option = option;
-    }
-
     @Override
     public String getType() {
         return "C";
@@ -45,7 +38,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public Boolean isExpired() {
-        if (endTime == null) return this.option.isExpired(this);
+        if (endTime == null) return this.getOption().isExpired(this);
         return new Date().after(endTime);
     }
 
@@ -60,12 +53,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public Double getPrice() {
-        return this.option.getPrice(this);
-    }
-
-
-    @Override
     public ATrainingSession createSession(ATrainingEvent event) {
         CourseTrainingSession session = new CourseTrainingSession();
         session.setStartTime(event.getStartTime());
@@ -73,25 +60,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
         session.setCompleted(false);
         session.setTrainingBundle(this);
         return session;
-    }
-
-    // TODO assign Option
-    @Override
-    public boolean assignOption(Long optionId) {
-        List<APurchaseOption> options = ((CourseTrainingBundleSpecification) getBundleSpec()).getOptions();
-        if(options == null)
-            return false;
-
-        Optional<APurchaseOption> op = options
-                .stream()
-                .filter(o -> o.getId().equals(optionId))
-                .findFirst();
-
-        boolean present = op.isPresent();
-        if (present) {
-            this.option = op.get();
-        }
-        return present;
     }
 
     @Override
@@ -111,7 +79,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public int hashCode() {
-        return Objects.hash(super.hashCode(), option);
+        return Objects.hash(super.hashCode(), getOption());
     }
 
     @Override
@@ -119,7 +87,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
         return "CourseTrainingBundle{" + super.toString()+
                 ", startTime=" + getStartTime() +
                 ", endTime=" + endTime +
-                ", option=" + option +
+                ", option=" + getOption().toString() +
                 '}';
     }
 

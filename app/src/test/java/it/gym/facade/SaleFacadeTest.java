@@ -229,7 +229,10 @@ public class SaleFacadeTest {
     }
 
     public static SalesLineItem addSalesLineItem(Sale mockSale, ATrainingBundleSpecification specs) {
-        return mockSale.addSalesLineItem(specs.createTrainingBundle());
+        Long optionId = specs.getOptions().get(0).getId();
+
+        ATrainingBundle bundle = specs.createTrainingBundle(optionId);
+        return mockSale.addSalesLineItem(bundle);
     }
 
 }

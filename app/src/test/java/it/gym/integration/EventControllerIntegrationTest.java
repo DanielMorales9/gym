@@ -52,7 +52,8 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
-        ATrainingBundle personalBundle = personalSpec.createTrainingBundle();
+        Long optionId = personalSpec.getOptions().get(0).getId();
+        ATrainingBundle personalBundle = personalSpec.createTrainingBundle(optionId);
         personalBundle = bundleRepository.save(personalBundle);
         APurchaseOption option = courseSpec.getOptions().get(0);
         courseBundle = createCourseBundle(1L, start, courseSpec, option);

@@ -129,8 +129,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenAddSliOK() throws Exception {
         String path = String.format("/sales/%d/salesLineItems", sale.getId());
 
+        Long optionId = personalSpec.getOptions().get(0).getId();
         ResultActions result = mockMvc.perform(put(path)
-                .param("bundleSpecId", personalSpec.getId().toString()))
+                .param("bundleSpecId", personalSpec.getId().toString())
+                .param("optionId", optionId.toString()))
                 .andExpect(status().isOk());
 
         List<SalesLineItem> sli = sliRepository.findAll();

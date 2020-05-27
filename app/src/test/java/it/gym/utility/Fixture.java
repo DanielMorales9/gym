@@ -78,13 +78,19 @@ public class Fixture {
         return sale;
     }
 
-    public static PersonalTrainingBundleSpecification createPersonalBundleSpec(long id, String name, int numSessions) {
+    public static PersonalTrainingBundleSpecification createPersonalBundleSpec(long id, String name, int number) {
         PersonalTrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
         specs.setId(id);
         specs.setName(name);
         specs.setDescription("Description");
-        specs.setNumSessions(numSessions);
-        specs.setPrice(111.0);
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        APurchaseOption option = new BundlePurchaseOption();
+        option.setNumber(number);
+        option.setId((long) 1);
+        option.setPrice(111.0);
+        option.setName(specs.getName());
+        options.add(option);
+        specs.setOptions(options);
         specs.setDisabled(false);
         specs.setNumDeletions(0);
         specs.setUnlimitedDeletions(true);
@@ -108,6 +114,7 @@ public class Fixture {
         pt.setId(id);
         pt.setNumDeletions(0);
         pt.setUnlimitedDeletions(true);
+        pt.setOption(spec.getOptions().get(0));
         return pt;
     }
 

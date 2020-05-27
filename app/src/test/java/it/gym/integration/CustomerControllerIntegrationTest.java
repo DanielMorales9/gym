@@ -52,7 +52,8 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         );
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         personalSpec = bundleSpecRepository.save(personalSpec);
-        personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle();
+        Long optionId = personalSpec.getOptions().get(0).getId();
+        personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle(optionId);
         personal = bundleRepository.save(personal);
         customer.setCurrentTrainingBundles(Collections.singletonList(personal));
         customer = repository.save(customer);

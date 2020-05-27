@@ -7,6 +7,8 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Entity
 @DiscriminatorValue(value="P")
@@ -25,12 +27,10 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         return "P";
     }
 
-    // TODO Option and Validity
     @Override
     public Boolean isExpired() {
         Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        PersonalTrainingBundleSpecification spec = ((PersonalTrainingBundleSpecification) this.getBundleSpec());
-        return spec.getNumSessions().equals(size);
+        return getOption().getNumber().equals(size);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class PersonalTrainingBundle extends ATrainingBundle {
 
     @Override
     public Double getPrice() {
-        return ((PersonalTrainingBundleSpecification) this.getBundleSpec()).getPrice();
+        return getOption().getPrice();
     }
 
     @Override
@@ -56,12 +56,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         session.setEndTime(event.getEndTime());
         session.setTrainingBundle(this);
         return session;
-    }
-
-    // TODO Assign Option and Validity
-    @Override
-    public boolean assignOption(Long optionId) {
-        return true;
     }
 
     @Override

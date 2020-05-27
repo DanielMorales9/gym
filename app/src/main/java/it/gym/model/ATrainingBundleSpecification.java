@@ -2,6 +2,7 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
+import it.gym.exception.BadRequestException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -11,6 +12,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @JsonTypeInfo(
@@ -77,7 +79,24 @@ public abstract class  ATrainingBundleSpecification implements Serializable, Eag
 
     public abstract String getType();
 
-    public abstract ATrainingBundle createTrainingBundle();
+    public abstract ATrainingBundle createTrainingBundle(Long optionId);
+
+    public void setOption(Long optionId, ATrainingBundle bundle) {
+        List<APurchaseOption> options = this.getOptions();
+        if (options == null) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
+        }
+        Optional<APurchaseOption> op = options
+                .stream()
+                .filter(o -> o.getId().equals(optionId))
+                .findFirst();
+
+        if (!op.isPresent()) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
+        }
+
+        bundle.setOption(op.get());
+    }
 
     public Integer getNumDeletions() {
         return numDeletions;

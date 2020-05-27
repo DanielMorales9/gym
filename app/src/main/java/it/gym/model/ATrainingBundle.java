@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -69,6 +70,19 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @Column(name = "start_time")
     private Date startTime;
 
+
+    @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE})
+    @JoinColumn(name = "option_id")
+    private APurchaseOption option;
+
+    public APurchaseOption getOption() {
+        return option;
+    }
+
+    public void setOption(APurchaseOption option) {
+        this.option = option;
+    }
+
     public abstract String getType();
     public abstract Boolean isDeletable();
     @JsonIgnore
@@ -76,7 +90,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @JsonIgnore
     public abstract Double getPrice();
     public abstract ATrainingSession createSession(ATrainingEvent event);
-    public abstract boolean assignOption(Long optionId);
+
     public abstract void addSession(ATrainingSession session);
 
     public Date getStartTime() {

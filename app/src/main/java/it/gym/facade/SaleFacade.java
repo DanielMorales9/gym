@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -77,11 +78,7 @@ public class SaleFacade {
     public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Long optionId) {
         Sale sale = this.findById(saleId);
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
-        ATrainingBundle bundle = bundleSpec.createTrainingBundle();
-        boolean ret = bundle.assignOption(optionId);
-        if (!ret) {
-            throw new BadRequestException("L'opzione indicata non è disponibile");
-        }
+        ATrainingBundle bundle = bundleSpec.createTrainingBundle(optionId);
         bundle.setCustomer(sale.getCustomer());
 
         sale.addSalesLineItem(bundle);

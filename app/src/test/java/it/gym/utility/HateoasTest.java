@@ -116,7 +116,6 @@ public class HateoasTest {
         String prefix = handlePrefix(p, false);
         expectATrainingBundleSpec(result, bundle, prefix);
         result
-                .andExpect(jsonPath("$"+prefix+"numSessions").value(bundle.getNumSessions()))
                 .andExpect(jsonPath("$"+prefix+"unlimitedDeletions").value(bundle.getUnlimitedDeletions()))
                 .andExpect(jsonPath("$"+prefix+"numDeletions").value(bundle.getNumDeletions()));
     }
