@@ -3,7 +3,6 @@ package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
-import it.gym.repository.PurchaseOptionRepository;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import it.gym.utility.HateoasTest;

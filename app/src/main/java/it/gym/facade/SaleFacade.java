@@ -15,7 +15,6 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -154,9 +153,9 @@ public class SaleFacade {
 
     private List<ATrainingBundle> getDeletableBundles(Sale sale) {
         return sale.getSalesLineItems()
-                    .stream()
-                    .map(SalesLineItem::getTrainingBundle)
-                    .collect(Collectors.toList());
+                .stream()
+                .map(SalesLineItem::getTrainingBundle)
+                .collect(Collectors.toList());
     }
 
     public Sale deletePayment(Long saleId, Long paymentId) {
