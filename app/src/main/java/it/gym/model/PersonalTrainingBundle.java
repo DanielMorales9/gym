@@ -7,8 +7,6 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 @Entity
 @DiscriminatorValue(value="P")

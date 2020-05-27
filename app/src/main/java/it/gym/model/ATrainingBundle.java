@@ -182,7 +182,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
         return "id=" + id + ", name='" + name + ", createdAt=" + createdAt;
     }
 
-    void activateBundle(Date activationTime) {
+    protected void activateBundle(Date activationTime) {
         if (startTime == null) {
             this.setStartTime(activationTime);
         }

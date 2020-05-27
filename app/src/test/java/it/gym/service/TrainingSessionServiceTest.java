@@ -1,7 +1,9 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.*;
+import it.gym.model.ATrainingSession;
+import it.gym.model.PersonalTrainingBundle;
+import it.gym.model.PersonalTrainingSession;
 import it.gym.repository.TrainingSessionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
