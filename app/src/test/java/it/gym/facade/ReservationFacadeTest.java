@@ -609,7 +609,7 @@ public class ReservationFacadeTest {
                     maxCustomers,
                     1,
                     111.);
-            TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+            TimePurchaseOption option = spec.getOptions().toArray(new TimePurchaseOption[]{})[0];
             bundle = createCourseBundle(1L, start, spec, option);
             if (addToCurrentCustomersBundle)
                 customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));

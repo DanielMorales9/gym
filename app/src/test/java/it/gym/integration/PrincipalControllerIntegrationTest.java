@@ -17,10 +17,8 @@ public class PrincipalControllerIntegrationTest extends AbstractIntegrationTest 
 
     @Test
     public void whenAsksForPrincipal_returnsPrincipal() throws Exception {
-        MvcResult result = mockMvc.perform(get("/user"))
+        mockMvc.perform(get("/user"))
                 .andExpect(status().isOk()).andReturn();
-        String content = result.getResponse().getContentAsString();
-        assertThat(content).isNotEqualToIgnoringCase("");
     }
 
     @Test

@@ -114,12 +114,13 @@ public class EventFacadeTest {
         CourseTrainingEvent evt = (CourseTrainingEvent) facade.createCourseEvent(1L, event);
 
         assertThat(evt).isNotNull();
-        assertThat(evt.getName()).isEqualTo("course");
+        assertThat(evt.getName().equals("course")).isTrue();
         assertThat(evt.getStartTime()).isEqualTo(start);
         assertThat(evt.getEndTime()).isEqualTo(end);
         assertThat(evt.getReservations()).isNull();
         assertThat(evt.getSessions()).isNull();
-        assertThat(evt.getType()).isEqualTo(CourseTrainingEvent.TYPE);
+        assertThat(evt.getType().equals(CourseTrainingEvent.TYPE))
+        ;
 
     }
 
@@ -391,7 +392,7 @@ public class EventFacadeTest {
         spec.setDescription("Description");
         spec.setName("corso");
         spec.setId(1L);
-        TimeOption o = new TimeOption();
+        TimePurchaseOption o = new TimePurchaseOption();
         o.setPrice(100.);
         o.setNumber(30);
         spec.addOption(o);
@@ -431,7 +432,7 @@ public class EventFacadeTest {
                     true,
                     null);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-            TimeOption option = spec.getOptions().toArray(new TimeOption[]{})[0];
+            TimePurchaseOption option = spec.getOptions().toArray(new TimePurchaseOption[]{})[0];
 
             bundle = createCourseBundle(1L, start, spec, option);
 

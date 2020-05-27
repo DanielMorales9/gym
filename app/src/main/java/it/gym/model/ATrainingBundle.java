@@ -65,18 +65,27 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @Column(name = "n_deletions")
     private Integer numDeletions;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "start_time")
+    private Date startTime;
+
     public abstract String getType();
     public abstract Boolean isDeletable();
-
     @JsonIgnore
     public abstract Boolean isExpired();
     @JsonIgnore
     public abstract Double getPrice();
-
     public abstract ATrainingSession createSession(ATrainingEvent event);
     public abstract boolean assignOption(Long optionId);
     public abstract void addSession(ATrainingSession session);
 
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
 
     public Integer getNumDeletions() {
         return numDeletions;
@@ -158,6 +167,12 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @Override
     public String toString() {
         return "id=" + id + ", name='" + name + ", createdAt=" + createdAt;
+    }
+
+    void activateBundle(Date activationTime) {
+        if (startTime == null) {
+            this.setStartTime(activationTime);
+        }
     }
 
     @Override

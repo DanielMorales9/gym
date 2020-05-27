@@ -22,10 +22,6 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     @Column(name="max_customers")
     private Integer maxCustomers;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bundle_spec_id", nullable = false)
-    private List<TimeOption> options;
-
     public Integer getMaxCustomers() {
         return maxCustomers;
     }
@@ -49,24 +45,9 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
         return ctb;
     }
 
-    public List<TimeOption> getOptions() {
-        return options;
-    }
-
-    public void setOptions(List<TimeOption> options) {
-        this.options = options;
-    }
-
-    public void addOption(TimeOption option) {
-        if (this.options == null) {
-            this.options = new ArrayList<>();
-        }
-        this.options.add(option);
-    }
-
     @Override
     public CourseTrainingBundleSpecification eager() {
-        this.getOptions().forEach(TimeOption::eager);
+        this.getOptions().forEach(APurchaseOption::eager);
         return this;
     }
 }

@@ -7,13 +7,10 @@ import it.gym.repository.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
 import java.util.Date;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -57,7 +54,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         personalSpec = specRepository.save(personalSpec);
         ATrainingBundle personalBundle = personalSpec.createTrainingBundle();
         personalBundle = bundleRepository.save(personalBundle);
-        TimeOption option = courseSpec.getOptions().get(0);
+        APurchaseOption option = courseSpec.getOptions().get(0);
         courseBundle = createCourseBundle(1L, start, courseSpec, option);
         courseBundle = bundleRepository.save(courseBundle);
     }

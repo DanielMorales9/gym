@@ -112,7 +112,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     public void deleteCourseBundleSpecId_throwsException() throws Exception {
         CourseTrainingBundle bundle = createCourseBundle(1L, getNextMonday(),
                 courseBundleSpec,
-                courseBundleSpec.getOptions().toArray(new TimeOption[] {})[0]);
+                courseBundleSpec.getOptions().toArray(new TimePurchaseOption[] {})[0]);
         bundleRepository.save(bundle);
         mockMvc.perform(delete("/bundleSpecs/" + courseBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
@@ -180,6 +180,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
             public final Integer number = 1;
             public final String name = "One Month Option";
             public final Double price = 111.0;
+            public final String type = "T";
         };
 
         ObjectMapper objectMapper = new ObjectMapper();
@@ -193,8 +194,9 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
                 repository.findById(courseBundleSpec.getId()).get();
 
         expectTrainingBundleSpec(result, expected);
-        ArrayList<TimeOption> options = new ArrayList<>(courseBundleSpec.getOptions());
-        options.sort((o1, o2) -> (int) (o2.getId() - o1.getId()));
+        ArrayList<APurchaseOption> options = new ArrayList<>(courseBundleSpec.getOptions());
+        options.sort((o1, o2) -> (int) (
+                o2.getId() - o1.getId()));
         logger.info(options.toString());
         for (int i = 0; i < options.size(); i++) {
             expectOption(result, options.get(i), "options["+i+"]");
@@ -295,7 +297,7 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         expected.setMaxCustomers(11);
         expected.setUnlimitedDeletions(true);
         expected.setNumDeletions(0);
-        TimeOption o = new TimeOption();
+        TimePurchaseOption o = new TimePurchaseOption();
         o.setPrice(1.0);
         o.setNumber(1);
         expected.addOption(o);

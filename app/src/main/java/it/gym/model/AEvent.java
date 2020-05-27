@@ -40,7 +40,6 @@ public abstract class AEvent implements Serializable {
     @Column(name="name")
     private String name;
 
-
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "start_time")
     private Date startTime;

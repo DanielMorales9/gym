@@ -158,7 +158,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
         p.setDescription("Questo è un pacchetto Corso");
         p.setDisabled(false);
         p.setUnlimitedDeletions(Boolean.TRUE);
-        TimeOption option = new TimeOption();
+        TimePurchaseOption option = new TimePurchaseOption();
         option.setPrice(111.0);
         option.setName("option");
         option.setNumber(1);

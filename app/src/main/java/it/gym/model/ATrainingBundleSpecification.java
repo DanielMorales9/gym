@@ -8,7 +8,9 @@ import lombok.Generated;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 @JsonTypeInfo(
@@ -26,7 +28,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode
 @Generated //exclude coverage analysis on generated methods
-public abstract class ATrainingBundleSpecification implements Serializable, Eager<ATrainingBundleSpecification> {
+public abstract class  ATrainingBundleSpecification implements Serializable, Eager<ATrainingBundleSpecification> {
 
     @Id
     @SequenceGenerator(name = "bundle_specs_spec_id_seq",
@@ -53,6 +55,25 @@ public abstract class ATrainingBundleSpecification implements Serializable, Eage
 
     @Column(name = "n_deletions")
     private Integer numDeletions;
+
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "bundle_spec_id", nullable = false)
+    private List<APurchaseOption> options;
+
+    public List<APurchaseOption> getOptions() {
+        return options;
+    }
+
+    public void setOptions(List<APurchaseOption> options) {
+        this.options = options;
+    }
+
+    public void addOption(APurchaseOption option) {
+        if (this.options == null) {
+            this.options = new ArrayList<>();
+        }
+        this.options.add(option);
+    }
 
     public abstract String getType();
 

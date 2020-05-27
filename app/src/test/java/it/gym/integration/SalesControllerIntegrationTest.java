@@ -63,7 +63,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         courseSpec = createCourseBundleSpec(1L, "course", 11, 1, 111.);
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
-        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+        TimePurchaseOption option = courseSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
         CourseTrainingBundle course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
         course = bundleRepository.save(course);
 
@@ -151,7 +151,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenAddSliByOptionOK() throws Exception {
-        TimeOption option = courseSpec.getOptions().toArray(new TimeOption[]{})[0];
+        TimePurchaseOption option = courseSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
         String path = String.format("/sales/%s/salesLineItems", sale.getId());
 
         ResultActions result = mockMvc.perform(put(path)

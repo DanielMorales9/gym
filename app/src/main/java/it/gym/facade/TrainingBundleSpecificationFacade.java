@@ -1,6 +1,5 @@
 package it.gym.facade;
 
-import it.gym.controller.ReservationController;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.*;
@@ -17,7 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.stream.Collectors;
 
 
 @Component
@@ -69,7 +67,7 @@ public class TrainingBundleSpecificationFacade {
         return service.existsByName(name);
     }
 
-    public ATrainingBundleSpecification createOptionToBundleSpec(Long id, TimeOption option) {
+    public ATrainingBundleSpecification createOptionToBundleSpec(Long id, APurchaseOption option) {
         CourseTrainingBundleSpecification bundleSpec = (CourseTrainingBundleSpecification) this.service.findById(id);
         bundleSpec.addOption(option);
         return service.save(bundleSpec);
@@ -81,7 +79,7 @@ public class TrainingBundleSpecificationFacade {
 
     public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
         CourseTrainingBundleSpecification c = (CourseTrainingBundleSpecification) this.findById(id);
-        TimeOption o = this.repository.findById(optionId).orElseThrow(() -> new NotFoundException("Opzione non trovata"));
+        APurchaseOption o = this.repository.findById(optionId).orElseThrow(() -> new NotFoundException("Opzione non trovata"));
         c.getOptions().remove(o);
         repository.delete(o);
         return service.save(c);

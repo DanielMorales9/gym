@@ -7,8 +7,6 @@ import org.springframework.hateoas.ExposesResourceFor;
 import javax.persistence.*;
 import java.util.*;
 
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
-
 @Entity
 @DiscriminatorValue(value="C")
 @JsonTypeName("C")
@@ -17,16 +15,12 @@ import static org.apache.commons.lang3.time.DateUtils.addMonths;
 public class CourseTrainingBundle extends ATrainingBundle {
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "start_time")
-    private Date startTime;
-
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "end_time")
     private Date endTime;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "option_id")
-    private TimeOption option;
+    private APurchaseOption option;
 
     public Date getEndTime() {
         return endTime;
@@ -36,19 +30,11 @@ public class CourseTrainingBundle extends ATrainingBundle {
         this.endTime = endTime;
     }
 
-    public Date getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(Date startTime) {
-        this.startTime = startTime;
-    }
-
-    public TimeOption getOption() {
+    public APurchaseOption getOption() {
         return option;
     }
 
-    public void setOption(TimeOption option) {
+    public void setOption(APurchaseOption option) {
         this.option = option;
     }
 
@@ -59,7 +45,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public Boolean isExpired() {
-        if (endTime == null) return false;
+        if (endTime == null) return this.option.isExpired(this);
         return new Date().after(endTime);
     }
 
@@ -75,7 +61,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public Double getPrice() {
-        return this.option.getPrice();
+        return this.option.getPrice(this);
     }
 
 
@@ -89,13 +75,14 @@ public class CourseTrainingBundle extends ATrainingBundle {
         return session;
     }
 
+    // TODO assign Option
     @Override
     public boolean assignOption(Long optionId) {
-        List<TimeOption> options = ((CourseTrainingBundleSpecification) getBundleSpec()).getOptions();
+        List<APurchaseOption> options = ((CourseTrainingBundleSpecification) getBundleSpec()).getOptions();
         if(options == null)
             return false;
 
-        Optional<TimeOption> op = options
+        Optional<APurchaseOption> op = options
                 .stream()
                 .filter(o -> o.getId().equals(optionId))
                 .findFirst();
@@ -111,17 +98,10 @@ public class CourseTrainingBundle extends ATrainingBundle {
     public void addSession(ATrainingSession session) {
         if (this.getSessions() == null) {
             this.setSessions(new ArrayList<>());
-        }
-        if (startTime == null) {
-            startBundle(session);
+            this.activateBundle(session.getStartTime());
         }
 
         this.getSessions().add(session);
-    }
-
-    private void startBundle(ATrainingSession session) {
-        this.startTime = session.getStartTime();
-        this.endTime = addMonths(this.startTime, this.option.getNumber());
     }
 
     @Override
@@ -137,7 +117,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
     @Override
     public String toString() {
         return "CourseTrainingBundle{" + super.toString()+
-                ", startTime=" + startTime +
+                ", startTime=" + getStartTime() +
                 ", endTime=" + endTime +
                 ", option=" + option +
                 '}';

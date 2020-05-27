@@ -224,7 +224,7 @@ public class Fixture {
         specs.setName(name);
         specs.setUnlimitedDeletions(true);
         specs.setNumDeletions(0);
-        TimeOption option = new TimeOption();
+        TimePurchaseOption option = new TimePurchaseOption();
         option.setNumber(number);
         option.setId(1L);
         option.setPrice(price);
@@ -238,7 +238,7 @@ public class Fixture {
     public static CourseTrainingBundle createCourseBundle(long l,
                                                           Date startTime,
                                                           ATrainingBundleSpecification spec,
-                                                          TimeOption option) {
+                                                          APurchaseOption option) {
         CourseTrainingBundle pt = new CourseTrainingBundle();
         pt.setName("Winter Pack");
         pt.setStartTime(startTime);

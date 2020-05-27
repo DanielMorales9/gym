@@ -6,7 +6,6 @@ import it.gym.model.*;
 import it.gym.repository.CustomerRepository;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
-import it.gym.utility.Fixture;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +49,7 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);
 
-        TimeOption option = courseBundleSpec.getOptions().toArray(new TimeOption[]{})[0];
+        TimePurchaseOption option = courseBundleSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
 
         courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
         courseBundle.setCustomer(customer);
