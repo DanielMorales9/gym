@@ -77,10 +77,3 @@ echo "========================"
 docker tag ${DOCKER_USER}/${IMAGE}:${TAG} ${ECR_NAME}:${TAG}
 docker push ${ECR_NAME}:${TAG}
 echo "+success"
-
-echo "==================================="
-echo "|  Taint and Deploy Latest Version|"
-echo "==================================="
-./terraform destroy --target=aws_ecs_cluster.ecs_cluster --auto-approve .infrastructure/
-./terraform plan .infrastructure/
-./terraform apply --auto-approve .infrastructure/
