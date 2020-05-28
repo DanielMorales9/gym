@@ -114,8 +114,9 @@ resource "aws_alb_listener_rule" "api_https" {
   }
 
   condition {
-    field  = "path-pattern"
-    values = ["/api/*"]
+    path_pattern {
+      values = ["/api/*"]
+    }
   }
 }
 
