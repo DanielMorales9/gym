@@ -2,11 +2,12 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {GymService, ScreenService} from './core/utilities';
-import {Observable, Subscription} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {SideBarComponent} from './components';
 import {AuthenticationService} from './core/authentication';
 import {filter, map, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
+import {Gym} from './shared/model';
 
 
 @Component({
@@ -18,12 +19,12 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
-                private gymService: GymService,
                 private router: Router,
                 private route: ActivatedRoute) {
         super();
     }
 
+    gym: Gym;
     appName: string;
     authenticated: boolean;
 
@@ -65,15 +66,22 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     private getAppName(): Observable<any> {
-        return this.auth.getGym()
-            .pipe(
-                map(data => {
-                if (!!data) {
-                    this.appName = data.name;
-                    this.setTitle(this.appName);
-                }
-                return data;
-            }));
+        let obs;
+        if (!this.gym) {
+            obs = this.auth.getGym();
+        }
+        else {
+            obs = of(this.gym);
+        }
+
+        return obs.pipe(map((data: Gym) => {
+            if (!!data) {
+                this.gym = data;
+                this.appName = data.name;
+                this.setTitle(this.appName);
+            }
+            return data;
+        }));
     }
 
     logout() {

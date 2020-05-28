@@ -97,6 +97,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     public excludeDays: number[];
     public dayStartHour: number;
     public dayEndHour: number;
+    public hourSegments: number;
     public weekStartsOn: number;
     public activeDayIsOpen: boolean;
     public role: number;
@@ -180,10 +181,19 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     private initCalendarConfig() {
         this.facade.getConfig().pipe(
             takeUntil(this.unsubscribe$)
-        ).subscribe(config => {
+        ).subscribe((config: Gym) => {
             this.gym = config;
             this.dayStartHour = 24;
             this.dayEndHour = 0;
+            const split = config.minutesBetweenEvents;
+            console.log(split);
+            if (!split || split === 0) {
+                this.hourSegments = 1;
+            }
+            else {
+                this.hourSegments = Math.ceil(60 / split);
+            }
+
             this.excludeDays = [];
 
             // tslint:disable-next-line:forin

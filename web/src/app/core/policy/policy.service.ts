@@ -96,6 +96,7 @@ export class PolicyService {
             canCreate: true,
             canDelete: true,
             canEdit: true,
+            canShow: true,
         }
 
     };
@@ -181,6 +182,8 @@ export class PolicyService {
             canCreate: true,
             canDelete: true,
             canEdit: true,
+            canShow: true,
+
         }
     };
 

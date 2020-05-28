@@ -118,6 +118,17 @@ public class Fixture {
         return pt;
     }
 
+    public static Workout createWorkout(long id) {
+        Workout pt = new Workout();
+        pt.setName("Workout");
+        pt.setId(id);
+        pt.setDescription("workout");
+        pt.setTemplate(true);
+        pt.setTag1("workout");
+        pt.setCreatedAt(new Date());
+        return pt;
+    }
+
     public static Admin createAdmin(long id, String email, List<Role> roles) {
         Admin user = new Admin();
         user.setId(id);

@@ -12,16 +12,11 @@ public class TrainingSessionAssembler extends ResourceAssemblerSupport<ATraining
         TrainingSessionResource> {
 
     public TrainingSessionAssembler() {
-        super(ATrainingBundle.class, TrainingSessionResource.class);
+        super(ATrainingSession.class, TrainingSessionResource.class);
     }
 
     @Override
     public TrainingSessionResource toResource(ATrainingSession session) {
-        TrainingSessionResource resource = new TrainingSessionResource(session);
-        resource.add(linkTo(TrainingSessionRepository.class).slash("sessions")
-                .slash(session.getId()).withSelfRel());
-        resource.add(linkTo(TrainingBundleRepository.class).slash("bundles")
-                .slash(session.getTrainingBundle().getId()).withRel("bundles"));
-        return resource;
+        return new TrainingSessionResource(session);
     }
 }

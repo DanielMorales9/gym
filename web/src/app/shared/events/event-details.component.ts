@@ -9,7 +9,6 @@ import {AuthenticationService} from '../../core/authentication';
 import {BaseComponent} from '../base-component';
 import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
-import {dateComparator} from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-tools';
 
 @Component({
     templateUrl: './event-details.component.html',
@@ -271,10 +270,6 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     }
 
-    assignWorkout() {
-        this.router.navigate(['assignWorkout'], {relativeTo: this.route});
-    }
-
     hasWorkout() {
         if (!!this.event && this.event.type === 'P') {
             return this.event.session.workouts.length > 0;
@@ -282,7 +277,12 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         return false;
     }
 
+    assignWorkout() {
+        this.router.navigate(['sessions', this.event.session.id, 'assignWorkout'], {relativeTo: this.route});
+    }
+
+
     goToWorkout() {
-        this.router.navigate(['programme'], {relativeTo: this.route});
+        this.router.navigate(['sessions', this.event.session.id, 'programme'], {relativeTo: this.route});
     }
 }

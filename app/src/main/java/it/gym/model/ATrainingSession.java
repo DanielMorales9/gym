@@ -129,4 +129,5 @@ public abstract class ATrainingSession implements Serializable, Eager<ATrainingS
         this.getWorkouts().forEach(Workout::eager);
         return this;
     }
+
 }

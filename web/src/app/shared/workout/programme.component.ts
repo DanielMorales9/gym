@@ -24,15 +24,8 @@ import {BaseComponent} from '../base-component';
 })
 export class ProgrammeComponent extends BaseComponent implements OnInit {
 
-    event: any;
+    session: any;
     users: any;
-
-    EVENT_TYPES = {
-        P: 'Allenamento Personale',
-        C: 'Corso',
-        H: 'Chiusura',
-        T: 'Ferie',
-    };
 
     canDelete: boolean;
     canDeleteWorkout: boolean;
@@ -51,10 +44,12 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const id = +this.route.snapshot.params['id'];
-        this.findById(id);
-        this.getPolicy();
-
+        const sessionId = +this.route.params
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe( r => {
+                this.findSessionById(r['sessionId']);
+                this.getPolicy();
+            });
     }
 
     private getPolicy() {
@@ -62,16 +57,10 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }
 
-    private findById(id: number) {
-        this.facade.findEventById(id)
+    private findSessionById(sessionId: number) {
+        this.facade.findSessionById(sessionId)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(data => this.event = data);
-    }
-
-    getType() {
-        if (!!this.event) {
-            return this.EVENT_TYPES[this.event.type];
-        }
+            .subscribe(data => this.session = data);
     }
 
     editWorkout(workout) {
@@ -87,7 +76,7 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
                 this.service.patchWorkout(res)
-                    .subscribe(_ => this.findById(this.event.id),
+                    .subscribe(_ => this.findSessionById(this.session.id),
                         err => this.snackBar.open(err.err.message));
             }
         });
@@ -95,10 +84,10 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
     }
 
     deleteWorkout(workout) {
-        this.service.deleteWorkoutFromEvent(this.event.id, workout.id)
+        this.service.deleteWorkoutFromSession(this.session.id, workout.id)
             .subscribe(res => {
-                if (this.event.session.workouts.length > 1) {
-                    this.findById(this.event.id);
+                if (this.session.workouts.length > 1) {
+                    this.findSessionById(this.session.id);
                 }
                 else {
                     this.location.back();
@@ -108,8 +97,8 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
 
     deleteProgramme() {
         forkJoin(
-            this.event.session.workouts.map(workout => {
-                return this.service.deleteWorkoutFromEvent(this.event.id.toString(), workout.id)
+            this.session.workouts.map(workout => {
+                return this.service.deleteWorkoutFromSession(this.session.id, workout.id)
                     .pipe( map( w => w));
             })
         ).subscribe(res => this.location.back(),
