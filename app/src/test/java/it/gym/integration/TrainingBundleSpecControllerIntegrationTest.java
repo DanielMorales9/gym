@@ -59,7 +59,6 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     public void findPersonalBundleSpecIdOK() throws Exception {
         ResultActions result = mockMvc.perform(get("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isOk());
-        logger.info(bundleRepository.findAll().toString());
         expectTrainingBundleSpec(result, personalBundleSpec);
     }
 

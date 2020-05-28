@@ -2,30 +2,14 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>
-                Programma - {{event?.name}}
+                Programma
             </mat-card-title>
-            <mat-card-subtitle>
-                <mat-icon fontSet="fa" fontIcon="fa-tag"></mat-icon>&nbsp;{{getType() || 'Loading...'}}
-            </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
             <div class="summary-info">
-                <span>
-                    <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>
-                    {{event?.startTime | date: 'dd/MM/yyyy'}} {{event?.startTime | date: 'HH:mm'}} -
-                    &nbsp;{{event?.endTime | date: 'HH:mm'}}
-                </span>
-                <ng-container [ngSwitch]="event?.type">
-                    <ng-container *ngSwitchCase="'P'">
-                        <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>{{event?.reservation.user.firstName}}
-                            {{event?.reservation.user.lastName}}
-                        </span>
-                    </ng-container>
-                </ng-container>
-                <h6 style="margin-top: 8px">Workout</h6>
+                <h6 style="margin-top: 8px">WODS</h6>
                 <mat-expansion-panel [class.mat-expansion-panel]="false" class='expansion-list'
-                                     *ngFor="let workout of event?.session.workouts">
+                                     *ngFor="let workout of session?.workouts">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             {{workout?.name || 'Loading...'}}

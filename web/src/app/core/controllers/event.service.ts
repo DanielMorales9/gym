@@ -84,4 +84,8 @@ export class EventService {
     findById(id: number): Observable<any> {
         return this.http.get(`/events/${id}`);
     }
+
+    findSessionById(id: any): Observable<any> {
+        return this.http.get(`/trainingSessions/${id}`);
+    }
 }

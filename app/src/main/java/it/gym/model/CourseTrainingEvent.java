@@ -74,12 +74,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
         }
     }
 
-    @Override
-    public void assignWorkout(Workout w) {
-        // TODO not implemented
-        throw new BadRequestException("Funzionalità non ancora supportata");
-    }
-
     @JsonIgnore
     public Map<Long, ATrainingSession> getSessions() {
         return sessions;

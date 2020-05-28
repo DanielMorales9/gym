@@ -6,6 +6,11 @@ import it.gym.model.ATrainingSession;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingSessionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,4 +36,7 @@ public class TrainingSessionService implements ICrudService<ATrainingSession, Lo
         return this.repository.findAll();
     }
 
+    public Page<ATrainingSession> findAll(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
 }

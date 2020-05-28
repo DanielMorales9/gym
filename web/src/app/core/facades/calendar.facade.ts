@@ -258,4 +258,8 @@ export class CalendarFacade {
     findEventById(id: number): Observable<any> {
         return this.eventService.findById(id);
     }
+
+    findSessionById(id: any) {
+        return this.eventService.findSessionById(id);
+    }
 }
