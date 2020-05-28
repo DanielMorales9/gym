@@ -100,6 +100,38 @@ public class HateoasTest {
         expectTrainingBundleSpec(result, bundle, null);
     }
 
+    public static void expectTrainingSession(ResultActions result, ATrainingSession session) throws Exception {
+        expectTrainingSession(result, session, null);
+    }
+
+    private static void expectTrainingSession(ResultActions result, ATrainingSession session, String p) throws Exception {
+        String prefix = handlePrefix(p, false);
+        result
+                .andExpect(jsonPath("$"+prefix+"id").value(session.getId()))
+                .andExpect(jsonPath("$"+prefix+"completed").value(session.getCompleted()))
+                .andExpect(jsonPath("$"+prefix+"deletable").value(session.isDeletable()))
+                .andExpect(jsonPath("$"+prefix+"startTime").value(format(session.getStartTime())))
+                .andExpect(jsonPath("$"+prefix+"endTime").value(format(session.getEndTime())))
+                .andExpect(jsonPath("$"+prefix+"type").value(session.getType()));
+    }
+    
+    public static void expectWorkout(ResultActions result, Workout workout) throws Exception {
+        expectWorkout(result, workout, null);
+    }
+
+    public static void expectWorkout(ResultActions result, Workout workout, String p) throws Exception {
+        String prefix = handlePrefix(p, false);
+        result
+                .andExpect(jsonPath("$"+prefix+"id").value(workout.getId()))
+                .andExpect(jsonPath("$"+prefix+"name").value(workout.getName()))
+                .andExpect(jsonPath("$"+prefix+"description").value(workout.getDescription()))
+                .andExpect(jsonPath("$"+prefix+"tag1").value(workout.getTag1()))
+                .andExpect(jsonPath("$"+prefix+"tag2").value(workout.getTag2()))
+                .andExpect(jsonPath("$"+prefix+"tag3").value(workout.getTag3()))
+                .andExpect(jsonPath("$"+prefix+"template").value(workout.isTemplate()))
+                .andExpect(jsonPath("$"+prefix+"createdAt").value(format(workout.getCreatedAt())));
+    }
+
     private static void expectATrainingBundleSpec(ResultActions result,
                                                   ATrainingBundleSpecification bundle,
                                                   String prefix) throws Exception {

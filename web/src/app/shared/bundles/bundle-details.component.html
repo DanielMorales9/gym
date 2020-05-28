@@ -73,17 +73,21 @@
                         <td mat-cell *matCellDef="let element"> {{element.startTime | date: 'dd/MM/yyyy'}} </td>
                     </ng-container>
 
-                    <ng-container matColumnDef="startTime">
-                        <th mat-header-cell *matHeaderCellDef> Inizio </th>
-                        <td mat-cell *matCellDef="let element"> {{element.startTime | date: 'HH:mm'}} </td>
+                    <ng-container matColumnDef="time">
+                        <th mat-header-cell *matHeaderCellDef> Orario </th>
+                        <td mat-cell *matCellDef="let element"> {{element.startTime | date: 'HH:mm'}} - {{element.endTime | date: 'HH:mm'}}</td>
                     </ng-container>
 
 
-                    <ng-container matColumnDef="endTime">
-                        <th mat-header-cell *matHeaderCellDef> Fine </th>
-                        <td mat-cell *matCellDef="let element"> {{element.endTime | date: 'HH:mm'}} </td>
-                    </ng-container>
+                    <ng-container matColumnDef="workouts">
+                        <th mat-header-cell *matHeaderCellDef> WOD </th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container [ngTemplateOutlet]="hasWorkout(element)? workout : assign"
+                                          [ngTemplateOutletContext]="{element:element}">
+                            </ng-container>
 
+                        </td>
+                    </ng-container>
                     <tr mat-header-row *matHeaderRowDef="displayedSessionsColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedSessionsColumns; let i = index;"></tr>
                 </table>
@@ -108,3 +112,19 @@
         </mat-card-actions>
     </mat-card>
 </div>
+
+<ng-template #assign let-element='element'>
+    <button mat-button color="basic" (click)="assignWorkout(element.id)"
+            *ngIf="canEditWorkout">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Assegna Programma
+        </span>
+    </button>
+</ng-template>
+<ng-template #workout let-element='element'>
+    <button mat-button color="basic" (click)="goToWorkout(element.id)">
+        <span>
+            <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Programma
+        </span>
+    </button>
+</ng-template>

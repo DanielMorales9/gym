@@ -3,7 +3,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
-import {Observable, Subscription} from 'rxjs';
+import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
 import {BundleType} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
@@ -23,7 +23,9 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
 
     canEdit: boolean;
     canDelete: boolean;
-    displayedSessionsColumns = ['index', 'date', 'startTime', 'endTime'];
+    canShowWorkout: boolean;
+    canEditWorkout: boolean;
+    displayedSessionsColumns = ['index', 'date', 'time'];
 
     constructor(private service: BundleService,
                 private dialog: MatDialog,
@@ -42,6 +44,9 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
             .subscribe(d => {
                 this.bundle = d;
                 this.getPolicies();
+                if (this.canShowWorkout) {
+                    this.displayedSessionsColumns.push('workouts');
+                }
             });
     }
 
@@ -144,5 +149,25 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
     private getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
         this.canEdit = this.policy.get('bundle', 'canEdit');
+        this.canShowWorkout = this.policy.get('workout', 'canShow');
+        this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }
+
+
+    hasWorkout(session) {
+        if (!!session && session.type === 'P') {
+            return session.workouts.length > 0;
+        }
+        return false;
+    }
+
+    assignWorkout(sessionId: number) {
+        this.router.navigate(['sessions', sessionId, 'assignWorkout'], {relativeTo: this.route.parent.parent});
+    }
+
+
+    goToWorkout(sessionId: number) {
+        this.router.navigate(['sessions', sessionId, 'programme'], {relativeTo: this.route.parent.parent});
+    }
+
 }

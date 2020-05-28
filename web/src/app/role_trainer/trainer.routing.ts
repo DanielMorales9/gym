@@ -74,7 +74,14 @@ const routes = [
                 path: 'events/:id/sessions/:sessionId/programme', component: ProgrammeComponent,
                 data: {title: 'Programma di Allenamento', back: true }
             },
-
+            {
+                path: 'sessions/:sessionId/assignWorkout', component: AssignWorkoutsComponent,
+                data: {title: 'Assegna Workout', back: true }
+            },
+            {
+                path: 'sessions/:sessionId/programme', component: ProgrammeComponent,
+                data: {title: 'Programma di Allenamento', back: true }
+            },
             {
                 path: 'home', component: HomeComponent,
                 data: {title: 'Home' }

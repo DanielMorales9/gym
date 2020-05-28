@@ -87,6 +87,14 @@ const routes = [
                 data: {title: 'Programma di Allenamento', back: true }
             },
             {
+                path: 'sessions/:sessionId/assignWorkout', component: AssignWorkoutsComponent,
+                data: {title: 'Assegna Workout', back: true }
+            },
+            {
+                path: 'sessions/:sessionId/programme', component: ProgrammeComponent,
+                data: {title: 'Programma di Allenamento', back: true }
+            },
+            {
                 path: 'profile', component: ProfileComponent,
                 data: {title: 'Profilo'}
             },

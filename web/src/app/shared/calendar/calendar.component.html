@@ -70,7 +70,7 @@
                     [excludeDays]="excludeDays"
                     [weekStartsOn]="weekStartsOn"
                     locale="it"
-                    [hourSegments]="1"
+                    [hourSegments]="hourSegments"
                     [refresh]="refresh"
                     [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
                     (dayHeaderClicked)="header('header', $event)"
@@ -89,8 +89,8 @@
                 [refresh]="refresh"
                 [dayStartHour]="dayStartHour"
                 [dayEndHour]="dayEndHour"
+                [hourSegments]="hourSegments"
                 locale="it"
-                [hourSegments]="1"
                 [currentTimeMarkerTemplate]="currentTimeMarkerTemplate"
                 (hourSegmentClicked)="handleEvent('hour', $event)"
                 (eventClicked)="handleEvent('info',$event)"
@@ -124,7 +124,7 @@
 </div>
 
 <ng-template #button>
-    <button type="button" mat-fab color="primary" class="fab-button-add"
+    <button type="button" style="z-index: 100" mat-fab color="primary" class="fab-button-add"
             title="Aggiungi Evento" (click)="handleEvent('hour', {})">
         <mat-icon>add</mat-icon>
     </button>

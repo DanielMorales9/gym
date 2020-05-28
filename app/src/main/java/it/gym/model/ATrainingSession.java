@@ -127,7 +127,6 @@ public abstract class ATrainingSession implements Serializable, Eager<ATrainingS
     @Override
     public ATrainingSession eager() {
         this.getWorkouts().forEach(Workout::eager);
-        this.getTrainingBundle().eager();
         this.isDeletable();
         return this;
     }
