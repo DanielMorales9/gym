@@ -16,6 +16,7 @@ env:
     - MAVEN_OPTS="-Dmaven.repo.local=.m2"
     - TF_VERSION="0.12.19"
     - MVN_VERSION="3.6.1"
+    - TESTCONTAINERS_RYUK_DISABLED=true
 
 addons:
   apt:

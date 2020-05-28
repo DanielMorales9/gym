@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-@EnableGlobalMethodSecurity(prePostEnabled = false)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityTestConfig extends WebSecurityConfigurerAdapter {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
