@@ -349,7 +349,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 beforeStart: isResizable,
                 afterEnd: isResizable
             },
-            draggable: true,
+            draggable: false,
             meta: event
         };
         if (!isAllDay) {
