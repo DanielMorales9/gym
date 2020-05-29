@@ -186,7 +186,6 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
             this.dayStartHour = 24;
             this.dayEndHour = 0;
             const split = config.minutesBetweenEvents;
-            console.log(split);
             if (!split || split === 0) {
                 this.hourSegments = 1;
             }

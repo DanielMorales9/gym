@@ -53,7 +53,6 @@ export class OptionModalComponent implements OnInit {
             ])
         });
         this.type.valueChanges.subscribe(val => {
-            console.log(val);
             if (val === 'B') {
                 this.numberDescription = 'Numero di sessioni';
             } else {
@@ -89,7 +88,6 @@ export class OptionModalComponent implements OnInit {
         option.name = this.name.value;
         option.price = this.price.value;
         option.type = this.type.value;
-        console.log(option.type);
         option.number = this.number.value;
         return option;
     }

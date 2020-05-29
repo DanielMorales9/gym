@@ -27,7 +27,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
     }
 
     getEvents() {
-        console.log("getEvents");
         this.events = [];
 
         const {startDay, endDay} = this.getStartAndEndTimeByView();
@@ -52,12 +51,10 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 forkJoin(events)
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe(r => {
-                        console.log(r);
                         this.events = [];
                         r.forEach((o: any) => {
                             this.events.push(...o.map(v => this.formatEvent(v)));
                         });
-                        console.log(this.events);
                         this.refreshView();
                     });
         });
@@ -69,7 +66,6 @@ export class ACustomerCalendarComponent extends BaseCalendar {
             switchMap(params => this.facade.findUserById(+params['id'])),
             catchError(r => throwError(r)),
             map(r => {
-                console.log(r);
                 this.user = r;
                 return r;
             }),

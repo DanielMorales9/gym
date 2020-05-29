@@ -21,7 +21,6 @@ export class GymModalComponent implements OnInit {
 
     ngOnInit(): void {
         this.gym = this.data;
-        console.log(this.gym);
         this.buildForm();
     }
 
