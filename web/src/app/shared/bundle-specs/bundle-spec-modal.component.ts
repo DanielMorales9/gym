@@ -89,7 +89,6 @@ export class BundleSpecModalComponent implements OnInit {
         });
 
         this.unlimitedDeletions.valueChanges.subscribe(val => {
-            console.log(val);
             if (val === false) {
                 this.showNumDeletions = true;
                 this.numDeletions.enable();

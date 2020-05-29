@@ -7,6 +7,7 @@ import 'rxjs/add/operator/toPromise';
 import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
 import {AuthenticationService} from '../../core/authentication';
+import {feedChart, padding} from './padding';
 
 
 function insertAt(array, index, ...elementsArray) {
@@ -87,38 +88,16 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
 
   private getCustomerReservationsByWeek(interval, id) {
 
-    return this.statsService.getCustomerReservationsByWeek(id, interval).pipe(map(d => {
-      this.lineChartLabels.length = 0;
-      // tslint:disable-next-line:radix
-      // this.lineChartLabels
-      const labels  = d.map(v => parseInt(v.week, undefined))
-          .filter((v, i, a) => a.indexOf(v) === i);
-      labels.sort((a, b) => a.week - b.week);
-      this.lineChartLabels = labels.map(v => 'Sett. ' + v);
-      this.lineChartData = [];
-
-      for (const key in this.BUNDLE_TYPE_NAME) {
-
-        let data = d.filter(v => v.type === key);
-        data.forEach(v => v.week = parseInt(v.week, undefined));
-        const labels_dict = {};
-
-        data = data.map(v => labels_dict[v.week] = v.numreservations);
-
-        for (let i = 0; i < labels.length; i++) {
-          if (!labels_dict[labels[i]]) {
-            labels_dict[labels[i]] = 0;
-          }
-        }
-
-        data = labels.map(v => labels_dict[v]);
-        this.lineChartData.push({data: data, label: this.BUNDLE_TYPE_NAME[key], stack: '1'});
-      }
-
-      this.lineChart.datasets = this.lineChartData;
-      this.lineChart.labels = this.lineChartLabels;
-      this.lineChart.chart.update();
-    }));
+    return this.statsService.getCustomerReservationsByWeek(id, interval)
+        .pipe(map(d => {
+          this.lineChartLabels.length = 0;
+          const [lineChartData, lineChartLabels] = feedChart(d, this.BUNDLE_TYPE_NAME);
+          this.lineChartLabels = lineChartLabels;
+          this.lineChartData = lineChartData;
+          this.lineChart.datasets = lineChartData;
+          this.lineChart.labels = lineChartLabels;
+          this.lineChart.chart.update();
+        }));
   }
 
   update(interval?: string) {
