@@ -51,11 +51,14 @@ export class UsersComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         this.type = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
+        this.getPolicy();
+        this.initQueryParams();
+    }
 
+    private getPolicy() {
         this.canDelete = this.policy.get('user', 'canDelete');
         this.canCreate = this.policy.get('user', 'canCreate');
         this.canEdit = this.policy.get('user', 'canEdit');
-        this.initQueryParams();
     }
 
     private initQueryParams() {
