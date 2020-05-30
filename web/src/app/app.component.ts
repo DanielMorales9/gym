@@ -35,7 +35,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     public sideBar: SideBarComponent;
 
     private setTitle(...title) {
-        this.title = title;
+        if (this.isDesktop()) {
+            this.title = title;
+        }
         document.title = title.join(' - ');
     }
 
@@ -43,6 +45,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         this.authOnNavigation();
         this.authenticate();
         this.desktop = this.isDesktop();
+
     }
 
     private getTitle(state, parent) {
@@ -83,6 +86,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             if (!!data) {
                 this.gym = data;
                 this.appName = data.name;
+                this.title = [this.appName];
                 this.setTitle(this.appName);
             }
             return data;

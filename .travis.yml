@@ -45,8 +45,8 @@ deploy:
     skip_cleanup: true
 
 after_deploy:
-  - bash .travis/after_deploy.sh -i="app" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
-  - bash .travis/after_deploy.sh -i="web" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash .travis/push_images.sh -i="app" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash .travis/push_images.sh -i="web" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
   - bash .travis/taint_deploy.sh
 
 after_success: bash .travis/after_success.sh

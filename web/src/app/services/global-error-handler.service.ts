@@ -13,10 +13,11 @@ export class GlobalErrorHandler implements ErrorHandler {
 
     handleError(err) {
         if (!environment.production) {
-            console.error(err);
+            console.log(err);
+            console.log(err.stack);
         }
-        const message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
-
+        let message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
+        message += err.stack;
 
         this.router.navigate(['/error'], {
             replaceUrl: true,

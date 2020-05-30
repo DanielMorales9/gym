@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
@@ -153,7 +153,8 @@ export class StatsComponent extends BaseComponent implements OnInit {
     amountPayed: number;
     intervalName: string;
 
-    constructor(private statsService: StatsService) {
+    constructor(private statsService: StatsService,
+                private cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -257,6 +258,6 @@ export class StatsComponent extends BaseComponent implements OnInit {
         o.push(this.getSalesByBundleType(interval));
         o.push(this.getReservationsByWeek(interval));
         o.push(this.getReservationsByDayOfWeek(interval));
-        forkJoin(o).pipe(takeUntil(this.unsubscribe$)).subscribe(v => v);
+        forkJoin(o).pipe(takeUntil(this.unsubscribe$)).subscribe(v => this.cdr.detectChanges());
     }
 }
