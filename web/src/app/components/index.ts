@@ -5,3 +5,5 @@ export * from './primary-admin-controls.component';
 export * from './primary-trainer-controls.component';
 export * from './primary-customer-controls.component';
 export * from './menu-controls.component';
+export * from './show-role.pipe';
+export * from './current-role.pipe';

@@ -1,10 +1,10 @@
 import {
-    ChangeDetectionStrategy,
     Component,
     ComponentFactory,
     ComponentFactoryResolver,
     ComponentRef,
-    Input, OnDestroy,
+    Input,
+    OnDestroy,
     OnInit,
     Type,
     ViewChild,
@@ -18,7 +18,6 @@ import {ISubscription} from 'rxjs-compat/Subscription';
     selector: 'side-bar',
     templateUrl: './side-bar.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideBarComponent implements OnInit, OnDestroy {
 

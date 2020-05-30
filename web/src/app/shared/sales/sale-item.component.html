@@ -15,10 +15,10 @@
         </div>
         <div class="panel-content">
         <span>
-            <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{getDate(sale?.createdAt)}}
+            <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>Creato&nbsp;{{sale?.createdAt | date: 'dd/MM/yy HH:mm'}}
         </span>
                 <span [hidden]="!sale?.payed" class="green-light">
-            <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{getDate(sale?.payedDate)}}
+            <mat-icon fontSet="fas" fontIcon="fa-calendar-check"></mat-icon>Pagato&nbsp;{{sale?.payedDate | date: 'dd/MM/yy HH:mm'}}
         </span>
                 <span>
             <mat-icon fontSet="fas" fontIcon="fa-money-bill-wave"></mat-icon>Totale&nbsp;{{sale?.totalPrice}}&euro;

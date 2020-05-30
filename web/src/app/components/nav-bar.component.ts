@@ -7,7 +7,6 @@ import {Location} from '@angular/common';
     selector: 'nav-bar',
     templateUrl: './nav-bar.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavBarComponent implements OnInit, OnDestroy {
 

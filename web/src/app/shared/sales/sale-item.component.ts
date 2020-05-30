@@ -2,7 +2,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
 import {Sale} from '../model';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {MatDialog} from '@angular/material';
-import {DateService} from '../../core/utilities';
 
 
 @Component({
@@ -18,16 +17,11 @@ export class SaleItemComponent {
     @Input() canDelete: boolean;
     @Output() done = new EventEmitter();
 
-    constructor(private dateService: DateService,
-                private dialog: MatDialog) {
+    constructor(private dialog: MatDialog) {
     }
 
     deleteSale() {
         this.done.emit({type: 'delete', sale: this.sale});
-    }
-
-    getDate(createdAt: string) {
-        return this.dateService.getStringDate(createdAt);
     }
 
     pay() {

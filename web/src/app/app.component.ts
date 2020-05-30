@@ -53,7 +53,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     private getCurrentRole() {
-        return this.auth.getCurrentUserRole();
+        return this.auth.getCurrentUserRoleId();
     }
 
     private authenticate() {

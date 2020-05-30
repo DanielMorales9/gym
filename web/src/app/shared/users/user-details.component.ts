@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
-import {ImageModalComponent} from '../profile';
+import {ImageModalComponent} from '../profile/image-modal.component';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 
