@@ -21,7 +21,6 @@ import {BaseComponent} from '../base-component';
         '../../styles/root.css',
         '../../styles/card.css'
     ],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgrammeComponent extends BaseComponent implements OnInit {
 

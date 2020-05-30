@@ -13,7 +13,6 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './workout-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
 

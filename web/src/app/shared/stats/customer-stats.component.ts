@@ -7,7 +7,7 @@ import 'rxjs/add/operator/toPromise';
 import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
 import {AuthenticationService} from '../../core/authentication';
-import {feedChart, padding} from './padding';
+import {feedChart} from './padding';
 
 
 function insertAt(array, index, ...elementsArray) {
@@ -18,7 +18,6 @@ function insertAt(array, index, ...elementsArray) {
 @Component({
   templateUrl: './customer-stats.component.html',
   styleUrls: ['../../styles/root.css', '../../styles/card.css'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerStatsComponent extends BaseComponent implements OnInit {
 

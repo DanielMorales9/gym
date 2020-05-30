@@ -10,7 +10,6 @@ import {AuthenticationService} from '../../core/authentication';
 @Component({
     templateUrl: './gym-settings.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GymSettingsComponent implements OnInit {
 
