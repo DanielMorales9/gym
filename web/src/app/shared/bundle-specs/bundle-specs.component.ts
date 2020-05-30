@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
 import {BundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,7 +13,8 @@ import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './bundle-specs.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
+    styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleSpecsComponent extends BaseComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BaseCalendarModal} from './base-calendar-modal';
@@ -6,7 +6,8 @@ import { theme } from '../config';
 
 @Component({
     templateUrl: './customer-hour-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
     form: FormGroup;

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
 import {BaseCalendar} from '../../shared/calendar';
@@ -15,7 +15,8 @@ import {filter, map, takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: '../../shared/calendar/calendar.component.html',
-    styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
+    styleUrls: ['../../styles/root.css', '../../styles/calendar.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminCalendarComponent extends BaseCalendar {
 

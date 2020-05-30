@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
@@ -17,7 +17,8 @@ function insertAt(array, index, ...elementsArray) {
 
 @Component({
   templateUrl: './customer-stats.component.html',
-  styleUrls: ['../../styles/root.css', '../../styles/card.css']
+  styleUrls: ['../../styles/root.css', '../../styles/card.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerStatsComponent extends BaseComponent implements OnInit {
 

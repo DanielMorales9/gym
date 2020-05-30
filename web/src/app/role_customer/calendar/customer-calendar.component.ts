@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
@@ -10,7 +10,8 @@ import {map, takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: '../../shared/calendar/calendar.component.html',
-    styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
+    styleUrls: ['../../styles/root.css', '../../styles/calendar.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerCalendarComponent extends BaseCalendar {
 

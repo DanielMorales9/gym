@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef, MatSelectionList} from '@angular/material';
 import {Gym} from '../model';
@@ -7,7 +7,8 @@ import {rangeValidator} from '../../core/functions';
 
 @Component({
     templateUrl: './gym-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GymModalComponent implements OnInit {
 

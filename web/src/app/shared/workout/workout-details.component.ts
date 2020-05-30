@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {WorkoutService} from '../../core/controllers';
 import {Workout} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,6 +13,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './workout-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
 

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {BaseCalendar} from './base-calendar';
 import {CustomerDeleteModalComponent} from './customer-delete-modal.component';
 import {CustomerHourModalComponent} from './customer-hour-modal.component';
@@ -9,11 +9,11 @@ import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, of, throwError} from 'rxjs';
-import {User} from '../model';
 
 @Component({
     templateUrl: './calendar.component.html',
-    styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
+    styleUrls: ['../../styles/root.css', '../../styles/calendar.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ACustomerCalendarComponent extends BaseCalendar {
 
@@ -57,7 +57,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                         });
                         this.refreshView();
                     });
-        });
+            });
     }
 
     private getUserFromRouteParams() {

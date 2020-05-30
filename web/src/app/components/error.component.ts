@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
     templateUrl: './error.component.html',
-    styleUrls: ['../styles/root.css', '../styles/card.css']
+    styleUrls: ['../styles/root.css', '../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ErrorComponent implements OnInit {
     message: string;

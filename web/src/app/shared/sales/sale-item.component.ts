@@ -10,7 +10,6 @@ import {DateService} from '../../core/utilities';
     templateUrl: './sale-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class SaleItemComponent {
 

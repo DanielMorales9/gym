@@ -6,7 +6,6 @@ import {FormControl} from '@angular/forms';
     templateUrl: './search-date.toolbar.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class SearchDateToolbar implements OnInit {
 

@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
@@ -6,7 +6,8 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 @Component({
     selector: 'trainer-header-modal',
     templateUrl: './trainer-header-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainerHeaderModalComponent extends BaseCalendarModal implements OnInit {
 

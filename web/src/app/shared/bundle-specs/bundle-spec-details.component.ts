@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../core/controllers';
 import {BundleType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -15,6 +15,7 @@ import {BaseComponent} from '../base-component';
     selector: 'bundle-spec-details',
     templateUrl: './bundle-spec-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleSpecDetailsComponent extends BaseComponent implements OnInit {
     PERSONAL = BundleType.PERSONAL;

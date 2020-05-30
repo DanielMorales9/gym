@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../model';
 import {AuthService, UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
@@ -7,7 +7,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
-import {ImageModalComponent} from '../profile/image-modal.component';
+import {ImageModalComponent} from '../profile';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 
@@ -15,6 +15,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './user-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailsComponent extends BaseComponent implements OnInit {
 

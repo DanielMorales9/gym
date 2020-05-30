@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {SnackBarService} from '../../core/utilities';
 import {AuthenticationService} from '../../core/authentication';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -21,6 +21,7 @@ import {BaseComponent} from '../base-component';
         '../../styles/root.css',
         '../../styles/card.css'
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgrammeComponent extends BaseComponent implements OnInit {
 

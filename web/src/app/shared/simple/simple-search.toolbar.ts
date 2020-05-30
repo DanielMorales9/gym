@@ -5,7 +5,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@
     templateUrl: './simple-search.toolbar.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class SimpleSearchToolbar {
     @Input() query: any;

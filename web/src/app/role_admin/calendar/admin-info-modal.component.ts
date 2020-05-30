@@ -1,11 +1,12 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {ActivatedRoute, Router} from '@angular/router';
+import {Router} from '@angular/router';
 
 @Component({
     templateUrl: './admin-info-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AdminInfoModalComponent extends BaseCalendarModal {
 

@@ -1,10 +1,11 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     templateUrl: './trainer-delete-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainerDeleteModalComponent extends BaseCalendarModal {
 

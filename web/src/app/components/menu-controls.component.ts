@@ -1,12 +1,12 @@
-import {Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../core/authentication';
-import {Role} from '../shared/model';
 
 @Component({
     selector: 'menu',
     templateUrl: './menu-controls.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MenuControlsComponent {
 

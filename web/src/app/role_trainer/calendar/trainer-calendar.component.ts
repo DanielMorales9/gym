@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {BaseCalendar} from '../../shared/calendar';
 import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
@@ -10,13 +10,14 @@ import {TrainerDeleteModalComponent} from './trainer-delete-modal.component';
 import {TrainerChangeModalComponent} from './trainer-change-modal.component';
 import {TrainerHourModalComponent} from './trainer-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
-import {map, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 
 
 @Component({
     templateUrl: '../../shared/calendar/calendar.component.html',
-    styleUrls: ['../../styles/root.css', '../../styles/calendar.css']
+    styleUrls: ['../../styles/root.css', '../../styles/calendar.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainerCalendarComponent extends BaseCalendar {
 

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, Inject, ViewChild} from '@angular/core';
+import {AfterViewInit, ChangeDetectionStrategy, Component, Inject, ViewChild} from '@angular/core';
 import {ImgCropperConfig, ImgCropperErrorEvent, ImgCropperEvent, LyImageCropper} from '@alyle/ui/image-cropper';
 import {LY_DIALOG_DATA, LyDialogRef} from '@alyle/ui/dialog';
 import {lyl, StyleRenderer, ThemeRef, ThemeVariables} from '@alyle/ui';
@@ -31,6 +31,7 @@ const STYLES = (_theme: ThemeVariables, ref: ThemeRef) => {
 @Component({
     templateUrl: './image-crop-modal.component.html',
     styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ImageCropModalComponent implements AfterViewInit {
     readonly classes = this.sRenderer.renderSheet(STYLES);

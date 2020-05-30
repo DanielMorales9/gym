@@ -7,7 +7,6 @@ import {WorkoutModalComponent} from './workout-modal.component';
     templateUrl: './workout-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class WorkoutItemComponent {
     constructor(private dialog: MatDialog) {

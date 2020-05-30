@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {CalendarFacade} from '../../core/facades';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PolicyService} from '../../core/policy';
@@ -13,6 +13,7 @@ import {forkJoin, Observable} from 'rxjs';
 @Component({
     templateUrl: './event-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventDetailsComponent extends BaseComponent implements OnInit {
 

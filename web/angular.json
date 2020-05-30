@@ -142,7 +142,8 @@
     },
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "css"
+      "styleext": "css",
+      "changeDetection": "OnPush",
     },
     "@schematics/angular:directive": {
       "prefix": "app"

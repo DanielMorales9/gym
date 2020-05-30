@@ -5,7 +5,6 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
     templateUrl: './search-mixed-toolbar.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class SearchMixedToolbar implements OnInit {
 

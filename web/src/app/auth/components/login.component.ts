@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService, Credentials} from '../../core/authentication';
@@ -7,7 +7,8 @@ import {BaseComponent} from '../../shared/base-component';
 
 @Component({
     templateUrl: './login.component.html',
-    styleUrls: ['../../styles/root.css', './auth.css']
+    styleUrls: ['../../styles/root.css', './auth.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent extends BaseComponent implements OnInit {
 

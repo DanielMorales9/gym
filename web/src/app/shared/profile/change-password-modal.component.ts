@@ -1,11 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../core/functions';
 import {MatDialogRef} from '@angular/material';
 
 @Component({
     templateUrl: 'change-password-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChangePasswordModalComponent implements OnInit {
 

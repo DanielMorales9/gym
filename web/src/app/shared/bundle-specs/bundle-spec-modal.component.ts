@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {BundleSpecification, BundleSpecificationType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
@@ -6,7 +6,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 @Component({
     selector: 'bundle-spec-modal',
     templateUrl: './bundle-spec-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleSpecModalComponent implements OnInit {
 

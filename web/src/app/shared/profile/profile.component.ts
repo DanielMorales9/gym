@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {User} from '../model';
 import {UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
@@ -19,6 +19,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './profile.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent extends BaseComponent implements OnInit {
 

@@ -1,10 +1,11 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 
 @Component({
     templateUrl: './reservation.modal.component.html',
-    styleUrls: ['../../styles/root.css', '../../styles/search-card-list.css']
+    styleUrls: ['../../styles/root.css', '../../styles/search-card-list.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ReservationModalComponent {
 

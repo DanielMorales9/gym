@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ComponentFactoryResolver, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {ISubscription} from 'rxjs-compat/Subscription';
 import {Location} from '@angular/common';
@@ -7,6 +7,7 @@ import {Location} from '@angular/common';
     selector: 'nav-bar',
     templateUrl: './nav-bar.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NavBarComponent implements OnInit, OnDestroy {
 
