@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Gym} from '../model';
 import {GymService} from '../../services';
 import {MatDialog} from '@angular/material';
@@ -10,6 +10,7 @@ import {AuthenticationService} from '../../core/authentication';
 @Component({
     templateUrl: './gym-settings.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GymSettingsComponent implements OnInit {
 
@@ -19,17 +20,22 @@ export class GymSettingsComponent implements OnInit {
     constructor(private gymService: GymService,
                 private authService: AuthenticationService,
                 private snackbar: SnackBarService,
+                private cdr: ChangeDetectorRef,
                 private dialog: MatDialog) {
+    }
+
+    ngOnInit(): void {
         this.authService.getConfig()
             .pipe(
                 take(1),
                 share()
             )
-            .subscribe(res => this.gym = res);
+            .subscribe(res => {
+                this.gym = res;
+                this.cdr.detectChanges();
+            });
         this.canEdit = this.gymService.canEdit();
     }
-
-    ngOnInit(): void {}
 
     openDialog(): void {
 

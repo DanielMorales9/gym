@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CalendarFacade} from '../../core/facades';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PolicyService} from '../../core/policy';
@@ -13,6 +13,7 @@ import {forkJoin, Observable} from 'rxjs';
 @Component({
     templateUrl: './event-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventDetailsComponent extends BaseComponent implements OnInit {
 
@@ -53,6 +54,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
                 private router: Router,
                 private auth: AuthenticationService,
                 private snackBar: SnackBarService,
+                private cdr: ChangeDetectorRef,
                 private policy: PolicyService) {
         super();
     }
@@ -72,7 +74,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
                 }
 
                 this.displayedPaymentsColumns = displayedPaymentsColumns;
-
+                this.cdr.detectChanges();
             }
         );
     }

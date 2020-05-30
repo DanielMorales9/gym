@@ -34,7 +34,7 @@ export class WorkoutService extends DataSourceService {
         return this.http.delete(`/workouts/${id}`);
     }
 
-    findWorkoutById(id: number): any {
+    findWorkoutById(id: number) {
         return this.http.get(`/workouts/${id}`);
     }
 

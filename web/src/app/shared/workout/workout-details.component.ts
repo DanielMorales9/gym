@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {WorkoutService} from '../../core/controllers';
 import {Workout} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -13,6 +13,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './workout-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
 
@@ -26,6 +27,7 @@ export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
                 private router: Router,
                 private policy: PolicyService,
                 private snackBar: SnackBarService,
+                private cdr: ChangeDetectorRef,
                 private route: ActivatedRoute) {
         super();
     }
@@ -33,9 +35,13 @@ export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
     ngOnInit(): void {
         this.getPolicies();
 
-        this.route.params.subscribe( params => {
-            this.getWorkout(+params['id']);
-        });
+        this.route.params
+            .pipe(takeUntil(this.unsubscribe$),
+                switchMap(p => this.service.findWorkoutById(+p['id'])))
+            .subscribe( (params: Workout) => {
+                this.workout = params;
+                this.cdr.detectChanges();
+            });
     }
 
     private getPolicies() {
@@ -74,7 +80,4 @@ export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
                 }));
     }
 
-    private getWorkout(id: number) {
-        this.service.findWorkoutById(id).subscribe(res => this.workout = res);
-    }
 }

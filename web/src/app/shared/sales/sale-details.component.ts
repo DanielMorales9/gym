@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {CourseBundle, PersonalBundleSpecification, Sale} from '../model';
+import {Sale} from '../model';
 import {MatDialog} from '@angular/material';
 import {SalesService} from '../../core/controllers';
 import {SaleHelperService} from '../../core/helpers';
@@ -14,6 +14,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './sale-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SaleDetailsComponent extends BaseComponent implements OnInit {
 
@@ -36,6 +37,7 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
                 private service: SalesService,
                 private dialog: MatDialog,
                 private policy: PolicyService,
+                private cdr: ChangeDetectorRef,
                 private snackbar: SnackBarService) {
         super();
     }
@@ -63,6 +65,7 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
             this.sale = res;
             this.sale.salesLineItems.forEach(value => {
                 value.price = value.trainingBundle.option.price;
+                this.cdr.detectChanges();
             });
         });
     }

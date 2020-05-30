@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute} from '@angular/router';
 
 @Component({
@@ -10,7 +10,8 @@ export class ErrorComponent implements OnInit {
     message: string;
     title: string;
 
-    constructor(private router: ActivatedRoute) {
+    constructor(private router: ActivatedRoute,
+                private cdr: ChangeDetectorRef) {
     }
 
 
@@ -24,6 +25,7 @@ export class ErrorComponent implements OnInit {
             this.title = title;
             this.message = message;
         }
+        this.cdr.detectChanges();
     }
 
 }

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
@@ -20,6 +20,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
+                private cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
         super(facade, router, snackBar, activatedRoute, screenService);
     }
@@ -44,6 +45,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
                     this.events.push(...o.map(v => this.formatEvent(v)));
                 });
                 this.refreshView();
+                this.cdr.detectChanges();
             });
 
     }

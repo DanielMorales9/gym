@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
 import {BaseCalendar} from '../../shared/calendar';
@@ -27,6 +27,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public screenService: ScreenService,
                 public router: Router,
+                private cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
         super(facade, router, snackBar, activatedRoute, screenService);
     }
@@ -41,6 +42,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             .subscribe(r => {
                 this.events = r;
                 this.refreshView();
+                this.cdr.detectChanges();
             });
     }
 

@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {User} from '../model';
 import {AuthService, UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
@@ -15,6 +15,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './user-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailsComponent extends BaseComponent implements OnInit {
 
@@ -35,6 +36,7 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
                 private authService: AuthService,
                 private policy: PolicyService,
                 private dialog: MatDialog,
+                private cdr: ChangeDetectorRef,
                 private snackbar: SnackBarService) {
         super();
     }
@@ -50,6 +52,7 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
             this.user = value;
             this.getAvatar();
             this.getPolicies();
+            this.cdr.detectChanges();
         });
     }
 

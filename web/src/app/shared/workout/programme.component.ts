@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SnackBarService} from '../../core/utilities';
 import {AuthenticationService} from '../../core/authentication';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -8,7 +8,7 @@ import {CalendarFacade} from '../../core/facades';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {WorkoutService} from '../../core/controllers';
 import {forkJoin} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {BaseComponent} from '../base-component';
 
@@ -21,6 +21,7 @@ import {BaseComponent} from '../base-component';
         '../../styles/root.css',
         '../../styles/card.css'
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProgrammeComponent extends BaseComponent implements OnInit {
 
@@ -39,16 +40,20 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
                 private auth: AuthenticationService,
                 private snackBar: SnackBarService,
                 private service: WorkoutService,
+                private cdr: ChangeDetectorRef,
                 private policy: PolicyService) {
         super();
     }
 
     ngOnInit(): void {
         const sessionId = +this.route.params
-            .pipe(takeUntil(this.unsubscribe$))
+            .pipe(takeUntil(this.unsubscribe$),
+                switchMap(r => this.facade.findSessionById(r['sessionId']))
+            )
             .subscribe( r => {
-                this.findSessionById(r['sessionId']);
+                this.session = r;
                 this.getPolicy();
+                this.cdr.detectChanges();
             });
     }
 
@@ -60,7 +65,10 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
     private findSessionById(sessionId: number) {
         this.facade.findSessionById(sessionId)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(data => this.session = data);
+            .subscribe(data => {
+                this.session = data;
+                this.cdr.detectChanges();
+            });
     }
 
     editWorkout(workout) {

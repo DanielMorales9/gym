@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleService} from '../../core/controllers';
@@ -13,6 +13,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
 
@@ -32,6 +33,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
                 private router: Router,
                 private snackBar: SnackBarService,
                 private policy: PolicyService,
+                private cdr: ChangeDetectorRef,
                 private route: ActivatedRoute) {
         super();
     }
@@ -47,6 +49,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
                 if (this.canShowWorkout) {
                     this.displayedSessionsColumns.push('workouts');
                 }
+                this.cdr.detectChanges();
             });
     }
 
