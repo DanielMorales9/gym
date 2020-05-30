@@ -25,19 +25,20 @@ export class SearchDateToolbar implements OnInit {
     }
 
     emit(type, event) {
+        const query = Object.assign({}, this.query);
         switch (type) {
             case 'date':
-                if (!!event.value) { this.query.date = event.value; } else { delete this.query.date; }
+                if (!!event.value) { query.date = event.value; } else { delete query.date; }
                 break;
             case this.filterName:
                 if (event.value === undefined || event.value === null) {
-                    delete this.query[this.filterName];
+                    delete query[this.filterName];
                 } else {
-                    this.query[this.filterName] = event.value;
+                    query[this.filterName] = event.value;
                 }
                 break;
         }
-        this.done.emit(this.query);
+        this.done.emit(query);
     }
 
 }

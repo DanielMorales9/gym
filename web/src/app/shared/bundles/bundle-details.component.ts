@@ -13,7 +13,6 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
 

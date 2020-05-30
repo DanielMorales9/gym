@@ -2,16 +2,17 @@
 <div class="main-container">
     <nav-bar [authenticated]="authenticated"
              [appName]="appName"
-             [isMobile]="!isDesktop()"
+             [title]="title"
+             [isMobile]="!desktop"
              (logout)="logout()"
              (snav)="openSideBar()"
              (home)="goHome()">
     </nav-bar>
     <side-bar #sideBar
               [appName]="appName"
-              [opened]="sideBarOpened()"
-              [mode]="sideBarMode()"
-              [isMobile]="!isDesktop()">
+              [opened]="desktop && authenticated"
+              [mode]="!desktop && authenticated ? 'over' : 'side'"
+              [isMobile]="!desktop">
     </side-bar>
 </div>
 

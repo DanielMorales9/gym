@@ -26,28 +26,29 @@ export class FilterSearchToolbar implements OnInit {
     }
 
     emit(type?, event?) {
+        const query = Object.assign({}, this.query);
         switch (type) {
             case 'name':
-                if (this.name !== undefined) { this.query.name = this.name; }
-                else { delete this.query.name; }
+                if (this.name !== undefined) { query.name = this.name; }
+                else { delete query.name; }
                 break;
             case this.filterName:
                 if (!!event.value) {
-                    this.query[this.filterName] = event.value;
+                    query[this.filterName] = event.value;
                 } else {
-                    delete this.query[this.filterName];
+                    delete query[this.filterName];
                 }
                 break;
         }
 
-        for (const key in this.query) {
-            if (!this.query[key]) {
-                delete this.query[key];
+        for (const key in query) {
+            if (!query[key]) {
+                delete query[key];
             }
         }
 
 
-        this.done.emit(this.query);
+        this.done.emit(query);
     }
 }
 

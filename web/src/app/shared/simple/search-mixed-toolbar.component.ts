@@ -29,21 +29,22 @@ export class SearchMixedToolbar implements OnInit {
     }
 
     emit(type, event) {
+        const query = Object.assign({}, this.query);
         switch (type) {
             case 'name':
-                if (!!this.name) { this.query.name = this.name; }
-                else { delete this.query.name; }
+                if (!!this.name) { query.name = this.name; }
+                else { delete query.name; }
                 break;
             case 'date':
-                if (!!event.value) { this.query.date = event.value; }
-                else { delete this.query.date; }
+                if (!!event.value) { query.date = event.value; }
+                else { delete query.date; }
                 break;
             default:
-                if (event.value === undefined || event.value === null) { delete this.query[this.filterName]; }
-                else { this.query[this.filterName] = event.value; }
+                if (event.value === undefined || event.value === null) { delete query[this.filterName]; }
+                else { query[this.filterName] = event.value; }
                 break;
         }
-        this.done.emit(this.query);
+        this.done.emit(query);
     }
 }
 

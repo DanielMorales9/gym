@@ -1,11 +1,11 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
-import {GymService, ScreenService} from './core/utilities';
-import {Observable, of, Subscription} from 'rxjs';
+import {ScreenService} from './core/utilities';
+import {Observable, of} from 'rxjs';
 import {SideBarComponent} from './components';
 import {AuthenticationService} from './core/authentication';
-import {filter, map, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
 
@@ -17,6 +17,13 @@ import {Gym} from './shared/model';
 })
 export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
+    gym: Gym;
+    appName: string;
+    authenticated: boolean;
+    isBack: boolean;
+    desktop: boolean;
+    title: string[];
+
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
                 private router: Router,
@@ -24,20 +31,18 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         super();
     }
 
-    gym: Gym;
-    appName: string;
-    authenticated: boolean;
-
     @ViewChild('sideBar', { static: true })
     public sideBar: SideBarComponent;
 
     private setTitle(...title) {
+        this.title = title;
         document.title = title.join(' - ');
     }
 
     ngOnInit(): void {
         this.authOnNavigation();
         this.authenticate();
+        this.desktop = this.isDesktop();
     }
 
     private getTitle(state, parent) {
@@ -62,7 +67,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                     this.authenticated = !!data;
                     return data;
                 }
-        ));
+            ));
     }
 
     private getAppName(): Observable<any> {
@@ -88,12 +93,12 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         this.auth.logout()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
-            _ => {
-                this.authenticated = false;
-                this.router.navigateByUrl('/auth');
-                this.sideBar.close();
-            }
-        );
+                _ => {
+                    this.authenticated = false;
+                    this.router.navigateByUrl('/auth');
+                    this.sideBar.close();
+                }
+            );
     }
 
     private authOnNavigation() {
@@ -109,9 +114,22 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                 switchMap(s => this.getAppName())
             )
             .subscribe(_ => {
+                this.isBack = this.getBack(this.router.routerState, this.router.routerState.root);
                 const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
                 this.setTitle(this.appName, ...titles);
-        });
+            });
+    }
+
+    private getBack(state, parent) {
+
+        if (parent && parent.snapshot.data && parent.snapshot.data.back) {
+            return parent.snapshot.data.back;
+        }
+
+        if (state && parent) {
+            return this.getBack(state, state.firstChild(parent));
+        }
+
     }
 
     isDesktop() {
@@ -136,12 +154,8 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    sideBarMode() {
-        return !this.isDesktop() && this.authenticated ? 'over' : 'side';
-    }
-
     sideBarOpened() {
-        return this.isDesktop() && this.authenticated;
+        return this.desktop && this.authenticated;
     }
 
     openSideBar() {

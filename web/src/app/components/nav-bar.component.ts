@@ -1,89 +1,33 @@
-import {ChangeDetectionStrategy, Component, ComponentFactoryResolver, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
-import {ISubscription} from 'rxjs-compat/Subscription';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {Router} from '@angular/router';
 import {Location} from '@angular/common';
 
 @Component({
     selector: 'nav-bar',
     templateUrl: './nav-bar.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NavBarComponent implements OnInit, OnDestroy {
+export class NavBarComponent {
 
     @Input() authenticated: boolean;
     @Input() appName: string;
+    @Input() title: string[];
     @Input() isMobile: boolean;
+    @Input() isBack: boolean;
 
     @Output() logout = new EventEmitter();
     @Output() home = new EventEmitter();
     @Output() snav = new EventEmitter();
 
-    title: string;
-    isBack: boolean;
-    sub: ISubscription;
 
     constructor(private router: Router,
-                private route: ActivatedRoute,
-                private location: Location,
-                private componentFactoryResolver: ComponentFactoryResolver) {}
-
-    ngOnInit(): void {
-        this.title = this.appName;
-        this.sub = this.router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                this.isBack = this.getBack(this.router.routerState, this.router.routerState.root);
-                const titles = this.getTitle(this.router.routerState, this.router.routerState.root);
-                this.setTitle(...titles, this.appName);
-            }
-        });
-    }
-
-    private setTitle(...titles) {
-        if (this.isMobile) {
-            this.title = titles[0];
-        }
-        else {
-            this.title = titles.filter(value => !!value).reverse().join(' | ');
-        }
-    }
-
-    private getTitle(state, parent) {
-        const data = [];
-        if (parent && parent.snapshot.data && parent.snapshot.data.title) {
-            data.push(parent.snapshot.data.title);
-        }
-
-        if (state && parent) {
-            data.push(... this.getTitle(state, state.firstChild(parent)));
-        }
-        return data;
-    }
-
-    private getBack(state, parent) {
-
-        if (parent && parent.snapshot.data && parent.snapshot.data.back) {
-            return parent.snapshot.data.back;
-        }
-
-        if (state && parent) {
-            return this.getBack(state, state.firstChild(parent));
-        }
-
-    }
-
-    ngOnDestroy(): void {
-        this.sub.unsubscribe();
-    }
+                private location: Location) {}
 
 
     openSideBar() {
         this.snav.emit();
     }
-
-    hideMenu() {
-        return !this.authenticated;
-    }
-
     doLogout() {
         this.logout.emit();
     }

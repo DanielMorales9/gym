@@ -8,7 +8,7 @@ import {CoreModule} from './core';
 import {GlobalErrorHandler, GymService} from './services';
 import {
     CurrentRolePipe,
-    ErrorComponent, MenuControlsComponent, NavBarComponent,
+    ErrorComponent, JoinStringPipe, MenuControlsComponent, NavBarComponent,
     PrimaryAdminControlsComponent,
     PrimaryCustomerControlsComponent,
     PrimaryTrainerControlsComponent, ShowRolePipe,
@@ -57,6 +57,7 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
         TimeAgoExtendsPipe,
         ShowRolePipe,
         CurrentRolePipe,
+        JoinStringPipe,
         MenuControlsComponent
     ],
     entryComponents: [

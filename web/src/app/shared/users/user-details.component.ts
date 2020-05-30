@@ -15,7 +15,6 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './user-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserDetailsComponent extends BaseComponent implements OnInit {
 

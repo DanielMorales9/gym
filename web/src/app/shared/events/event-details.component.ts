@@ -13,7 +13,6 @@ import {forkJoin, Observable} from 'rxjs';
 @Component({
     templateUrl: './event-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
-    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventDetailsComponent extends BaseComponent implements OnInit {
 
