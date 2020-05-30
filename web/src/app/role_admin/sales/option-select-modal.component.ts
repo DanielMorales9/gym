@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {CourseBundle, CourseBundleSpecification, Sale} from '../../shared/model';
@@ -8,7 +8,8 @@ import {BaseComponent} from '../../shared/base-component';
 
 @Component({
     templateUrl: './option-select-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OptionSelectModalComponent extends BaseComponent {
 

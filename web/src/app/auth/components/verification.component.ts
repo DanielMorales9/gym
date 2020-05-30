@@ -1,5 +1,5 @@
 import {ActivatedRoute, ParamMap, Router} from '@angular/router';
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../core/functions';
@@ -12,7 +12,8 @@ import {BaseComponent} from '../../shared/base-component';
 
 @Component({
     templateUrl: './verification.component.html',
-    styleUrls: ['../../styles/root.css', './auth.css']
+    styleUrls: ['../../styles/root.css', './auth.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VerificationComponent extends BaseComponent implements OnInit {
 

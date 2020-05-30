@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {User} from '../model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
@@ -7,7 +7,8 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 @Component({
     selector: 'user-patch-modal',
     templateUrl: './user-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserModalComponent implements OnInit {
 

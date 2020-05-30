@@ -1,15 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
 import {User, USER_TYPE} from '../model';
-import {catchError, map} from 'rxjs/operators';
-import {error} from '@angular/compiler/src/util';
-import {throwError} from 'rxjs';
 
 @Component({
     templateUrl: './user-controls.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UserControlsComponent implements OnInit {
 

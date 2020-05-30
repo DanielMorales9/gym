@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {User} from '../model';
 import {UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
@@ -19,6 +19,7 @@ import {BaseComponent} from '../base-component';
 @Component({
     templateUrl: './profile.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileComponent extends BaseComponent implements OnInit {
 
@@ -31,7 +32,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
                 private authService: AuthService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog,
-                private _cd: ChangeDetectorRef,
+                private cdr: ChangeDetectorRef,
                 private _dialog: LyDialog) {
         super();
     }
@@ -96,7 +97,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
             .subscribe((result?: ImgCropperEvent) => {
             if (result) {
                 const cropped = result.dataURL;
-                this._cd.markForCheck();
+                this.cdr.markForCheck();
 
                 const file = this.dataURLtoFile(result.dataURL, selectedFile.name);
                 const uploadImageData = new FormData();
@@ -130,7 +131,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
             }, err => {
                 const gender = this.user.gender ? 'woman' : 'man';
                 this.image_src = `https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
-            });
+            }, () => {this.cdr.detectChanges()});
     }
 
     getRoleName() {

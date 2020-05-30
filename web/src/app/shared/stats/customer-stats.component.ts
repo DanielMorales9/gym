@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild} from '@angular/core';
 import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
@@ -7,7 +7,7 @@ import 'rxjs/add/operator/toPromise';
 import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
 import {AuthenticationService} from '../../core/authentication';
-import {feedChart, padding} from './padding';
+import {feedChart} from './padding';
 
 
 function insertAt(array, index, ...elementsArray) {
@@ -17,7 +17,8 @@ function insertAt(array, index, ...elementsArray) {
 
 @Component({
   templateUrl: './customer-stats.component.html',
-  styleUrls: ['../../styles/root.css', '../../styles/card.css']
+  styleUrls: ['../../styles/root.css', '../../styles/card.css'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerStatsComponent extends BaseComponent implements OnInit {
 
@@ -72,6 +73,7 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
 
   constructor(private statsService: StatsService,
               private authService: AuthenticationService,
+              private cdr: ChangeDetectorRef,
               private route: ActivatedRoute) {
     super();
   }
@@ -107,6 +109,8 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
     this.intervalName = this.INTERVAL_NAME[interval];
     this.getCustomerReservationsByWeek(interval, this.id)
         .pipe(takeUntil(this.unsubscribe$))
-        .subscribe(v => v);
+        .subscribe(v => {
+          this.cdr.detectChanges();
+        });
   }
 }

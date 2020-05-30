@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthService} from '../../core/controllers';
@@ -6,7 +6,8 @@ import {SnackBarService} from '../../core/utilities';
 
 @Component({
     templateUrl: './send-change-password-token.component.html',
-    styleUrls: ['../../styles/root.css', './auth.css']
+    styleUrls: ['../../styles/root.css', './auth.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SendChangePasswordTokenComponent implements OnInit {
 

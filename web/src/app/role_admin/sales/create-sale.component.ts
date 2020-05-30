@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BundleSpecification, Sale} from '../../shared/model';
 import {BundleSpecHelperService, QueryableDatasource, SaleHelperService} from '../../core/helpers';
@@ -12,7 +12,8 @@ import {BaseComponent} from '../../shared/base-component';
 
 @Component({
     templateUrl: './create-sale.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css']
+    styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CreateSaleComponent extends BaseComponent implements OnInit, OnDestroy {
 

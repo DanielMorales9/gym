@@ -1,21 +1,10 @@
-import {
-    Component,
-    ComponentFactory,
-    ComponentFactoryResolver,
-    ComponentRef,
-    Input, OnDestroy,
-    OnInit,
-    Type,
-    ViewChild,
-    ViewContainerRef
-} from '@angular/core';
-import {ActivatedRoute, ActivatedRouteSnapshot, NavigationEnd, Router} from '@angular/router';
-import {MatSidenav} from '@angular/material/sidenav';
-import {ISubscription} from 'rxjs-compat/Subscription';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
     templateUrl: './calendar-controls.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CalendarControlsComponent {
 

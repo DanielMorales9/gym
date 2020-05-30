@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {User} from '../../shared/model';
 import {UserHelperService} from '../../core/helpers';
@@ -11,7 +11,8 @@ import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './modify-password.component.html',
-    styleUrls: ['../../styles/root.css', './auth.css']
+    styleUrls: ['../../styles/root.css', './auth.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ModifyPasswordComponent extends BaseComponent implements OnInit {
 

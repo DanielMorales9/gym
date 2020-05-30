@@ -1,23 +1,22 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../model';
-import {UserService} from '../../core/controllers';
+import {AuthService, UserService} from '../../core/controllers';
 import {GymService} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
 import {AuthenticationService} from '../../core/authentication';
-import {AuthService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
-import {UserHelperService, QueryableDatasource} from '../../core/helpers';
+import {QueryableDatasource, UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
-import {first} from 'rxjs/operators/first';
-import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
-import {Observable, of} from 'rxjs';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
+import {Observable} from 'rxjs';
 import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './users.component.html',
-    styleUrls: ['../../styles/search-list.css']
+    styleUrls: ['../../styles/search-list.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent extends BaseComponent implements OnInit {
 
@@ -65,7 +64,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
             .subscribe(params => {
                 this.queryParams = Object.assign({}, params);
                 this.search(this.queryParams);
-        });
+            });
     }
 
     private updateQueryParams($event?) {

@@ -1,10 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {AuthenticationService} from '../core/authentication';
 import {User} from '../shared/model';
 
 @Component({
     templateUrl: './primary-customer-controls.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PrimaryCustomerControlsComponent implements OnInit {
 

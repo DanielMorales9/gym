@@ -9,7 +9,6 @@ import {User} from '../model';
     templateUrl: './user-item.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
-
 })
 export class UserItemComponent {
 

@@ -197,7 +197,7 @@ export class AuthenticationService {
         }
     }
 
-    getCurrentUserRole() {
+    getCurrentUserRoleId() {
         if (!this.currentRole) {
 
             this.currentRole = this.getPrincipalRole();
@@ -219,7 +219,7 @@ export class AuthenticationService {
     }
 
     getUserRoleName() {
-        const idx = this.getCurrentUserRole();
+        const idx = this.getCurrentUserRoleId();
         return this.INDEX2NAME[idx - 1];
     }
 

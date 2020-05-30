@@ -1,4 +1,4 @@
-import {Component, Inject} from '@angular/core';
+import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {USER_INDEX} from '../../shared/model';
@@ -6,7 +6,8 @@ import {Router} from '@angular/router';
 
 @Component({
     templateUrl: './trainer-info-modal.component.html',
-    styleUrls: ['../../styles/root.css']
+    styleUrls: ['../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TrainerInfoModalComponent extends BaseCalendarModal {
 

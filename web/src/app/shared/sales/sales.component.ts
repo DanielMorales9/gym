@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Sale} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SalesService} from '../../core/controllers';
@@ -12,7 +12,8 @@ import {BaseComponent} from '../base-component';
 
 @Component({
     templateUrl: './sales.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css']
+    styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SalesComponent extends BaseComponent implements OnInit {
 

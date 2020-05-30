@@ -1,6 +1,6 @@
 import {QueryableDatasource, WorkoutHelperService} from '../../core/helpers';
 import {Workout} from '../model';
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
 import {BaseComponent} from '../base-component';
 import {WorkoutService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
@@ -11,7 +11,8 @@ import {Location} from '@angular/common';
 
 @Component({
     templateUrl: './assign-workouts.component.html',
-    styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css']
+    styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AssignWorkoutsComponent extends BaseComponent implements OnInit, OnDestroy {
 
