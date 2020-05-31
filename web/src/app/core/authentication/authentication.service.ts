@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 
 import {HttpClient} from '@angular/common/http';
 import {Credentials, Role, Roles, TypeIndex, User} from '../../shared/model';
 import {StorageService} from './storage.service';
-import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
+import {catchError, map, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
 import {Observable, of, Subject} from 'rxjs';
 
@@ -14,7 +14,7 @@ import {Observable, of, Subject} from 'rxjs';
 @Injectable({
     providedIn: 'root'
 })
-export class AuthenticationService {
+export class AuthenticationService implements OnInit, OnDestroy {
 
     private readonly CREDENTIAL_KEY = 'credentials';
     private readonly USER_KEY = 'user';
@@ -25,14 +25,36 @@ export class AuthenticationService {
 
     private readonly TTL = environment.production ? 10000 : 0;
 
+    private unsubscribe$ = new Subject<any>();
+    private currentRoleId$ = new Subject<number>();
     private roles$ = new Subject<Role[]>();
 
-    private currentRole: number;
     private user: User;
+    private currentRoleId: number;
     private remember: boolean;
 
     constructor(private http: HttpClient,
                 private storageService: StorageService) { }
+
+    ngOnInit() {
+        this.currentRoleId$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => {
+            this.currentRoleId = v;
+            this.storageService.set(this.ROLE_KEY, this.currentRoleId);
+        });
+
+        this.roles$
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => {
+                this.currentRoleId$.next(this.currentRoleId || v[0].id);
+            });
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
 
     /**
      * logs-in the user.
@@ -47,7 +69,16 @@ export class AuthenticationService {
                 }
                 return of(data);
             }
-        ));
+        ), map(u => {
+            this.setRoles(u);
+            return u;
+        }));
+    }
+
+    private setRoles(u: User) {
+        if (!!u && !!u.roles) {
+            this.roles$.next(u.roles);
+        }
     }
 
     private getUserDetails(username): Observable<any> {
@@ -73,7 +104,6 @@ export class AuthenticationService {
                         if (!!u) {
                             this.setWithExpiry(this.USER_EXPIRE_KEY, u, this.TTL);
                         }
-                        this.roles$.next(u.roles);
                         return u;
                     }
                 ));
@@ -109,7 +139,8 @@ export class AuthenticationService {
         let ret;
         if (!principal) {
             ret = this.signIn()
-                .pipe(throttleTime(300), catchError(err => of(undefined)),
+                .pipe(throttleTime(300),
+                    catchError(err => of(undefined)),
                     map(v => {
                         if (!!v) {
                             this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, v, this.TTL);
@@ -132,7 +163,7 @@ export class AuthenticationService {
     logout(): Observable<any> {
         // Customize credentials invalidation here
         return this.signOut().pipe(map( _ => {
-                this.currentRole = undefined;
+                this.currentRoleId = undefined;
                 this.storageService.set(this.CREDENTIAL_KEY);
                 this.storageService.set(this.USER_KEY);
                 localStorage.removeItem(this.USER_EXPIRE_KEY);
@@ -157,8 +188,7 @@ export class AuthenticationService {
 
     getPrincipalRole() {
         const user = this.getUser();
-        this.currentRole = this.getRoleByUser(user);
-        return this.currentRole;
+        return this.getRoleByUser(user);
     }
 
     getRoleByUser(user: User) {
@@ -170,12 +200,7 @@ export class AuthenticationService {
     }
 
     getCurrentUserRoleId() {
-        if (!this.currentRole) {
-
-            this.currentRole = this.getPrincipalRole();
-            this.setCurrentUserRole(this.currentRole);
-        }
-        return this.currentRole;
+        return this.currentRoleId$;
     }
 
     getUser(): User {
@@ -185,8 +210,8 @@ export class AuthenticationService {
         return this.user;
     }
 
-    getUserRoleName() {
-        const idx = this.getCurrentUserRoleId();
+    getUserRoleName(currentRoleId?) {
+        const idx = currentRoleId || this.currentRoleId || 1;
         return Roles[idx - 1];
     }
 
@@ -195,14 +220,12 @@ export class AuthenticationService {
     }
 
     setCurrentUserRole(idx?: number) {
-        this.currentRole = idx;
-        this.storageService.set(this.ROLE_KEY, this.currentRole);
+        this.currentRoleId$.next(idx);
     }
 
     private getDefaultRole() {
         const user = this.getUser();
-        this.currentRole = this.getRoleByUser(user);
-        return this.currentRole;
+        return this.getRoleByUser(user);
     }
 
     private signIn(): Observable<any> {

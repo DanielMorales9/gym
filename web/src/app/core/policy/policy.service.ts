@@ -1,12 +1,21 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../authentication';
+import {BaseComponent} from '../../shared/base-component';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @Injectable()
-export class PolicyService {
+export class PolicyService implements OnInit, OnDestroy {
 
     constructor(private auth: AuthenticationService) {}
 
+    unsubscribe$ = new Subject<void>();
+    currentRoleId = 1;
+
     ADMIN_POLICY = {
+        gym: {
+            canEdit: true
+        },
         bundleSpec: {
             canDelete: true,
             canEdit: true,
@@ -252,9 +261,20 @@ export class PolicyService {
 
     POLICIES = [this.ADMIN_POLICY, this.TRAINER_POLICY, this.CUSTOMER_POLICY];
 
+    ngOnInit() {
+        this.auth.getCurrentUserRoleId()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => this.currentRoleId = v);
+    }
+
+    ngOnDestroy(): void {
+        this.unsubscribe$.next();
+        this.unsubscribe$.complete();
+    }
+
 
     get(entity: string, ...action) {
-        const myPolicy = this.POLICIES[this.auth.getCurrentUserRoleId() - 1];
+        const myPolicy = this.POLICIES[this.currentRoleId - 1];
         if (entity in myPolicy) {
             let policy = myPolicy[entity];
             let a, index;

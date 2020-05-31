@@ -34,18 +34,15 @@ export class LoginComponent extends BaseComponent implements OnInit {
             password: this.password.value,
             remember: false
         };
+
         this.auth.login(this.credentials)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(data => {
                 if (!!data) {
-                    const roleId = this.auth.getPrincipalRole();
-                    const roleName = data.roles.find(value => value.id === roleId).name.toLowerCase();
-                    this.error = false;
+                    const roleName = this.auth.getUserRoleName(data.roles[0].id);
                     this.router.navigateByUrl(roleName);
                 }
-                else {
-                    this.error = true;
-                }
+                this.error = !!data;
             });
     }
 

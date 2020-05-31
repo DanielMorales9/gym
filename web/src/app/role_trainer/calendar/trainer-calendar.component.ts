@@ -69,7 +69,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
                     action: EVENT_TYPES.CHANGE,
                     title: 'Orario di Ferie',
                     userId: this.user.id,
-                    role: this.role,
+                    role: this.currentRoleId,
                     event: event
                 };
                 this.openModal(action);
@@ -85,7 +85,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
                     action: EVENT_TYPES.HEADER,
                     title: 'Giorno di Ferie',
                     userId: this.user.id,
-                    role: this.role,
+                    role: this.currentRoleId,
                     event: event
                 };
                 this.openModal(action);
@@ -99,7 +99,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
             action: EVENT_TYPES.DELETE,
             title: `Sei sicuro di voler eliminare la ${event.meta.eventName} ?`,
             userId: this.user.id,
-            role: this.role,
+            role: this.currentRoleId,
             event: event
         };
         this.openModal(action);
@@ -110,7 +110,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
             action: EVENT_TYPES.HOUR,
             title: 'Orario di Ferie',
             userId: this.user.id,
-            role: this.role,
+            role: this.currentRoleId,
             event: event
         };
         this.openModal(action);
@@ -122,7 +122,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
             action: EVENT_TYPES.INFO,
             title: event.title,
             userId: this.user.id,
-            role: this.role,
+            role: this.currentRoleId,
             event: event
         };
         this.openModal(action);

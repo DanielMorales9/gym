@@ -19,6 +19,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
 
     roles: Role[];
     currentRoleId: number;
+    roleName: string;
 
     constructor(private auth: AuthenticationService,
                 private cdr: ChangeDetectorRef,
@@ -30,14 +31,29 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
         this.getRoles();
     }
 
-    private getRoles() {
+    getRoles() {
         this.auth.getRoles()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( v => {
                 this.roles = v.map(d => new Role(d.id, RoleNames[d.name]));
-                this.currentRoleId = this.auth.getCurrentUserRoleId();
-                this.cdr.detectChanges();
+                this.setCurrentRole(this.currentRoleId || this.roles[0].id);
             });
+
+        this.auth.getCurrentUserRoleId()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe( v => {
+                this.setCurrentRole(v);
+            });
+    }
+
+    setCurrentRole(v) {
+        if (this.currentRoleId !== v) {
+            this.currentRoleId = v;
+            this.roleName = this.auth.getUserRoleName(this.currentRoleId);
+            this.router.navigateByUrl(this.roleName);
+            this.cdr.detectChanges();
+
+        }
     }
 
     doLogout() {
@@ -45,19 +61,18 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
     }
 
     goToProfile() {
-        this.router.navigateByUrl(this.auth.getUserRoleName() + '/profile');
+        this.router.navigateByUrl(this.roleName + '/profile');
     }
 
     goToGym() {
-        this.router.navigateByUrl(this.auth.getUserRoleName() + '/settings/gym');
+        this.router.navigateByUrl(this.roleName + '/settings/gym');
     }
 
     gotToStats() {
-        this.router.navigateByUrl(this.auth.getUserRoleName() + '/stats');
+        this.router.navigateByUrl(this.roleName + '/stats');
     }
 
     switchRole(id: number) {
         this.auth.setCurrentUserRole(id);
-        this.router.navigateByUrl(this.auth.getUserRoleName());
     }
 }
