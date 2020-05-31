@@ -158,7 +158,6 @@ export class StatsComponent extends BaseComponent implements OnInit {
         super();
     }
 
-
     ngOnInit(): void {
         this.updateCharts();
     }
@@ -171,11 +170,13 @@ export class StatsComponent extends BaseComponent implements OnInit {
                     this.MONTHS_OF_YEAR,
                     this.MONTHS_IDX,
                     { totalprice: 0, amountpayed: 0 });
+                data.sort((a, b) => this.MONTHS_OF_YEAR[a.month] - this.MONTHS_OF_YEAR[b.month]);
+
                 this.barChartLabels = data.map(v => v.month);
 
                 this.barChartData = [
-                    {data: d.map(v => v.totalprice), label: 'Totale'},
-                    {data: d.map(v => v.amountpayed), label: 'Pagato'}
+                    {data: data.map(v => v.totalprice), label: 'Totale'},
+                    {data: data.map(v => v.amountpayed), label: 'Pagato'}
                 ];
                 this.barChart.datasets = this.barChartData;
                 this.barChart.labels = this.barChartLabels;

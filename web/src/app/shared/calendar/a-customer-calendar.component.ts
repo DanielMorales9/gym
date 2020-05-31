@@ -72,7 +72,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 return r;
             }),
             map(r => {
-                this.role = this.facade.getRoleByUser(r);
+                this.currentRoleId = this.facade.getRoleByUser(r);
                 return r;
             })
         );
@@ -94,7 +94,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 action: action,
                 title: `Prenota l\'allenamento per ${this.user.firstName} ${this.user.lastName}!`,
                 userId: this.user.id,
-                role: this.role,
+                role: this.currentRoleId,
                 event: event
             };
             this.openModal(action);
@@ -108,7 +108,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         this.modalData = {
             action: action,
             title: `Sei sicuro di voler eliminare la prenotazione per ${this.user.firstName} ${this.user.lastName}?`,
-            role: this.role,
+            role: this.currentRoleId,
             userId: this.user.id,
             event: event
         };
@@ -121,7 +121,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         this.modalData = {
             action: action,
             title: event.title,
-            role: this.role,
+            role: this.currentRoleId,
             userId: this.user.id,
             event: event
         };

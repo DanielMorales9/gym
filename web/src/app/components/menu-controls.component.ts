@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../core/authentication';
-import {Role} from '../shared/model';
-import {Observable, of} from 'rxjs';
+import {Role, RoleNames} from '../shared/model';
+import {BaseComponent} from '../shared/base-component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'menu',
@@ -10,30 +11,49 @@ import {Observable, of} from 'rxjs';
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuControlsComponent implements OnInit {
+export class MenuControlsComponent extends BaseComponent implements OnInit {
 
     @Input() hideLogin;
     @Input() hideMenu;
     @Output() logout = new EventEmitter();
+
     roles: Role[];
     currentRoleId: number;
-
+    roleName: string;
 
     constructor(private auth: AuthenticationService,
+                private cdr: ChangeDetectorRef,
                 private router: Router) {
+        super();
     }
 
     ngOnInit(): void {
         this.getRoles();
-        this.getCurrentRoleId();
     }
 
-    private getRoles() {
-         this.roles = this.auth.getRoles().sort(a => a.id);
+    getRoles() {
+        this.auth.getRoles()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe( v => {
+                this.roles = v.map(d => new Role(d.id, RoleNames[d.name]));
+                this.setCurrentRole(this.currentRoleId || this.roles[0].id);
+            });
+
+        this.auth.getCurrentUserRoleId()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe( v => {
+                this.setCurrentRole(v);
+            });
     }
 
-    private getCurrentRoleId() {
-        this.currentRoleId = this.auth.getCurrentUserRoleId();
+    setCurrentRole(v) {
+        if (this.currentRoleId !== v) {
+            this.currentRoleId = v;
+            this.roleName = this.auth.getUserRoleName(this.currentRoleId);
+            this.router.navigateByUrl(this.roleName);
+            this.cdr.detectChanges();
+
+        }
     }
 
     doLogout() {
@@ -41,19 +61,18 @@ export class MenuControlsComponent implements OnInit {
     }
 
     goToProfile() {
-        this.router.navigateByUrl(this.auth.getUserRoleName() + '/profile');
+        this.router.navigateByUrl(this.roleName + '/profile');
     }
 
     goToGym() {
-        this.router.navigateByUrl(this.auth.getUserRoleName() + '/settings/gym');
+        this.router.navigateByUrl(this.roleName + '/settings/gym');
     }
 
     gotToStats() {
-        this.router.navigateByUrl(this.auth.getUserRoleName() + '/stats');
+        this.router.navigateByUrl(this.roleName + '/stats');
     }
 
     switchRole(id: number) {
         this.auth.setCurrentUserRole(id);
-        this.router.navigateByUrl(this.auth.getUserRoleName());
     }
 }

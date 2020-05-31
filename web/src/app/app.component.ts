@@ -60,9 +60,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         return data;
     }
 
-    private getCurrentRole() {
-        return this.auth.getCurrentUserRoleId();
-    }
 
     private authenticate() {
         return this.auth.login()
@@ -142,10 +139,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     goHome() {
         if (this.authenticated && this.hasUser()) {
-            const roleName = this.getUser().roles
-                .find(value => value.id === this.getCurrentRole())
-                .name.toLowerCase();
-            this.router.navigateByUrl(roleName);
+            this.router.navigateByUrl(this.auth.getUserRoleName());
         }
         else {
             this.router.navigateByUrl('/auth');

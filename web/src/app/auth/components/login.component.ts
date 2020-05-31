@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationService, Credentials} from '../../core/authentication';
+import {AuthenticationService} from '../../core/authentication';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
+import {Credentials} from '../../shared/model';
 
 @Component({
     templateUrl: './login.component.html',
@@ -33,18 +34,15 @@ export class LoginComponent extends BaseComponent implements OnInit {
             password: this.password.value,
             remember: false
         };
+
         this.auth.login(this.credentials)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(data => {
                 if (!!data) {
-                    const roleId = this.auth.getPrincipalRole();
-                    const roleName = data.roles.find(value => value.id === roleId).name.toLowerCase();
-                    this.error = false;
+                    const roleName = this.auth.getUserRoleName(data.roles[0].id);
                     this.router.navigateByUrl(roleName);
                 }
-                else {
-                    this.error = true;
-                }
+                this.error = !!data;
             });
     }
 

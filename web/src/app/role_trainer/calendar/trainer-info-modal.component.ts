@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
-import {USER_INDEX} from '../../shared/model';
+import {UserIndex} from '../../shared/model';
 import {Router} from '@angular/router';
 
 @Component({
@@ -41,7 +41,7 @@ export class TrainerInfoModalComponent extends BaseCalendarModal {
     }
 
     info() {
-        const root = USER_INDEX[this.modalData.role];
+        const root = UserIndex[this.modalData.role];
         this.router.navigate([root, 'events', this.modalData.event.meta.id]);
         this.dialogRef.close();
     }

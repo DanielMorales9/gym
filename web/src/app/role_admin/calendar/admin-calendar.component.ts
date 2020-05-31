@@ -53,7 +53,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                     action: EVENT_TYPES.HEADER,
                     title: 'Giorno di Chiusura',
                     userId: this.user.id,
-                    role: this.role,
+                    role: this.currentRoleId,
                     event: event
                 };
                 this.openModal(action);
@@ -65,7 +65,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             action: EVENT_TYPES.DELETE,
             title: `Sei sicuro di voler eliminare ${event.meta.eventName}?`,
             userId: this.user.id,
-            role: this.role,
+            role: this.currentRoleId,
             event: event
         };
         this.openModal(action);
@@ -80,7 +80,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                     action: EVENT_TYPES.HOUR,
                     title: 'Crea Evento',
                     userId: this.user.id,
-                    role: this.role,
+                    role: this.currentRoleId,
                     event: event
                 };
                 this.openModal(action);
@@ -94,7 +94,7 @@ export class AdminCalendarComponent extends BaseCalendar {
             action: EVENT_TYPES.INFO,
             title: event.title,
             userId: this.user.id,
-            role: this.role,
+            role: this.currentRoleId,
             event: event
         };
         this.openModal(action);
@@ -107,7 +107,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                     action: EVENT_TYPES.CHANGE,
                     title: 'Cambia chiusura',
                     userId: this.user.id,
-                    role: this.role,
+                    role: this.currentRoleId,
                     event: event
                 };
                 this.openModal(action);

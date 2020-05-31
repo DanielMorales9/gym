@@ -128,9 +128,11 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe((res: any) => {
                 this.image_src = `data:${res.type};base64,${res.picByte}`;
+                this.cdr.detectChanges();
             }, err => {
                 const gender = this.user.gender ? 'woman' : 'man';
                 this.image_src = `https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
+                this.cdr.detectChanges();
             });
     }
 

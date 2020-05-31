@@ -66,10 +66,6 @@ export class GymService {
         return this.gym[dayS + 'EndHour'];
     }
 
-    canEdit() {
-        return this.auth.getCurrentUserRoleId() === 1;
-    }
-
     isDayEvent(start: Date, end: Date) {
         const startHour = this.getStartHourByDate(start);
         const endHour = this.getEndHourByDate(end);

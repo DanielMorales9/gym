@@ -66,7 +66,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
                     action: action,
                     title: 'Prenota il tuo allenamento!',
                     userId: this.user.id,
-                    role: this.role,
+                    role: this.currentRoleId,
                     event: event
                 };
                 this.openModal(action);
@@ -79,7 +79,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         this.modalData = {
             action: action,
             title: `Sei sicuro di voler eliminare la prenotazione?`,
-            role: this.role,
+            role: this.currentRoleId,
             userId: this.user.id,
             event: event
         };
@@ -91,7 +91,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         this.modalData = {
             action: action,
             title: event.title,
-            role: this.role,
+            role: this.currentRoleId,
             userId: this.user.id,
             event: event
         };

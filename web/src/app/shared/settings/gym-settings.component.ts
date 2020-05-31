@@ -6,6 +6,7 @@ import {GymModalComponent} from './gym-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {filter, share, switchMap, take} from 'rxjs/operators';
 import {AuthenticationService} from '../../core/authentication';
+import {PolicyService} from '../../core/policy';
 
 @Component({
     templateUrl: './gym-settings.component.html',
@@ -21,6 +22,7 @@ export class GymSettingsComponent implements OnInit {
                 private authService: AuthenticationService,
                 private snackbar: SnackBarService,
                 private cdr: ChangeDetectorRef,
+                private policy: PolicyService,
                 private dialog: MatDialog) {
     }
 
@@ -34,7 +36,7 @@ export class GymSettingsComponent implements OnInit {
                 this.gym = res;
                 this.cdr.detectChanges();
             });
-        this.canEdit = this.gymService.canEdit();
+        this.canEdit = this.policy.get('gym', 'canEdit');
     }
 
     openDialog(): void {

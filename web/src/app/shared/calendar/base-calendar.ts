@@ -100,7 +100,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     public hourSegments: number;
     public weekStartsOn: number;
     public activeDayIsOpen: boolean;
-    public role: number;
+    public currentRoleId: number;
     public gym: Gym;
     private queryParams: {view: CalendarView, viewDate: Date};
     user: User;
@@ -175,38 +175,42 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected getRole() {
-        this.role = this.facade.getRole();
+        this.facade.getRole()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => {
+                this.currentRoleId = v;
+            });
     }
 
     private initCalendarConfig() {
-        this.facade.getConfig().pipe(
-            takeUntil(this.unsubscribe$)
-        ).subscribe((config: Gym) => {
-            this.gym = config;
-            this.dayStartHour = 24;
-            this.dayEndHour = 0;
-            const split = config.minutesBetweenEvents;
-            if (!split || split === 0) {
-                this.hourSegments = 1;
-            }
-            else {
-                this.hourSegments = Math.ceil(60 / split);
-            }
-
-            this.excludeDays = [];
-
-            // tslint:disable-next-line:forin
-            for (const key in this.DAY_OF_WEEK) {
-                if (!config[key + 'Open']) {
-                    this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
-                } else {
-                    this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
-                    this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
+        this.facade.getConfig()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe((config: Gym) => {
+                this.gym = config;
+                this.dayStartHour = 24;
+                this.dayEndHour = 0;
+                const split = config.minutesBetweenEvents;
+                if (!split || split === 0) {
+                    this.hourSegments = 1;
+                }
+                else {
+                    this.hourSegments = Math.ceil(60 / split);
                 }
 
-            }
+                this.excludeDays = [];
 
-            this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
+                // tslint:disable-next-line:forin
+                for (const key in this.DAY_OF_WEEK) {
+                    if (!config[key + 'Open']) {
+                        this.excludeDays.push(this.DAY_OF_WEEK[key.replace('Open', '')]);
+                    } else {
+                        this.dayStartHour = Math.min(this.dayStartHour, config[key + 'StartHour']);
+                        this.dayEndHour = Math.max(this.dayEndHour, config[key + 'EndHour'] - 1);
+                    }
+
+                }
+
+                this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
         });
     }
 
