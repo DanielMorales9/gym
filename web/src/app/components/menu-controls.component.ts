@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Router} from '@angular/router';
 import {AuthenticationService} from '../core/authentication';
-import {Role} from '../shared/model';
-import {Observable, of} from 'rxjs';
+import {Role, RoleNames} from '../shared/model';
+import {BaseComponent} from '../shared/base-component';
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     selector: 'menu',
@@ -10,30 +11,33 @@ import {Observable, of} from 'rxjs';
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MenuControlsComponent implements OnInit {
+export class MenuControlsComponent extends BaseComponent implements OnInit {
 
     @Input() hideLogin;
     @Input() hideMenu;
     @Output() logout = new EventEmitter();
+
     roles: Role[];
     currentRoleId: number;
 
-
     constructor(private auth: AuthenticationService,
+                private cdr: ChangeDetectorRef,
                 private router: Router) {
+        super();
     }
 
     ngOnInit(): void {
         this.getRoles();
-        this.getCurrentRoleId();
     }
 
     private getRoles() {
-         this.roles = this.auth.getRoles().sort(a => a.id);
-    }
-
-    private getCurrentRoleId() {
-        this.currentRoleId = this.auth.getCurrentUserRoleId();
+        this.auth.getRoles()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe( v => {
+                this.roles = v.map(d => new Role(d.id, RoleNames[d.name]));
+                this.currentRoleId = this.auth.getCurrentUserRoleId();
+                this.cdr.detectChanges();
+            });
     }
 
     doLogout() {

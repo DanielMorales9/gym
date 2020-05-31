@@ -7,7 +7,7 @@ import {Role} from '../shared/model';
 export class ShowRolePipe implements PipeTransform {
 
     transform(roles: Role[], args?: any): any {
-        if (!!args) {
+        if (!!args && !!roles) {
             return roles.filter(r => r.id === args).length === 1;
         }
         return false;

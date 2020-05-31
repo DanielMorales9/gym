@@ -4,11 +4,31 @@ export enum USER_TYPE {
     C = 'customer'
 }
 
-export let USER_INDEX = {
+export let TypeIndex = {
+    'A': 1,
+    'T': 2,
+    'C': 3
+};
+
+export let UserIndex = {
     1: 'admin',
     2: 'trainer',
     3: 'customer'
 };
+
+export let Roles = [
+    'admin',
+    'trainer',
+    'customer'
+];
+
+export let RoleNames = {
+    'ADMIN': 'Amministratore',
+    'TRAINER': 'Allenatore',
+    'CUSTOMER': 'Cliente'
+};
+
+
 
 export class Role {
     id: number;

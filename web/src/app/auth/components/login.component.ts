@@ -1,9 +1,10 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationService, Credentials} from '../../core/authentication';
+import {AuthenticationService} from '../../core/authentication';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
+import {Credentials} from '../../shared/model';
 
 @Component({
     templateUrl: './login.component.html',

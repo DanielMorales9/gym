@@ -1,20 +1,11 @@
 import {Injectable} from '@angular/core';
 
 import {HttpClient} from '@angular/common/http';
-import {to_promise} from '../functions/decorators';
-import {User} from '../../shared/model';
+import {Credentials, Role, Roles, TypeIndex, User} from '../../shared/model';
 import {StorageService} from './storage.service';
 import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
 import {environment} from '../../../environments/environment';
-import {Observable, of} from 'rxjs';
-
-
-export interface Credentials {
-    // Customize received credentials here
-    username: string;
-    password: string;
-    remember: boolean;
-}
+import {Observable, of, Subject} from 'rxjs';
 
 /**
  * Provides a base for authentication workflow.
@@ -33,32 +24,12 @@ export class AuthenticationService {
     private readonly GYM_EXPIRE_KEY: 'gym_ttl';
 
     private readonly TTL = environment.production ? 10000 : 0;
+
+    private roles$ = new Subject<Role[]>();
+
+    private currentRole: number;
     private user: User;
     private remember: boolean;
-    private currentRole: number;
-
-    private TYPE2INDEX = {
-        'A': 1,
-        'T': 2,
-        'C': 3
-    };
-
-    private TYPE2NAME = {
-        'A': 'admin',
-        'T': 'trainer',
-        'C': 'customer'
-    };
-
-    private INDEX2NAME = [
-        'admin',
-        'trainer',
-        'customer'
-    ];
-    private ROLE2NAME = {
-        'ADMIN': 'Amministratore',
-        'TRAINER': 'Allenatore',
-        'CUSTOMER': 'Cliente'
-    };
 
     constructor(private http: HttpClient,
                 private storageService: StorageService) { }
@@ -99,12 +70,13 @@ export class AuthenticationService {
             res = this.findUserByEmail(username).pipe(
                 catchError(err => of(null)),
                 map(u => {
-                    if (!!u) {
-                        this.setWithExpiry(this.USER_EXPIRE_KEY, u, this.TTL);
+                        if (!!u) {
+                            this.setWithExpiry(this.USER_EXPIRE_KEY, u, this.TTL);
+                        }
+                        this.roles$.next(u.roles);
+                        return u;
                     }
-                    return u;
-                }
-            ));
+                ));
         }
         else {
             res = of(user);
@@ -128,7 +100,7 @@ export class AuthenticationService {
                     this.storageService.set(this.CREDENTIAL_KEY);
                 }
                 return v;
-        }));
+            }));
     }
 
 
@@ -191,7 +163,7 @@ export class AuthenticationService {
 
     getRoleByUser(user: User) {
         if (user.type) {
-            return this.TYPE2INDEX[this.user.type];
+            return TypeIndex[this.user.type];
         } else {
             return 3;
         }
@@ -206,11 +178,6 @@ export class AuthenticationService {
         return this.currentRole;
     }
 
-    hasRole(expectedRole: any) {
-        const idx = this.TYPE2INDEX[expectedRole];
-        return this.getRoles().filter( v => v.id === idx).length === 1;
-    }
-
     getUser(): User {
         if (!this.user) {
             this.user = this.storageService.get(this.USER_KEY) || {};
@@ -220,11 +187,11 @@ export class AuthenticationService {
 
     getUserRoleName() {
         const idx = this.getCurrentUserRoleId();
-        return this.INDEX2NAME[idx - 1];
+        return Roles[idx - 1];
     }
 
-    getRoles(): any[] {
-        return (this.getUser().roles || []).map(v => new Object({id: v.id, name: this.ROLE2NAME[v.name]}));
+    getRoles(): Subject<Role[]> {
+        return this.roles$;
     }
 
     setCurrentUserRole(idx?: number) {
@@ -264,7 +231,7 @@ export class AuthenticationService {
                 .pipe(map(v => {
                     this.setWithExpiry(this.GYM_EXPIRE_KEY, v, this.TTL);
                     return v;
-            }));
+                }));
         }
         else {
             res = of(gym);

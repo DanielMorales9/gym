@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {BaseCalendarModal} from './base-calendar-modal';
 import {Router} from '@angular/router';
-import {USER_INDEX} from '../model';
+import {UserIndex} from '../model';
 
 @Component({
     templateUrl: './customer-info-modal.component.html',
@@ -54,7 +54,7 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
     }
 
     info() {
-        const root = USER_INDEX[this.modalData.role];
+        const root = UserIndex[this.modalData.role];
         this.router.navigate([root, 'events', this.modalData.event.meta.id]);
         this.dialogRef.close();
     }
