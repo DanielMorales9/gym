@@ -17,7 +17,6 @@ import {Gym} from './shared/model';
 })
 export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
-    gym: Gym;
     appName: string;
     authenticated: boolean;
     isBack: boolean;
@@ -62,32 +61,27 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
 
     private authenticate() {
-        return this.auth.login()
-            .pipe(map(data => {
+        return this.auth.authenticate()
+            .pipe(
+                map(data => {
                     this.authenticated = !!data;
                     return data;
-                }
-            ));
+                }),
+                switchMap(v => this.auth.getUserDetails(v)));
     }
 
-    private getAppName(): Observable<any> {
-        let obs;
-        if (!this.gym) {
-            obs = this.auth.getGym();
+    private getAppName(v): Observable<any> {
+        if (!this.appName) {
+            return this.auth.getGym().pipe(map((data: Gym) => {
+                if (!!data) {
+                    this.appName = data.name;
+                    this.title = [this.appName];
+                    this.setTitle(this.appName);
+                }
+                return data;
+            }));
         }
-        else {
-            obs = of(this.gym);
-        }
-
-        return obs.pipe(map((data: Gym) => {
-            if (!!data) {
-                this.gym = data;
-                this.appName = data.name;
-                this.title = [this.appName];
-                this.setTitle(this.appName);
-            }
-            return data;
-        }));
+        return of(v);
     }
 
     logout() {
@@ -112,7 +106,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                     return v;
                 }),
                 switchMap(s => this.authenticate()),
-                switchMap(s => this.getAppName())
+                switchMap(s => this.getAppName(s))
             )
             .subscribe(_ => {
                 this.isBack = this.getBack(this.router.routerState, this.router.routerState.root);
@@ -160,10 +154,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         if (this.authenticated) {
             this.sideBar.toggle();
         }
-    }
-
-    private getUser() {
-        return this.auth.getUser();
     }
 
     private hasUser() {
