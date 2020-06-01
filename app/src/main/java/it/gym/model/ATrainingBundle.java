@@ -69,10 +69,21 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @Column(name = "start_time")
     private Date startTime;
 
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "end_time")
+    private Date endTime;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE})
     @JoinColumn(name = "option_id")
     private APurchaseOption option;
+
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
+    }
 
     public APurchaseOption getOption() {
         return option;
@@ -89,6 +100,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @JsonIgnore
     public abstract Double getPrice();
     public abstract ATrainingSession createSession(ATrainingEvent event);
+
+    public void terminate() {
+        this.setEndTime(this.getOption().getEndDate(this));
+    }
 
     public abstract void addSession(ATrainingSession session);
 
@@ -146,10 +161,6 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
 
     public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public Date getExpiredAt() {
-        return expiredAt;
     }
 
     public void setExpiredAt(Date expiredAt) {

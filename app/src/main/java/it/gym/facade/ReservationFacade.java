@@ -113,11 +113,13 @@ public class ReservationFacade {
 
     private void checkBundleIsReservable(Customer customer, ATrainingBundle bundle) {
         if (bundle.isExpired()) {
+            bundle.terminate();
             List<ATrainingBundle> expiredBundles = deleteExpiredBundles(customer);
             expiredBundles.forEach(trainingBundle -> trainingBundle.setExpiredAt(new Date()));
             customer.addToPreviousTrainingBundles(expiredBundles);
             customerService.save(customer);
             sendExpiredBundleEmail(customer, bundle);
+
             throw new MethodNotAllowedException("Hai completato tutte le sessioni " +
                     "di allenamento disponibili in questo pacchetto");
         }

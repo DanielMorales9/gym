@@ -34,4 +34,9 @@ public class TimePurchaseOption extends APurchaseOption {
         return new Date().after(addMonths(bundle.getStartTime(), this.getNumber()));
     }
 
+    @Override
+    public Date getEndDate(ATrainingBundle bundle) {
+        return addMonths(bundle.getStartTime(), this.getNumber());
+    }
+
 }
