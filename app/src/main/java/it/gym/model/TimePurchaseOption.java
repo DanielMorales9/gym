@@ -31,7 +31,8 @@ public class TimePurchaseOption extends APurchaseOption {
 
     @Override
     public Boolean isExpired(ATrainingBundle bundle) {
-        return new Date().after(addMonths(bundle.getStartTime(), this.getNumber()));
+        if (bundle.getStartTime() != null) return new Date().after(addMonths(bundle.getStartTime(), this.getNumber()));
+        else return false;
     }
 
     @Override

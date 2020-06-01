@@ -101,8 +101,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public abstract Double getPrice();
     public abstract ATrainingSession createSession(ATrainingEvent event);
 
-    public void terminate() {
+    public ATrainingBundle terminate() {
         this.setEndTime(this.getOption().getEndDate(this));
+        this.setExpiredAt(new Date());
+        return this;
     }
 
     public abstract void addSession(ATrainingSession session);
