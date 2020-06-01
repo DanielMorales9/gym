@@ -14,21 +14,9 @@ import java.util.*;
 @Generated //exclude coverage analysis on generated methods
 public class CourseTrainingBundle extends ATrainingBundle {
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "end_time")
-    private Date endTime;
-
     @Override
     public Double getPrice() {
         return this.getOption().getPrice(this);
-    }
-
-    public Date getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(Date endTime) {
-        this.endTime = endTime;
     }
 
     @Override
@@ -38,8 +26,10 @@ public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
     public Boolean isExpired() {
-        if (endTime == null) return this.getOption().isExpired(this);
-        return new Date().after(endTime);
+        if (this.getEndTime() == null) {
+            return this.getOption().isExpired(this);
+        }
+        return new Date().after(getEndTime());
     }
 
     @Override
@@ -86,7 +76,7 @@ public class CourseTrainingBundle extends ATrainingBundle {
     public String toString() {
         return "CourseTrainingBundle{" + super.toString()+
                 ", startTime=" + getStartTime() +
-                ", endTime=" + endTime +
+                ", endTime=" + getEndTime() +
                 ", option=" + getOption().toString() +
                 '}';
     }

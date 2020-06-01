@@ -101,4 +101,5 @@ public abstract class APurchaseOption implements Serializable, Eager<APurchaseOp
         return this;
     }
 
+    public abstract Date getEndDate(ATrainingBundle bundle);
 }

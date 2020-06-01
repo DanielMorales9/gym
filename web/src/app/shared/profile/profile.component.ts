@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {User} from '../model';
+import {TypeNames, User} from '../model';
 import {UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from '../users';
@@ -26,6 +26,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     user: User;
     image_src: any;
     image_name: 'Immagine Profilo';
+    mapNames = TypeNames;
 
     constructor(private auth: AuthenticationService,
                 private userService: UserService,
@@ -137,27 +138,6 @@ export class ProfileComponent extends BaseComponent implements OnInit {
 
             });
     }
-
-    getRoleName() {
-        let name;
-        if (!this.user) { return name; }
-        switch (this.user.type) {
-            case 'A':
-                name = 'Amministratore';
-                break;
-            case 'C':
-                name = 'Cliente';
-                break;
-            case 'T':
-                name = 'Allenatore';
-                break;
-            default:
-                name = 'Cliente';
-                break;
-        }
-        return name;
-    }
-
     openImageDialog() {
         const dialogRef = this.dialog.open(ImageModalComponent, {
             data: this.image_src

@@ -8,7 +8,7 @@
         <mat-card-content>
             <div class="summary-info">
                 <div>
-                    <mat-icon fontSet="fa" fontIcon="fa-user-tag"></mat-icon>&nbsp;{{getRoleName()}}
+                    <mat-icon fontSet="fa" fontIcon="fa-user-tag"></mat-icon>&nbsp;{{ user?.type | map: mapNames }}
                 </div>
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-{{user?.gender ? 'venus' : 'mars'}}"></mat-icon>&nbsp;&nbsp;

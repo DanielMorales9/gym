@@ -46,7 +46,7 @@ import {
     WorkoutItemComponent,
     WorkoutDetailsComponent,
     AssignWorkoutsComponent,
-    WorkoutSelectItemComponent, ProgrammeComponent
+    WorkoutSelectItemComponent, ProgrammeComponent, MapStringPipe
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {
@@ -207,7 +207,8 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutDetailsComponent,
         AssignWorkoutsComponent,
         ProgrammeComponent,
-        WorkoutSelectItemComponent
+        WorkoutSelectItemComponent,
+        MapStringPipe
     ],
     exports: [
         CalendarControlsComponent,
@@ -259,7 +260,8 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutDetailsComponent,
         AssignWorkoutsComponent,
         ProgrammeComponent,
-        WorkoutSelectItemComponent
+        WorkoutSelectItemComponent,
+        MapStringPipe
     ],
     providers: [
         [ LyTheme2 ],
