@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
-import {User} from '../model';
+import {RoleNames, TypeNames, User} from '../model';
 
 
 @Component({
@@ -18,6 +18,7 @@ export class UserItemComponent {
 
     @Output() done = new EventEmitter();
 
+    mapNames = TypeNames;
 
     constructor(private dialog: MatDialog) {
     }
@@ -38,26 +39,6 @@ export class UserItemComponent {
 
     deleteUser() {
         this.done.emit({type: 'delete', user: this.user});
-    }
-
-    getRoleName() {
-        let name;
-        if (!this.user) { return name; }
-        switch (this.user.type) {
-            case 'A':
-                name = 'Amministratore';
-                break;
-            case 'C':
-                name = 'Cliente';
-                break;
-            case 'T':
-                name = 'Allenatore';
-                break;
-            default:
-                name = 'Cliente';
-                break;
-        }
-        return name;
     }
 
     goToInfo() {

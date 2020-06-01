@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {User} from '../model';
+import {TypeNames, User} from '../model';
 import {AuthService, UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
@@ -29,6 +29,7 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
     private root: string;
+    mapNames = TypeNames;
 
     constructor(private service: UserService,
                 private route: ActivatedRoute,
@@ -101,26 +102,6 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
 
     getUserCreatedAt() {
         return UserHelperService.getUserCreatedAt(this.user);
-    }
-
-    getRoleName() {
-        let name;
-        if (!this.user) { return name; }
-        switch (this.user.type) {
-            case 'A':
-                name = 'Amministratore';
-                break;
-            case 'C':
-                name = 'Cliente';
-                break;
-            case 'T':
-                name = 'Allenatore';
-                break;
-            default:
-                name = 'Cliente';
-                break;
-        }
-        return name;
     }
 
     getAvatar() {

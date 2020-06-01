@@ -1,5 +1,5 @@
 export enum USER_TYPE {
-    A= 'admin',
+    A = 'admin',
     T = 'trainer',
     C = 'customer'
 }
@@ -8,6 +8,12 @@ export let TypeIndex = {
     'A': 1,
     'T': 2,
     'C': 3
+};
+
+export let TypeNames = {
+    'A': 'Amministratore',
+    'T': 'Allenatore',
+    'C': 'Cliente',
 };
 
 export let UserIndex = {
