@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class TrainingBundleService implements ICrudService<ATrainingBundle, Long> {
@@ -63,6 +64,15 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
 
     @CachePut(value = "bundles-search", condition="#result != null")
     public Page<ATrainingBundle> search(Long specId, Boolean expired, Date time, Pageable pageable) {
+        if (expired != null) {
+            List<ATrainingBundle> rStream = this.findBundlesByNotExpired(Pageable.unpaged())
+                    .stream()
+                    .filter(ATrainingBundle::isExpired)
+                    .map(ATrainingBundle::terminate)
+                    .collect(Collectors.toList());
+            this.saveAll(rStream);
+        }
+
         Page<ATrainingBundle> bundles;
         if (specId != null) {
             bundles = this.findBundlesBySpecId(specId, pageable);
