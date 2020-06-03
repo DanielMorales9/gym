@@ -56,6 +56,10 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 value: this.modalData.event.date ?  this.modalData.event.date.getHours() + 1 + ':'
                     + this.modalData.event.date.getMinutes() : ''
             }, Validators.required),
+            external: new FormControl({
+                disabled: !!this.modalData.event.external,
+                value: this.modalData.event.external
+            }),
             course: new FormControl({
                 disabled: true,
                 value: ''}, Validators.required)
@@ -70,9 +74,12 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 else {
                     this.course.enable();
                 }
+                this.external.enable();
             }
             else {
                 this.course.disable();
+                this.external.disable();
+
             }
             this.form.updateValueAndValidity();
         });
@@ -81,6 +88,10 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
 
     get name() {
         return this.form.get('name');
+    }
+
+    get external() {
+        return this.form.get('external');
     }
 
     get date() {
@@ -121,7 +132,8 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 eventName: this.name.value,
                 type: 'course',
                 userId: this.modalData.userId,
-                meta: this.course.value
+                meta: this.course.value,
+                external: this.external.value
             });
         } else if (this.event.value === 'chiusura') {
             this.close({

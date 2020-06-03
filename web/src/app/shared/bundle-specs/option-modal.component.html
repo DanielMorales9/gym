@@ -11,6 +11,7 @@
                         [ngClass]="{ 'is-invalid': type.touched && type.invalid }">
                     <mat-option value="B">Pacchetto</mat-option>
                     <mat-option value="T">A Tempo</mat-option>
+                    <mat-option value="D">A Consumo</mat-option>
                 </mat-select>
                 <mat-error *ngIf="type.touched && type.invalid">
                     <div *ngIf="!!type.errors?.required">Tipo obbligatorio</div>
@@ -36,7 +37,7 @@
         </div>
         <div>
             <mat-form-field>
-                <label for="price" class="sr-only">Prezzo</label>
+                <label for="price" class="sr-only">{{priceDescription}}</label>
                 <input placeholder="Prezzo&nbsp;&euro;"
                        matInput
                        id="price"

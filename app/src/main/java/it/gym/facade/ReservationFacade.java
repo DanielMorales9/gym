@@ -85,7 +85,10 @@ public class ReservationFacade {
         Date rangeEnd = addMinutes(endTime, minutes);
 
         return eventService.findOverlappingEvents(rangeStart, rangeEnd).stream()
-                .filter(e -> "P".equals(e.getType()) || "C".equals(e.getType())).count();
+                .map(e -> (ATrainingEvent) e)
+                .filter(ATrainingEvent::isTrainingEvent)
+                .filter(v -> !v.isExternal())
+                .count();
 
     }
 
@@ -203,6 +206,7 @@ public class ReservationFacade {
         ATrainingEvent evt = new PersonalTrainingEvent();
         evt.setStartTime(event.getStartTime());
         evt.setEndTime(event.getEndTime());
+        evt.setExternal(event.getExternal());
         evt.setName(String.format("Allenamento: %s", bundle.getName()));
         return evt;
     }

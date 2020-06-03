@@ -11,13 +11,16 @@
         <mat-card-content>
             <div class="summary-info">
                 <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-dove"></mat-icon>
+                    Questo Allenamento viene praticato all'aperto
+                </span>
+                <span>
                     <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>
                     Data:&nbsp;{{event?.startTime | date: 'dd/MM/yyyy'}}
                 </span>
                 <span>
                     <mat-icon fontSet="fas" fontIcon="fa-hourglass-half"></mat-icon>
-                    Orario:&nbsp;{{event?.startTime | date: 'HH:mm'}} -
-                    &nbsp;{{event?.endTime | date: 'HH:mm'}}
+                    Orario:&nbsp;{{event?.startTime | date: 'HH:mm'}} - {{event?.endTime | date: 'HH:mm'}}
                 </span>
                 <ng-container [ngSwitch]="event?.type">
                     <ng-container *ngSwitchCase="'C'">

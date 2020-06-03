@@ -280,6 +280,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);
+        e.setExternal(false);
         e.setId(courseSpec.getId());
         e.setName("course");
 

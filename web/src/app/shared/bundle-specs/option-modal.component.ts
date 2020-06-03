@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {Option} from '../model';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
@@ -13,9 +13,11 @@ export class OptionModalComponent implements OnInit {
     option: Option;
     form: FormGroup;
     numberDescription = 'Numero';
+    priceDescription = 'Prezzo';
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<OptionModalComponent>,
+                private cdr: ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.option = new Option();
     }
@@ -59,6 +61,14 @@ export class OptionModalComponent implements OnInit {
             } else {
                 this.numberDescription = 'Numero di mesi';
             }
+
+            if (val === 'D') {
+                this.priceDescription = 'Prezzo ad allenamento';
+            }
+            else {
+                this.priceDescription = 'Prezzo';
+            }
+            this.cdr.detectChanges();
         });
     }
 

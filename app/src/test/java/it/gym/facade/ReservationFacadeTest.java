@@ -554,6 +554,7 @@ public class ReservationFacadeTest {
             event = new Event();
             event.setStartTime(start);
             event.setEndTime(end);
+            event.setExternal(false);
             e = new PersonalTrainingEvent[1];
 
             return this;

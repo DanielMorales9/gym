@@ -128,6 +128,13 @@
                 </mat-form-field>
                 <div *ngIf="!hasCourses" class="mat-error">Nessun corso disponibile</div>
             </div>
+            <div>
+                <label for="external" class="sr-only">Evento Esterno</label>
+                <mat-checkbox id="external"
+                              name="external"
+                              formControlName="external">Evento Esterno</mat-checkbox>
+            </div>
+
             <br>
             <span>{{message}}</span>
             <br>
