@@ -23,43 +23,43 @@ public class SaleService implements ICrudService<Sale, Long> {
     @Autowired private SaleRepository saleRepository;
 
 
-    @Caching(
-            put = {
-                    @CachePut(value = "sales-single", key = "#var1.id", condition="#result != null"),
-            },
-            evict = {
-                    @CacheEvict(value = "sales-all", allEntries = true),
-                    @CacheEvict(value = "sales-search", allEntries = true),
-                    @CacheEvict(value = "sales-users", allEntries = true)
-            }
-    )
+//    @Caching(
+//            put = {
+//                    @CachePut(value = "sales-single", key = "#var1.id", condition="#result != null"),
+//            },
+//            evict = {
+//                    @CacheEvict(value = "sales-all", allEntries = true),
+//                    @CacheEvict(value = "sales-search", allEntries = true),
+//                    @CacheEvict(value = "sales-users", allEntries = true)
+//            }
+//    )
     public Sale save(Sale var1) {
         return this.saleRepository.save(var1);
     }
 
-    @Caching (
-            put = {
-                    @CachePut(value = "sales-single", key = "#sale", condition="#result != null"),
-            }
-    )
+//    @Caching (
+//            put = {
+//                    @CachePut(value = "sales-single", key = "#sale", condition="#result != null"),
+//            }
+//    )
     public Sale findById(Long sale) {
         return this.saleRepository.findById(sale).orElseThrow(() -> new NotFoundException("Vendita", sale));
     }
 
 
-    @Caching(
-            evict = {
-                    @CacheEvict(value = "sales-single", key = "#sale.id"),
-                    @CacheEvict(value = "sales-all", allEntries = true),
-                    @CacheEvict(value = "sales-search", allEntries = true),
-                    @CacheEvict(value = "sales-users", allEntries = true)
-            }
-    )
+//    @Caching(
+//            evict = {
+//                    @CacheEvict(value = "sales-single", key = "#sale.id"),
+//                    @CacheEvict(value = "sales-all", allEntries = true),
+//                    @CacheEvict(value = "sales-search", allEntries = true),
+//                    @CacheEvict(value = "sales-users", allEntries = true)
+//            }
+//    )
     public void delete(Sale sale) {
         this.saleRepository.delete(sale);
     }
 
-    @Cacheable(value = "sales-all")
+//    @Cacheable(value = "sales-all")
     public Page<Sale> findAll(Boolean payed, Pageable pageable) {
         Page<Sale> page;
 
@@ -72,7 +72,7 @@ public class SaleService implements ICrudService<Sale, Long> {
         return initAssociation(page);
     }
 
-    @Cacheable(value = "sales-search")
+//    @Cacheable(value = "sales-search")
     public Page<Sale> getSales(String lastName, Date date, Boolean payed, Pageable pageable) {
         Page<Sale> page;
         if (date != null && lastName != null) {
@@ -88,7 +88,7 @@ public class SaleService implements ICrudService<Sale, Long> {
         return initAssociation(page);
     }
 
-    @Cacheable(value = "sales-users")
+//    @Cacheable(value = "sales-users")
     public Page<Sale> findAllUserSales(Long id, Date date, Boolean payed, Pageable pageable) {
         Page<Sale> page;
         if (date != null) {

@@ -56,6 +56,7 @@ public class RestConfig {
                         Workout.class,
                         APurchaseOption.class,
                         BundlePurchaseOption.class,
+                        OnDemandPurchaseOption.class,
                         TimePurchaseOption.class,
                         PersonalTrainingBundleSpecification.class,
                         PersonalTrainingBundle.class,

@@ -50,6 +50,10 @@ public abstract class AEvent implements Serializable {
 
     public abstract String getType();
 
+    public boolean isTrainingEvent() {
+        return false;
+    }
+
     public Long getId() {
         return id;
     }

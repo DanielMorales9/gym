@@ -170,6 +170,7 @@ public class EventFacade {
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setName(evt.getName());
+        event.setExternal(evt.getExternal());
         event.setSpecification(spec);
 
         logger.debug("Saving CourseEvent");

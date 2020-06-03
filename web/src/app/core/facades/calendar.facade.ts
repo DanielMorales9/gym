@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core';
 import {BundleService, BundleSpecsService, EventService, ReservationService, UserService} from '../controllers';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {User} from '../../shared/model';
 import {AuthenticationService} from '../authentication';
 import {DateService, GymService} from '../utilities';
-import {to_promise} from '../functions/decorators';
 
 
 @Injectable()
@@ -238,9 +237,13 @@ export class CalendarFacade {
         return this.gymService.isDayEvent(startTime, endTime);
     }
 
-    createCourseEvent(name: any, meta: any, start: Date, end: Date) {
+    createCourseEvent(name: any, meta: any, start: Date, end: Date, external: boolean) {
         const gymId = this.gymService.gym.id;
-        return this.eventService.createCourseEvent(gymId, {name: name, id: meta, startTime: start, endTime: end});
+        return this.eventService.createCourseEvent(gymId,{
+            name: name, id: meta,
+            startTime: start, endTime: end,
+            external: external
+        });
     }
 
     deleteCourseEvent(id: any): Observable<any> {

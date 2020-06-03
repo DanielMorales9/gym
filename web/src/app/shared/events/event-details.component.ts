@@ -101,7 +101,11 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
                         })
                     );
                 })
-            ).subscribe(res => this.users = res);
+            ).subscribe(res => {
+            this.users = res;
+            this.cdr.detectChanges();
+
+        });
     }
 
     private getPolicy() {
@@ -144,7 +148,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     deleteReservation(id: any) {
         this.removeReservation(id)
-            .subscribe(r => r);
+            .subscribe(r => this.cdr.detectChanges());
         this.findById(this.event.id);
     }
 
@@ -157,7 +161,10 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         }
         forkJoin(reservations.map(r => this.confirmReservation(r.id)))
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(r =>  this.findById(this.event.id));
+            .subscribe(r => {
+                this.findById(this.event.id);
+                this.cdr.detectChanges();
+            });
     }
 
     private confirmReservation(id: any) {
@@ -193,8 +200,10 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             o = this.facade.deleteTimeOff(this.event.id);
         }
         o.pipe(takeUntil(this.unsubscribe$))
-            .subscribe( r => this.goBack(),
-                err => this.snackBar.open(err.error.message));
+            .subscribe( r => {
+                this.goBack();
+                this.cdr.detectChanges();
+            }, err => this.snackBar.open(err.error.message));
     }
 
     private goBack() {
@@ -215,7 +224,10 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         if (this.event.type === 'P') {
             this.facade.completeEvent(this.event.id)
                 .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(r => this.findById(this.event.id),
+                .subscribe(r => {
+                    this.findById(this.event.id);
+                        this.cdr.detectChanges();
+                    },
                     error => this.snackBar.open(error.error.message));
         }
     }
@@ -249,11 +261,17 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             if (res[userId]) {
                 const bundleId = this.userBundle[userId].id;
                 this.reserveFromEvent(userId, bundleId)
-                    .subscribe(r => this.userReservation[userId] = r.id);
+                    .subscribe(r => {
+                        this.userReservation[userId] = r.id;
+                        this.cdr.detectChanges();
+                    });
 
             } else {
                 this.removeReservation(this.userReservation[userId])
-                    .subscribe(r => this.userReservation[userId] = undefined);
+                    .subscribe(r => {
+                        this.userReservation[userId] = undefined;
+                        this.cdr.detectChanges();
+                    });
             }
             this.userSelected[userId] = res[userId];
         }

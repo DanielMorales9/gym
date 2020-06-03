@@ -17,6 +17,7 @@ import java.util.Date;
 @JsonSubTypes({
         @JsonSubTypes.Type(value = TimePurchaseOption.class, name="T"),
         @JsonSubTypes.Type(value = BundlePurchaseOption.class, name="B"),
+        @JsonSubTypes.Type(value = OnDemandPurchaseOption.class, name="D"),
 })
 @Entity
 @Table(name="options")

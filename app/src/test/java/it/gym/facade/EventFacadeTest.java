@@ -104,6 +104,7 @@ public class EventFacadeTest {
         Event event = new Event();
         event.setStartTime(start);
         event.setEndTime(end);
+        event.setExternal(false);
         event.setId(spec.getId());
         event.setName("course");
 

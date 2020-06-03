@@ -7,6 +7,7 @@ public class Event {
     private Date startTime;
     private Date endTime;
     private Long id;
+    private Boolean external;
 
     public String getName() {
         return name;
@@ -37,5 +38,13 @@ public class Event {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Boolean getExternal() {
+        return external;
+    }
+
+    public void setExternal(Boolean external) {
+        this.external = external;
     }
 }

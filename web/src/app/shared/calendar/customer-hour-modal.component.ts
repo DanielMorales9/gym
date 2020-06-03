@@ -74,7 +74,8 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
                 bundleId: bundleId,
                 startTime: start,
                 endTime: end,
-                userId: userId
+                userId: userId,
+                external: false,
             });
         }
         else {

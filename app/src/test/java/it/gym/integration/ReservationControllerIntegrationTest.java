@@ -50,6 +50,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             public final String name = "personal";
             public final Date startTime = fixture.getStart();
             public final Date endTime = fixture.getEnd();
+            public final Boolean external = false;
         };
 
         ObjectMapper objectMapper = new ObjectMapper();

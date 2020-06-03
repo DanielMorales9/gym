@@ -128,7 +128,6 @@ export class BundleSpecModalComponent implements OnInit {
 
     submit() {
         const bundle = this.getBundleFromForm();
-        console.log('closed');
         this.dialogRef.close(bundle);
     }
 
