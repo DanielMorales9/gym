@@ -36,7 +36,6 @@ export class AuthenticationService implements OnInit, OnDestroy {
         this.currentRoleId$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
-                console.log(v);
                 this.currentRoleId = v;
             });
 

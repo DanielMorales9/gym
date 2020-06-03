@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
@@ -24,6 +24,7 @@ export class UserControlsComponent implements OnInit {
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
                 private userService: UserService,
+                private cdr: ChangeDetectorRef,
                 private policy: PolicyService) {
     }
 
@@ -35,6 +36,7 @@ export class UserControlsComponent implements OnInit {
             this.userService.findUserById(id).subscribe(data => {
                 this.user = data;
                 this.getPolicy();
+                this.cdr.detectChanges();
             }, err => { throw err; });
         }
     }
