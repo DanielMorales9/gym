@@ -10,7 +10,7 @@
         </mat-card-header>
         <mat-card-content>
             <div class="summary-info">
-                <span>
+                <span *ngIf="event?.external">
                     <mat-icon fontSet="fas" fontIcon="fa-dove"></mat-icon>
                     Questo Allenamento viene praticato all'aperto
                 </span>

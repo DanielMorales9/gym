@@ -480,9 +480,9 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 }, e => this.snackBar.open(e.message || e.error.message, undefined,  {duration: 5000}));
     }
 
-    protected createReservationFromBundle({userId, bundleId, startTime, endTime}) {
+    protected createReservationFromBundle({userId, bundleId, startTime, endTime, external}) {
         this.facade.createReservationFromBundle(userId, bundleId,
-            { startTime: startTime, endTime: endTime })
+            { startTime: startTime, endTime: endTime, external: external})
             .subscribe(res => {
                 this.snackBar.open('Prenotazione effettuata');
                 this.getEvents();
