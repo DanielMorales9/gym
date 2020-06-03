@@ -1,4 +1,5 @@
 import {
+    ChangeDetectionStrategy, ChangeDetectorRef,
     Component,
     ComponentFactory,
     ComponentFactoryResolver,
@@ -18,6 +19,7 @@ import {ISubscription} from 'rxjs-compat/Subscription';
     selector: 'side-bar',
     templateUrl: './side-bar.component.html',
     styleUrls: ['../styles/root.css', '../styles/app.component.css'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SideBarComponent implements OnInit, OnDestroy {
 
@@ -41,6 +43,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
+                private cdr: ChangeDetectorRef,
                 private componentFactoryResolver: ComponentFactoryResolver) {}
 
     ngOnInit(): void {
@@ -48,6 +51,7 @@ export class SideBarComponent implements OnInit, OnDestroy {
                 if (event instanceof NavigationEnd) {
                     this.updatePrimaryControls(this.router.routerState.snapshot.root);
                     this.updateSecondaryControls(this.router.routerState.snapshot.root);
+                    this.cdr.detectChanges();
                 }
             }
         );
