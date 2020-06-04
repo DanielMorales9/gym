@@ -1,8 +1,9 @@
-import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BaseCalendarModal} from './base-calendar-modal';
 import { theme } from '../config';
+import {PolicyService} from '../../core/policy';
 
 @Component({
     templateUrl: './customer-hour-modal.component.html',
@@ -12,14 +13,19 @@ import { theme } from '../config';
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
     form: FormGroup;
     theme = theme;
+    canBookExternal: boolean;
 
     constructor(public dialogRef: MatDialogRef<CustomerHourModalComponent>,
+                private policyService: PolicyService,
+                private cdr: ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = data;
     }
 
     ngOnInit(): void {
+        this.canBookExternal = this.policyService.get('bundleSpec', 'canBookExternal');
+
         this.form = new FormGroup({
             bundle: new FormControl({
                 value: 0,
@@ -33,7 +39,12 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
                 disabled: !!this.modalData.event.date,
                 value: this.modalData.event.date ?  this.modalData.event.date.getHours() + ':' + this.modalData.event.date.getMinutes() : ''
             }, Validators.required),
+            external: new FormControl({
+                disabled: !this.canBookExternal,
+                value: !!this.modalData.event.external
+            }, Validators.required),
         });
+        this.cdr.detectChanges();
     }
 
     private isDisabled() {
@@ -50,6 +61,10 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
 
     get startTime() {
         return this.form.get('startTime');
+    }
+
+    get external() {
+        return this.form.get('external');
     }
 
     get event() {
@@ -75,7 +90,7 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
                 startTime: start,
                 endTime: end,
                 userId: userId,
-                external: false,
+                external: this.external.value,
             });
         }
         else {

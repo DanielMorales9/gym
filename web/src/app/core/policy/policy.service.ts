@@ -21,6 +21,7 @@ export class PolicyService implements OnInit, OnDestroy {
             canEdit: true,
             canDisable: true,
             canCreate: true,
+            canBookExternal: true
         },
         option: {
             canCreate: true,
@@ -116,6 +117,7 @@ export class PolicyService implements OnInit, OnDestroy {
             canEdit: false,
             canDisable: false,
             canCreate: false,
+            canBookExternal: true
         },
         sale: {
             canDelete: false,
@@ -202,6 +204,7 @@ export class PolicyService implements OnInit, OnDestroy {
             canCreate: false,
             canEdit: false,
             canDisable: false,
+            canBookExternal: false
         },
         sale: {
             canDelete: false,
