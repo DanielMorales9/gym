@@ -132,7 +132,7 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
             .pipe(
                 takeUntil(this.unsubscribe$),
                 filter(v => !!v),
-                switchMap((v: any) => this.service.deleteBundleSpecs(v.id))
+                switchMap((v: any) => this.service.deleteBundleSpecs(bundleSpec.id))
             ).subscribe(_ => this.search(),
                 err => this.snackbar.open(err.error.message));
     }
