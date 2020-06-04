@@ -123,6 +123,9 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
                 takeUntil(this.unsubscribe$),
                 switchMap(v => this.service.deletePayment(this.sale.id, id))
             )
-            .subscribe((data: Sale) => this.sale = data);
+            .subscribe((data: Sale) => {
+                this.sale = data;
+                this.cdr.detectChanges();
+            });
     }
 }
