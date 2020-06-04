@@ -11,6 +11,7 @@ import {PolicyService} from '../../core/policy';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CustomerHourModalComponent extends BaseCalendarModal implements OnInit {
+
     form: FormGroup;
     theme = theme;
     canBookExternal: boolean;
