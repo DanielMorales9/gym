@@ -255,6 +255,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     private initEventTypes() {
         const types = this.activatedRoute.snapshot.queryParamMap.get('types');
+        const userId = this.activatedRoute.snapshot.paramMap.get('id');
         if (!!types) {
             this.types = types;
         } else {
@@ -266,7 +267,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
             if (this.policyService.get('events', 'canShowPersonal')) {
                 this.types.push('P');
             }
-            if (this.policyService.get('events', 'canShowTimeOff')) {
+            if (this.policyService.get('events', 'canShowTimeOff') && !userId) {
                 this.types.push('T');
             }
             if (this.policyService.get('events', 'canShowHoliday')) {

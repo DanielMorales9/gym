@@ -33,9 +33,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
         const events = [];
-        const data = this.facade.getEvents(startDay, endDay, this.types, this.user.id);
-        events.push(data);
-        forkJoin(events)
+        this.facade.getEvents(startDay, endDay, this.types, this.user.id)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(r => {
                 this.events = [];
