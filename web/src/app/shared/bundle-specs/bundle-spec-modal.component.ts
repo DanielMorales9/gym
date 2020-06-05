@@ -28,6 +28,7 @@ export class BundleSpecModalComponent implements OnInit {
         if (!hasBundle) {
             this.bundleSpec = new PersonalBundleSpecification();
         }
+
         if (this.bundleSpec.type === BundleSpecificationType.PERSONAL) {
             this.showCourse = false;
             this.showPersonal = true;
@@ -58,17 +59,16 @@ export class BundleSpecModalComponent implements OnInit {
                 Validators.min(2)
             ]),
             unlimitedDeletions: new FormControl({
-                value: this.bundleSpec.unlimitedDeletions,
-                disabled: this.bundleSpec.type !== BundleSpecificationType.PERSONAL
+                value: !!this.bundleSpec.unlimitedDeletions,
+                disabled: false
             }, [
                 Validators.required
             ]),
             numDeletions: new FormControl({
                 value: this.bundleSpec.numDeletions,
-                disabled: !!this.bundleSpec.unlimitedDeletions
+                disabled: false
             }, [
                 Validators.required,
-                Validators.pattern(/^\d+$/),
                 Validators.min(0)
             ])
         });
@@ -135,7 +135,6 @@ export class BundleSpecModalComponent implements OnInit {
         let bundle;
         if (this.type.value === BundleSpecificationType.PERSONAL) {
             bundle = new PersonalBundleSpecification();
-            bundle.unlimitedDeletions = this.unlimitedDeletions.value;
         }
         else {
             bundle = new CourseBundleSpecification();
@@ -143,9 +142,8 @@ export class BundleSpecModalComponent implements OnInit {
             bundle.unlimitedDeletions = true;
         }
 
-        if (!bundle.unlimitedDeletions) {
-            bundle.numDeletions = this.numDeletions.value;
-        }
+        bundle.unlimitedDeletions = this.unlimitedDeletions.value;
+        bundle.numDeletions = !bundle.unlimitedDeletions ? this.numDeletions.value: null;
 
         bundle.id = this.bundleSpec.id;
         bundle.name = this.name.value;

@@ -18,7 +18,7 @@ export class UserItemComponent {
 
     @Output() done = new EventEmitter();
 
-    mapNames = TypeNames;
+    typeNames = TypeNames;
 
     constructor(private dialog: MatDialog) {
     }

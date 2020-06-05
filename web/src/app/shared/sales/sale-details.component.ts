@@ -121,8 +121,12 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
         of(confirm('Sei sicuro di voler eliminare il pagamento?'))
             .pipe(
                 takeUntil(this.unsubscribe$),
-                switchMap(v => this.service.deletePayment(this.sale.id, id))
+                switchMap(v => this.service.deletePayment(this.sale.id, id)),
+                switchMap(v => this.service.findById(this.sale.id))
             )
-            .subscribe((data: Sale) => this.sale = data);
+            .subscribe((data: Sale) => {
+                this.sale = data;
+                this.cdr.detectChanges();
+            });
     }
 }

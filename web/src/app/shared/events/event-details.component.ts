@@ -148,8 +148,8 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     deleteReservation(id: any) {
         this.removeReservation(id)
+            .pipe(switchMap(v => this.findById(this.event.id)))
             .subscribe(r => this.cdr.detectChanges());
-        this.findById(this.event.id);
     }
 
     confirm() {
@@ -223,11 +223,9 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     completeEvent() {
         if (this.event.type === 'P') {
             this.facade.completeEvent(this.event.id)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(r => {
-                    this.findById(this.event.id);
-                        this.cdr.detectChanges();
-                    },
+                .pipe(takeUntil(this.unsubscribe$),
+                    switchMap(v => this.findById(this.event.id)))
+                .subscribe(r => this.cdr.detectChanges(),
                     error => this.snackBar.open(error.error.message));
         }
     }
@@ -247,34 +245,39 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
         dialogRef.afterClosed().subscribe(res => {
             if (res) {
+                const fj = [];
+                let ob;
                 for (const userId in res) {
-                    this.updateReservations(userId, res);
+                    ob = this.updateReservations(userId, res);
+                    if (!!ob) { fj.push(ob); }
                 }
-                this.findById(this.event.id);
+                forkJoin(fj)
+                    .pipe(switchMap(_ => this.findById(this.event.id)))
+                        .subscribe(v => this.cdr.detectChanges());
             }
         });
 
     }
 
     private updateReservations(userId: string, res) {
+        let ob;
         if (this.userSelected[userId] !== res[userId]) {
             if (res[userId]) {
                 const bundleId = this.userBundle[userId].id;
-                this.reserveFromEvent(userId, bundleId)
-                    .subscribe(r => {
+                ob = this.reserveFromEvent(userId, bundleId)
+                    .pipe(map(r => {
                         this.userReservation[userId] = r.id;
-                        this.cdr.detectChanges();
-                    });
+                    }));
 
             } else {
-                this.removeReservation(this.userReservation[userId])
-                    .subscribe(r => {
+                ob = this.removeReservation(this.userReservation[userId])
+                    .pipe(map(r => {
                         this.userReservation[userId] = undefined;
-                        this.cdr.detectChanges();
-                    });
+                    }));
             }
             this.userSelected[userId] = res[userId];
         }
+        return ob;
     }
 
     book() {
@@ -284,9 +287,10 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
                 takeUntil(this.unsubscribe$),
                 map(r => r.filter(v => v.bundleSpec.id === this.event.specification.id)[0]),
                 filter(b => !!b),
-                switchMap( bundle => this.reserveFromEvent(user.id, bundle.id))
+                switchMap( bundle => this.reserveFromEvent(user.id, bundle.id)),
+                switchMap(d => this.findById(this.event.id))
             )
-            .subscribe(d => this.findById(this.event.id));
+            .subscribe(_ => this.cdr.detectChanges());
 
     }
 

@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {Option} from '../../shared/model';
+import {Option, OptionType} from '../../shared/model';
 
 
 @Component({
@@ -14,6 +14,8 @@ export class OptionSelectItemComponent {
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;
+
+    optionNames = OptionType;
 
     constructor() {}
 

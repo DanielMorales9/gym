@@ -66,6 +66,12 @@
                 <ngx-material-timepicker #startTimePicker [theme]="theme"></ngx-material-timepicker>
             </mat-form-field>
         </div>
+        <div *ngIf="canBookExternal">
+            <label for="external" class="sr-only">Evento Esterno</label>
+            <mat-checkbox id="external"
+                          name="external"
+                          formControlName="external">Evento Esterno</mat-checkbox>
+        </div>
     </div>
     <div mat-dialog-actions>
         <button mat-flat-button type="button" color="basic" (click)="close()">Cancella</button>

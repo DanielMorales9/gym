@@ -8,6 +8,17 @@ export enum BundleType {
     COURSE = 'C'
 }
 
+export enum OptionType {
+    B = 'Pacchetto',
+    T = 'A Tempo',
+    D = 'A Consumo'
+}
+
+export enum BundleType {
+    P = 'Allenamento Personalizzato',
+    C = 'Corso'
+}
+
 export class Option {
     id: number;
     name: string;

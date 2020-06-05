@@ -11,7 +11,11 @@
     <mat-card-content>
         <div class="card-list-content">
             <div>
-                <mat-icon fontSet="fas" fontIcon="fa-history"></mat-icon>&nbsp;Numero di mesi {{option?.number}}
+                <mat-icon fontSet="fas" fontIcon="fa-box"></mat-icon>&nbsp; {{option?.type| map: optionNames }}
+            </div>
+            <div>
+                <mat-icon fontSet="fas" fontIcon="fa-history"></mat-icon>&nbsp;
+                Numero di {{ option?.type == 'B' ? 'sessioni': 'mesi' }} {{option?.number}}
             </div>
             <div>
                 <mat-icon fontSet="fas" fontIcon="fa-money-check-alt"></mat-icon>&nbsp;Prezzo {{option?.price}}&euro;

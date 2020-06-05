@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../core/controllers';
-import {BundleType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
+import {BundleType, CourseBundleSpecification, OptionType, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
@@ -23,6 +23,8 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
 
     bundleSpec: CourseBundleSpecification|PersonalBundleSpecification;
 
+    optionNames = OptionType;
+
     canDelete: boolean;
     canDisable: boolean;
     displayedPaymentsColumns: String[];
@@ -42,7 +44,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
 
     ngOnInit(): void {
         this.getPolicies();
-        const displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'date'];
+        const displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'type'];
 
         if (this.canDeleteOption) {
             displayedPaymentsColumns.push('actions');
