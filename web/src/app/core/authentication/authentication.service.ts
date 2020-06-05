@@ -5,6 +5,7 @@ import {Credentials, Gym, Role, Roles, TypeIndex, User} from '../../shared/model
 import {StorageService} from './storage.service';
 import {catchError, map, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
 import {Observable, of, Subject} from 'rxjs';
+import {environment} from '../../../environments/environment';
 
 /**
  * Provides a base for authentication workflow.
@@ -18,6 +19,8 @@ export class AuthenticationService implements OnInit, OnDestroy {
     private readonly CREDENTIAL_KEY = 'credentials';
     private readonly ROLE_KEY = 'role';
 
+    private readonly PRINCIPAL_EXPIRE_KEY = 'principal_ttl';
+    private readonly TTL = environment.production ? 10000 : 0;
 
     private unsubscribe$ = new Subject<any>();
     private currentRoleId$ = new Subject<number>();
@@ -118,9 +121,25 @@ export class AuthenticationService implements OnInit, OnDestroy {
 
 
     private getPrincipal(): Observable<any> {
-        return this.signIn()
-            .pipe(throttleTime(300),
-                catchError(err => of(undefined)));
+        const principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
+        let ret;
+        if (!principal) {
+            ret = this.signIn()
+                .pipe(throttleTime(300),
+                    catchError(err => of(undefined)),
+                    map(v => {
+                        if (!!v) {
+                            this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, v, this.TTL);
+                        }
+                        return v;
+                    }));
+
+        }
+        else {
+            ret = of(principal);
+        }
+
+        return ret;
     }
 
     /**
@@ -133,6 +152,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
                 this.setCurrentUserRole();
                 this.user = undefined;
                 this.gym = undefined;
+                this.storageService.set(this.PRINCIPAL_EXPIRE_KEY);
                 this.storageService.set(this.CREDENTIAL_KEY);
             }
         ));
@@ -214,6 +234,36 @@ export class AuthenticationService implements OnInit, OnDestroy {
         }
 
         return res;
+    }
+
+    setWithExpiry(key, value, ttl) {
+        const now = new Date();
+
+        // `item` is an object which contains the original value
+        // as well as the time when it's supposed to expire
+        const item = {
+            value: value,
+            expiry: now.getTime() + ttl
+        };
+        this.storageService.set(key, JSON.stringify(item));
+    }
+
+    getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key);
+        // if the item doesn't exist, return null
+        if (!itemStr) {
+            return null;
+        }
+        const item = JSON.parse(itemStr);
+        const now = new Date();
+        // compare the expiry time of the item with the current time
+        if (now.getTime() > item.expiry) {
+            // If the item is expired, deleteBundleSpecs the item from storage
+            // and return null
+            this.storageService.set(key);
+            return null;
+        }
+        return item.value;
     }
 
     getConfig(): Observable<Gym> {
