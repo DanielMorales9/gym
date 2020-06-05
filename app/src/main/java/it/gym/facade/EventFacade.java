@@ -74,14 +74,6 @@ public class EventFacade {
         return s.collect(Collectors.toList());
     }
 
-    public List<AEvent> findAllTimesOffByTrainerId(Long trainerId, Date startTime, Date endTime) {
-        return this.service.findAllTimesOffById(trainerId, startTime, endTime);
-    }
-
-    public List<AEvent> findAllHolidays(Date startTime, Date endTime) {
-        return this.service.findAllHolidays(startTime, endTime);
-    }
-
     public AEvent createHoliday(Long gymId, Event event) {
         Gym gym = gymService.findById(gymId);
 
@@ -234,14 +226,6 @@ public class EventFacade {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
         event.complete();
         return service.save(event);
-    }
-
-    public List<AEvent> findPersonalByInterval(Long customerId, Date startTime, Date endTime) {
-        return service.findPersonalByInterval(customerId, startTime, endTime);
-    }
-
-    public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
-        return service.findTrainingByInterval(startTime, endTime);
     }
 
     public AEvent findById(Long id) {

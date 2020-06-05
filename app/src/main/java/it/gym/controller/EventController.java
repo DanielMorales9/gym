@@ -176,36 +176,6 @@ public class EventController {
 
     }
 
-    @GetMapping("/personal")
-    @PreAuthorize("isAuthenticated()")
-    @Deprecated
-    public ResponseEntity<List<EventResource>> findPersonalByInterval(@RequestParam Long customerId,
-                                                               @RequestParam(value = "startTime")
-                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                               @RequestParam(value = "endTime")
-                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findPersonalByInterval(customerId, startTime, endTime);
-
-        return ResponseEntity.ok(new EventAssembler().toResources(res));
-    }
-
-    @GetMapping("/training")
-    @PreAuthorize("isAuthenticated()")
-    @Deprecated
-    public ResponseEntity<List<EventResource>> findTrainingByInterval(@RequestParam(value = "startTime")
-                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                               @RequestParam(value = "endTime")
-                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                       iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findTrainingByInterval(startTime, endTime);
-
-        return ResponseEntity.ok(new EventAssembler().toResources(res));
-    }
-
-
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")

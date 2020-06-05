@@ -4,10 +4,7 @@ import it.gym.exception.NotFoundException;
 import it.gym.model.AEvent;
 import it.gym.model.Holiday;
 import it.gym.model.TimeOff;
-import it.gym.repository.CourseEventRepository;
 import it.gym.repository.EventRepository;
-import it.gym.repository.PersonalEventRepository;
-import it.gym.repository.TrainingEventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +17,6 @@ public class EventService implements ICrudService<AEvent, Long> {
 
     @Autowired
     private EventRepository repository;
-
-    @Autowired
-    private PersonalEventRepository personalRepository;
-
-    @Autowired
-    private TrainingEventRepository trainingRepository;
-
-    @Autowired
-    private CourseEventRepository courseRepository;
 
     @Override
     public AEvent save(AEvent var1) {
@@ -76,15 +64,4 @@ public class EventService implements ICrudService<AEvent, Long> {
                 .collect(Collectors.toList());
     }
 
-    public List<AEvent> findAllCourseEvents(Date startTime, Date endTime) {
-        return this.courseRepository.findByInterval(startTime, endTime);
-    }
-
-    public List<AEvent> findPersonalByInterval(Long customerId, Date startTime, Date endTime) {
-        return personalRepository.findByIntervalAndCustomerId(customerId, startTime, endTime);
-    }
-
-    public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
-        return trainingRepository.findByInterval(startTime, endTime);
-    }
 }

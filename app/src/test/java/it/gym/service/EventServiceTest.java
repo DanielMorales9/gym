@@ -4,10 +4,7 @@ import it.gym.exception.NotFoundException;
 import it.gym.model.AEvent;
 import it.gym.model.TimeOff;
 import it.gym.model.Trainer;
-import it.gym.repository.CourseEventRepository;
 import it.gym.repository.EventRepository;
-import it.gym.repository.PersonalEventRepository;
-import it.gym.repository.TrainingEventRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -32,15 +29,6 @@ public class EventServiceTest {
 
     @MockBean
     private EventRepository repository;
-
-    @MockBean
-    private PersonalEventRepository personalRepository;
-
-    @MockBean
-    private TrainingEventRepository trainingRepository;
-
-    @MockBean
-    private CourseEventRepository courseRepository;
 
     @TestConfiguration
     static class EventServiceTestContextConfiguration {
