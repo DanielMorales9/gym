@@ -35,18 +35,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
     getEvents() {
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        const events = [];
-        let data = this.facade.getTrainingEvents(startDay, endDay);
-        events.push(data);
-
-        data = this.facade.getTimesOff(startDay, endDay, this.user.id);
-        events.push(data);
-
-        data = this.facade.getHoliday(startDay, endDay);
-
-        events.push(data);
-
-        forkJoin(events)
+        this.facade.getEvents(startDay, endDay, ['P', 'H', 'C', 'T'], undefined, this.user.id)
             .pipe(
                 takeUntil(this.unsubscribe$)
             )

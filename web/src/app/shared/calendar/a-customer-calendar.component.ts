@@ -43,10 +43,8 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         obs.pipe(takeUntil(this.unsubscribe$))
             .subscribe(user => {
-                let data = this.facade.getCustomerEvents(user.id, startDay, endDay);
-                events.push(data);
 
-                data = this.facade.getCourseEvents(startDay, endDay);
+                const data = this.facade.getEvents(startDay, endDay, ['P', 'C', 'H'], user.id);
                 events.push(data);
 
                 forkJoin(events)

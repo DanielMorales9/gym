@@ -34,7 +34,7 @@ export class AdminCalendarComponent extends BaseCalendar {
 
     getEvents() {
         const {startDay, endDay} = this.getStartAndEndTimeByView();
-        this.facade.getAllEvents(startDay, endDay)
+        this.facade.getEvents(startDay, endDay, ['P', 'C', 'H', 'T'])
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map(r => r.map(v => this.formatEvent(v)))

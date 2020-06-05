@@ -14,7 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 
 
@@ -33,6 +35,17 @@ public class EventController {
         AEvent res = facade.findById(id);
 
         return ResponseEntity.ok(new EventAssembler().toResource(res));
+    }
+
+    @GetMapping(path = "/{eventId}/complete")
+    @ResponseBody
+    @PreAuthorize("hasAuthority('TRAINER')")
+    public ResponseEntity<EventResource> complete(@PathVariable Long eventId) {
+
+        logger.info("completing session");
+        AEvent event = facade.complete(eventId);
+
+        return ResponseEntity.ok(new EventAssembler().toResource(event));
     }
 
     @PostMapping(path = "/{gymId}/holiday")
@@ -165,6 +178,7 @@ public class EventController {
 
     @GetMapping("/timeOff")
     @PreAuthorize("isAuthenticated()")
+    @Deprecated
     public ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam
                                                                            Long trainerId,
                                                                    @RequestParam(value = "startTime")
@@ -180,6 +194,7 @@ public class EventController {
 
     @GetMapping("/holiday")
     @PreAuthorize("isAuthenticated()")
+    @Deprecated
     public ResponseEntity<List<EventResource>> findAllHolidaysByInterval(@RequestParam(value = "startTime")
                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
@@ -193,6 +208,7 @@ public class EventController {
 
     @GetMapping("/personal")
     @PreAuthorize("isAuthenticated()")
+    @Deprecated
     public ResponseEntity<List<EventResource>> findPersonalByInterval(@RequestParam Long customerId,
                                                                @RequestParam(value = "startTime")
                                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
@@ -207,6 +223,7 @@ public class EventController {
 
     @GetMapping("/training")
     @PreAuthorize("isAuthenticated()")
+    @Deprecated
     public ResponseEntity<List<EventResource>> findTrainingByInterval(@RequestParam(value = "startTime")
                                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                        iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
@@ -220,6 +237,7 @@ public class EventController {
 
     @GetMapping("/course")
     @PreAuthorize("isAuthenticated()")
+    @Deprecated
     public ResponseEntity<List<EventResource>> findAllCoursesByInterval(@RequestParam(value = "startTime")
                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
@@ -235,25 +253,21 @@ public class EventController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                        iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                                @RequestParam(value = "endTime")
-                                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                        iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime);
+                                                                        iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                                   Date startTime,
+                                                                       @RequestParam(value = "endTime")
+                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                        iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                                    Date endTime,
+                                                                @RequestParam(value = "types")
+                                                                           HashSet<String> types,
+                                                                @RequestParam(required = false)
+                                                                               Long customerId,
+                                                                @RequestParam(required = false)
+                                                                               Long trainerId) {
+        List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
 
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }
-
-    @GetMapping(path = "/{eventId}/complete")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('TRAINER')")
-    public ResponseEntity<EventResource> complete(@PathVariable Long eventId) {
-
-        logger.info("completing session");
-        AEvent event = facade.complete(eventId);
-
-        return ResponseEntity.ok(new EventAssembler().toResource(event));
-    }
-
 
 }
