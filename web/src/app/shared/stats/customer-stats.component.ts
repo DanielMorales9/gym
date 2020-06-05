@@ -8,6 +8,7 @@ import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
 import {AuthenticationService} from '../../core/authentication';
 import {feedChart} from './padding';
+import {of} from 'rxjs';
 
 
 function insertAt(array, index, ...elementsArray) {
@@ -82,10 +83,21 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || this.route.snapshot.queryParamMap.get('id');
 
+    let ob;
     if (!this.id) {
-      this.id = this.authService.getUser().id;
+      ob = this.authService.getObservableUser()
+          .pipe(
+              takeUntil(this.unsubscribe$),
+              map(v => {
+                this.id = v.id;
+                return this.id;
+              }));
     }
-    this.update();
+    else {
+      ob = of(this.id);
+    }
+
+    ob.subscribe(v => this.update());
   }
 
   private getCustomerReservationsByWeek(interval, id) {

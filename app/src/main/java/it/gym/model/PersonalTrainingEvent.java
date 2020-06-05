@@ -16,6 +16,8 @@ import java.util.Objects;
 @Generated //exclude coverage analysis on generated methods
 public class PersonalTrainingEvent extends ATrainingEvent {
 
+    public static final String TYPE = "P";
+
     @OneToOne(cascade = CascadeType.ALL, orphanRemoval=true)
     @JoinColumn(name = "reservation_res_id")
     private Reservation reservation;

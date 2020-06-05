@@ -41,7 +41,7 @@ export class CalendarFacade {
     }
 
     getRole() {
-        return this.auth.getCurrentUserRoleId();
+        return this.auth.getObservableCurrentUserRoleId();
     }
 
     getConfig() {
@@ -62,36 +62,15 @@ export class CalendarFacade {
     getCourses(): Observable<any> {
         return this.specService.listBundleSpecs({disabled: false, type: 'C'});
     }
-
-
-    getCustomerEvents(id: number, startTime: any, endTime: any): Observable<any> {
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getCustomerEvents(id, startS, endS);
-    }
-
     /**
      * EVENTS API
      */
 
-    getAllEvents(startTime: any, endTime: any): Observable<any> {
+    getEvents(startTime: any, endTime: any, types?: string[], customerId?: number, trainerId?: number): Observable<any> {
         const startS = CalendarFacade.formatDateToString(startTime);
         const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getAllEvents(startS, endS);
+        return this.eventService.getEvents(startS, endS, types, customerId, trainerId);
     }
-
-    getCourseEvents(startTime: any, endTime: any): Observable<any> {
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getCourseEvents(startS, endS);
-    }
-
-    getTrainingEvents(startTime: any, endTime: any): Observable<any> {
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getTrainingEvents(startS, endS);
-    }
-
     /**
      * Holiday API
      */
@@ -129,13 +108,6 @@ export class CalendarFacade {
         return this.eventService.canEdit(gymId, event);
     }
 
-
-    getHoliday(startTime: any, endTime: any): Observable<any> {
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getHolidays(startS, endS);
-    }
-
     /**
      * TIME-OFF API
      */
@@ -157,13 +129,6 @@ export class CalendarFacade {
 
         return this.eventService.isTimeOffAvailable(gymId, {startTime: startTime, endTime: endTime});
     }
-
-    getTimesOff(startTime: any, endTime: any, id: number): Observable<any> {
-        const startS = CalendarFacade.formatDateToString(startTime);
-        const endS = CalendarFacade.formatDateToString(endTime);
-        return this.eventService.getTimesOff(startS,  endS, id);
-    }
-
     deleteTimeOff(id: number): Observable<any> {
         return this.eventService.deleteTimeOff(id);
     }
@@ -218,28 +183,13 @@ export class CalendarFacade {
             {customerId: userId, eventId: eventId, bundleId: bundleId});
     }
 
-    /**
-     * GYM API
-     */
-    isGymOpenOnDate(date: Date) {
-        return this.gymService.isGymOpenOnDate(date);
-    }
-
-    getStartHourByDate(start: any) {
-        return this.gymService.getStartHourByDate(start);
-    }
-
-    getEndHourByDate(end: any) {
-        return this.gymService.getEndHourByDate(end);
-    }
-
     isDayEvent(startTime: Date, endTime: Date) {
         return this.gymService.isDayEvent(startTime, endTime);
     }
 
     createCourseEvent(name: any, meta: any, start: Date, end: Date, external: boolean) {
         const gymId = this.gymService.gym.id;
-        return this.eventService.createCourseEvent(gymId,{
+        return this.eventService.createCourseEvent(gymId, {
             name: name, id: meta,
             startTime: start, endTime: end,
             external: external

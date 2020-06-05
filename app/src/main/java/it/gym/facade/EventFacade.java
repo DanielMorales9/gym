@@ -12,8 +12,11 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static it.gym.utility.CheckEvents.hasHolidays;
 
@@ -35,16 +38,40 @@ public class EventFacade {
     @Qualifier("trainingBundleSpecificationService")
     @Autowired private TrainingBundleSpecificationService specService;
 
-    public List<AEvent> findAllEventsByInterval(Date startTime, Date endTime) {
-        return service.findAllEvents(startTime, endTime);
-    }
+    public List<AEvent> findAllEventsByInterval(Date startTime,
+                                                Date endTime,
+                                                Collection<String> types,
+                                                Long customerId,
+                                                Long trainerId) {
+        Stream<AEvent> s = service.findAllEvents(startTime, endTime)
+                .stream()
+                .filter(c -> types.contains(c.getType()));
 
-    public List<AEvent> findAllTimesOffByTrainerId(Long trainerId, Date startTime, Date endTime) {
-        return this.service.findAllTimesOffById(trainerId, startTime, endTime);
-    }
+        if (customerId != null) {
+            s = s.filter(c -> {
+                if (PersonalTrainingEvent.TYPE.equals(c.getType())) {
+                    return ((PersonalTrainingEvent) c).getReservation().getUser()
+                            .getId().equals(customerId);
+                }
+                else {
+                    return true;
+                }
+            });
+        }
 
-    public List<AEvent> findAllHolidays(Date startTime, Date endTime) {
-        return this.service.findAllHolidays(startTime, endTime);
+        if (trainerId != null) {
+            s = s.filter(c -> {
+                if (TimeOff.TYPE.equals(c.getType())) {
+                    return ((TimeOff) c).getUser()
+                            .getId().equals(trainerId);
+                }
+                else {
+                    return true;
+                }
+            });
+        }
+
+        return s.collect(Collectors.toList());
     }
 
     public AEvent createHoliday(Long gymId, Event event) {
@@ -195,22 +222,10 @@ public class EventFacade {
         return event;
     }
 
-    public List<AEvent> findAllCourseEvents(Date startTime, Date endTime) {
-        return service.findAllCourseEvents(startTime, endTime);
-    }
-
     public AEvent complete(Long eventId) {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
         event.complete();
         return service.save(event);
-    }
-
-    public List<AEvent> findPersonalByInterval(Long customerId, Date startTime, Date endTime) {
-        return service.findPersonalByInterval(customerId, startTime, endTime);
-    }
-
-    public List<AEvent> findTrainingByInterval(Date startTime, Date endTime) {
-        return service.findTrainingByInterval(startTime, endTime);
     }
 
     public AEvent findById(Long id) {

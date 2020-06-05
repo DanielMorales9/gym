@@ -9,6 +9,7 @@ import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, of, throwError} from 'rxjs';
+import {PolicyService} from '../../core/policy';
 
 @Component({
     templateUrl: './calendar.component.html',
@@ -22,9 +23,10 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
-                private cdr: ChangeDetectorRef,
+                public policyService: PolicyService,
+                public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, snackBar, activatedRoute, screenService);
+        super(facade, router, policyService, snackBar, activatedRoute, cdr, screenService);
     }
 
     getEvents() {
@@ -43,19 +45,11 @@ export class ACustomerCalendarComponent extends BaseCalendar {
 
         obs.pipe(takeUntil(this.unsubscribe$))
             .subscribe(user => {
-                let data = this.facade.getCustomerEvents(user.id, startDay, endDay);
-                events.push(data);
-
-                data = this.facade.getCourseEvents(startDay, endDay);
-                events.push(data);
-
-                forkJoin(events)
+                this.facade.getEvents(startDay, endDay, this.types, user.id)
                     .pipe(takeUntil(this.unsubscribe$))
                     .subscribe(r => {
                         this.events = [];
-                        r.forEach((o: any) => {
-                            this.events.push(...o.map(v => this.formatEvent(v)));
-                        });
+                        this.events.push(...r.map(v => this.formatEvent(v)));
                         this.refreshView();
                         this.cdr.detectChanges();
                     });

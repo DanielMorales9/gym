@@ -9,6 +9,7 @@ import {AuthenticationService} from '../../core/authentication';
 import {BaseComponent} from '../base-component';
 import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
+import {User} from '../model';
 
 @Component({
     templateUrl: './event-details.component.html',
@@ -19,6 +20,8 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     event: any;
     users: any;
+    user: User;
+
     userSelected = new Map<number, boolean>();
     userReservation = new Map<number, number>();
     userBundle = new Map<number, any>();
@@ -61,6 +64,13 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     ngOnInit(): void {
         const id = +this.route.snapshot.params['id'];
+
+        this.auth.getObservableUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => {
+               this.user = v;
+            });
+
         this.findById(id).subscribe(
             r => {
                 this.getPolicy();
@@ -281,13 +291,12 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     book() {
-        const user = this.auth.getUser();
-        this.facade.getCurrentTrainingBundles(user.id)
+        this.facade.getCurrentTrainingBundles(this.user.id)
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map(r => r.filter(v => v.bundleSpec.id === this.event.specification.id)[0]),
                 filter(b => !!b),
-                switchMap( bundle => this.reserveFromEvent(user.id, bundle.id)),
+                switchMap( bundle => this.reserveFromEvent(this.user.id, bundle.id)),
                 switchMap(d => this.findById(this.event.id))
             )
             .subscribe(_ => this.cdr.detectChanges());

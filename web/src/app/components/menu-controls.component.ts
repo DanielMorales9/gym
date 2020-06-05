@@ -35,11 +35,11 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
         this.auth.getRoles()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( v => {
-                this.roles = v.map(d => new Role(d.id, RoleNames[d.name]));
+                this.roles = v;
                 this.setCurrentRole(this.currentRoleId || this.roles[0].id);
             });
 
-        this.auth.getCurrentUserRoleId()
+        this.auth.getObservableCurrentUserRoleId()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( v => {
                 this.setCurrentRole(v);
@@ -52,11 +52,13 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             this.roleName = this.auth.getUserRoleName(this.currentRoleId);
             this.router.navigateByUrl(this.roleName);
             this.cdr.detectChanges();
-
         }
     }
 
     doLogout() {
+        this.currentRoleId = undefined;
+        this.roles = undefined;
+        this.roleName = undefined;
         this.logout.emit();
     }
 

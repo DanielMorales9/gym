@@ -11,6 +11,7 @@ import {AdminChangeModalComponent} from './admin-change-modal.component';
 import {AdminHourModalComponent} from './admin-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
 import {filter, map, takeUntil} from 'rxjs/operators';
+import {PolicyService} from '../../core/policy';
 
 
 @Component({
@@ -27,14 +28,15 @@ export class AdminCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public screenService: ScreenService,
                 public router: Router,
-                private cdr: ChangeDetectorRef,
+                public policyService: PolicyService,
+                public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, snackBar, activatedRoute, screenService);
+        super(facade, router, policyService, snackBar, activatedRoute, cdr, screenService);
     }
 
     getEvents() {
         const {startDay, endDay} = this.getStartAndEndTimeByView();
-        this.facade.getAllEvents(startDay, endDay)
+        this.facade.getEvents(startDay, endDay, this.types)
             .pipe(
                 takeUntil(this.unsubscribe$),
                 map(r => r.map(v => this.formatEvent(v)))

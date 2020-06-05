@@ -19,3 +19,35 @@
         <mat-icon fontSet="fas" fontIcon="fa-table"></mat-icon>&nbsp;&nbsp;Mese
     </span>
 </a>
+
+<h2 matSubheader>Eventi</h2>
+
+<a mat-list-item *ngIf="canShowPersonal" disableRipple>
+    <span>
+        <mat-checkbox [checked]="selectedEventTypes['P']"
+                      (change)="changeEvent($event, 'P')"
+                      id="personal">Personal</mat-checkbox>
+    </span>
+</a>
+<a mat-list-item *ngIf="canShowCourse" disableRipple>
+    <span>
+        <mat-checkbox [checked]="selectedEventTypes['C']"  (change)="changeEvent($event,'C')"
+                      id="course">Corsi</mat-checkbox>
+    </span>
+</a>
+<a mat-list-item *ngIf="canShowHoliday" disableRipple>
+    <span>
+        <mat-checkbox [checked]="selectedEventTypes['H']"
+                      (change)="changeEvent($event,'H')"
+                      id="holiday">Chiusura</mat-checkbox>
+    </span>
+</a>
+<a mat-list-item *ngIf="canShowTimeOff" disableRipple>
+    <span>
+        <mat-checkbox [checked]="selectedEventTypes['T']"
+                      (change)="changeEvent($event,'T')"
+                      id="timeoff">Ferie</mat-checkbox>
+    </span>
+</a>
+
+<mat-divider></mat-divider>

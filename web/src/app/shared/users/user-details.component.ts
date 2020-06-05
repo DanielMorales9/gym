@@ -5,7 +5,6 @@ import {MatDialog} from '@angular/material';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
-import {UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {ImageModalComponent} from '../profile/image-modal.component';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
@@ -98,10 +97,6 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(r => this.snackbar.open('Controlla la mail per verificare il tuo account'),
                 error => this.snackbar.open(error.error.message));
-    }
-
-    getUserCreatedAt() {
-        return UserHelperService.getUserCreatedAt(this.user);
     }
 
     getAvatar() {
