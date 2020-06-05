@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -51,7 +50,7 @@ public class EventController {
     @PostMapping(path = "/{gymId}/holiday")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<EventResource> createHoliday(@PathVariable Long gymId,
-                                                @RequestBody Event event) {
+                                                       @RequestBody Event event) {
         logger.info("Create holiday");
 
         AEvent holiday = facade.createHoliday(gymId, event);
@@ -74,8 +73,8 @@ public class EventController {
     @PatchMapping(path = "/{gymId}/holiday/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<EventResource> editHoliday(@PathVariable Long gymId,
-                                              @PathVariable Long id,
-                                              @RequestBody Event event) {
+                                                     @PathVariable Long id,
+                                                     @RequestBody Event event) {
         logger.info("Edit holiday");
 
         AEvent holiday = facade.editEvent(gymId, id, event);
@@ -86,7 +85,7 @@ public class EventController {
 
     @PostMapping(path = "/{gymId}/holiday/isAvailable")
     public ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
-                                              @RequestBody Event event) {
+                                                     @RequestBody Event event) {
         logger.info("is holiday available");
 
         facade.isAvailable(gymId, event);
@@ -97,7 +96,7 @@ public class EventController {
 
     @PostMapping(path = "/{gymId}/canEdit")
     public ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
-                                        @RequestBody Event event) {
+                                               @RequestBody Event event) {
         logger.info("canEdit event");
 
         facade.canEdit(gymId, event);
@@ -109,8 +108,8 @@ public class EventController {
 
     @PostMapping(path = "/{gymId}/timeOff")
     public ResponseEntity<EventResource> createTimeOff(@PathVariable Long gymId,
-                                                @RequestParam Long trainerId,
-                                                @RequestBody Event event) {
+                                                       @RequestParam Long trainerId,
+                                                       @RequestBody Event event) {
         logger.info("Create timeOff");
 
         AEvent timeOff = facade.createTimeOff(gymId, trainerId, event);
@@ -155,8 +154,8 @@ public class EventController {
     @PatchMapping(path = "/{gymId}/timeOff/{id}")
     @PreAuthorize("hasAuthority('TRAINER')")
     public ResponseEntity<EventResource> editTimeOff(@PathVariable Long gymId,
-                                              @PathVariable Long id,
-                                              @RequestBody Event event) {
+                                                     @PathVariable Long id,
+                                                     @RequestBody Event event) {
         logger.info("Edit TimeOff");
 
         AEvent timeOff = facade.editEvent(gymId, id, event);
@@ -167,7 +166,7 @@ public class EventController {
 
     @PostMapping(path = "/{gymId}/timeOff/isAvailable")
     public ResponseEntity<String> isTimeOffAvailable(@PathVariable Long gymId,
-                                              @RequestBody Event event) {
+                                                     @RequestBody Event event) {
         logger.info("isAvailable timeOff");
 
         facade.isAvailable(gymId, event);
@@ -179,18 +178,18 @@ public class EventController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
-                                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                        iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                                   Date startTime,
+                                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                               iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                               Date startTime,
                                                                        @RequestParam(value = "endTime")
-                                                               @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                        iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                                    Date endTime,
-                                                                @RequestParam(value = "types")
-                                                                           HashSet<String> types,
-                                                                @RequestParam(required = false)
+                                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                                               iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                               Date endTime,
+                                                                       @RequestParam(value = "types")
+                                                                               HashSet<String> types,
+                                                                       @RequestParam(required = false)
                                                                                Long customerId,
-                                                                @RequestParam(required = false)
+                                                                       @RequestParam(required = false)
                                                                                Long trainerId) {
         List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
 
