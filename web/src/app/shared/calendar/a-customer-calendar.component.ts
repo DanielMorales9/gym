@@ -24,9 +24,9 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 public router: Router,
                 public screenService: ScreenService,
                 public policyService: PolicyService,
-                private cdr: ChangeDetectorRef,
+                public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, policyService, snackBar, activatedRoute, screenService);
+        super(facade, router, policyService, snackBar, activatedRoute, cdr, screenService);
     }
 
     getEvents() {

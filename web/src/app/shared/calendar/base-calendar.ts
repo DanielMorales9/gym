@@ -1,5 +1,5 @@
 import {Subject, throwError} from 'rxjs';
-import {ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../model';
 import {EVENT_TYPES} from './event-types.enum';
@@ -41,6 +41,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                           public policyService: PolicyService,
                           public snackBar: SnackBarService,
                           public activatedRoute: ActivatedRoute,
+                          public cdr: ChangeDetectorRef,
                           public screenService: ScreenService) {
         super();
     }

@@ -29,9 +29,9 @@ export class AdminCalendarComponent extends BaseCalendar {
                 public screenService: ScreenService,
                 public router: Router,
                 public policyService: PolicyService,
-                private cdr: ChangeDetectorRef,
+                public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, policyService, snackBar, activatedRoute, screenService);
+        super(facade, router, policyService, snackBar, activatedRoute, cdr, screenService);
     }
 
     getEvents() {

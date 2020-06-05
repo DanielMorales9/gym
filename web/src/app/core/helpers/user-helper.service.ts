@@ -10,10 +10,6 @@ export class UserHelperService extends HelperService<User> {
     constructor(private service: UserService) {
         super();
     }
-    static getUserCreatedAt(user) {
-        const date = new Date(user.createdAt);
-        return date.toLocaleDateString();
-    }
     get(page: number, size: number): Observable<Object> {
         return this.service.get(page, size);
     }

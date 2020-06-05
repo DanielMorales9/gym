@@ -282,7 +282,7 @@ export class PolicyService implements OnInit, OnDestroy {
     POLICIES = [this.ADMIN_POLICY, this.TRAINER_POLICY, this.CUSTOMER_POLICY];
 
     ngOnInit() {
-        this.auth.getCurrentUserRoleId()
+        this.auth.getObservableCurrentUserRoleId()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
                 this.currentRoleId = v;

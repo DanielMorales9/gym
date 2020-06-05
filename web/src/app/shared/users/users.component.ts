@@ -45,7 +45,9 @@ export class UsersComponent extends BaseComponent implements OnInit {
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
         super();
-        this.currentUserId = this.auth.getUser().id;
+        this.auth.getObservableCurrentUserRoleId()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => this.currentUserId = v);
         this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
     }
 

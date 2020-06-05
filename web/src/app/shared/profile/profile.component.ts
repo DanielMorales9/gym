@@ -39,8 +39,16 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.user = this.auth.getUser();
-        this.getAvatar();
+        this.auth.getObservableUser()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => {
+                if (!this.user) {
+                    this.user = v;
+                    this.getAvatar();
+                    this.cdr.detectChanges();
+                }
+            });
+
     }
 
     openDialog(): void {
@@ -65,10 +73,6 @@ export class ProfileComponent extends BaseComponent implements OnInit {
             )
             .subscribe((user: User) => this.snackbar.open(`L'utente ${user.lastName} è stato modificato`),
                     error => this.snackbar.open(error.error.message));
-    }
-
-    getUserCreatedAt() {
-        return UserHelperService.getUserCreatedAt(this.user);
     }
 
     openPasswordDialog() {

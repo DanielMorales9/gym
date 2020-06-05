@@ -39,12 +39,14 @@ export class AuthenticationService implements OnInit, OnDestroy {
         this.currentRoleId$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
+                console.log(this.currentRoleId);
                 this.currentRoleId = v;
             });
 
         this.roles$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
+                console.log(v);
                 this.currentRoleId$.next(this.currentRoleId || v[0].id);
             });
     }
@@ -79,6 +81,8 @@ export class AuthenticationService implements OnInit, OnDestroy {
         }
         else if (!!this.user) {
             obs = of(this.user);
+            this.setUser(this.user);
+            this.setRoles(this.user.roles);
         }
         else {
             obs = of(principal);
@@ -149,9 +153,9 @@ export class AuthenticationService implements OnInit, OnDestroy {
     logout(): Observable<any> {
         // Customize credentials invalidation here
         return this.signOut().pipe(map( _ => {
-                this.setCurrentUserRole();
                 this.user = undefined;
                 this.gym = undefined;
+                this.currentRoleId = undefined;
                 this.storageService.set(this.PRINCIPAL_EXPIRE_KEY);
                 this.storageService.set(this.CREDENTIAL_KEY);
             }
@@ -178,12 +182,16 @@ export class AuthenticationService implements OnInit, OnDestroy {
         }
     }
 
-    getCurrentUserRoleId() {
+    getObservableCurrentUserRoleId() {
         return this.currentRoleId$;
     }
 
-    getUser(): any {
-        return !!this.user ? this.user : {};
+    getObservableUser(): Observable<User> {
+        return this.user$;
+    }
+
+    getUser(): User {
+        return this.user;
     }
 
     getUserRoleName(currentRoleId?) {
@@ -198,11 +206,6 @@ export class AuthenticationService implements OnInit, OnDestroy {
     setCurrentUserRole(idx?: number) {
         this.currentRoleId = idx;
         this.currentRoleId$.next(idx);
-    }
-
-    private getDefaultRole() {
-        const user = this.getUser();
-        return this.getRoleByUser(user);
     }
 
     private signIn(): Observable<any> {
