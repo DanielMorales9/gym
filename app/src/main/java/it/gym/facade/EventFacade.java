@@ -230,10 +230,6 @@ public class EventFacade {
         return event;
     }
 
-    public List<AEvent> findAllCourseEvents(Date startTime, Date endTime) {
-        return service.findAllCourseEvents(startTime, endTime);
-    }
-
     public AEvent complete(Long eventId) {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
         event.complete();

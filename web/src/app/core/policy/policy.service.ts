@@ -1,6 +1,5 @@
 import {Injectable, OnDestroy, OnInit} from '@angular/core';
 import {AuthenticationService} from '../authentication';
-import {BaseComponent} from '../../shared/base-component';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
@@ -15,6 +14,12 @@ export class PolicyService implements OnInit, OnDestroy {
     ADMIN_POLICY = {
         gym: {
             canEdit: true
+        },
+        events: {
+            canShowCourse: true,
+            canShowPersonal: true,
+            canShowTimeOff: true,
+            canShowHoliday: true
         },
         bundleSpec: {
             canDelete: true,
@@ -112,6 +117,12 @@ export class PolicyService implements OnInit, OnDestroy {
     };
 
     TRAINER_POLICY = {
+        events: {
+            canShowCourse: true,
+            canShowPersonal: true,
+            canShowTimeOff: true,
+            canShowHoliday: true
+        },
         bundleSpec: {
             canDelete: false,
             canEdit: false,
@@ -199,6 +210,12 @@ export class PolicyService implements OnInit, OnDestroy {
     };
 
     CUSTOMER_POLICY = {
+        events: {
+            canShowCourse: true,
+            canShowPersonal: true,
+            canShowTimeOff: false,
+            canShowHoliday: true
+        },
         bundleSpec: {
             canDelete: false,
             canCreate: false,
@@ -267,7 +284,10 @@ export class PolicyService implements OnInit, OnDestroy {
     ngOnInit() {
         this.auth.getCurrentUserRoleId()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => this.currentRoleId = v);
+            .subscribe(v => {
+                this.currentRoleId = v;
+                console.log(v);
+            });
     }
 
     ngOnDestroy(): void {
@@ -276,7 +296,7 @@ export class PolicyService implements OnInit, OnDestroy {
     }
 
 
-    get(entity: string, ...action) {
+        get(entity: string, ...action) {
         const myPolicy = this.POLICIES[this.currentRoleId - 1];
         if (entity in myPolicy) {
             let policy = myPolicy[entity];

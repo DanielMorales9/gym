@@ -176,36 +176,6 @@ public class EventController {
 
     }
 
-    @GetMapping("/timeOff")
-    @PreAuthorize("isAuthenticated()")
-    @Deprecated
-    public ResponseEntity<List<EventResource>> findAllTimesOffByTrainerId(@RequestParam
-                                                                           Long trainerId,
-                                                                   @RequestParam(value = "startTime")
-                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                                   @RequestParam(value = "endTime")
-                                                                   @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                           iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findAllTimesOffByTrainerId(trainerId, startTime, endTime);
-
-        return ResponseEntity.ok(new EventAssembler().toResources(res));
-    }
-
-    @GetMapping("/holiday")
-    @PreAuthorize("isAuthenticated()")
-    @Deprecated
-    public ResponseEntity<List<EventResource>> findAllHolidaysByInterval(@RequestParam(value = "startTime")
-                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                                  @RequestParam(value = "endTime")
-                                                                  @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findAllHolidays(startTime, endTime);
-
-        return ResponseEntity.ok(new EventAssembler().toResources(res));
-    }
-
     @GetMapping("/personal")
     @PreAuthorize("isAuthenticated()")
     @Deprecated
@@ -235,19 +205,6 @@ public class EventController {
         return ResponseEntity.ok(new EventAssembler().toResources(res));
     }
 
-    @GetMapping("/course")
-    @PreAuthorize("isAuthenticated()")
-    @Deprecated
-    public ResponseEntity<List<EventResource>> findAllCoursesByInterval(@RequestParam(value = "startTime")
-                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date startTime,
-                                                                 @RequestParam(value = "endTime")
-                                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                         iso = DateTimeFormat.ISO.DATE_TIME) Date endTime) {
-        List<AEvent> res = facade.findAllCourseEvents(startTime, endTime);
-
-        return ResponseEntity.ok(new EventAssembler().toResources(res));
-    }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")

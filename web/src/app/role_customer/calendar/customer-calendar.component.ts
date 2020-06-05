@@ -5,7 +5,8 @@ import {CalendarFacade} from '../../services';
 import {MatDialog} from '@angular/material';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {forkJoin} from 'rxjs';
-import {map, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
+import {PolicyService} from '../../core/policy';
 
 
 @Component({
@@ -20,9 +21,10 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
+                public policyService: PolicyService,
                 private cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, snackBar, activatedRoute, screenService);
+        super(facade, router, policyService, snackBar, activatedRoute, screenService);
     }
 
     getEvents() {
@@ -31,15 +33,13 @@ export class CustomerCalendarComponent extends BaseCalendar {
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
         const events = [];
-        const data = this.facade.getEvents(startDay, endDay, ['P', 'C', 'H'], this.user.id);
+        const data = this.facade.getEvents(startDay, endDay, this.types, this.user.id);
         events.push(data);
         forkJoin(events)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(r => {
                 this.events = [];
-                r.forEach((o: any) => {
-                    this.events.push(...o.map(v => this.formatEvent(v)));
-                });
+                this.events.push(...r.map(v => this.formatEvent(v)));
                 this.refreshView();
                 this.cdr.detectChanges();
             });

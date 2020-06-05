@@ -12,6 +12,7 @@ import {TrainerHourModalComponent} from './trainer-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
 import {takeUntil} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
+import {PolicyService} from '../../core/policy';
 
 
 @Component({
@@ -27,23 +28,22 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 private dialog: MatDialog,
                 public router: Router,
                 public screenService: ScreenService,
+                public policyService: PolicyService,
                 private cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, snackBar, activatedRoute, screenService);
+        super(facade, router, policyService, snackBar, activatedRoute, screenService);
     }
 
     getEvents() {
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        this.facade.getEvents(startDay, endDay, ['P', 'H', 'C', 'T'], undefined, this.user.id)
+        this.facade.getEvents(startDay, endDay, this.types, undefined, this.user.id)
             .pipe(
                 takeUntil(this.unsubscribe$)
             )
             .subscribe(r => {
                 this.events = [];
-                r.forEach((o: any[]) => {
-                    this.events.push(...o.map(v => this.formatEvent(v)));
-                });
+                this.events.push(...r.map(v => this.formatEvent(v)));
                 this.refreshView();
                 this.cdr.detectChanges();
             });

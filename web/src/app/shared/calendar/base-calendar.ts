@@ -8,6 +8,7 @@ import {CalendarFacade} from '../../services';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {catchError, filter, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
+import {PolicyService} from '../../core/policy';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -37,6 +38,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
+                          public policyService: PolicyService,
                           public snackBar: SnackBarService,
                           public activatedRoute: ActivatedRoute,
                           public screenService: ScreenService) {
@@ -94,6 +96,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     public view: CalendarView;
     public viewDate: Date;
+    public types: any;
     public excludeDays: number[];
     public dayStartHour: number;
     public dayEndHour: number;
@@ -102,7 +105,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     public activeDayIsOpen: boolean;
     public currentRoleId: number;
     public gym: Gym;
-    private queryParams: {view: CalendarView, viewDate: Date};
+    private queryParams: {view: CalendarView, viewDate: Date, types: any};
     user: User;
     modalData: any;
     showMarker = true;
@@ -141,6 +144,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
         this.initView();
         this.initViewDate();
+        this.initEventTypes();
         this.initCalendarConfig();
         this.getUser();
         this.getRole();
@@ -156,6 +160,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 this.events = [];
                 this.view = params['view'];
                 this.viewDate = new Date(params['viewDate']);
+                this.types = params['types'];
                 this.getEvents();
             });
     }
@@ -244,6 +249,28 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
             this.viewDate = new Date(stringDate.replace('-', '/'));
         } else {
             this.viewDate = new Date();
+        }
+    }
+
+    private initEventTypes() {
+        const types = this.activatedRoute.snapshot.queryParamMap.get('types');
+        if (!!types) {
+            this.types = types;
+        } else {
+
+            this.types = [];
+            if (this.policyService.get('events', 'canShowCourse')) {
+                this.types.push('C');
+            }
+            if (this.policyService.get('events', 'canShowPersonal')) {
+                this.types.push('P');
+            }
+            if (this.policyService.get('events', 'canShowTimeOff')) {
+                this.types.push('T');
+            }
+            if (this.policyService.get('events', 'canShowHoliday')) {
+                this.types.push('H');
+            }
         }
     }
 
@@ -583,7 +610,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     private updateQueryParams() {
-        this.queryParams = {view: this.view, viewDate: this.viewDate};
+        this.queryParams = {view: this.view, viewDate: this.viewDate, types: this.types};
         this.router.navigate(
             [],
             {
