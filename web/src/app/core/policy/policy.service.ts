@@ -286,7 +286,6 @@ export class PolicyService implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
                 this.currentRoleId = v;
-                console.log(v);
             });
     }
 

@@ -36,7 +36,6 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( v => {
                 this.roles = v;
-                console.log(v, this.roles, this.currentRoleId);
                 this.setCurrentRole(this.currentRoleId || this.roles[0].id);
             });
 
@@ -54,7 +53,6 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             this.router.navigateByUrl(this.roleName);
             this.cdr.detectChanges();
         }
-        console.log(this.currentRoleId);
     }
 
     doLogout() {

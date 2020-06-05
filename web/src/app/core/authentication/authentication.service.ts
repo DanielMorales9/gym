@@ -39,14 +39,12 @@ export class AuthenticationService implements OnInit, OnDestroy {
         this.currentRoleId$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
-                console.log(this.currentRoleId);
                 this.currentRoleId = v;
             });
 
         this.roles$
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => {
-                console.log(v);
                 this.currentRoleId$.next(this.currentRoleId || v[0].id);
             });
     }
@@ -92,7 +90,6 @@ export class AuthenticationService implements OnInit, OnDestroy {
     }
 
     private setRoles(roles: Role[]) {
-        console.log(roles);
         this.roles$.next(roles);
     }
 
