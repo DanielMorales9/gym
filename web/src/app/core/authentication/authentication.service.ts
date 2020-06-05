@@ -92,6 +92,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
     }
 
     private setRoles(roles: Role[]) {
+        console.log(roles);
         this.roles$.next(roles);
     }
 
@@ -116,7 +117,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
                     this.storageService.set(this.CREDENTIAL_KEY);
                 }
                 else {
-                    const roles = v['authorities'].map((d, i) => new Role(i + 1, d.authority));
+                    const roles = v['authorities'].map((d, i) => new Role(TypeIndex[d.authority[0]], d.authority));
                     this.setRoles(roles);
                 }
                 return v;
