@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
+import java.util.List;
+
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectTrainingBundle;
@@ -44,7 +47,9 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         customer = customerRepository.save(customer);
 
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
-        CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
+
+        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+        CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);

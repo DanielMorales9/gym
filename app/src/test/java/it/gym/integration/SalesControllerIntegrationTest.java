@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -60,10 +61,12 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         customer = userRepository.save(customer);
         sale = createSale(1L, customer);
         personalSpec = createPersonalBundleSpec(1L, "personal", 11);
-        courseSpec = createCourseBundleSpec(1L, "course", 11, 1, 111.);
+
+        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+        courseSpec = createCourseBundleSpec(1L, "course", 11, options);
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
-        TimePurchaseOption option = courseSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+        APurchaseOption option = courseSpec.getOptions().get(0);
         CourseTrainingBundle course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
         course = bundleRepository.save(course);
 

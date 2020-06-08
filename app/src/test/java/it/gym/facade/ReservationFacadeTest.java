@@ -5,6 +5,7 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
+import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -607,11 +609,14 @@ public class ReservationFacadeTest {
 
             start = getNextMonday();
             end = addHours(start, 1);
+
+            List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
             CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L,
                     "course",
                     maxCustomers,
-                    1,
-                    111.);
+                    options
+            );
+
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createCourseBundle(1L, start, spec, option);
             if (addToCurrentCustomersBundle)

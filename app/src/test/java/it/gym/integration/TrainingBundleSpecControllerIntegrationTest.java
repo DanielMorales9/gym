@@ -16,7 +16,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -42,7 +44,10 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
     @Before
     public void before() {
         personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
-        courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
+
+        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+        courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
+
         personalBundleSpec = repository.save(personalBundleSpec);
         courseBundleSpec = repository.save(courseBundleSpec);
         logger.info(personalBundleSpec.toString());

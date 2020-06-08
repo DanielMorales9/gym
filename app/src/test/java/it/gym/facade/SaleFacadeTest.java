@@ -15,6 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -98,8 +99,8 @@ public class SaleFacadeTest {
                 true,
                 null);
         Sale mockSale = createSale(1L, customer);
-        CourseTrainingBundleSpecification bundleSpec = createCourseBundleSpec(1L,
-                "course", 11, 1, 111.);
+        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 111.0));
+        CourseTrainingBundleSpecification bundleSpec = createCourseBundleSpec(1L, "course", 11, options);
         APurchaseOption option = bundleSpec.getOptions().get(0);
 
         Mockito.doReturn(mockSale).when(saleService).findById(1L);

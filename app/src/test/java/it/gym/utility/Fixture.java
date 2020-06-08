@@ -233,9 +233,50 @@ public class Fixture {
         return list;
     }
 
-    public static CourseTrainingBundleSpecification createCourseBundleSpec(long l, String name,
+    public static APurchaseOption createTimePurchaseOption(int number, double price) {
+        TimePurchaseOption option = new TimePurchaseOption();
+        option.setNumber(number);
+        option.setId(1L);
+        option.setPrice(price);
+        option.setCreatedAt(new Date());
+        option.setName("myTimeOption");
+        return option;
+    }
+
+    public static APurchaseOption createBundlePurchaseOption(int number, double price) {
+        BundlePurchaseOption option = new BundlePurchaseOption();
+        option.setNumber(number);
+        option.setId(2L);
+        option.setPrice(price);
+        option.setCreatedAt(new Date());
+        option.setName("myBundleOption");
+        return option;
+    }
+
+    public static APurchaseOption createOnDemandPurchaseOption(int number, double price) {
+        OnDemandPurchaseOption option = new OnDemandPurchaseOption();
+        option.setNumber(number);
+        option.setId(3L);
+        option.setPrice(price);
+        option.setCreatedAt(new Date());
+        option.setName("myOnDemandOption");
+        return option;
+    }
+
+//    public static List<APurchaseOption> createAllOptions(int number1, double price1,
+//                                                         int number2, double price2,
+//                                                         int number3, double price3) {
+//        ArrayList<APurchaseOption> options = new ArrayList<>();
+//        options.add(createTimePurchaseOption(number1, price1));
+//        options.add(createBundlePurchaseOption(number2, price2));
+//        options.add(createOnDemandPurchaseOption(number3, price3));
+//        return options;
+//    }
+
+    public static CourseTrainingBundleSpecification createCourseBundleSpec(long l,
+                                                                           String name,
                                                                            int maxCustomers,
-                                                                           int number, double price) {
+                                                                           List<APurchaseOption> options) {
         CourseTrainingBundleSpecification specs = new CourseTrainingBundleSpecification();
         specs.setDisabled(false);
         specs.setDescription("Description");
@@ -243,13 +284,7 @@ public class Fixture {
         specs.setName(name);
         specs.setUnlimitedDeletions(true);
         specs.setNumDeletions(0);
-        TimePurchaseOption option = new TimePurchaseOption();
-        option.setNumber(number);
-        option.setId(1L);
-        option.setPrice(price);
-        option.setCreatedAt(new Date());
-        option.setName("myOption");
-        specs.addOption(option);
+        specs.setOptions(options);
         specs.setMaxCustomers(maxCustomers);
         return specs;
     }

@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -48,7 +50,8 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         event = eventRepository.save(event);
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
-        courseSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
+        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.));
+        courseSpec = createCourseBundleSpec(1L, "course", 1, options);
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
