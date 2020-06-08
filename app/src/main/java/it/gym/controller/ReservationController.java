@@ -28,6 +28,7 @@ public class ReservationController {
 
     @PostMapping(path = "/{gymId}/isAvailable")
     @Deprecated
+    // TODO Deprecated
     public ResponseEntity<String> isAvailable(@PathVariable Long gymId,
                                               @RequestParam("customerId") Long customerId,
                                               @RequestParam("bundleId") Long bundleId,
