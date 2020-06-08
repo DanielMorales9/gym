@@ -64,14 +64,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
 
     @CachePut(value = "bundles-search", condition="#result != null")
     public Page<ATrainingBundle> search(Long specId, Boolean expired, Date time, Pageable pageable) {
-        if (expired != null) {
-            List<ATrainingBundle> rStream = this.findBundlesByNotExpired(Pageable.unpaged())
-                    .stream()
-                    .filter(ATrainingBundle::isExpired)
-                    .map(ATrainingBundle::terminate)
-                    .collect(Collectors.toList());
-            this.saveAll(rStream);
-        }
 
         Page<ATrainingBundle> bundles;
         if (specId != null) {
