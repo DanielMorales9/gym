@@ -13,6 +13,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
+import java.util.List;
+
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectTrainingBundle;
@@ -43,17 +46,20 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
         customer = customerRepository.save(customer);
 
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
-        CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
+        options = createSingletonTimePurchaseOptions(1, 100.0);
+        CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);
 
-        TimePurchaseOption option = courseBundleSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+        APurchaseOption option = courseBundleSpec.getOptions().get(0);
 
         courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
         courseBundle.setCustomer(customer);
-        personalBundle = createPersonalBundle(1L, personalBundleSpec);
+        personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
         personalBundle.setCustomer(customer);
 
         personalBundle = repository.save(personalBundle);

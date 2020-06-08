@@ -5,7 +5,7 @@ import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
-import {BundleType} from '../model';
+import {BundleType, BundleTypeConstant} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
@@ -17,8 +17,11 @@ import {BaseComponent} from '../base-component';
 })
 export class BundleDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
 
-    PERSONAL = BundleType.PERSONAL;
-    COURSE   = BundleType.COURSE;
+    PERSONAL = BundleTypeConstant.PERSONAL;
+    COURSE   = BundleTypeConstant.COURSE;
+
+
+    bundleType = BundleType;
 
     bundle: any;
 
@@ -88,23 +91,6 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
             }
         }
         return false;
-    }
-
-    getBundleType() {
-        let name;
-        if (!this.bundle) { return name; }
-        switch (this.bundle.type) {
-            case this.PERSONAL:
-                name = 'Allenamento Personale';
-                break;
-            case this.COURSE:
-                name = 'Corso';
-                break;
-            default:
-                name = 'Allenamento Personale';
-                break;
-        }
-        return name;
     }
 
     edit() {

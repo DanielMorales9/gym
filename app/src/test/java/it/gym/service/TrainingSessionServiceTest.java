@@ -1,9 +1,7 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.ATrainingSession;
-import it.gym.model.PersonalTrainingBundle;
-import it.gym.model.PersonalTrainingSession;
+import it.gym.model.*;
 import it.gym.repository.TrainingSessionRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,14 +40,21 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        PersonalTrainingBundle p = createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11));
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+        APurchaseOption option = personalBundleSpec.getOptions().get(0);
+        PersonalTrainingBundle p = createPersonalBundle(1L, personalBundleSpec, option);
         this.service.save(createPersonalTrainingSession(1L, p));
         Mockito.verify(repository).save(any(ATrainingSession.class));
     }
 
     @Test
     public void findById() {
-        PersonalTrainingBundle p = createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11));
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
+        APurchaseOption option = personalBundleSpec.getOptions().get(0);
+        PersonalTrainingBundle p = createPersonalBundle(1L, personalBundleSpec, option);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, p);
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(session));
         ATrainingSession u = this.service.findById(1L);
@@ -59,7 +64,12 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findAll() {
-        PersonalTrainingSession session = createPersonalTrainingSession(1L, createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11)));
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
+        APurchaseOption option = personalBundleSpec.getOptions().get(0);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, personalBundleSpec, option);
+        PersonalTrainingSession session = createPersonalTrainingSession(1L, bundle);
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(session));
         List<ATrainingSession> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(session));
@@ -73,7 +83,12 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        ATrainingSession u = createPersonalTrainingSession(1L, createPersonalBundle(1L, createPersonalBundleSpec(1L, "personal", 11)));
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
+        APurchaseOption option = personalBundleSpec.getOptions().get(0);
+        PersonalTrainingBundle personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
+        ATrainingSession u = createPersonalTrainingSession(1L, personalBundle);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingSession.class));
     }

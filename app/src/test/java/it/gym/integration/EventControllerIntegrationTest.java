@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -48,8 +50,12 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         event = eventRepository.save(event);
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
-        courseSpec = createCourseBundleSpec(1L, "course", 1, 1, 111.);
-        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+
+        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
+        courseSpec = createCourseBundleSpec(1L, "course", 1, options);
+
+        options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", options);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
         Long optionId = personalSpec.getOptions().get(0).getId();
@@ -73,6 +79,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenCreateHolidayReturnsOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
+
         Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);
@@ -102,6 +109,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenCreateHolidayReturnsException() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
+
         Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);

@@ -49,17 +49,14 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     header(action: string, event: any) {
-        this.facade.isHolidayAvailableAllDay(event.day.date)
-            .subscribe(_ => {
-                this.modalData = {
-                    action: EVENT_TYPES.HEADER,
-                    title: 'Giorno di Chiusura',
-                    userId: this.user.id,
-                    role: this.currentRoleId,
-                    event: event
-                };
-                this.openModal(action);
-            }, err => this.snackBar.open(err.error.message));
+        this.modalData = {
+            action: EVENT_TYPES.HEADER,
+            title: 'Giorno di Chiusura',
+            userId: this.user.id,
+            role: this.currentRoleId,
+            event: event
+        };
+        this.openModal(action);
     }
 
     delete(action: string, event: any) {
@@ -103,17 +100,14 @@ export class AdminCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
-            .subscribe(_ => {
-                this.modalData = {
-                    action: EVENT_TYPES.CHANGE,
-                    title: 'Cambia chiusura',
-                    userId: this.user.id,
-                    role: this.currentRoleId,
-                    event: event
-                };
-                this.openModal(action);
-            }, err => this.snackBar.open(err.error.message));
+        this.modalData = {
+            action: EVENT_TYPES.CHANGE,
+            title: 'Cambia chiusura',
+            userId: this.user.id,
+            role: this.currentRoleId,
+            event: event
+        };
+        this.openModal(action);
     }
 
     openModal(action: string) {

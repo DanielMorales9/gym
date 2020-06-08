@@ -26,12 +26,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public Boolean isExpired() {
-        Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        return getOption().getNumber().equals(size);
-    }
-
-    @Override
     public Boolean isDeletable() {
         if (this.getSessions() == null) {
             return true;
@@ -42,11 +36,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public Double getPrice() {
-        return getOption().getPrice();
-    }
-
-    @Override
     public ATrainingSession createSession(ATrainingEvent event) {
         PersonalTrainingSession session = new PersonalTrainingSession();
         session.setCompleted(false);
@@ -54,16 +43,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         session.setEndTime(event.getEndTime());
         session.setTrainingBundle(this);
         return session;
-    }
-
-    @Override
-    public void addSession(ATrainingSession session) {
-        if (this.getSessions() == null) {
-            this.setSessions(new ArrayList<>());
-            this.activateBundle(session.getStartTime());
-        }
-
-        this.getSessions().add(session);
     }
 
     @Override

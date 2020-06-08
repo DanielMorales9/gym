@@ -3,7 +3,7 @@ export enum BundleSpecificationType {
     COURSE = 'C'
 }
 
-export enum BundleType {
+export enum BundleTypeConstant {
     PERSONAL =  'P',
     COURSE = 'C'
 }
@@ -93,7 +93,7 @@ export class PersonalBundle extends Bundle {
 
     constructor() {
         super();
-        this.type = BundleType.PERSONAL;
+        this.type = BundleTypeConstant.PERSONAL;
     }
 
     getPrice() {
@@ -109,7 +109,7 @@ export class CourseBundle extends Bundle {
 
     constructor() {
         super();
-        this.type = BundleType.COURSE;
+        this.type = BundleTypeConstant.COURSE;
     }
 
     getPrice() {

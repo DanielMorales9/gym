@@ -24,7 +24,7 @@
         </span>
             </div>
             <div>
-                <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
+                <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{bundleSpec?.type | map: bundleType}}
             </div>
             <ng-container [ngSwitch]="bundleSpec?.type">
 

@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../core/controllers';
-import {BundleType, CourseBundleSpecification, OptionType, PersonalBundleSpecification} from '../model';
+import {BundleType, BundleTypeConstant, CourseBundleSpecification, OptionType, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
@@ -18,8 +18,8 @@ import {BaseComponent} from '../base-component';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BundleSpecDetailsComponent extends BaseComponent implements OnInit {
-    PERSONAL = BundleType.PERSONAL;
-    COURSE   = BundleType.COURSE;
+    PERSONAL = BundleTypeConstant.PERSONAL;
+    COURSE   = BundleTypeConstant.COURSE;
 
     bundleSpec: CourseBundleSpecification|PersonalBundleSpecification;
 
@@ -31,6 +31,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
     canDeleteOption: boolean;
     canMakeOption: boolean;
     canEdit: boolean;
+    bundleType = BundleType;
 
     constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
@@ -105,23 +106,6 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
 
     private getBundleSpec(id: number) {
         return this.service.findBundleSpecById(id);
-    }
-
-    getBundleType() {
-        let name;
-        if (!this.bundleSpec) { return name; }
-        switch (this.bundleSpec.type) {
-            case this.PERSONAL:
-                name = 'Allenamento Personale';
-                break;
-            case this.COURSE:
-                name = 'Corso';
-                break;
-            default:
-                name = 'Allenamento Personale';
-                break;
-        }
-        return name;
     }
 
     createOption() {

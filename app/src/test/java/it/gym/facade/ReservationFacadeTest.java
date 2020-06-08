@@ -17,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -41,6 +42,9 @@ public class ReservationFacadeTest {
     static {
         System.setProperty("reservationBeforeHours", "2");
     }
+
+    private final PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture();
+    private final CourseTrainingEventFixture courseEventFixture = new CourseTrainingEventFixture();
 
     @TestConfiguration
     static class ReservationFacadeTestContextConfiguration {
@@ -75,8 +79,10 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
-        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
-        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
+        APurchaseOption option = spec.getOptions().get(0);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec, option);
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
         Date start = getNextMonday();
         Date end = addHours(start, 1);
@@ -88,7 +94,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenCustomerCreateReservationFromBundle() {
-        PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture().invoke(11);
+        personalEventFixture.invoke(11, 900.0);
 
         Gym gym = personalEventFixture.getGym();
         Customer customer = personalEventFixture.getCustomer();
@@ -138,7 +144,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenAdminCreateReservation() {
-        PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture().invoke(11);
+        personalEventFixture.invoke(11, 900.0);
 
         Gym gym = personalEventFixture.getGym();
         Customer customer = personalEventFixture.getCustomer();
@@ -192,7 +198,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = MethodNotAllowedException.class)
     public void whenCreatingReservationFromEventThenReturnsNotReservable() {
-        CourseTrainingEventFixture courseEventFixture = new CourseTrainingEventFixture().invoke(0, true);
+        courseEventFixture.invoke(0, true);
 
         Gym gym = courseEventFixture.getGym();
         Customer customer = courseEventFixture.getCustomer();
@@ -234,7 +240,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenCreatingReservationFromEventThenReturnsOk() {
-        CourseTrainingEventFixture courseEventFixture = new CourseTrainingEventFixture().invoke(1, true);
+        courseEventFixture.invoke(1, true);
 
         Gym gym = courseEventFixture.getGym();
         Customer customer = courseEventFixture.getCustomer();
@@ -286,7 +292,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = BadRequestException.class)
     public void whenCreatingReservationFromEventWithoutBundleThenReturnsBadRequest() {
-        CourseTrainingEventFixture courseEventFixture = new CourseTrainingEventFixture().invoke(0, false);
+        courseEventFixture.invoke(0, false);
 
         Gym gym = courseEventFixture.getGym();
         Customer customer = courseEventFixture.getCustomer();
@@ -318,7 +324,7 @@ public class ReservationFacadeTest {
 
     @Test(expected = MethodNotAllowedException.class)
     public void whenCreatingReservationFromBundleThenBundleIsExpired() {
-        PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture().invoke(0);
+        personalEventFixture.invoke(0, 900.0);
 
         Gym gym = personalEventFixture.getGym();
         Customer customer = personalEventFixture.getCustomer();
@@ -351,7 +357,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenAdminDeleteReservationToPersonalTrainingEvent() {
-        PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture().invoke(11);
+        personalEventFixture.invoke(11, 900.0);
 
         Date start = personalEventFixture.getStart();
         Date end = personalEventFixture.getEnd();
@@ -387,7 +393,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenCustomerDeletesReservationToPersonalTrainingEvent() {
-        PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture().invoke(11);
+        personalEventFixture.invoke(11, 900.0);
 
         Date start = personalEventFixture.getStart();
         Date end = personalEventFixture.getEnd();
@@ -421,13 +427,13 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenAdminDeleteReservationToCourseTrainingEvent() {
-        CourseTrainingEventFixture fixture = new CourseTrainingEventFixture().invoke(11, true);
+        courseEventFixture.invoke(11, true);
 
-        Date start = fixture.getStart();
-        Gym gym = fixture.getGym();
-        Date end = fixture.getEnd();
-        Customer customer = fixture.getCustomer();
-        ATrainingBundle bundle = fixture.getBundle();
+        Date start = courseEventFixture.getStart();
+        Gym gym = courseEventFixture.getGym();
+        Date end = courseEventFixture.getEnd();
+        Customer customer = courseEventFixture.getCustomer();
+        ATrainingBundle bundle = courseEventFixture.getBundle();
 
         ATrainingEvent event = createCourseEvent(1L,
                 "course", start, end,
@@ -444,7 +450,7 @@ public class ReservationFacadeTest {
         Mockito.doReturn(res).when(service).findById(1L);
         Mockito.doReturn(gym).when(gymService).findById(1L);
 
-        String email = fixture.getCustomer().getEmail();
+        String email = courseEventFixture.getCustomer().getEmail();
         Reservation actual = facade.deleteReservation(1L, 1L, gym.getId(), email, "ADMIN");
 
         Reservation expected = createReservation(1L, customer);
@@ -463,7 +469,7 @@ public class ReservationFacadeTest {
 
     @Test
     public void whenConfirmPersonalTrainingEvent() {
-        PersonalTrainingEventFixture personalEventFixture = new PersonalTrainingEventFixture().invoke(11);
+        personalEventFixture.invoke(11, 900.0);
 
         Date start = personalEventFixture.getStart();
         Date end = personalEventFixture.getEnd();
@@ -534,7 +540,7 @@ public class ReservationFacadeTest {
             return bundle;
         }
 
-        public PersonalTrainingEventFixture invoke(int numSessions) {
+        public void invoke(int numSessions1, double price1) {
             gym = createGym(1L);
             customer = createCustomer(1L,
                     "customer@customer.com",
@@ -544,8 +550,10 @@ public class ReservationFacadeTest {
                     true,
                     null);
 
-            PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", numSessions);
-            bundle = createPersonalBundle(1L, spec);
+            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(numSessions1, price1);
+            PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
+            APurchaseOption option = spec.getOptions().get(0);
+            bundle = createPersonalBundle(1L, spec, option);
             customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
             start = getNextMonday();
@@ -557,7 +565,6 @@ public class ReservationFacadeTest {
             event.setExternal(false);
             e = new PersonalTrainingEvent[1];
 
-            return this;
         }
     }
 
@@ -593,7 +600,7 @@ public class ReservationFacadeTest {
             return event;
         }
 
-        public CourseTrainingEventFixture invoke(int maxCustomers, boolean addToCurrentCustomersBundle) {
+        public void invoke(int maxCustomers, boolean addToCurrentCustomersBundle) {
             gym = createGym(1L);
             customer = createCustomer(1L,
                     "customer@customer.com",
@@ -605,18 +612,20 @@ public class ReservationFacadeTest {
 
             start = getNextMonday();
             end = addHours(start, 1);
+
+            List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L,
                     "course",
                     maxCustomers,
-                    1,
-                    111.);
-            TimePurchaseOption option = spec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+                    options
+            );
+
+            APurchaseOption option = spec.getOptions().get(0);
             bundle = createCourseBundle(1L, start, spec, option);
             if (addToCurrentCustomersBundle)
                 customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
             event = createCourseEvent(1L, "test", start, end, spec);
-            return this;
         }
     }
 }

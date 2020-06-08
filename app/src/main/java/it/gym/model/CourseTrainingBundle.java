@@ -15,21 +15,8 @@ import java.util.*;
 public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
-    public Double getPrice() {
-        return this.getOption().getPrice(this);
-    }
-
-    @Override
     public String getType() {
         return "C";
-    }
-
-    @Override
-    public Boolean isExpired() {
-        if (this.getEndTime() == null) {
-            return this.getOption().isExpired(this);
-        }
-        return new Date().after(getEndTime());
     }
 
     @Override
@@ -50,16 +37,6 @@ public class CourseTrainingBundle extends ATrainingBundle {
         session.setCompleted(false);
         session.setTrainingBundle(this);
         return session;
-    }
-
-    @Override
-    public void addSession(ATrainingSession session) {
-        if (this.getSessions() == null) {
-            this.setSessions(new ArrayList<>());
-            this.activateBundle(session.getStartTime());
-        }
-
-        this.getSessions().add(session);
     }
 
     @Override
