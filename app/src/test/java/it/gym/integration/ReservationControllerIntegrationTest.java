@@ -1,7 +1,6 @@
 package it.gym.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.exception.BadRequestException;
 import it.gym.model.*;
 import it.gym.repository.*;
 import org.junit.Test;
@@ -394,7 +393,8 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
             PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
             spec = specRepository.save(spec);
-            bundle = createPersonalBundle(1L, spec);
+            APurchaseOption option = spec.getOptions().get(0);
+            bundle = createPersonalBundle(1L, spec, option);
 
             start = addDays(getNextMonday(), days);
             end = addHours(start, 1);

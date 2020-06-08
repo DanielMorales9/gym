@@ -84,6 +84,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/holiday/isAvailable")
+    @Deprecated
     public ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
                                                      @RequestBody Event event) {
         logger.info("is holiday available");
@@ -95,6 +96,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/canEdit")
+    @Deprecated
     public ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
                                                @RequestBody Event event) {
         logger.info("canEdit event");
@@ -165,6 +167,7 @@ public class EventController {
     }
 
     @PostMapping(path = "/{gymId}/timeOff/isAvailable")
+    @Deprecated
     public ResponseEntity<String> isTimeOffAvailable(@PathVariable Long gymId,
                                                      @RequestBody Event event) {
         logger.info("isAvailable timeOff");

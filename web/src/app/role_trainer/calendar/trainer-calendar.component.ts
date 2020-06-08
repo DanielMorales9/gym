@@ -51,35 +51,25 @@ export class TrainerCalendarComponent extends BaseCalendar {
     }
 
     change(action: string, event: any) {
-        this.facade.canEdit({startTime: event.newStart, endTime: event.newEnd})
-            .subscribe(_ => {
-                this.modalData = {
-                    action: EVENT_TYPES.CHANGE,
-                    title: 'Orario di Ferie',
-                    userId: this.user.id,
-                    role: this.currentRoleId,
-                    event: event
-                };
-                this.openModal(action);
-            }, err => {
-                this.snackBar.open(err.error.message);
-            });
+         this.modalData = {
+                action: EVENT_TYPES.CHANGE,
+                title: 'Orario di Ferie',
+                userId: this.user.id,
+                role: this.currentRoleId,
+                event: event
+            };
+            this.openModal(action);
     }
 
     header(action: string, event: any) {
-        this.facade.isTimeOffAvailableAllDay(new Date(event.day.date))
-            .subscribe(res => {
-                this.modalData = {
-                    action: EVENT_TYPES.HEADER,
-                    title: 'Giorno di Ferie',
-                    userId: this.user.id,
-                    role: this.currentRoleId,
-                    event: event
-                };
-                this.openModal(action);
-            }, err => {
-                this.snackBar.open(err.error.message);
-            });
+        this.modalData = {
+                action: EVENT_TYPES.HEADER,
+                title: 'Giorno di Ferie',
+                userId: this.user.id,
+                role: this.currentRoleId,
+                event: event
+        };
+        this.openModal(action);
     }
 
     delete(action: string, event: any) {

@@ -27,6 +27,7 @@ public class ReservationController {
     @Autowired private ReservationFacade facade;
 
     @PostMapping(path = "/{gymId}/isAvailable")
+    @Deprecated
     public ResponseEntity<String> isAvailable(@PathVariable Long gymId,
                                               @RequestParam("customerId") Long customerId,
                                               @RequestParam("bundleId") Long bundleId,

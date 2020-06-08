@@ -57,16 +57,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public void addSession(ATrainingSession session) {
-        if (this.getSessions() == null) {
-            this.setSessions(new ArrayList<>());
-            this.activateBundle(session.getStartTime());
-        }
-
-        this.getSessions().add(session);
-    }
-
-    @Override
     public String toString() {
         return "PersonalTrainingBundle{ " + super.toString() + " }";
     }

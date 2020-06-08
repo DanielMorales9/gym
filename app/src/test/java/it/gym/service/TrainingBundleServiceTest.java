@@ -45,7 +45,7 @@ public class TrainingBundleServiceTest {
     @Test
     public void findAll() {
         PersonalTrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", 11);
-        ATrainingBundle bundle = createPersonalBundle(1L, pe);
+        ATrainingBundle bundle = createPersonalBundle(1L, pe, pe.getOptions().get(0));
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(bundle));
         List<ATrainingBundle> u = this.service.findAll();
         assertThat(u).isEqualTo(Collections.singletonList(bundle));

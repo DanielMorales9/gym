@@ -12,14 +12,6 @@ export class EventService {
         return this.http.delete(endpoint);
     }
 
-    isTimeOffAvailable(gymId: any, event: any) {
-        return this.http.post(`/events/${gymId}/timeOff/isAvailable`, event);
-    }
-
-    isHolidayAvailable(gymId: any, event: any) {
-        return this.http.post(`/events/${gymId}/holiday/isAvailable`, event);
-    }
-
     createHoliday(gymId: any, event: { name: string; startTime: Date; endTime: Date }): Observable<any> {
         return this.http.post(`/events/${gymId}/holiday`, event);
     }
@@ -34,10 +26,6 @@ export class EventService {
 
     editHoliday(gymId: number, id: any, event: { name: string; startTime: Date; endTime: Date }): Observable<any> {
         return this.http.patch(`/events/${gymId}/holiday/${id}`, event);
-    }
-
-    canEdit(gymId: any, event: { startTime: any; endTime: any }): Observable<any> {
-        return this.http.post(`/events/${gymId}/canEdit`, event);
     }
 
     editTimeOff(gymId: any, id: number, event: { name: string; startTime: Date; endTime: Date }) {

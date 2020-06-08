@@ -56,7 +56,7 @@ public class TrainingSessionControllerTest extends AbstractIntegrationTest {
 
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
 
-        PersonalTrainingBundle personalBundle = createPersonalBundle(1L, personalBundleSpec);
+        PersonalTrainingBundle personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
         workout = createWorkout(1L);
         workout = workoutRepository.save(workout);
 

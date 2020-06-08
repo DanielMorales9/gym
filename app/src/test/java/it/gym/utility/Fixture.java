@@ -107,7 +107,8 @@ public class Fixture {
         return pt;
     }
 
-    public static PersonalTrainingBundle createPersonalBundle(long id, ATrainingBundleSpecification spec) {
+    public static PersonalTrainingBundle createPersonalBundle(long id, ATrainingBundleSpecification spec,
+                                                              APurchaseOption aPurchaseOption) {
         PersonalTrainingBundle pt = new PersonalTrainingBundle();
         pt.setName("Winter Pack");
         pt.setBundleSpec(spec);

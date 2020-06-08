@@ -49,11 +49,11 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
         courseBundleSpec = specRepository.save(courseBundleSpec);
         personalBundleSpec = specRepository.save(personalBundleSpec);
 
-        TimePurchaseOption option = courseBundleSpec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+        APurchaseOption option = courseBundleSpec.getOptions().get(0);
 
         courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
         courseBundle.setCustomer(customer);
-        personalBundle = createPersonalBundle(1L, personalBundleSpec);
+        personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
         personalBundle.setCustomer(customer);
 
         personalBundle = repository.save(personalBundle);

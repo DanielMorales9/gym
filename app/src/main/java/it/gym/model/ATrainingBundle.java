@@ -9,6 +9,7 @@ import org.springframework.data.rest.core.annotation.RestResource;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
@@ -95,19 +96,19 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
 
     public abstract String getType();
     public abstract Boolean isDeletable();
+
     @JsonIgnore
     public abstract Boolean isExpired();
+
     @JsonIgnore
     public abstract Double getPrice();
+
     public abstract ATrainingSession createSession(ATrainingEvent event);
 
-    public ATrainingBundle terminate() {
+    public void terminate() {
         this.setEndTime(this.getOption().getEndDate(this));
         this.setExpiredAt(new Date());
-        return this;
     }
-
-    public abstract void addSession(ATrainingSession session);
 
     public Date getStartTime() {
         return startTime;
@@ -192,7 +193,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
 
     @Override
     public String toString() {
-        return "id=" + id + ", name='" + name + ", createdAt=" + createdAt;
+        return "id=" + id + ", name='" + name + ", createdAt=" + createdAt + ", " +
+                "startTime=" + startTime + ", endTime=" + endTime;
     }
 
     protected void activateBundle(Date activationTime) {
@@ -219,5 +221,23 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public ATrainingBundle eager() {
         this.getSessions().forEach(ATrainingSession::eager);
         return this;
+    }
+
+    public void addSession(ATrainingSession session) {
+        if (!this.hasSessions()) {
+            this.setSessions(new ArrayList<>());
+            this.activateBundle(session.getStartTime());
+        }
+
+        this.getSessions().add(session);
+    }
+
+    protected boolean hasSessions() {
+        if (this.sessions != null) {
+            return this.sessions.size() > 0;
+        }
+        else {
+            return false;
+        }
     }
 }

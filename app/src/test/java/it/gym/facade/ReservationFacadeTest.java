@@ -76,7 +76,8 @@ public class ReservationFacadeTest {
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
-        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec);
+        APurchaseOption option = spec.getOptions().get(0);
+        PersonalTrainingBundle bundle = createPersonalBundle(1L, spec, option);
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
         Date start = getNextMonday();
         Date end = addHours(start, 1);
@@ -545,7 +546,8 @@ public class ReservationFacadeTest {
                     null);
 
             PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", numSessions);
-            bundle = createPersonalBundle(1L, spec);
+            APurchaseOption option = spec.getOptions().get(0);
+            bundle = createPersonalBundle(1L, spec, option);
             customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
 
             start = getNextMonday();
@@ -610,7 +612,7 @@ public class ReservationFacadeTest {
                     maxCustomers,
                     1,
                     111.);
-            TimePurchaseOption option = spec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+            APurchaseOption option = spec.getOptions().get(0);
             bundle = createCourseBundle(1L, start, spec, option);
             if (addToCurrentCustomersBundle)
                 customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));

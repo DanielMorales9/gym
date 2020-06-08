@@ -61,20 +61,28 @@ public class ReservationFacade {
 
         checkBundleIsReservable(customer, bundle);
 
-        if (checkIsReservedOnTime && isNotOnTime(startTime, gym)) {
-            throw new BadRequestException(
-                    String.format("E' necessario prenotare almeno %s ore prima",
-                            gym.getReservationBeforeHours() ));
-        }
+        if (checkIsReservedOnTime) { checkIsOnTime(startTime, gym); }
 
-        List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
-
-        hasHolidays(events);
+        checkHasHolidays(startTime, endTime);
 
         if (checkNumEvents) {
             isTimeAvailable(gym, startTime, endTime);
         }
 
+    }
+
+    private void checkHasHolidays(Date startTime, Date endTime) {
+        List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
+
+        hasHolidays(events);
+    }
+
+    private void checkIsOnTime(Date startTime, Gym gym) {
+        if (isNotOnTime(startTime, gym)) {
+            throw new BadRequestException(
+                    String.format("E' necessario prenotare almeno %s ore prima",
+                            gym.getReservationBeforeHours() ));
+        }
     }
 
     private Long checkOverlappingEvents(Gym gym, Date startTime, Date endTime) {
@@ -238,6 +246,7 @@ public class ReservationFacade {
         logger.info("Adding training session to bundle");
         bundle.addSession(session);
 
+        logger.info(bundle.toString());
         logger.info("Saving training session into bundle");
         bundleService.save(bundle);
 
@@ -345,6 +354,7 @@ public class ReservationFacade {
             logger.info("Deleting personal training event");
             this.eventService.delete(event);
         } else {
+
             logger.info("Deleting reservation from event");
             event.deleteReservation(res);
 
