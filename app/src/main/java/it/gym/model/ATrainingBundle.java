@@ -98,15 +98,18 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public abstract Boolean isDeletable();
 
     @JsonIgnore
-    public abstract Boolean isExpired();
+    public Boolean isExpired() {
+        return this.getOption().isExpired(this);
+    }
 
     @JsonIgnore
-    public abstract Double getPrice();
+    public Double getPrice() {
+        return getOption().getPrice();
+    }
 
     public abstract ATrainingSession createSession(ATrainingEvent event);
 
     public void terminate() {
-        this.setEndTime(this.getOption().getEndDate(this));
         this.setExpiredAt(new Date());
     }
 
@@ -198,9 +201,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     }
 
     protected void activateBundle(Date activationTime) {
-        if (startTime == null) {
-            this.setStartTime(activationTime);
-        }
+        this.setStartTime(activationTime);
+        this.setEndTime(this.getOption().getEndDate(this));
     }
 
     @Override

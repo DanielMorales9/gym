@@ -79,6 +79,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenCreateHolidayReturnsOK() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
+
         Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);
@@ -108,6 +109,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     public void whenCreateHolidayReturnsException() throws Exception {
         Date start = addHours(getNextMonday(), 24);
         Date end = addHours(start, 1);
+
         Event e = new Event();
         e.setStartTime(start);
         e.setEndTime(end);

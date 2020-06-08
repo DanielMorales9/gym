@@ -26,12 +26,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     }
 
     @Override
-    public Boolean isExpired() {
-        Integer size = (this.getSessions() == null) ? 0 : this.getSessions().size();
-        return getOption().getNumber().equals(size);
-    }
-
-    @Override
     public Boolean isDeletable() {
         if (this.getSessions() == null) {
             return true;
@@ -39,11 +33,6 @@ public class PersonalTrainingBundle extends ATrainingBundle {
         return this.getSessions().stream()
                 .map(ATrainingSession::isDeletable)
                 .reduce(Boolean::logicalAnd).orElse(true);
-    }
-
-    @Override
-    public Double getPrice() {
-        return getOption().getPrice();
     }
 
     @Override

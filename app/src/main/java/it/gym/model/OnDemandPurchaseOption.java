@@ -32,8 +32,8 @@ public class OnDemandPurchaseOption extends APurchaseOption {
 
     @Override
     public Boolean isExpired(ATrainingBundle bundle) {
-        if (bundle.getStartTime() != null) {
-            return new Date().after(addMonths(bundle.getStartTime(), this.getNumber()));
+        if (bundle.getEndTime() != null) {
+            return new Date().after(bundle.getEndTime());
         }
         else {
             return false;

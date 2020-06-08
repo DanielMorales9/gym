@@ -15,21 +15,8 @@ import java.util.*;
 public class CourseTrainingBundle extends ATrainingBundle {
 
     @Override
-    public Double getPrice() {
-        return this.getOption().getPrice(this);
-    }
-
-    @Override
     public String getType() {
         return "C";
-    }
-
-    @Override
-    public Boolean isExpired() {
-        if (this.getEndTime() == null) {
-            return this.getOption().isExpired(this);
-        }
-        return new Date().after(getEndTime());
     }
 
     @Override
