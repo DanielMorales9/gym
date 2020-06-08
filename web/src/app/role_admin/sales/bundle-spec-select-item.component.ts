@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {BundleType} from '../../shared/model';
+import {BundleTypeConstant} from '../../shared/model';
 
 
 @Component({
@@ -14,8 +14,8 @@ export class BundleSpecSelectItemComponent {
     @Output() done = new EventEmitter();
 
     @Input() selected: boolean;
-    PERSONAL: BundleType.PERSONAL;
-    COURSE: BundleType.COURSE;
+    PERSONAL: BundleTypeConstant.PERSONAL;
+    COURSE: BundleTypeConstant.COURSE;
 
     constructor() {}
 

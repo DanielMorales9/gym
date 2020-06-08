@@ -19,7 +19,7 @@
                 </span>
                 </div>
                 <div>
-                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{getBundleType()}}
+                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{bundle?.type | map: bundleType}}
                 </div>
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-user-tag"></mat-icon>&nbsp;

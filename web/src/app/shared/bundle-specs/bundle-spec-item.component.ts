@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {BundleType} from '../model';
+import {BundleType, BundleTypeConstant} from '../model';
 
 
 @Component({
@@ -13,12 +13,14 @@ import {BundleType} from '../model';
 })
 export class BundleSpecItemComponent {
 
-    COURSE   = BundleType.COURSE;
-    PERSONAL = BundleType.PERSONAL;
+    COURSE   = BundleTypeConstant.COURSE;
+    PERSONAL = BundleTypeConstant.PERSONAL;
 
     @Input() bundleSpec: any;
     @Input() canDelete: boolean;
     @Input() canDisable: boolean;
+
+    bundleType = BundleType;
 
     @Output() done = new EventEmitter();
     constructor(private dialog: MatDialog) {
@@ -48,24 +50,6 @@ export class BundleSpecItemComponent {
 
     toggleDisabled() {
         this.done.emit({type: 'patch', bundleSpec: this.bundleSpec});
-    }
-
-    getBundleType() {
-        const defaultName = 'Allenamento Personale';
-        let name;
-        if (!this.bundleSpec) { return name; }
-        switch (this.bundleSpec.type) {
-            case this.PERSONAL:
-                name = defaultName;
-                break;
-            case this.COURSE:
-                name = 'Corso';
-                break;
-            default:
-                name = defaultName;
-                break;
-        }
-        return name;
     }
 
     goToInfo() {

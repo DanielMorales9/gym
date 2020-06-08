@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
 import {MatDialog} from '@angular/material';
-import {BundleType} from '../model';
+import {BundleType, BundleTypeConstant} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
 
 @Component({
@@ -17,28 +17,12 @@ export class BundleItemComponent {
 
     @Output() done = new EventEmitter();
 
-    PERSONAL = BundleType.PERSONAL;
-    COURSE   = BundleType.COURSE;
+    PERSONAL = BundleTypeConstant.PERSONAL;
+    COURSE   = BundleTypeConstant.COURSE;
+
+    bundleType = BundleType;
 
     constructor(private dialog: MatDialog) {}
-
-    getBundleType() {
-        const defaultName = 'Allenamento Personale';
-        let name;
-        if (!this.bundle) { return name; }
-        switch (this.bundle.type) {
-            case this.PERSONAL:
-                name = defaultName;
-                break;
-            case this.COURSE:
-                name = 'Corso';
-                break;
-            default:
-                name = defaultName;
-                break;
-        }
-        return name;
-    }
 
     goToInfo() {
         this.done.emit({type: 'info', bundle: this.bundle});
