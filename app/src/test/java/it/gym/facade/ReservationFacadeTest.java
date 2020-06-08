@@ -5,7 +5,6 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
-import it.gym.utility.Fixture;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -77,7 +76,8 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
-        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
         APurchaseOption option = spec.getOptions().get(0);
         PersonalTrainingBundle bundle = createPersonalBundle(1L, spec, option);
         customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
@@ -547,7 +547,8 @@ public class ReservationFacadeTest {
                     true,
                     null);
 
-            PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", numSessions);
+            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(numSessions, 900.0);
+            PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createPersonalBundle(1L, spec, option);
             customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
@@ -610,7 +611,7 @@ public class ReservationFacadeTest {
             start = getNextMonday();
             end = addHours(start, 1);
 
-            List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+            List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L,
                     "course",
                     maxCustomers,

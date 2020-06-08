@@ -1,7 +1,9 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
+import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,7 +18,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-import static it.gym.utility.Fixture.createPersonalBundleSpec;
+import static it.gym.utility.Fixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
@@ -40,7 +42,8 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void save() {
-        this.service.save(createPersonalBundleSpec(1L, "personal", 11));
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        this.service.save(createPersonalBundleSpec(1L, "personal", options));
         Mockito.verify(repository).save(any(ATrainingBundleSpecification.class));
     }
 
@@ -52,18 +55,27 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void findById() {
-        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(createPersonalBundleSpec(1L, "personal", 11)));
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> {
+            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+            PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+            return Optional.of(personalBundleSpec);
+        });
         ATrainingBundleSpecification u = this.service.findById(1L);
-        assertThat(u).isEqualTo(createPersonalBundleSpec(1L, "personal", 11));
+
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+        assertThat(u).isEqualTo(personalBundleSpec);
         Mockito.verify(repository).findById(1L);
     }
 
     @Test
     public void findAll() {
-        ATrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", 11);
-        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(pe));
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(personalBundleSpec));
         List<ATrainingBundleSpecification> u = this.service.findAll();
-        assertThat(u).isEqualTo(Collections.singletonList(pe));
+        assertThat(u).isEqualTo(Collections.singletonList(personalBundleSpec));
         Mockito.verify(repository).findAll();
     }
 
@@ -74,7 +86,8 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void delete() {
-        ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal", options);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));
     }

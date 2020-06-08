@@ -283,7 +283,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                     roles);
             customer = userRepository.save(customer);
 
-            List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+            List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L, "personal", 11, options);
 
             spec = specRepository.save(spec);
@@ -396,7 +396,9 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                     roles);
             customer = userRepository.save(customer);
 
-            PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", 11);
+            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+            PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
+
             spec = specRepository.save(spec);
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createPersonalBundle(1L, spec, option);

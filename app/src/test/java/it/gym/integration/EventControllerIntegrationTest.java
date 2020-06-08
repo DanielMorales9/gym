@@ -50,9 +50,12 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         event = eventRepository.save(event);
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
-        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.));
+
+        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
         courseSpec = createCourseBundleSpec(1L, "course", 1, options);
-        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", 11);
+
+        options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", options);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
         Long optionId = personalSpec.getOptions().get(0).getId();

@@ -40,7 +40,8 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
         PersonalTrainingBundle p = createPersonalBundle(1L, personalBundleSpec, option);
         this.service.save(createPersonalTrainingSession(1L, p));
@@ -49,7 +50,9 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findById() {
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
         PersonalTrainingBundle p = createPersonalBundle(1L, personalBundleSpec, option);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, p);
@@ -61,7 +64,9 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findAll() {
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
         PersonalTrainingBundle bundle = createPersonalBundle(1L, personalBundleSpec, option);
         PersonalTrainingSession session = createPersonalTrainingSession(1L, bundle);
@@ -78,7 +83,9 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
         PersonalTrainingBundle personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
         ATrainingSession u = createPersonalTrainingSession(1L, personalBundle);

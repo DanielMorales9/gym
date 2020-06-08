@@ -46,9 +46,10 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
         customer = customerRepository.save(customer);
 
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
-        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+        options = createSingletonTimePurchaseOptions(1, 100.0);
         CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);

@@ -1,5 +1,6 @@
 package it.gym.service;
 
+import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.CourseTrainingBundleRepository;
@@ -16,8 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.Collections;
 import java.util.List;
 
-import static it.gym.utility.Fixture.createPersonalBundle;
-import static it.gym.utility.Fixture.createPersonalBundleSpec;
+import static it.gym.utility.Fixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -44,7 +44,9 @@ public class TrainingBundleServiceTest {
 
     @Test
     public void findAll() {
-        PersonalTrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", 11);
+
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", options);
         ATrainingBundle bundle = createPersonalBundle(1L, pe, pe.getOptions().get(0));
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(bundle));
         List<ATrainingBundle> u = this.service.findAll();

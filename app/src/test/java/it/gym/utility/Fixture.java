@@ -78,18 +78,12 @@ public class Fixture {
         return sale;
     }
 
-    public static PersonalTrainingBundleSpecification createPersonalBundleSpec(long id, String name, int number) {
+    public static PersonalTrainingBundleSpecification createPersonalBundleSpec(long id, String name,
+                                                                               List<APurchaseOption> options) {
         PersonalTrainingBundleSpecification specs = new PersonalTrainingBundleSpecification();
         specs.setId(id);
         specs.setName(name);
         specs.setDescription("Description");
-        ArrayList<APurchaseOption> options = new ArrayList<>();
-        APurchaseOption option = new BundlePurchaseOption();
-        option.setNumber(number);
-        option.setId((long) 1);
-        option.setPrice(111.0);
-        option.setName(specs.getName());
-        options.add(option);
         specs.setOptions(options);
         specs.setDisabled(false);
         specs.setNumDeletions(0);
@@ -263,15 +257,33 @@ public class Fixture {
         return option;
     }
 
-//    public static List<APurchaseOption> createAllOptions(int number1, double price1,
-//                                                         int number2, double price2,
-//                                                         int number3, double price3) {
-//        ArrayList<APurchaseOption> options = new ArrayList<>();
-//        options.add(createTimePurchaseOption(number1, price1));
-//        options.add(createBundlePurchaseOption(number2, price2));
-//        options.add(createOnDemandPurchaseOption(number3, price3));
-//        return options;
-//    }
+    public static List<APurchaseOption> createAllOptions(int number1, double price1,
+                                                         int number2, double price2,
+                                                         int number3, double price3) {
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        options.add(createTimePurchaseOption(number1, price1));
+        options.add(createBundlePurchaseOption(number2, price2));
+        options.add(createOnDemandPurchaseOption(number3, price3));
+        return options;
+    }
+
+    public static List<APurchaseOption> createSingletonBundlePurchaseOptions(int number1, double price1) {
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        options.add(createBundlePurchaseOption(number1, price1));
+        return options;
+    }
+
+    public static List<APurchaseOption> createSingletonTimePurchaseOptions(int number1, double price1) {
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        options.add(createTimePurchaseOption(number1, price1));
+        return options;
+    }
+
+    public static List<APurchaseOption> createSingletonOnDemandPurchaseOptions(int number1, double price1) {
+        ArrayList<APurchaseOption> options = new ArrayList<>();
+        options.add(createOnDemandPurchaseOption(number1, price1));
+        return options;
+    }
 
     public static CourseTrainingBundleSpecification createCourseBundleSpec(long l,
                                                                            String name,

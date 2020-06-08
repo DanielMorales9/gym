@@ -43,9 +43,10 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Before
     public void before() {
-        personalBundleSpec = createPersonalBundleSpec(1L, "personal", 11);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
-        List<APurchaseOption> options = Collections.singletonList(createTimePurchaseOption(1, 100.0));
+        options = createSingletonTimePurchaseOptions(1, 100.0);
         courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
 
         personalBundleSpec = repository.save(personalBundleSpec);
