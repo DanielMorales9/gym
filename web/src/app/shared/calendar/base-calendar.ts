@@ -181,11 +181,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected getRole() {
-        this.facade.getRole()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                this.currentRoleId = v;
-            });
+        this.currentRoleId = this.facade.getCurrentRoleId();
     }
 
     private initCalendarConfig() {
