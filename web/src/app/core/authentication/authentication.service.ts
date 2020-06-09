@@ -274,4 +274,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
         );
     }
 
+    getCurrentUserRoleId() {
+        return this.currentRoleId;
+    }
 }
