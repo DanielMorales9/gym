@@ -3,6 +3,7 @@ package it.gym.controller;
 import it.gym.facade.SaleFacade;
 import it.gym.hateoas.*;
 import it.gym.model.Sale;
+import it.gym.model.SalesLineItem;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -62,6 +63,19 @@ public class SaleController {
         return facade.getSales(lastName, date, payed, pageable);
     }
 
+<<<<<<< optimize-hateoas
+=======
+
+    @GetMapping(path = "/{id}/salesLineItems")
+    @ResponseBody
+    public List<SalesLineItem> findLinesBySaleId(@PathVariable Long id) {
+
+        Sale sale = facade.findById(id);
+
+        return sale.getSalesLineItems();
+    }
+
+>>>>>>> fixed hateoas
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> createSale(@RequestParam Long customerId) {

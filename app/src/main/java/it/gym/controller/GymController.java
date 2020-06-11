@@ -41,9 +41,8 @@ public class GymController {
     }
 
     @GetMapping
-    public ResponseEntity<CollectionModel<GymResource>> findGyms() {
-        List<Gym> gym = service.findAll();
-        return ResponseEntity.ok(new GymAssembler().toCollectionModel(gym));
+    public List<Gym> findGyms() {
+        return service.findAll();
     }
 
     @GetMapping("/manifest.webmanifest")

@@ -30,7 +30,11 @@ public class TrainingSessionController {
         ATrainingSession s = facade.findById(id);
         logger.info(s.toString());
 
+<<<<<<< optimize-hateoas
         return new ResponseEntity<TrainingSessionResource>(new TrainingSessionAssembler().toModel(s), HttpStatus.OK);
+=======
+        return new ResponseEntity<>(new TrainingSessionAssembler().toModel(s), HttpStatus.OK);
+>>>>>>> fixed hateoas
     }
 
     @GetMapping("/{sessionId}/workouts")

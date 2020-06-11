@@ -43,10 +43,9 @@ public class UserController {
     }
 
     @GetMapping(path = "/{id}/roles")
-    ResponseEntity<CollectionModel<RoleResource>> getRoles(@PathVariable Long id) {
+    List<Role> getRoles(@PathVariable Long id) {
         AUser user = facade.findById(id);
-        List<Role> roles = user.getRoles();
-        return ResponseEntity.ok(new RoleAssembler().toCollectionModel(roles));
+        return user.getRoles();
     }
 
     @DeleteMapping(path = "/{id}")

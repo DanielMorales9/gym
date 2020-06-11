@@ -110,8 +110,8 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"id").value(session.getId()))
                 .andExpect(jsonPath("$"+prefix+"completed").value(session.getCompleted()))
                 .andExpect(jsonPath("$"+prefix+"deletable").value(session.isDeletable()))
-                .andExpect(jsonPath("$"+prefix+"startTime").value(format(session.getStartTime())))
-                .andExpect(jsonPath("$"+prefix+"endTime").value(format(session.getEndTime())))
+                .andExpect(jsonPath("$"+prefix+"startTime").value(session.getStartTime()))
+                .andExpect(jsonPath("$"+prefix+"endTime").value(session.getEndTime()))
                 .andExpect(jsonPath("$"+prefix+"type").value(session.getType()));
     }
     
@@ -129,7 +129,7 @@ public class HateoasTest {
                 .andExpect(jsonPath("$"+prefix+"tag2").value(workout.getTag2()))
                 .andExpect(jsonPath("$"+prefix+"tag3").value(workout.getTag3()))
                 .andExpect(jsonPath("$"+prefix+"template").value(workout.isTemplate()))
-                .andExpect(jsonPath("$"+prefix+"createdAt").value(format(workout.getCreatedAt())));
+                .andExpect(jsonPath("$"+prefix+"createdAt").value(workout.getCreatedAt()));
     }
 
     private static void expectATrainingBundleSpec(ResultActions result,
@@ -289,19 +289,13 @@ public class HateoasTest {
         expectEvent(result, event, null);
     }
 
-    private static String format(Date d) {
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZZZZ");
-        fmt.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return fmt.format(d);
-    }
-
     private static void expectEvent(ResultActions result, AEvent event, String p) throws Exception {
 
         String prefix = handlePrefix(p);
         result.andExpect(jsonPath("$"+prefix+"id").value(event.getId()))
                 .andExpect(jsonPath("$"+prefix+"name").value(event.getName()))
-                .andExpect(jsonPath("$"+prefix+"startTime").value(format(event.getStartTime())))
-                .andExpect(jsonPath("$"+prefix+"endTime").value(format(event.getEndTime())))
+                .andExpect(jsonPath("$"+prefix+"startTime").value(event.getStartTime().getTime()))
+                .andExpect(jsonPath("$"+prefix+"endTime").value(event.getEndTime().getTime()))
                 .andExpect(jsonPath("$"+prefix+"type").value(event.getType()));
 
         if ("T".equals(event.getType())) {
