@@ -306,7 +306,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
             expectSale(result, expected, "content[" + i + "]");
             expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
-            expectUser(result, customer, "content[" + i + "].customer");
         }
     }
 

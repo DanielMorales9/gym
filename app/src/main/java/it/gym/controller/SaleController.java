@@ -7,6 +7,7 @@ import it.gym.model.Sale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +24,7 @@ public class SaleController {
     @Autowired
     private SaleFacade facade;
 
+
     @GetMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<SaleResource> findSaleById(@PathVariable Long id) {
@@ -34,31 +36,31 @@ public class SaleController {
 
     @GetMapping(path = "/findByCustomer")
     @ResponseBody
-    public Page<Sale> findUserSales(@RequestParam Long id,
+    public Page<SaleResource> findUserSales(@RequestParam Long id,
                                     @RequestParam(required = false)
                                     @DateTimeFormat(pattern = "dd-MM-yyyy",
                                             iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                     @RequestParam(required = false) Boolean payed,
                                     Pageable pageable) {
-        return facade.findAllUserSales(id, date, payed, pageable);
+        return facade.findAllUserSales(id, date, payed, pageable).map(SaleResource::new);
     }
 
     @GetMapping
     @ResponseBody
-    public Page<Sale> findAll(@RequestParam(required = false) Boolean payed,
+    public Page<SaleResource> findAll(@RequestParam(required = false) Boolean payed,
                               Pageable pageable) {
-        return facade.findAll(payed, pageable);
+        return facade.findAll(payed, pageable).map(SaleResource::new);
     }
 
     @GetMapping(path = "/search")
     @ResponseBody
     @PreAuthorize("hasAuthority('ADMIN')")
-    public Page<Sale> findSalesByLastNameAndDate(@RequestParam(required = false) String lastName,
+    public Page<SaleResource> findSalesByLastNameAndDate(@RequestParam(required = false) String lastName,
                                                  @RequestParam(required = false) @DateTimeFormat(pattern = "dd-MM-yyyy",
                                                          iso = DateTimeFormat.ISO.DATE_TIME) Date date,
                                                  @RequestParam(required = false) Boolean payed,
                                                  Pageable pageable) {
-        return facade.getSales(lastName, date, payed, pageable);
+        return facade.getSales(lastName, date, payed, pageable).map(SaleResource::new);
     }
 
     @PostMapping

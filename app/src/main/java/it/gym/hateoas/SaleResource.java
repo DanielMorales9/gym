@@ -23,7 +23,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
     private final List<SalesLineItemResource> salesLineItems;
 
 
-    SaleResource(Sale model) {
+    public SaleResource(Sale model) {
         id = model.getId();
         amountPayed = model.getAmountPayed();
         createdAt = model.getCreatedAt();
