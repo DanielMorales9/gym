@@ -31,7 +31,7 @@ public class SaleController {
 
         Sale sale = facade.findById(id);
 
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
     @GetMapping(path = "/findByCustomer")
@@ -63,24 +63,11 @@ public class SaleController {
         return facade.getSales(lastName, date, payed, pageable);
     }
 
-<<<<<<< optimize-hateoas
-=======
-
-    @GetMapping(path = "/{id}/salesLineItems")
-    @ResponseBody
-    public List<SalesLineItem> findLinesBySaleId(@PathVariable Long id) {
-
-        Sale sale = facade.findById(id);
-
-        return sale.getSalesLineItems();
-    }
-
->>>>>>> fixed hateoas
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> createSale(@RequestParam Long customerId) {
         Sale sale = this.facade.createSale(customerId);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
     @PutMapping(value = "/{saleId}/salesLineItems")
@@ -89,7 +76,7 @@ public class SaleController {
                                                          @RequestParam Long bundleSpecId,
                                                          @RequestParam Long optionId) {
         Sale sale = this.facade.addSalesLineItem(saleId, bundleSpecId, optionId);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
 
@@ -98,35 +85,35 @@ public class SaleController {
     public ResponseEntity<SaleResource> deleteSalesLineItem(@PathVariable Long saleId,
                                                             @PathVariable Long salesLineItemId) {
         Sale sale = this.facade.deleteSalesLineItem(saleId, salesLineItemId);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{saleId}/confirm")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> confirmSale(@PathVariable Long saleId) {
         Sale sale = this.facade.confirmSale(saleId);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
     @GetMapping(value = "/{saleId}/pay")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestParam Double amount) {
         Sale sale = this.facade.paySale(saleId, amount);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{saleId}/payments/{paymentId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> deletePayment(@PathVariable Long saleId, @PathVariable Long paymentId) {
         Sale sale = this.facade.deletePayment(saleId, paymentId);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{saleId}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> deleteSale(@PathVariable Long saleId) {
         Sale sale = this.facade.deleteSaleById(saleId);
-        return new ResponseEntity<SaleResource>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+        return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
     }
 
 }
