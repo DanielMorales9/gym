@@ -1,13 +1,209 @@
 package it.gym.hateoas;
 
-import it.gym.model.Sale;
-import lombok.Data;
-import org.springframework.hateoas.Resources;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import it.gym.model.*;
+import org.springframework.hateoas.ResourceSupport;
 
-public class SaleResource extends ResourceModel<Sale> {
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class SaleResource extends ResourceSupport {
+
+    private final Long id;
+    private final Double amountPayed;
+    private final Double totalPrice;
+    private final Boolean deletable;
+    private final Boolean payed;
+    private final Boolean completed;
+    private final Date payedDate;
+    private final Date createdAt;
+    private final List<Payment> payments;
+    private final SaleCustomer customer;
+    private final List<SalesLineItemResource> salesLineItems;
+
 
     SaleResource(Sale model) {
-        super(model);
+        id = model.getId();
+        amountPayed = model.getAmountPayed();
+        createdAt = model.getCreatedAt();
+        deletable = model.isDeletable();
+        payed = model.isPayed();
+        completed = model.isCompleted();
+        payedDate = model.getPayedDate();
+        totalPrice = model.getTotalPrice();
+        payments = model.getPayments();
+        customer = new SaleCustomer(model.getCustomer());
+        this.salesLineItems = getSalesLineItems(model);
     }
 
+    private List<SalesLineItemResource> getSalesLineItems(Sale model) {
+        return model.getSalesLineItems()
+                .stream()
+                .map(SalesLineItemResource::new)
+                .collect(Collectors.toList());
+    }
+
+    @JsonProperty("id")
+    public Long getSaleId() {
+        return id;
+    }
+
+    public Double getAmountPayed() {
+        return amountPayed;
+    }
+
+    public Double getTotalPrice() {
+        return totalPrice;
+    }
+
+    public Boolean getDeletable() {
+        return deletable;
+    }
+
+    public Boolean getPayed() {
+        return payed;
+    }
+
+    public Boolean getCompleted() {
+        return completed;
+    }
+
+    public Date getPayedDate() {
+        return payedDate;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public SaleCustomer getCustomer() {
+        return customer;
+    }
+
+    public List<SalesLineItemResource> getSalesLineItems() {
+        return salesLineItems;
+    }
+
+    private static class SaleCustomer extends ResourceSupport {
+
+        private final Long id;
+        private final String firstName;
+        private final String lastName;
+
+        public SaleCustomer(Customer customer) {
+            this.id = customer.getId();
+            this.firstName = customer.getFirstName();
+            this.lastName = customer.getLastName();
+        }
+
+        @JsonProperty("id")
+        public Long getCustomerId() {
+            return id;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getLastName() {
+            return lastName;
+        }
+    }
+
+    private static class SalesLineItemResource extends ResourceSupport {
+
+        private final Long id;
+        private final SalesLineItemTrainingBundle trainingBundle;
+        private final SalesLineItemTrainingBundleSpecification bundleSpecification;
+
+        SalesLineItemResource(SalesLineItem model) {
+            id = model.getId();
+            trainingBundle = new SalesLineItemTrainingBundle(model.getTrainingBundle());
+            bundleSpecification = new SalesLineItemTrainingBundleSpecification(model.getBundleSpecification());
+        }
+
+        @JsonProperty("id")
+        public Long getSalesLineItemId() {
+            return id;
+        }
+
+        public SalesLineItemTrainingBundle getTrainingBundle() {
+            return trainingBundle;
+        }
+
+        public SalesLineItemTrainingBundleSpecification getBundleSpecification() {
+            return bundleSpecification;
+        }
+    }
+
+    private static class SalesLineItemTrainingBundle extends ResourceSupport {
+
+        private final Long id;
+        private final String name;
+        private final SalesLineItemTrainingBundleOption option;
+
+        public SalesLineItemTrainingBundle(ATrainingBundle trainingBundle) {
+            id = trainingBundle.getId();
+            name = trainingBundle.getName();
+            option = new SalesLineItemTrainingBundleOption(trainingBundle.getOption());
+        }
+
+        @JsonProperty("id")
+        public Long getBundleId() {
+            return id;
+        }
+
+        public SalesLineItemTrainingBundleOption getOption() {
+            return option;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private static class SalesLineItemTrainingBundleSpecification extends ResourceSupport {
+
+        private final Long id;
+        private final String name;
+
+        public SalesLineItemTrainingBundleSpecification(ATrainingBundleSpecification trainingBundleSpec) {
+            id = trainingBundleSpec.getId();
+            name = trainingBundleSpec.getName();
+        }
+
+        @JsonProperty("id")
+        public Long getBundleSpecId() {
+            return id;
+        }
+
+        public String getName() {
+            return name;
+        }
+    }
+
+    private static class SalesLineItemTrainingBundleOption extends ResourceSupport {
+
+        private final Long id;
+        private final Double price;
+
+        public SalesLineItemTrainingBundleOption(APurchaseOption option) {
+            this.id = option.getId();
+            this.price = option.getPrice();
+        }
+
+        @JsonProperty("id")
+        public Long getOptionId() {
+            return id;
+        }
+
+        public Double getPrice() {
+            return price;
+        }
+    }
 }

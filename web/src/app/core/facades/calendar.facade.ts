@@ -40,10 +40,6 @@ export class CalendarFacade {
         return this.userService.findUserById(id);
     }
 
-    getObservableCurrentRoleId() {
-        return this.auth.getObservableCurrentUserRoleId();
-    }
-
     getCurrentRoleId() {
         return this.auth.getCurrentUserRoleId();
     }

@@ -61,16 +61,6 @@ public class SaleController {
         return facade.getSales(lastName, date, payed, pageable);
     }
 
-
-    @GetMapping(path = "/{id}/salesLineItems")
-    @ResponseBody
-    public ResponseEntity<List<SalesLineItemResource>> findLinesBySaleId(@PathVariable Long id) {
-
-        Sale sale = facade.findById(id);
-
-        return new ResponseEntity<>(new SalesLineItemAssembler().toResources(sale.getSalesLineItems()), HttpStatus.OK);
-    }
-
     @PostMapping
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<SaleResource> createSale(@RequestParam Long customerId) {

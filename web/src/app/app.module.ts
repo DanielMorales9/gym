@@ -1,6 +1,6 @@
 import {BrowserModule, HammerModule} from '@angular/platform-browser';
 import {ErrorHandler, NgModule, Pipe} from '@angular/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {NoopAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
@@ -8,10 +8,14 @@ import {CoreModule} from './core';
 import {GlobalErrorHandler, GymService} from './services';
 import {
     CurrentRolePipe,
-    ErrorComponent, JoinStringPipe, MenuControlsComponent, NavBarComponent,
+    ErrorComponent,
+    JoinStringPipe,
+    MenuControlsComponent,
+    NavBarComponent,
     PrimaryAdminControlsComponent,
     PrimaryCustomerControlsComponent,
-    PrimaryTrainerControlsComponent, ShowRolePipe,
+    PrimaryTrainerControlsComponent,
+    ShowRolePipe,
     SideBarComponent
 } from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
@@ -34,8 +38,8 @@ import {
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
-import { ServiceWorkerModule } from '@angular/service-worker';
-import { environment } from '../environments/environment';
+import {ServiceWorkerModule} from '@angular/service-worker';
+import {environment} from '../environments/environment';
 import {MatMenuModule} from '@angular/material/menu';
 
 // tslint:disable-next-line:use-pipe-transform-interface
@@ -66,8 +70,8 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
         PrimaryCustomerControlsComponent,
     ],
     imports: [
+        NoopAnimationsModule,
         BrowserModule,
-        BrowserAnimationsModule,
         CoreModule,
         FormsModule,
         ReactiveFormsModule,
