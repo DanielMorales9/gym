@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -185,7 +184,7 @@ public class EventController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<CollectionModel<EventResource>> findAllEventsByInterval(@RequestParam(value = "startTime")
+    public List<AEvent> findAllEventsByInterval(@RequestParam(value = "startTime")
                                                                                       @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                                                               iso = DateTimeFormat.ISO.DATE_TIME)
                                                                                               Date startTime,
@@ -199,9 +198,7 @@ public class EventController {
                                                                                               Long customerId,
                                                                                   @RequestParam(required = false)
                                                                                               Long trainerId) {
-        List<AEvent> res = facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
-
-        return ResponseEntity.ok(new EventAssembler().toCollectionModel(res));
+        return facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
     }
 
 }

@@ -2,14 +2,16 @@ package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.UserFacade;
-import it.gym.hateoas.*;
+import it.gym.hateoas.AUserAssembler;
+import it.gym.hateoas.AUserResource;
+import it.gym.hateoas.ImageAssembler;
+import it.gym.hateoas.ImageResource;
 import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.hateoas.CollectionModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -93,9 +95,8 @@ public class UserController {
     @GetMapping(path = "/events")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public ResponseEntity<CollectionModel<AUserResource>> findUserPerEvent(@RequestParam Long eventId) {
-        List<AUser> user = facade.findUserByEventId(eventId);
-        return ResponseEntity.ok(new AUserAssembler().toCollectionModel(user));
+    public List<AUser> findUserPerEvent(@RequestParam Long eventId) {
+        return facade.findUserByEventId(eventId);
 
     }
 
