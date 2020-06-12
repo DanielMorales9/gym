@@ -30,7 +30,7 @@ public class WorkoutController {
 
         Workout w = facade.findById(id);
 
-        return new ResponseEntity<>(new WorkoutAssembler().toResource(w), HttpStatus.OK);
+        return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
     }
 
     @GetMapping
@@ -49,7 +49,7 @@ public class WorkoutController {
     @ResponseBody
     public ResponseEntity<WorkoutResource> create(@RequestBody Workout w) {
          w = facade.save(w);
-        return new ResponseEntity<>(new WorkoutAssembler().toResource(w), HttpStatus.OK);
+        return new ResponseEntity<>(new WorkoutAssembler().toModel(w), HttpStatus.OK);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -65,7 +65,7 @@ public class WorkoutController {
             throws IOException {
 
         Workout w = facade.patch(id, request);
-        return ResponseEntity.ok(new WorkoutAssembler().toResource(w));
+        return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
     }
 
     @GetMapping("/search")

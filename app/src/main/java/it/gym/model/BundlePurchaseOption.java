@@ -13,7 +13,7 @@ import java.util.Date;
 @DiscriminatorValue(value="B")
 @JsonTypeName("B")
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Generated
 public class BundlePurchaseOption extends APurchaseOption {
 

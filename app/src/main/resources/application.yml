@@ -39,6 +39,8 @@ spring:
       max-file-size: 10MB
       max-request-size: 10MB
   cache.redis.time-to-live: 86400000
+  hateoas:
+    use-hal-as-default-json-media-type: false
 
 server:
   port: 80

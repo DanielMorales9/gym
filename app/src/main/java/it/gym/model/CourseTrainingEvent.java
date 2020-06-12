@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import lombok.Generated;
-import org.springframework.hateoas.ExposesResourceFor;
+import org.springframework.hateoas.server.ExposesResourceFor;
 
 import javax.persistence.*;
 import java.util.*;

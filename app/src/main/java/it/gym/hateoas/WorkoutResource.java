@@ -1,12 +1,16 @@
 package it.gym.hateoas;
 
-import it.gym.model.AUser;
+import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import it.gym.model.Workout;
+import org.springframework.hateoas.RepresentationModel;
 
-public class WorkoutResource extends ResourceModel<Workout> {
+public class WorkoutResource extends RepresentationModel<WorkoutResource> {
+
+    @JsonUnwrapped
+    private Workout model;
 
     WorkoutResource(Workout model) {
-        super(model);
+        this.model = model;
     }
 
 }

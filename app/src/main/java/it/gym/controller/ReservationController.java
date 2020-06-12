@@ -51,7 +51,7 @@ public class ReservationController {
         Role r = facade.getRoleFromPrincipal(principal);
         Reservation res = facade.createReservation(gymId, customerId, bundleId, event, r.getName());
 
-        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
 
     }
 
@@ -65,7 +65,7 @@ public class ReservationController {
         Role r = facade.getRoleFromPrincipal(principal);
         Reservation res = facade.createReservationWithExistingEvent(gymId, customerId, eventId, bundleId, r.getName());
 
-        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
 
     }
 
@@ -79,7 +79,7 @@ public class ReservationController {
         String email = principal.getName();
         Reservation res = facade.deleteReservation(eventId, reservationId, gymId, email, r.getName());
 
-        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
     }
 
 
@@ -91,7 +91,7 @@ public class ReservationController {
         logger.info("confirming session");
         Reservation res = facade.confirm(reservationId);
 
-        return ResponseEntity.ok(new ReservationAssembler().toResource(res));
+        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
     }
 
 }

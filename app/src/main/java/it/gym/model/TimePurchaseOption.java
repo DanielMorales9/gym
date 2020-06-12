@@ -15,7 +15,7 @@ import static org.apache.commons.lang3.time.DateUtils.addMonths;
 @DiscriminatorValue(value="T")
 @JsonTypeName("T")
 @Data
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = true)
 @Generated
 public class TimePurchaseOption extends APurchaseOption {
 

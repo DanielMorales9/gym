@@ -2,7 +2,10 @@ package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.UserFacade;
-import it.gym.hateoas.*;
+import it.gym.hateoas.AUserAssembler;
+import it.gym.hateoas.AUserResource;
+import it.gym.hateoas.ImageAssembler;
+import it.gym.hateoas.ImageResource;
 import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
@@ -38,21 +41,20 @@ public class UserController {
     @GetMapping(path = "/{id}")
     public ResponseEntity<AUserResource> get(@PathVariable Long id) {
         AUser user = facade.findById(id);
-        return ResponseEntity.ok(new AUserAssembler().toResource(user));
+        return ResponseEntity.ok(new AUserAssembler().toModel(user));
     }
 
     @GetMapping(path = "/{id}/roles")
-    ResponseEntity<List<RoleResource>> getRoles(@PathVariable Long id) {
+    List<Role> getRoles(@PathVariable Long id) {
         AUser user = facade.findById(id);
-        List<Role> roles = user.getRoles();
-        return ResponseEntity.ok(new RoleAssembler().toResources(roles));
+        return user.getRoles();
     }
 
     @DeleteMapping(path = "/{id}")
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<AUserResource> delete(@PathVariable Long id) {
         AUser user = facade.delete(id);
-        return ResponseEntity.ok(new AUserAssembler().toResource(user));
+        return ResponseEntity.ok(new AUserAssembler().toModel(user));
     }
 
     @PatchMapping(path = "/{id}")
@@ -60,7 +62,7 @@ public class UserController {
         AUser u = facade.findById(id);
         u = objectMapper.readerForUpdating(u).readValue(request.getReader());
         u = facade.save(u);
-        return ResponseEntity.ok(new AUserAssembler().toResource(u));
+        return ResponseEntity.ok(new AUserAssembler().toModel(u));
     }
 
     @PostMapping("/{id}/image")
@@ -68,19 +70,19 @@ public class UserController {
                                                      @RequestParam("imageFile") MultipartFile file)
             throws IOException {
         AUser u = facade.uploadImage(id, file);
-        return ResponseEntity.ok(new AUserAssembler().toResource(u));
+        return ResponseEntity.ok(new AUserAssembler().toModel(u));
     }
 
     @GetMapping("/{id}/image")
     public ResponseEntity<ImageResource> getImage(@PathVariable("id") Long id) throws DataFormatException, IOException {
         Image u = facade.retrieveImage(id);
-        return ResponseEntity.ok(new ImageAssembler().toResource(u));
+        return ResponseEntity.ok(new ImageAssembler().toModel(u));
     }
 
     @GetMapping(path = "/findByEmail")
     public ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
         AUser user = facade.findByEmail(email);
-        return ResponseEntity.ok(new AUserAssembler().toResource(user));
+        return ResponseEntity.ok(new AUserAssembler().toModel(user));
     }
 
     @GetMapping(path = "/search")
@@ -93,9 +95,8 @@ public class UserController {
     @GetMapping(path = "/events")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public ResponseEntity<List<AUserResource>> findUserPerEvent(@RequestParam Long eventId) {
-        List<AUser> user = facade.findUserByEventId(eventId);
-        return ResponseEntity.ok(new AUserAssembler().toResources(user));
+    public List<AUser> findUserPerEvent(@RequestParam Long eventId) {
+        return facade.findUserByEventId(eventId);
 
     }
 

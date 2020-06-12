@@ -21,7 +21,8 @@ spring:
             non_contextual_creation: true
         temp:
           use_jdbc_metadata_defaults: false
-
+  hateoas:
+    use-hal-as-default-json-media-type: false
   mail:
     host: smtp.gmail.com
     port: 587

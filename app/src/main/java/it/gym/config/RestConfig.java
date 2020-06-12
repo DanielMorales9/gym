@@ -3,6 +3,7 @@ package it.gym.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import it.gym.model.*;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.core.mapping.RepositoryDetectionStrategy;
@@ -13,12 +14,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class RestConfig {
 
-
     @Bean
     public Jackson2ObjectMapperBuilder objectMapperBuilder() {
         return new Jackson2ObjectMapperBuilder() {
             @Override
-            public void configure(ObjectMapper objectMapper) {
+            public void configure(@NotNull ObjectMapper objectMapper) {
                 objectMapper.disable(SerializationFeature.FAIL_ON_UNWRAPPED_TYPE_IDENTIFIERS);
                 objectMapper.registerSubtypes(PersonalTrainingBundleSpecification.class);
                 objectMapper.registerSubtypes(PersonalTrainingBundle.class);

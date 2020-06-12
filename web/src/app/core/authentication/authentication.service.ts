@@ -228,7 +228,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
             res = this.getConfig().pipe(map((v: Gym) => {
                 this.gym = v;
                 return v;
-            }) );
+            }));
         }
         else {
             res = of(this.gym);
@@ -269,7 +269,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
 
     getConfig(): Observable<Gym> {
         return this.http.get(`/gyms`).pipe(
-            throttleTime(300),
+            catchError(err => Array([undefined])),
             map((res: Object) => res[0])
         );
     }

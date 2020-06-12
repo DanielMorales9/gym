@@ -36,13 +36,12 @@ public class GymController {
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
         Gym gym = service.findById(id);
-        return ResponseEntity.ok(new GymAssembler().toResource(gym));
+        return ResponseEntity.ok(new GymAssembler().toModel(gym));
     }
 
     @GetMapping
-    public ResponseEntity<List<GymResource>> findGyms() {
-        List<Gym> gym = service.findAll();
-        return ResponseEntity.ok(new GymAssembler().toResources(gym));
+    public List<Gym> findGyms() {
+        return service.findAll();
     }
 
     @GetMapping("/manifest.webmanifest")
@@ -57,6 +56,6 @@ public class GymController {
         Gym gym = service.findById(id);
         gym = objectMapper.readerForUpdating(gym).readValue(request.getReader());
         gym = service.save(gym);
-        return ResponseEntity.ok(new GymAssembler().toResource(gym));
+        return ResponseEntity.ok(new GymAssembler().toModel(gym));
     }
 }

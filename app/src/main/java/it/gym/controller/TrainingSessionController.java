@@ -30,7 +30,7 @@ public class TrainingSessionController {
         ATrainingSession s = facade.findById(id);
         logger.info(s.toString());
 
-        return new ResponseEntity<>(new TrainingSessionAssembler().toResource(s), HttpStatus.OK);
+        return new ResponseEntity<>(new TrainingSessionAssembler().toModel(s), HttpStatus.OK);
     }
 
     @GetMapping("/{sessionId}/workouts")

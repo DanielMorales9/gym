@@ -34,26 +34,26 @@ public class TrainingBundleSpecificationController {
     public ResponseEntity<TrainingBundleSpecificationResource> delete(@PathVariable Long id) {
         ATrainingBundleSpecification specs = facade.findById(id);
         facade.delete(specs);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(specs));
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(specs));
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleSpecificationResource> findById(@PathVariable Long id) {
         ATrainingBundleSpecification spec = facade.findById(id);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(spec));
     }
 
     @PostMapping
     public ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
         ATrainingBundleSpecification s = facade.createTrainingBundleSpecification(spec);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(s));
     }
 
     @PostMapping(path = "/{id}/options")
     public ResponseEntity<TrainingBundleSpecificationResource> createOption(@PathVariable Long id,
                                                                             @RequestBody APurchaseOption option) {
         ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(s));
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(s));
     }
 
 
@@ -61,7 +61,7 @@ public class TrainingBundleSpecificationController {
     @PreAuthorize("hasAuthority('ADMIN')")
     public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(@PathVariable Long id, @PathVariable Long optionId) {
         ATrainingBundleSpecification b = this.facade.deleteOption(id, optionId);
-        return new ResponseEntity<>(new TrainingBundleSpecificationAssembler().toResource(b), HttpStatus.OK);
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(b));
     }
 
     @PatchMapping(path = "/{id}")
@@ -70,7 +70,7 @@ public class TrainingBundleSpecificationController {
         ATrainingBundleSpecification spec = facade.findById(id);
         spec = objectMapper.readerForUpdating(spec).readValue(request.getReader());
         spec = facade.save(spec);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toResource(spec));
+        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(spec));
     }
 
     @GetMapping

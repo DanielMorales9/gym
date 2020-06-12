@@ -2,12 +2,12 @@ package it.gym.hateoas;
 
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
-import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
+import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
 
-import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 
-public class GymAssembler extends ResourceAssemblerSupport<Gym, GymResource> {
+public class GymAssembler extends RepresentationModelAssemblerSupport<Gym, GymResource> {
 
     public GymAssembler(){
         super(Gym.class, GymResource.class);
@@ -15,7 +15,7 @@ public class GymAssembler extends ResourceAssemblerSupport<Gym, GymResource> {
     }
 
     @Override
-    public GymResource toResource(Gym gym) {
+    public GymResource toModel(Gym gym) {
         GymResource resource = new GymResource(gym);
         resource.add(linkTo(GymRepository.class).slash("gyms")
                 .slash(gym.getId()).withSelfRel());
