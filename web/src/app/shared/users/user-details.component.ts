@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TypeNames, User} from '../model';
 import {AuthService, UserService} from '../../core/controllers';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';

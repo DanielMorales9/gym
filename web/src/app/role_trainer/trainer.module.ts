@@ -4,14 +4,14 @@ import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
-import {
-    MAT_CHECKBOX_CLICK_ACTION,
-    MatButtonModule,
-    MatDialogModule, MatExpansionModule,
-    MatFormFieldModule,
-    MatIconModule,
-    MatInputModule, MatListModule
-} from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MAT_CHECKBOX_CLICK_ACTION } from '@angular/material/checkbox';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
 import {TrainerRouting} from './trainer.routing';
 import {
     TrainerCalendarComponent,

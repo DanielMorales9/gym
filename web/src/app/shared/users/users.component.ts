@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../model';
 import {AuthService, UserService} from '../../core/controllers';
 import {GymService} from '../../services';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
 import {AuthenticationService} from '../../core/authentication';

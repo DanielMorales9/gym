@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {Gym} from '../model';
 import {GymService} from '../../services';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {GymModalComponent} from './gym-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {filter, share, switchMap, take} from 'rxjs/operators';

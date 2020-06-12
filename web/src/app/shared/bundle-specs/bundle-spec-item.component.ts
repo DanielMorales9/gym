@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {BundleType, BundleTypeConstant} from '../model';
 

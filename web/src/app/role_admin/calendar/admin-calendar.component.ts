@@ -3,7 +3,7 @@ import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
 import {BaseCalendar} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {AdminHeaderModalComponent} from './admin-header-modal.component';
 import {AdminInfoModalComponent} from './admin-info-modal.component';
 import {AdminDeleteModalComponent} from './admin-delete-modal.component';

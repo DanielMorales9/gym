@@ -10,7 +10,8 @@ import {
     SendChangePasswordTokenComponent,
     VerificationComponent
 } from './components';
-import {MatFormFieldModule, MatInputModule} from '@angular/material';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import {MatButtonModule} from '@angular/material/button';
 
 @NgModule({

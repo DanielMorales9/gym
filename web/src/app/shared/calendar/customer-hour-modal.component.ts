@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BaseCalendarModal} from './base-calendar-modal';
 import { theme } from '../config';
