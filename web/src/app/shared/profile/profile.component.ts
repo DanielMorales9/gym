@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TypeNames, User} from '../model';
 import {UserService} from '../../core/controllers';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {UserModalComponent} from '../users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
 import {AuthenticationService} from '../../core/authentication';

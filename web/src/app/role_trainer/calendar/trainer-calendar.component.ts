@@ -4,7 +4,7 @@ import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
 import {ActivatedRoute, Router} from '@angular/router';
 import {TrainerInfoModalComponent} from './trainer-info-modal.component';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {TrainerHeaderModalComponent} from './trainer-header-modal.component';
 import {TrainerDeleteModalComponent} from './trainer-delete-modal.component';
 import {TrainerChangeModalComponent} from './trainer-change-modal.component';

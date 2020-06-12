@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/co
 import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from '../../shared/calendar';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {forkJoin} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';

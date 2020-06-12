@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 import {HTTP_INTERCEPTORS, HttpClient, HttpClientModule} from '@angular/common/http';
 import {ApiPrefixInterceptor, CacheInterceptor, HttpCacheService, HttpService, LoaderInterceptor, XhrInterceptor} from './http';
 import {LoaderComponent, LoaderService} from './loader';
-import {MatProgressBarModule} from '@angular/material';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import {NoAuthGuardService, RoleGuardService} from './guards';
 import {
     AuthService,

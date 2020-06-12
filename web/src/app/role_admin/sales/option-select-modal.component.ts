@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, Inject} from '@angular/core';
 import {FormBuilder, FormGroup} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {CourseBundle, CourseBundleSpecification, Sale} from '../../shared/model';
 import {SalesService} from '../../core/controllers';
 import {takeUntil} from 'rxjs/operators';

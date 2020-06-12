@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {WorkoutService} from '../../core/controllers';
 import {Workout} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {WorkoutModalComponent} from './workout-modal.component';

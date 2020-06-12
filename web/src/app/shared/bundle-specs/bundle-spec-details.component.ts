@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {BundleSpecsService} from '../../core/controllers';
 import {BundleType, BundleTypeConstant, CourseBundleSpecification, OptionType, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {PolicyService} from '../../core/policy';
 import {OptionModalComponent} from './option-modal.component';

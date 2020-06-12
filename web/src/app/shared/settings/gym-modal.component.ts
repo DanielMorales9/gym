@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit, ViewChild} from '@angular/core';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef, MatSelectionList} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatSelectionList } from '@angular/material/list';
 import {Gym} from '../model';
 import {rangeValidator} from '../../core/functions';
 

@@ -1,5 +1,5 @@
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
 import {Workout} from '../model';
 

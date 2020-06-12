@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Sale} from '../model';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {SalesService} from '../../core/controllers';
 import {SaleHelperService} from '../../core/helpers';
 import {PaySaleModalComponent} from './pay-sale-modal.component';

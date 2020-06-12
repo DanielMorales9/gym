@@ -5,7 +5,7 @@ import {CustomerHourModalComponent} from './customer-hour-modal.component';
 import {CustomerInfoModalComponent} from './customer-info-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
-import {MatDialog} from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, of, throwError} from 'rxjs';
