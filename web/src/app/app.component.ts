@@ -2,12 +2,13 @@ import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
 import 'rxjs/add/operator/finally';
 import {ScreenService} from './core/utilities';
-import {Observable, of} from 'rxjs';
+import {interval, Observable, of} from 'rxjs';
 import {SideBarComponent} from './components';
 import {AuthenticationService} from './core/authentication';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
+import {SwUpdate} from '@angular/service-worker';
 
 
 @Component({
@@ -26,6 +27,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
                 private router: Router,
+                private swUpdate: SwUpdate,
                 private route: ActivatedRoute) {
         super();
     }
@@ -45,6 +47,20 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         this.authenticate();
         this.desktop = this.isDesktop();
 
+        this.swUpdate.available
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(event => {
+            if (confirm('Aggiornamento disponibile. Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
+                this.swUpdate.activateUpdate().then(() => {
+                    console.log('updated');
+                    window.location.reload();
+                });
+            }
+        });
+
+        interval(6 * 60 * 60).subscribe(() =>  {
+            this.swUpdate.checkForUpdate();
+        });
     }
 
     private getTitle(state, parent) {
