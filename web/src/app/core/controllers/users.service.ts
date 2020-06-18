@@ -30,15 +30,6 @@ export class UserService {
         return this.http.delete(`/users/${id}`);
     }
 
-    searchCustomerByLastName(query: any, page: number, size: number) {
-        return this.http.get(`/customers/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
-
-    }
-
-    getCustomers(page: number, size: number) {
-        return this.http.get(`/customers?page=${page}&size=${size}&sort=lastName`);
-    }
-
     getCustomerBundles(query: any, page: number, size: number) {
         query['page'] = page;
         query['size'] = size;
