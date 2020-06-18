@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {UserService} from '../controllers';
-import {Role, User} from '../../shared/model';
+import {User} from '../../shared/model';
 import {HelperService} from './helper.service';
 import {Observable} from 'rxjs';
 
@@ -10,25 +10,17 @@ export class UserHelperService extends HelperService<User> {
     constructor(private service: UserService) {
         super();
     }
+
     get(page: number, size: number): Observable<Object> {
         return this.service.get(page, size);
     }
 
     search(query: any, page: number, size: number): Observable<Object> {
-        if (query.type) {
-            if (!!query.name) {
-                return this.service.searchCustomerByLastName(query.name, page, size);
-            } else {
-                return this.service.getCustomers(page, size);
-            }
-
-        } else {
-            if (!!query.name) {
-                return this.service.search(query.name, page, size);
-            }
-            else {
-                return this.service.get(page, size);
-            }
+        if (!!query.name) {
+            return this.service.search(query.name, page, size);
+        }
+        else {
+            return this.service.get(page, size);
         }
     }
 

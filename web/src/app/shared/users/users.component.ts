@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../model';
 import {AuthService, UserService} from '../../core/controllers';
 import {GymService} from '../../services';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
 import {AuthenticationService} from '../../core/authentication';
@@ -108,7 +108,6 @@ export class UsersComponent extends BaseComponent implements OnInit {
         if (!$event) {
             $event = {};
         }
-        if (this.type === 'trainer') { $event.type = this.type; }
         this.ds.setQuery($event);
         this.ds.fetchPage(0);
         this.updateQueryParams($event);

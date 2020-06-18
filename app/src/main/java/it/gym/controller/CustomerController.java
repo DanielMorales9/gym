@@ -31,6 +31,8 @@ public class CustomerController {
 
     @GetMapping
     @ResponseBody
+    @Deprecated
+    // TODO
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
     public Page<Customer> simpleSearch(Pageable pageable) {
         return service.findAll(pageable);
@@ -38,6 +40,8 @@ public class CustomerController {
 
     @GetMapping(path = "/search")
     @ResponseBody
+    @Deprecated
+    // TODO
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
     public Page<Customer> searchByLastName(@RequestParam String query, Pageable pageable) {
         logger.info(String.format("Query: %s", query));
