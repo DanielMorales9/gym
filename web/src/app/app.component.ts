@@ -40,7 +40,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         if (this.isDesktop()) {
             this.title = title;
         }
-        document.title = title.join(' - ');
+        document.title = title.filter(v => !!v).join(' - ');
     }
 
     ngOnInit(): void {
