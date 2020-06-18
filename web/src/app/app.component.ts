@@ -37,10 +37,11 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     public sideBar: SideBarComponent;
 
     private setTitle(...title) {
+        title = title.filter(v => !!v);
         if (this.isDesktop()) {
             this.title = title;
         }
-        document.title = title.filter(v => !!v).join(' - ');
+        document.title = title.join(' - ');
     }
 
     ngOnInit(): void {
