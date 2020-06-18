@@ -9,6 +9,7 @@ import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
 import {SwUpdate} from '@angular/service-worker';
+import {environment} from '../environments/environment.prod';
 
 
 @Component({
@@ -47,20 +48,28 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         this.authenticate();
         this.desktop = this.isDesktop();
 
-        this.swUpdate.available
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(event => {
-            if (confirm('Aggiornamento disponibile. Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
-                this.swUpdate.activateUpdate().then(() => {
-                    console.log('updated');
-                    window.location.reload();
-                });
-            }
-        });
+        this.checkUpdates();
+    }
 
-        interval(6 * 60 * 60).subscribe(() =>  {
-            this.swUpdate.checkForUpdate();
-        });
+    private checkUpdates() {
+        // TODO fix me
+        if (!window.location.href.includes('localhost')) {
+            this.swUpdate.available
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(event => {
+                    if (confirm('Aggiornamento disponibile. ' +
+                        'Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
+                        this.swUpdate.activateUpdate().then(() => {
+                            console.log('updated');
+                            window.location.reload();
+                        });
+                    }
+                });
+
+            interval(6 * 60 * 60).subscribe(() => {
+                this.swUpdate.checkForUpdate();
+            });
+        }
     }
 
     private getTitle(state, parent) {

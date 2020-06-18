@@ -48,33 +48,30 @@
                 </mat-error>
             </mat-form-field>
         </div>
-        <ng-container *ngIf="showPersonal">
 
-            <div>
-                <label for="unlimitedDeletions" class="sr-only">Cancellazioni illimitate</label>
-                <mat-checkbox id="unlimitedDeletions"
-                              name="unlimitedDeletions"
-                              formControlName="unlimitedDeletions">Cancellazioni illimitate</mat-checkbox>
-            </div>
+        <div>
+            <label for="unlimitedDeletions" class="sr-only">Cancellazioni illimitate</label>
+            <mat-checkbox id="unlimitedDeletions"
+                          name="unlimitedDeletions"
+                          formControlName="unlimitedDeletions">Cancellazioni illimitate</mat-checkbox>
+        </div>
 
-            <div *ngIf="showNumDeletions">
-                <mat-form-field>
-                    <label for="numDeletions" class="sr-only">Numero di Cancellazioni</label>
-                    <input placeholder="Numero di cancellazioni"
-                           matInput
-                           type="number"
-                           id="numDeletions"
-                           name="numDeletions"
-                           formControlName="numDeletions"
-                           [ngClass]="{ 'is-invalid': numDeletions.touched && numDeletions.invalid }" />
-                    <mat-error *ngIf="numDeletions.touched && numDeletions.invalid">
-                        <div *ngIf="!!numDeletions.errors?.required">Numero di cancellazioni obbligatori</div>
-<!--                        <div *ngIf="!!numDeletions.errors?.pattern">Il numero di cancellationi deve essere intero</div>-->
-                        <div *ngIf="!!numDeletions.errors?.min">Il numero di cancellationi deve essere positivo</div>
-                    </mat-error>
-                </mat-form-field>
-            </div>
-        </ng-container>
+        <div *ngIf="showNumDeletions">
+            <mat-form-field>
+                <label for="numDeletions" class="sr-only">Numero di Cancellazioni</label>
+                <input placeholder="Numero di cancellazioni"
+                       matInput
+                       type="number"
+                       id="numDeletions"
+                       name="numDeletions"
+                       formControlName="numDeletions"
+                       [ngClass]="{ 'is-invalid': numDeletions.touched && numDeletions.invalid }" />
+                <mat-error *ngIf="numDeletions.touched && numDeletions.invalid">
+                    <div *ngIf="!!numDeletions.errors?.required">Numero di cancellazioni obbligatori</div>
+                    <div *ngIf="!!numDeletions.errors?.min">Il numero di cancellationi deve essere positivo</div>
+                </mat-error>
+            </mat-form-field>
+        </div>
         <ng-container *ngIf="showCourse">
             <div>
                 <mat-form-field>

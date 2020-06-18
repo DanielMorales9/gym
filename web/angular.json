@@ -31,6 +31,12 @@
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+            ],
+            "fileReplacements": [
+              {
+                "replace": "src/environments/environment.ts",
+                "with": "src/environments/environment.ts"
+              }
             ]
           },
           "configurations": {
@@ -52,6 +58,9 @@
               ],
               "serviceWorker": true,
               "ngswConfigPath": "ngsw-config.json"
+            },
+            "development": {
+              "serviceWorker": false
             }
           }
         },
@@ -63,6 +72,9 @@
           "configurations": {
             "production": {
               "browserTarget": "client:build:production"
+            },
+            "development": {
+              "browserTarget": "client:build:development"
             }
           }
         },

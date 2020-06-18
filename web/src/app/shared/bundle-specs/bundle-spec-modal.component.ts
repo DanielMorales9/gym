@@ -139,11 +139,10 @@ export class BundleSpecModalComponent implements OnInit {
         else {
             bundle = new CourseBundleSpecification();
             bundle.maxCustomers = this.maxCustomers.value;
-            bundle.unlimitedDeletions = true;
         }
 
         bundle.unlimitedDeletions = this.unlimitedDeletions.value;
-        bundle.numDeletions = !bundle.unlimitedDeletions ? this.numDeletions.value: null;
+        bundle.numDeletions = !bundle.unlimitedDeletions ? this.numDeletions.value : null;
 
         bundle.id = this.bundleSpec.id;
         bundle.name = this.name.value;

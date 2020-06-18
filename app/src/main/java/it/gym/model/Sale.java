@@ -133,7 +133,9 @@ public class Sale implements Serializable, Eager<Sale> {
     public void setPayments(List<Payment> payments) { this.payments = payments; }
 
     public Double getTotalPrice() {
-        this.totalPrice = salesLineItems.stream().map(SalesLineItem::getSubTotal).reduce(Double::sum).orElse(0.);
+        this.totalPrice = salesLineItems.stream()
+                .map(SalesLineItem::getSubTotal)
+                .reduce(Double::sum).orElse(0.);
         return this.totalPrice;
     }
 
