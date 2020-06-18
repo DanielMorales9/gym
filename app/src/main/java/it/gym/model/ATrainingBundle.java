@@ -104,7 +104,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
 
     @JsonIgnore
     public Double getPrice() {
-        return getOption().getPrice();
+        return getOption().getPrice(this);
     }
 
     public abstract ATrainingSession createSession(ATrainingEvent event);

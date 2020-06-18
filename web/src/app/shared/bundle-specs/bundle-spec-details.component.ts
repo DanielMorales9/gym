@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {BundleSpecsService} from '../../core/controllers';
 import {BundleType, BundleTypeConstant, CourseBundleSpecification, OptionType, PersonalBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {PolicyService} from '../../core/policy';
 import {OptionModalComponent} from './option-modal.component';
@@ -60,7 +60,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
             .subscribe(res => {
                 this.bundleSpec = res;
                 this.cdr.detectChanges();
-        });
+            });
     }
 
     private getPolicies() {
@@ -86,14 +86,17 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
                 takeUntil(this.unsubscribe$),
                 filter(v => !!v),
                 switchMap(v => this.service.patchBundleSpecs(v)))
-            .subscribe((v: CourseBundleSpecification|PersonalBundleSpecification) => this.bundleSpec = v);
+            .subscribe((v: CourseBundleSpecification|PersonalBundleSpecification) => {
+                this.bundleSpec = v;
+                this.cdr.detectChanges();
+            });
     }
 
     deleteBundle() {
         of(confirm(`Vuoi eliminare il pacchetto ${this.bundleSpec.name}?`))
             .pipe(takeUntil(this.unsubscribe$), filter(v => !!v),
                 switchMap(v => this.service.deleteBundleSpecs(this.bundleSpec.id)))
-                .subscribe(_ =>
+            .subscribe(_ =>
                 this.router.navigateByUrl('/', {
                     replaceUrl: true
                 }));
@@ -101,7 +104,11 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
 
     toggleDisabled() {
         this.bundleSpec.disabled = !this.bundleSpec.disabled;
-        this.service.patchBundleSpecs(this.bundleSpec);
+        this.service.patchBundleSpecs(this.bundleSpec)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(v => {
+                this.cdr.detectChanges();
+            });
     }
 
     private getBundleSpec(id: number) {
@@ -127,6 +134,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
                 }))
             .subscribe(res => {
                 this.bundleSpec = res;
+                this.cdr.detectChanges();
             });
     }
 
@@ -137,7 +145,10 @@ export class BundleSpecDetailsComponent extends BaseComponent implements OnInit 
                 switchMap(v => this.service.deleteOption(this.bundleSpec.id, id))
             )
             .subscribe(
-                data => this.bundleSpec = data,
+                data => {
+                    this.bundleSpec = data;
+                    this.cdr.detectChanges();
+                },
                 error => this.snackBar.open('Impossibile eliminare opzione in uso'));
     }
 
