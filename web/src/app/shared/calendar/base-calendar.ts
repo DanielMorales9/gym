@@ -213,6 +213,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 }
 
                 this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
+                this.cdr.detectChanges();
         });
     }
 
