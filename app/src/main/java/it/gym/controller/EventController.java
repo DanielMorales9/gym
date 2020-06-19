@@ -83,33 +83,6 @@ public class EventController {
 
     }
 
-    @PostMapping(path = "/{gymId}/holiday/isAvailable")
-    @Deprecated
-    // TODO Deprecated
-    public ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
-                                                     @RequestBody Event event) {
-        logger.info("is holiday available");
-
-        facade.isAvailable(gymId, event);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
-    @PostMapping(path = "/{gymId}/canEdit")
-    @Deprecated
-    // TODO Deprecated
-    public ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
-                                               @RequestBody Event event) {
-        logger.info("canEdit event");
-
-        facade.canEdit(gymId, event);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
-
     @PostMapping(path = "/{gymId}/timeOff")
     public ResponseEntity<EventResource> createTimeOff(@PathVariable Long gymId,
                                                        @RequestParam Long trainerId,
@@ -167,20 +140,6 @@ public class EventController {
         return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
 
     }
-
-    @PostMapping(path = "/{gymId}/timeOff/isAvailable")
-    @Deprecated
-    // TODO Deprecated
-    public ResponseEntity<String> isTimeOffAvailable(@PathVariable Long gymId,
-                                                     @RequestBody Event event) {
-        logger.info("isAvailable timeOff");
-
-        facade.isAvailable(gymId, event);
-
-        return new ResponseEntity<>(HttpStatus.OK);
-
-    }
-
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")

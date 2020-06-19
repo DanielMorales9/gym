@@ -29,25 +29,6 @@ public class CustomerController {
     @Autowired
     private CustomerService service;
 
-    @GetMapping
-    @ResponseBody
-    @Deprecated
-    // TODO
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public Page<Customer> simpleSearch(Pageable pageable) {
-        return service.findAll(pageable);
-    }
-
-    @GetMapping(path = "/search")
-    @ResponseBody
-    @Deprecated
-    // TODO
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public Page<Customer> searchByLastName(@RequestParam String query, Pageable pageable) {
-        logger.info(String.format("Query: %s", query));
-        return service.findByLastName(query, pageable);
-    }
-
     @GetMapping(path = "/bundles")
     @ResponseBody
     public Page<ATrainingBundle> findBundles(@RequestParam Long id,
