@@ -13,6 +13,7 @@ import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 
 @Component
 @Transactional
@@ -54,7 +55,7 @@ public class TrainingSessionFacade {
         this.service.delete(w);
     }
 
-    public Page<ATrainingSession> findByCustomer(Long customerId, Pageable pageables) {
-        return sessionService.findByCustomer(customerId, pageables);
+    public Page<ATrainingSession> findByCustomer(Long customerId, Date date, Pageable pageables) {
+        return sessionService.findByCustomer(customerId, date, pageables);
     }
 }

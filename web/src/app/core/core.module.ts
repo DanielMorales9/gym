@@ -23,6 +23,8 @@ import {
 } from './helpers';
 import {PolicyService} from './policy';
 import {CalendarFacade} from './facades';
+import {SessionService} from './controllers/session.service';
+import {SessionHelperService} from './helpers/session-helper.service';
 
 
 @NgModule({
@@ -71,7 +73,9 @@ import {CalendarFacade} from './facades';
         BundleCustomerHelperService,
         WorkoutService,
         WorkoutHelperService,
-        PolicyService
+        PolicyService,
+        SessionService,
+        SessionHelperService,
     ]
 })
 export class CoreModule {

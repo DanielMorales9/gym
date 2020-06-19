@@ -61,7 +61,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                     if (confirm('Aggiornamento disponibile. ' +
                         'Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
                         this.swUpdate.activateUpdate().then(() => {
-                            console.log('updated');
                             window.location.reload();
                         });
                     }

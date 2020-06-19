@@ -1,0 +1,66 @@
+<mat-expansion-panel [class.mat-expansion-panel]="false">
+    <mat-expansion-panel-header>
+        <mat-panel-title>
+            <a (click)="goToInfo()">
+                {{session?.type | map: sessionType || 'Loading...' }} #{{session?.id }}
+            </a>
+        </mat-panel-title>
+        <mat-panel-description class="panel-header-description">
+        </mat-panel-description>
+    </mat-expansion-panel-header>
+    <div class="mat-ex-panel-body">
+        <div class="panel-body-description">
+        </div>
+        <div class="panel-content">
+            <div>
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{session?.type | map: sessionType}}
+                </span>
+            </div>
+            <div>
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-hourglass-half"></mat-icon>
+                    Orario:&nbsp;{{session?.startTime | date: 'HH:mm'}} - {{session?.endTime | date: 'HH:mm'}}
+                </span>
+            </div>
+            <div>
+                <span class="green-light" *ngIf="session?.completed else notCompleted">
+                    <mat-icon fontSet="fas" fontIcon="fa-check-double"></mat-icon>&nbsp;Completato
+                </span>
+            </div>
+
+            <div>
+                <span *ngIf="session?.workouts.length > 0 else noWorkout">
+                    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Workouts {{session?.workouts.length}}
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="panel-actions">
+        <button mat-button color="primary" (click)="goToInfo()">
+            <span>
+                <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info Programma
+            </span>
+        </button>
+
+        <button mat-button color="basic" (click)="assignWorkout()"
+                *ngIf="canAssignWorkout">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Assegna Programma
+                </span>
+        </button>
+    </div>
+</mat-expansion-panel>
+<mat-divider></mat-divider>
+
+<ng-template #notCompleted>
+<span class="red-light">
+    <mat-icon fontSet="fas" fontIcon="fa-ban"></mat-icon>&nbsp;Non Completato
+</span>
+</ng-template>
+
+<ng-template #noWorkout>
+<span>
+    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Nessun Workout Assegnato
+</span>
+</ng-template>

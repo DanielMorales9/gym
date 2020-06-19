@@ -87,7 +87,10 @@ import {HAMMER_GESTURE_CONFIG, HammerModule} from '@angular/platform-browser';
 import {LyButtonModule} from '@alyle/ui/button';
 import {LyIconModule} from '@alyle/ui/icon';
 import {LyDialogModule} from '@alyle/ui/dialog';
+import {SessionItemComponent, SessionsCustomerComponent} from './sessions';
+import {CdkTableModule} from '@angular/cdk/table';
 
+// @ts-ignore
 @NgModule({
     imports: [
         RouterModule,
@@ -125,7 +128,8 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         LyButtonModule,
         LyIconModule,
         LyDialogModule,
-        HammerModule
+        HammerModule,
+        CdkTableModule
     ],
     entryComponents: [
         UserModalComponent,
@@ -204,6 +208,8 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         WorkoutDetailsComponent,
         AssignWorkoutsComponent,
         ProgrammeComponent,
+        SessionsCustomerComponent,
+        SessionItemComponent,
         WorkoutSelectItemComponent,
         MapStringPipe
     ],
@@ -258,7 +264,9 @@ import {LyDialogModule} from '@alyle/ui/dialog';
         AssignWorkoutsComponent,
         ProgrammeComponent,
         WorkoutSelectItemComponent,
-        MapStringPipe
+        MapStringPipe,
+        SessionsCustomerComponent,
+        SessionItemComponent,
     ],
     providers: [
         [ LyTheme2 ],

@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {User} from '../../shared/model';
 import {AuthenticationService} from '../authentication';
 import {DateService, GymService} from '../utilities';
+import {SessionService} from '../controllers/session.service';
 
 
 @Injectable()
@@ -16,6 +17,7 @@ export class CalendarFacade {
                 private specService: BundleSpecsService,
                 private eventService: EventService,
                 private dateService: DateService,
+                private sessionService: SessionService,
                 private gymService: GymService) {
     }
 
@@ -192,6 +194,6 @@ export class CalendarFacade {
     }
 
     findSessionById(id: any) {
-        return this.eventService.findSessionById(id);
+        return this.sessionService.findSessionById(id);
     }
 }

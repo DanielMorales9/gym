@@ -9,10 +9,13 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @PreAuthorize("isAuthenticated()")
@@ -52,8 +55,13 @@ public class TrainingSessionController {
 
     @GetMapping
     @ResponseBody
-    public Page<ATrainingSession> getSessionsByCustomer(@RequestParam Long customerId, Pageable pageables) {
-        return facade.findByCustomer(customerId, pageables);
+    public Page<ATrainingSession> getSessionsByCustomer(@RequestParam Long customerId,
+                                                        @RequestParam(required = false)
+                                                        @DateTimeFormat(pattern="dd-MM-yyyy",
+                                                                iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                Date date,
+                                                        Pageable pageable) {
+        return facade.findByCustomer(customerId, date, pageable);
     }
 
 }

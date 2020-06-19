@@ -42,12 +42,14 @@ export class WorkoutService extends DataSourceService {
         return this.http.get(`/workouts/tags`);
     }
 
+    // TODO move this to SessionService
     assignWorkout(sessionId: string, workoutId: any) {
         return this.http.get(`/trainingSessions/${sessionId}/workouts`, {params: {
                 workoutId: workoutId
             }});
     }
 
+    // TODO move this to SessionService
     deleteWorkoutFromSession(sessionId: any, wId: any) {
         return this.http.delete(`/trainingSessions/${sessionId}/workouts`, {params: {
                 workoutId: wId
