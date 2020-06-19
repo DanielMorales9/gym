@@ -39,4 +39,8 @@ public class TrainingSessionService implements ICrudService<ATrainingSession, Lo
     public Page<ATrainingSession> findAll(Pageable pageable) {
         return repository.findAll(pageable);
     }
+
+    public Page<ATrainingSession> findByCustomer(Long customerId, Pageable pageables) {
+        return repository.findByCustomer(customerId, pageables);
+    }
 }

@@ -7,6 +7,9 @@ import it.gym.service.TrainingSessionService;
 import it.gym.service.WorkoutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
@@ -49,5 +52,9 @@ public class TrainingSessionFacade {
         session.removeWorkout(w);
         sessionService.save(session);
         this.service.delete(w);
+    }
+
+    public Page<ATrainingSession> findByCustomer(Long customerId, Pageable pageables) {
+        return sessionService.findByCustomer(customerId, pageables);
     }
 }

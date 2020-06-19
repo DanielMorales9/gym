@@ -7,6 +7,8 @@ import it.gym.model.ATrainingSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -46,8 +48,12 @@ public class TrainingSessionController {
     public ResponseEntity<String> remove(@PathVariable Long sessionId, @RequestParam Long workoutId) {
         facade.remove(sessionId, workoutId);
         return new ResponseEntity<>(HttpStatus.OK);
-
     }
 
+    @GetMapping
+    @ResponseBody
+    public Page<ATrainingSession> getSessionsByCustomer(@RequestParam Long customerId, Pageable pageables) {
+        return facade.findByCustomer(customerId, pageables);
+    }
 
 }
