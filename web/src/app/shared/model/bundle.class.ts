@@ -8,6 +8,11 @@ export enum BundleTypeConstant {
     COURSE = 'C'
 }
 
+export enum BundleEntity {
+    P =  'personal',
+    C = 'course'
+}
+
 export enum OptionType {
     B = 'Pacchetto',
     T = 'A Tempo',

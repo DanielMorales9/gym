@@ -64,7 +64,8 @@ export class PolicyService implements OnInit, OnDestroy {
             canShow: {
                 bundles: true,
                 sales: true,
-                stats: true
+                stats: true,
+                sessions: true
             }
         },
         trainer: {
@@ -161,7 +162,8 @@ export class PolicyService implements OnInit, OnDestroy {
             canShow: {
                 bundles: true,
                 sales: false,
-                stats: true
+                stats: true,
+                sessions: true
             }
         },
         trainer: {
@@ -254,7 +256,8 @@ export class PolicyService implements OnInit, OnDestroy {
             canShow: {
                 bundles: true,
                 sales: false,
-                stats: true
+                stats: true,
+                sessions: true
             }
         },
         trainer: {

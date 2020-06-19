@@ -144,17 +144,17 @@ public class ReservationFacade {
 
         String adminMessage = String.format(
                 "Il cliente %s %s ha terminato il pacchetto %s.\n" +
-                "Verifica lo stato del pacchetto al seguente" +
-                " link https://www.goodfellas.fitness/admin/bundle/%s\n",
+                        "Verifica lo stato del pacchetto al seguente" +
+                        " link https://www.goodfellas.fitness/admin/bundle/%s\n",
                 customer.getFirstName(), customer.getLastName(),
                 bundle.getName(), bundle.getId());
 
         String customerMessage = String.format(
                 "Gentile %s %s,\n" +
-                "Hai terminato il pacchetto %s.\n" +
-                "Verifica lo stato del pacchetto al seguente" +
-                " link https://www.goodfellas.fitness/customer/bundle/%s.\n" +
-                "Rivolgiti in segreteria per rinnovare il tuo pacchetto o sceglierne un altro.",
+                        "Hai terminato il pacchetto %s.\n" +
+                        "Verifica lo stato del pacchetto al seguente" +
+                        " link https://www.goodfellas.fitness/customer/bundle/%s.\n" +
+                        "Rivolgiti in segreteria per rinnovare il tuo pacchetto o sceglierne un altro.",
                 customer.getFirstName(), customer.getLastName(),
                 bundle.getName(), bundle.getId());
 
@@ -332,7 +332,7 @@ public class ReservationFacade {
                     sendDeleteReservationAttemptEmail(email, event);
                     throw new BadRequestException(
                             String.format("E' necessario annullare una prenotazione almeno %s ore prima. " +
-                                          "Rivolgiti in segreteria per maggiori informazioni",
+                                            "Rivolgiti in segreteria per maggiori informazioni",
                                     gym.getReservationBeforeHours()));
                 }
                 else if (!canCancel) {
@@ -377,7 +377,7 @@ public class ReservationFacade {
                 customer.getFirstName(), customer.getLastName());
 
         String message = String.format(
-                        "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n" +
+                "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n" +
                         "Verifica lo stato dellla prenotazione al seguente" +
                         " link https://www.goodfellas.fitness/admin/events/%s\n",
                 customer.getFirstName(), customer.getLastName(),

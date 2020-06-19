@@ -23,7 +23,6 @@ public class CustomerService implements ICrudService<Customer, Long> {
     @Autowired
     private CustomerRepository repository;
 
-
     public Customer save(Customer var1) {
         return repository.save(var1);
     }
@@ -38,10 +37,6 @@ public class CustomerService implements ICrudService<Customer, Long> {
 
     public List<Customer> findAll() {
         return this.repository.findAll();
-    }
-
-    public Page<Customer> findByLastName(String query, Pageable pageable) {
-        return repository.findByLastName(query, pageable);
     }
 
     public Page<Customer> findAll(Pageable pageable) {

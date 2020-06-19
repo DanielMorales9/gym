@@ -16,6 +16,7 @@ export class UserControlsComponent implements OnInit {
     canShowBundles: boolean;
     canShowSales: boolean;
     canMakeAppointments: boolean;
+    canShowSessions: boolean;
     canShowStats: boolean;
 
     isCustomer: boolean;
@@ -48,6 +49,7 @@ export class UserControlsComponent implements OnInit {
         this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
         this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
         this.canShowStats = this.policy.get(entity, 'canShow', 'stats');
+        this.canShowSessions = this.policy.get(entity, 'canShow', 'sessions');
         this.isCustomer = entity === 'customer';
     }
 
@@ -69,5 +71,9 @@ export class UserControlsComponent implements OnInit {
 
     showStats() {
         return this.router.navigate([this.root, 'customer', this.user.id, 'stats']);
+    }
+
+    showSessions() {
+        return this.router.navigate([this.root, 'customer', this.user.id, 'sessions']);
     }
 }

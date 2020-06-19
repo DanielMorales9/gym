@@ -1,0 +1,13 @@
+<search-date [query]="query"
+              datePlaceholder="Cerca per data"
+              (done)="search($event)"></search-date>
+
+<cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
+
+    <div *cdkVirtualFor="let b of ds; trackBy: trackBy" class="scroll-item">
+        <session-item [session]="b" (done)="handleEvent($event)">
+        </session-item>
+    </div>
+
+</cdk-virtual-scroll-viewport>
+<no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>

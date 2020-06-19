@@ -48,10 +48,6 @@ export class EventService {
         return this.http.get(`/events/${id}`);
     }
 
-    findSessionById(id: any): Observable<any> {
-        return this.http.get(`/trainingSessions/${id}`);
-    }
-
     getEvents(start: string, end: string, types?: string[], customerId?: number, trainerId?: number): Observable<any> {
         const params = {
             startTime: start,

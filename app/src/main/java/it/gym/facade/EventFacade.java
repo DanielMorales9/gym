@@ -28,7 +28,6 @@ public class EventFacade {
 
     private static final String PRESENT_EVENTS_EX = "Ci sono già altri eventi";
 
-
     @Autowired private EventService service;
     @Autowired private GymService gymService;
     @Autowired private UserService userService;
@@ -131,26 +130,6 @@ public class EventFacade {
         timeOff.setUser(trainer);
 
         return service.save(timeOff);
-    }
-
-    public void canEdit(Long gymId, Event event) {
-        Gym gym = gymService.findById(gymId);
-
-        Date startTime = event.getStartTime();
-        Date endTime = event.getEndTime();
-
-        gymService.checkGymHours(gym, startTime, endTime);
-        checkNoOtherEventsExceptMe(event);
-    }
-
-    public void isAvailable(Long gymId, Event event) {
-        Gym gym = gymService.findById(gymId);
-
-        Date startTime = event.getStartTime();
-        Date endTime = event.getEndTime();
-
-        gymService.checkGymHours(gym, startTime, endTime);
-        checkNoOtherEvents(event);
     }
 
     private void checkNoOtherEventsExceptMe(Event event) {

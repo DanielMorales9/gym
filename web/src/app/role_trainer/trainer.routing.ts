@@ -11,6 +11,7 @@ import {ACustomerCalendarComponent, CalendarControlsComponent, CalendarCustomerC
 import {EventDetailsComponent} from '../shared/events';
 import {CustomerStatsComponent} from '../shared/stats';
 import {AssignWorkoutsComponent, ProgrammeComponent, WorkoutDetailsComponent, WorkoutsComponent} from '../shared/workout';
+import {SessionsCustomerComponent} from '../shared/sessions';
 
 const routes = [
     { path: '', children : [
@@ -81,6 +82,18 @@ const routes = [
             {
                 path: 'sessions/:sessionId/programme', component: ProgrammeComponent,
                 data: {title: 'Programma di Allenamento', back: true }
+            },
+            {
+                path: 'customer/:id/sessions/:sessionId/assignWorkout', component: AssignWorkoutsComponent,
+                data: {title: 'Assegna Workout', back: true }
+            },
+            {
+                path: 'customer/:id/sessions/:sessionId/programme', component: ProgrammeComponent,
+                data: {title: 'Programma di Allenamento', back: true }
+            },
+            {
+                path: 'customer/:id/sessions', component: SessionsCustomerComponent,
+                data: {title: 'Allenamenti Cliente', back: true, secondary: UserControlsComponent }
             },
             {
                 path: 'home', component: HomeComponent,

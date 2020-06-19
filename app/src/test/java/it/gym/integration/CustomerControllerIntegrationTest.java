@@ -75,29 +75,6 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
     }
 
     @Test
-    public void whenSearchCustomers_OK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/customers")).andExpect(status().isOk());
-        expectUser(result, customer, "content[0]");
-        expectCustomerRoles(result, roles, "content[0].roles");
-    }
-
-    @Test
-    public void whenSearchCustomersByLastName_OK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/customers/search?query="+customer.getLastName()))
-                .andExpect(status().isOk());
-        expectUser(result, customer, "content[0]");
-        expectCustomerRoles(result, roles, "content[0].roles");
-    }
-
-    @Test
-    public void whenSearch_OK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/customers/search?query="+customer.getLastName()))
-                .andExpect(status().isOk());
-        expectUser(result, customer, "content[0]");
-        expectCustomerRoles(result, roles, "content[0].roles");
-    }
-
-    @Test
     public void whenFindBundlesWAllParametersOK() throws Exception {
         SimpleDateFormat fmt = new SimpleDateFormat("dd-MM-yyyy");
         String date = fmt.format(new Date());

@@ -18,7 +18,7 @@ public class CourseTrainingSession extends ATrainingSession {
 
     @Override
     public String getType() {
-        return "P";
+        return "C";
     }
 
     @Override

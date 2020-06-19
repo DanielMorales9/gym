@@ -144,35 +144,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
     @Test
     @Transactional
-    public void whenIsAvailableReturnsOK() throws Exception {
-        personalTrainingEventFixture.invoke(28, false, false, 1, 100.0, 30, 100.0, 1, 10.0, 1);
-        Long gymId = personalTrainingEventFixture.getGym().getId();
-        Customer customer = personalTrainingEventFixture.getCustomer();
-        ATrainingBundle bundle = personalTrainingEventFixture.getBundle();
-
-        Object evt = new Object() {
-            public final Date startTime = personalTrainingEventFixture.getStart();
-            public final Date endTime = personalTrainingEventFixture.getEnd();
-        };
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        String json = objectMapper.writeValueAsString(evt);
-        mockMvc.perform(post("/reservations/"+ gymId + "/isAvailable")
-                .param("customerId", String.valueOf(customer.getId()))
-                .param("bundleId", String.valueOf(bundle.getId()))
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(json))
-                .andExpect(status().isOk());
-
-        assertThat(eventRepository.findAll()).isEmpty();
-        assertThat(sessionRepository.findAll()).isEmpty();
-        assertThat(reservationRepository.findAll()).isEmpty();
-
-        personalTrainingEventFixture.tearDown();
-    }
-
-    @Test
-    @Transactional
     public void whenConfirmCourseEventReservationReturnsOK() throws Exception {
         courseTrainingEventFixture.invoke(0, true, true, 0, 1, 100.0, 30, 100.0, 1, 10.0, 11);
         Reservation reservation = courseTrainingEventFixture.getReservation();
