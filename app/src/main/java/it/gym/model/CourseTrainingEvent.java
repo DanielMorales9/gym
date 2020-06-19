@@ -2,7 +2,6 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import lombok.Generated;
 import org.springframework.hateoas.server.ExposesResourceFor;
@@ -115,12 +114,6 @@ public class CourseTrainingEvent extends ATrainingEvent {
     @Override
     public void complete() {
         this.sessions.values().forEach(ATrainingSession::complete);
-    }
-
-    @Override
-    public void removeWorkout(Workout w) {
-        // TODO not implemented
-        throw new BadRequestException("Funzionalità non ancora supportata");
     }
 
     @Override

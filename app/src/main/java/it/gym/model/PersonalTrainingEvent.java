@@ -46,11 +46,6 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     }
 
     @Override
-    public void removeWorkout(Workout w) {
-        this.session.removeWorkout(w);
-    }
-
-    @Override
     public ATrainingSession getSession(Reservation res) {
         return session;
     }
