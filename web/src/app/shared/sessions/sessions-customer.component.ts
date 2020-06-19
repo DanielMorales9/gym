@@ -52,6 +52,9 @@ export class SessionsCustomerComponent extends BaseComponent implements OnInit {
                 if (!!id) {
                     this.queryParams.customerId = id;
                 }
+                if (!!this.queryParams.date) {
+                    this.queryParams.date = new Date(this.queryParams.date);
+                }
                 this.search(this.queryParams);
             });
     }
@@ -59,7 +62,6 @@ export class SessionsCustomerComponent extends BaseComponent implements OnInit {
     private updateQueryParams(queryParams?) {
         if (!queryParams) { queryParams = {}; }
         if (this.customerId) { queryParams.customerId = this.customerId; }
-
         this.queryParams = this.query = queryParams;
         this.router.navigate(
             [],

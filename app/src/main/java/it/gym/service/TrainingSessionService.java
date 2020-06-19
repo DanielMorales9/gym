@@ -23,8 +23,7 @@ public class TrainingSessionService implements ICrudService<ATrainingSession, Lo
 
     @Autowired private TrainingSessionRepository repository;
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-
+    
     public ATrainingSession save(ATrainingSession var1) {
         return this.repository.save(var1);
     }
