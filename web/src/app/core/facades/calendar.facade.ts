@@ -136,10 +136,7 @@ export class CalendarFacade {
     deleteReservation(data: any, id?: number) {
         // TODO implement simpler logic
         const gymId = this.gymService.gym.id;
-        if ('reservation' in data) {
-            return this.reservationService.deleteReservation(data.id, data.reservation.id, gymId);
-        }
-        else if ('reservations' in data && !!id) {
+        if ('reservations' in data && !!id) {
             const myReservations = data.reservations.filter(a => a.user.id === id);
             if (myReservations.length > 0) {
                 return this.reservationService.deleteReservation(data.id, myReservations[0].id, gymId);

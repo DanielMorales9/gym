@@ -68,11 +68,13 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
     @After
     public void after() {
+        reservationRepository.deleteAll();
+        sessionRepository.deleteAll();
+        bundleRepository.deleteAll();
         eventRepository.deleteAll();
+        specRepository.deleteAll();
         userRepository.deleteAll();
         gymRepository.deleteAll();
-        bundleRepository.deleteAll();
-        specRepository.deleteAll();
     }
 
     @Test
@@ -133,7 +135,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
         ATrainingSession session = courseBundle.createSession(courseEvent);
         courseBundle.addSession(session);
-        courseEvent.addSession(res.getId(), session);
         eventRepository.save(courseEvent);
         courseBundle = bundleRepository.save(courseBundle);
 
@@ -241,8 +242,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(h.getId());
         expected.setSpecification(courseSpec);
         expectEvent(result, expected);
-
-        // TODO expectTrainingSession
     }
 
     @Test
@@ -250,10 +249,12 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         Date start = getNextMonday();
         Date end = addHours(start, 1);
 
-        CourseTrainingEvent event = createCourseEvent(1L, "course", start, end, courseSpec);
+        // TODO this should be a fixture separate class
+        CourseTrainingEvent event = eventRepository.save(createCourseEvent(1L, "course", start, end, courseSpec));
 
-        ATrainingSession session = courseBundle.createSession(event);
-        ATrainingSession session1 = courseBundle.createSession(event);
+        ATrainingSession session = sessionRepository.save(courseBundle.createSession(event));
+        ATrainingSession session1 = sessionRepository.save(courseBundle.createSession(event));
+
         courseBundle.addSession(session);
         courseBundle.addSession(session1);
 
@@ -276,12 +277,16 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         customer1 = userRepository.save(customer1);
 
         Reservation reservation = createReservation(1L, customer);
-        event.addReservation(reservation);
         Reservation reservation1 = createReservation(2L, customer1);
-        event.addReservation(reservation1);
-        event.addSession(reservation.getId(), session);
-        event.addSession(reservation1.getId(), session1);
-        event = eventRepository.save(event);
+
+        reservation.setSession(session);
+        reservation1.setSession(session1);
+
+        reservation.setEvent(event);
+        reservation1.setEvent(event);
+
+        reservationRepository.save(reservation);
+        reservationRepository.save(reservation1);
 
         assertThat(reservationRepository.findAll().size()).isEqualTo(2);
         ResultActions result = mockMvc.perform(delete("/events/course/" + event.getId()))
@@ -296,7 +301,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expectEvent(result, expected);
         assertThat(reservationRepository.findAll().size()).isEqualTo(0);
         assertThat(sessionRepository.findAll().size()).isEqualTo(0);
-        // TODO expectTrainingSession
     }
 
     @Test
@@ -319,6 +323,5 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(event.getId());
         expected.setSpecification(courseSpec);
         expectEvent(result, expected);
-        // TODO expectTrainingSession
     }
 }

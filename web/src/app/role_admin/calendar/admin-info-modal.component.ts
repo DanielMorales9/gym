@@ -18,7 +18,8 @@ export class AdminInfoModalComponent extends BaseCalendarModal {
     }
 
     submit() {
-        if (!this.modalData.event.meta.session.completed && this.modalData.event.meta.reservation.confirmed) {
+        if (!this.modalData.event.meta.reservations[0].session.completed &&
+            this.modalData.event.meta.reservations[0].confirmed) {
             this.complete();
         } else { this.confirm(); }
     }
@@ -26,7 +27,7 @@ export class AdminInfoModalComponent extends BaseCalendarModal {
     confirm() {
         this.close({
             type: 'confirm',
-            eventId: this.modalData.event.meta.reservation.id
+            eventId: this.modalData.event.meta.reservation[0].id
         });
     }
 

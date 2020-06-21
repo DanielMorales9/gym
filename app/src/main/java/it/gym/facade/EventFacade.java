@@ -29,10 +29,18 @@ public class EventFacade {
     private static final String PRESENT_EVENTS_EX = "Ci sono già altri eventi";
 
     @Autowired private EventService service;
+
+    @Qualifier("trainingSessionService")
+    @Autowired private TrainingSessionService sessionService;
+
     @Autowired private GymService gymService;
+
     @Autowired private UserService userService;
+
     @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
+
+    @Autowired private ReservationService reservationService;
 
     @Qualifier("trainingBundleSpecificationService")
     @Autowired private TrainingBundleSpecificationService specService;
@@ -49,7 +57,7 @@ public class EventFacade {
         if (customerId != null) {
             s = s.filter(c -> {
                 if (PersonalTrainingEvent.TYPE.equals(c.getType())) {
-                    return ((PersonalTrainingEvent) c).getReservation().getUser()
+                    return ((PersonalTrainingEvent) c).getReservations().get(0).getUser()
                             .getId().equals(customerId);
                 }
                 else {
@@ -193,6 +201,18 @@ public class EventFacade {
         List<ATrainingBundle> bundles = event.deleteSessionsFromBundles();
 
         logger.info("Deleting training event");
+        List<Reservation> reservations = event.getReservations();
+
+        List<ATrainingSession> sessions = reservations.stream()
+                .map(Reservation::getSession).collect(Collectors.toList());
+
+        logger.info("Deleting sessions");
+        this.sessionService.deleteAll(sessions);
+
+        logger.info("Deleting reservations");
+        this.reservationService.deleteAll(reservations);
+
+        logger.info("Deleting training event");
         this.service.delete(event);
 
         logger.info("Saving bundle event");
@@ -204,6 +224,8 @@ public class EventFacade {
     public AEvent complete(Long eventId) {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
         event.complete();
+        List<ATrainingSession> sessions = event.getReservations().stream().map(Reservation::getSession).collect(Collectors.toList());
+         sessionService.saveAll(sessions);
         return service.save(event);
     }
 

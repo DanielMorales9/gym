@@ -4,7 +4,10 @@ import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Generated;
 import org.springframework.hateoas.server.ExposesResourceFor;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -18,52 +21,31 @@ public class PersonalTrainingEvent extends ATrainingEvent {
 
     public static final String TYPE = "P";
 
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval=true)
-    @JoinColumn(name = "reservation_res_id")
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "event"
+    )
     private Reservation reservation;
-
-    @OneToOne(cascade = CascadeType.ALL, orphanRemoval=true)
-    @JoinColumn(name = "session_session_id")
-    private ATrainingSession session;
 
     @Override
     public String getType() {
         return "P";
     }
 
-    public ATrainingSession getSession() {
-        return session;
-    }
-
     @Override
     public boolean isSessionDeletable() {
-        return this.session.isDeletable();
+        return this.reservation.getSession().isDeletable();
     }
 
     @Override
     public void complete() {
-        this.session.complete();
-    }
-
-    @Override
-    public ATrainingSession getSession(Reservation res) {
-        return session;
-    }
-
-    @Override
-    public void deleteSession(Reservation res) {
-        this.session = null;
-    }
-
-    @Override
-    public void addSession(Long reservationId, ATrainingSession session) {
-        this.session = session;
+        this.reservation.getSession().complete();
     }
 
     @Override
     public List<ATrainingBundle> deleteSessionsFromBundles() {
-        session.deleteMeFromBundle();
-        return Collections.singletonList(session.getTrainingBundle());
+        return Collections.singletonList(reservation.getSession().deleteMeFromBundle());
     }
 
     @Override
@@ -71,17 +53,13 @@ public class PersonalTrainingEvent extends ATrainingEvent {
         this.reservation = res;
     }
 
-    public void setSession(ATrainingSession session) {
-        this.session = session;
-    }
-
     @Override
     public boolean isReservable() {
         return true;
     }
 
-    public Reservation getReservation() {
-        return reservation;
+    public List<Reservation> getReservations() {
+        return Collections.singletonList(reservation);
     }
 
     public void setReservation(Reservation reservation) {
@@ -107,8 +85,7 @@ public class PersonalTrainingEvent extends ATrainingEvent {
         if (o == null || getClass() != o.getClass()) return false;
         if (!super.equals(o)) return false;
         PersonalTrainingEvent that = (PersonalTrainingEvent) o;
-        return Objects.equals(reservation, that.reservation) &&
-                Objects.equals(session, that.session);
+        return Objects.equals(reservation, that.reservation);
     }
 
     @Override

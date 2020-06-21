@@ -136,10 +136,10 @@ public class ReservationFacadeTest {
         Reservation expected = createReservation(1L, customer);
 
         assertThat(actual).isEqualTo(expected);
-        assertThat(e[0].getReservation()).isEqualTo(expected);
-        assertThat(e[0].getSession().getCompleted()).isFalse();
-        assertThat(e[0].getSession().getStartTime()).isEqualTo(start);
-        assertThat(e[0].getSession().getEndTime()).isEqualTo(end);
+        assertThat(e[0].getReservations()).isEqualTo(Collections.singletonList(expected));
+        assertThat(actual.getSession().getCompleted()).isFalse();
+        assertThat(actual.getSession().getStartTime()).isEqualTo(start);
+        assertThat(actual.getSession().getEndTime()).isEqualTo(end);
     }
 
     @Test
@@ -189,10 +189,10 @@ public class ReservationFacadeTest {
         Reservation expected = createReservation(1L, customer);
 
         assertThat(actual).isEqualTo(expected);
-        assertThat(e[0].getReservation()).isEqualTo(expected);
-        assertThat(e[0].getSession().getCompleted()).isFalse();
-        assertThat(e[0].getSession().getStartTime()).isEqualTo(start);
-        assertThat(e[0].getSession().getEndTime()).isEqualTo(end);
+        assertThat(e[0].getReservations()).isEqualTo(Collections.singletonList(expected));
+        assertThat(actual.getSession().getCompleted()).isFalse();
+        assertThat(actual.getSession().getStartTime()).isEqualTo(start);
+        assertThat(actual.getSession().getEndTime()).isEqualTo(end);
     }
 
 
@@ -285,9 +285,9 @@ public class ReservationFacadeTest {
 
         assertThat(actual).isEqualTo(expected);
         assertThat(event.getReservations()).isEqualTo(Collections.singletonList(expected));
-        assertThat(event.getSession(expected).getCompleted()).isFalse();
-        assertThat(event.getSession(expected).getStartTime()).isEqualTo(start);
-        assertThat(event.getSession(expected).getEndTime()).isEqualTo(end);
+        assertThat(actual.getSession().getCompleted()).isFalse();
+        assertThat(actual.getSession().getStartTime()).isEqualTo(start);
+        assertThat(actual.getSession().getEndTime()).isEqualTo(end);
     }
 
     @Test(expected = BadRequestException.class)
@@ -370,7 +370,7 @@ public class ReservationFacadeTest {
         event.addReservation(res);
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
-        event.addSession(res.getId(), session);
+        res.setSession(session);
         Gym gym = personalEventFixture.getGym();
         Long gymId = gym.getId();
 
@@ -406,7 +406,8 @@ public class ReservationFacadeTest {
         event.addReservation(res);
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
-        event.addSession(res.getId(), session);
+        res.setSession(session);
+
         Gym gym = personalEventFixture.getGym();
         Long gymId = gym.getId();
 
@@ -444,7 +445,7 @@ public class ReservationFacadeTest {
         event.addReservation(res);
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
-        event.addSession(res.getId(), session);
+        res.setSession(session);
 
         Mockito.doReturn(event).when(eventService).findById(1L);
         Mockito.doReturn(res).when(service).findById(1L);
@@ -461,8 +462,6 @@ public class ReservationFacadeTest {
         Mockito.verify(eventService).findById(1L);
         Mockito.verify(service).findById(1L);
         Mockito.verify(bundleService).save(any(CourseTrainingBundle.class));
-//        Mockito.verify(service).delete(any(Reservation.class));
-//        Mockito.verify(sessionService).delete(any(CourseTrainingSession.class));
 
     }
 
@@ -482,7 +481,6 @@ public class ReservationFacadeTest {
         event.addReservation(res);
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
-        event.addSession(res.getId(), session);
 
         Mockito.doReturn(res).when(service).findById(1L);
 

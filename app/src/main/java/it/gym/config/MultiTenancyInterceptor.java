@@ -2,6 +2,7 @@ package it.gym.config;
 
 import it.gym.model.Tenant;
 import it.gym.repository.TenantRepository;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -29,7 +30,7 @@ public class MultiTenancyInterceptor extends OncePerRequestFilter {
 
     @Override
     public void doFilterInternal(HttpServletRequest request,
-                                 HttpServletResponse response,
+                                 @NotNull HttpServletResponse response,
                                  FilterChain filterChain) throws IOException, ServletException {
         String tenantUuid = request.getHeader("X-Tenant");
         logger.debug("preHandle TenantContext");

@@ -22,8 +22,9 @@ public class CourseTrainingSession extends ATrainingSession {
     }
 
     @Override
-    public void deleteMeFromBundle() {
+    public ATrainingBundle deleteMeFromBundle() {
         this.getTrainingBundle().getSessions().remove(this);
+        return this.getTrainingBundle();
     }
 
     @Override

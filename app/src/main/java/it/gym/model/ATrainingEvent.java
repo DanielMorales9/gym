@@ -5,6 +5,8 @@ import lombok.Generated;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import java.util.List;
 
 @Entity
@@ -13,6 +15,18 @@ public abstract class ATrainingEvent extends AEvent {
 
     @Column(name = "is_external")
     private boolean isExternal;
+
+    @ManyToOne
+    @JoinColumn(name = "spec_id")
+    private ATrainingBundleSpecification specification;
+
+    public ATrainingBundleSpecification getSpecification() {
+        return specification;
+    }
+
+    public void setSpecification(CourseTrainingBundleSpecification specification) {
+        this.specification = specification;
+    }
 
     public void setExternal(boolean external) {
         isExternal = external;
@@ -29,18 +43,15 @@ public abstract class ATrainingEvent extends AEvent {
     @JsonIgnore
     public abstract boolean isReservable();
     public abstract Reservation createReservation(Customer customer);
+    public abstract List<Reservation> getReservations();
     public abstract void addReservation(Reservation res);
     public abstract void deleteReservation(Reservation res);
 
     @JsonIgnore
     public abstract boolean isSessionDeletable();
-    public abstract void addSession(Long reservationId, ATrainingSession session);
 
     public abstract List<ATrainingBundle> deleteSessionsFromBundles();
 
-    public abstract void deleteSession(Reservation res);
-    @JsonIgnore
-    public abstract ATrainingSession getSession(Reservation res);
     public abstract void complete();
 
 }
