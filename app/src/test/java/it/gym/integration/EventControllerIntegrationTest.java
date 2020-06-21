@@ -135,8 +135,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
         ATrainingSession session = courseBundle.createSession(courseEvent);
         courseBundle.addSession(session);
-        // TODO
-//        courseEvent.addSession(res.getId(), session);
         eventRepository.save(courseEvent);
         courseBundle = bundleRepository.save(courseBundle);
 
@@ -325,6 +323,5 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(event.getId());
         expected.setSpecification(courseSpec);
         expectEvent(result, expected);
-        // TODO expectTrainingSession
     }
 }

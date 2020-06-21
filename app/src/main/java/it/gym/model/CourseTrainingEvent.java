@@ -1,15 +1,13 @@
 package it.gym.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import it.gym.exception.MethodNotAllowedException;
 import lombok.Generated;
 import org.springframework.hateoas.server.ExposesResourceFor;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import javax.persistence.*;
-import java.util.*;
-import java.util.stream.Collector;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Entity
@@ -38,7 +36,7 @@ public class CourseTrainingEvent extends ATrainingEvent {
         int nReservations;
         if (this.reservations == null) nReservations = 0;
         else nReservations = reservations.size();
-        return nReservations < this.getSpecification().getMaxCustomers();
+        return nReservations < ((CourseTrainingBundleSpecification) this.getSpecification()).getMaxCustomers();
     }
 
     public List<Reservation> getReservations() {

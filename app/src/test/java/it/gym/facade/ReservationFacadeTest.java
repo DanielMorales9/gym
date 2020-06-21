@@ -481,8 +481,6 @@ public class ReservationFacadeTest {
         event.addReservation(res);
         ATrainingSession session = bundle.createSession(event);
         bundle.addSession(session);
-        // TODO
-        // event.addSession(res.getId(), session);
 
         Mockito.doReturn(res).when(service).findById(1L);
 

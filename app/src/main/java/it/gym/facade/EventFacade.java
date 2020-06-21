@@ -224,7 +224,8 @@ public class EventFacade {
     public AEvent complete(Long eventId) {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
         event.complete();
-        // TODO sessionService.save(event.getSessions())
+        List<ATrainingSession> sessions = event.getReservations().stream().map(Reservation::getSession).collect(Collectors.toList());
+         sessionService.saveAll(sessions);
         return service.save(event);
     }
 

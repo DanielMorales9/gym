@@ -3,9 +3,11 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import lombok.Generated;
 import org.springframework.hateoas.server.ExposesResourceFor;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;

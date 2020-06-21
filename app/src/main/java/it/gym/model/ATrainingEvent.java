@@ -18,9 +18,9 @@ public abstract class ATrainingEvent extends AEvent {
 
     @ManyToOne
     @JoinColumn(name = "spec_id")
-    private CourseTrainingBundleSpecification specification;
+    private ATrainingBundleSpecification specification;
 
-    public CourseTrainingBundleSpecification getSpecification() {
+    public ATrainingBundleSpecification getSpecification() {
         return specification;
     }
 

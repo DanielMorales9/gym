@@ -19,6 +19,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -119,10 +121,7 @@ public class EventFacadeTest {
         assertThat(evt.getStartTime()).isEqualTo(start);
         assertThat(evt.getEndTime()).isEqualTo(end);
         assertThat(evt.getReservations()).isNull();
-        // TODO
-        // assertThat(evt.getSessions()).isNull();
-        assertThat(evt.getType().equals(CourseTrainingEvent.TYPE))
-        ;
+        assertThat(evt.getType().equals(CourseTrainingEvent.TYPE));
 
     }
 
@@ -174,15 +173,14 @@ public class EventFacadeTest {
         AEvent actual = facade.complete(1L);
 
         Mockito.verify(service).save(event);
-        // TODO all completed
-//        boolean allCompleted = event.getSessions()
-//                .values()
-//                .stream()
-//                .map(ATrainingSession::getCompleted)
-//                .reduce(Boolean::logicalAnd)
-//                .orElse(false);
+        boolean allCompleted = event.getReservations()
+                .stream()
+                .map(Reservation::getSession)
+                .map(ATrainingSession::getCompleted)
+                .reduce(Boolean::logicalAnd)
+                .orElse(false);
 
-//        assertThat(allCompleted).isTrue();
+        assertThat(allCompleted).isTrue();
         assertThat(actual).isEqualTo(event);
     }
 
