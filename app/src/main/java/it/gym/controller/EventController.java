@@ -111,10 +111,9 @@ public class EventController {
     @DeleteMapping(path = "/course/{id}")
     public ResponseEntity<EventResource> deleteCourseEvent(@PathVariable Long id) {
         logger.info("Deleting course event");
+        AEvent course = facade.deleteEvent(id);
 
-        AEvent timeOff = facade.deleteEvent(id);
-
-        return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
+        return ResponseEntity.ok(new EventAssembler().toModel(course));
 
     }
 

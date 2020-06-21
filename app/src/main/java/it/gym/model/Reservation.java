@@ -1,5 +1,6 @@
 package it.gym.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -24,6 +25,16 @@ public class Reservation implements Serializable {
     @ManyToOne
     @JoinColumn(name = "user_user_id")
     private Customer user;
+
+    @ManyToOne
+    @JoinColumn(name = "event_id")
+    @JsonIgnore
+    private ATrainingEvent event;
+
+    // This good as you can extend it to ManyToOne
+    @OneToOne
+    @JoinColumn(name = "session_id")
+    private ATrainingSession session;
 
     @Column(name = "is_confirmed")
     private Boolean isConfirmed;
@@ -64,5 +75,22 @@ public class Reservation implements Serializable {
     @Override
     public int hashCode() {
         return Objects.hash(id, isConfirmed);
+    }
+
+    @JsonIgnore
+    public ATrainingEvent getEvent() {
+        return event;
+    }
+
+    public void setEvent(ATrainingEvent event) {
+        this.event = event;
+    }
+
+    public ATrainingSession getSession() {
+        return session;
+    }
+
+    public void setSession(ATrainingSession session) {
+        this.session = session;
     }
 }

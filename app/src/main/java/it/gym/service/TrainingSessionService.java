@@ -51,4 +51,8 @@ public class TrainingSessionService implements ICrudService<ATrainingSession, Lo
         }
         return repository.findByCustomer(customerId, pageables);
     }
+
+    public void deleteAll(List<ATrainingSession> sessions) {
+        repository.deleteAll(sessions);
+    }
 }
