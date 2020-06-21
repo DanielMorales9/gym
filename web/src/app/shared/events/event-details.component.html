@@ -41,13 +41,13 @@
                     </ng-container>
                     <ng-container *ngSwitchCase="'P'">
                         <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>{{event?.reservation.user.firstName}}
-                            {{event?.reservation.user.lastName}}
+                            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>{{event?.reservations[0].user.firstName}}
+                            {{event?.reservations[0].user.lastName}}
                         </span>
-                        <span class="green-light" *ngIf="event?.reservation.confirmed else notConfirmed">
+                        <span class="green-light" *ngIf="event?.reservations[0].confirmed else notConfirmed">
                             <mat-icon fontSet="fas" fontIcon="fa-check"></mat-icon>&nbsp;Confermato
                         </span>
-                        <span class="green-light" *ngIf="event?.session.completed else notCompleted">
+                        <span class="green-light" *ngIf="event?.reservations[0].session.completed else notCompleted">
                             <mat-icon fontSet="fas" fontIcon="fa-check-double"></mat-icon>&nbsp;Completato
                         </span>
                         <ng-template #notConfirmed>

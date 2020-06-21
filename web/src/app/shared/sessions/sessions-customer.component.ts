@@ -80,10 +80,10 @@ export class SessionsCustomerComponent extends BaseComponent implements OnInit {
 
     handleEvent($event) {
         if ($event.type === 'info') {
-            this.goToDetails($event.session);
+            this.goToDetails($event.reservations[0].session);
         }
         else if ($event.type === 'assign') {
-            this.assignWorkout($event.session);
+            this.assignWorkout($event.reservations[0].session);
         }
     }
 

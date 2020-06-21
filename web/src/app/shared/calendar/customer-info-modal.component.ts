@@ -28,7 +28,7 @@ export class CustomerInfoModalComponent extends BaseCalendarModal {
     confirm() {
         this.close({
             type: 'confirm',
-            eventId: this.modalData.event.meta.reservation.id
+            eventId: this.modalData.event.meta.reservations[0].id
         });
     }
 

@@ -163,13 +163,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     confirm() {
-        let reservations;
-        if (this.event.type === 'C') {
-            reservations = this.event.reservations;
-        } else if (this.event.type === 'P') {
-            reservations = [this.event.reservation];
-        }
-        forkJoin(reservations.map(r => this.confirmReservation(r.id)))
+        forkJoin(this.event.reservations.map(r => this.confirmReservation(r.id)))
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(r => {
                 this.findById(this.event.id);
@@ -183,10 +177,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     isDisabledConfirmed() {
-        if (this.event.type === 'P') {
-            return this.event.reservation.confirmed;
-        }
-        else if (this.event.type === 'C') {
+        if (this.event.type === 'P' || this.event.type === 'C') {
             if (this.event.reservations.length > 0) {
                 return !this.event.reservations.map(v => v.confirmed).reduce((p, c) => p && c)[0];
             }
@@ -201,7 +192,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             o = this.facade.deleteCourseEvent(this.event.id);
         }
         else if (this.event.type === 'P') {
-            o = this.removeReservation(this.event.reservation.id);
+            o = this.removeReservation(this.event.reservations[0].id);
         }
         else if (this.event.type === 'H') {
             o = this.facade.deleteHoliday(this.event.id);
@@ -225,7 +216,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     isDisabledCompleted() {
         if (this.event.type === 'P') {
-            return this.event.session.completed;
+            return this.event.reservations[0].session.completed;
         }
         return true;
     }
@@ -305,17 +296,17 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
     hasWorkout() {
         if (!!this.event && this.event.type === 'P') {
-            return this.event.session.workouts.length > 0;
+            return this.event.reservations[0].session.workouts.length > 0;
         }
         return false;
     }
 
     assignWorkout() {
-        this.router.navigate(['sessions', this.event.session.id, 'assignWorkout'], {relativeTo: this.route});
+        this.router.navigate(['sessions', this.event.reservations[0].session.id, 'assignWorkout'], {relativeTo: this.route});
     }
 
 
     goToWorkout() {
-        this.router.navigate(['sessions', this.event.session.id, 'programme'], {relativeTo: this.route});
+        this.router.navigate(['sessions', this.event.reservations[0].session.id, 'programme'], {relativeTo: this.route});
     }
 }
