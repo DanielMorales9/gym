@@ -146,7 +146,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     }
 
     public List<ATrainingSession> getSessions() {
-        return sessions;
+        if (sessions != null) return sessions;
+        else return new ArrayList<>();
     }
 
     void setSessions(List<ATrainingSession> sessions) {

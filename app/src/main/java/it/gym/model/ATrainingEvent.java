@@ -24,7 +24,7 @@ public abstract class ATrainingEvent extends AEvent {
         return specification;
     }
 
-    public void setSpecification(CourseTrainingBundleSpecification specification) {
+    public void setSpecification(ATrainingBundleSpecification specification) {
         this.specification = specification;
     }
 
@@ -40,11 +40,14 @@ public abstract class ATrainingEvent extends AEvent {
         return true;
     }
 
+    public abstract Reservation createReservation(Customer customer);
     @JsonIgnore
     public abstract boolean isReservable();
-    public abstract Reservation createReservation(Customer customer);
     public abstract List<Reservation> getReservations();
+
+    // TODO remove
     public abstract void addReservation(Reservation res);
+    // TODO remove
     public abstract void deleteReservation(Reservation res);
 
     @JsonIgnore
@@ -54,4 +57,6 @@ public abstract class ATrainingEvent extends AEvent {
 
     public abstract void complete();
 
+    @JsonIgnore
+    public abstract boolean isDeletable();
 }

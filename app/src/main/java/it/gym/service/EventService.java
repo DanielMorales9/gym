@@ -2,6 +2,7 @@ package it.gym.service;
 
 import it.gym.exception.NotFoundException;
 import it.gym.model.AEvent;
+import it.gym.model.ATrainingEvent;
 import it.gym.model.Holiday;
 import it.gym.model.TimeOff;
 import it.gym.repository.EventRepository;
@@ -64,4 +65,7 @@ public class EventService implements ICrudService<AEvent, Long> {
                 .collect(Collectors.toList());
     }
 
+    public void deleteAll(List<ATrainingEvent> events) {
+        this.repository.deleteAll(events);
+    }
 }

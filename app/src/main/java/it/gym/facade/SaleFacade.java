@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,14 +33,25 @@ public class SaleFacade {
     @Qualifier("trainingBundleSpecificationService")
     private TrainingBundleSpecificationService bundleSpecService;
 
-    @Qualifier("trainingBundleService")
     @Autowired
+    @Qualifier("trainingBundleService")
     private TrainingBundleService bundleService;
 
     @Autowired
     private SalesLineItemService salesLineItemService;
+
     @Autowired
     private PaymentService paymentService;
+
+    @Autowired
+    @Qualifier("trainingSessionService")
+    private TrainingSessionService sessionService;
+
+    @Autowired
+    private EventService eventService;
+
+    @Autowired
+    private ReservationService reservationService;
 
     private Sale save(Sale sale) {
         return this.saleService.save(sale);
@@ -136,14 +148,39 @@ public class SaleFacade {
 
     public Sale deleteSaleById(Long saleId) {
         Sale sale = this.findById(saleId);
+
         if (!sale.isDeletable()) {
             throw new BadRequestException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
                     sale.getCustomer().getLastName()));
         }
+
+        // get bundles from sale
+        List<ATrainingBundle> bundles = getDeletableBundles(sale);
+
+        List<ATrainingSession> sessions = bundles.stream()
+                .map(ATrainingBundle::getSessions)
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+        // get reservations from sessions from bundles
+        List<Reservation> reservations = sessions.stream()
+                .map(ATrainingSession::getReservation)
+                .collect(Collectors.toList());
+
+        // get events from reservations
+        List<ATrainingEvent> events = reservations.stream()
+                .map(Reservation::getEvent)
+                .filter(ATrainingEvent::isDeletable)
+                .collect(Collectors.toList());
+
+        reservationService.deleteAll(reservations);
+        eventService.deleteAll(events);
+        sessionService.deleteAll(sessions);
+        bundleService.deleteAll(bundles);
+
+
         sale.removeBundlesFromCustomersCurrentBundles();
         this.userService.save(sale.getCustomer());
-        List<ATrainingBundle> bundles = getDeletableBundles(sale);
-        this.bundleService.deleteAll(bundles);
         this.salesLineItemService.deleteAll(sale.getSalesLineItems());
         this.paymentService.deleteAll(sale.getPayments());
 

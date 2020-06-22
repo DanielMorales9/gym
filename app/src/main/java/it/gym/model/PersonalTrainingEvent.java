@@ -44,6 +44,11 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     }
 
     @Override
+    public boolean isDeletable() {
+        return this.reservation.getSession().isDeletable();
+    }
+
+    @Override
     public List<ATrainingBundle> deleteSessionsFromBundles() {
         return Collections.singletonList(reservation.getSession().deleteMeFromBundle());
     }

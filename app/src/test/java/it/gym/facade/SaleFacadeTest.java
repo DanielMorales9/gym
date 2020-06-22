@@ -40,6 +40,12 @@ public class SaleFacadeTest {
     private GymService gymService;
 
     @MockBean
+    private EventService eventService;
+
+    @MockBean
+    private ReservationService reservationService;
+
+    @MockBean
     @Qualifier("trainingBundleSpecificationService")
     private TrainingBundleSpecificationService bundleSpecService;
 
