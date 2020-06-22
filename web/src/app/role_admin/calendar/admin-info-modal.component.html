@@ -15,10 +15,11 @@
                 </span>
             </button>
             <button type="button" mat-flat-button color="accent"
-                    *ngIf="!modalData?.event.meta?.reservation.confirmed"
+                    *ngIf="!modalData?.event.meta?.reservations[0].confirmed"
                     (click)="submit()">Conferma</button>
             <button type="button" mat-flat-button color="accent"
-                    *ngIf="!modalData?.event.meta?.session.completed && modalData?.event.meta?.reservation.confirmed"
+                    *ngIf="!modalData?.event.meta?.reservations[0].session.completed
+                    && modalData?.event.meta?.reservations[0].confirmed"
                     (click)="submit()">Completa</button>
         </div>
     </ng-container>

@@ -22,6 +22,7 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     @Column(name="max_customers")
     private Integer maxCustomers;
 
+    @Override
     public Integer getMaxCustomers() {
         return maxCustomers;
     }

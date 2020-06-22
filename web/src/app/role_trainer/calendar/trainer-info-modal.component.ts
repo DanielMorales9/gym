@@ -19,14 +19,15 @@ export class TrainerInfoModalComponent extends BaseCalendarModal {
     }
 
     submit() {
-        if (!this.modalData.event.meta.session.completed && this.modalData.event.meta.reservation.confirmed) {
+        if (!this.modalData.event.meta.reservations[0].session.completed &&
+            this.modalData.event.meta.reservations[0].confirmed) {
             this.complete();
         } else { this.confirm(); }
     }
 
     confirm() {
         this.close({
-            eventId: this.modalData.event.meta.reservation.id,
+            eventId: this.modalData.event.meta.reservations[0].id,
             start: this.modalData.event.start,
             type: 'confirm',
         });

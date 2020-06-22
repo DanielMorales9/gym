@@ -1,9 +1,7 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.AEvent;
-import it.gym.model.Holiday;
-import it.gym.model.TimeOff;
+import it.gym.model.*;
 import it.gym.repository.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,4 +62,15 @@ public class EventService implements ICrudService<AEvent, Long> {
                 .collect(Collectors.toList());
     }
 
+    public void deleteAll(List<ATrainingEvent> events) {
+        this.repository.deleteAll(events);
+    }
+
+    public List<ATrainingEvent> saveAll(List<ATrainingEvent> saveEvents) {
+        return  this.repository.saveAll(saveEvents);
+    }
+
+    public List<AEvent> findEventsBySpec(ATrainingBundleSpecification spec) {
+        return this.repository.findAllEventsBySpec(spec.getId());
+    }
 }

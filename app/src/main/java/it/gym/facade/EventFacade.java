@@ -5,6 +5,7 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,18 @@ public class EventFacade {
     private static final String PRESENT_EVENTS_EX = "Ci sono già altri eventi";
 
     @Autowired private EventService service;
+
+    @Qualifier("trainingSessionService")
+    @Autowired private TrainingSessionService sessionService;
+
     @Autowired private GymService gymService;
+
     @Autowired private UserService userService;
+
     @Qualifier("trainingBundleService")
     @Autowired private TrainingBundleService bundleService;
+
+    @Autowired private ReservationService reservationService;
 
     @Qualifier("trainingBundleSpecificationService")
     @Autowired private TrainingBundleSpecificationService specService;
@@ -49,7 +58,7 @@ public class EventFacade {
         if (customerId != null) {
             s = s.filter(c -> {
                 if (PersonalTrainingEvent.TYPE.equals(c.getType())) {
-                    return ((PersonalTrainingEvent) c).getReservation().getUser()
+                    return ((PersonalTrainingEvent) c).getReservations().get(0).getUser()
                             .getId().equals(customerId);
                 }
                 else {
@@ -159,6 +168,7 @@ public class EventFacade {
         logger.debug("Looking up gymId");
         Gym gym = gymService.findById(gymId);
         logger.debug("Looking up specId");
+
         CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
                 this.specService.findById(evt.getId());
 
@@ -172,15 +182,24 @@ public class EventFacade {
         checkNoHolidays(startTime, endTime);
 
         logger.debug("Creating CourseEvent");
+        CourseTrainingEvent event = createCourse(evt, spec, startTime, endTime);
+
+        logger.debug("Saving CourseEvent");
+        return service.save(event);
+    }
+
+    @NotNull
+    private CourseTrainingEvent createCourse(Event evt,
+                                             ATrainingBundleSpecification spec,
+                                             Date startTime, Date endTime) {
         CourseTrainingEvent event = new CourseTrainingEvent();
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setName(evt.getName());
         event.setExternal(evt.getExternal());
         event.setSpecification(spec);
-
-        logger.debug("Saving CourseEvent");
-        return service.save(event);
+        event.setMaxCustomers(evt.getMaxCustomers());
+        return event;
     }
 
     public AEvent deleteEvent(Long id) {
@@ -191,6 +210,18 @@ public class EventFacade {
 
         logger.info("Deleting sessions from bundles");
         List<ATrainingBundle> bundles = event.deleteSessionsFromBundles();
+
+        logger.info("Deleting training event");
+        List<Reservation> reservations = event.getReservations();
+
+        List<ATrainingSession> sessions = reservations.stream()
+                .map(Reservation::getSession).collect(Collectors.toList());
+
+        logger.info("Deleting sessions");
+        this.sessionService.deleteAll(sessions);
+
+        logger.info("Deleting reservations");
+        this.reservationService.deleteAll(reservations);
 
         logger.info("Deleting training event");
         this.service.delete(event);
@@ -204,6 +235,8 @@ public class EventFacade {
     public AEvent complete(Long eventId) {
         ATrainingEvent event = (ATrainingEvent) service.findById(eventId);
         event.complete();
+        List<ATrainingSession> sessions = event.getReservations().stream().map(Reservation::getSession).collect(Collectors.toList());
+         sessionService.saveAll(sessions);
         return service.save(event);
     }
 

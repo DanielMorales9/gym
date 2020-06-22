@@ -1,6 +1,5 @@
 package it.gym.facade;
 
-import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
@@ -16,7 +15,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 
@@ -105,6 +103,7 @@ public class EventFacadeTest {
         event.setStartTime(start);
         event.setEndTime(end);
         event.setExternal(false);
+        event.setMaxCustomers(spec.getMaxCustomers());
         event.setId(spec.getId());
         event.setName("course");
 
@@ -119,9 +118,7 @@ public class EventFacadeTest {
         assertThat(evt.getStartTime()).isEqualTo(start);
         assertThat(evt.getEndTime()).isEqualTo(end);
         assertThat(evt.getReservations()).isNull();
-        assertThat(evt.getSessions()).isNull();
-        assertThat(evt.getType().equals(CourseTrainingEvent.TYPE))
-        ;
+        assertThat(evt.getType().equals(CourseTrainingEvent.TYPE));
 
     }
 
@@ -173,9 +170,9 @@ public class EventFacadeTest {
         AEvent actual = facade.complete(1L);
 
         Mockito.verify(service).save(event);
-        boolean allCompleted = event.getSessions()
-                .values()
+        boolean allCompleted = event.getReservations()
                 .stream()
+                .map(Reservation::getSession)
                 .map(ATrainingSession::getCompleted)
                 .reduce(Boolean::logicalAnd)
                 .orElse(false);
@@ -303,17 +300,17 @@ public class EventFacadeTest {
                     true,
                     null);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec();
-            TimePurchaseOption option = spec.getOptions().toArray(new TimePurchaseOption[]{})[0];
+            APurchaseOption option = spec.getOptions().get(0);
 
             bundle = createCourseBundle(1L, start, spec, option);
 
             fixtureEvent = createCourseEvent(1L, "CourseEvent", start, addHours(start, 1), spec);
             res = fixtureEvent.createReservation(customer);
             res.setId(1L);
-            fixtureEvent.addReservation(res);
             session = bundle.createSession(fixtureEvent);
+            res.setSession(session);
             bundle.addSession(session);
-            fixtureEvent.addSession(res.getId(), session);
+            fixtureEvent.addReservation(res);
             return this;
         }
     }

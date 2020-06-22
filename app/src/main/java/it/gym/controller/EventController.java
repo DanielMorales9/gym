@@ -111,10 +111,9 @@ public class EventController {
     @DeleteMapping(path = "/course/{id}")
     public ResponseEntity<EventResource> deleteCourseEvent(@PathVariable Long id) {
         logger.info("Deleting course event");
+        AEvent course = facade.deleteEvent(id);
 
-        AEvent timeOff = facade.deleteEvent(id);
-
-        return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
+        return ResponseEntity.ok(new EventAssembler().toModel(course));
 
     }
 
@@ -144,19 +143,19 @@ public class EventController {
     @GetMapping
     @PreAuthorize("isAuthenticated()")
     public List<AEvent> findAllEventsByInterval(@RequestParam(value = "startTime")
-                                                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                                              iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                                              Date startTime,
-                                                                                  @RequestParam(value = "endTime")
-                                                                                      @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
-                                                                                              iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                                              Date endTime,
-                                                                                  @RequestParam(value = "types")
-                                                                                              HashSet<String> types,
-                                                                                  @RequestParam(required = false)
-                                                                                              Long customerId,
-                                                                                  @RequestParam(required = false)
-                                                                                              Long trainerId) {
+                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                        iso = DateTimeFormat.ISO.DATE_TIME)
+                                                        Date startTime,
+                                                @RequestParam(value = "endTime")
+                                                @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
+                                                        iso = DateTimeFormat.ISO.DATE_TIME)
+                                                        Date endTime,
+                                                @RequestParam(value = "types")
+                                                        HashSet<String> types,
+                                                @RequestParam(required = false)
+                                                        Long customerId,
+                                                @RequestParam(required = false)
+                                                        Long trainerId) {
         return facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
     }
 

@@ -1,6 +1,6 @@
-import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {theme} from '../../shared';
 
@@ -19,6 +19,7 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
 
     constructor(private builder: FormBuilder,
                 public dialogRef: MatDialogRef<AdminHourModalComponent>,
+                private cdr: ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
         this.modalData = data;
@@ -60,6 +61,9 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 disabled: !!this.modalData.event.external,
                 value: !!this.modalData.event.external
             }),
+            maxCustomers: new FormControl({
+                disabled: false
+            }, Validators.required),
             course: new FormControl({
                 disabled: true,
                 value: ''}, Validators.required)
@@ -73,14 +77,22 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 }
                 else {
                     this.course.enable();
+                    this.external.enable();
+                    this.maxCustomers.enable();
                 }
-                this.external.enable();
             }
             else {
                 this.course.disable();
                 this.external.disable();
+                this.maxCustomers.disable();
 
             }
+            this.form.updateValueAndValidity();
+        });
+
+        this.course.valueChanges.subscribe( v => {
+            this.maxCustomers.setValue(v.maxCustomers);
+            this.cdr.detectChanges();
             this.form.updateValueAndValidity();
         });
 
@@ -114,6 +126,10 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
         return this.form.get('course');
     }
 
+    get maxCustomers() {
+        return this.form.get('maxCustomers');
+    }
+
     submit() {
         const startTime = this.startTime.value.split(':');
         const endTime = this.endTime.value.split(':');
@@ -132,8 +148,9 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 eventName: this.name.value,
                 type: 'course',
                 userId: this.modalData.userId,
-                meta: this.course.value,
-                external: !!this.external.value
+                meta: this.course.value.id,
+                external: !!this.external.value,
+                maxCustomers: this.maxCustomers.value
             });
         } else if (this.event.value === 'chiusura') {
             this.close({

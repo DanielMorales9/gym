@@ -3,8 +3,6 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.model.Sale;
-import it.gym.repository.CourseTrainingBundleRepository;
 import it.gym.repository.TrainingBundleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -16,8 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Service
 public class TrainingBundleService implements ICrudService<ATrainingBundle, Long> {

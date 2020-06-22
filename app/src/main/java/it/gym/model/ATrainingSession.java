@@ -58,6 +58,16 @@ public abstract class ATrainingSession implements Serializable, Eager<ATrainingS
     @JoinColumn(name = "session_id")
     private List<Workout> workouts;
 
+    // possible OneToMany In future
+    @JsonIgnore
+    @OneToOne(
+            cascade = CascadeType.ALL,
+            orphanRemoval = true,
+            mappedBy = "session"
+    )
+    private Reservation reservation;
+
+
     public boolean getCompleted() {
         return isCompleted;
     }
@@ -69,7 +79,7 @@ public abstract class ATrainingSession implements Serializable, Eager<ATrainingS
     public abstract String getType();
     public abstract boolean isDeletable();
     public abstract void complete();
-    public abstract void deleteMeFromBundle();
+    public abstract ATrainingBundle deleteMeFromBundle();
 
     public Long getId() {
         return id;
@@ -130,4 +140,12 @@ public abstract class ATrainingSession implements Serializable, Eager<ATrainingS
         return this;
     }
 
+    @JsonIgnore
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
 }

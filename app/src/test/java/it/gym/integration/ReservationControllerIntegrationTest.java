@@ -206,7 +206,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         assertThat(actualEvent).isEqualTo(event);
         assertThat(actualEvent.getReservations().size()).isEqualTo(0);
-        assertThat(actualEvent.getSessions().size()).isEqualTo(0);
+//        assertThat(actualEvent.getSessions().size()).isEqualTo(0);
         assertThat(actualBundle).isEqualTo(courseTrainingEventFixture.getBundle());
 
         assertThat(eventRepository.findAll()).isNotEmpty();
@@ -310,6 +310,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 event.setStartTime(start);
                 event.setEndTime(end);
                 event.setName("personal");
+                event.setMaxCustomers(spec.getMaxCustomers());
                 event.setSpecification(spec);
             }
 
@@ -323,7 +324,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 bundle = bundleRepository.save(bundle);
 
                 session = bundle.getSessions().get(0);
-                event.addSession(reservation.getId(), session);
+                reservation.setSession(session);
             }
 
             customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
@@ -424,12 +425,13 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 event.setStartTime(start);
                 event.setEndTime(end);
                 event.setName("personal");
+                event = eventRepository.save(event);
             }
 
             if (hasReservation) {
                 reservation = createReservation(1L, customer);
+                reservation.setEvent(event);
                 reservation = reservationRepository.save(reservation);
-                event.setReservation(reservation);
             }
 
             if (hasReservation) {
@@ -443,14 +445,15 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
             if (hasEvent) {
                 session = bundle.getSessions().get(0);
-                event.setSession(session);
-                event = eventRepository.save(event);
+                reservation.setSession(session);
+                reservation = reservationRepository.save(reservation);
             }
 
             return this;
         }
 
         public void tearDown() {
+            reservationRepository.deleteAll();
             eventRepository.deleteAll();
 
             gymRepository.deleteAll();

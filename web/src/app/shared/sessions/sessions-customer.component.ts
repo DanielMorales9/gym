@@ -8,7 +8,6 @@ import {BaseComponent} from '../base-component';
 import {Session} from '../model/session.class';
 import {SessionService} from '../../core/controllers/session.service';
 import {SessionHelperService} from '../../core/helpers/session-helper.service';
-import {PolicyService} from '../../core/policy';
 
 @Component({
     templateUrl: './sessions-customer.component.html',

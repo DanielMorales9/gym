@@ -118,7 +118,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     @ViewChild('prev', { static: true }) prev: ElementRef<HTMLElement>;
 
     static getPersonalEventColor(event: any) {
-        return (event.reservation.confirmed) ? (event.session.completed) ?
+        return (event.reservations[0].confirmed) ? (event.reservations[0].session.completed) ?
             CALENDAR_COLUMNS.GREEN : CALENDAR_COLUMNS.BLUE : CALENDAR_COLUMNS.YELLOW;
     }
 
@@ -401,7 +401,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     private isReservationDeletable(event: any) {
-        return event.reservation.user.id === this.user.id || !this.isCustomer();
+        return event.reservations[0].user.id === this.user.id || !this.isCustomer();
     }
 
     private isMyTimeOff(event: any) {
@@ -417,7 +417,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         if (this.isCustomer() && me) {
             return `Il tuo allenamento dalle ${startHour} alle ${endHour}`;
         } else {
-            return `${event['reservation']['user']['lastName']} ~ Personal (${startHour} - ${endHour})`;
+            return `${event['reservations'][0]['user']['lastName']} ~ Personal (${startHour} - ${endHour})`;
         }
     }
 
@@ -520,7 +520,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected deleteReservation(data) {
-        this.facade.deleteReservation(data, this.user.id)
+        this.facade.deleteReservation(data)
             .subscribe(res => {
                 this.snackBar.open('La Prenotazione è stata eliminata');
                 this.getEvents();
@@ -571,7 +571,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected createCourseEvent(data: any) {
-        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end, data.external)
+        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end, data.external, data.maxCustomers)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( r => {
                 this.snackBar.open('Evento creato');

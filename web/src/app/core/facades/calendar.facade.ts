@@ -136,15 +136,18 @@ export class CalendarFacade {
     deleteReservation(data: any, id?: number) {
         // TODO implement simpler logic
         const gymId = this.gymService.gym.id;
-        if ('reservation' in data) {
-            return this.reservationService.deleteReservation(data.id, data.reservation.id, gymId);
+        const eventId = data.id;
+        let reservations = data.reservations;
+
+        if (!!id) {
+            reservations = reservations.filter(a => a.user.id === id);
         }
-        else if ('reservations' in data && !!id) {
-            const myReservations = data.reservations.filter(a => a.user.id === id);
-            if (myReservations.length > 0) {
-                return this.reservationService.deleteReservation(data.id, myReservations[0].id, gymId);
-            }
+
+        if (data.reservations.length > 0) {
+            const reservationId = reservations[0].id;
+            return this.reservationService.deleteReservation(data.id, reservationId, gymId);
         }
+
         return new Observable(observer => observer.error({error: {message: 'Nessuna prenotazione'}}));
     }
 
@@ -168,12 +171,13 @@ export class CalendarFacade {
         return this.gymService.isDayEvent(startTime, endTime);
     }
 
-    createCourseEvent(name: any, meta: any, start: Date, end: Date, external: boolean) {
+    createCourseEvent(name: any, meta: any, start: Date, end: Date, external: boolean, maxCustomers: number) {
         const gymId = this.gymService.gym.id;
         return this.eventService.createCourseEvent(gymId, {
             name: name, id: meta,
             startTime: start, endTime: end,
-            external: external
+            external: external,
+            maxCustomers: maxCustomers
         });
     }
 

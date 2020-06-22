@@ -26,5 +26,11 @@ public interface EventRepository extends JpaRepository<AEvent, Long> {
             "from AEvent as t " +
             "where t.startTime <= :startTime and t.endTime >= :endTime")
     List<AEvent> findAllEventsLargerThanInterval(Date startTime, Date endTime);
+
+
+    @Query("select t " +
+            "from ATrainingEvent as t " +
+            "where t.specification.id = :specId")
+    List<AEvent> findAllEventsBySpec(Long specId);
 }
 

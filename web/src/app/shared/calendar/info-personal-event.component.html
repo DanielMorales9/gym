@@ -1,12 +1,13 @@
-<i class="fas fa-check" *ngIf="event?.meta?.reservation.confirmed"></i>
+<i class="fas fa-check" *ngIf="event?.meta?.reservations[0].confirmed"></i>
 <i class="fas fa-check-double"
-   *ngIf="event?.meta?.reservation.confirmed && event?.meta.session.completed"></i>
-<i class="fas fa-ban" *ngIf="!event?.meta.reservation.confirmed"></i>&nbsp;
+   *ngIf="event?.meta?.reservations[0].confirmed &&
+    event?.meta.reservations[0].session.completed"></i>
+<i class="fas fa-ban" *ngIf="!event?.meta.reservations[0].confirmed"></i>&nbsp;
 <ng-container *ngIf="event?.user else you;">L'allenamento</ng-container> dalle {{ event?.start | date :  'HH:mm'}}
 alle {{ event?.end | date :  'HH:mm'}}
-<ng-container *ngIf="event?.user">del cliente {{event?.meta.reservation.user.lastName}}</ng-container>
-<span *ngIf="!event?.meta?.reservation.confirmed"> non</span> è stato confermato e
-<span *ngIf="!event?.meta.session.completed"> non è stato </span> completato!
+<ng-container *ngIf="event?.user">del cliente {{event?.meta.reservations[0].user.lastName}}</ng-container>
+<span *ngIf="!event?.meta?.reservations[0].confirmed"> non</span> è stato confermato e
+<span *ngIf="!event?.meta.reservations[0].session.completed"> non è stato </span> completato!
 <ng-template #you>
     Il tuo allenamento
 </ng-template>

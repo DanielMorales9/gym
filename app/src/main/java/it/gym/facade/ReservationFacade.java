@@ -215,6 +215,7 @@ public class ReservationFacade {
         evt.setStartTime(event.getStartTime());
         evt.setEndTime(event.getEndTime());
         evt.setExternal(event.getExternal());
+        evt.setSpecification(bundle.getBundleSpec());
         evt.setName(String.format("Allenamento: %s", bundle.getName()));
         return evt;
     }
@@ -225,9 +226,6 @@ public class ReservationFacade {
         logger.info("Creating reservation");
         Reservation res = evt.createReservation(customer);
 
-        logger.info("Saving reservation");
-        res = service.save(res);
-
         logger.info("Creating training session");
         ATrainingSession session = bundle.createSession(evt);
 
@@ -235,10 +233,16 @@ public class ReservationFacade {
         session = sessionService.save(session);
 
         logger.info("Adding reservation to training event");
-        evt.addReservation(res);
+//        evt.addReservation(res);
 
-        logger.info("Adding training session to the training event");
-        evt.addSession(res.getId(), session);
+        logger.info("Adding training session to reservation");
+        res.setSession(session);
+
+        logger.info("Adding training event to reservation");
+        res.setEvent(evt);
+
+        logger.info("Saving reservation");
+        res = service.save(res);
 
         logger.info("Saving training event");
         eventService.save(evt);
@@ -304,7 +308,7 @@ public class ReservationFacade {
         Reservation res = this.service.findById(reservationId);
 
         logger.info("Getting session by reservation from event");
-        ATrainingSession session = event.getSession(res);
+        ATrainingSession session = res.getSession();
         logger.info("Getting bundle from session");
         ATrainingBundle bundle = session.getTrainingBundle();
 
@@ -350,17 +354,19 @@ public class ReservationFacade {
         logger.info("Saving bundle event");
         this.bundleService.save(bundle);
 
+        logger.info("Deleting reservation from event");
+        event.deleteReservation(res);
+
+        service.delete(res);
+
+        logger.info("Deleting session");
+        sessionService.delete(session);
+
         if (event.getType().equals("P")) {
+
             logger.info("Deleting personal training event");
             this.eventService.delete(event);
         } else {
-
-            logger.info("Deleting reservation from event");
-            event.deleteReservation(res);
-
-            logger.info("Deleting session by reservation from event");
-            event.deleteSession(res);
-
             logger.info("Saving training event");
             this.eventService.save(event);
 

@@ -45,6 +45,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
     private CourseTrainingBundleSpecification courseSpec;
 
     private SalesLineItem sli1;
+    private ATrainingBundle course;
 
     @Before
     public void before() {
@@ -70,7 +71,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
         APurchaseOption option = courseSpec.getOptions().get(0);
-        CourseTrainingBundle course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
+        course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
         course = bundleRepository.save(course);
 
         sli1 = sale.addSalesLineItem(course);
@@ -243,6 +244,33 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     public void whenDeleteSaleOK() throws Exception {
+        String path = "/sales/" + sale.getId();
+
+        List<SalesLineItem> sli = sliRepository.findAll();
+        ResultActions result = mockMvc.perform(delete(path))
+                .andExpect(status().isOk());
+
+
+        Sale expected = new Sale();
+        expected.setId(sale.getId());
+        expected.setAmountPayed(0.);
+        expected.setCompleted(true);
+        expected.setCustomer(customer);
+        expected.setSalesLineItems(sli);
+
+        expectSale(result, expected);
+        expectSalesLineItems(result, sli, "salesLineItems");
+
+        Customer c = customer;
+        expectSaleUser(result, c, "customer");
+        assertThat(repository.findAll()).isEmpty();
+        assertThat(sliRepository.findAll()).isEmpty();
+        assertThat(bundleRepository.findAll().size()).isEqualTo(0);
+        bundleSpecRepository.findById(courseSpec.getId()).get();
+    }
+
+    @Test
+    public void whenDeleteSaleWithEvents() throws Exception {
         String path = "/sales/" + sale.getId();
 
         List<SalesLineItem> sli = sliRepository.findAll();

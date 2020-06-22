@@ -53,7 +53,7 @@ const routes = [
             },
             {
                 path: 'sales/buy/:id', component: CreateSaleComponent,
-                data: {title: 'Crea Vendita', back: true}
+                data: {title: 'Crea Vendita', back: true, secondary: UserControlsComponent}
             },
             {
                 path: 'sales', component: SalesComponent,
