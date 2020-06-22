@@ -32,7 +32,10 @@ export class EventService {
         return this.http.patch(`/events/${gymId}/timeOff/${id}`, event);
     }
 
-    createCourseEvent(gymId: any, event: { name: any; startTime: Date; id: any; endTime: Date, external: boolean }) {
+    createCourseEvent(gymId: any, event: {
+        name: any; startTime: Date; id: any; endTime: Date,
+        external: boolean, maxCustomers: number }) {
+
         return this.http.post(`/events/${gymId}/course`, event);
     }
 

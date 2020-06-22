@@ -22,11 +22,16 @@
                     <mat-icon fontSet="fas" fontIcon="fa-hourglass-half"></mat-icon>
                     Orario:&nbsp;{{event?.startTime | date: 'HH:mm'}} - {{event?.endTime | date: 'HH:mm'}}
                 </span>
+                <!-- TODO refactor view event of type Course and Personal -->
                 <ng-container [ngSwitch]="event?.type">
                     <ng-container *ngSwitchCase="'C'">
                         <span>
                             <mat-icon fontSet="fas" fontIcon="fa-tags"></mat-icon>
                             {{ event?.specification.name }}
+                        </span>
+                        <span *ngIf="event?.maxCustomers">
+                            <mat-icon fontSet="fas" fontIcon="fa-times"></mat-icon>
+                            Massimo numero di prenotazioni {{ event?.maxCustomers }}
                         </span>
                         <ng-container *ngIf="event?.reservations.length > 0 else noReservations;">
                             <div>

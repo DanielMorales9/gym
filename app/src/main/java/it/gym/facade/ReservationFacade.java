@@ -215,6 +215,7 @@ public class ReservationFacade {
         evt.setStartTime(event.getStartTime());
         evt.setEndTime(event.getEndTime());
         evt.setExternal(event.getExternal());
+        evt.setSpecification(bundle.getBundleSpec());
         evt.setName(String.format("Allenamento: %s", bundle.getName()));
         return evt;
     }

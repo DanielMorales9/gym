@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject, OnInit} from '@angular/core';
 import {BaseCalendarModal} from '../../shared/calendar';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {theme} from '../../shared';
 
@@ -62,9 +62,8 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 value: !!this.modalData.event.external
             }),
             maxCustomers: new FormControl({
-                disabled: true,
-                value: !!this.modalData.event.maxCustomers
-            }),
+                disabled: false
+            }, Validators.required),
             course: new FormControl({
                 disabled: true,
                 value: ''}, Validators.required)
@@ -92,8 +91,9 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
         });
 
         this.course.valueChanges.subscribe( v => {
-           this.maxCustomers.setValue(v.maxCustomers);
-           this.cdr.detectChanges();
+            this.maxCustomers.setValue(v.maxCustomers);
+            this.cdr.detectChanges();
+            this.form.updateValueAndValidity();
         });
 
     }
@@ -148,7 +148,7 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 eventName: this.name.value,
                 type: 'course',
                 userId: this.modalData.userId,
-                meta: this.course.value,
+                meta: this.course.value.id,
                 external: !!this.external.value,
                 maxCustomers: this.maxCustomers.value
             });
