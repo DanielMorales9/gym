@@ -433,8 +433,7 @@ public class ReservationFacadeTest {
         ATrainingBundle bundle = courseEventFixture.getBundle();
 
         ATrainingEvent event = createCourseEvent(1L,
-                "course", start, end,
-                (CourseTrainingBundleSpecification) bundle.getBundleSpec());
+                "course", start, end, bundle.getBundleSpec());
 
         Reservation res = event.createReservation(customer);
         res.setId(1L);

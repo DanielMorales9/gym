@@ -175,4 +175,6 @@ public abstract class  ATrainingBundleSpecification implements Serializable, Eag
                 ", Descrizione: " +
                 this.description;
     }
+
+    public Integer getMaxCustomers() { return 1; }
 }

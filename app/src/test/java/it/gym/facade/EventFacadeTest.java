@@ -1,6 +1,5 @@
 package it.gym.facade;
 
-import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
@@ -16,11 +15,8 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
@@ -107,6 +103,7 @@ public class EventFacadeTest {
         event.setStartTime(start);
         event.setEndTime(end);
         event.setExternal(false);
+        event.setMaxCustomers(spec.getMaxCustomers());
         event.setId(spec.getId());
         event.setName("course");
 
