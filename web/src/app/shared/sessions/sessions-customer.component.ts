@@ -8,7 +8,6 @@ import {BaseComponent} from '../base-component';
 import {Session} from '../model/session.class';
 import {SessionService} from '../../core/controllers/session.service';
 import {SessionHelperService} from '../../core/helpers/session-helper.service';
-import {PolicyService} from '../../core/policy';
 
 @Component({
     templateUrl: './sessions-customer.component.html',
@@ -80,10 +79,10 @@ export class SessionsCustomerComponent extends BaseComponent implements OnInit {
 
     handleEvent($event) {
         if ($event.type === 'info') {
-            this.goToDetails($event.reservations[0].session);
+            this.goToDetails($event.session);
         }
         else if ($event.type === 'assign') {
-            this.assignWorkout($event.reservations[0].session);
+            this.assignWorkout($event.session);
         }
     }
 

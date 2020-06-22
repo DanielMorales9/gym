@@ -31,6 +31,6 @@ export class HomeComponent extends BaseComponent implements OnInit {
         setTimeout(() => {
             this.user = this.auth.getUser();
             this.cdr.detectChanges();
-        }, 1000);
+        }, 300);
     }
 }
