@@ -68,4 +68,8 @@ public class EventService implements ICrudService<AEvent, Long> {
     public void deleteAll(List<ATrainingEvent> events) {
         this.repository.deleteAll(events);
     }
+
+    public List<ATrainingEvent> saveAll(List<ATrainingEvent> saveEvents) {
+        return  this.repository.saveAll(saveEvents);
+    }
 }

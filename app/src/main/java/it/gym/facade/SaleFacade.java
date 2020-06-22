@@ -168,13 +168,20 @@ public class SaleFacade {
                 .collect(Collectors.toList());
 
         // get events from reservations
-        List<ATrainingEvent> events = reservations.stream()
+        List<ATrainingEvent> deletableEvents = reservations.stream()
                 .map(Reservation::getEvent)
                 .filter(ATrainingEvent::isDeletable)
                 .collect(Collectors.toList());
 
+        List<ATrainingEvent> saveEvents = reservations.stream()
+                .filter(a -> !a.getEvent().isDeletable())
+                .peek(r -> r.getEvent().deleteReservation(r))
+                .map(Reservation::getEvent)
+                .collect(Collectors.toList());
+
+        eventService.saveAll(saveEvents);
         reservationService.deleteAll(reservations);
-        eventService.deleteAll(events);
+        eventService.deleteAll(deletableEvents);
         sessionService.deleteAll(sessions);
         bundleService.deleteAll(bundles);
 
