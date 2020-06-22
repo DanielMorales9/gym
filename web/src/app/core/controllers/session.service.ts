@@ -10,7 +10,6 @@ export class SessionService {
     }
 
     get(page: number, size: number, params?: any): Observable<Object> {
-        console.log(params);
 
         if (!params) {
             params = {};

@@ -38,4 +38,8 @@ public class ReservationService implements ICrudService<Reservation, Long> {
     public void deleteAll(List<Reservation> reservations) {
         reservationRepository.deleteAll(reservations);
     }
+
+    public List<Reservation> saveAll(List<Reservation> reservations) {
+        return this.reservationRepository.saveAll(reservations);
+    }
 }

@@ -3,7 +3,6 @@ package it.gym.service;
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.PersonalTrainingBundleSpecification;
-import it.gym.repository.CourseTrainingBundleRepository;
 import it.gym.repository.TrainingBundleRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,9 +24,6 @@ public class TrainingBundleServiceTest {
 
     @MockBean
     private TrainingBundleRepository repository;
-
-    @MockBean
-    private CourseTrainingBundleRepository courseRepository;
 
     @TestConfiguration
     static class TrainingBundleServiceTestContextConfiguration {

@@ -136,7 +136,6 @@ public class ReservationFacadeTest {
         Reservation expected = createReservation(1L, customer);
 
         assertThat(actual).isEqualTo(expected);
-        assertThat(e[0].getReservations()).isEqualTo(Collections.singletonList(expected));
         assertThat(actual.getSession().getCompleted()).isFalse();
         assertThat(actual.getSession().getStartTime()).isEqualTo(start);
         assertThat(actual.getSession().getEndTime()).isEqualTo(end);
@@ -189,8 +188,6 @@ public class ReservationFacadeTest {
         Reservation expected = createReservation(1L, customer);
 
         assertThat(actual).isEqualTo(expected);
-        assertThat(e[0].getReservations()).isEqualTo(Collections.singletonList(expected));
-        assertThat(actual.getSession().getCompleted()).isFalse();
         assertThat(actual.getSession().getStartTime()).isEqualTo(start);
         assertThat(actual.getSession().getEndTime()).isEqualTo(end);
     }
@@ -284,7 +281,6 @@ public class ReservationFacadeTest {
         expected.setConfirmed(true);
 
         assertThat(actual).isEqualTo(expected);
-        assertThat(event.getReservations()).isEqualTo(Collections.singletonList(expected));
         assertThat(actual.getSession().getCompleted()).isFalse();
         assertThat(actual.getSession().getStartTime()).isEqualTo(start);
         assertThat(actual.getSession().getEndTime()).isEqualTo(end);
@@ -492,7 +488,7 @@ public class ReservationFacadeTest {
         expected.setConfirmed(true);
         assertThat(actual).isEqualTo(expected);
     }
-    
+
     private ATrainingEvent createPersonalEvent(Date startTime, Date endTime) {
         ATrainingEvent evt = new PersonalTrainingEvent();
         evt.setEndTime(startTime);

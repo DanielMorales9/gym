@@ -80,6 +80,11 @@ public class CourseTrainingEvent extends ATrainingEvent {
         this.reservations.forEach(r -> r.getSession().complete());
     }
 
+    @Override
+    public boolean isDeletable() {
+        return false;
+    }
+
 
     @Override
     public void addReservation(Reservation res) {
