@@ -134,6 +134,19 @@
                               name="external"
                               formControlName="external">Evento Esterno</mat-checkbox>
             </div>
+            <mat-form-field>
+                <label for="maxCustomers" class="sr-only">Massimo numero di prenotazioni</label>
+                <input matInput
+                       id="maxCustomers"
+                       name="maxCustomers"
+                       formControlName="maxCustomers"
+                       placeholder="Max Prenotazioni"
+                       [ngClass]="{ 'is-invalid': maxCustomers.touched && maxCustomers.invalid }" readonly>
+                <mat-error *ngIf="maxCustomers.touched && maxCustomers.invalid">
+                    <div *ngIf="!!maxCustomers.errors?.required">Massimo numero di prenotazioni obbligatoria</div>
+                </mat-error>
+            </mat-form-field>
+
 
             <br>
             <span>{{message}}</span>
