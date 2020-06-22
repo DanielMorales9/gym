@@ -1,6 +1,7 @@
 package it.gym.facade;
 
 import it.gym.repository.PurchaseOptionRepository;
+import it.gym.service.EventService;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
 import org.junit.Test;
@@ -21,6 +22,9 @@ public class TrainingBundleSpecificationServiceTest {
 
     @MockBean
     private PurchaseOptionRepository repository;
+
+    @MockBean
+    private EventService eventService;
 
     @MockBean
     @Qualifier("trainingBundleService")
