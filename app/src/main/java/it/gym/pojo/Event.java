@@ -8,6 +8,7 @@ public class Event {
     private Date endTime;
     private Long id;
     private Boolean external;
+    private Integer maxCustomers;
 
     public String getName() {
         return name;
@@ -16,6 +17,7 @@ public class Event {
     public void setName(String name) {
         this.name = name;
     }
+
     public Date getStartTime() {
         return startTime;
     }
@@ -38,6 +40,14 @@ public class Event {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getMaxCustomers() {
+        return maxCustomers;
+    }
+
+    public void setMaxCustomers(Integer maxCustomers) {
+        this.maxCustomers = maxCustomers;
     }
 
     public Boolean getExternal() {

@@ -571,7 +571,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected createCourseEvent(data: any) {
-        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end, data.external)
+        this.facade.createCourseEvent(data.eventName, data.meta, data.start, data.end, data.external, data.maxCustomers)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( r => {
                 this.snackBar.open('Evento creato');

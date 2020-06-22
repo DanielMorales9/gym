@@ -86,20 +86,11 @@
             </mat-form-field>
         </div>
 
-
         <ng-container *ngIf="!!event.value">
-            <ng-container *ngTemplateOutlet="nameT;context:{
-                type: event.value,
-                title: template[event.value].title,
-                message: template[event.value].message
-            }">
-            </ng-container>
-        </ng-container>
 
-        <ng-template #nameT let-type="type" let-message="message" let-title="title">
             <div>
                 <mat-form-field>
-                    <label for="name">{{title}}</label>
+                    <label for="name">{{ template[event.value].title }}</label>
                     <input name="name"
                            matInput
                            id="name"
@@ -107,7 +98,7 @@
                            formControlName="name"
                            [ngClass]="{ 'is-invalid': name.touched && name.invalid }"/>
                     <mat-error *ngIf="name.touched && name.invalid">
-                        <div *ngIf="!!name.errors?.required">Nome {{type}} obbligatorio</div>
+                        <div *ngIf="!!name.errors?.required">Nome {{event.value}} obbligatorio</div>
                     </mat-error>
                 </mat-form-field>
             </div>
@@ -120,25 +111,41 @@
                                 type="text"
                                 formControlName="course"
                                 [ngClass]="{ 'is-invalid': course.touched && course.invalid }">
-                        <mat-option [value]="b.id" *ngFor="let b of modalData.event.courses">{{b.name}}</mat-option>
+                        <mat-option [value]="b" *ngFor="let b of modalData.event.courses">{{b.name}}</mat-option>
                     </mat-select>
                     <mat-error *ngIf="course.touched && course.invalid">
                         <div *ngIf="!!course.errors?.required">Corso obbligatorio</div>
                     </mat-error>
                 </mat-form-field>
                 <div *ngIf="!hasCourses" class="mat-error">Nessun corso disponibile</div>
-            </div>
-            <div>
-                <label for="external" class="sr-only">Evento Esterno</label>
-                <mat-checkbox id="external"
-                              name="external"
-                              formControlName="external">Evento Esterno</mat-checkbox>
+                <div>
+                    <mat-form-field>
+                        <label for="maxCustomers" class="sr-only">Massimo numero di prenotazioni</label>
+                        <input matInput
+                               id="maxCustomers"
+                               name="maxCustomers"
+                               formControlName="maxCustomers"
+                               type="number"
+                               placeholder="Max Prenotazioni"
+                               [ngClass]="{ 'is-invalid': maxCustomers.touched && maxCustomers.invalid }">
+                        <mat-error *ngIf="maxCustomers.touched && maxCustomers.invalid">
+                            <div *ngIf="!!maxCustomers.errors?.required">Massimo numero di prenotazioni obbligatoria</div>
+                        </mat-error>
+                    </mat-form-field>
+                </div>
+                <div>
+                    <label for="external" class="sr-only">Evento Esterno</label>
+                    <mat-checkbox id="external"
+                                  name="external"
+                                  formControlName="external">Evento Esterno</mat-checkbox>
+                </div>
+
             </div>
 
             <br>
-            <span>{{message}}</span>
+            <span>{{template[event.value].message}}</span>
             <br>
-        </ng-template>
+        </ng-container>
 
     </div>
     <div mat-dialog-actions>

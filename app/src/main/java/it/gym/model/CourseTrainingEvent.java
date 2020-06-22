@@ -26,6 +26,17 @@ public class CourseTrainingEvent extends ATrainingEvent {
             fetch = FetchType.EAGER)
     private List<Reservation> reservations;
 
+    @Column(name = "max_customers")
+    private Integer maxCustomers;
+
+    public Integer getMaxCustomers() {
+        return maxCustomers;
+    }
+
+    public void setMaxCustomers(Integer maxCustomers) {
+        this.maxCustomers = maxCustomers;
+    }
+
     @Override
     public String getType() {
         return "C";
@@ -36,7 +47,7 @@ public class CourseTrainingEvent extends ATrainingEvent {
         int nReservations;
         if (this.reservations == null) nReservations = 0;
         else nReservations = reservations.size();
-        return nReservations < ((CourseTrainingBundleSpecification) this.getSpecification()).getMaxCustomers();
+        return nReservations < getMaxCustomers();
     }
 
     public List<Reservation> getReservations() {
@@ -110,5 +121,4 @@ public class CourseTrainingEvent extends ATrainingEvent {
                 " endTime " + this.getEndTime() +
                 " } ";
     }
-
 }

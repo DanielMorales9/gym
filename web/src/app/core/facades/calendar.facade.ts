@@ -171,12 +171,13 @@ export class CalendarFacade {
         return this.gymService.isDayEvent(startTime, endTime);
     }
 
-    createCourseEvent(name: any, meta: any, start: Date, end: Date, external: boolean) {
+    createCourseEvent(name: any, meta: any, start: Date, end: Date, external: boolean, maxCustomers: number) {
         const gymId = this.gymService.gym.id;
         return this.eventService.createCourseEvent(gymId, {
             name: name, id: meta,
             startTime: start, endTime: end,
-            external: external
+            external: external,
+            maxCustomers: maxCustomers
         });
     }
 

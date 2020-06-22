@@ -5,6 +5,7 @@ import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -167,6 +168,7 @@ public class EventFacade {
         logger.debug("Looking up gymId");
         Gym gym = gymService.findById(gymId);
         logger.debug("Looking up specId");
+
         CourseTrainingBundleSpecification spec = (CourseTrainingBundleSpecification)
                 this.specService.findById(evt.getId());
 
@@ -180,15 +182,24 @@ public class EventFacade {
         checkNoHolidays(startTime, endTime);
 
         logger.debug("Creating CourseEvent");
+        CourseTrainingEvent event = createCourse(evt, spec, startTime, endTime);
+
+        logger.debug("Saving CourseEvent");
+        return service.save(event);
+    }
+
+    @NotNull
+    private CourseTrainingEvent createCourse(Event evt,
+                                             ATrainingBundleSpecification spec,
+                                             Date startTime, Date endTime) {
         CourseTrainingEvent event = new CourseTrainingEvent();
         event.setStartTime(startTime);
         event.setEndTime(endTime);
         event.setName(evt.getName());
         event.setExternal(evt.getExternal());
         event.setSpecification(spec);
-
-        logger.debug("Saving CourseEvent");
-        return service.save(event);
+        event.setMaxCustomers(evt.getMaxCustomers());
+        return event;
     }
 
     public AEvent deleteEvent(Long id) {

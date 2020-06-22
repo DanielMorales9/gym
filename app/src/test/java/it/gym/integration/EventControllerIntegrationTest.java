@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -223,6 +222,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         e.setStartTime(start);
         e.setEndTime(end);
         e.setExternal(false);
+        e.setMaxCustomers(courseSpec.getMaxCustomers());
         e.setId(courseSpec.getId());
         e.setName("course");
 
@@ -241,6 +241,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setEndTime(end);
         expected.setId(h.getId());
         expected.setSpecification(courseSpec);
+        expected.setMaxCustomers(courseSpec.getMaxCustomers());
         expectEvent(result, expected);
     }
 
@@ -297,7 +298,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(event.getId());
-        expected.setSpecification(courseSpec);
+        expected.setMaxCustomers(courseSpec.getMaxCustomers());
         expectEvent(result, expected);
         assertThat(reservationRepository.findAll().size()).isEqualTo(0);
         assertThat(sessionRepository.findAll().size()).isEqualTo(0);
@@ -321,7 +322,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setStartTime(start);
         expected.setEndTime(end);
         expected.setId(event.getId());
-        expected.setSpecification(courseSpec);
+        expected.setMaxCustomers(courseSpec.getMaxCustomers());
         expectEvent(result, expected);
     }
 }

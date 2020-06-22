@@ -171,12 +171,13 @@ public class Fixture {
     }
 
     public static CourseTrainingEvent createCourseEvent(long id, String name, Date startTime, Date endTime,
-                                                        CourseTrainingBundleSpecification specification) {
+                                                        ATrainingBundleSpecification specification) {
         CourseTrainingEvent course = new CourseTrainingEvent();
         course.setId(id);
         course.setStartTime(startTime);
         course.setEndTime(endTime);
         course.setName(name);
+        course.setMaxCustomers(specification.getMaxCustomers());
         course.setSpecification(specification);
         return course;
     }
