@@ -237,6 +237,9 @@ public class ReservationFacade {
         logger.info("Adding training session to reservation");
         res.setSession(session);
 
+        logger.info("Adding training event to reservation");
+        res.setEvent(evt);
+
         logger.info("Saving reservation");
         res = service.save(res);
 

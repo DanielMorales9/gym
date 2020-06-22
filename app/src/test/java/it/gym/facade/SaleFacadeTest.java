@@ -56,6 +56,10 @@ public class SaleFacadeTest {
     @MockBean
     private SalesLineItemService salesLineItemService;
 
+    @MockBean
+    @Qualifier("trainingSessionService")
+    private TrainingSessionService sessionService;
+
     @TestConfiguration
     static class SaleFacadeTestContextConfiguration {
 
