@@ -4,6 +4,7 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.*;
 import it.gym.repository.PurchaseOptionRepository;
+import it.gym.service.EventService;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
 import org.slf4j.Logger;
@@ -28,6 +29,9 @@ public class TrainingBundleSpecificationFacade {
     private TrainingBundleSpecificationService service;
 
     @Autowired
+    private EventService eventService;
+
+    @Autowired
     private PurchaseOptionRepository repository;
 
     @Autowired
@@ -39,11 +43,18 @@ public class TrainingBundleSpecificationFacade {
     }
 
     public void delete(ATrainingBundleSpecification spec) {
-        List<ATrainingBundle> bundles = bundleService.findBundlesBySpec(spec);
-        boolean isDeletable = bundles.isEmpty();
-        if (!isDeletable) {
+        boolean noBundles = bundleService.findBundlesBySpec(spec).isEmpty();
+
+        if (!noBundles) {
             throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso.");
         }
+
+        boolean noEvents = eventService.findEventsBySpec(spec).isEmpty();
+
+        if (!noEvents){
+            throw new BadRequestException("Non è possibile eliminare un pacchetto con eventi associati.");
+        }
+
         service.delete(spec);
     }
 
