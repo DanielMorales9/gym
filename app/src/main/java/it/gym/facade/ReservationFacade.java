@@ -232,7 +232,7 @@ public class ReservationFacade {
         session = sessionService.save(session);
 
         logger.info("Adding reservation to training event");
-        evt.addReservation(res);
+//        evt.addReservation(res);
 
         logger.info("Adding training session to reservation");
         res.setSession(session);

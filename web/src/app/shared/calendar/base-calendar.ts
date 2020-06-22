@@ -520,7 +520,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected deleteReservation(data) {
-        this.facade.deleteReservation(data, this.user.id)
+        this.facade.deleteReservation(data)
             .subscribe(res => {
                 this.snackBar.open('La Prenotazione è stata eliminata');
                 this.getEvents();
