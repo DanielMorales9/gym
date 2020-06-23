@@ -3,6 +3,7 @@ package it.gym.controller;
 import it.gym.facade.EventFacade;
 import it.gym.hateoas.EventAssembler;
 import it.gym.hateoas.EventResource;
+import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.AEvent;
 import it.gym.pojo.Event;
 import org.slf4j.Logger;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -142,7 +144,7 @@ public class EventController {
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
-    public List<AEvent> findAllEventsByInterval(@RequestParam(value = "startTime")
+    public List<EventResource> findAllEventsByInterval(@RequestParam(value = "startTime")
                                                 @DateTimeFormat(pattern="dd-MM-yyyy_HH:mm",
                                                         iso = DateTimeFormat.ISO.DATE_TIME)
                                                         Date startTime,
@@ -156,7 +158,8 @@ public class EventController {
                                                         Long customerId,
                                                 @RequestParam(required = false)
                                                         Long trainerId) {
-        return facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
+        List<AEvent> events = facade.findAllEventsByInterval(startTime, endTime, types, customerId, trainerId);
+        return new ArrayList<>(new EventAssembler().toCollectionModel(events).getContent());
     }
 
 }

@@ -2,6 +2,7 @@ package it.gym.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.TrainingBundleFacade;
+import it.gym.hateoas.SaleResource;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
@@ -31,8 +32,8 @@ public class TrainingBundleController {
 
     @GetMapping
     @ResponseBody
-    public Page<ATrainingBundle> findAll(Pageable pageable) {
-        return service.findAll(pageable);
+    public Page<TrainingBundleResource> findAll(Pageable pageable) {
+        return service.findAll(pageable).map(TrainingBundleResource::new);
     }
 
     @GetMapping(path = "/{id}")
@@ -49,16 +50,16 @@ public class TrainingBundleController {
 
     @GetMapping("/search")
     @ResponseBody
-    public Page<ATrainingBundle> search(@RequestParam(required = false) Long specId,
-                                        @RequestParam(required = false) Boolean expired,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy",
+    public Page<TrainingBundleResource> search(@RequestParam(required = false) Long specId,
+                                               @RequestParam(required = false) Boolean expired,
+                                               @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy",
                                                 iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                        Pageable pageable) {
+                                               Pageable pageable) {
         Page<ATrainingBundle> bundles;
 
          bundles = service.search(specId, expired, date, pageable);
 
-         return bundles;
+         return bundles.map(TrainingBundleResource::new);
     }
 
     @PatchMapping(path = "/{id}")
