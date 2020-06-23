@@ -45,4 +45,12 @@ public class OnDemandPurchaseOption extends APurchaseOption {
         return addMonths(bundle.getStartTime(), this.getNumber());
     }
 
+    @Override
+    public Double getPercentageStatus(ATrainingBundle trainingBundle) {
+        long startTime = trainingBundle.getStartTime().getTime();
+        long endTime = getEndDate(trainingBundle).getTime();
+        long date = new Date().getTime();
+        return (1.0 * (date - startTime)) / (endTime - startTime);
+    }
+
 }

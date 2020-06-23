@@ -50,4 +50,17 @@ public class TrainingBundleFacade {
         return service.save(bundle);
     }
 
+    public List<ATrainingBundle> getExpiredBundles() {
+        List<ATrainingBundle> notExpired = this.service.findBundlesByNotExpired();
+        List<ATrainingBundle> expired = notExpired
+                .stream().filter(ATrainingBundle::isExpired).collect(Collectors.toList());
+
+        expired.forEach(ATrainingBundle::terminate);
+        return this.service.saveAll(expired);
+
+    }
+
+    public List<ATrainingBundle> getActiveBundles() {
+        return this.service.findBundlesByNotExpired();
+    }
 }

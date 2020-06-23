@@ -38,4 +38,10 @@ public class BundlePurchaseOption extends APurchaseOption {
         return new Date();
     }
 
+    @Override
+    public Double getPercentageStatus(ATrainingBundle trainingBundle) {
+        int size = (trainingBundle.getSessions() == null) ? 0 : trainingBundle.getSessions().size();
+        return 1. * size / this.getNumber();
+    }
+
 }

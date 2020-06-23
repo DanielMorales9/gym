@@ -97,6 +97,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public abstract String getType();
     public abstract Boolean isDeletable();
 
+    public Double percentageStatus() {
+        return this.option.getPercentageStatus(this);
+    }
+
     @JsonIgnore
     public Boolean isExpired() {
         return this.getOption().isExpired(this);
