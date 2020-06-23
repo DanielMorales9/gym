@@ -19,7 +19,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
     private final Date payedDate;
     private final Date createdAt;
     private final List<Payment> payments;
-    private final SaleCustomer customer;
+    private final CustomerResource customer;
     private final List<SalesLineItemResource> salesLineItems;
 
 
@@ -33,7 +33,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
         payedDate = model.getPayedDate();
         totalPrice = model.getTotalPrice();
         payments = model.getPayments();
-        customer = new SaleCustomer(model.getCustomer());
+        customer = new CustomerResource(model.getCustomer());
         this.salesLineItems = getSalesLineItems(model);
     }
 
@@ -81,7 +81,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
         return payments;
     }
 
-    public SaleCustomer getCustomer() {
+    public CustomerResource getCustomer() {
         return customer;
     }
 
@@ -89,42 +89,16 @@ public class SaleResource extends RepresentationModel<SaleResource> {
         return salesLineItems;
     }
 
-    private static class SaleCustomer extends RepresentationModel<SaleCustomer> {
-
-        private final Long id;
-        private final String firstName;
-        private final String lastName;
-
-        public SaleCustomer(Customer customer) {
-            this.id = customer.getId();
-            this.firstName = customer.getFirstName();
-            this.lastName = customer.getLastName();
-        }
-
-        @JsonProperty("id")
-        public Long getCustomerId() {
-            return id;
-        }
-
-        public String getFirstName() {
-            return firstName;
-        }
-
-        public String getLastName() {
-            return lastName;
-        }
-    }
-
     private static class SalesLineItemResource extends RepresentationModel<SalesLineItemResource> {
 
         private final Long id;
         private final SalesLineItemTrainingBundle trainingBundle;
-        private final SalesLineItemTrainingBundleSpecification bundleSpecification;
+        private final InnerTrainingBundleSpecificationResource bundleSpecification;
 
         SalesLineItemResource(SalesLineItem model) {
             id = model.getId();
             trainingBundle = new SalesLineItemTrainingBundle(model.getTrainingBundle());
-            bundleSpecification = new SalesLineItemTrainingBundleSpecification(model.getBundleSpecification());
+            bundleSpecification = new InnerTrainingBundleSpecificationResource(model.getBundleSpecification());
         }
 
         @JsonProperty("id")
@@ -136,7 +110,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
             return trainingBundle;
         }
 
-        public SalesLineItemTrainingBundleSpecification getBundleSpecification() {
+        public InnerTrainingBundleSpecificationResource getBundleSpecification() {
             return bundleSpecification;
         }
     }
@@ -160,26 +134,6 @@ public class SaleResource extends RepresentationModel<SaleResource> {
 
         public SalesLineItemTrainingBundleOption getOption() {
             return option;
-        }
-
-        public String getName() {
-            return name;
-        }
-    }
-
-    private static class SalesLineItemTrainingBundleSpecification extends RepresentationModel<SalesLineItemTrainingBundleSpecification> {
-
-        private final Long id;
-        private final String name;
-
-        public SalesLineItemTrainingBundleSpecification(ATrainingBundleSpecification trainingBundleSpec) {
-            id = trainingBundleSpec.getId();
-            name = trainingBundleSpec.getName();
-        }
-
-        @JsonProperty("id")
-        public Long getBundleSpecId() {
-            return id;
         }
 
         public String getName() {
