@@ -1,6 +1,7 @@
 package it.gym.hateoas;
 
-import it.gym.model.AEvent;
+import it.gym.model.*;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
@@ -16,8 +17,18 @@ public class EventAssembler extends RepresentationModelAssemblerSupport<AEvent, 
     }
 
     @Override
-    public EventResource toModel(AEvent event) {
-        EventResource res =  new EventResource(event);
+    public @NotNull EventResource toModel(AEvent event) {
+
+        EventResource res;
+        switch (event.getType()) {
+            case "P": res = new TrainingEventResource((PersonalTrainingEvent) event); break;
+            case "C": res = new CourseTrainingEventResource((CourseTrainingEvent) event); break;
+            case "H": res = new HolidayResource((Holiday) event); break;
+            case "T": res = new TimeOffResource((TimeOff) event); break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + event.getType());
+        }
+
         res.add(linkTo(AEvent.class).slash("events").slash(event.getId()).withSelfRel());
         return res;
     }

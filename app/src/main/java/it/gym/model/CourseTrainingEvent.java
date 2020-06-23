@@ -51,7 +51,8 @@ public class CourseTrainingEvent extends ATrainingEvent {
     }
 
     public List<Reservation> getReservations() {
-        return reservations;
+        if (reservations != null) return reservations;
+        return new ArrayList<>();
     }
 
     @Override

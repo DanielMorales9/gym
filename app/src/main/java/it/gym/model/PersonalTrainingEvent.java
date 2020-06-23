@@ -8,6 +8,7 @@ import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -64,7 +65,10 @@ public class PersonalTrainingEvent extends ATrainingEvent {
     }
 
     public List<Reservation> getReservations() {
-        return Collections.singletonList(reservation);
+        if (reservation != null) {
+            return Collections.singletonList(reservation);
+        }
+        return new ArrayList<>();
     }
 
     public void setReservation(Reservation reservation) {

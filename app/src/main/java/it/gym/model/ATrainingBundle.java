@@ -243,4 +243,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
             return false;
         }
     }
+
+    public Date getExpiredAt() {
+        return expiredAt;
+    }
 }

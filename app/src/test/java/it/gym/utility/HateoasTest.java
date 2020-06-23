@@ -304,7 +304,12 @@ public class HateoasTest {
     }
 
     private static void expectEvent(ResultActions result, TimeOff event, String prefix) throws Exception {
-        expectAUser(result, event.getUser(), prefix+"user");
+        prefix = handlePrefix(prefix+"user");
+        AUser user = event.getUser();
+        result
+                .andExpect(jsonPath("$"+prefix+"id").value(user.getId()))
+                .andExpect(jsonPath("$"+prefix+"firstName").value(user.getFirstName()))
+                .andExpect(jsonPath("$"+prefix+"lastName").value(user.getLastName()));
     }
 
 

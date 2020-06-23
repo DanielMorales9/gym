@@ -117,7 +117,7 @@ public class EventFacadeTest {
         assertThat(evt.getName().equals("course")).isTrue();
         assertThat(evt.getStartTime()).isEqualTo(start);
         assertThat(evt.getEndTime()).isEqualTo(end);
-        assertThat(evt.getReservations()).isNull();
+        assertThat(evt.getReservations()).isEmpty();
         assertThat(evt.getType().equals(CourseTrainingEvent.TYPE));
 
     }
