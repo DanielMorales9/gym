@@ -22,7 +22,7 @@ public class TrainingBundleResource extends RepresentationModel<TrainingBundleRe
     private final Date endTime;
     private final String type;
     private final Boolean isDeletable;
-    private final CustomerResource customer;
+    private final UserResource customer;
     private final APurchaseOption option;
     private final InnerTrainingBundleSpecificationResource bundleSpec;
     private final List<InnerTrainingSessionResource> sessions;
@@ -39,7 +39,7 @@ public class TrainingBundleResource extends RepresentationModel<TrainingBundleRe
         this.endTime = model.getEndTime();
         this.type = model.getType();
         this.isDeletable = model.isDeletable();
-        this.customer = model.getCustomer() != null? new CustomerResource(model.getCustomer()) : null;
+        this.customer = model.getCustomer() != null? new UserResource(model.getCustomer()) : null;
         this.bundleSpec = model.getBundleSpec() != null ? new InnerTrainingBundleSpecificationResource(model.getBundleSpec()) : null;
         this.option = model.getOption();
         this.sessions = model.getSessions()
@@ -93,7 +93,7 @@ public class TrainingBundleResource extends RepresentationModel<TrainingBundleRe
         return isDeletable;
     }
 
-    public CustomerResource getCustomer() {
+    public UserResource getCustomer() {
         return customer;
     }
 

@@ -210,7 +210,6 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setEndTime(end);
         expected.setId(h.getId());
         expectEvent(result, expected);
-        expectAUser(result, trainer, "user");
     }
 
     @Test

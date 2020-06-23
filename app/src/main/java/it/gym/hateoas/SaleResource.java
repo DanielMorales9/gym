@@ -19,7 +19,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
     private final Date payedDate;
     private final Date createdAt;
     private final List<Payment> payments;
-    private final CustomerResource customer;
+    private final UserResource customer;
     private final List<SalesLineItemResource> salesLineItems;
 
 
@@ -33,7 +33,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
         payedDate = model.getPayedDate();
         totalPrice = model.getTotalPrice();
         payments = model.getPayments();
-        customer = new CustomerResource(model.getCustomer());
+        customer = new UserResource(model.getCustomer());
         this.salesLineItems = getSalesLineItems(model);
     }
 
@@ -81,7 +81,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
         return payments;
     }
 
-    public CustomerResource getCustomer() {
+    public UserResource getCustomer() {
         return customer;
     }
 
