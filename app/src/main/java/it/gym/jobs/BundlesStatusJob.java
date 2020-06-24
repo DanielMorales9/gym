@@ -34,7 +34,7 @@ public class BundlesStatusJob {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
 
-    @Scheduled(cron = "0 30 10 * * SUN", zone ="GMT+2:00")
+    @Scheduled(cron = "0 0 12 * * SUN", zone ="GMT+2:00")
     public void getBundleStatus() {
         logger.info("STARTED BundleStatus JOB");
         List<AUser> admins = userService.findAllAdmins();
