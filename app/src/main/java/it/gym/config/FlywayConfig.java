@@ -24,7 +24,7 @@ public class FlywayConfig {
     private static final String DB_MIGRATION_DEFAULT = "db/migration/default";
     public static final String DB_MIGRATION_TENANTS = "db/migration/tenants";
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Bean
     public Flyway flyway(DataSource dataSource) {

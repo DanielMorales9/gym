@@ -6,15 +6,19 @@ import it.gym.model.AUser;
 import it.gym.service.MailService;
 import it.gym.service.UserService;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
+@Transactional
 public class BundlesStatusJob {
 
     @Autowired
@@ -27,8 +31,12 @@ public class BundlesStatusJob {
     @Qualifier("mailService")
     private MailService mailService;
 
-    @Scheduled(cron = "0 30 13 * * ?", zone ="GMT+2:00")
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+
+    @Scheduled(cron = "0 30 10 * * SUN", zone ="GMT+2:00")
     public void getBundleStatus() {
+        logger.info("STARTED BundleStatus JOB");
         List<AUser> admins = userService.findAllAdmins();
         List<ATrainingBundle> expired = facade.getExpiredBundles();
         List<ATrainingBundle> activeBundles = facade.getActiveBundles();
@@ -37,14 +45,17 @@ public class BundlesStatusJob {
                 .filter(p -> p.percentageStatus() >= 90.0)
                 .collect(Collectors.toList());
 
-        String subject = "Stato dei pacchetti";
-        String body = makeBodyMessage(expired, aboutToExpire);
+        if (!expired.isEmpty() || !aboutToExpire.isEmpty()) {
 
-        admins.forEach(a -> {
-            String header = String.format("Gentile %s %s,\n\n", a.getFirstName(), a.getLastName());
-            mailService.sendSimpleMail(a.getEmail(), subject, header + body);
-        });
+            String subject = "Stato dei pacchetti";
+            String body = makeBodyMessage(expired, aboutToExpire);
 
+            admins.forEach(a -> {
+                String header = String.format("Gentile %s %s,\n\n", a.getFirstName(), a.getLastName());
+                mailService.sendSimpleMail(a.getEmail(), subject, header + body);
+            });
+        }
+        logger.info("FINISHED BundleStatus JOB");
     }
 
     @NotNull
