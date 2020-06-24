@@ -71,7 +71,11 @@ public class Sale implements Serializable, Eager<Sale> {
     }
 
     public boolean isPayed() {
-        return isPayed;
+        return isPayed && this.salesLineItems
+                .stream().map(SalesLineItem::getTrainingBundle)
+                .map(ATrainingBundle::isExpired)
+                .reduce(Boolean::logicalAnd)
+                .orElse(false);
     }
 
     public void setPayed(boolean payed) {
