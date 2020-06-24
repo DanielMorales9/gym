@@ -4,8 +4,6 @@ import it.gym.facade.TrainingSessionFacade;
 import it.gym.hateoas.TrainingSessionAssembler;
 import it.gym.hateoas.TrainingSessionResource;
 import it.gym.model.ATrainingSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,15 +23,12 @@ public class TrainingSessionController {
     @Autowired
     private TrainingSessionFacade facade;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-
 
     @GetMapping(path = "/{id}")
     @ResponseBody
     public ResponseEntity<TrainingSessionResource> findById(@PathVariable Long id) {
 
         ATrainingSession s = facade.findById(id);
-        logger.info(s.toString());
 
         return new ResponseEntity<>(new TrainingSessionAssembler().toModel(s), HttpStatus.OK);
     }
@@ -55,13 +50,13 @@ public class TrainingSessionController {
 
     @GetMapping
     @ResponseBody
-    public Page<ATrainingSession> getSessionsByCustomer(@RequestParam Long customerId,
-                                                        @RequestParam(required = false)
-                                                        @DateTimeFormat(pattern="dd-MM-yyyy",
-                                                                iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                Date date,
-                                                        Pageable pageable) {
-        return facade.findByCustomer(customerId, date, pageable);
+    public Page<TrainingSessionResource> getSessionsByCustomer(@RequestParam Long customerId,
+                                                               @RequestParam(required = false)
+                                                               @DateTimeFormat(pattern="dd-MM-yyyy",
+                                                                       iso = DateTimeFormat.ISO.DATE_TIME)
+                                                                       Date date,
+                                                               Pageable pageable) {
+        return facade.findByCustomer(customerId, date, pageable).map(TrainingSessionResource::new);
     }
 
 }

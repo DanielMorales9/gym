@@ -1,4 +1,4 @@
-import {Workout} from './bundle.class';
+import {Bundle, Workout} from './bundle.class';
 
 export class Session {
     id: number;
@@ -8,4 +8,5 @@ export class Session {
     startTime: Date;
     type: string;
     workouts: Workout[];
+    bundle: Bundle;
 }

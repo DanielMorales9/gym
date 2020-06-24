@@ -240,7 +240,7 @@ public class SaleFacadeTest {
         Sale sale = saleFacade.paySale(1L, 900.);
         assertThat(sale.getAmountPayed()).isEqualTo(900.0);
         assertThat(sale.getPayedDate()).isNotNull();
-        assertThat(sale.isPayed()).isTrue();
+        assertThat(sale.isPayed()).isFalse();
     }
 
     @Test

@@ -8,10 +8,12 @@ class InnerTrainingBundleSpecificationResource extends RepresentationModel<Inner
 
     private final Long id;
     private final String name;
+    private final String description;
 
     public InnerTrainingBundleSpecificationResource(ATrainingBundleSpecification trainingBundleSpec) {
         id = trainingBundleSpec.getId();
         name = trainingBundleSpec.getName();
+        description = trainingBundleSpec.getDescription();
     }
 
     @JsonProperty("id")
@@ -21,5 +23,9 @@ class InnerTrainingBundleSpecificationResource extends RepresentationModel<Inner
 
     public String getName() {
         return name;
+    }
+
+    public String getDescription() {
+        return description;
     }
 }

@@ -1,8 +1,6 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
-        <mat-panel-title [ngClass]="{
-                'red-light': isExpired(),
-                'blue-light': isNotActive()}">
+        <mat-panel-title [ngClass]="{'blue-light': isNotActive()}">
             <a (click)="goToInfo()">
                 {{bundle?.name || 'Loading...'}} - {{bundle?.customer.firstName}} {{bundle?.customer.lastName}}
             </a>

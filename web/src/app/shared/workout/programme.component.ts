@@ -11,6 +11,7 @@ import {forkJoin} from 'rxjs';
 import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {BaseComponent} from '../base-component';
+import {BundleEntity, BundleType} from '../model';
 
 
 @Component({
@@ -31,6 +32,9 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
     canDelete: boolean;
     canDeleteWorkout: boolean;
     canEditWorkout: boolean;
+    sessionType = BundleType;
+    sessionEntity = BundleEntity;
+    canAssignWorkout: boolean;
 
     constructor(private route: ActivatedRoute,
                 private facade: CalendarFacade,
@@ -60,6 +64,7 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
     private getPolicy() {
         this.canDeleteWorkout = this.policy.get('workout', 'canDelete');
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
+        this.canAssignWorkout = this.policy.get(this.sessionEntity[this.session.type], 'canAssignWorkout');
     }
 
     private findSessionById(sessionId: number) {
@@ -111,5 +116,11 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
             })
         ).subscribe(res => this.location.back(),
             err => this.snackBar.open(err.err.message));
+    }
+
+    assignWorkout() {
+        console.log(this.route.parent.parent);
+        this.router.navigate(['sessions', this.session.id, 'assignWorkout'],
+            {relativeTo: this.route.parent.parent});
     }
 }

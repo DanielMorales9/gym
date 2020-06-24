@@ -2,50 +2,97 @@
     <mat-card>
         <mat-card-header>
             <mat-card-title>
-                WODS
+                #{{session?.id}} - {{session?.bundle.name}}
             </mat-card-title>
         </mat-card-header>
         <mat-card-content>
             <div class="summary-info">
-                <mat-expansion-panel [class.mat-expansion-panel]="false" class='expansion-list'
-                                     *ngFor="let workout of session?.workouts">
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            {{workout?.name || 'Loading...'}}
-                        </mat-panel-title>
-                        <mat-panel-description class="panel-header-description">
-                            {{workout?.tag2}} {{workout?.tag3}}
-                        </mat-panel-description>
-                    </mat-expansion-panel-header>
-                    <div class="mat-ex-panel-body">
-                        <div style="margin-bottom: 8px;">
-                            <span>{{workout?.tag1 || 'Loading...'}}</span>
+                <div>
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{session?.type | map: sessionType}}
+                </span>
+                </div>
+                <div>
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-calendar"></mat-icon>
+                    Data:&nbsp;{{session?.startTime | date: 'dd/MM/yyyy'}}
+                </span>
+                </div>
+                <div>
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-hourglass-half"></mat-icon>
+                    Orario:&nbsp;{{session?.startTime | date: 'HH:mm'}} - {{session?.endTime | date: 'HH:mm'}}
+                </span>
+                </div>
+                <div>
+                <span class="green-light" *ngIf="session?.completed else notCompleted">
+                    <mat-icon fontSet="fas" fontIcon="fa-check-double"></mat-icon>&nbsp;Completato
+                </span>
+                </div>
+                <ng-container *ngIf="session?.workouts.length > 0 else noWorkout">
+                    <mat-expansion-panel [class.mat-expansion-panel]="false"
+                                         class='expansion-list'
+                                         *ngFor="let workout of session?.workouts">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                {{workout?.name || 'Loading...'}}
+                            </mat-panel-title>
+                            <mat-panel-description class="panel-header-description">
+                                {{workout?.tag2}} {{workout?.tag3}}
+                            </mat-panel-description>
+                        </mat-expansion-panel-header>
+                        <div class="mat-ex-panel-body">
+                            <div style="margin-bottom: 8px;">
+                                <span>{{workout?.tag1 || 'Loading...'}}</span>
+                            </div>
+                            <div class="panel-body-description">
+                                <span style="white-space: pre;" [innerHTML]="workout?.description"></span>
+                            </div>
                         </div>
-                        <div class="panel-body-description">
-                            <span style="white-space: pre;" [innerHTML]="workout?.description"></span>
-                        </div>
-                    </div>
-                    <div class="panel-actions">
-                        <button mat-button color="basic" *ngIf="canEditWorkout" (click)="editWorkout(workout)">
+                        <div class="panel-actions">
+                            <button mat-button color="basic" *ngIf="canEditWorkout" (click)="editWorkout(workout)">
                             <span>
                                 <mat-icon fontSet="fa" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
                             </span>
-                        </button>
-                        <button mat-button color="warn" *ngIf="canDeleteWorkout" (click)="deleteWorkout(workout)">
+                            </button>
+                            <button mat-button color="warn" *ngIf="canDeleteWorkout" (click)="deleteWorkout(workout)">
                             <span>
                                 <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
                             </span>
-                        </button>
-                    </div>
-                </mat-expansion-panel>
+                            </button>
+                        </div>
+                    </mat-expansion-panel>
+
+                </ng-container>
             </div>
         </mat-card-content>
         <mat-card-actions>
-            <button mat-button color="warn" (click)="deleteProgramme()" *ngIf="canDeleteWorkout">
+            <button mat-button color="warn" (click)="deleteProgramme()"
+                    *ngIf="canDeleteWorkout && session?.workouts.length>0">
                 <span>
                     <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina Programma
+                </span>
+            </button>
+            <button mat-button color="basic" (click)="assignWorkout()"
+                    *ngIf="canAssignWorkout">
+                <span>
+                    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Assegna Programma
                 </span>
             </button>
         </mat-card-actions>
     </mat-card>
 </div>
+
+<ng-template #notCompleted>
+<span class="red-light">
+    <mat-icon fontSet="fas" fontIcon="fa-ban"></mat-icon>&nbsp;Non Completato
+</span>
+</ng-template>
+
+
+<ng-template #noWorkout>
+<span>
+    <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Nessun Workout Assegnato
+</span>
+</ng-template>
+
