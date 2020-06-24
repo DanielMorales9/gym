@@ -19,9 +19,9 @@ import java.sql.SQLException;
         matchIfMissing = true)
 public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
-    private static Logger logger = LoggerFactory.getLogger(TenantConnectionProvider.class);
-    private static final String DEFAULT_TENANT = FlywayConfig.DEFAULT_SCHEMA;
-    private DataSource dataSource;
+    private static final Logger logger = LoggerFactory.getLogger(TenantConnectionProvider.class);
+    static final String DEFAULT_TENANT = "goodfellas";
+    private final DataSource dataSource;
 
     public TenantConnectionProvider(DataSource dataSource) {
         this.dataSource = dataSource;

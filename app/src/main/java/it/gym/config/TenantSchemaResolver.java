@@ -13,13 +13,15 @@ import org.springframework.stereotype.Component;
         matchIfMissing = true)
 public class TenantSchemaResolver implements CurrentTenantIdentifierResolver {
 
+    private static final String DEFAULT_SCHEMA = "goodfellas";
+
     @Override
     public String resolveCurrentTenantIdentifier() {
         String t =  TenantContext.getCurrentTenant();
         if(t!=null){
             return t;
         } else {
-            return FlywayConfig.DEFAULT_SCHEMA;
+            return DEFAULT_SCHEMA;
         }
     }
 

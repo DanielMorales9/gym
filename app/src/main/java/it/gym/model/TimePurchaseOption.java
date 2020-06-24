@@ -44,4 +44,16 @@ public class TimePurchaseOption extends APurchaseOption {
         return addMonths(bundle.getStartTime(), this.getNumber());
     }
 
+    @Override
+    public Double getPercentageStatus(ATrainingBundle trainingBundle) {
+        Date startDate = trainingBundle.getStartTime();
+        if (startDate == null) {
+            return 0.0;
+        }
+        long startTime = startDate.getTime();
+        long endTime = getEndDate(trainingBundle).getTime();
+        long date = new Date().getTime();
+        return (1.0 * (date - startTime)) / (endTime - startTime);
+    }
+
 }

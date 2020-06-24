@@ -108,8 +108,8 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
                     @CacheEvict(value = "bundles-search", allEntries = true)
             }
     )
-    public void saveAll(List<ATrainingBundle> bundles) {
-        repository.saveAll(bundles);
+    public List<ATrainingBundle> saveAll(List<ATrainingBundle> bundles) {
+        return repository.saveAll(bundles);
     }
 
 
@@ -131,6 +131,10 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
 
     public Page<ATrainingBundle> findBundlesByNotExpired(Pageable pageable) {
         return repository.findBundlesByExpiredAtNull(pageable);
+    }
+
+    public List<ATrainingBundle> findBundlesByNotExpired() {
+        return repository.findBundlesByExpiredAtNull();
     }
 
     public Page<ATrainingBundle> findBundlesByExpired(Pageable pageable) {
