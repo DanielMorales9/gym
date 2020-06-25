@@ -44,7 +44,9 @@ public class ReservationFacade {
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
         return customer.getTrainingBundles()
-                .stream().filter(b -> b.getId().equals(bundleId))
+                .stream()
+                .filter(b -> !b.isExpired())
+                .filter(b -> b.getId().equals(bundleId))
                 .findAny()
                 .orElseThrow(() -> new BadRequestException("Non possiedi questo pacchetto"));
     }
@@ -184,7 +186,8 @@ public class ReservationFacade {
         return customer
                 .getTrainingBundles()
                 .stream()
-                .filter(ATrainingBundle::isExpired).collect(Collectors.toList());
+                .filter(ATrainingBundle::isExpired)
+                .collect(Collectors.toList());
     }
 
     public boolean isNotOnTime(Date startTime, Gym gym) {

@@ -52,7 +52,8 @@ public class CustomerService implements ICrudService<Customer, Long> {
         else {
             bundles = customer.getTrainingBundles()
                     .stream()
-                    .filter(a -> a.isExpired() == expired).collect(Collectors.toList());
+                    .filter(a -> a.isExpired() == expired)
+                    .collect(Collectors.toList());
         }
 
         Stream<ATrainingBundle> stream = bundles.stream();
