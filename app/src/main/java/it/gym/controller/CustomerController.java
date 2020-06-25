@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/customers")
@@ -39,14 +40,13 @@ public class CustomerController {
     @ResponseBody
     public List<ATrainingBundle> findBundles(@PathVariable Long id,
                                              @RequestParam(required = false) Long specId) {
-        List<ATrainingBundle> bundles = service.findById(id).getTrainingBundles();
+        Stream<ATrainingBundle> bundles = service.findById(id).getTrainingBundles()
+                .stream().filter(a -> !a.isExpired());
+
         if (specId != null) {
-            bundles = bundles
-                .stream()
-                .filter(b -> b.getBundleSpec().getId().equals(specId))
-                .collect(Collectors.toList());
+            bundles = bundles.filter(b -> b.getBundleSpec().getId().equals(specId));
         }
-        return bundles;
+        return bundles.collect(Collectors.toList());
     }
 
 }
