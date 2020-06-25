@@ -45,18 +45,17 @@ public class CustomerService implements ICrudService<Customer, Long> {
 
     public Page<ATrainingBundle> findBundles(Long id, Boolean expired, String name, Date date, Pageable pageable) {
         Customer customer = this.findById(id);
-        List<ATrainingBundle> bundles, prev;
+        List<ATrainingBundle> bundles;
         if (expired == null) {
-            bundles = customer.getCurrentTrainingBundles();
-            prev = customer.getPreviousTrainingBundles();
-            bundles.addAll(prev);
-        }
-        else if (expired){
-            bundles = customer.getPreviousTrainingBundles();
+            bundles = customer.getTrainingBundles();
         }
         else {
-            bundles = customer.getCurrentTrainingBundles();
+            bundles = customer.getTrainingBundles()
+                    .stream()
+                    .filter(a -> a.isExpired() == expired)
+                    .collect(Collectors.toList());
         }
+
         Stream<ATrainingBundle> stream = bundles.stream();
         if (name != null) {
             stream = stream.filter(b -> b.getName().contains(name));

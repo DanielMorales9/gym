@@ -156,7 +156,7 @@ public class SaleFacadeTest {
     @Test
     public void deleteSaleById() {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
-        customer.setCurrentTrainingBundles(Collections.emptyList());
+        customer.setTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
 
         List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
@@ -169,7 +169,7 @@ public class SaleFacadeTest {
     @Test(expected = BadRequestException.class)
     public void deleteSaleByIdNonDeletable() {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
-        customer.setCurrentTrainingBundles(Collections.emptyList());
+        customer.setTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
 
         List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);

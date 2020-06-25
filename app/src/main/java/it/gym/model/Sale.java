@@ -1,6 +1,5 @@
 package it.gym.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
@@ -199,7 +198,7 @@ public class Sale implements Serializable, Eager<Sale> {
     }
 
     public boolean addBundlesToCustomersCurrentBundles() {
-        return this.customer.addToCurrentTrainingBundles(
+        return this.customer.addToTrainingBundles(
                 this.salesLineItems.stream()
                         .map(SalesLineItem::getTrainingBundle)
                         .collect(Collectors.toList()));
@@ -210,9 +209,9 @@ public class Sale implements Serializable, Eager<Sale> {
                 .stream()
                 .map(SalesLineItem::getTrainingBundle)
                 .collect(Collectors.toList());
-        if (trainingBundles.isEmpty() || this.getCustomer().getCurrentTrainingBundles().isEmpty())
+        if (trainingBundles.isEmpty() || this.getCustomer().getTrainingBundles().isEmpty())
             return;
-        this.getCustomer().getCurrentTrainingBundles().removeAll(trainingBundles);
+        this.getCustomer().getTrainingBundles().removeAll(trainingBundles);
     }
 
     @PrePersist

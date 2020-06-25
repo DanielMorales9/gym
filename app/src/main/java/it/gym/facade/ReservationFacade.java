@@ -43,8 +43,9 @@ public class ReservationFacade {
     @Autowired private MailService mailService;
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
-        return customer.getCurrentTrainingBundles()
-                .stream().filter(b -> b.getId().equals(bundleId))
+        return customer.getTrainingBundles()
+                .stream()
+                .filter(b -> b.getId().equals(bundleId))
                 .findAny()
                 .orElseThrow(() -> new BadRequestException("Non possiedi questo pacchetto"));
     }
@@ -125,9 +126,8 @@ public class ReservationFacade {
     private void checkBundleIsReservable(Customer customer, ATrainingBundle bundle) {
         if (bundle.isExpired()) {
             bundle.terminate();
-            List<ATrainingBundle> expiredBundles = deleteExpiredBundles(customer);
-            expiredBundles.forEach(trainingBundle -> trainingBundle.setExpiredAt(new Date()));
-            customer.addToPreviousTrainingBundles(expiredBundles);
+            List<ATrainingBundle> expiredBundles = getExpiredBundles(customer);
+            expiredBundles.forEach(ATrainingBundle::terminate);
             customerService.save(customer);
             sendExpiredBundleEmail(customer, bundle);
 
@@ -180,14 +180,13 @@ public class ReservationFacade {
                 checkIsReservedOnTime, checkIsPast, checkNumEvents);
     }
 
-    private List<ATrainingBundle> deleteExpiredBundles(Customer customer) {
+    private List<ATrainingBundle> getExpiredBundles(Customer customer) {
         logger.info("Checking whether the bundles are expired");
-        List<ATrainingBundle> expiredBundles = customer
-                .getCurrentTrainingBundles()
+        return customer
+                .getTrainingBundles()
                 .stream()
-                .filter(ATrainingBundle::isExpired).collect(Collectors.toList());
-        expiredBundles.forEach(customer::deleteBundle);
-        return expiredBundles;
+                .filter(ATrainingBundle::isExpired)
+                .collect(Collectors.toList());
     }
 
     public boolean isNotOnTime(Date startTime, Gym gym) {
@@ -231,9 +230,6 @@ public class ReservationFacade {
 
         logger.info("Saving created session");
         session = sessionService.save(session);
-
-        logger.info("Adding reservation to training event");
-//        evt.addReservation(res);
 
         logger.info("Adding training session to reservation");
         res.setSession(session);

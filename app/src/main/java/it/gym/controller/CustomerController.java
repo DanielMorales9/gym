@@ -1,9 +1,6 @@
 package it.gym.controller;
 
-import it.gym.hateoas.TrainingBundleAssembler;
-import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
-import it.gym.model.Customer;
 import it.gym.service.CustomerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,14 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @RestController
 @RequestMapping("/customers")
@@ -45,14 +40,13 @@ public class CustomerController {
     @ResponseBody
     public List<ATrainingBundle> findBundles(@PathVariable Long id,
                                              @RequestParam(required = false) Long specId) {
-        List<ATrainingBundle> bundles = service.findById(id).getCurrentTrainingBundles();
+        Stream<ATrainingBundle> bundles = service.findById(id).getTrainingBundles()
+                .stream().filter(a -> !a.isExpired());
+
         if (specId != null) {
-            bundles = bundles
-                .stream()
-                .filter(b -> b.getBundleSpec().getId().equals(specId))
-                .collect(Collectors.toList());
+            bundles = bundles.filter(b -> b.getBundleSpec().getId().equals(specId));
         }
-        return bundles;
+        return bundles.collect(Collectors.toList());
     }
 
 }

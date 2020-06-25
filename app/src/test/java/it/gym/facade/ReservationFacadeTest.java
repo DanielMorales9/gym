@@ -15,6 +15,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -83,7 +84,7 @@ public class ReservationFacadeTest {
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
         APurchaseOption option = spec.getOptions().get(0);
         PersonalTrainingBundle bundle = createPersonalBundle(1L, spec, option);
-        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+        customer.addToTrainingBundles(Collections.singletonList(bundle));
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Event event = new Event();
@@ -547,7 +548,7 @@ public class ReservationFacadeTest {
             PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createPersonalBundle(1L, spec, option);
-            customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+            customer.addToTrainingBundles(Collections.singletonList(bundle));
 
             start = getNextMonday();
             end = addHours(start, 1);
@@ -616,7 +617,7 @@ public class ReservationFacadeTest {
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createCourseBundle(1L, start, spec, option);
             if (addToCurrentCustomersBundle)
-                customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+                customer.addToTrainingBundles(Collections.singletonList(bundle));
 
             event = createCourseEvent(1L, "test", start, end, spec);
         }

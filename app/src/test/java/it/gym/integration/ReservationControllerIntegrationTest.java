@@ -327,7 +327,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 reservation.setSession(session);
             }
 
-            customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+            customer.addToTrainingBundles(Collections.singletonList(bundle));
             customer = userRepository.save(customer);
 
             if (hasEvent) {
@@ -342,7 +342,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             sessionRepository.deleteAll();
 
             gymRepository.deleteAll();
-            customer.setCurrentTrainingBundles(null);
+            customer.setTrainingBundles(null);
             userRepository.deleteAll();
 
             bundleRepository.deleteAll();
@@ -440,7 +440,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             }
             bundle = bundleRepository.save(bundle);
 
-            customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+            customer.addToTrainingBundles(Collections.singletonList(bundle));
             customer = userRepository.save(customer);
 
             if (hasEvent) {
@@ -457,7 +457,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             eventRepository.deleteAll();
 
             gymRepository.deleteAll();
-            customer.setCurrentTrainingBundles(null);
+            customer.setTrainingBundles(null);
             userRepository.deleteAll();
 
             bundleRepository.deleteAll();
