@@ -58,14 +58,14 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         Long optionId = personalSpec.getOptions().get(0).getId();
         personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle(optionId);
         personal = bundleRepository.save(personal);
-        customer.setCurrentTrainingBundles(Collections.singletonList(personal));
+        customer.setTrainingBundles(Collections.singletonList(personal));
         customer = repository.save(customer);
     }
 
 
     @After
     public void after() {
-        customer.setCurrentTrainingBundles(null);
+        customer.setTrainingBundles(null);
         customer = repository.save(customer);
         bundleRepository.deleteAll();
         bundleSpecRepository.deleteAll();

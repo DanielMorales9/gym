@@ -136,7 +136,7 @@ public class SaleTest {
 
         List<ATrainingBundle> expected = sale.getSalesLineItems().stream()
                 .map(SalesLineItem::getTrainingBundle).collect(Collectors.toList());
-        assertThat(sale.getCustomer().getCurrentTrainingBundles()).isEqualTo(expected);
+        assertThat(sale.getCustomer().getTrainingBundles()).isEqualTo(expected);
     }
 
     @Test
@@ -150,7 +150,7 @@ public class SaleTest {
         sale.addBundlesToCustomersCurrentBundles();
         sale.removeBundlesFromCustomersCurrentBundles();
 
-        assertThat(sale.getCustomer().getCurrentTrainingBundles()).isEmpty();
+        assertThat(sale.getCustomer().getTrainingBundles()).isEmpty();
     }
 
     private Date getDate() {

@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -237,7 +236,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         Customer c = customer;
         expectSaleUser(result, c, "customer");
-        c.setCurrentTrainingBundles(null);
+        c.setTrainingBundles(null);
         userRepository.save(c);
 
     }

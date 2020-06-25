@@ -20,12 +20,13 @@ public interface UserRepository extends JpaRepository<AUser, Long> {
     @Query(value =
             "select u.* " +
             "from events as e, bundle_specs as bs, " +
-            "       bundles as b, users as u, current_users_bundles as c " +
+            "       bundles as b, users as u, users_bundles as c " +
             "where e.event_id = :eventId " +
             "   and e.spec_id = bs.bundle_spec_id " +
             "   and b.bundle_spec_bundle_spec_id = bs.bundle_spec_id " +
             "   and b.bundle_id = c.bundle_id " +
-            "   and c.user_id = u.user_id",
+            "   and c.user_id = u.user_id " +
+            "   and b.expired_at is null",
             nativeQuery=true)
     List<AUser> findUserByEventId(Long eventId);
 

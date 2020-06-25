@@ -25,22 +25,13 @@ public class Customer extends AUser {
     private Integer weight;
 
     @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="current_users_bundles",
+    @JoinTable(name="users_bundles",
             joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
             inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
-    private List<ATrainingBundle> currentTrainingBundles;
-
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="previous_users_bundles",
-            joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
-            inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
-    @EqualsAndHashCode.Exclude
-    @ToString.Exclude
-    @JsonIgnore
-    private List<ATrainingBundle> previousTrainingBundles;
+    private List<ATrainingBundle> trainingBundles;
 
     public Integer getWeight() {
         return weight;
@@ -58,47 +49,27 @@ public class Customer extends AUser {
         this.height = height;
     }
 
-    @JsonIgnore
-    public List<ATrainingBundle> getPreviousTrainingBundles() {
-        if (previousTrainingBundles == null)
-            this.previousTrainingBundles = new ArrayList<>();
-        return previousTrainingBundles;
-    }
-
-    public void setPreviousTrainingBundles(List<ATrainingBundle> previousTrainingBundles) {
-        this.previousTrainingBundles = previousTrainingBundles;
-    }
-
-    public List<ATrainingBundle> getCurrentTrainingBundles() {
-        if (currentTrainingBundles == null)
-            this.currentTrainingBundles = new ArrayList<>();
-        return currentTrainingBundles;
+    public List<ATrainingBundle> getTrainingBundles() {
+        if (trainingBundles == null)
+            this.trainingBundles = new ArrayList<>();
+        return trainingBundles;
     }
 
 
-    public void setCurrentTrainingBundles(List<ATrainingBundle> currentTrainingBundles) {
-        this.currentTrainingBundles = currentTrainingBundles;
+    public void setTrainingBundles(List<ATrainingBundle> currentTrainingBundles) {
+        this.trainingBundles = currentTrainingBundles;
     }
 
-    public boolean addToCurrentTrainingBundles(List<ATrainingBundle> bundles) {
-        if (this.currentTrainingBundles == null) {
-            this.currentTrainingBundles = new ArrayList<>();
+    public boolean addToTrainingBundles(List<ATrainingBundle> bundles) {
+        if (this.trainingBundles == null) {
+            this.trainingBundles = new ArrayList<>();
         }
-        return this.currentTrainingBundles.addAll(bundles);
+        return this.trainingBundles.addAll(bundles);
     }
 
     public void deleteBundle(ATrainingBundle bundle) {
-        if (this.currentTrainingBundles != null) this.currentTrainingBundles.remove(bundle);
-        if (this.previousTrainingBundles != null) this.previousTrainingBundles.remove(bundle);
+        if (this.trainingBundles != null) this.trainingBundles.remove(bundle);
     }
-
-    public void addToPreviousTrainingBundles(List<ATrainingBundle> bundles) {
-        if (this.previousTrainingBundles == null) {
-            this.previousTrainingBundles = new ArrayList<>();
-        }
-        this.previousTrainingBundles.addAll(bundles);
-    }
-
     @Override
     public List<Role> defaultRoles() {
         return Collections.singletonList(
@@ -112,8 +83,8 @@ public class Customer extends AUser {
 
     @Override
     public boolean isActive() {
-        if (this.currentTrainingBundles != null)
-            return !this.currentTrainingBundles.isEmpty();
+        if (this.trainingBundles != null)
+            return !this.trainingBundles.isEmpty();
         else return false;
     }
 }
