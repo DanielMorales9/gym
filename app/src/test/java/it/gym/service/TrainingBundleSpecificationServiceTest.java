@@ -55,6 +55,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void findById() {
+<<<<<<< HEAD
         List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
 
@@ -62,6 +63,18 @@ public class TrainingBundleSpecificationServiceTest {
         ATrainingBundleSpecification u = this.service.findById(1L);
 
         assertThat(u).isEqualTo(spec);
+=======
+        Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> {
+            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+            PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+            return Optional.of(personalBundleSpec);
+        });
+        ATrainingBundleSpecification u = this.service.findById(1L);
+
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+        assertThat(u).isEqualTo(personalBundleSpec);
+>>>>>>> cb92586... bundle state
         Mockito.verify(repository).findById(1L);
     }
 

@@ -211,7 +211,7 @@ public class SaleFacadeTest {
 
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
-        Sale sale = saleFacade.paySale(1L, 11.);
+        saleFacade.paySale(1L, 11.);
     }
 
     @Test(expected = BadRequestException.class)
@@ -224,7 +224,11 @@ public class SaleFacadeTest {
         mockSale.setCompleted(true);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         mockSaveMethod();
+<<<<<<< HEAD
         Sale sale = saleFacade.paySale(1L, 1000.);
+=======
+        saleFacade.paySale(1L, 1000.);
+>>>>>>> cb92586... bundle state
     }
 
     @Test
@@ -267,9 +271,9 @@ public class SaleFacadeTest {
     }
 
     public static SalesLineItem addSalesLineItem(Sale mockSale, ATrainingBundleSpecification specs) {
-        Long optionId = specs.getOptions().get(0).getId();
+        APurchaseOption option = specs.getOptions().get(0);
 
-        ATrainingBundle bundle = specs.createTrainingBundle(optionId);
+        ATrainingBundle bundle = specs.createTrainingBundle(option);
         return mockSale.addSalesLineItem(bundle);
     }
 

@@ -70,7 +70,11 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         personalSpec = bundleSpecRepository.save(personalSpec);
         courseSpec = bundleSpecRepository.save(courseSpec);
         APurchaseOption option = courseSpec.getOptions().get(0);
+<<<<<<< HEAD
         course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
+=======
+        CourseTrainingBundle course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
+>>>>>>> cb92586... bundle state
         course = bundleRepository.save(course);
 
         sli1 = sale.addSalesLineItem(course);
@@ -187,8 +191,8 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         String path = "/sales/addSalesLineItem";
 
         mockMvc.perform(get(path)
-                        .param("bundleSpecId", courseSpec.getId().toString())
-                        .param("saleId", sale.getId().toString()))
+                .param("bundleSpecId", courseSpec.getId().toString())
+                .param("saleId", sale.getId().toString()))
                 .andExpect(status().isBadRequest());
     }
 

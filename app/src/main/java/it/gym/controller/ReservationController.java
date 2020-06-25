@@ -26,6 +26,24 @@ public class ReservationController {
 
     @Autowired private ReservationFacade facade;
 
+<<<<<<< HEAD
+=======
+    @PostMapping(path = "/{gymId}/isAvailable")
+    @Deprecated
+    // TODO Deprecated
+    public ResponseEntity<String> isAvailable(@PathVariable Long gymId,
+                                              @RequestParam("customerId") Long customerId,
+                                              @RequestParam("bundleId") Long bundleId,
+                                              @RequestBody Event event,
+                                              Principal principal) {
+
+        Role r = facade.getRoleFromPrincipal(principal);
+        facade.isAvailable(gymId, customerId, bundleId, event, r.getName());
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+>>>>>>> cb92586... bundle state
     @PostMapping(path = "/{gymId}")
     public ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
                                                                            @RequestParam("customerId") Long customerId,

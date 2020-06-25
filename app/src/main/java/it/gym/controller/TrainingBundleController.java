@@ -62,13 +62,15 @@ public class TrainingBundleController {
          return bundles.map(TrainingBundleResource::new);
     }
 
+    //TODO add activate method
+
     @PatchMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
                                                         HttpServletRequest request) throws IOException {
         ATrainingBundle bundle = service.findById(id);
         bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
         if (bundle.isExpired()) {
-            bundle.terminate();
+            bundle.completeBundle();
         }
         bundle = service.save(bundle);
         return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));

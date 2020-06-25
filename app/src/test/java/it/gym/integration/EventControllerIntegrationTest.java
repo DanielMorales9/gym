@@ -16,9 +16,10 @@ import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.expectEvent;
 import static it.gym.utility.HateoasTest.expectAUser;
-import static org.apache.commons.lang3.time.DateUtils.*;
+import static it.gym.utility.HateoasTest.expectEvent;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,10 +58,10 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", options);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);
-        Long optionId = personalSpec.getOptions().get(0).getId();
-        ATrainingBundle personalBundle = personalSpec.createTrainingBundle(optionId);
+        APurchaseOption option = personalSpec.getOptions().get(0);
+        ATrainingBundle personalBundle = personalSpec.createTrainingBundle(option);
         personalBundle = bundleRepository.save(personalBundle);
-        APurchaseOption option = courseSpec.getOptions().get(0);
+        option = courseSpec.getOptions().get(0);
         courseBundle = createCourseBundle(1L, start, courseSpec, option);
         courseBundle = bundleRepository.save(courseBundle);
     }

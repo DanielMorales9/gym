@@ -1,5 +1,9 @@
 import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+<<<<<<< HEAD
 import { MatDialog } from '@angular/material/dialog';
+=======
+import {MatDialog} from '@angular/material';
+>>>>>>> cb92586... bundle state
 import {BundleType, BundleTypeConstant} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
 

@@ -13,7 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+<<<<<<< HEAD
 import java.util.Collections;
+=======
+>>>>>>> cb92586... bundle state
 import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;

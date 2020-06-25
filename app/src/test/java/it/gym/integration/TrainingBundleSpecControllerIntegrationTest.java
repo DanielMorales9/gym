@@ -95,10 +95,9 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Test
     public void deletePersonalBundleSpecId_throwException() throws Exception {
-        APurchaseOption purchaseOption = personalBundleSpec.getOptions().get(0);
-        Long optionId = purchaseOption.getId();
-        logger.info(purchaseOption.toString());
-        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle(optionId);
+        APurchaseOption option = personalBundleSpec.getOptions().get(0);
+        logger.info(option.toString());
+        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle(option);
         bundleRepository.save(bundle);
         mockMvc.perform(delete("/bundleSpecs/" + personalBundleSpec.getId()))
                 .andExpect(status().isBadRequest());
@@ -134,8 +133,8 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         PersonalTrainingEvent evt = createPersonalEvent(1L, "course", start, end);
-        Long optionId = personalBundleSpec.getOptions().get(0).getId();
-        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle(optionId);
+        APurchaseOption option = personalBundleSpec.getOptions().get(0);
+        ATrainingBundle bundle = personalBundleSpec.createTrainingBundle(option);
         ATrainingSession session = bundle.createSession(evt);
         session.setCompleted(true);
         bundle.addSession(session);

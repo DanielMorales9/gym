@@ -148,9 +148,14 @@ export class AdminHourModalComponent extends BaseCalendarModal implements OnInit
                 eventName: this.name.value,
                 type: 'course',
                 userId: this.modalData.userId,
+<<<<<<< HEAD
                 meta: this.course.value.id,
                 external: !!this.external.value,
                 maxCustomers: this.maxCustomers.value
+=======
+                meta: this.course.value,
+                external: !!this.external.value
+>>>>>>> cb92586... bundle state
             });
         } else if (this.event.value === 'chiusura') {
             this.close({

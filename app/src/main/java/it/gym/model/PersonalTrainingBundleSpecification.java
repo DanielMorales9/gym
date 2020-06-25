@@ -22,13 +22,14 @@ public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecific
     }
 
     @Override
-    public ATrainingBundle createTrainingBundle(Long optionId) {
+    public ATrainingBundle createTrainingBundle(APurchaseOption option) {
         PersonalTrainingBundle ptb = new PersonalTrainingBundle();
         ptb.setName(this.getName());
         ptb.setBundleSpec(this);
         ptb.setUnlimitedDeletions(this.getUnlimitedDeletions());
         ptb.setNumDeletions(this.getNumDeletions());
-        setOption(optionId, ptb);
+        ptb.setOption(option);
+        ptb.initState();
         return ptb;
     }
 

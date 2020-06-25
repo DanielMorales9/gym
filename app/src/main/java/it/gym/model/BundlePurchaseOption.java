@@ -35,7 +35,7 @@ public class BundlePurchaseOption extends APurchaseOption {
 
     @Override
     public Date getEndDate(ATrainingBundle bundle) {
-        return new Date();
+        return null;
     }
 
     @Override

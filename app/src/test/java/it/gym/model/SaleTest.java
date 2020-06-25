@@ -8,7 +8,12 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.*;
 import java.util.stream.Collectors;
 
+<<<<<<< HEAD
 import static it.gym.utility.Fixture.*;
+=======
+import static it.gym.utility.Fixture.createCourseBundleSpec;
+import static it.gym.utility.Fixture.createSingletonTimePurchaseOptions;
+>>>>>>> cb92586... bundle state
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
@@ -162,8 +167,7 @@ public class SaleTest {
     private SalesLineItem addPersonalToSalesLineItem(Sale sale) {
         ATrainingBundleSpecification spec = createPersonalBundleSpecification();
         APurchaseOption option = spec.getOptions().get(0);
-        Long optionId = spec.getOptions().get(0).getId();
-        ATrainingBundle a = spec.createTrainingBundle(optionId);
+        ATrainingBundle a = spec.createTrainingBundle(option);
         a.setOption(option);
         return sale.addSalesLineItem(a);
     }

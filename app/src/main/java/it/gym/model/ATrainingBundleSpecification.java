@@ -79,24 +79,7 @@ public abstract class  ATrainingBundleSpecification implements Serializable, Eag
 
     public abstract String getType();
 
-    public abstract ATrainingBundle createTrainingBundle(Long optionId);
-
-    public void setOption(Long optionId, ATrainingBundle bundle) {
-        List<APurchaseOption> options = this.getOptions();
-        if (options == null) {
-            throw new BadRequestException("L'opzione indicata non è disponibile");
-        }
-        Optional<APurchaseOption> op = options
-                .stream()
-                .filter(o -> o.getId().equals(optionId))
-                .findFirst();
-
-        if (!op.isPresent()) {
-            throw new BadRequestException("L'opzione indicata non è disponibile");
-        }
-
-        bundle.setOption(op.get());
-    }
+    public abstract ATrainingBundle createTrainingBundle(APurchaseOption option);
 
     public Integer getNumDeletions() {
         return numDeletions;

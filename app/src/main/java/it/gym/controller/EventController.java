@@ -85,6 +85,36 @@ public class EventController {
 
     }
 
+<<<<<<< HEAD
+=======
+    @PostMapping(path = "/{gymId}/holiday/isAvailable")
+    @Deprecated
+    // TODO Deprecated
+    public ResponseEntity<String> isHolidayAvailable(@PathVariable Long gymId,
+                                                     @RequestBody Event event) {
+        logger.info("is holiday available");
+
+        facade.isAvailable(gymId, event);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+    @PostMapping(path = "/{gymId}/canEdit")
+    @Deprecated
+    // TODO Deprecated
+    public ResponseEntity<String> canEditEvent(@PathVariable Long gymId,
+                                               @RequestBody Event event) {
+        logger.info("canEdit event");
+
+        facade.canEdit(gymId, event);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
+
+
+>>>>>>> cb92586... bundle state
     @PostMapping(path = "/{gymId}/timeOff")
     public ResponseEntity<EventResource> createTimeOff(@PathVariable Long gymId,
                                                        @RequestParam Long trainerId,
@@ -138,7 +168,24 @@ public class EventController {
 
         AEvent timeOff = facade.editEvent(gymId, id, event);
 
+<<<<<<< HEAD
         return ResponseEntity.ok(new EventAssembler().toModel(timeOff));
+=======
+        return ResponseEntity.ok(new EventAssembler().toResource(timeOff));
+
+    }
+
+    @PostMapping(path = "/{gymId}/timeOff/isAvailable")
+    @Deprecated
+    // TODO Deprecated
+    public ResponseEntity<String> isTimeOffAvailable(@PathVariable Long gymId,
+                                                     @RequestBody Event event) {
+        logger.info("isAvailable timeOff");
+
+        facade.isAvailable(gymId, event);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+>>>>>>> cb92586... bundle state
 
     }
 

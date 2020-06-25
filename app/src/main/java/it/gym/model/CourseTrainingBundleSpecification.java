@@ -37,13 +37,14 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     }
 
     @Override
-    public ATrainingBundle createTrainingBundle(Long optionId) {
+    public ATrainingBundle createTrainingBundle(APurchaseOption option) {
         CourseTrainingBundle ctb = new CourseTrainingBundle();
         ctb.setName(this.getName());
         ctb.setBundleSpec(this);
         ctb.setUnlimitedDeletions(this.getUnlimitedDeletions());
         ctb.setNumDeletions(this.getNumDeletions());
-        setOption(optionId, ctb);
+        ctb.setOption(option);
+        ctb.initState();
         return ctb;
     }
 

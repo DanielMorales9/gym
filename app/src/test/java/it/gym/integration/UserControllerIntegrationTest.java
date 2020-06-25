@@ -125,10 +125,15 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
 
         spec = bundleSpecRepository.save(spec);
-        Long optionId = spec.getOptions().get(0).getId();
+        APurchaseOption option = spec.getOptions().get(0);
 
+<<<<<<< HEAD
         ATrainingBundle bundle = spec.createTrainingBundle(optionId);
         customer.addToTrainingBundles(Collections.singletonList(bundle));
+=======
+        ATrainingBundle bundle = spec.createTrainingBundle(option);
+        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+>>>>>>> cb92586... bundle state
         customer = repository.save(customer);
         mockMvc.perform(delete("/users/" + customer.getId()))
                 .andExpect(status().isBadRequest());

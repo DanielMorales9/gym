@@ -28,7 +28,7 @@ import java.util.Objects;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="bundle_type", discriminatorType=DiscriminatorType.STRING, length=1)
 @Data
-@Generated //exclude coverage analysis on generated methods
+@Generated //exclude coverage analyson generated methods
 public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Serializable, Eager<ATrainingBundle> {
 
     @Id
@@ -78,6 +78,10 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @JoinColumn(name = "option_id")
     private APurchaseOption option;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingBundle")
+    @OrderBy("id")
+    private List<ABundleState> states;
+
     public Date getEndTime() {
         return endTime;
     }
@@ -97,14 +101,18 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public abstract String getType();
     public abstract Boolean isDeletable();
 
+<<<<<<< HEAD
     public Double percentageStatus() {
         return this.option.getPercentageStatus(this);
     }
 
+=======
+>>>>>>> cb92586... bundle state
     @JsonIgnore
     public Boolean isExpired() {
         return this.getOption().isExpired(this);
     }
+<<<<<<< HEAD
 
     @JsonIgnore
     public Double getPrice() {
@@ -117,6 +125,16 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
         this.setExpiredAt(new Date());
     }
 
+=======
+
+    @JsonIgnore
+    public Double getPrice() {
+        return getOption().getPrice();
+    }
+
+    public abstract ATrainingSession createSession(ATrainingEvent event);
+
+>>>>>>> cb92586... bundle state
     public Date getStartTime() {
         return startTime;
     }
@@ -205,9 +223,22 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
                 "startTime=" + startTime + ", endTime=" + endTime;
     }
 
+<<<<<<< HEAD
     protected void activateBundle(Date activationTime) {
         this.setStartTime(activationTime);
         this.setEndTime(this.getOption().getEndDate(this));
+=======
+    public Date getEndDate() {
+        return this.getOption().getEndDate(this);
+    }
+
+    protected void activateBundle() {
+
+    }
+
+    public void completeBundle() {
+        this.setExpiredAt(new Date());
+>>>>>>> cb92586... bundle state
     }
 
     @Override
@@ -233,7 +264,11 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public void addSession(ATrainingSession session) {
         if (!this.hasSessions()) {
             this.setSessions(new ArrayList<>());
+<<<<<<< HEAD
             this.activateBundle(session.getStartTime());
+=======
+            this.activateBundle();
+>>>>>>> cb92586... bundle state
         }
 
         this.getSessions().add(session);
@@ -248,7 +283,22 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
         }
     }
 
+<<<<<<< HEAD
     public Date getExpiredAt() {
         return expiredAt;
+=======
+    public void initState() {
+        BundleCreateState state = new BundleCreateState(this);
+        state.onInit();
+        this.changeState(state);
+    }
+
+    public ABundleState changeState(ABundleState bundleState) {
+        if (this.states == null) {
+            this.states = new ArrayList<>();
+        }
+        this.states.add(bundleState);
+        return bundleState;
+>>>>>>> cb92586... bundle state
     }
 }

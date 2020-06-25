@@ -110,6 +110,18 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 1,
                 10.0,
                 2);
+<<<<<<< HEAD
+
+        Long gymId = fixture.getGym().getId();
+        Customer customer = fixture.getCustomer();
+        ATrainingBundle bundle = fixture.getBundle();
+
+        Object evt = new Object() {
+            public final String name = "personal";
+            public final Date startTime = fixture.getStart();
+            public final Date endTime = fixture.getEnd();
+            public final Boolean external = false;
+=======
 
         Long gymId = fixture.getGym().getId();
         Customer customer = fixture.getCustomer();
@@ -140,6 +152,40 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         assertThat(reservationRepository.findAll()).isNotEmpty();
 
         fixture.tearDown();
+    }
+
+    @Test
+    @Transactional
+    public void whenIsAvailableReturnsOK() throws Exception {
+        personalTrainingEventFixture.invoke(28, false, false, 1, 100.0, 30, 100.0, 1, 10.0, 1);
+        Long gymId = personalTrainingEventFixture.getGym().getId();
+        Customer customer = personalTrainingEventFixture.getCustomer();
+        ATrainingBundle bundle = personalTrainingEventFixture.getBundle();
+
+        Object evt = new Object() {
+            public final Date startTime = personalTrainingEventFixture.getStart();
+            public final Date endTime = personalTrainingEventFixture.getEnd();
+>>>>>>> cb92586... bundle state
+        };
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        String json = objectMapper.writeValueAsString(evt);
+        ResultActions result = mockMvc.perform(post("/reservations/"+gymId)
+                .param("customerId", String.valueOf(customer.getId()))
+                .param("bundleId", String.valueOf(bundle.getId()))
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(json))
+                .andExpect(status().isOk());
+
+        Reservation reservation = reservationRepository.findAll().get(0);
+        expectReservation(result, reservation);
+        expectUser(result, reservation.getUser(), "user");
+
+        assertThat(eventRepository.findAll()).isNotEmpty();
+        assertThat(sessionRepository.findAll()).isNotEmpty();
+        assertThat(reservationRepository.findAll()).isNotEmpty();
+
+        personalTrainingEventFixture.tearDown();
     }
 
     @Test
@@ -206,7 +252,11 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
 
         assertThat(actualEvent).isEqualTo(event);
         assertThat(actualEvent.getReservations().size()).isEqualTo(0);
+<<<<<<< HEAD
 //        assertThat(actualEvent.getSessions().size()).isEqualTo(0);
+=======
+        assertThat(actualEvent.getSessions().size()).isEqualTo(0);
+>>>>>>> cb92586... bundle state
         assertThat(actualBundle).isEqualTo(courseTrainingEventFixture.getBundle());
 
         assertThat(eventRepository.findAll()).isNotEmpty();

@@ -16,6 +16,7 @@ import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
@@ -88,12 +89,38 @@ public class SaleFacade {
 
     public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Long optionId) {
         Sale sale = this.findById(saleId);
+        logger.info(sale.toString());
         ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
-        ATrainingBundle bundle = bundleSpec.createTrainingBundle(optionId);
+        logger.info(bundleSpec.toString());
+        APurchaseOption option = getOptionById(optionId, bundleSpec);
+        logger.info(option.toString());
+        ATrainingBundle bundle = bundleSpec.createTrainingBundle(option);
+        logger.info(bundle.toString());
         bundle.setCustomer(sale.getCustomer());
 
         sale.addSalesLineItem(bundle);
-        return this.save(sale);
+        sale = this.save(sale);
+
+        logger.info(sale.toString());
+
+
+        return sale;
+    }
+
+    private APurchaseOption getOptionById(Long optionId, ATrainingBundleSpecification bundleSpec) {
+        List<APurchaseOption> options = bundleSpec.getOptions();
+        if (options == null) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
+        }
+        Optional<APurchaseOption> op = options
+                .stream()
+                .filter(o -> o.getId().equals(optionId))
+                .findFirst();
+
+        if (!op.isPresent()) {
+            throw new BadRequestException("L'opzione indicata non è disponibile");
+        }
+        return op.get();
     }
 
     public Sale deleteSalesLineItem(Long saleId, Long salesLineItemId) {

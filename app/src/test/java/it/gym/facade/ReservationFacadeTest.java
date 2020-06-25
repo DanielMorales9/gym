@@ -84,7 +84,11 @@ public class ReservationFacadeTest {
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
         APurchaseOption option = spec.getOptions().get(0);
         PersonalTrainingBundle bundle = createPersonalBundle(1L, spec, option);
+<<<<<<< HEAD
         customer.addToTrainingBundles(Collections.singletonList(bundle));
+=======
+        customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+>>>>>>> cb92586... bundle state
         Date start = getNextMonday();
         Date end = addHours(start, 1);
         Event event = new Event();
@@ -548,7 +552,11 @@ public class ReservationFacadeTest {
             PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createPersonalBundle(1L, spec, option);
+<<<<<<< HEAD
             customer.addToTrainingBundles(Collections.singletonList(bundle));
+=======
+            customer.addToCurrentTrainingBundles(Collections.singletonList(bundle));
+>>>>>>> cb92586... bundle state
 
             start = getNextMonday();
             end = addHours(start, 1);

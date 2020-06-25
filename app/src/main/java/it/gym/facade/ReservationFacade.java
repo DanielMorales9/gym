@@ -125,9 +125,16 @@ public class ReservationFacade {
 
     private void checkBundleIsReservable(Customer customer, ATrainingBundle bundle) {
         if (bundle.isExpired()) {
+<<<<<<< HEAD
             bundle.terminate();
             List<ATrainingBundle> expiredBundles = getExpiredBundles(customer);
             expiredBundles.forEach(ATrainingBundle::terminate);
+=======
+            bundle.completeBundle();
+            List<ATrainingBundle> expiredBundles = deleteExpiredBundles(customer);
+            expiredBundles.forEach(trainingBundle -> trainingBundle.setExpiredAt(new Date()));
+            customer.addToPreviousTrainingBundles(expiredBundles);
+>>>>>>> cb92586... bundle state
             customerService.save(customer);
             sendExpiredBundleEmail(customer, bundle);
 
@@ -363,6 +370,16 @@ public class ReservationFacade {
             logger.info("Deleting personal training event");
             this.eventService.delete(event);
         } else {
+<<<<<<< HEAD
+=======
+
+            logger.info("Deleting reservation from event");
+            event.deleteReservation(res);
+
+            logger.info("Deleting session by reservation from event");
+            event.deleteSession(res);
+
+>>>>>>> cb92586... bundle state
             logger.info("Saving training event");
             this.eventService.save(event);
 

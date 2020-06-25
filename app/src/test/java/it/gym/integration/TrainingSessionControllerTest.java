@@ -121,7 +121,7 @@ public class TrainingSessionControllerTest extends AbstractIntegrationTest {
         session.addWorkout(w);
         session = sessionRepository.save(session);
         mockMvc.perform(delete("/trainingSessions/" + session.getId() + "/workouts")
-                        .param("workoutId", w.getId().toString()))
+                .param("workoutId", w.getId().toString()))
                 .andExpect(status().isOk());
     }
 
