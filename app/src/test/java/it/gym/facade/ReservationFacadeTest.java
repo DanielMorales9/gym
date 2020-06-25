@@ -286,7 +286,7 @@ public class ReservationFacadeTest {
         assertThat(actual.getSession().getEndTime()).isEqualTo(end);
     }
 
-    @Test(expected = BadRequestException.class)
+    @Test(expected = MethodNotAllowedException.class)
     public void whenCreatingReservationFromEventWithoutBundleThenReturnsBadRequest() {
         courseEventFixture.invoke(0, false);
 
@@ -318,7 +318,7 @@ public class ReservationFacadeTest {
                 "CUSTOMER");
     }
 
-    @Test(expected = MethodNotAllowedException.class)
+    @Test(expected = BadRequestException.class)
     public void whenCreatingReservationFromBundleThenBundleIsExpired() {
         personalEventFixture.invoke(0, 900.0);
 

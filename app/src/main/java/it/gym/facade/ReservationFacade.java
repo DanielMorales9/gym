@@ -45,7 +45,6 @@ public class ReservationFacade {
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
         return customer.getTrainingBundles()
                 .stream()
-                .filter(b -> !b.isExpired())
                 .filter(b -> b.getId().equals(bundleId))
                 .findAny()
                 .orElseThrow(() -> new BadRequestException("Non possiedi questo pacchetto"));

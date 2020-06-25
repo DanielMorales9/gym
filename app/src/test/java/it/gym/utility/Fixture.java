@@ -109,7 +109,7 @@ public class Fixture {
         pt.setId(id);
         pt.setNumDeletions(0);
         pt.setUnlimitedDeletions(true);
-        pt.setOption(spec.getOptions().get(0));
+        pt.setOption(aPurchaseOption);
         return pt;
     }
 
