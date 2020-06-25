@@ -59,7 +59,7 @@ public abstract class AUser implements DefaultRoles, Serializable, Eager<AUser> 
     @Size(min = 2, max = 30)
     protected String firstName;
 
-    @Column(name = "last_name", nullable = false)
+    @Column(name = "lastname", nullable = false)
     @NotNull
     @Size(min = 2, max = 30)
     protected String lastName;
@@ -67,7 +67,7 @@ public abstract class AUser implements DefaultRoles, Serializable, Eager<AUser> 
     @Column(name = "phone_number")
     protected String phoneNumber;
 
-    @Column(name = "createdat", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 

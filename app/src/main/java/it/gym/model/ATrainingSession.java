@@ -48,7 +48,7 @@ public abstract class ATrainingSession implements Serializable, Eager<ATrainingS
     @ManyToOne
     @JsonIgnore
     @EqualsAndHashCode.Exclude
-    @JoinColumn(name = "training_bundle_bundle_id")
+    @JoinColumn(name = "bundle_id")
     private ATrainingBundle trainingBundle;
 
     @Column(name = "is_completed")

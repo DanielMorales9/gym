@@ -24,10 +24,7 @@ public class Customer extends AUser {
     @Column(name = "weight")
     private Integer weight;
 
-    @ManyToMany(cascade = CascadeType.ALL)
-    @JoinTable(name="users_bundles",
-            joinColumns = @JoinColumn(name="user_id", referencedColumnName="user_id"),
-            inverseJoinColumns=@JoinColumn(name="bundle_id", referencedColumnName="bundle_id"))
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "customer")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JsonIgnore
@@ -55,21 +52,10 @@ public class Customer extends AUser {
         return trainingBundles;
     }
 
-
     public void setTrainingBundles(List<ATrainingBundle> currentTrainingBundles) {
         this.trainingBundles = currentTrainingBundles;
     }
 
-    public boolean addToTrainingBundles(List<ATrainingBundle> bundles) {
-        if (this.trainingBundles == null) {
-            this.trainingBundles = new ArrayList<>();
-        }
-        return this.trainingBundles.addAll(bundles);
-    }
-
-    public void deleteBundle(ATrainingBundle bundle) {
-        if (this.trainingBundles != null) this.trainingBundles.remove(bundle);
-    }
     @Override
     public List<Role> defaultRoles() {
         return Collections.singletonList(

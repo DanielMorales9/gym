@@ -113,11 +113,6 @@ public class SaleFacade {
         String messageTemplate = "Impossibile confermare vendita (#%d) vuota.";
         Sale sale = findById(saleId);
         if (!sale.confirm()) throw new BadRequestException(String.format(messageTemplate, sale.getId()));
-        if (!sale.addBundlesToCustomersCurrentBundles()) {
-            String message = String.format("Impossibile confermare vendita per il cliente %s.",
-                    sale.getCustomer().getLastName());
-            throw new BadRequestException(message);
-        }
         return this.save(sale);
     }
 
@@ -184,10 +179,7 @@ public class SaleFacade {
         eventService.deleteAll(deletableEvents);
         sessionService.deleteAll(sessions);
         bundleService.deleteAll(bundles);
-
-
-        sale.removeBundlesFromCustomersCurrentBundles();
-        this.userService.save(sale.getCustomer());
+        
         this.salesLineItemService.deleteAll(sale.getSalesLineItems());
         this.paymentService.deleteAll(sale.getPayments());
 

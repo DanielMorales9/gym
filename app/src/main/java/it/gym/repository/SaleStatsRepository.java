@@ -29,7 +29,7 @@ public interface SaleStatsRepository extends JpaRepository<Sale, String> {
                     "sum(total_price) as totalprice, " +
                     "sum(amount_payed) as amountpayed " +
             "from sales as s, sales_lines as sli, bundle_specs " +
-            "where s.sale_id = sli.sale_id and bundle_spec_id = sli.bundle_specification_bundle_spec_id " +
+            "where s.sale_id = sli.sale_id and spec_id = sli.spec_id " +
             "    and s.createdat >= date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +
             "group by bundle_spec_type;", nativeQuery = true)
     List<SaleBundleStatistics> getSaleStatsByBundleType(String timeInterval);

@@ -51,15 +51,15 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
                 roles
         );
 
+        customer = repository.save(customer);
         List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", options);
 
         personalSpec = bundleSpecRepository.save(personalSpec);
         Long optionId = personalSpec.getOptions().get(0).getId();
         personal = (PersonalTrainingBundle) personalSpec.createTrainingBundle(optionId);
+        personal.setCustomer(customer);
         personal = bundleRepository.save(personal);
-        customer.setTrainingBundles(Collections.singletonList(personal));
-        customer = repository.save(customer);
     }
 
 

@@ -22,11 +22,11 @@ public class SalesLineItem implements Serializable, Eager<SalesLineItem> {
     private Long id;
 
     @OneToOne(cascade = {CascadeType.REFRESH, CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST})
-    @JoinColumn(name = "training_bundle_bundle_id")
+    @JoinColumn(name = "bundle_id")
     private ATrainingBundle trainingBundle;
 
     @ManyToOne
-    @JoinColumn(name = "bundle_specification_bundle_spec_id")
+    @JoinColumn(name = "spec_id")
     private ATrainingBundleSpecification bundleSpecification;
 
     public Long getId() {

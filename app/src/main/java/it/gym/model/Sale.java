@@ -25,7 +25,7 @@ public class Sale implements Serializable, Eager<Sale> {
     @Column(name="sale_id")
     private Long id;
 
-    @Column(name = "createdat", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -54,7 +54,7 @@ public class Sale implements Serializable, Eager<Sale> {
     private List<Payment> payments;
 
     @ManyToOne
-    @JoinColumn(name = "customer_user_id")
+    @JoinColumn(name = "user_id")
     private Customer customer;
 
     public Sale() {
@@ -195,13 +195,6 @@ public class Sale implements Serializable, Eager<Sale> {
                 .map(SalesLineItem::getTrainingBundle)
                 .map(ATrainingBundle::isDeletable)
                 .reduce(Boolean::logicalAnd).orElse(true);
-    }
-
-    public boolean addBundlesToCustomersCurrentBundles() {
-        return this.customer.addToTrainingBundles(
-                this.salesLineItems.stream()
-                        .map(SalesLineItem::getTrainingBundle)
-                        .collect(Collectors.toList()));
     }
 
     public void removeBundlesFromCustomersCurrentBundles() {

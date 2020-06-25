@@ -41,7 +41,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     @Column(name = "name")
     private String name;
 
-    @Column(name = "createdat", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -50,7 +50,7 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     private Date expiredAt;
 
     @ManyToOne
-    @JoinColumn(name = "bundle_spec_bundle_spec_id")
+    @JoinColumn(name = "spec_id")
     private ATrainingBundleSpecification bundleSpec;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "trainingBundle")
