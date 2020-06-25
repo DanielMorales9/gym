@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import {CommonModule, registerLocaleData} from '@angular/common';
 import {AdminRouting} from './admin.routing';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -42,6 +42,7 @@ import {MatTabsModule} from '@angular/material/tabs';
 
 registerLocaleData(localeIt);
 
+@Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any>{
         swipe: {direction: Hammer.DIRECTION_HORIZONTAL},

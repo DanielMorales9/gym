@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -23,6 +23,7 @@ import {HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular
 import * as Hammer from 'hammerjs';
 import {HomeComponent} from './home';
 
+@Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any> {
         swipe: { direction: Hammer.DIRECTION_HORIZONTAL }

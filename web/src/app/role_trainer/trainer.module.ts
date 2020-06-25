@@ -1,4 +1,4 @@
-import {NgModule} from '@angular/core';
+import { NgModule, Injectable } from '@angular/core';
 import {SharedModule} from '../shared/shared.module';
 import {CommonModule, registerLocaleData} from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
@@ -29,6 +29,7 @@ import {HomeComponent} from './home';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 
+@Injectable()
 export class MyHammerConfig extends HammerGestureConfig {
     overrides = <any>{
         swipe: {direction: Hammer.DIRECTION_HORIZONTAL},
