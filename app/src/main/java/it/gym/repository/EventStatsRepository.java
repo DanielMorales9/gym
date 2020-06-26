@@ -28,7 +28,7 @@ public interface EventStatsRepository extends JpaRepository<AEvent, String> {
                     "from events as e, reservations as r " +
                     "where e.event_id = r.event_id " +
                     " and e.start_time > date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval)" +
-                    " and r.user_user_id = :id " +
+                    " and r.user_id = :id " +
                     "group by week, e.type " +
                     "order by week;", nativeQuery = true)
     List<ReservationTimeStatistics> getCustomerReservationsByWeek(Long id, String timeInterval);

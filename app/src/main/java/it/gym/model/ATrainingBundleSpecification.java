@@ -48,7 +48,7 @@ public abstract class  ATrainingBundleSpecification implements Serializable, Eag
     @Column(name = "is_disabled", nullable = false)
     private Boolean isDisabled;
 
-    @Column(name = "createdat", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 
@@ -59,7 +59,7 @@ public abstract class  ATrainingBundleSpecification implements Serializable, Eag
     private Integer numDeletions;
 
     @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "bundle_spec_id", nullable = false)
+    @JoinColumn(name = "spec_id", nullable = false)
     private List<APurchaseOption> options;
 
     public List<APurchaseOption> getOptions() {

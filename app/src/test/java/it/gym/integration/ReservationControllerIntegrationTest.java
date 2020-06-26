@@ -57,7 +57,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     private final CourseTrainingEventFixture courseTrainingEventFixture = new CourseTrainingEventFixture();
 
     @Test
-    @Transactional
     public void whenCreateReservationFromBundleWithBundlePurchaseOptionReturnsOK() throws Exception {
         PersonalTrainingEventFixture fixture = personalTrainingEventFixture.invoke(
                 14,
@@ -97,7 +96,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
-    @Transactional
     public void whenCreateReservationFromBundleWithOnDemandPurchaseOptionReturnsOK() throws Exception {
         PersonalTrainingEventFixture fixture = personalTrainingEventFixture.invoke(
                 14,
@@ -143,7 +141,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
-    @Transactional
     public void whenConfirmCourseEventReservationReturnsOK() throws Exception {
         courseTrainingEventFixture.invoke(0, true, true, 0, 1, 100.0, 30, 100.0, 1, 10.0, 11);
         Reservation reservation = courseTrainingEventFixture.getReservation();
@@ -163,7 +160,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
-    @Transactional
     public void whenConfirmPersonalEventReservationReturnsOK() throws Exception {
         personalTrainingEventFixture.invoke(0, true, true, 1, 100.0, 30, 100.0, 1, 10.0, 1);
         Reservation reservation = personalTrainingEventFixture.getReservation();
@@ -183,7 +179,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
-    @Transactional
     public void whenDeleteReservationOnCourseEventReturnsOK() throws Exception {
         courseTrainingEventFixture.invoke(0, true, true, 0, 1, 100.0, 30, 100.0, 1, 10.0, 11);
         Reservation reservation = courseTrainingEventFixture.getReservation();
@@ -219,7 +214,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
     }
 
     @Test
-    @Transactional
     public void whenDeleteReservationOnPersonalEventThenOK() throws Exception {
 
         personalTrainingEventFixture.invoke(0, true,true,
@@ -279,6 +273,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             return session;
         }
 
+        @Transactional
         public void invoke(int days, boolean hasReservation, boolean hasEvent, int optionIndex, int number1, double price1, int number2, double price2, int number3, double price3, int maxCustomers) {
             gym = createGym(1L);
             gym = gymRepository.save(gym);
@@ -327,8 +322,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 reservation.setSession(session);
             }
 
-            customer.addToTrainingBundles(Collections.singletonList(bundle));
-            customer = userRepository.save(customer);
+            bundle.setCustomer(customer);
 
             if (hasEvent) {
                 event = eventRepository.save(event);
@@ -342,7 +336,6 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
             sessionRepository.deleteAll();
 
             gymRepository.deleteAll();
-            customer.setTrainingBundles(null);
             userRepository.deleteAll();
 
             bundleRepository.deleteAll();
@@ -438,10 +431,9 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                 session = bundle.createSession(event);
                 bundle.addSession(session);
             }
-            bundle = bundleRepository.save(bundle);
 
-            customer.addToTrainingBundles(Collections.singletonList(bundle));
-            customer = userRepository.save(customer);
+            bundle.setCustomer(customer);
+            bundle = bundleRepository.save(bundle);
 
             if (hasEvent) {
                 session = bundle.getSessions().get(0);
@@ -453,15 +445,25 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         }
 
         public void tearDown() {
-            reservationRepository.deleteAll();
-            eventRepository.deleteAll();
+            List<Reservation> a = reservationRepository.findAll();
 
-            gymRepository.deleteAll();
-            customer.setTrainingBundles(null);
+            a.forEach(r -> {
+                r.setSession(null);
+                r.setEvent(null);
+                r.setUser(null);
+            });
+            reservationRepository.saveAll(a);
+
             userRepository.deleteAll();
+            gymRepository.deleteAll();
+
+            eventRepository.deleteAll();
+            sessionRepository.deleteAll();
+
 
             bundleRepository.deleteAll();
             specRepository.deleteAll();
+            reservationRepository.deleteAll();
         }
     }
 }

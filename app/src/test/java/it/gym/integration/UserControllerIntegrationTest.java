@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -124,17 +123,18 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
         List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
 
+        customer = repository.save(customer);
         spec = bundleSpecRepository.save(spec);
         Long optionId = spec.getOptions().get(0).getId();
 
+
         ATrainingBundle bundle = spec.createTrainingBundle(optionId);
-        customer.addToTrainingBundles(Collections.singletonList(bundle));
-        customer = repository.save(customer);
+        bundle.setCustomer(customer);
+        bundleRepository.save(bundle);
         mockMvc.perform(delete("/users/" + customer.getId()))
                 .andExpect(status().isBadRequest());
 
-        customer.setTrainingBundles(null);
-        repository.save(customer);
+
         bundleRepository.deleteAll();
         bundleSpecRepository.deleteAll();
 

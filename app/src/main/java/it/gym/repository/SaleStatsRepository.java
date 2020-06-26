@@ -13,24 +13,24 @@ import java.util.List;
 public interface SaleStatsRepository extends JpaRepository<Sale, String> {
 
     @Query(value =
-            "select to_char(to_timestamp (date_part('month', createdat)\\:\\:text, 'MM'), 'TMMonth') as month," +
-            "       date_part('year', createdat) as year," +
-            "       date_part('month', createdat) as monthnum," +
+            "select to_char(to_timestamp (date_part('month', created_at)\\:\\:text, 'MM'), 'TMMonth') as month," +
+            "       date_part('year', created_at) as year," +
+            "       date_part('month', created_at) as monthnum," +
             "       sum(total_price) as totalprice, " +
             "       sum(amount_payed) as amountpayed " +
             "from sales " +
-            "where createdat > date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +
+            "where created_at > date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +
             "group by month, monthnum, year " +
             "order by year, monthnum;", nativeQuery = true)
     List<SaleTimeStatistics> getSalesByMonthInterval(String timeInterval);
 
     @Query(value =
-            "select bundle_spec_type as bundletype, " +
+            "select bs.name as bundletype, " +
                     "sum(total_price) as totalprice, " +
                     "sum(amount_payed) as amountpayed " +
-            "from sales as s, sales_lines as sli, bundle_specs " +
-            "where s.sale_id = sli.sale_id and bundle_spec_id = sli.bundle_specification_bundle_spec_id " +
-            "    and s.createdat >= date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +
-            "group by bundle_spec_type;", nativeQuery = true)
+            "from sales as s, sales_lines as sli, bundle_specs as bs " +
+            "where s.sale_id = sli.sale_id and bs.bundle_spec_id = sli.spec_id " +
+            "    and s.created_at >= date_trunc('month', now()) + '1 month' - cast(:timeInterval AS Interval) " +
+            "group by bs.name;", nativeQuery = true)
     List<SaleBundleStatistics> getSaleStatsByBundleType(String timeInterval);
 }

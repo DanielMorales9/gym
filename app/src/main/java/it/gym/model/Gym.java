@@ -127,7 +127,7 @@ public class Gym implements Serializable, Eager<Gym> {
     @Column(name="minutes_between_events")
     private Integer minutesBetweenEvents;
 
-    @Column(name = "createdat", nullable = false, updatable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date createdAt;
 

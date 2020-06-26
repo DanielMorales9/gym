@@ -190,7 +190,7 @@ export class StatsComponent extends BaseComponent implements OnInit {
             .pipe(takeUntil(this.unsubscribe$),
                 map(d => {
                     this.pieChartLabels.length = 0;
-                    this.pieChartLabels = d.map(v => this.BUNDLE_TYPE_NAME[v.bundletype]);
+                    this.pieChartLabels = d.map(v => v.bundletype);
                     this.pieChartData = [{data: d.map(v => v.totalprice), label: 'Totale'}];
                     this.pieChart.datasets = this.pieChartData;
                     this.pieChart.labels = this.pieChartLabels;

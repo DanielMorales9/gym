@@ -124,35 +124,6 @@ public class SaleTest {
         assertThat(sale.confirm()).isFalse();
     }
 
-    @Test
-    public void addBundlesToCustomersCurrentBundles() {
-        Date start = getDate();
-
-        Sale sale = createSale(createCustomer());
-        addPersonalToSalesLineItem(sale);
-        addCourseToSalesLineItem(sale, start);
-
-        sale.addBundlesToCustomersCurrentBundles();
-
-        List<ATrainingBundle> expected = sale.getSalesLineItems().stream()
-                .map(SalesLineItem::getTrainingBundle).collect(Collectors.toList());
-        assertThat(sale.getCustomer().getTrainingBundles()).isEqualTo(expected);
-    }
-
-    @Test
-    public void removeBundlesToCustomersCurrentBundles() {
-        Date start = getDate();
-
-        Sale sale = createSale(createCustomer());
-        addPersonalToSalesLineItem(sale);
-        addCourseToSalesLineItem(sale, start);
-
-        sale.addBundlesToCustomersCurrentBundles();
-        sale.removeBundlesFromCustomersCurrentBundles();
-
-        assertThat(sale.getCustomer().getTrainingBundles()).isEmpty();
-    }
-
     private Date getDate() {
         Calendar cal = Calendar.getInstance();
         cal.set(2019, Calendar.JUNE, 21, 0, 0, 0);

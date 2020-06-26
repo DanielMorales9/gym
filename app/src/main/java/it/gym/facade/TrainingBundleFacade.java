@@ -41,7 +41,6 @@ public class TrainingBundleFacade {
 
     public ATrainingBundle deleteById(Long id) {
         ATrainingBundle bundle = service.findById(id);
-        bundle.getCustomer().deleteBundle(bundle);
         service.delete(bundle);
         return bundle;
     }

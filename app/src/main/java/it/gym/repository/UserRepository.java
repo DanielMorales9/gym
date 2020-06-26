@@ -18,18 +18,19 @@ public interface UserRepository extends JpaRepository<AUser, Long> {
     Page<AUser> findByLastNameContainingOrFirstNameContaining(String query, Pageable pageable);
 
     @Query(value =
-            "select u.* " +
-            "from events as e, bundle_specs as bs, " +
-            "       bundles as b, users as u, users_bundles as c " +
+            "select distinct u.* " +
+            "from events as e, bundles as b, users as u " +
             "where e.event_id = :eventId " +
-            "   and e.spec_id = bs.bundle_spec_id " +
-            "   and b.bundle_spec_bundle_spec_id = bs.bundle_spec_id " +
-            "   and b.bundle_id = c.bundle_id " +
-            "   and c.user_id = u.user_id " +
+            "   and e.spec_id = b.spec_id " +
+            "   and b.user_id = u.user_id " +
             "   and b.expired_at is null",
             nativeQuery=true)
     List<AUser> findUserByEventId(Long eventId);
 
-    @Query(value = "select u.* from users as u where u.user_type = :type", nativeQuery = true)
+    @Query(value =
+            "select u.* " +
+            "from users as u " +
+            "where u.user_type = :type",
+            nativeQuery = true)
     List<AUser> findAllByType(String type);
 }
