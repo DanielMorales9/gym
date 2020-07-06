@@ -155,7 +155,7 @@
     "@schematics/angular:component": {
       "prefix": "app",
       "style": "css",
-      "changeDetection": "OnPush",
+      "changeDetection": "OnPush"
     },
     "@schematics/angular:directive": {
       "prefix": "app"
