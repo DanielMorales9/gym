@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Bundle} from '../model';
 import {BundleService} from '../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';

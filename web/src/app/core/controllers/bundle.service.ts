@@ -16,6 +16,7 @@ export class BundleService {
     search(query: any, page: number, size: number): Observable<Object> {
         query['page'] = page;
         query['size'] = size;
+        query['sort'] = 'createdAt,desc';
         return this.http.get(`/bundles/search`, {params: query});
     }
 
