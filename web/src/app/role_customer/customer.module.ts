@@ -16,7 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import {CustomerRouting} from './customer.routing';
 import {CustomerCalendarComponent} from './calendar';
-import localeIt from '@angular/common/locales/it';
+import localeIt from '@angular/common/locales/global/it';
 import {ScrollingModule} from '@angular/cdk/scrolling';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';

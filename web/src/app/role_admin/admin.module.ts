@@ -27,7 +27,7 @@ import {
 import {CalendarModule, DateAdapter} from 'angular-calendar';
 import {adapterFactory} from 'angular-calendar/date-adapters/date-fns';
 import {AdminHourModalComponent} from './calendar/admin-hour-modal.component';
-import localeIt from '@angular/common/locales/it';
+import localeIt from '@angular/common/locales/global/it';
 import {SharedModule} from '../shared/shared.module';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MAT_DATE_LOCALE} from '@angular/material/core';

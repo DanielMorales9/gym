@@ -21,7 +21,7 @@ import {
     TrainerHourModalComponent,
     TrainerInfoModalComponent
 } from './calendar';
-import localeIt from '@angular/common/locales/it';
+import localeIt from '@angular/common/locales/global/it';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {HAMMER_GESTURE_CONFIG, HammerGestureConfig, HammerModule} from '@angular/platform-browser';
 import * as Hammer from 'hammerjs';
