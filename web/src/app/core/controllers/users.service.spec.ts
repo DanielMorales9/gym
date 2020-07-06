@@ -31,7 +31,7 @@ describe('UserService', () => {
             done();
         });
         const req = backend.expectOne({
-            url: '/users?page=1&size=5&sort=lastName',
+            url: '/users?page=1&size=5&sort=createdAt,desc',
             method: 'GET'
         });
         const user = new User();
@@ -46,7 +46,7 @@ describe('UserService', () => {
             done();
         });
         const req = backend.expectOne({
-            url: '/users/search?query=Rossi&page=1&size=5&sort=lastName',
+            url: '/users/search?query=Rossi&page=1&size=5&sort=createdAt,desc',
             method: 'GET'
         });
         const user = new User();

@@ -21,7 +21,7 @@ export class BundleSpecsService extends DataSourceService {
     }
 
     get(page: number, size: number): Observable<Object> {
-        return this.http.get(`/bundleSpecs?page=${page}&size=${size}&sort=name`);
+        return this.http.get(`/bundleSpecs?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
     search(query: any, page: number, size: number): Observable<Object> {

@@ -30,7 +30,7 @@ describe('BundleSpecsService', () => {
             done();
         });
         const req = backend.expectOne({
-            url: '/bundleSpecs?page=1&size=5&sort=name',
+            url: '/bundleSpecs?page=1&size=5&sort=createdAt,desc',
             method: 'GET'
         });
         req.flush([]);

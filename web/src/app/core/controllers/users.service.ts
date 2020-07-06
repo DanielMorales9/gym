@@ -15,11 +15,11 @@ export class UserService {
     }
 
     get(page: number, size: number): any {
-        return this.http.get(`/users?page=${page}&size=${size}&sort=lastName`);
+        return this.http.get(`/users?page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
     search(query: string, page: number, size: number): Observable<Object> {
-        return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=lastName`);
+        return this.http.get(`/users/search?query=${query}&page=${page}&size=${size}&sort=createdAt,desc`);
     }
 
     patchUser(user): Observable<Object> {
