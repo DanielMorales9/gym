@@ -42,7 +42,7 @@ public class BundlesStatusJob {
         List<ATrainingBundle> activeBundles = facade.getActiveBundles();
 
         List<ATrainingBundle> aboutToExpire = activeBundles.stream()
-                .filter(p -> p.percentageStatus() >= 90.0)
+                .filter(p -> p.percentageStatus() >= 80.0)
                 .collect(Collectors.toList());
 
         if (!expired.isEmpty() || !aboutToExpire.isEmpty()) {
@@ -80,10 +80,10 @@ public class BundlesStatusJob {
 
     private void bundlesFormat(List<ATrainingBundle> expired, StringBuilder body) {
         for (ATrainingBundle aTrainingBundle : expired) {
-            body.append(String.format("Pacchetto: %s, Opzione %s, %f, Cliente %s %s\n",
+            body.append(String.format("Pacchetto: %s, Opzione %s, Prezzo totale %.2f, Cliente %s %s\n",
                     aTrainingBundle.getName(),
                     aTrainingBundle.getOption().getName(),
-                    aTrainingBundle.getOption().getPrice(),
+                    aTrainingBundle.getOption().getPrice(aTrainingBundle),
                     aTrainingBundle.getCustomer().getFirstName(),
                     aTrainingBundle.getCustomer().getLastName()));
         }
