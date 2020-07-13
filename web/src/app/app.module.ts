@@ -1,6 +1,6 @@
 import {BrowserModule, HammerModule} from '@angular/platform-browser';
-import {ErrorHandler, NgModule, Pipe} from '@angular/core';
-import {BrowserAnimationsModule, NoopAnimationsModule} from '@angular/platform-browser/animations';
+import {ErrorHandler, LOCALE_ID, NgModule, Pipe} from '@angular/core';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
@@ -19,26 +19,27 @@ import {
     SideBarComponent
 } from './components';
 import {TimeAgoPipe} from 'time-ago-pipe';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCardModule } from '@angular/material/card';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatListModule } from '@angular/material/list';
-import { MatRadioModule } from '@angular/material/radio';
-import { MatSelectModule } from '@angular/material/select';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatTableModule } from '@angular/material/table';
-import { MatToolbarModule } from '@angular/material/toolbar';
+import {MatButtonModule} from '@angular/material/button';
+import {MatCardModule} from '@angular/material/card';
+import {MatCheckboxModule} from '@angular/material/checkbox';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatInputModule} from '@angular/material/input';
+import {MatListModule} from '@angular/material/list';
+import {MatRadioModule} from '@angular/material/radio';
+import {MatSelectModule} from '@angular/material/select';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
+import {MatTableModule} from '@angular/material/table';
+import {MatToolbarModule} from '@angular/material/toolbar';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {MAT_DATE_LOCALE} from '@angular/material/core';
 import {NgxMaterialTimepickerModule} from 'ngx-material-timepicker';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {MatMenuModule} from '@angular/material/menu';
+import '@angular/common/locales/global/it';
 
 // tslint:disable-next-line:use-pipe-transform-interface
 @Pipe({
@@ -98,6 +99,7 @@ export class TimeAgoExtendsPipe extends TimeAgoPipe {}
         GymService,
         { provide: ErrorHandler, useClass: GlobalErrorHandler },
         { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
+        { provide: LOCALE_ID, useValue: 'it-IT' }
     ],
     bootstrap: [AppComponent]
 })
