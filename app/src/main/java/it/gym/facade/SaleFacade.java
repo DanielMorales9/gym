@@ -82,7 +82,6 @@ public class SaleFacade {
         sale.setCreatedAt(new Date());
         sale.setAmountPayed(0.);
         sale.setCustomer(customer);
-        sale.setPayed(false);
         return this.save(sale);
     }
 
@@ -206,7 +205,6 @@ public class SaleFacade {
         sale.getPayments().remove(p);
 
         sale.setAmountPayed(sale.getAmountPayed() - p.getAmount());
-        sale.setPayed(false);
         sale.setPayedDate(null);
 
         paymentService.delete(p);

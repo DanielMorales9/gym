@@ -357,7 +357,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setId(sale.getId());
         expected.setAmountPayed(111.);
         expected.setCompleted(true);
-        expected.setPayed(true);
         expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 
@@ -390,7 +389,6 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         expected.setAmountPayed(0.);
         expected.setPayedDate(null);
         expected.setCompleted(true);
-        expected.setPayed(false);
         expected.setCustomer(customer);
         expected.setSalesLineItems(sli);
 

@@ -66,8 +66,11 @@ public class SaleService implements ICrudService<Sale, Long> {
         if (payed == null) {
             page = this.findAll(pageable);
         }
+        else if (payed) {
+            page = saleRepository.findSalesByIsPayed(pageable);
+        }
         else {
-            page = saleRepository.findSalesByIsPayed(payed, pageable);
+            page = saleRepository.findSalesByIsNotPayed(pageable);
         }
         return initAssociation(page);
     }
@@ -104,7 +107,12 @@ public class SaleService implements ICrudService<Sale, Long> {
         if (payed == null) {
             return saleRepository.findSalesByCustomerLastNameContains(lastName, pageable);
         }
-        return saleRepository.findSalesByCustomerLastNameAndIsPayed(lastName, payed, pageable);
+        else if(payed) {
+            return saleRepository.findSalesByCustomerLastNameAndIsPayed(lastName, pageable);
+        }
+        else {
+            return saleRepository.findSalesByCustomerLastNameAndIsNotPayed(lastName, pageable);
+        }
     }
 
     public Page<Sale> findSalesByCustomerLastNameAndCreatedAtGreaterThanEqual(String lastName,
@@ -114,15 +122,24 @@ public class SaleService implements ICrudService<Sale, Long> {
         if (payed == null) {
             return saleRepository.findSalesByCustomerLastNameContainsAndCreatedAtGreaterThanEqual(lastName, date, pageable);
         }
-        return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsPayed(lastName, date,
-                payed, pageable);
+        else if (payed) {
+            return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsPayed(lastName, date, pageable);
+        }
+        else {
+            return saleRepository.findSalesByCustomerLastNameAndCreatedAtGreaterThanEqualAndIsNotPayed(lastName, date, pageable);
+        }
     }
 
     public Page<Sale> findSalesByCreatedAtGreaterThanEqual(Date date, Boolean payed, Pageable pageable) {
         if (payed == null) {
             return saleRepository.findSalesByCreatedAtGreaterThanEqual(date, pageable);
         }
-        return saleRepository.findSalesByCreatedAtGreaterThanEqualAndIsPayed(date, payed, pageable);
+        else if (payed) {
+            return saleRepository.findSalesByCreatedAtGreaterThanEqualAndIsPayed(date, pageable);
+        }
+        else {
+            return saleRepository.findSalesByCreatedAtGreaterThanEqualAndIsNotPayed(date, pageable);
+        }
     }
 
     public Page<Sale> findAll(Pageable pageable) {
@@ -132,7 +149,12 @@ public class SaleService implements ICrudService<Sale, Long> {
     public Page<Sale> findUserSales(Long id, Boolean payed, Pageable pageable) {
         if (payed == null)
             return this.saleRepository.findUserSales(id, pageable);
-        return  this.saleRepository.findUserSalesPayed(id, payed, pageable);
+        else if(payed) {
+            return this.saleRepository.findUserSalesPayed(id, pageable);
+        }
+        else {
+            return this.saleRepository.findUserSalesNotPayed(id, pageable);
+        }
     }
 
     public Page<Sale> findSalesByCustomerIdAndCreatedAtGreaterThanEqual(Long id,
@@ -142,7 +164,12 @@ public class SaleService implements ICrudService<Sale, Long> {
         if (payed == null) {
             return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqual(id, date, pageable);
         }
-        return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqualAndIsPayed(id, date, payed, pageable);
+        else if (payed) {
+            return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqualAndIsPayed(id, date, pageable);
+        }
+        else {
+            return saleRepository.findSalesByCustomerIdAndCreatedAtGreaterThanEqualAndIsNotPayed(id, date, pageable);
+        }
     }
 
     public List<Sale> findAll() {

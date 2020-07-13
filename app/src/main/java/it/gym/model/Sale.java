@@ -9,7 +9,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "sales")
@@ -39,9 +38,6 @@ public class Sale implements Serializable, Eager<Sale> {
     @Column(name = "amount_payed")
     private Double amountPayed;
 
-    @Column(name = "is_payed")
-    private boolean isPayed;
-
     @Column(name = "is_completed")
     private boolean isCompleted;
 
@@ -70,15 +66,11 @@ public class Sale implements Serializable, Eager<Sale> {
     }
 
     public boolean isPayed() {
-        return isPayed && this.salesLineItems
+        return amountPayed.equals(getTotalPrice()) && this.salesLineItems
                 .stream().map(SalesLineItem::getTrainingBundle)
                 .map(ATrainingBundle::isExpired)
                 .reduce(Boolean::logicalAnd)
                 .orElse(false);
-    }
-
-    public void setPayed(boolean payed) {
-        isPayed = payed;
     }
 
     public Date getCreatedAt() {
@@ -176,10 +168,7 @@ public class Sale implements Serializable, Eager<Sale> {
     }
 
     public void pay(Double amount) {
-        if (amountPayed + amount == totalPrice) {
-            this.setPayed(true);
-            this.setPayedDate(new Date());
-        }
+        this.setPayedDate(new Date());
         Payment payment = new Payment();
         payment.setAmount(amount);
         addPayment(payment);
@@ -195,16 +184,6 @@ public class Sale implements Serializable, Eager<Sale> {
                 .map(SalesLineItem::getTrainingBundle)
                 .map(ATrainingBundle::isDeletable)
                 .reduce(Boolean::logicalAnd).orElse(true);
-    }
-
-    public void removeBundlesFromCustomersCurrentBundles() {
-        List<ATrainingBundle> trainingBundles = this.getSalesLineItems()
-                .stream()
-                .map(SalesLineItem::getTrainingBundle)
-                .collect(Collectors.toList());
-        if (trainingBundles.isEmpty() || this.getCustomer().getTrainingBundles().isEmpty())
-            return;
-        this.getCustomer().getTrainingBundles().removeAll(trainingBundles);
     }
 
     @PrePersist

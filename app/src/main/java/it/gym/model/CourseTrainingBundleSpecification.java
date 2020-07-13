@@ -8,6 +8,7 @@ import lombok.Generated;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import java.util.Objects;
 
 @Entity
 @DiscriminatorValue(value="C")
@@ -37,6 +38,20 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        CourseTrainingBundleSpecification that = (CourseTrainingBundleSpecification) o;
+        return Objects.equals(maxCustomers, that.maxCustomers);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), maxCustomers);
+    }
+
+    @Override
     public ATrainingBundle createTrainingBundle(Long optionId) {
         CourseTrainingBundle ctb = new CourseTrainingBundle();
         ctb.setName(this.getName());
@@ -51,5 +66,12 @@ public class CourseTrainingBundleSpecification extends ATrainingBundleSpecificat
     public CourseTrainingBundleSpecification eager() {
         super.eager();
         return this;
+    }
+
+    @Override
+    public String toString() {
+        return "CourseTrainingBundleSpecification{" +
+                "maxCustomers=" + maxCustomers +
+                '}';
     }
 }

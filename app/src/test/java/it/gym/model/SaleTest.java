@@ -38,7 +38,6 @@ public class SaleTest {
         CourseTrainingBundle expectedBundle = createCourseBundle(start, expectedSpecs, option);
         SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
 
-        assertThat(sli.getBundleSpecification()).isEqualTo(expectedSpecs);
         assertThat(sli.getTrainingBundle()).isEqualTo(expectedBundle);
 
         assertThat(sli).isEqualTo(expectedSli);
@@ -198,7 +197,6 @@ public class SaleTest {
         sale.setId(1L);
         sale.setCompleted(false);
         sale.setAmountPayed(0.0);
-        sale.setPayed(false);
         sale.setPayedDate(null);
         sale.setCustomer(customer);
         return sale;
