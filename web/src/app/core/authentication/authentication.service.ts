@@ -1,4 +1,4 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
 
 import {HttpClient} from '@angular/common/http';
 import {Credentials, Gym, Role, Roles, TypeIndex, User} from '../../shared/model';
@@ -11,6 +11,7 @@ import {environment} from '../../../environments/environment';
  * Provides a base for authentication workflow.
  * The login/logout methods should be replaced with proper implementation.
  */
+@Directive()
 @Injectable({
     providedIn: 'root'
 })

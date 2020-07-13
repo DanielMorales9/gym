@@ -1,5 +1,5 @@
 import {Subject, throwError} from 'rxjs';
-import {ChangeDetectorRef, ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { ChangeDetectorRef, ElementRef, Injectable, OnDestroy, OnInit, ViewChild, Directive } from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../model';
 import {EVENT_TYPES} from './event-types.enum';
@@ -33,6 +33,7 @@ interface EventGroupMeta {
     type: string;
 }
 
+@Directive()
 @Injectable()
 export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy {
 

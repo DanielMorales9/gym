@@ -1,8 +1,9 @@
-import {Injectable, OnDestroy, OnInit} from '@angular/core';
+import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
 import {AuthenticationService} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 
+@Directive()
 @Injectable()
 export class PolicyService implements OnInit, OnDestroy {
 
