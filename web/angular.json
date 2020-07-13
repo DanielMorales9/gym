@@ -150,12 +150,12 @@
   "defaultProject": "client",
   "schematics": {
     "@schematics/angular:class": {
-      "spec": false
+      "skipTests": true
     },
     "@schematics/angular:component": {
       "prefix": "app",
-      "styleext": "css",
-      "changeDetection": "OnPush",
+      "style": "css",
+      "changeDetection": "OnPush"
     },
     "@schematics/angular:directive": {
       "prefix": "app"
