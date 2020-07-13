@@ -42,13 +42,12 @@
                 </mat-card-header>
                 <mat-card-content>
                     <div class="chart">
-                        <canvas baseChart #pieChart
-                                [datasets]="pieChartData"
-                                [labels]="pieChartLabels"
-                                [colors]="pieChartColors"
-                                [chartType]="pieChartType"
-                                [options]="pieChartOptions"
-                                [legend]="pieChartLegend">
+                        <canvas baseChart #barChartByType
+                                [datasets]="barChartTypeData"
+                                [labels]="barChartTypeLabels"
+                                [chartType]="barChartType"
+                                [options]="barChartTypeOptions"
+                                [legend]="barChartTypeLegend">
                         </canvas>
                     </div>
                 </mat-card-content>

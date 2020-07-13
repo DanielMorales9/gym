@@ -19,34 +19,21 @@
                     <mat-icon fontSet="fas" fontIcon="fa-tag"></mat-icon>&nbsp;{{bundleSpec?.type | map: bundleType}}
                 </div>
 
-                <ng-container [ngSwitch]="bundleSpec?.type">
+                <div *ngIf="bundleSpec?.unlimitedDeletions">
+                    <mat-icon fontSet="fas" fontIcon="fa-infinity"></mat-icon>&nbsp;Cancellazioni illimitate
+                </div>
+                <div *ngIf="!bundleSpec?.unlimitedDeletions && bundleSpec?.numDeletions">
+                    <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundleSpec?.numDeletions}}
+                </div>
 
-                    <ng-container *ngSwitchCase="PERSONAL">
+                <div *ngIf="bundleSpec?.type == COURSE">
+                    <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundleSpec?.maxCustomers}}
+                </div>
 
-                        <div *ngIf="bundleSpec?.unlimitedDeletions">
-                            <mat-icon fontSet="fas" fontIcon="fa-infinity"></mat-icon>&nbsp;Cancellazioni illimitate
-                        </div>
-                        <div *ngIf="!bundleSpec?.unlimitedDeletions && bundleSpec?.numDeletions">
-                            <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundleSpec?.numDeletions}}
-                        </div>
+                <div *ngIf="bundleSpec?.options.length == 0;">
+                    <mat-icon fontSet="fa" fontIcon="fa-list-ol"></mat-icon>&nbsp;Nessuna opzione disponibile
+                </div>
 
-                        <ng-container *ngIf="bundleSpec?.options.length == 0;">
-                            <div>
-                                <mat-icon fontSet="fa" fontIcon="fa-list-ol"></mat-icon>&nbsp;Nessuna opzione disponibile
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="COURSE">
-                        <div>
-                            <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundleSpec?.maxCustomers}}
-                        </div>
-                        <ng-container *ngIf="bundleSpec?.options.length == 0;">
-                            <div>
-                                <mat-icon fontSet="fa" fontIcon="fa-list-ol"></mat-icon>&nbsp;Nessuna opzione disponibile
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </ng-container>
             </div>
             <ng-container>
                 <mat-expansion-panel *ngIf="bundleSpec?.options.length > 0"

@@ -23,7 +23,7 @@
                 <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Attivo
             </span>
                 <span class="red-light" *ngIf="isExpired()">
-                <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Scaduto
+                <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Terminato
             </span>
             </div>
             <div>
@@ -33,26 +33,18 @@
                 <mat-icon fontSet="fas" fontIcon="fa-user-tag"></mat-icon>&nbsp;
                 {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
             </div>
-            <ng-container [ngSwitch]="bundle?.type">
-                <ng-container *ngSwitchCase="PERSONAL">
-                    <div>
-                        <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon>&nbsp;
-                        {{bundle?.sessions.length}}/{{bundle?.option.number}} Sessioni
-                    </div>
-                </ng-container>
-                <ng-container *ngSwitchCase="COURSE">
-                    <ng-container *ngIf="!!bundle?.startTime">
-                    <div>
-                        <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
-                        Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
-                    </div>
-                    <div>
-                        <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
-                        Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
-                    </div>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
+            <div *ngIf="!!bundle?.startTime">
+                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
+                Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
+            </div>
+            <div *ngIf="!!bundle?.endTime">
+                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
+                Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
+            </div>
+            <div>
+                <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon> {{bundle?.sessions.length}} Sessioni /
+                {{bundle?.option.number}} {{bundle?.option.type != 'B' ? 'Mesi': 'Totali'}}
+            </div>
             <div *ngIf="!!bundle?.expiredAt">
                 <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>
                 Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
