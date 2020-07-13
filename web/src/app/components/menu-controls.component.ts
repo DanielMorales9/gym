@@ -44,6 +44,11 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             .subscribe( v => {
                 this.setCurrentRole(v);
             });
+
+        setTimeout(() => {
+            this.roles = this.auth.getUser().roles;
+            this.setCurrentRole(this.currentRoleId || this.roles[0].id);
+        }, 1000);
     }
 
     setCurrentRole(v) {

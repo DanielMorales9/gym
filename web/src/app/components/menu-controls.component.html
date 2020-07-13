@@ -4,8 +4,7 @@
     <button mat-menu-item *ngIf="!(currentRoleId | currentRole: 2)" (click)="gotToStats()">
         <mat-icon>show_chart</mat-icon>&nbsp;Statistiche</button>
     <button mat-menu-item (click)="goToGym()"><mat-icon>store</mat-icon>&nbsp;La mia palestra</button>
-    <button mat-menu-item *ngIf="roles?.length > 1"
-            [matMenuTriggerFor]="views">
+    <button mat-menu-item *ngIf="roles?.length > 1" [matMenuTriggerFor]="views">
         <mat-icon>remove_red_eye</mat-icon>&nbsp;Cambia vista
     </button>
     <button mat-menu-item (click)="doLogout()"><mat-icon>logout</mat-icon>&nbsp;Logout</button>
