@@ -97,7 +97,9 @@ export class BundlesComponent extends BaseComponent implements OnInit {
         } else if ($event.type === 'edit') {
             this.service.patchBundle($event.bundle)
                 .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(undefined, err => this.snackbar.open(err.error.message));
+                .subscribe({
+                    error: err => this.snackbar.open(err.error.message)
+                });
         }
     }
 

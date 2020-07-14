@@ -99,9 +99,9 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
             .pipe(
                 takeUntil(this.unsubscribe$),
                 mergeMap((users: any) => {
-                    const allIds = users.map(user => this.facade.getCurrentTrainingBundles(user.id));
-                    return forkJoin(...allIds).pipe(
-                        map((idArr) => {
+                    const allIds: Array<Observable<any>> = users.map(user => this.facade.getCurrentTrainingBundles(user.id));
+                    return forkJoin(allIds)
+                        .pipe(map((idArr) => {
                             users.forEach((eachUser, index) => {
                                 eachUser.currentTrainingBundles = idArr[index];
                                 this.userBundle[eachUser.id] = idArr[index]
@@ -163,7 +163,8 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     }
 
     confirm() {
-        forkJoin(this.event.reservations.map(r => this.confirmReservation(r.id)))
+        const obs: Array<Observable<any>> = this.event.reservations.map(r => this.confirmReservation(r.id));
+        forkJoin(obs)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(r => {
                 this.findById(this.event.id);
@@ -304,7 +305,6 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
     assignWorkout() {
         this.router.navigate(['sessions', this.event.reservations[0].session.id, 'assignWorkout'], {relativeTo: this.route});
     }
-
 
     goToWorkout() {
         this.router.navigate(['sessions', this.event.reservations[0].session.id, 'programme'], {relativeTo: this.route});

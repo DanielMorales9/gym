@@ -3,7 +3,7 @@ import {ChartDataSets, ChartOptions, ChartType} from 'chart.js';
 import {BaseChartDirective, Color, Label} from 'ng2-charts';
 import {StatsService} from '../../core/controllers';
 import {map, takeUntil} from 'rxjs/operators';
-import 'rxjs/add/operator/toPromise';
+
 import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
 import {AuthenticationService} from '../../core/authentication';
