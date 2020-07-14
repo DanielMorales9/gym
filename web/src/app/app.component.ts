@@ -1,6 +1,6 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
-import 'rxjs/add/operator/finally';
+
 import {ScreenService} from './core/utilities';
 import {interval, Observable, of} from 'rxjs';
 import {SideBarComponent} from './components';

@@ -44,7 +44,7 @@ export function feedChart(d, bundleTypeName) {
     }
 
     d = pad;
-    const labels = d.map(v => v.week).filter((v, i, a) => a.indexOf(v) === i)
+    const labels = d.map(v => v.week).filter((v, i, a) => a.indexOf(v) === i);
     labels.sort((a, b) => a - b);
     const lineChartLabels = labels.map(v => 'Sett. ' + v);
     const lineChartData = [];

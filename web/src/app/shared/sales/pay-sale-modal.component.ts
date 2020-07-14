@@ -41,11 +41,12 @@ export class PaySaleModalComponent implements OnInit {
     }
 
     submit() {
-        if (this.amount.value > 0 )
+        if (this.amount.value > 0 ) {
             this.dialogRef.close({
                 sale: this.sale,
                 amount: this.amount.value
             });
+        }
 
     }
 
