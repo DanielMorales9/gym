@@ -5,7 +5,7 @@ import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
-import {BundleType, BundleTypeConstant} from '../model';
+import {Bundle, BundleType, BundleTypeConstant} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
@@ -29,7 +29,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
     canDelete: boolean;
     canShowWorkout: boolean;
     canEditWorkout: boolean;
-    displayedSessionsColumns = ['index', 'date', 'time'];
+    displayedSessionsColumns = ['date', 'time'];
 
     constructor(private service: BundleService,
                 private dialog: MatDialog,
@@ -47,6 +47,14 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
             takeUntil(this.unsubscribe$),
                 switchMap(params => this.getBundle(+params['id'])))
             .subscribe(d => {
+                d.sessions.sort((a, b) => {
+                    if (new Date(b.startTime) < new Date(a.startTime)) {
+                        return -1;
+                    }
+                    else {
+                        return 1;
+                    }
+                });
                 this.bundle = d;
                 this.getPolicies();
                 if (this.canShowWorkout) {

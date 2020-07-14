@@ -19,8 +19,8 @@ function insertAt(array, index, ...elementsArray) {
 })
 export class StatsComponent extends BaseComponent implements OnInit {
 
-    @ViewChild('pieChart', {static: true, read: BaseChartDirective})
-    public pieChart: BaseChartDirective;
+    @ViewChild('barChartByType', {static: true, read: BaseChartDirective})
+    public barChartByType: BaseChartDirective;
 
     @ViewChild('barChart', {static: true, read: BaseChartDirective})
     public barChart: BaseChartDirective;
@@ -106,28 +106,13 @@ export class StatsComponent extends BaseComponent implements OnInit {
     public barChartDayLegend = true;
     public barChartDayData: ChartDataSets[] = [{data: []}];
 
-    public pieChartOptions: ChartOptions = {
-        responsive: true,
-        legend: {
-            position: 'top',
-        },
-        plugins: {
-            datalabels: {
-                formatter: (value, ctx) => {
-                    return ctx.chart.data.labels[ctx.dataIndex];
-                },
-            },
-        }
+    public barChartTypeOptions: ChartOptions = {
+        responsive: true
     };
-    public pieChartLabels: Label[] = [];
-    public pieChartType: ChartType = 'pie';
-    public pieChartLegend = true;
-    public pieChartData: ChartDataSets[] = [{data: []}];
-    public pieChartColors = [
-        {
-            backgroundColor: ['rgba(0,255,0,0.3)', 'rgba(0,0,255,0.3)'],
-        },
-    ];
+    public barChartTypeLabels: Label[] = [];
+
+    public barChartTypeLegend = true;
+    public barChartTypeData: ChartDataSets[] = [{data: []}];
 
     public lineChartData: ChartDataSets[] = [{data: []}];
     public lineChartLabels: Label[] = [];
@@ -189,12 +174,16 @@ export class StatsComponent extends BaseComponent implements OnInit {
         return this.statsService.getSalesByBundleType(interval)
             .pipe(takeUntil(this.unsubscribe$),
                 map(d => {
-                    this.pieChartLabels.length = 0;
-                    this.pieChartLabels = d.map(v => v.bundletype);
-                    this.pieChartData = [{data: d.map(v => v.totalprice), label: 'Totale'}];
-                    this.pieChart.datasets = this.pieChartData;
-                    this.pieChart.labels = this.pieChartLabels;
-                    this.pieChart.chart.update();
+
+                    this.barChartTypeLabels.length = 0;
+                    this.barChartTypeLabels = d.map(v => v.bundletype);
+                    this.barChartTypeData = [
+                        {data: d.map(v => v.totalprice), label: 'Totale'},
+                        {data: d.map(v => v.amountpayed), label: 'Pagato'}
+                    ];
+                    this.barChartByType.datasets = this.barChartTypeData;
+                    this.barChartByType.labels = this.barChartTypeLabels;
+                    this.barChartByType.chart.update();
 
                     const prices = d.map(v => v.totalprice) || [];
                     const amounts = d.map(v => v.amountpayed) || [];

@@ -32,7 +32,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
     }
 
     getRoles() {
-        this.auth.getRoles()
+        this.auth.getObservableRoles()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe( v => {
                 this.roles = v;
@@ -44,6 +44,13 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             .subscribe( v => {
                 this.setCurrentRole(v);
             });
+
+        setTimeout(() => {
+            if (this.auth.isAuthenticated()) {
+                this.roles = this.auth.getUser().roles;
+                this.setCurrentRole(this.currentRoleId || this.roles[0].id);
+            }
+        }, 1000);
     }
 
     setCurrentRole(v) {

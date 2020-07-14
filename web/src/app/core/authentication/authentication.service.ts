@@ -197,7 +197,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
         return Roles[idx - 1];
     }
 
-    getRoles(): Subject<Role[]> {
+    getObservableRoles(): Subject<Role[]> {
         return this.roles$;
     }
 

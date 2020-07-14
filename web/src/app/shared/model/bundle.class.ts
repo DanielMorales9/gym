@@ -40,6 +40,8 @@ export abstract class BundleSpecification {
     disabled: boolean;
     type: string;
     options: Option[];
+    unlimitedDeletions: boolean;
+    numDeletions: number;
 
     constructor() {
 

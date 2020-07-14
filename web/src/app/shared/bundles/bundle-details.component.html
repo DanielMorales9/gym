@@ -15,7 +15,7 @@
                     <mat-icon fontSet="fa" fontIcon="fa-check-circle"></mat-icon>&nbsp;Attivo
                 </span>
                         <span class="red-light" *ngIf="isExpired()">
-                    <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Scaduto
+                    <mat-icon fontSet="fa" fontIcon="fa-times-circle"></mat-icon>&nbsp;Terminato
                 </span>
                 </div>
                 <div>
@@ -29,29 +29,26 @@
                     <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>
                     Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
                 </div>
-                <ng-container [ngSwitch]="bundle?.type">
 
-                    <ng-container *ngSwitchCase="PERSONAL">
-                        <div>
-                            <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon> {{bundle?.sessions.length}}/{{bundle?.option.number}} Sessioni
-                        </div>
-                    </ng-container>
-                    <ng-container *ngSwitchCase="COURSE">
-                        <ng-container *ngIf="!!bundle?.startTime">
-                            <div>
-                                <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
-                                Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
-                            </div>
-                            <div>
-                                <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
-                                Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
-                            </div>
-                            <div>
-                                <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundle?.bundleSpec.maxCustomers}}
-                            </div>
-                        </ng-container>
-                    </ng-container>
-                </ng-container>
+                <div>
+                    <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon> {{bundle?.sessions.length}} Sessioni /
+                    {{bundle?.option.number}} {{bundle?.option.type != 'B' ? 'Mesi': 'Totali'}}
+                </div>
+                <div *ngIf="!!bundle?.startTime">
+                    <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
+                    Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
+                </div>
+                <div *ngIf="!!bundle?.endTime">
+                    <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
+                    Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
+                </div>
+
+                <div *ngIf="bundle?.unlimitedDeletions">
+                    <mat-icon fontSet="fas" fontIcon="fa-infinity"></mat-icon>&nbsp;Cancellazioni illimitate
+                </div>
+                <div *ngIf="!bundle?.unlimitedDeletions && bundle?.numDeletions">
+                    <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundle?.numDeletions}}
+                </div>
             </div>
             <mat-expansion-panel class='expansion-list'
                                  [class.mat-expansion-panel]="false"
@@ -117,7 +114,7 @@
     <button mat-button color="basic" (click)="assignWorkout(element.id)"
             *ngIf="canEditWorkout">
         <span>
-            <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Assegna Programma
+            <mat-icon fontSet="fas" fontIcon="fa-dumbbell"></mat-icon>&nbsp;Assegna
         </span>
     </button>
 </ng-template>
