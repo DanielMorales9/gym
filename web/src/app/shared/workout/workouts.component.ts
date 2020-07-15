@@ -1,5 +1,4 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {BaseComponent} from '../base-component';
 import {QueryableDatasource, WorkoutHelperService} from '../../core/helpers';
 import {Workout} from '../model';
 import {WorkoutService} from '../../core/controllers';
@@ -7,23 +6,19 @@ import {PolicyService} from '../../core/policy';
 import {MatDialog} from '@angular/material/dialog';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {SnackBarService} from '../../core/utilities';
-import {first} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
+import {SearchComponent} from '../search-component';
 
 @Component({
     templateUrl: './workouts.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorkoutsComponent extends BaseComponent implements OnInit {
+export class WorkoutsComponent extends SearchComponent<Workout> implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun workout disponibile';
 
     query: any = {};
-    private queryParams: any;
-
-    private pageSize = 10;
-    ds: QueryableDatasource<Workout>;
 
     filters = [
         {name: 'Tutti', value: null}
@@ -38,12 +33,12 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
     constructor(private helper: WorkoutHelperService,
                 private service: WorkoutService,
                 private dialog: MatDialog,
-                private route: ActivatedRoute,
-                private router: Router,
+                protected route: ActivatedRoute,
+                protected router: Router,
                 private snackbar: SnackBarService,
                 private policy: PolicyService) {
-        super();
-        this.ds = new QueryableDatasource<Workout>(helper, this.pageSize, this.query);
+        super(router, route);
+        this.ds = new QueryableDatasource<Workout>(helper, this.query);
     }
 
     ngOnInit(): void {
@@ -64,32 +59,14 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
             });
     }
 
-    private initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.queryParams.isTemplate = true;
-            this.search(this.queryParams);
-        });
+    protected initDefaultQueryParams(params: any): any {
+        params.isTemplate = true;
+        return params;
     }
 
-    private updateQueryParams($event) {
-        if (!$event) { $event = {isTemplate: true}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
-    }
-
-    search($event?) {
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
+    protected enrichQueryParams($event?): any {
+        $event.isTemplate = true;
+        return $event;
     }
 
     handleEvent($event) {
@@ -127,7 +104,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
         this.service.postWorkout(w).subscribe(_ => {
             const message = `Il workout ${w.name} è stato creato`;
             this.snackbar.open(message);
-            this.search({isTemplate: true});
+            this.dataSourceSearch({isTemplate: true});
         }, err => this.snackbar.open(err.error.message));
     }
 
@@ -135,7 +112,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
         this.service.deleteWorkout(id).subscribe(_ => {
             const message = `Il workout è stato cancellato`;
             this.snackbar.open(message);
-            this.search({isTemplate: true});
+            this.dataSourceSearch({isTemplate: true});
         }, err => this.snackbar.open(err.error.message));
     }
 
@@ -143,7 +120,7 @@ export class WorkoutsComponent extends BaseComponent implements OnInit {
         this.service.patchWorkout(w).subscribe(_ => {
             const message = `Il workout ${w.name} è stato modificato`;
             this.snackbar.open(message);
-            this.search({isTemplate: true});
+            this.dataSourceSearch({isTemplate: true});
         }, err => this.snackbar.open(err.error.message));
     }
 

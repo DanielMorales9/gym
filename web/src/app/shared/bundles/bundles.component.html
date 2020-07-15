@@ -3,7 +3,7 @@
               [filterName]="filterName"
               [selected]="selected"
               datePlaceholder="Cerca per data"
-              (done)="search($event)"></search-date>
+              (done)="dataSourceSearch($event)"></search-date>
 
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 

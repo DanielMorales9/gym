@@ -7,24 +7,21 @@ import {BundleSpecsService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
-import {BaseComponent} from '../base-component';
+import {SearchComponent} from '../search-component';
 
 @Component({
     templateUrl: './bundle-specs.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleSpecsComponent extends BaseComponent implements OnInit {
+export class BundleSpecsComponent extends SearchComponent<BundleSpecification> implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
     query: any = {};
-    private queryParams: any;
 
-    private pageSize = 10;
-    ds: QueryableDatasource<BundleSpecification>;
     canDelete: boolean;
     canDisable: boolean;
     canCreate: boolean;
@@ -37,42 +34,22 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
     selected = false;
 
     constructor(private service: BundleSpecsService,
-                private router: Router,
-                private route: ActivatedRoute,
+                protected router: Router,
+                protected route: ActivatedRoute,
                 private dialog: MatDialog,
                 private helper: BundleSpecHelperService,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-        super();
-        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
+        super(router, route);
+        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.query);
     }
 
     ngOnInit(): void {
         this.initQueryParams();
+
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
         this.canCreate = this.policy.get('bundleSpec', 'canCreate');
-    }
-
-    private initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.search(this.queryParams);
-        });
-    }
-
-    private updateQueryParams($event) {
-        if (!$event) { $event = {}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
     }
 
     openDialog(): void {
@@ -111,20 +88,14 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
         }
     }
 
-    search($event?) {
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
-    }
-
     private createBundleSpec(bundleSpec: BundleSpecification) {
         delete bundleSpec.id;
         this.service.post(bundleSpec)
             .subscribe(_ => {
-            const message = `Il pacchetto ${bundleSpec.name} è stato creato`;
-            this.snackbar.open(message);
-            this.search();
-        }, err => this.snackbar.open(err.error.message));
+                const message = `Il pacchetto ${bundleSpec.name} è stato creato`;
+                this.snackbar.open(message);
+                this.dataSourceSearch();
+            }, err => this.snackbar.open(err.error.message));
     }
 
     private deleteBundleSpec(bundleSpec: BundleSpecification) {
@@ -133,8 +104,8 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
                 takeUntil(this.unsubscribe$),
                 filter(v => !!v),
                 switchMap((v: any) => this.service.deleteBundleSpecs(bundleSpec.id))
-            ).subscribe(_ => this.search(),
-                err => this.snackbar.open(err.error.message));
+            ).subscribe(_ => this.dataSourceSearch(),
+            err => this.snackbar.open(err.error.message));
     }
 
     private toggleDisabled(bundleSpec: BundleSpecification) {
@@ -146,7 +117,7 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
         this.service.patchBundleSpecs(bundleSpec).subscribe(_ => {
             const message = `Il pacchetto ${bundleSpec.name} è stato modificato`;
             this.snackbar.open(message);
-            this.search();
+            this.dataSourceSearch();
         }, err => this.snackbar.open(err.error.message));
     }
 
@@ -165,4 +136,5 @@ export class BundleSpecsComponent extends BaseComponent implements OnInit {
     trackBy(index, item) {
         return item ? item.id : index;
     }
+
 }

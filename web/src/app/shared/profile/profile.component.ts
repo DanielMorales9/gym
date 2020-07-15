@@ -137,8 +137,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
 
             }, err => {
                 const gender = this.user.gender ? 'woman' : 'man';
-                this.image_src = `https://cdn0.iconfinder.com/data/
-                icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
+                this.image_src = 'https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png';
                 this.cdr.detectChanges();
 
             });

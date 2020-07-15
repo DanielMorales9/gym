@@ -3,78 +3,52 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
-import {first, takeUntil} from 'rxjs/operators';
-import {BaseComponent} from '../base-component';
 import {Session} from '../model/session.class';
 import {SessionService} from '../../core/controllers/session.service';
 import {SessionHelperService} from '../../core/helpers/session-helper.service';
+import {SearchComponent} from '../search-component';
 
 @Component({
     templateUrl: './sessions-customer.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SessionsCustomerComponent extends BaseComponent implements OnInit {
+export class SessionsCustomerComponent extends SearchComponent<Session> implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessuna sessione';
 
     query: any;
     customerId: any;
 
-    ds: QueryableDatasource<Session>;
-
-    private queryParams: any;
-    private pageSize = 10;
 
     constructor(private service: SessionService,
                 private helper: SessionHelperService,
-                private route: ActivatedRoute,
-                private router: Router,
+                protected route: ActivatedRoute,
+                protected router: Router,
                 private dialog: MatDialog,
                 private snackbar: SnackBarService) {
-        super();
-        this.ds = new QueryableDatasource<Session>(helper, this.pageSize, this.query);
+        super(router, route);
+        this.ds = new QueryableDatasource<Session>(helper, this.query);
     }
 
     ngOnInit(): void {
         this.customerId = this.route.snapshot.params['id'];
-        this.initQueryParams(this.customerId);
+        this.initQueryParams();
     }
 
-    private initQueryParams(id?) {
-        this.route.queryParams
-            .pipe(
-                first(),
-                takeUntil(this.unsubscribe$))
-            .subscribe(params => {
-                this.queryParams = Object.assign({}, params);
-                if (!!id) {
-                    this.queryParams.customerId = id;
-                }
-                if (!!this.queryParams.date) {
-                    this.queryParams.date = new Date(this.queryParams.date);
-                }
-                this.search(this.queryParams);
-            });
+    protected initDefaultQueryParams(params: any): any {
+        if (!!this.customerId) {
+            params.customerId = this.customerId;
+        }
+        if (!!this.queryParams.date) {
+            params.date = new Date(params.date);
+        }
+        return params;
     }
 
-    private updateQueryParams(queryParams?) {
-        if (!queryParams) { queryParams = {}; }
-        if (this.customerId) { queryParams.customerId = this.customerId; }
-        this.queryParams = this.query = queryParams;
-        this.router.navigate(
-            [],
-            {
-                replaceUrl: true,
-                relativeTo: this.route,
-                queryParams: this.queryParams,
-            });
-    }
-
-    search($event?) {
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
+    protected enrichQueryParams($event?): any {
+        if (this.customerId) { $event.customerId = this.customerId; }
+        return $event;
     }
 
     handleEvent($event) {
@@ -89,7 +63,6 @@ export class SessionsCustomerComponent extends BaseComponent implements OnInit {
     private goToDetails(session: any) {
         this.router.navigate([session.id, 'programme'], {relativeTo: this.route});
     }
-
 
     private assignWorkout(session: any) {
         this.router.navigate([session.id, 'assignWorkout'], {relativeTo: this.route});

@@ -4,18 +4,21 @@ import {CollectionViewer} from '@angular/cdk/collections';
 import {HelperService} from './index';
 
 export class QueryableDatasource<T> extends DataSource<any> {
+
     private length = 1;
     private cachedData = Array.from<T |undefined>({length: this.length});
     private fetchedPages = new Set<number>();
     private dataStream = new BehaviorSubject<(T |undefined)[]>(this.cachedData);
     private subscription = new Subscription();
     empty = false;
+    private PAGE_SIZE = 10;
 
 
     constructor(private helper: HelperService<T>,
-                private pageSize: number,
-                private query: Object) {
+                private query: Object,
+                private pageSize?: number) {
         super();
+        this.pageSize = !this.pageSize ? this.PAGE_SIZE : this.pageSize;
     }
 
     connect(collectionViewer: CollectionViewer): Observable<(T |undefined)[]> {

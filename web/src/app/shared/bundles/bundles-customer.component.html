@@ -4,7 +4,7 @@
               [selected]="selected"
               textPlaceholder="Nome"
               datePlaceholder="Cerca data"
-              (done)="search($event)"></mixed-search>
+              (done)="dataSourceSearch($event)"></mixed-search>
 
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 

@@ -1,45 +1,40 @@
 import {QueryableDatasource, WorkoutHelperService} from '../../core/helpers';
 import {Workout} from '../model';
 import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/core';
-import {BaseComponent} from '../base-component';
 import {WorkoutService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
 import {ActivatedRoute, Router} from '@angular/router';
-import {first, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 import {Location} from '@angular/common';
+import {SearchComponent} from '../search-component';
 
 @Component({
     templateUrl: './assign-workouts.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AssignWorkoutsComponent extends BaseComponent implements OnInit, OnDestroy {
+export class AssignWorkoutsComponent extends SearchComponent<Workout> implements OnInit, OnDestroy {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun Workout disponibile';
 
     sub: any;
-
     query: any;
 
-    private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
 
-    ds: QueryableDatasource<Workout>;
-    private queryParams: any;
     filters = [{name: 'Tutti', value: null}];
     filterName = 'tag';
     private sessionId: number;
 
-    constructor(
-        private helper: WorkoutHelperService,
-        private service: WorkoutService,
-        private snackbar: SnackBarService,
-        private router: Router,
-        private location: Location,
-        private route: ActivatedRoute) {
-        super();
-        this.ds = new QueryableDatasource<Workout>(helper, this.pageSize, this.query);
+    constructor(private helper: WorkoutHelperService,
+                private service: WorkoutService,
+                private snackbar: SnackBarService,
+                protected router: Router,
+                private location: Location,
+                protected route: ActivatedRoute) {
+        super(router, route);
+        this.ds = new QueryableDatasource<Workout>(helper, this.query);
     }
 
     ngOnInit(): void {
@@ -64,46 +59,19 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
             });
     }
 
-    private initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.queryParams.isTemplate = true;
-            this.search(this.queryParams);
-        });
+    protected initDefaultQueryParams(params: any): any {
+        params.isTemplate = true;
+        return params;
     }
 
-    private updateQueryParams($event) {
-        if (!$event) { $event = {isTemplate: true}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
+    protected enrichQueryParams(params: any): any {
+        params.isTemplate = true;
+        return params;
     }
 
     ngOnDestroy() {
         // this.destroy();
         super.ngOnDestroy();
-    }
-
-
-    search($event) {
-        Object.keys($event).forEach(key => {
-            if ($event[key] === undefined) {
-                delete $event[key];
-            }
-            if ($event[key] === '') {
-                delete $event[key];
-            }
-        });
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
     }
 
     confirmSession() {
@@ -119,7 +87,7 @@ export class AssignWorkoutsComponent extends BaseComponent implements OnInit, On
                     .pipe( map( w => w));
             })
         ).subscribe(res => this.location.back(),
-                err => this.snackbar.open(err.err.message));
+            err => this.snackbar.open(err.err.message));
     }
 
     selectWorkout(id: any) {
