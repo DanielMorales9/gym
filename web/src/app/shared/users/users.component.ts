@@ -12,13 +12,14 @@ import {PolicyService} from '../../core/policy';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {SearchComponent} from '../search-component';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './users.component.html',
     styleUrls: ['../../styles/search-list.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent extends SearchComponent<User> implements OnInit {
+export class UsersComponent extends SearchComponent<User> implements Policy, OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
 
@@ -50,11 +51,11 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
 
     ngOnInit(): void {
         this.type = this.route.parent.parent.snapshot.routeConfig.path;
-        this.getPolicy();
+        this.getPolicies();
         this.initQueryParams();
     }
 
-    private getPolicy() {
+    getPolicies() {
         this.canDelete = this.policy.get('user', 'canDelete');
         this.canCreate = this.policy.get('user', 'canCreate');
         this.canEdit = this.policy.get('user', 'canEdit');

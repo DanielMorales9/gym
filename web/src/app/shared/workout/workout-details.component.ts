@@ -9,13 +9,14 @@ import {WorkoutModalComponent} from './workout-modal.component';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {BaseComponent} from '../base-component';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './workout-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
+export class WorkoutDetailsComponent extends BaseComponent implements Policy, OnInit {
 
     workout: Workout;
 
@@ -44,7 +45,7 @@ export class WorkoutDetailsComponent extends BaseComponent implements OnInit {
             });
     }
 
-    private getPolicies() {
+    getPolicies() {
         this.canDelete = this.policy.get('workout', 'canDelete');
         this.canEdit = this.policy.get('workout', 'canEdit');
     }

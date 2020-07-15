@@ -3,13 +3,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
 import {User, USER_TYPE} from '../model';
+import {BaseComponent} from '../base-component';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './user-controls.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/app.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserControlsComponent implements OnInit {
+export class UserControlsComponent extends BaseComponent implements Policy,  OnInit {
 
     user: User;
     canSell: boolean;
@@ -27,6 +29,7 @@ export class UserControlsComponent implements OnInit {
                 private userService: UserService,
                 private cdr: ChangeDetectorRef,
                 private policy: PolicyService) {
+        super();
     }
 
     ngOnInit(): void {
@@ -36,21 +39,21 @@ export class UserControlsComponent implements OnInit {
         if (!!id) {
             this.userService.findUserById(id).subscribe(data => {
                 this.user = data;
-                this.getPolicy();
+                this.getPolicies();
                 this.cdr.detectChanges();
             }, err => { throw err; });
         }
     }
 
-    private getPolicy() {
+    getPolicies() {
         const entity = USER_TYPE[this.user.type];
+        this.isCustomer = entity === 'customer';
         this.canSell = this.policy.get(entity, 'canSell');
         this.canMakeAppointments = this.policy.get(entity, 'canMakeAppointments');
         this.canShowBundles = this.policy.get(entity, 'canShow', 'bundles');
         this.canShowSales = this.policy.get(entity, 'canShow', 'sales');
         this.canShowStats = this.policy.get(entity, 'canShow', 'stats');
         this.canShowSessions = this.policy.get(entity, 'canShow', 'sessions');
-        this.isCustomer = entity === 'customer';
     }
 
     sell() {

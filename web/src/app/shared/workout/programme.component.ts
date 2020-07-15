@@ -12,6 +12,7 @@ import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {BaseComponent} from '../base-component';
 import {BundleEntity, BundleType} from '../model';
+import {Policy} from '../policy.interface';
 
 
 @Component({
@@ -24,7 +25,7 @@ import {BundleEntity, BundleType} from '../model';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProgrammeComponent extends BaseComponent implements OnInit {
+export class ProgrammeComponent extends BaseComponent implements Policy, OnInit {
 
     session: any;
     users: any;
@@ -56,12 +57,12 @@ export class ProgrammeComponent extends BaseComponent implements OnInit {
             )
             .subscribe( r => {
                 this.session = r;
-                this.getPolicy();
+                this.getPolicies();
                 this.cdr.detectChanges();
             });
     }
 
-    private getPolicy() {
+    getPolicies() {
         this.canDeleteWorkout = this.policy.get('workout', 'canDelete');
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
         this.canAssignWorkout = this.policy.get(this.sessionEntity[this.session.type], 'canAssignWorkout');

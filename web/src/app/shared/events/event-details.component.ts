@@ -10,13 +10,14 @@ import {BaseComponent} from '../base-component';
 import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
 import {User} from '../model';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './event-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventDetailsComponent extends BaseComponent implements OnInit {
+export class EventDetailsComponent extends BaseComponent implements Policy, OnInit {
 
     event: any;
     users: any;
@@ -73,7 +74,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
 
         this.findById(id).subscribe(
             r => {
-                this.getPolicy();
+                this.getPolicies();
                 if (r.type === 'C') {
                     this.computeMaps(id);
                 }
@@ -118,7 +119,7 @@ export class EventDetailsComponent extends BaseComponent implements OnInit {
         });
     }
 
-    private getPolicy() {
+    getPolicies() {
         this.canDelete = this.policy.get('reservation', 'canDelete');
         this.canCompleteEvent = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canComplete') && this.isTraining();
         this.canDeleteEvent = this.policy.get(this.EVENT_ENTITY[this.event.type], 'canDelete');

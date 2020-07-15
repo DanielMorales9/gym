@@ -9,18 +9,14 @@ import {Bundle, BundleType, BundleTypeConstant} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
+import { Policy } from '../policy.interface';
 
 @Component({
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
-
-    PERSONAL = BundleTypeConstant.PERSONAL;
-    COURSE   = BundleTypeConstant.COURSE;
-
-
+export class BundleDetailsComponent extends BaseComponent implements Policy, OnInit, OnDestroy {
     bundleType = BundleType;
 
     bundle: any;
@@ -143,7 +139,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
             });
     }
 
-    private getPolicies() {
+    getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
         this.canEdit = this.policy.get('bundle', 'canEdit');
         this.canShowWorkout = this.policy.get('workout', 'canShow');
