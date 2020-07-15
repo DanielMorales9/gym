@@ -7,26 +7,23 @@ import {BundleCustomerHelperService, QueryableDatasource} from '../../core/helpe
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
-import {BaseComponent} from '../base-component';
+import {SearchComponent} from '../search-component';
 
 @Component({
     templateUrl: './bundles-customer.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundlesCustomerComponent extends BaseComponent implements OnInit {
+export class BundlesCustomerComponent extends SearchComponent<Bundle> implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
     query: any;
     id: number;
 
-    ds: QueryableDatasource<Bundle>;
     canDelete: boolean;
     canEdit: boolean;
 
-    private queryParams: any;
-    private pageSize = 10;
     filters = [
         {name: 'Attivi', value: false},
         {name: 'Terminati', value: true},
@@ -36,13 +33,13 @@ export class BundlesCustomerComponent extends BaseComponent implements OnInit {
 
     constructor(private service: BundleService,
                 private helper: BundleCustomerHelperService,
-                private route: ActivatedRoute,
-                private router: Router,
+                protected route: ActivatedRoute,
+                protected router: Router,
                 private dialog: MatDialog,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-        super();
-        this.ds = new QueryableDatasource<Bundle>(helper, this.pageSize, this.query);
+        super(router, route);
+        this.ds = new QueryableDatasource<Bundle>(helper, this.query);
     }
 
     ngOnInit(): void {
@@ -50,13 +47,13 @@ export class BundlesCustomerComponent extends BaseComponent implements OnInit {
         this.route.params.pipe(
             first(),
             takeUntil(this.unsubscribe$))
-        .subscribe(param => {
-            this.id = +param['id'];
-            this.initQueryParams(this.id);
-        });
+            .subscribe(param => {
+                this.id = +param['id'];
+                this.initQueryParams(this.id);
+            });
     }
 
-    private initQueryParams(id?) {
+    protected initQueryParams(id?) {
         this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             if (Object.keys(params).length > 0) {
@@ -71,7 +68,7 @@ export class BundlesCustomerComponent extends BaseComponent implements OnInit {
         });
     }
 
-    private updateQueryParams(event?) {
+    protected updateQueryParams(event?) {
         if (!event) { event = {}; }
         if (this.id) { event.id = this.id; }
 
@@ -83,12 +80,6 @@ export class BundlesCustomerComponent extends BaseComponent implements OnInit {
                 relativeTo: this.route,
                 queryParams: this.queryParams,
             });
-    }
-
-    search($event?) {
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
     }
 
     private getPolicies() {

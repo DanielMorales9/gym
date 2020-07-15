@@ -1,5 +1,5 @@
 import {Subject, throwError} from 'rxjs';
-import { ChangeDetectorRef, ElementRef, Injectable, OnDestroy, OnInit, ViewChild, Directive } from '@angular/core';
+import {ChangeDetectorRef, Directive, ElementRef, Injectable, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {CalendarEvent, CalendarEventAction, CalendarMonthViewDay, CalendarView} from 'angular-calendar';
 import {Gym, User} from '../model';
 import {EVENT_TYPES} from './event-types.enum';
@@ -215,7 +215,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
                 this.weekStartsOn = this.DAY_OF_WEEK[config.weekStartsOn.toLowerCase()];
                 this.cdr.detectChanges();
-        });
+            });
     }
 
     private initView() {
@@ -482,9 +482,9 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         this.facade.completeEvent(data.eventId)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(res => {
-                    this.snackBar.open('Allenamento completato');
-                    this.getEvents();
-                }, err => this.snackBar.open(err.error.message));
+                this.snackBar.open('Allenamento completato');
+                this.getEvents();
+            }, err => this.snackBar.open(err.error.message));
     }
 
     protected createReservation(d) {
@@ -502,9 +502,9 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 })
             )
             .subscribe(res => {
-                    this.snackBar.open('Prenotazione effettuata');
-                    this.getEvents();
-                }, e => this.snackBar.open(e.message || e.error.message, undefined,  {duration: 5000}));
+                this.snackBar.open('Prenotazione effettuata');
+                this.getEvents();
+            }, e => this.snackBar.open(e.message || e.error.message, undefined,  {duration: 5000}));
     }
 
     protected createReservationFromBundle({userId, bundleId, startTime, endTime, external}) {
@@ -548,27 +548,27 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         this.facade.createHoliday(data.eventName, data.start, data.end)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(res => {
-                    this.snackBar.open('Chiusura confermata');
-                    this.getEvents();
-                }, err => this.snackBar.open(err.error.message));
+                this.snackBar.open('Chiusura confermata');
+                this.getEvents();
+            }, err => this.snackBar.open(err.error.message));
     }
 
     protected deleteHoliday(data) {
         this.facade.deleteHoliday(data.eventId)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(r => {
-                    this.snackBar.open('La chiusura è stata eliminata');
-                    this.getEvents();
-                }, err => this.snackBar.open(err.error.message));
+                this.snackBar.open('La chiusura è stata eliminata');
+                this.getEvents();
+            }, err => this.snackBar.open(err.error.message));
     }
 
     protected deleteCourseEvent(data: any) {
         this.facade.deleteCourseEvent(data.eventId)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(res => {
-                    this.snackBar.open('Evento eliminato');
-                    this.getEvents();
-                }, error => this.snackBar.open(error.error.message));
+                this.snackBar.open('Evento eliminato');
+                this.getEvents();
+            }, error => this.snackBar.open(error.error.message));
     }
 
     protected createCourseEvent(data: any) {
@@ -586,17 +586,17 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         this.facade.editHoliday(data.eventId, {name: data.eventName, startTime: data.start, endTime: data.end})
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(res => {
-                    this.snackBar.open('Chiusura confermata');
-                    this.getEvents();
-                }, (err) => this.snackBar.open(err.error.message));
+                this.snackBar.open('Chiusura confermata');
+                this.getEvents();
+            }, (err) => this.snackBar.open(err.error.message));
     }
 
     protected editTimeOff(data) {
         this.facade.editTimeOff(data.eventId, data.start, data.end, data.eventName)
             .subscribe( res => {
-                    this.snackBar.open('Ferie richieste');
-                    this.getEvents();
-                }, (err) => this.snackBar.open(err.error.message));
+                this.snackBar.open('Ferie richieste');
+                this.getEvents();
+            }, (err) => this.snackBar.open(err.error.message));
     }
 
     protected createTimeOff(data: any, end?: Date) {
@@ -609,7 +609,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
             });
     }
 
-    private updateQueryParams() {
+    protected updateQueryParams() {
         this.queryParams = {view: this.view, viewDate: this.viewDate, types: this.types};
         this.router.navigate(
             [],

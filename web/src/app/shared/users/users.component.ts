@@ -11,23 +11,20 @@ import {QueryableDatasource, UserHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {Observable} from 'rxjs';
-import {BaseComponent} from '../base-component';
+import {SearchComponent} from '../search-component';
 
 @Component({
     templateUrl: './users.component.html',
     styleUrls: ['../../styles/search-list.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent extends BaseComponent implements OnInit {
+export class UsersComponent extends SearchComponent<User> implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
 
     currentUserId: number;
 
     query = {name: ''};
-    private pageSize = 10;
-    private queryParams: any;
-    ds: QueryableDatasource<User>;
 
     canCreate: boolean;
     canDelete: boolean;
@@ -37,18 +34,19 @@ export class UsersComponent extends BaseComponent implements OnInit {
     constructor(private service: UserService,
                 private helper: UserHelperService,
                 private gymService: GymService,
-                private router: Router,
+                protected router: Router,
+                protected route: ActivatedRoute,
                 private activatedRoute: ActivatedRoute,
                 private auth: AuthenticationService,
                 private authService: AuthService,
                 private policy: PolicyService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
-        super();
+        super(router, route);
         this.auth.getObservableCurrentUserRoleId()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => this.currentUserId = v);
-        this.ds = new QueryableDatasource<User>(this.helper, this.pageSize, this.query);
+        this.ds = new QueryableDatasource<User>(this.helper, this.query);
     }
 
     ngOnInit(): void {
@@ -63,7 +61,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
         this.canEdit = this.policy.get('user', 'canEdit');
     }
 
-    private initQueryParams() {
+    protected initQueryParams() {
         this.activatedRoute.queryParams
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(params => {
@@ -72,7 +70,7 @@ export class UsersComponent extends BaseComponent implements OnInit {
             });
     }
 
-    private updateQueryParams($event?) {
+    protected updateQueryParams($event?) {
         this.queryParams = $event;
         this.router.navigate(
             [],

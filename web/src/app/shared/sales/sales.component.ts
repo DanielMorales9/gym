@@ -7,7 +7,7 @@ import {SnackBarService} from '../../core/utilities';
 import {QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
-import {BaseComponent} from '../base-component';
+import {SearchComponent} from '../search-component';
 
 
 @Component({
@@ -15,18 +15,15 @@ import {BaseComponent} from '../base-component';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SalesComponent extends BaseComponent implements OnInit {
+export class SalesComponent extends SearchComponent<Sale> implements OnInit {
 
     private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
 
     query: any;
     noCardMessage: string;
 
-    private pageSize = 10;
-    private queryParams: any;
     id: number;
 
-    ds: QueryableDatasource<Sale>;
     canPay: boolean;
     canDelete: boolean;
     canSell: boolean;
@@ -43,13 +40,13 @@ export class SalesComponent extends BaseComponent implements OnInit {
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
                 private auth: AuthenticationService,
-                private router: Router,
-                private route: ActivatedRoute,
+                protected router: Router,
+                protected route: ActivatedRoute,
                 private policy: PolicyService,
                 private snackbar: SnackBarService) {
-        super();
+        super(router, route);
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
-        this.ds = new QueryableDatasource<Sale>(helper, this.pageSize, this.query);
+        this.ds = new QueryableDatasource<Sale>(helper, this.query);
     }
 
     ngOnInit(): void {
@@ -71,7 +68,7 @@ export class SalesComponent extends BaseComponent implements OnInit {
         this.canSell = this.policy.get('sale', 'canSell') && !!this.id;
     }
 
-    private initQueryParams(id?) {
+    protected initQueryParams(id?) {
         this.route.queryParams
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(params => {
@@ -90,7 +87,7 @@ export class SalesComponent extends BaseComponent implements OnInit {
             });
     }
 
-    private updateQueryParams(event?) {
+    protected updateQueryParams(event?) {
         if (!event) { event = {}; }
         if (this.id) { event.id = this.id; }
 
@@ -102,12 +99,6 @@ export class SalesComponent extends BaseComponent implements OnInit {
                 relativeTo: this.route,
                 queryParams: this.queryParams,
             });
-    }
-
-    search($event?) {
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
     }
 
     handleEvent($event) {

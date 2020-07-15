@@ -7,7 +7,7 @@ import {BundleService, BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
 import {OptionSelectModalComponent} from './option-select-modal.component';
 import {first, takeUntil} from 'rxjs/operators';
-import {BaseComponent} from '../../shared/base-component';
+import {SearchComponent} from '../../shared/search-component';
 
 
 @Component({
@@ -15,7 +15,7 @@ import {BaseComponent} from '../../shared/base-component';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css', '../../styles/search-card-list.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CreateSaleComponent extends BaseComponent implements OnInit, OnDestroy {
+export class CreateSaleComponent extends SearchComponent<BundleSpecification> implements OnInit, OnDestroy {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto disponibile';
 
@@ -23,14 +23,11 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
 
     id: number;
     query = {disabled: false, name: ''};
+
     sale: Sale;
-
-    private pageSize = 10;
     selected: Map<number, boolean> = new Map<number, boolean>();
-    optionsSelected: Map<number, boolean> = new Map<number, boolean>();
 
-    ds: QueryableDatasource<BundleSpecification>;
-    private queryParams: any;
+    optionsSelected: Map<number, boolean> = new Map<number, boolean>();
 
     constructor(private saleHelper: SaleHelperService,
                 private helper: BundleSpecHelperService,
@@ -38,10 +35,10 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
                 private bundleService: BundleService,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog,
-                private router: Router,
-                private route: ActivatedRoute) {
-        super();
-        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.pageSize, this.query);
+                protected router: Router,
+                protected route: ActivatedRoute) {
+        super(router, route);
+        this.ds = new QueryableDatasource<BundleSpecification>(helper, this.query);
     }
 
     ngOnInit(): void {
@@ -56,7 +53,7 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
         });
     }
 
-    private initQueryParams() {
+    protected initQueryParams() {
         this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = Object.assign({}, params);
             this.queryParams.disabled = this.query.disabled;
@@ -65,7 +62,7 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
         });
     }
 
-    private updateQueryParams($event) {
+    protected updateQueryParams($event) {
         if (!$event) { $event = {}; }
 
         this.queryParams = this.query = $event;
@@ -122,7 +119,7 @@ export class CreateSaleComponent extends BaseComponent implements OnInit, OnDest
         }
     }
 
-    search($event) {
+    search($event?) {
         Object.keys($event).forEach(key => {
             if ($event[key] === undefined) {
                 delete $event[key];
