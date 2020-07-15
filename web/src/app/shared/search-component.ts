@@ -10,7 +10,7 @@ export abstract class SearchComponent<T> extends BaseComponent {
 
     ds: QueryableDatasource<T>;
 
-    protected query: any;
+    public query: any;
     protected queryParams: any;
 
     protected constructor(protected router: Router,
