@@ -3,7 +3,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
-import {first, takeUntil} from 'rxjs/operators';
 import {Session} from '../model/session.class';
 import {SessionService} from '../../core/controllers/session.service';
 import {SessionHelperService} from '../../core/helpers/session-helper.service';
@@ -34,27 +33,20 @@ export class SessionsCustomerComponent extends SearchComponent<Session> implemen
 
     ngOnInit(): void {
         this.customerId = this.route.snapshot.params['id'];
-        this.initQueryParams(this.customerId);
+        this.initQueryParams();
     }
 
-    protected initQueryParams(id?) {
-        this.route.queryParams
-            .pipe(
-                first(),
-                takeUntil(this.unsubscribe$))
-            .subscribe(params => {
-                this.queryParams = Object.assign({}, params);
-                if (!!id) {
-                    this.queryParams.customerId = id;
-                }
-                if (!!this.queryParams.date) {
-                    this.queryParams.date = new Date(this.queryParams.date);
-                }
-                this.search(this.queryParams);
-            });
+    protected initDefaultQueryParams(params: any): any {
+        if (!!this.customerId) {
+            params.customerId = this.customerId;
+        }
+        if (!!this.queryParams.date) {
+            params.date = new Date(params.date);
+        }
+        return params;
     }
 
-    protected getDefaultQueryParams($event?): any {
+    protected enrichQueryParams($event?): any {
         if (this.customerId) { $event.customerId = this.customerId; }
         return $event;
     }

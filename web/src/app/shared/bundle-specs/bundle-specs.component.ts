@@ -7,7 +7,7 @@ import {BundleSpecsService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
+import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';
 import {SearchComponent} from '../search-component';
 
@@ -46,16 +46,10 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
 
     ngOnInit(): void {
         this.initQueryParams();
+
         this.canDelete = this.policy.get('bundleSpec', 'canDelete');
         this.canDisable = this.policy.get('bundleSpec', 'canDisable');
         this.canCreate = this.policy.get('bundleSpec', 'canCreate');
-    }
-
-    protected initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.search(this.queryParams);
-        });
     }
 
     openDialog(): void {

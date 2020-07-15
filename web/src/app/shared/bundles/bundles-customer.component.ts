@@ -44,31 +44,25 @@ export class BundlesCustomerComponent extends SearchComponent<Bundle> implements
 
     ngOnInit(): void {
         this.getPolicies();
-        this.route.params.pipe(
-            first(),
-            takeUntil(this.unsubscribe$))
-            .subscribe(param => {
-                this.id = +param['id'];
-                this.initQueryParams(this.id);
-            });
-    }
-
-    protected initQueryParams(id?) {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            if (Object.keys(params).length > 0) {
-                if (!!this.queryParams.date) {
-                    this.queryParams.date = new Date(this.queryParams.date);
-                }
-            }
-            if (!!id) {
-                this.queryParams.id = id;
-            }
-            this.search(this.queryParams);
+        this.route.params.pipe(first()).subscribe(param => {
+            this.id = +param['id'];
+            this.initQueryParams();
         });
     }
 
-    protected getDefaultQueryParams($event?): any {
+    protected initDefaultQueryParams(params: any): any {
+        if (Object.keys(params).length > 0) {
+            if (!!params.date) {
+                params.date = new Date(params.date);
+            }
+        }
+        if (!!this.id) {
+            params.id = this.id;
+        }
+        return params;
+    }
+
+    protected enrichQueryParams($event?): any {
         if (this.id) {
             $event.id = this.id;
         }

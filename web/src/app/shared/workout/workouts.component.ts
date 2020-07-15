@@ -6,7 +6,6 @@ import {PolicyService} from '../../core/policy';
 import {MatDialog} from '@angular/material/dialog';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {SnackBarService} from '../../core/utilities';
-import {first} from 'rxjs/operators';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SearchComponent} from '../search-component';
 
@@ -60,15 +59,12 @@ export class WorkoutsComponent extends SearchComponent<Workout> implements OnIni
             });
     }
 
-    protected initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.queryParams.isTemplate = true;
-            this.search(this.queryParams);
-        });
+    protected initDefaultQueryParams(params: any): any {
+        params.isTemplate = true;
+        return params;
     }
 
-    protected getDefaultQueryParams($event?): any {
+    protected enrichQueryParams($event?): any {
         $event.isTemplate = true;
         return $event;
     }

@@ -6,7 +6,7 @@ import {SnackBarService} from '../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
-import {first, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
 
 @Component({
@@ -43,26 +43,19 @@ export class BundlesComponent extends SearchComponent<Bundle> implements OnInit 
 
     ngOnInit(): void {
         this.getPolicies();
-        this.initQueryParams(this.id);
+        this.initQueryParams();
     }
 
-    protected initQueryParams(id?) {
-        this.route.queryParams
-            .pipe(
-                first(),
-                takeUntil(this.unsubscribe$))
-            .subscribe(params => {
-                this.queryParams = Object.assign({}, params);
-                if (Object.keys(params).length > 0) {
-                    if (!!this.queryParams.time) {
-                        this.queryParams.time = new Date(this.queryParams.time);
-                    }
-                }
-                this.search(this.queryParams);
-            });
+    protected initDefaultQueryParams(params: any): any {
+        if (Object.keys(params).length > 0) {
+            if (!!params.time) {
+                params.time = new Date(params.time);
+            }
+        }
+        return params;
     }
 
-    protected getDefaultQueryParams($event?): any {
+    protected enrichQueryParams($event?): any {
         if (this.id) { $event.id = this.id; }
         return $event;
     }

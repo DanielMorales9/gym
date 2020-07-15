@@ -4,7 +4,7 @@ import {ChangeDetectionStrategy, Component, OnDestroy, OnInit} from '@angular/co
 import {WorkoutService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
 import {ActivatedRoute, Router} from '@angular/router';
-import {first, map} from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import {forkJoin} from 'rxjs';
 import {Location} from '@angular/common';
 import {SearchComponent} from '../search-component';
@@ -59,46 +59,19 @@ export class AssignWorkoutsComponent extends SearchComponent<Workout> implements
             });
     }
 
-    protected initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.queryParams.isTemplate = true;
-            this.search(this.queryParams);
-        });
+    protected initDefaultQueryParams(params: any): any {
+        params.isTemplate = true;
+        return params;
     }
 
-    updateQueryParams($event) {
-        if (!$event) { $event = {isTemplate: true}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
+    protected enrichQueryParams(params: any): any {
+        params.isTemplate = true;
+        return params;
     }
 
     ngOnDestroy() {
         // this.destroy();
         super.ngOnDestroy();
-    }
-
-
-    search($event?) {
-        Object.keys($event).forEach(key => {
-            if ($event[key] === undefined) {
-                delete $event[key];
-            }
-            if ($event[key] === '') {
-                delete $event[key];
-            }
-        });
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
     }
 
     confirmSession() {

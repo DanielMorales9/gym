@@ -6,7 +6,7 @@ import {SnackBarService} from '../../core/utilities';
 import {BundleService, BundleSpecsService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
 import {OptionSelectModalComponent} from './option-select-modal.component';
-import {first, takeUntil} from 'rxjs/operators';
+import {takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../../shared/search-component';
 
 
@@ -52,13 +52,10 @@ export class CreateSaleComponent extends SearchComponent<BundleSpecification> im
         });
     }
 
-    protected initQueryParams() {
-        this.route.queryParams.pipe(first()).subscribe(params => {
-            this.queryParams = Object.assign({}, params);
-            this.queryParams.disabled = this.query.disabled;
-            this.queryParams.name = this.query.name;
-            this.search(this.queryParams);
-        });
+    protected initDefaultQueryParams(params: any): any {
+        params.disabled = this.query.disabled;
+        params.name = this.query.name;
+        return params;
     }
 
     ngOnDestroy() {

@@ -36,7 +36,6 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
                 private gymService: GymService,
                 protected router: Router,
                 protected route: ActivatedRoute,
-                private activatedRoute: ActivatedRoute,
                 private auth: AuthenticationService,
                 private authService: AuthService,
                 private policy: PolicyService,
@@ -50,7 +49,7 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
     }
 
     ngOnInit(): void {
-        this.type = this.activatedRoute.parent.parent.snapshot.routeConfig.path;
+        this.type = this.route.parent.parent.snapshot.routeConfig.path;
         this.getPolicy();
         this.initQueryParams();
     }
@@ -59,15 +58,6 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
         this.canDelete = this.policy.get('user', 'canDelete');
         this.canCreate = this.policy.get('user', 'canCreate');
         this.canEdit = this.policy.get('user', 'canEdit');
-    }
-
-    protected initQueryParams() {
-        this.activatedRoute.queryParams
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(params => {
-                this.queryParams = Object.assign({}, params);
-                this.search(this.queryParams);
-            });
     }
 
     openDialog(): void {
@@ -89,15 +79,6 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
                 this.snackbar.open(message);
                 this.search();
             }, err => this.snackbar.open(err.error.message));
-    }
-
-    search($event?) {
-        if (!$event) {
-            $event = {};
-        }
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
     }
 
     handleEvent($event: any) {

@@ -58,7 +58,7 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
                 takeUntil(this.unsubscribe$))
             .subscribe(params => {
                 this.id = +params['id'];
-                this.initQueryParams(this.id);
+                this.initQueryParams();
             });
     }
 
@@ -68,26 +68,21 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
         this.canSell = this.policy.get('sale', 'canSell') && !!this.id;
     }
 
-    protected initQueryParams(id?) {
-        this.route.queryParams
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(params => {
-                this.queryParams = Object.assign({}, params);
-                if (Object.keys(params).length > 0) {
-                    if (!!this.queryParams.date) {
-                        this.queryParams.date = new Date(this.queryParams.date);
-                    }
-                }
+    protected initDefaultQueryParams(params: any): any {
+        if (Object.keys(params).length > 0) {
+            if (!!params.date) {
+                params.date = new Date(params.date);
+            }
+        }
 
-                if (!!id || !!this.id) {
-                    this.queryParams.id = this.id || id;
-                }
-                this.mixed = this.canDelete && !this.id;
-                this.search(this.queryParams);
-            });
+        if (!!this.id) {
+            params.id = this.id;
+        }
+        this.mixed = this.canDelete && !this.id;
+        return params;
     }
 
-    protected getDefaultQueryParams($event?): any {
+    protected enrichQueryParams($event?): any {
         if (this.id) { $event.id = this.id; }
         return $event;
     }
