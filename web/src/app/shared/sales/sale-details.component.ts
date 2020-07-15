@@ -129,4 +129,10 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
                 this.cdr.detectChanges();
             });
     }
+
+    goToUserDetails() {
+        this.router.navigate(['users', this.sale.customer.id], {
+            relativeTo: this.route.parent
+        });
+    }
 }

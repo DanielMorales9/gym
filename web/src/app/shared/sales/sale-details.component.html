@@ -5,7 +5,10 @@
                 Riepilogo Vendita #{{sale?.id}}
             </mat-card-title>
             <mat-card-subtitle>
-                Cliente: {{sale?.customer?.firstName}} {{sale?.customer?.lastName}}
+                Cliente:
+                <a (click)="goToUserDetails()">
+                    {{sale?.customer?.firstName}} {{sale?.customer?.lastName}}
+                </a>
             </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>

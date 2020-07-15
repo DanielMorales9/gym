@@ -310,4 +310,9 @@ export class EventDetailsComponent extends BaseComponent implements Policy, OnIn
     goToWorkout() {
         this.router.navigate(['sessions', this.event.reservations[0].session.id, 'programme'], {relativeTo: this.route});
     }
+
+    goToUserDetails() {
+        this.router.navigate(['users', this.event.reservations[0].user.id],
+            {relativeTo: this.route.parent.parent});
+    }
 }

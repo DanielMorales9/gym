@@ -23,7 +23,9 @@
                 </div>
                 <div>
                     <mat-icon fontSet="fas" fontIcon="fa-user-tag"></mat-icon>&nbsp;
-                    {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
+                    <a (click)="goToUserDetails()">
+                        {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
+                    </a>
                 </div>
                 <div *ngIf="!!bundle?.expiredAt">
                     <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>

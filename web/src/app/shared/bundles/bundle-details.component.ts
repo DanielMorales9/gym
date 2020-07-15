@@ -1,15 +1,15 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
-import {Bundle, BundleType, BundleTypeConstant} from '../model';
+import {Bundle, BundleType} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
-import { Policy } from '../policy.interface';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './bundle-details.component.html',
@@ -40,7 +40,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     ngOnInit(): void {
         this.route.params
             .pipe(first(),
-            takeUntil(this.unsubscribe$),
+                takeUntil(this.unsubscribe$),
                 switchMap(params => this.getBundle(+params['id'])))
             .subscribe(d => {
                 d.sessions.sort((a, b) => {
@@ -163,4 +163,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
         this.router.navigate(['sessions', sessionId, 'programme'], {relativeTo: this.route.parent.parent});
     }
 
+    goToUserDetails() {
+        this.router.navigate(['users', this.bundle.customer.id], {relativeTo: this.route.parent.parent});
+    }
 }

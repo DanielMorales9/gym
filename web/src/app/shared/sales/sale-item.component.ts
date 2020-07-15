@@ -37,6 +37,10 @@ export class SaleItemComponent {
         });
     }
 
+    goToUserDetails() {
+        this.done.emit({type: 'userInfo', user: this.sale.customer});
+    }
+
     goToInfo() {
         this.done.emit({type: 'info', sale: this.sale});
     }

@@ -75,7 +75,15 @@ export class BundlesComponent extends SearchComponent<Bundle> implements Policy,
                 .subscribe({
                     error: err => this.snackbar.open(err.error.message)
                 });
+        } else if ($event.type === 'userInfo') {
+            this.goToUserDetails($event.user);
         }
+    }
+
+    private goToUserDetails(user) {
+        this.router.navigate(['users', user.id], {
+            relativeTo: this.route.parent
+        });
     }
 
     private goToDetails(bundle: any) {

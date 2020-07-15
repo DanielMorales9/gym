@@ -99,6 +99,9 @@ export class SalesComponent extends SearchComponent<Sale> implements Policy, OnI
             case 'info':
                 this.goToDetails($event.sale);
                 break;
+            case 'userInfo':
+                this.goToUserDetails($event.user);
+                break;
         }
     }
 
@@ -130,5 +133,10 @@ export class SalesComponent extends SearchComponent<Sale> implements Policy, OnI
 
     trackBy(index, item) {
         return item ? item.id : index;
+    }
+
+    private goToUserDetails(user: any) {
+        const roleName = this.auth.getUserRoleName();
+        this.router.navigate([roleName, 'users', user.id]);
     }
 }

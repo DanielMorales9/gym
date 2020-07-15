@@ -46,6 +46,7 @@ export class UsersComponent extends SearchComponent<User> implements Policy, OnI
         this.auth.getObservableCurrentUserRoleId()
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(v => this.currentUserId = v);
+
         this.ds = new QueryableDatasource<User>(this.helper, this.query);
     }
 

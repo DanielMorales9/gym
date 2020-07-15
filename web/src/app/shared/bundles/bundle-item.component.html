@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title [ngClass]="{'blue-light': isNotActive()}">
-            <a (click)="goToInfo()">
+            <a (click)="goToUserDetails()">
                 {{bundle?.name || 'Loading...'}} - {{bundle?.customer.firstName}} {{bundle?.customer.lastName}}
             </a>
         </mat-panel-title>
@@ -31,7 +31,9 @@
             </div>
             <div>
                 <mat-icon fontSet="fas" fontIcon="fa-user-tag"></mat-icon>&nbsp;
-                {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
+                <a (click)="goToUserDetails()">
+                    {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
+                </a>
             </div>
             <div *ngIf="!!bundle?.startTime">
                 <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>

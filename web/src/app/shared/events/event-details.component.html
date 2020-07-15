@@ -46,8 +46,10 @@
                     </ng-container>
                     <ng-container *ngSwitchCase="'P'">
                         <span>
-                            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>{{event?.reservations[0].user.firstName}}
-                            {{event?.reservations[0].user.lastName}}
+                            <mat-icon fontSet="fas" fontIcon="fa-user"></mat-icon>
+                            <a (click)="goToUserDetails()">
+                                {{event?.reservations[0].user.firstName}} {{event?.reservations[0].user.lastName}}
+                            </a>
                         </span>
                         <span class="green-light" *ngIf="event?.reservations[0].confirmed else notConfirmed">
                             <mat-icon fontSet="fas" fontIcon="fa-check"></mat-icon>&nbsp;Confermato

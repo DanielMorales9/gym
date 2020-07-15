@@ -6,12 +6,18 @@
             </a>
         </mat-panel-title>
         <mat-panel-description class="panel-header-description">
-            {{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || ''}}
+            <a (click)="goToUserDetails()">
+                {{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || ''}}
+            </a>
         </mat-panel-description>
     </mat-expansion-panel-header>
     <div class="mat-ex-panel-body">
         <div class="panel-body-description">
-            <span>Cliente:&nbsp;{{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || ''}}</span>
+            <span>Cliente:&nbsp;
+                <a (click)="goToUserDetails()">
+                    {{sale?.customer?.firstName || 'Loading...'}} {{sale?.customer?.lastName || ''}}
+                </a>
+            </span>
         </div>
         <div class="panel-content">
         <span>
