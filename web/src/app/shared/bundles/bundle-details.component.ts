@@ -1,26 +1,22 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
-import {Bundle, BundleType, BundleTypeConstant} from '../model';
+import {Bundle, BundleType} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './bundle-details.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleDetailsComponent extends BaseComponent implements OnInit, OnDestroy {
-
-    PERSONAL = BundleTypeConstant.PERSONAL;
-    COURSE   = BundleTypeConstant.COURSE;
-
-
+export class BundleDetailsComponent extends BaseComponent implements Policy, OnInit, OnDestroy {
     bundleType = BundleType;
 
     bundle: any;
@@ -44,7 +40,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
     ngOnInit(): void {
         this.route.params
             .pipe(first(),
-            takeUntil(this.unsubscribe$),
+                takeUntil(this.unsubscribe$),
                 switchMap(params => this.getBundle(+params['id'])))
             .subscribe(d => {
                 d.sessions.sort((a, b) => {
@@ -143,7 +139,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
             });
     }
 
-    private getPolicies() {
+    getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
         this.canEdit = this.policy.get('bundle', 'canEdit');
         this.canShowWorkout = this.policy.get('workout', 'canShow');
@@ -167,4 +163,7 @@ export class BundleDetailsComponent extends BaseComponent implements OnInit, OnD
         this.router.navigate(['sessions', sessionId, 'programme'], {relativeTo: this.route.parent.parent});
     }
 
+    goToUserDetails() {
+        this.router.navigate(['users', this.bundle.customer.id], {relativeTo: this.route.parent.parent});
+    }
 }

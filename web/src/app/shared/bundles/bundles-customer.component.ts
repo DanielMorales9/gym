@@ -69,7 +69,7 @@ export class BundlesCustomerComponent extends SearchComponent<Bundle> implements
         return $event;
     }
 
-    private getPolicies() {
+    getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete');
         this.canEdit = this.policy.get('bundle', 'canEdit');
     }

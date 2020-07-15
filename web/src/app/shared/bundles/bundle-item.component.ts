@@ -81,4 +81,8 @@ export class BundleItemComponent {
         }
         return false;
     }
+
+    goToUserDetails() {
+        this.done.emit({type: 'userInfo', user: this.bundle.customer});
+    }
 }

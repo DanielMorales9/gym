@@ -8,13 +8,14 @@ import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
 import {takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
+import {Policy} from '../policy.interface';
 
 @Component({
     templateUrl: './bundles.component.html',
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundlesComponent extends SearchComponent<Bundle> implements OnInit {
+export class BundlesComponent extends SearchComponent<Bundle> implements Policy, OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
@@ -60,7 +61,7 @@ export class BundlesComponent extends SearchComponent<Bundle> implements OnInit 
         return $event;
     }
 
-    private getPolicies() {
+    getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete');
         this.canEdit = this.policy.get('bundle', 'canEdit');
     }
@@ -74,7 +75,15 @@ export class BundlesComponent extends SearchComponent<Bundle> implements OnInit 
                 .subscribe({
                     error: err => this.snackbar.open(err.error.message)
                 });
+        } else if ($event.type === 'userInfo') {
+            this.goToUserDetails($event.user);
         }
+    }
+
+    private goToUserDetails(user) {
+        this.router.navigate(['users', user.id], {
+            relativeTo: this.route.parent
+        });
     }
 
     private goToDetails(bundle: any) {

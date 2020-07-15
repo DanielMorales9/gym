@@ -8,6 +8,7 @@ import {QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
+import {Policy} from '../policy.interface';
 
 
 @Component({
@@ -15,7 +16,7 @@ import {SearchComponent} from '../search-component';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SalesComponent extends SearchComponent<Sale> implements OnInit {
+export class SalesComponent extends SearchComponent<Sale> implements Policy, OnInit {
 
     private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
 
@@ -51,7 +52,7 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
 
     ngOnInit(): void {
         this.root = this.route.parent.parent.snapshot.routeConfig.path;
-        this.getPolicy();
+        this.getPolicies();
 
         this.route.params
             .pipe(first(),
@@ -62,7 +63,7 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
             });
     }
 
-    private getPolicy() {
+    getPolicies() {
         this.canDelete = this.policy.get('sale', 'canDelete');
         this.canPay = this.policy.get('sale', 'canPay');
         this.canSell = this.policy.get('sale', 'canSell') && !!this.id;
@@ -98,6 +99,9 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
             case 'info':
                 this.goToDetails($event.sale);
                 break;
+            case 'userInfo':
+                this.goToUserDetails($event.user);
+                break;
         }
     }
 
@@ -129,5 +133,10 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
 
     trackBy(index, item) {
         return item ? item.id : index;
+    }
+
+    private goToUserDetails(user: any) {
+        const roleName = this.auth.getUserRoleName();
+        this.router.navigate([roleName, 'users', user.id]);
     }
 }

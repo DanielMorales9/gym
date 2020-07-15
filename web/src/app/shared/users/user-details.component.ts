@@ -9,6 +9,7 @@ import {PolicyService} from '../../core/policy';
 import {ImageModalComponent} from '../profile/image-modal.component';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
+import {Policy} from '../policy.interface';
 
 
 @Component({
@@ -16,7 +17,7 @@ import {BaseComponent} from '../base-component';
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserDetailsComponent extends BaseComponent implements OnInit {
+export class UserDetailsComponent extends BaseComponent implements Policy, OnInit {
 
     user: User;
 
@@ -56,7 +57,7 @@ export class UserDetailsComponent extends BaseComponent implements OnInit {
         });
     }
 
-    private getPolicies() {
+    getPolicies() {
         const entity = this.USER_TYPE[this.user.type];
         this.canEdit = this.policy.get(entity, 'canEdit');
         this.canDelete = this.policy.get(entity, 'canDelete');
