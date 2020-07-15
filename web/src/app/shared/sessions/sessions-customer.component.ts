@@ -40,7 +40,7 @@ export class SessionsCustomerComponent extends SearchComponent<Session> implemen
         if (!!this.customerId) {
             params.customerId = this.customerId;
         }
-        if (!!this.queryParams.date) {
+        if (!!params.date) {
             params.date = new Date(params.date);
         }
         return params;
