@@ -54,17 +54,9 @@ export class SessionsCustomerComponent extends SearchComponent<Session> implemen
             });
     }
 
-    protected updateQueryParams(queryParams?) {
-        if (!queryParams) { queryParams = {}; }
-        if (this.customerId) { queryParams.customerId = this.customerId; }
-        this.queryParams = this.query = queryParams;
-        this.router.navigate(
-            [],
-            {
-                replaceUrl: true,
-                relativeTo: this.route,
-                queryParams: this.queryParams,
-            });
+    protected getDefaultQueryParams($event?): any {
+        if (this.customerId) { $event.customerId = this.customerId; }
+        return $event;
     }
 
     handleEvent($event) {
@@ -79,7 +71,6 @@ export class SessionsCustomerComponent extends SearchComponent<Session> implemen
     private goToDetails(session: any) {
         this.router.navigate([session.id, 'programme'], {relativeTo: this.route});
     }
-
 
     private assignWorkout(session: any) {
         this.router.navigate([session.id, 'assignWorkout'], {relativeTo: this.route});

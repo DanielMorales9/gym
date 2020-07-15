@@ -70,17 +70,6 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
             });
     }
 
-    protected updateQueryParams($event?) {
-        this.queryParams = $event;
-        this.router.navigate(
-            [],
-            {
-                replaceUrl: true,
-                relativeTo: this.activatedRoute,
-                queryParams: this.queryParams,
-            });
-    }
-
     openDialog(): void {
         const dialogRef = this.dialog.open(UserModalComponent, {
             data : {

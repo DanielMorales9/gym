@@ -58,20 +58,6 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
         });
     }
 
-    protected updateQueryParams($event) {
-        if (!$event) { $event = {}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
-    }
-
     openDialog(): void {
         const title = 'Crea Nuovo Pacchetto';
 
@@ -156,4 +142,5 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
     trackBy(index, item) {
         return item ? item.id : index;
     }
+
 }

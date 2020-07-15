@@ -26,7 +26,6 @@ export class CreateSaleComponent extends SearchComponent<BundleSpecification> im
 
     sale: Sale;
     selected: Map<number, boolean> = new Map<number, boolean>();
-
     optionsSelected: Map<number, boolean> = new Map<number, boolean>();
 
     constructor(private saleHelper: SaleHelperService,
@@ -60,20 +59,6 @@ export class CreateSaleComponent extends SearchComponent<BundleSpecification> im
             this.queryParams.name = this.query.name;
             this.search(this.queryParams);
         });
-    }
-
-    protected updateQueryParams($event) {
-        if (!$event) { $event = {}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
     }
 
     ngOnDestroy() {
@@ -119,6 +104,7 @@ export class CreateSaleComponent extends SearchComponent<BundleSpecification> im
         }
     }
 
+    // TODO
     search($event?) {
         Object.keys($event).forEach(key => {
             if ($event[key] === undefined) {

@@ -14,25 +14,30 @@ export abstract class SearchComponent<T> extends BaseComponent {
     protected query: any;
     protected queryParams: any;
 
-    constructor(protected router: Router,
+    protected constructor(protected router: Router,
                 protected route: ActivatedRoute) {
         super();
     }
 
     protected updateQueryParams($event) {
         if (!$event) { $event = {}; }
+        $event = this.getDefaultQueryParams($event);
 
         this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
+        this.router.navigate([], {
                 relativeTo: this.route,
                 replaceUrl: true,
                 queryParams: this.queryParams,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
     }
+
+
     protected abstract initQueryParams($event?);
+
+    protected getDefaultQueryParams($event?) {
+        return $event;
+    }
 
     search($event?) {
         this.ds.setQuery($event);

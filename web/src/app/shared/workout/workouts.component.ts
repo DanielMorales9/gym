@@ -68,18 +68,9 @@ export class WorkoutsComponent extends SearchComponent<Workout> implements OnIni
         });
     }
 
-    protected updateQueryParams($event) {
-        if (!$event) { $event = {isTemplate: true}; }
-
-        this.queryParams = this.query = $event;
-        this.router.navigate(
-            [],
-            {
-                relativeTo: this.route,
-                replaceUrl: true,
-                queryParams: this.queryParams,
-                queryParamsHandling: 'merge', // remove to replace all query params by provided
-            });
+    protected getDefaultQueryParams($event?): any {
+        $event.isTemplate = true;
+        return $event;
     }
 
     handleEvent($event) {

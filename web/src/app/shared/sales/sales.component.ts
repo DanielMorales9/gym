@@ -87,18 +87,9 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
             });
     }
 
-    protected updateQueryParams(event?) {
-        if (!event) { event = {}; }
-        if (this.id) { event.id = this.id; }
-
-        this.queryParams = this.query = event;
-        this.router.navigate(
-            [],
-            {
-                replaceUrl: true,
-                relativeTo: this.route,
-                queryParams: this.queryParams,
-            });
+    protected getDefaultQueryParams($event?): any {
+        if (this.id) { $event.id = this.id; }
+        return $event;
     }
 
     handleEvent($event) {
