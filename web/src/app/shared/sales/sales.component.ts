@@ -108,14 +108,14 @@ export class SalesComponent extends SearchComponent<Sale> implements OnInit {
             this.helper.delete(sale.id)
                 .subscribe( _ => {
                     this.snackbar.open('Vendita eliminata per il cliente ' + sale.customer.lastName + '!');
-                    return this.search(this.queryParams);
+                    return this.dataSourceSearch(this.queryParams);
                 }, err => this.snackbar.open(err.error.message));
         }
     }
 
     private paySale(sale: Sale, amount: number) {
         this.service.pay(sale.id, amount)
-            .subscribe(_ => this.search(this.queryParams));
+            .subscribe(_ => this.dataSourceSearch(this.queryParams));
     }
 
     private goToDetails(sale: Sale) {

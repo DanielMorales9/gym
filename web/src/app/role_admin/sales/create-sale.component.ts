@@ -101,22 +101,6 @@ export class CreateSaleComponent extends SearchComponent<BundleSpecification> im
         }
     }
 
-    // TODO
-    search($event?) {
-        Object.keys($event).forEach(key => {
-            if ($event[key] === undefined) {
-                delete $event[key];
-            }
-            if ($event[key] === '') {
-                delete $event[key];
-            }
-        });
-        this.ds.setQuery($event);
-        this.ds.fetchPage(0);
-        this.updateQueryParams($event);
-    }
-
-
     confirmSale() {
         this.saleHelper.confirmSale(this.sale.id)
             .subscribe( (res: Sale) => {

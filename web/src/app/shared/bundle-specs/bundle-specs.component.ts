@@ -94,7 +94,7 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
             .subscribe(_ => {
                 const message = `Il pacchetto ${bundleSpec.name} è stato creato`;
                 this.snackbar.open(message);
-                this.search();
+                this.dataSourceSearch();
             }, err => this.snackbar.open(err.error.message));
     }
 
@@ -104,7 +104,7 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
                 takeUntil(this.unsubscribe$),
                 filter(v => !!v),
                 switchMap((v: any) => this.service.deleteBundleSpecs(bundleSpec.id))
-            ).subscribe(_ => this.search(),
+            ).subscribe(_ => this.dataSourceSearch(),
             err => this.snackbar.open(err.error.message));
     }
 
@@ -117,7 +117,7 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
         this.service.patchBundleSpecs(bundleSpec).subscribe(_ => {
             const message = `Il pacchetto ${bundleSpec.name} è stato modificato`;
             this.snackbar.open(message);
-            this.search();
+            this.dataSourceSearch();
         }, err => this.snackbar.open(err.error.message));
     }
 

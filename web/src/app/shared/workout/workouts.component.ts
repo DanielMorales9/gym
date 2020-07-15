@@ -104,7 +104,7 @@ export class WorkoutsComponent extends SearchComponent<Workout> implements OnIni
         this.service.postWorkout(w).subscribe(_ => {
             const message = `Il workout ${w.name} è stato creato`;
             this.snackbar.open(message);
-            this.search({isTemplate: true});
+            this.dataSourceSearch({isTemplate: true});
         }, err => this.snackbar.open(err.error.message));
     }
 
@@ -112,7 +112,7 @@ export class WorkoutsComponent extends SearchComponent<Workout> implements OnIni
         this.service.deleteWorkout(id).subscribe(_ => {
             const message = `Il workout è stato cancellato`;
             this.snackbar.open(message);
-            this.search({isTemplate: true});
+            this.dataSourceSearch({isTemplate: true});
         }, err => this.snackbar.open(err.error.message));
     }
 
@@ -120,7 +120,7 @@ export class WorkoutsComponent extends SearchComponent<Workout> implements OnIni
         this.service.patchWorkout(w).subscribe(_ => {
             const message = `Il workout ${w.name} è stato modificato`;
             this.snackbar.open(message);
-            this.search({isTemplate: true});
+            this.dataSourceSearch({isTemplate: true});
         }, err => this.snackbar.open(err.error.message));
     }
 

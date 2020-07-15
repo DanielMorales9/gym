@@ -4,7 +4,7 @@
             [filterName]="filterName"
             [selected]="selected"
             [query]="query"
-            textPlaceholder="Cognome" datePlaceholder="Cerca data" (done)="search($event)"></mixed-search>
+            textPlaceholder="Cognome" datePlaceholder="Cerca data" (done)="dataSourceSearch($event)"></mixed-search>
 </ng-template>
 
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
@@ -26,5 +26,5 @@
     <search-date [filters]="filters"
                  [filterName]="filterName"
                  [selected]="selected"
-                 [query]="query" datePlaceholder="Cerca data" (done)="search($event)"></search-date>
+                 [query]="query" datePlaceholder="Cerca data" (done)="dataSourceSearch($event)"></search-date>
 </ng-template>

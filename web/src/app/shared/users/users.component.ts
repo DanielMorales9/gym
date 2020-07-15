@@ -77,7 +77,7 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
             .subscribe(user => {
                 const message = `L'utente ${user.lastName} è stato creato`;
                 this.snackbar.open(message);
-                this.search();
+                this.dataSourceSearch();
             }, err => this.snackbar.open(err.error.message));
     }
 
@@ -97,7 +97,7 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
 
     private deleteUser(user: User) {
         return this.service.deleteUserWithConfirmation(user)
-            .subscribe(res => this.search(),
+            .subscribe(res => this.dataSourceSearch(),
                 err => this.snackbar.open(err.error.message)
             );
     }
@@ -105,7 +105,7 @@ export class UsersComponent extends SearchComponent<User> implements OnInit {
     private patchUser(user: User) {
         this.service.patchUser(user).subscribe((res: User) => {
                 this.snackbar.open(`L'utente ${res.lastName} è stato modificato`);
-                this.search();
+                this.dataSourceSearch();
             },
             error => this.snackbar.open(error.error.message)
         );

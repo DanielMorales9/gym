@@ -42,11 +42,11 @@ export abstract class SearchComponent<T> extends BaseComponent {
     protected initQueryParams() {
         this.route.queryParams.pipe(first()).subscribe(params => {
             this.queryParams = this.initDefaultQueryParams(Object.assign({}, params));
-            this.search(this.queryParams);
+            this.dataSourceSearch(this.queryParams);
         });
     }
 
-    search($event?) {
+    dataSourceSearch($event?) {
         Object.keys($event).forEach(key => {
             if ($event[key] === undefined || $event[key] === '' || $event[key] === null) {
                 delete $event[key];

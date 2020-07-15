@@ -1,4 +1,4 @@
-<simple-search [query]="query" text="Cerca pacchetti" (done)="search($event)"></simple-search>
+<simple-search [query]="query" text="Cerca pacchetti" (done)="dataSourceSearch($event)"></simple-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="186" class="scroll-viewport">
 
     <div *cdkVirtualFor="let spec of ds; templateCacheSize: 0; trackBy: trackBy" class="scroll-item">

@@ -2,7 +2,7 @@
         [filters]="filters"
         [filterName]="filterName"
         [selected]="selected"
-        [query]="query" text="Cerca per nome" (done)="search($event)">
+        [query]="query" text="Cerca per nome" (done)="dataSourceSearch($event)">
 </filter-search>
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="186" class="scroll-viewport">
 
