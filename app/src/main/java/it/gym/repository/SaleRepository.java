@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.Date;
+import java.util.List;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Long> {
@@ -86,5 +87,8 @@ public interface SaleRepository extends JpaRepository<Sale, Long> {
     @Query(value="select s from Sale as s where " +
             "s.createdAt >= :date and (s.amountPayed < s.totalPrice or s.totalPrice is null)")
     Page<Sale> findSalesByCreatedAtGreaterThanEqualAndIsNotPayed(Date date, Pageable pageable);
+
+    @Query(value = "select s from Sale as s where s.customer.id = :customerId")
+    List<Sale> findSalesByCustomerId(Long customerId);
 
 }

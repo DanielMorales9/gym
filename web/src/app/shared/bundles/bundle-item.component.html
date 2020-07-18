@@ -51,6 +51,11 @@
                 <mat-icon fontSet="fa" fontIcon="fa-calendar-times"></mat-icon>
                 Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
             </div>
+
+            <div style="margin-right: 16px; margin-top: 8px">
+                <ngb-progressbar [type]="percentage < 25? 'warning' : percentage < 50 ? 'secondary' : 'success' "
+                                 [value]="percentage">{{percentageText}}</ngb-progressbar>
+            </div>
         </div>
     </div>
     <div class="panel-actions">

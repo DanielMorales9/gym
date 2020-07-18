@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
+import {AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import {BundleType, BundleTypeConstant} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
@@ -9,20 +9,20 @@ import {BundleModalComponent} from './bundle-modal.component';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleItemComponent {
+export class BundleItemComponent implements OnInit {
 
     @Input() bundle: any;
     @Input() canEdit: boolean;
     @Input() canDelete: boolean;
 
     @Output() done = new EventEmitter();
-
-    PERSONAL = BundleTypeConstant.PERSONAL;
-    COURSE   = BundleTypeConstant.COURSE;
-
     bundleType = BundleType;
 
-    constructor(private dialog: MatDialog) {}
+    percentage = 0;
+    percentageText = '';
+
+    constructor(private dialog: MatDialog,
+                private cdr: ChangeDetectorRef) {}
 
     goToInfo() {
         this.done.emit({type: 'info', bundle: this.bundle});
@@ -84,5 +84,35 @@ export class BundleItemComponent {
 
     goToUserDetails() {
         this.done.emit({type: 'userInfo', user: this.bundle.customer});
+    }
+
+    ngOnInit(): void {
+
+        const intSub = setInterval(() => {
+
+            if (!this.bundle || !this.bundle.option) {
+                return;
+            }
+
+            if (this.bundle.option.type === 'B') {
+                this.percentage = this.bundle.sessions.length / this.bundle.option.number;
+            } else if (!!this.bundle.startTime && !!this.bundle.endTime) {
+                const start = new Date(this.bundle.startTime).getTime();
+                const end = new Date(this.bundle.endTime).getTime();
+                const now = new Date().getTime();
+                this.percentage = (now - start) / (end - start);
+            } else {
+                this.percentage = 0;
+            }
+
+            this.percentage = Math.floor(this.percentage * 100);
+
+            this.percentageText = `${this.percentage}%`;
+
+            this.cdr.detectChanges();
+            clearInterval(intSub);
+
+        }, 1000);
+
     }
 }

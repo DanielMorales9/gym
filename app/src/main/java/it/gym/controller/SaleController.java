@@ -4,6 +4,7 @@ import it.gym.facade.SaleFacade;
 import it.gym.hateoas.SaleAssembler;
 import it.gym.hateoas.SaleResource;
 import it.gym.model.Sale;
+import it.gym.pojo.Balance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,6 +101,13 @@ public class SaleController {
     public ResponseEntity<SaleResource> pay(@PathVariable Long saleId, @RequestParam Double amount) {
         Sale sale = this.facade.paySale(saleId, amount);
         return new ResponseEntity<>(new SaleAssembler().toModel(sale), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/balance")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
+    @ResponseBody
+    Balance getBalance(@RequestParam Long customerId) {
+        return this.facade.getBalance(customerId);
     }
 
     @DeleteMapping(value = "/{saleId}/payments/{paymentId}")
