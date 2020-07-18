@@ -1,7 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {to_promise} from '../functions/decorators';
 
 @Injectable()
 export class SalesService {
@@ -63,8 +62,11 @@ export class SalesService {
         return this.http.get('/sales/search', {params: query});
     }
 
-    @to_promise
     deletePayment(saleId: number, paymentId: number): any {
         return this.http.delete(`/sales/${saleId}/payments/${paymentId}`);
+    }
+
+    getBalance(customerId: number) {
+        return this.http.get(`/sales/balance?customerId=${customerId}`);
     }
 }

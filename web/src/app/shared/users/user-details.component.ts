@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TypeNames, User} from '../model';
-import {AuthService, UserService} from '../../core/controllers';
+import {AuthService, SalesService, UserService} from '../../core/controllers';
 import { MatDialog } from '@angular/material/dialog';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -25,11 +25,16 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
     canEdit: boolean;
     canSendToken: boolean;
     image_src: any;
-    image_name: 'Immagine Profilo';
+    image_name = 'Immagine Profilo';
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
     private root: string;
     mapNames = TypeNames;
+
+    totalPayed = 0.;
+    amountPayed = 0.;
+    percentage = 0.;
+    percentageType = 'danger';
 
     constructor(private service: UserService,
                 private route: ActivatedRoute,
@@ -37,6 +42,7 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
                 private authService: AuthService,
                 private policy: PolicyService,
                 private dialog: MatDialog,
+                private salesService: SalesService,
                 private cdr: ChangeDetectorRef,
                 private snackbar: SnackBarService) {
         super();
@@ -51,6 +57,7 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
             switchMap(params => this.service.findUserById(params['id']))
         ).subscribe(value => {
             this.user = value;
+            this.getBalance();
             this.getAvatar();
             this.getPolicies();
             this.cdr.detectChanges();
@@ -117,5 +124,19 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
         const dialogRef = this.dialog.open(ImageModalComponent, {
             data: this.image_src
         });
+    }
+
+    private getBalance() {
+        if (this.user.type === 'C') {
+            this.salesService.getBalance(this.user.id)
+                .pipe(takeUntil(this.unsubscribe$))
+                .subscribe(res => {
+                    this.totalPayed = res['totalPayed'];
+                    this.amountPayed = res['amountPayed'];
+                    this.percentage = Math.floor(this.amountPayed / this.totalPayed * 100);
+                    this.percentageType = this.percentage < 25 ? 'danger' : this.percentage < 50 ? 'warning' : this.percentage < 75 ? 'primary': 'success'
+                    this.cdr.detectChanges();
+                });
+        }
     }
 }

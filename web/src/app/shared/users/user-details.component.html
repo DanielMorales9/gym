@@ -48,6 +48,18 @@
                         {{user.height || 'Loading...'}}&nbsp;cm
                     </div>
                 </div>
+                <ng-container *ngIf="user?.type === 'C'">
+                    <div style="margin-top: 8px">
+
+                    <h6>Saldo</h6>
+                    <div style="margin-right: 16px; margin-top: 8px">
+                        <ngb-progressbar [type]="percentageType"
+                                         [value]="percentage">{{amountPayed}} / {{totalPayed}}€
+                        </ngb-progressbar>
+                    </div>
+                    </div>
+
+                </ng-container>
             </div>
         </mat-card-content>
         <mat-card-actions>

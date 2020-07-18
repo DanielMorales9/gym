@@ -180,4 +180,7 @@ public class SaleService implements ICrudService<Sale, Long> {
         return page.map(Sale::eager);
     }
 
+    public List<Sale> findSalesByCustomerId(Long customerId) {
+        return saleRepository.findSalesByCustomerId(customerId);
+    }
 }
