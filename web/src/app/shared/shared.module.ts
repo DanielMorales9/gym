@@ -89,6 +89,7 @@ import {LyIconModule} from '@alyle/ui/icon';
 import {LyDialogModule} from '@alyle/ui/dialog';
 import {SessionItemComponent, SessionsCustomerComponent} from './sessions';
 import {CdkTableModule} from '@angular/cdk/table';
+import {NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
 
 // @ts-ignore
 @NgModule({
@@ -129,7 +130,8 @@ import {CdkTableModule} from '@angular/cdk/table';
         LyIconModule,
         LyDialogModule,
         HammerModule,
-        CdkTableModule
+        CdkTableModule,
+        NgbProgressbarModule
     ],
     entryComponents: [
         UserModalComponent,
