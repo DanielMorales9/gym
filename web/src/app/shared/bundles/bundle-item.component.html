@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title [ngClass]="{'blue-light': isNotActive()}">
-            <a (click)="goToUserDetails()">
+            <a (click)="goToInfo()">
                 {{bundle?.name || 'Loading...'}} - {{bundle?.customer.firstName}} {{bundle?.customer.lastName}}
             </a>
         </mat-panel-title>
@@ -52,10 +52,7 @@
                 Data scadenza&nbsp;&nbsp;{{bundle?.expiredAt | date: 'dd/MM/yyyy'}}
             </div>
 
-            <div style="margin-right: 16px; margin-top: 8px">
-                <ngb-progressbar [type]="percentage < 25? 'warning' : percentage < 50 ? 'secondary' : 'success' "
-                                 [value]="percentage">{{percentageText}}</ngb-progressbar>
-            </div>
+            <bundle-progress [bundle]="bundle"></bundle-progress>
         </div>
     </div>
     <div class="panel-actions">

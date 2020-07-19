@@ -10,16 +10,26 @@ import {Location} from '@angular/common';
 })
 export class NavBarComponent {
 
+
+    _title: string[];
+
     @Input() authenticated: boolean;
     @Input() appName: string;
-    @Input() title: string[];
     @Input() isMobile: boolean;
     @Input() isBack: boolean;
+
+    @Input() set title(value: string[]) {
+        if (!!value && value.length > 1 && this.isMobile) {
+            value = value.slice(1);
+        }
+
+        this._title = value;
+    }
+
 
     @Output() logout = new EventEmitter();
     @Output() home = new EventEmitter();
     @Output() snav = new EventEmitter();
-
 
     constructor(private router: Router,
                 private location: Location) {}

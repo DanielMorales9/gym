@@ -52,6 +52,9 @@
                     <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundle?.numDeletions}}
                 </div>
             </div>
+
+            <bundle-progress [bundle]="bundle"></bundle-progress>
+
             <mat-expansion-panel class='expansion-list'
                                  [class.mat-expansion-panel]="false"
                                  *ngIf="bundle?.sessions.length > 0">
@@ -60,6 +63,7 @@
                         <h6>Sessioni</h6>
                     </mat-panel-title>
                 </mat-expansion-panel-header>
+
                 <table mat-table style="width: 100%" [dataSource]="bundle?.sessions">
 
                     <ng-container matColumnDef="index">

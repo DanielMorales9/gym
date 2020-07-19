@@ -1,3 +1,5 @@
+import {Session} from './session.class';
+
 export enum BundleSpecificationType {
     PERSONAL =  'P',
     COURSE = 'C'
@@ -86,7 +88,7 @@ export abstract class Bundle {
     expired: boolean;
     type: string;
     option: Option;
-
+    sessions: Session[];
 
     protected constructor() {
     }

@@ -1,12 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {TypeNames, User} from '../model';
 import {AuthService, SalesService, UserService} from '../../core/controllers';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {PolicyService} from '../../core/policy';
-import {ImageModalComponent} from '../profile/image-modal.component';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 import {Policy} from '../policy.interface';
@@ -24,8 +23,6 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
     canDelete: boolean;
     canEdit: boolean;
     canSendToken: boolean;
-    image_src: any;
-    image_name = 'Immagine Profilo';
 
     USER_TYPE = {A: 'admin', T: 'trainer', C: 'customer'};
     private root: string;
@@ -58,7 +55,6 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
         ).subscribe(value => {
             this.user = value;
             this.getBalance();
-            this.getAvatar();
             this.getPolicies();
             this.cdr.detectChanges();
         });
@@ -107,25 +103,6 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
                 error => this.snackbar.open(error.error.message));
     }
 
-    getAvatar() {
-        this.service.retrieveImage(this.user.id)
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe((res: any) => {
-                this.image_src = `data:${res.type};base64,${res.picByte}`;
-                this.cdr.detectChanges();
-            }, err => {
-                const gender = this.user.gender ? 'woman' : 'man';
-                this.image_src = `https://cdn0.iconfinder.com/data/icons/people-and-lifestyle-2/64/fitness-${gender}-lifestyle-avatar-512.png`;
-                this.cdr.detectChanges();
-            });
-    }
-
-    openImageDialog() {
-        const dialogRef = this.dialog.open(ImageModalComponent, {
-            data: this.image_src
-        });
-    }
-
     private getBalance() {
         if (this.user.type === 'C') {
             this.salesService.getBalance(this.user.id)
@@ -134,7 +111,15 @@ export class UserDetailsComponent extends BaseComponent implements Policy, OnIni
                     this.totalPayed = res['totalPayed'];
                     this.amountPayed = res['amountPayed'];
                     this.percentage = Math.floor(this.amountPayed / this.totalPayed * 100);
-                    this.percentageType = this.percentage < 25 ? 'danger' : this.percentage < 50 ? 'warning' : this.percentage < 75 ? 'primary': 'success'
+                    if (this.percentage < 25) {
+                        this.percentageType = 'danger';
+                    } else if (this.percentage < 50) {
+                        this.percentageType = 'warning';
+                    } else if (this.percentage < 75) {
+                        this.percentageType = 'primary';
+                    } else {
+                        this.percentageType = 'success';
+                    }
                     this.cdr.detectChanges();
                 });
         }

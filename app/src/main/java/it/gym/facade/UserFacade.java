@@ -95,7 +95,7 @@ public class UserFacade {
         return this.save(user);
     }
 
-    @CachePut(value = "profile_pictures", key="#id", condition="#result.error")
+    @CachePut(value = "profile_pictures", key="#id")
     public Image retrieveImage(Long id) throws DataFormatException, IOException {
         AUser user = this.findById(id);
         Image image = user.getImage();

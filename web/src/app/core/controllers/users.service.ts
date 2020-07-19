@@ -49,7 +49,7 @@ export class UserService {
         return this.http.get(`/customers/${id}/currentTrainingBundles`);
     }
 
-    uploadImage(id: number, data: FormData, param: any) {
+    uploadImage(id: number, data: FormData, param?: any) {
         return this.http.post(`/users/${id}/image`, data, param);
     }
 
