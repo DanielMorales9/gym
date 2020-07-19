@@ -1,7 +1,7 @@
 <mat-expansion-panel [class.mat-expansion-panel]="false">
     <mat-expansion-panel-header>
         <mat-panel-title [ngClass]="{'blue-light': isNotActive()}">
-            <a (click)="goToUserDetails()">
+            <a (click)="goToInfo()">
                 {{bundle?.name || 'Loading...'}} - {{bundle?.customer.firstName}} {{bundle?.customer.lastName}}
             </a>
         </mat-panel-title>

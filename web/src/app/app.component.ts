@@ -38,9 +38,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private setTitle(...title) {
         title = title.filter(v => !!v);
-        if (this.isDesktop()) {
-            this.title = title;
-        }
+        this.title = title;
         document.title = title.join(' - ');
     }
 

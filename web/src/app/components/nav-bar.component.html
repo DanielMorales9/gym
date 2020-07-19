@@ -6,7 +6,7 @@
         <mat-icon>arrow_back</mat-icon>
     </a>
     <h1 class="main-app-name">
-        <a id="main-app-name" (click)="goHome()">{{ title | join: ' | ' }}</a>
+        <a id="main-app-name" (click)="goHome()">{{ _title | join: ' | ' }}</a>
     </h1>
     <span class="spacer"></span>
     <menu [hideMenu]="!authenticated"
