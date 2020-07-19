@@ -9,6 +9,7 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {catchError, filter, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
 import {PolicyService} from '../../core/policy';
+import {Policy} from '../policy.interface';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -35,7 +36,8 @@ interface EventGroupMeta {
 
 @Directive()
 @Injectable()
-export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy {
+// tslint:disable-next-line:directive-class-suffix
+export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy, Policy {
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
@@ -80,6 +82,11 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         C: CALENDAR_COLUMNS.YELLOW,
         P: CALENDAR_COLUMNS.YELLOW,
     };
+
+    canShowCourse: boolean;
+    canShowPersonal: boolean;
+    canShowTimeOff: boolean;
+    canShowHoliday: boolean;
 
     ACTIONS: CalendarEventAction[] = [
         /*{
@@ -146,6 +153,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
         this.initView();
         this.initViewDate();
+        this.getPolicies();
         this.initEventTypes();
         this.initCalendarConfig();
         this.getUser();
@@ -162,7 +170,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 this.events = [];
                 this.view = params['view'];
                 this.viewDate = new Date(params['viewDate']);
-                this.types = params['types'];
+                this.types = JSON.parse(params['types'])['types'];
                 this.getEvents();
             });
     }
@@ -253,22 +261,21 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     private initEventTypes() {
         const types = this.activatedRoute.snapshot.queryParamMap.get('types');
-        const userId = this.activatedRoute.snapshot.paramMap.get('id');
         if (!!types) {
-            this.types = types;
+            this.types = JSON.parse(types)['types'];
         } else {
 
             this.types = [];
-            if (this.policyService.get('events', 'canShowCourse')) {
+            if (this.canShowCourse) {
                 this.types.push('C');
             }
-            if (this.policyService.get('events', 'canShowPersonal')) {
+            if (this.canShowPersonal) {
                 this.types.push('P');
             }
-            if (this.policyService.get('events', 'canShowTimeOff') && !userId) {
+            if (this.canShowTimeOff) {
                 this.types.push('T');
             }
-            if (this.policyService.get('events', 'canShowHoliday')) {
+            if (this.canShowHoliday) {
                 this.types.push('H');
             }
         }
@@ -610,7 +617,12 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     protected updateQueryParams() {
-        this.queryParams = {view: this.view, viewDate: this.viewDate, types: this.types};
+        this.queryParams = {
+            view: this.view,
+            viewDate: this.viewDate,
+            types: JSON.stringify({types: this.types})
+        };
+
         this.router.navigate(
             [],
             {
@@ -619,6 +631,14 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 replaceUrl: true,
                 queryParamsHandling: 'merge', // remove to replace all query params by provided
             });
+    }
+
+    getPolicies() {
+        const userId = this.activatedRoute.snapshot.paramMap.get('id');
+        this.canShowCourse = this.policyService.get('events', 'canShowCourse');
+        this.canShowPersonal = this.policyService.get('events', 'canShowPersonal');
+        this.canShowTimeOff = this.policyService.get('events', 'canShowTimeOff') && !userId;
+        this.canShowHoliday = this.policyService.get('events', 'canShowHoliday');
     }
 }
 

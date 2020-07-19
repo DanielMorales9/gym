@@ -46,6 +46,7 @@ export class CalendarControlsComponent extends BaseComponent implements OnInit {
                 this.selectedEventTypes['T'] = this.canShowTimeOff;
 
             } else {
+                typeNames = JSON.parse(typeNames)['types'];
                 if (!Array.isArray(typeNames)) {
                     typeNames = [typeNames];
                 }
@@ -65,7 +66,7 @@ export class CalendarControlsComponent extends BaseComponent implements OnInit {
         }
 
         if (!!types) {
-            params['types'] = types;
+            params['types'] = JSON.stringify({types: types});
         }
 
         const url = this.router.url.split('?')[0];
