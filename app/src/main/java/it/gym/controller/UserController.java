@@ -74,7 +74,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}/image")
-    public ResponseEntity<ImageResource> getImage(@PathVariable("id") Long id) throws DataFormatException, IOException {
+    public ResponseEntity<ImageResource> getImage(@PathVariable("id") Long id)
+            throws DataFormatException, IOException {
         Image u = facade.retrieveImage(id);
         return ResponseEntity.ok(new ImageAssembler().toModel(u));
     }

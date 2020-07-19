@@ -90,6 +90,7 @@ import {LyDialogModule} from '@alyle/ui/dialog';
 import {SessionItemComponent, SessionsCustomerComponent} from './sessions';
 import {CdkTableModule} from '@angular/cdk/table';
 import {NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
+import {AvatarComponent} from './profile/avatar.component';
 
 // @ts-ignore
 @NgModule({
@@ -214,7 +215,8 @@ import {NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
         SessionItemComponent,
         WorkoutSelectItemComponent,
         MapStringPipe,
-        BundleProgressComponent
+        BundleProgressComponent,
+        AvatarComponent
     ],
     exports: [
         CalendarControlsComponent,
