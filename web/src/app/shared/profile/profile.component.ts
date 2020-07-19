@@ -104,7 +104,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
 
                     this.userService.uploadImage(this.user.id, uploadImageData)
                         .subscribe(res => {
-                            this.user = res;
+                            this.user = res as any;
                             this.cdr.detectChanges();
                         });
                 }
