@@ -46,7 +46,7 @@ import {
     WorkoutItemComponent,
     WorkoutDetailsComponent,
     AssignWorkoutsComponent,
-    WorkoutSelectItemComponent, ProgrammeComponent, MapStringPipe
+    WorkoutSelectItemComponent, ProgrammeComponent, MapStringPipe, BundleProgressComponent
 } from './index';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -213,7 +213,8 @@ import {NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
         SessionsCustomerComponent,
         SessionItemComponent,
         WorkoutSelectItemComponent,
-        MapStringPipe
+        MapStringPipe,
+        BundleProgressComponent
     ],
     exports: [
         CalendarControlsComponent,
@@ -269,6 +270,7 @@ import {NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
         MapStringPipe,
         SessionsCustomerComponent,
         SessionItemComponent,
+        BundleProgressComponent
     ],
     providers: [
         [ LyTheme2 ],

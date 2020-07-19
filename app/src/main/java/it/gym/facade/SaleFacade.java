@@ -227,7 +227,7 @@ public class SaleFacade {
 
     public Balance getBalance(Long customerId) {
         Stream<Sale> streamOfSales = this.saleService.findSalesByCustomerId(customerId).stream();
-        return streamOfSales.map(s -> new Balance(s.getTotalPrice(), s.getTotalPrice()))
+        return streamOfSales.map(s -> new Balance(s.getTotalPrice(), s.getAmountPayed()))
                 .reduce(Balance::sum)
                 .orElse(new Balance());
 
