@@ -28,8 +28,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
                 private router: Router,
-                private swUpdate: SwUpdate,
-                private route: ActivatedRoute) {
+                private swUpdate: SwUpdate) {
         super();
     }
 
