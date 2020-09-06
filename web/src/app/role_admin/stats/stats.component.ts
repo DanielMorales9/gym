@@ -62,11 +62,11 @@ export class StatsComponent extends BaseComponent implements OnInit {
         'May': 4,
         'June': 5,
         'July': 6,
-        'August': 8,
-        'September': 9,
-        'October': 10,
-        'November': 11,
-        'December': 12,
+        'August': 7,
+        'September': 8,
+        'October': 9,
+        'November': 10,
+        'December': 11,
     };
 
     private MONTHS_IDX = [
