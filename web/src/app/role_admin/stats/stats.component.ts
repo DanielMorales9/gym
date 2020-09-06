@@ -7,11 +7,6 @@ import {BaseComponent} from '../../shared/base-component';
 import {forkJoin} from 'rxjs';
 import {feedChart, padding} from '../../shared/stats';
 
-function insertAt(array, index, ...elementsArray) {
-    array.splice(index, 0, ...elementsArray);
-}
-
-
 @Component({
     templateUrl: './stats.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
