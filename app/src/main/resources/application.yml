@@ -41,6 +41,12 @@ spring:
   cache.redis.time-to-live: 86400000
   hateoas:
     use-hal-as-default-json-media-type: false
+  data:
+    redis:
+      repositories:
+        enabled: false
+  main:
+    banner-mode: off
 
 server:
   port: 80
@@ -83,3 +89,4 @@ logging:
     org.springframework.beans: off
     org.springframework.web: debug
     it.gym: debug
+    it.gym.config.ApiLoggerInterceptor: off
