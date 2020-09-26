@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
@@ -41,6 +42,7 @@ public class ReservationFacade {
     @Autowired private TrainingBundleService bundleService;
     @Qualifier("mailService")
     @Autowired private MailService mailService;
+    @Autowired private CustomProperties properties;
 
     private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
         return customer.getTrainingBundles()
@@ -145,18 +147,18 @@ public class ReservationFacade {
         String adminMessage = String.format(
                 "Il cliente %s %s ha terminato il pacchetto %s.\n" +
                         "Verifica lo stato del pacchetto al seguente" +
-                        " link https://www.goodfellas.fitness/admin/bundle/%s\n",
+                        " link %s/admin/bundle/%s\n",
                 customer.getFirstName(), customer.getLastName(),
-                bundle.getName(), bundle.getId());
+                bundle.getName(), properties.getBaseURL(), bundle.getId());
 
         String customerMessage = String.format(
                 "Gentile %s %s,\n" +
                         "Hai terminato il pacchetto %s.\n" +
                         "Verifica lo stato del pacchetto al seguente" +
-                        " link https://www.goodfellas.fitness/customer/bundle/%s.\n" +
+                        " link %s/customer/bundle/%s.\n" +
                         "Rivolgiti in segreteria per rinnovare il tuo pacchetto o sceglierne un altro.",
                 customer.getFirstName(), customer.getLastName(),
-                bundle.getName(), bundle.getId());
+                bundle.getName(), properties.getBaseURL(), bundle.getId());
 
         mailService.sendSimpleMail(customer.getEmail(), subject, customerMessage);
 
@@ -381,9 +383,10 @@ public class ReservationFacade {
         String message = String.format(
                 "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n" +
                         "Verifica lo stato dellla prenotazione al seguente" +
-                        " link https://www.goodfellas.fitness/admin/events/%s\n",
+                        " link %s/admin/events/%s\n",
                 customer.getFirstName(), customer.getLastName(),
                 event.getName(), event.getStartTime(), event.getEndTime(),
+                properties.getBaseURL(),
                 event.getId());
         admins.forEach(a -> {
             mailService.sendSimpleMail(a.getEmail(), subject,

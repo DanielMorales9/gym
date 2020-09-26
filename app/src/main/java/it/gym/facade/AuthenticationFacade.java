@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
@@ -14,8 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.mail.MailException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
@@ -26,7 +25,6 @@ import java.util.stream.Collectors;
 
 
 @Component
-@PropertySource("application.yml")
 @Transactional
 public class AuthenticationFacade {
     private static final Logger logger = LoggerFactory.getLogger(AuthenticationFacade.class);
@@ -52,7 +50,8 @@ public class AuthenticationFacade {
     @Autowired
     private UserService userService;
 
-    @Value("${baseUrl}") private String baseUrl;
+    @Autowired
+    CustomProperties properties;
 
 
     public AUser register(AUser user) {
@@ -192,7 +191,7 @@ public class AuthenticationFacade {
     private void sendRegistrationConfirmationEmail(VerificationToken token) {
         String recipientAddress = token.getUser().getEmail();
         String subject = "Conferma la registrazione";
-        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, token.getToken());
+        String confirmationUrl = String.format("%s/auth/verification?token=%s", properties.getBaseURL(), token.getToken());
         String message = String.format("Per registrare autenticati al seguente indirizzo: %s", confirmationUrl);
         this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
@@ -200,7 +199,7 @@ public class AuthenticationFacade {
     private void sendChangePasswordTokenToEmail(VerificationToken token) {
         String recipientAddress = token.getUser().getEmail();
         String subject = "Cambia la tua password";
-        String confirmationUrl = String.format("%s/auth/modifyPassword?token=%s", baseUrl, token.getToken());
+        String confirmationUrl = String.format("%s/auth/modifyPassword?token=%s", properties.getBaseURL(), token.getToken());
         String message = String.format("Per modificare la password usa il seguente link: %s", confirmationUrl);
         this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }
@@ -208,7 +207,7 @@ public class AuthenticationFacade {
     private void sendVerificationEmail(VerificationToken token) {
         String subject = "Verifica Account";
         String recipientAddress = token.getUser().getEmail();
-        String confirmationUrl = String.format("%s/auth/verification?token=%s", baseUrl, token.getToken());
+        String confirmationUrl = String.format("%s/auth/verification?token=%s", properties.getBaseURL(), token.getToken());
         String message = String.format("Ti abbiamo generato un nuovo link di verifica: %s", confirmationUrl);
         this.mailService.sendSimpleMail(recipientAddress, subject, message);
     }

@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
@@ -33,6 +34,7 @@ public class ReservationFacadeTest {
     @MockBean private GymService gymService;
     @MockBean private CustomerService customerService;
     @MockBean private EventService eventService;
+    @MockBean private CustomProperties properties;
     @Qualifier("trainingBundleService")
     @MockBean private TrainingBundleService bundleService;
     @Qualifier("trainingSessionService")
