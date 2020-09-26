@@ -150,11 +150,13 @@
                 <version>0.8.4</version>
                 <configuration>
                     <excludes>
-                        <exclude>*</exclude>
+                        <exclude>it/gym/config/*Config*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>prepare-agent</id>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
