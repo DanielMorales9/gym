@@ -14,10 +14,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
-
-import static it.gym.config.TenantConnectionProvider.DEFAULT_TENANT;
 
 @Component
 @EnableScheduling
@@ -26,6 +22,9 @@ import static it.gym.config.TenantConnectionProvider.DEFAULT_TENANT;
         havingValue = "true",
         matchIfMissing = true)
 public class MultiTenancyInterceptor extends OncePerRequestFilter {
+
+    @Autowired
+    CustomProperties properties;
 
     @Autowired
     TenantRepository repository;
@@ -37,7 +36,7 @@ public class MultiTenancyInterceptor extends OncePerRequestFilter {
         String tenantUuid = request.getHeader("X-Tenant");
         logger.debug("preHandle TenantContext");
         Tenant tenant = tenantUuid != null? repository.findById(tenantUuid).orElse(null): null;
-        String schema = tenant != null ? tenant.getSchemaName(): DEFAULT_TENANT;
+        String schema = tenant != null ? tenant.getSchemaName(): properties.getSchema();
         TenantContext.setCurrentTenantSchema(schema);
         filterChain.doFilter(request, response);
     }

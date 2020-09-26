@@ -1,6 +1,7 @@
 package it.gym.config;
 
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,8 @@ import org.springframework.stereotype.Component;
         matchIfMissing = true)
 public class TenantSchemaResolver implements CurrentTenantIdentifierResolver {
 
-    private static final String DEFAULT_SCHEMA = "goodfellas";
+    @Autowired
+    CustomProperties properties;
 
     @Override
     public String resolveCurrentTenantIdentifier() {
@@ -21,7 +23,7 @@ public class TenantSchemaResolver implements CurrentTenantIdentifierResolver {
         if(t!=null){
             return t;
         } else {
-            return DEFAULT_SCHEMA;
+            return properties.getSchema();
         }
     }
 

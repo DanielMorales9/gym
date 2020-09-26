@@ -59,9 +59,10 @@ management:
       enabled: false
 
 baseUrl: ${BASE_HOST}
-admin_email: ${ADMIN_EMAIL}
-admin_password: ${ADMIN_PASSWORD}
+adminEmail: ${ADMIN_EMAIL}
+adminPassword: ${ADMIN_PASSWORD}
 schema: ${APP_NAME}
+
 
 ---
 

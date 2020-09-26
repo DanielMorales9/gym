@@ -3,6 +3,7 @@ package it.gym.config;
 import org.hibernate.engine.jdbc.connections.spi.MultiTenantConnectionProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
@@ -19,8 +20,10 @@ import java.sql.SQLException;
         matchIfMissing = true)
 public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
+    @Autowired
+    CustomProperties properties;
+
     private static final Logger logger = LoggerFactory.getLogger(TenantConnectionProvider.class);
-    static final String DEFAULT_TENANT = "goodfellas";
     private final DataSource dataSource;
 
     public TenantConnectionProvider(DataSource dataSource) {
@@ -48,7 +51,7 @@ public class TenantConnectionProvider implements MultiTenantConnectionProvider {
     @Override
     public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
         logger.debug("Release connection for tenant {}", tenantIdentifier);
-        connection.setSchema(DEFAULT_TENANT);
+        connection.setSchema(properties.getSchema());
         releaseAnyConnection(connection);
     }
 

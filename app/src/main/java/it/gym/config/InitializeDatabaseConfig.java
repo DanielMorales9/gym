@@ -8,10 +8,8 @@ import it.gym.service.TenantService;
 import it.gym.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -27,19 +25,12 @@ import java.util.List;
         name = "it.gym.enabled",
         havingValue = "true",
         matchIfMissing = true)
-@PropertySource("application.yml")
 public class InitializeDatabaseConfig implements CommandLineRunner {
 
     private static final String DEV_ENV = "dev";
 
-    @Value("${admin_email}")
-    String ADMIN_EMAIL;
-
-    @Value("${admin_password}")
-    String ADMIN_PASSWORD;
-
-    @Value("${schema}")
-    String SCHEMA;
+    @Autowired
+    private CustomProperties properties;
 
     @Autowired
     @Qualifier("roleService")
@@ -82,7 +73,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
 
             List<Role> roles = retrieveRoles();
 
-            if (userService.findByEmail(ADMIN_EMAIL) == null) {
+            if (userService.findByEmail(properties.getAdminEmail()) == null) {
                 createAndSaveGym();
                 createAndSaveAdmin(roles);
             }
@@ -107,8 +98,8 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
 
     private Tenant createTenant() {
         Tenant tenant = new Tenant();
-        tenant.setSchemaName(SCHEMA);
-        tenant.setTenantName(SCHEMA);
+        tenant.setSchemaName(properties.getSchema());
+        tenant.setTenantName(properties.getSchema());
         return tenant;
     }
 
@@ -125,26 +116,26 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
     }
 
     private void createAndSaveTrainer(List<Role> roles) {
-        String password = passwordEncoder.encode(ADMIN_PASSWORD);
+        String password = passwordEncoder.encode(properties.getDefaultPassword());
         Trainer trainer = createTrainer(password, roles);
         if (!userService.existsByEmail(trainer.getEmail())) userService.save(trainer);
     }
 
     private void createAndSaveCustomer(List<Role> roles) {
-        String password = passwordEncoder.encode(ADMIN_PASSWORD);
+        String password = passwordEncoder.encode(properties.getDefaultPassword());
         Customer customer = createCustomer(password, roles);
         if (!userService.existsByEmail(customer.getEmail())) userService.save(customer);
     }
 
     private void createAndSaveAdmin(List<Role> roles) {
-        String password = passwordEncoder.encode(ADMIN_PASSWORD);
+        String password = passwordEncoder.encode(properties.getDefaultPassword());
         Admin admin = createAdmin(password, roles);
         if (!userService.existsByEmail(admin.getEmail())) userService.save(admin);
     }
 
-    private Gym createAndSaveGym() {
+    private void createAndSaveGym() {
         Gym gym = createGym();
-        return gymService.save(gym);
+        gymService.save(gym);
     }
 
 
@@ -186,7 +177,7 @@ public class InitializeDatabaseConfig implements CommandLineRunner {
 
     private Admin createAdmin(String password, List<Role> roles) {
         Admin admin = new Admin();
-        admin.setEmail(ADMIN_EMAIL);
+        admin.setEmail(properties.getAdminEmail());
         admin.setFirstName("Admin");
         admin.setLastName("Admin");
         admin.setPassword(password);

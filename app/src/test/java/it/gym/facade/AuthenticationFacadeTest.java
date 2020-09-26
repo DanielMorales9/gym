@@ -1,5 +1,6 @@
 package it.gym.facade;
 
+import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
@@ -41,6 +42,7 @@ public class AuthenticationFacadeTest {
     @MockBean @Qualifier("mailService") private MailService mailService;
     @MockBean private BCryptPasswordEncoder passwordEncoder;
     @MockBean private RoleService roleService;
+    @MockBean private CustomProperties properties;
     @MockBean
     @Qualifier("verificationTokenService")
     private VerificationTokenService tokenService;
