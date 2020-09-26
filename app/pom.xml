@@ -147,10 +147,10 @@
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>0.8.4</version>
+                <version>0.8.6</version>
                 <configuration>
                     <excludes>
-                        <exclude>*</exclude>
+                        <exclude>it/gym/config/*Config*</exclude>
                     </excludes>
                 </configuration>
                 <executions>
@@ -161,7 +161,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>test</phase>
+                        <phase>prepare-package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
