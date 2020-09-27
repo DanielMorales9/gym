@@ -105,7 +105,10 @@ export class AuthenticationService implements OnInit, OnDestroy {
      * @return The principal data.
      */
     authenticate(credentials?: Credentials): Observable<any> {
-        this.remember = credentials ? credentials.remember : false;
+        if (!this.remember) {
+            this.remember = credentials ? credentials.remember : false
+        }
+
         if (credentials) {
             this.storageService.set(this.CREDENTIAL_KEY, credentials, this.remember);
         }

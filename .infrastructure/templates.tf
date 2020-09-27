@@ -42,6 +42,7 @@ data "template_file" "api_task_definition" {
     redis_host        = aws_elasticache_cluster.redis.cache_nodes[0].address
     redis_port        = aws_elasticache_cluster.redis.cache_nodes[0].port
     url               = "https://www.${var.domain}"
+    remember_me_token = var.remember_me_token
   }
 }
 

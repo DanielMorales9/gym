@@ -31,6 +31,9 @@ public class CustomProperties {
     @Value("${rememberMeParameter:rememberMe}")
     private String rememberMeParameter;
 
+    @Value("${rememberMeAlways:false}")
+    private Boolean rememberMeAlways;
+
     public String getAdminEmail() {
         return adminEmail;
     }
@@ -57,6 +60,10 @@ public class CustomProperties {
 
     public String getRememberMeParameter() {
         return rememberMeParameter;
+    }
+
+    public boolean getRememberMeAlways() {
+        return rememberMeAlways;
     }
 }
 

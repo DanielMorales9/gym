@@ -62,8 +62,11 @@ baseUrl: ${BASE_HOST}
 adminEmail: ${ADMIN_EMAIL}
 adminPassword: ${ADMIN_PASSWORD}
 schema: ${APP_NAME}
-rememberMeToken: "remember-me"
+# rememberMeAlways
+rememberMeToken: ${REMEMBER_ME_TOKEN}
 rememberMeCookie: "X-REMEMBER-ME"
+rememberMeParameter: "rememberMe"
+rememberMeAlways: false
 
 ---
 

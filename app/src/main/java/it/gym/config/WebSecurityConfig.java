@@ -30,8 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired MultiTenancyInterceptor tenancyInterceptor;
     @Autowired CustomProperties properties;
+    @Autowired MultiTenancyInterceptor tenancyInterceptor;
     @Autowired @Qualifier("userAuthService") UserAuthService userDetailsService;
 
     @Bean
@@ -66,10 +66,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public CustomTokenBasedRememberMeService tokenBasedRememberMeService(){
-        CustomTokenBasedRememberMeService service =
-                new CustomTokenBasedRememberMeService(properties.getRememberMeToken(), userDetailsService);
+    public TokenBasedRememberMeService tokenBasedRememberMeService(){
+        TokenBasedRememberMeService service =
+                new TokenBasedRememberMeService(properties.getRememberMeToken(), userDetailsService);
+        service.setAlwaysRemember(properties.getRememberMeAlways());
         service.setCookieName(properties.getRememberMeCookie());
+        service.setParameter(properties.getRememberMeParameter());
         return service;
     }
 
@@ -103,7 +105,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
                 .rememberMe()
                     .rememberMeServices(tokenBasedRememberMeService())
-                    .rememberMeParameter(properties.getRememberMeParameter())
                 .and()
                     .csrf().disable();
         //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());

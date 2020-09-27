@@ -1,16 +1,19 @@
 package it.gym.config;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices;
 
 import javax.servlet.http.HttpServletRequest;
 
-public class CustomTokenBasedRememberMeService extends TokenBasedRememberMeServices {
+public class TokenBasedRememberMeService extends TokenBasedRememberMeServices {
 
+    private static final Logger logger = LoggerFactory.getLogger(TokenBasedRememberMeService.class);
     @Autowired CustomProperties customProperties;
 
-    public CustomTokenBasedRememberMeService(String key, UserDetailsService userDetailsService) {
+    public TokenBasedRememberMeService(String key, UserDetailsService userDetailsService) {
         super(key, userDetailsService);
     }
 
