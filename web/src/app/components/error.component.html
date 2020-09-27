@@ -1,4 +1,9 @@
-<mat-card>
-    <mat-card-title>{{title}}</mat-card-title>
-    <mat-card-content [innerHTML]="message"></mat-card-content>
-</mat-card>
+<div class="card-container">
+    <mat-card>
+        <mat-card-title>{{title}}</mat-card-title>
+        <mat-card-content [innerHTML]="message"></mat-card-content>
+         <button type="button" mat-flat-button color="basic" *ngIf="showRefreshButton" (click)="refresh()">
+             <span><mat-icon fontSet="fas" fontIcon="fa-redo"></mat-icon>&nbsp;Ricarica</span>
+         </button>
+    </mat-card>
+</div>
