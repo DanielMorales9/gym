@@ -32,7 +32,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.credentials = {
             username: this.email.value,
             password: this.password.value,
-            remember: false
+            remember: true
         };
 
         this.auth.login(this.credentials)

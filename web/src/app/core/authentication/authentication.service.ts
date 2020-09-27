@@ -208,7 +208,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
     }
 
     private signIn(): Observable<any> {
-        return this.http.get('/user');
+        return this.http.get(`/user?rememberMe=${this.remember}`);
     }
 
     private signOut(): Observable<any> {
