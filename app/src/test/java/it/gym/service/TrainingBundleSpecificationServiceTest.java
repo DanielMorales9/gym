@@ -42,7 +42,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void save() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         this.service.save(createPersonalBundleSpec(1L, "personal", options));
         Mockito.verify(repository).save(any(ATrainingBundleSpecification.class));
     }
@@ -55,7 +55,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void findById() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
 
         Mockito.when(repository.findById(1L)).thenAnswer(invocationOnMock -> Optional.of(spec));
@@ -67,7 +67,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void findAll() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
 
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(personalBundleSpec));
@@ -83,7 +83,7 @@ public class TrainingBundleSpecificationServiceTest {
 
     @Test
     public void delete() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         ATrainingBundleSpecification u = createPersonalBundleSpec(1L, "personal", options);
         this.service.delete(u);
         Mockito.verify(repository).delete(any(ATrainingBundleSpecification.class));

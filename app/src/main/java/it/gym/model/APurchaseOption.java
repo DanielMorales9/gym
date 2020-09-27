@@ -9,6 +9,7 @@ import lombok.Generated;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 
 @JsonTypeInfo(
         use = JsonTypeInfo.Id.NAME,
@@ -105,4 +106,32 @@ public abstract class APurchaseOption implements Serializable, Eager<APurchaseOp
     public abstract Date getEndDate(ATrainingBundle bundle);
 
     public abstract Double getPercentageStatus(ATrainingBundle trainingBundle);
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        APurchaseOption that = (APurchaseOption) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(createdAt, that.createdAt) &&
+                Objects.equals(number, that.number);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, price, createdAt, number);
+    }
+
+    @Override
+    public String toString() {
+        return "APurchaseOption{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                ", createdAt=" + createdAt +
+                ", number=" + number +
+                '}';
+    }
 }

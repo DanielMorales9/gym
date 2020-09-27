@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
 import java.util.List;
 
 import static it.gym.utility.Calendar.getNextMonday;
@@ -46,10 +45,10 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
 
         customer = customerRepository.save(customer);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
-        options = createSingletonTimePurchaseOptions(1, 100.0);
+        options = createSingletonTimePurchaseOptions(1, 100.0, null);
         CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
 
         courseBundleSpec = specRepository.save(courseBundleSpec);

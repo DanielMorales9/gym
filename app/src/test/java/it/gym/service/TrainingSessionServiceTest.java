@@ -40,7 +40,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void save() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
         PersonalTrainingBundle p = createPersonalBundle(1L, personalBundleSpec, option);
@@ -50,7 +50,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findById() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
@@ -64,7 +64,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void findAll() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
         APurchaseOption option = personalBundleSpec.getOptions().get(0);
@@ -83,7 +83,7 @@ public class TrainingSessionServiceTest {
 
     @Test
     public void delete() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
         APurchaseOption option = personalBundleSpec.getOptions().get(0);

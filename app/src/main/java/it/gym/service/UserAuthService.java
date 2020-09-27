@@ -40,7 +40,6 @@ public class UserAuthService implements UserDetailsService {
                 true,
                 true,
                 mapRolesToAuthorities(user.getRoles()));
-        logger.info(u.toString());
         return u;
     }
 

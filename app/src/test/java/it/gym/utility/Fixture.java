@@ -228,61 +228,62 @@ public class Fixture {
         return list;
     }
 
-    public static APurchaseOption createTimePurchaseOption(int number, double price) {
+    public static APurchaseOption createTimePurchaseOption(int number, double price, Date createdAt) {
         TimePurchaseOption option = new TimePurchaseOption();
         option.setNumber(number);
         option.setId(1L);
         option.setPrice(price);
-        option.setCreatedAt(new Date());
+        option.setCreatedAt(createdAt);
         option.setName("myTimeOption");
         return option;
     }
 
-    public static APurchaseOption createBundlePurchaseOption(int number, double price) {
+    public static APurchaseOption createBundlePurchaseOption(int number, double price, Date createdAt) {
         BundlePurchaseOption option = new BundlePurchaseOption();
         option.setNumber(number);
         option.setId(2L);
         option.setPrice(price);
-        option.setCreatedAt(new Date());
+        option.setCreatedAt(createdAt);
         option.setName("myBundleOption");
         return option;
     }
 
-    public static APurchaseOption createOnDemandPurchaseOption(int number, double price) {
+    public static APurchaseOption createOnDemandPurchaseOption(int number, double price, Date createdAt) {
         OnDemandPurchaseOption option = new OnDemandPurchaseOption();
         option.setNumber(number);
         option.setId(3L);
         option.setPrice(price);
-        option.setCreatedAt(new Date());
+        option.setCreatedAt(createdAt);
         option.setName("myOnDemandOption");
         return option;
     }
 
     public static List<APurchaseOption> createAllOptions(int number1, double price1,
                                                          int number2, double price2,
-                                                         int number3, double price3) {
+                                                         int number3, double price3,
+                                                         Date createdAt) {
         ArrayList<APurchaseOption> options = new ArrayList<>();
-        options.add(createTimePurchaseOption(number1, price1));
-        options.add(createBundlePurchaseOption(number2, price2));
-        options.add(createOnDemandPurchaseOption(number3, price3));
+        options.add(createTimePurchaseOption(number1, price1, createdAt));
+        options.add(createBundlePurchaseOption(number2, price2, createdAt));
+        options.add(createOnDemandPurchaseOption(number3, price3, createdAt));
         return options;
     }
 
-    public static List<APurchaseOption> createSingletonBundlePurchaseOptions(int number1, double price1) {
+    public static List<APurchaseOption> createSingletonBundlePurchaseOptions(int number1, double price1, Date createdAt) {
         ArrayList<APurchaseOption> options = new ArrayList<>();
-        options.add(createBundlePurchaseOption(number1, price1));
+        options.add(createBundlePurchaseOption(number1, price1, createdAt));
         return options;
     }
 
-    public static List<APurchaseOption> createSingletonTimePurchaseOptions(int number1, double price1) {
+    public static List<APurchaseOption> createSingletonTimePurchaseOptions(int number1, double price1, Date createdAt) {
         ArrayList<APurchaseOption> options = new ArrayList<>();
-        options.add(createTimePurchaseOption(number1, price1));
+        options.add(createTimePurchaseOption(number1, price1, createdAt));
         return options;
     }
 
-    public static List<APurchaseOption> createSingletonOnDemandPurchaseOptions(int number1, double price1) {
+    public static List<APurchaseOption> createSingletonOnDemandPurchaseOptions(int number1, double price1, Date createdAt) {
         ArrayList<APurchaseOption> options = new ArrayList<>();
-        options.add(createOnDemandPurchaseOption(number1, price1));
+        options.add(createOnDemandPurchaseOption(number1, price1, createdAt));
         return options;
     }
 

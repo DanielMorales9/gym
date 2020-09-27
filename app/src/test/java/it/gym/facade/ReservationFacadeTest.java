@@ -16,7 +16,6 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +81,7 @@ public class ReservationFacadeTest {
         Mockito.doReturn(customer).when(customerService).findById(1L);
         Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
                 .when(customerService).save(any(Customer.class));
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
         APurchaseOption option = spec.getOptions().get(0);
         PersonalTrainingBundle bundle = createPersonalBundle(1L, spec, option);
@@ -546,7 +545,7 @@ public class ReservationFacadeTest {
                     true,
                     null);
 
-            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(numSessions1, price1);
+            List<APurchaseOption> options = createSingletonBundlePurchaseOptions(numSessions1, price1, null);
             PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
             APurchaseOption option = spec.getOptions().get(0);
             bundle = createPersonalBundle(1L, spec, option);
@@ -609,7 +608,7 @@ public class ReservationFacadeTest {
             start = getNextMonday();
             end = addHours(start, 1);
 
-            List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
+            List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0, null);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L,
                     "course",
                     maxCustomers,

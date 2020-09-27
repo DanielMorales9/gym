@@ -11,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
         );
 
         customer = repository.save(customer);
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", options);
 
         personalSpec = bundleSpecRepository.save(personalSpec);

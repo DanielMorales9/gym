@@ -120,7 +120,7 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
     public void deleteByUserId_throwsException() throws Exception {
         Customer customer = createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
 
         customer = repository.save(customer);
