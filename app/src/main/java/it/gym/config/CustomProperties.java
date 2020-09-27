@@ -22,6 +22,18 @@ public class CustomProperties {
     @Value("${baseUrl:http://localhost}")
     private String baseURL;
 
+    @Value("${rememberMeToken:default}")
+    private String rememberMeToken;
+
+    @Value("${rememberMeCookie:X-REMEMBER-ME}")
+    private String rememberMeCookie;
+
+    @Value("${rememberMeParameter:rememberMe}")
+    private String rememberMeParameter;
+
+    @Value("${rememberMeAlways:false}")
+    private Boolean rememberMeAlways;
+
     public String getAdminEmail() {
         return adminEmail;
     }
@@ -38,8 +50,20 @@ public class CustomProperties {
         return baseURL;
     }
 
-    public void setBaseURL(String baseURL) {
-        this.baseURL = baseURL;
+    public String getRememberMeToken() {
+        return rememberMeToken;
+    }
+
+    public String getRememberMeCookie() {
+        return rememberMeCookie;
+    }
+
+    public String getRememberMeParameter() {
+        return rememberMeParameter;
+    }
+
+    public boolean getRememberMeAlways() {
+        return rememberMeAlways;
     }
 }
 

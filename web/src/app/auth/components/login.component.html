@@ -27,6 +27,14 @@
                         <div *ngIf="!!password.errors?.required">Password obbligatoria</div>
                     </mat-error>
                 </mat-form-field>
+                <div>
+                    <label for="remember" class="sr-only">Remember</label>
+                    <mat-checkbox id="remember"
+                                  name="remember"
+                                  formControlName="remember">
+                        Rimani connesso
+                    </mat-checkbox>
+                </div>
                 <div class="error-message error-message-final" *ngIf="error">
                     Email o password errata!
                 </div>

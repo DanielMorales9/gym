@@ -32,7 +32,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.credentials = {
             username: this.email.value,
             password: this.password.value,
-            remember: false
+            remember: this.remember.value
         };
 
         this.auth.login(this.credentials)
@@ -51,6 +51,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.form = this.builder.group({
             email: [this.credentials.username, [Validators.required]],
             password: [this.credentials.password, Validators.required],
+            remember: [false,]
         });
     }
 
@@ -60,6 +61,10 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     get password() {
         return this.form.get('password');
+    }
+
+    get remember() {
+        return this.form.get('remember');
     }
 
 }

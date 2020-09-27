@@ -22,7 +22,8 @@
       { "name" : "REDIS_HOST", "value" : "${redis_host}" },
       { "name" : "REDIS_PORT", "value" : "${redis_port}" },
       { "name" : "BASE_HOST", "value" : "${url}" },
-      { "name" : "APP_NAME", "value" : "${app_name}" }
+      { "name" : "APP_NAME", "value" : "${app_name}" },
+      { "name" : "REMEMBER_ME_TOKEN", "value" : "${remember_me_token}" }
     ],
     "logConfiguration": {
       "logDriver": "awslogs",
