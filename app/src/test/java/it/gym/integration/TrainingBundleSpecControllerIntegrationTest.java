@@ -16,7 +16,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -43,10 +42,10 @@ public class TrainingBundleSpecControllerIntegrationTest extends AbstractIntegra
 
     @Before
     public void before() {
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
-        options = createSingletonTimePurchaseOptions(1, 100.0);
+        options = createSingletonTimePurchaseOptions(1, 100.0, null);
         courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
 
         personalBundleSpec = repository.save(personalBundleSpec);

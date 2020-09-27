@@ -17,7 +17,6 @@ import java.util.List;
 import static it.gym.utility.Calendar.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectEvent;
-import static it.gym.utility.HateoasTest.expectAUser;
 import static org.apache.commons.lang3.time.DateUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -50,10 +49,10 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
         trainer = createTrainer(1L);
         trainer = userRepository.save(trainer);
 
-        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
+        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0, null);
         courseSpec = createCourseBundleSpec(1L, "course", 1, options);
 
-        options = createSingletonBundlePurchaseOptions(30, 900.0);
+        options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalSpec = createPersonalBundleSpec(1L, "personal", options);
         courseSpec = specRepository.save(courseSpec);
         personalSpec = specRepository.save(personalSpec);

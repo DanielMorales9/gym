@@ -61,10 +61,10 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         customer = userRepository.save(customer);
         sale = createSale(1L, customer);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         personalSpec = createPersonalBundleSpec(1L, "personal", options);
 
-        options = createSingletonTimePurchaseOptions(1, 100.0);
+        options = createSingletonTimePurchaseOptions(1, 100.0, null);
         courseSpec = createCourseBundleSpec(1L, "course", 11, options);
 
         personalSpec = bundleSpecRepository.save(personalSpec);

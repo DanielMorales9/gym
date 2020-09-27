@@ -56,4 +56,13 @@ public class TimePurchaseOption extends APurchaseOption {
         return (1.0 * (date - startTime)) / (endTime - startTime);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        return super.equals(o);
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }

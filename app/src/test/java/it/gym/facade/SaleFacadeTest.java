@@ -90,7 +90,7 @@ public class SaleFacadeTest {
     @Test
     public void addSalesLineItem() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification mockBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
         Mockito.doReturn(mockBundleSpec).when(bundleSpecService).findById(1L);
@@ -111,7 +111,7 @@ public class SaleFacadeTest {
                 null);
         Sale mockSale = createSale(1L, customer);
         double price = 100.0;
-        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, price);
+        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, price, null);
         CourseTrainingBundleSpecification bundleSpec = createCourseBundleSpec(1L, "course", 11, options);
         APurchaseOption option = bundleSpec.getOptions().get(0);
 
@@ -129,7 +129,7 @@ public class SaleFacadeTest {
     public void confirmSale() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", options));
 
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -142,7 +142,7 @@ public class SaleFacadeTest {
     @Test
     public void deleteSalesLineItem() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         SalesLineItem mockSalesLineItem = addSalesLineItem(mockSale, personalBundleSpec);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -159,7 +159,7 @@ public class SaleFacadeTest {
         customer.setTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         addSalesLineItem(mockSale, personalBundleSpec);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -172,7 +172,7 @@ public class SaleFacadeTest {
         customer.setTrainingBundles(Collections.emptyList());
         Sale mockSale = createSale(1L, customer);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification bundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
         addSalesLineItem(mockSale, bundleSpec);
@@ -192,7 +192,7 @@ public class SaleFacadeTest {
     public void paySale() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", options));
 
         mockSale.setCompleted(true);
@@ -206,7 +206,7 @@ public class SaleFacadeTest {
     public void paySaleNotCompleted() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", options));
 
         Mockito.doReturn(mockSale).when(saleService).findById(1L);
@@ -218,7 +218,7 @@ public class SaleFacadeTest {
     public void paySaleMoreThanNeeded() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", options));
 
         mockSale.setCompleted(true);
@@ -231,7 +231,7 @@ public class SaleFacadeTest {
     public void paySaleExactlyWhatNeeded() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         addSalesLineItem(mockSale, createPersonalBundleSpec(1L, "personal", options));
 
         mockSale.setCompleted(true);
@@ -247,7 +247,7 @@ public class SaleFacadeTest {
     public void getTotalPrice() {
         Sale mockSale = createSale(1L, createCustomer(1L, "customer@customer.com", "", "customer", "customer", true, null));
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
         addSalesLineItem(mockSale, personalBundleSpec);
         Mockito.doReturn(mockSale).when(saleService).findById(1L);

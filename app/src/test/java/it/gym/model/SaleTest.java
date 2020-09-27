@@ -6,7 +6,6 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static it.gym.utility.Fixture.*;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -31,14 +30,12 @@ public class SaleTest {
         Sale sale = createSale(createCustomer());
         SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
+        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0, null);
         CourseTrainingBundleSpecification expectedSpecs =
                 createCourseBundleSpec(1L, "Course", 11, options);
         APurchaseOption option = expectedSpecs.getOptions().get(0);
         CourseTrainingBundle expectedBundle = createCourseBundle(start, expectedSpecs, option);
         SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
-
-        assertThat(sli.getTrainingBundle()).isEqualTo(expectedBundle);
 
         assertThat(sli).isEqualTo(expectedSli);
     }
@@ -140,7 +137,7 @@ public class SaleTest {
 
     private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
 
-        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0);
+        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0, null);
         CourseTrainingBundleSpecification spec =
                 createCourseBundleSpec(1L, "Course", 11, options);
         APurchaseOption option = spec.getOptions().get(0);

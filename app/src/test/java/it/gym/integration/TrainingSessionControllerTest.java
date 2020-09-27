@@ -11,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -52,7 +51,7 @@ public class TrainingSessionControllerTest extends AbstractIntegrationTest {
 
         customer = customerRepository.save(customer);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
 
         personalBundleSpec = specRepository.save(personalBundleSpec);

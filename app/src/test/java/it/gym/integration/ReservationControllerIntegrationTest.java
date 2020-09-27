@@ -11,7 +11,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
 import javax.transaction.Transactional;
-import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -274,7 +273,9 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
         }
 
         @Transactional
-        public void invoke(int days, boolean hasReservation, boolean hasEvent, int optionIndex, int number1, double price1, int number2, double price2, int number3, double price3, int maxCustomers) {
+        public void invoke(int days, boolean hasReservation, boolean hasEvent, int optionIndex,
+                           int number1, double price1, int number2, double price2, int number3, double price3,
+                           int maxCustomers) {
             gym = createGym(1L);
             gym = gymRepository.save(gym);
 
@@ -289,7 +290,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                     roles);
             customer = userRepository.save(customer);
 
-            List<APurchaseOption> options = createAllOptions(number1, price1, number2, price2, number3, price3);
+            List<APurchaseOption> options = createAllOptions(number1, price1, number2, price2, number3, price3, null);
             CourseTrainingBundleSpecification spec = createCourseBundleSpec(1L, "course", maxCustomers, options);
 
             spec = specRepository.save(spec);
@@ -401,7 +402,7 @@ public class ReservationControllerIntegrationTest extends AbstractIntegrationTes
                     roles);
             customer = userRepository.save(customer);
 
-            List<APurchaseOption> options = createAllOptions(number1, price1, number2, price2, number3, price3);
+            List<APurchaseOption> options = createAllOptions(number1, price1, number2, price2, number3, price3, null);
             PersonalTrainingBundleSpecification spec = createPersonalBundleSpec(1L, "personal", options);
 
             spec = specRepository.save(spec);

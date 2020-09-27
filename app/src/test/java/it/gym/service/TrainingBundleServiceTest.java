@@ -41,7 +41,7 @@ public class TrainingBundleServiceTest {
     @Test
     public void findAll() {
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0);
+        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
         PersonalTrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", options);
         ATrainingBundle bundle = createPersonalBundle(1L, pe, pe.getOptions().get(0));
         Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(bundle));
