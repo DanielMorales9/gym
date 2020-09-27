@@ -91,10 +91,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/",
                         "/user",
-                        "/log",
                         "/logout",
                         "/authentication/**",
                         "/gyms/**",
+                        "/log/**",
                         "/login",
                         "/actuator/*").permitAll()
                 .anyRequest().authenticated()
