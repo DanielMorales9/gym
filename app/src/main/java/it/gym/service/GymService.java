@@ -89,6 +89,7 @@ public class GymService implements ICrudService<Gym, Long> {
         manifest.setTheme_color(gym.getThemeColor());
         manifest.setBackground_color(gym.getBackgroundColor());
 
+        // TODO This is Hard coded and need to be dynamic
         ArrayList<Icon> icons = new ArrayList<>();
         Icon icon0 = new Icon("/src/assets/icons/android-chrome-192x192.png", "192x192", "image/png");
         Icon icon1 = new Icon("/src/assets/icons/android-chrome-512x512.png", "512x512", "image/png");

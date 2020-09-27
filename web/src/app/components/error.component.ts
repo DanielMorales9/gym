@@ -16,14 +16,15 @@ export class ErrorComponent implements OnInit {
 
 
     ngOnInit(): void {
-        const message = this.router.snapshot.queryParamMap.get('message');
         const title = this.router.snapshot.queryParamMap.get('title');
+        const message = this.router.snapshot.queryParamMap.get('message');
         if (message === 'Invalid Token Exception') {
             this.title = 'Token non valido!';
-            this.message = 'Rivolgiti all\'amministratore per risolvere il problema.';
+            this.message = 'Rivolgiti in segreteria per risolvere il problema.';
         } else {
-            this.title = title;
-            this.message = message;
+            this.title = "Qualcosa è andato storto";
+            this.message = "Prova più tardi oppure ricarica la pagina";
+
         }
         this.cdr.detectChanges();
     }
