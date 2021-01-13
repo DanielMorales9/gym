@@ -34,11 +34,13 @@ cache:
 before_install:
   - export M2_HOME="$PWD/apache-maven-${MVN_VERSION}"
   - export PATH="$M2_HOME/bin:$PATH"
-  - ./terraform validate
 
 install: bash .travis/install.sh
 
-script: bash .travis/script.sh
+script:
+  - ./terraform validate
+  - bash .travis/script.sh
+
 
 deploy:
   - provider: script
