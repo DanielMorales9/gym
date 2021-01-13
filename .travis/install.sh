@@ -3,8 +3,9 @@
 echo "========================="
 echo "|  Installing MAVEN     |"
 echo "========================="
-wget "https://archive.apache.org/dist/maven/maven-3/${MVN_VERSION}/binaries/apache-maven-${MVN_VERSION}-bin.zip"
-unzip -qq "apache-maven-${MVN_VERSION}-bin.zip"
+MAVEN_ZIP="apache-maven-${MVN_VERSION}-bin.zip"
+wget "https://archive.apache.org/dist/maven/maven-3/${MVN_VERSION}/binaries/${MAVEN_ZIP}"
+unzip -qq "${MAVEN_ZIP}"
 
 echo "========================="
 echo "|  Installing AWS-CLI   |"
