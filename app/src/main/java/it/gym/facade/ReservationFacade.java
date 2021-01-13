@@ -2,11 +2,11 @@ package it.gym.facade;
 
 import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
+import it.gym.exception.InternalServerException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
-import jdk.nashorn.internal.runtime.regexp.joni.exception.InternalException;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -204,7 +204,7 @@ public class ReservationFacade {
         return u.getRoles()
                 .stream()
                 .reduce((role, role2) -> role.getId() < role2.getId()? role : role2)
-                .orElseThrow(() -> new InternalException("Nessun ruolo"));
+                .orElseThrow(() -> new InternalServerException("Nessun ruolo"));
     }
 
     private boolean isPast(Date startTime) {
