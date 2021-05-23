@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -ex
 
 mvn clean
 if [[ "$TRAVIS_BRANCH" = "master" ]]; then

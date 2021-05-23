@@ -26,7 +26,7 @@ data "template_file" "api_task_definition" {
   template = file("${path.module}/templates/tasks/app.json")
 
   vars = {
-    image_url         = "${var.account_id}.dkr.ecr.eu-central-1.amazonaws.com/app:0.0.1-SNAPSHOT"
+    image_url         = "${var.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/app:0.0.1-SNAPSHOT"
     container_name    = "app"
     log_group_region  = var.aws_region
     log_group_name    = aws_cloudwatch_log_group.cloudwatch_log_group.name
@@ -50,7 +50,7 @@ data "template_file" "web_task_definition" {
   template = file("${path.module}/templates/tasks/web.json")
 
   vars = {
-    image_url        = "${var.account_id}.dkr.ecr.eu-central-1.amazonaws.com/web:0.0.1-SNAPSHOT"
+    image_url        = "${var.account_id}.dkr.ecr.${var.aws_region}.amazonaws.com/web:0.0.1-SNAPSHOT"
     container_name   = "web"
     log_group_region = var.aws_region
     log_group_name   = aws_cloudwatch_log_group.cloudwatch_log_group.name

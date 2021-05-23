@@ -1,17 +1,16 @@
 # define AWS region
 # =================
 provider "aws" {
-  region  = "eu-central-1"
-  version = "~> 2.0"
+  region  = "eu-west-1"
 }
 
 # manually define remote state file on S3
 # =======================================
 terraform {
   backend "s3" {
-    bucket  = "gms-app1"
+    bucket  = "goodfellas-448068747739"
     key     = "terraform.tfstate"
-    region  = "eu-central-1"
+    region  = "eu-west-1"
     encrypt = true
   }
 }

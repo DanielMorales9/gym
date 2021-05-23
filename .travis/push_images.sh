@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 # define arguments
 for i in "$@"
@@ -55,14 +55,6 @@ if [ $? -ne 0 ]; then
 else
     echo "+${IMAGE} repository exists"
 fi
-
-# login to ECR service
-echo "==========================="
-echo "| Login to ECR service... |"
-echo "==========================="
-$(aws ecr get-login --region ${AWS_DEFAULT_REGION} --no-include-email)
-
-
 # define the full path of the docker image
 echo "============================="
 echo "| Create ECR Docker Path... |"
@@ -70,10 +62,20 @@ echo "============================="
 ECR_NAME="${ACCOUNT}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com/${IMAGE}"
 echo "+${ECR_NAME}"
 
+# login to ECR service
+echo "==========================="
+echo "| Login to ECR service... |"
+echo "==========================="
+aws ecr get-login-password --region "${AWS_DEFAULT_REGION}" |\
+ docker login --username "AWS" --password-stdin "${ECR_NAME}"
+
+
 # push docker image to ECR
 echo "========================"
 echo "| Push Image to ECR... |"
 echo "========================"
 docker tag ${DOCKER_USER}/${IMAGE}:${TAG} ${ECR_NAME}:${TAG}
+docker tag ${DOCKER_USER}/${IMAGE}:${TAG} "${ECR_NAME}:latest"
 docker push ${ECR_NAME}:${TAG}
+docker push "${ECR_NAME}:latest"
 echo "+success"

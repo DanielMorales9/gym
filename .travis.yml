@@ -12,9 +12,9 @@ env:
   global:
     - TAG="0.0.1-SNAPSHOT"
     - DOCKER_USER="tenentedan9"
-    - AWS_DEFAULT_REGION="eu-central-1"
+    - AWS_DEFAULT_REGION="eu-west-1"
     - MAVEN_OPTS="-Dmaven.repo.local=.m2"
-    - TF_VERSION="0.13.5"
+    - TF_VERSION="0.15.3"
     - MVN_VERSION="3.6.1"
     - TESTCONTAINERS_RYUK_DISABLED=true
 

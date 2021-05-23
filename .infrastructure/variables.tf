@@ -48,7 +48,7 @@ variable "remember_me_token" {
 
 variable "aws_region" {
   description = "EC2 Region for the VPC"
-  default     = "eu-central-1"
+  default     = "eu-west-1"
 }
 
 variable "vpc_cidr" {
@@ -58,7 +58,7 @@ variable "vpc_cidr" {
 
 variable "availability_zones" {
   type    = list(string)
-  default = ["eu-central-1a", "eu-central-1b"]
+  default = ["eu-west-1a", "eu-west-1b"]
 }
 
 variable "az_count" {
