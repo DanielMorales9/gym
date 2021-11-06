@@ -19,9 +19,11 @@ export class GlobalErrorHandler implements ErrorHandler {
             console.log(err);
             console.log(err.stack);
         }
-        let message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
-        message += '\n' + err.stack;
-        console.error(message);
+        let message = "";
+        if (!!err) {
+            message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
+            message += '\n' + err.stack;
+        }
 
         this.http.post('/log/error/', message)
             .pipe(first()).subscribe(_ => {

@@ -35,7 +35,23 @@ before_install:
   - export M2_HOME="$PWD/apache-maven-${MVN_VERSION}"
   - export PATH="$M2_HOME/bin:$PATH"
 
-install: bash .travis/install.sh
+install:
+  - echo "TF_VAR_account_id = $TF_VAR_account_id"
+  - echo "TF_VAR_admin_email = $TF_VAR_admin_email"
+  - echo "TF_VAR_admin_password = $TF_VAR_admin_password"
+  - echo "TF_VAR_app_name = $TF_VAR_app_name"
+  - echo "TF_VAR_aws_access_key = $TF_VAR_aws_access_key"
+  - echo "TF_VAR_aws_secret_key = $TF_VAR_aws_secret_key"
+  - echo "TF_VAR_bucket = $TF_VAR_bucket"
+  - echo "TF_VAR_domain = $TF_VAR_domain"
+  - echo "TF_VAR_gmail_password = $TF_VAR_gmail_password"
+  - echo "TF_VAR_gmail_username = $TF_VAR_gmail_username"
+  - echo "TF_VAR_key_name = $TF_VAR_key_name"
+  - echo "TF_VAR_postgres_db = $TF_VAR_postgres_db"
+  - echo "TF_VAR_postgres_password = $TF_VAR_postgres_password"
+  - echo "TF_VAR_postgres_username = $TF_VAR_postgres_username"
+  - echo "TF_VAR_remember_me_token = $TF_VAR_remember_me_token"
+  - echo "TF_VAR_url = $TF_VAR_url"
 
 script:
   - ./terraform validate
