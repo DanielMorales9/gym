@@ -77,7 +77,7 @@ public class AuthenticationFacade {
         try {
             this.sendRegistrationConfirmationEmail(vk);
         } catch (MailException e) {
-            logger.info(e.getMessage());
+            logger.error(e.getMessage());
             this.rollbackRegistration(vk);
 
             String message = String.format(EMAIL_REGISTRATION_EX_MESSAGE, user.getFirstName(), user.getLastName());
