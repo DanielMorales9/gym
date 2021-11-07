@@ -12,6 +12,7 @@ import {EventDetailsComponent} from '../shared/events';
 import {CustomerStatsComponent} from '../shared/stats';
 import {AssignWorkoutsComponent, ProgrammeComponent, WorkoutDetailsComponent, WorkoutsComponent} from '../shared/workout';
 import {SessionsCustomerComponent} from '../shared/sessions';
+import {AppInfoComponent} from "../shared/app-info";
 
 const routes = [
     { path: '', children : [
@@ -106,6 +107,10 @@ const routes = [
             {
                 path: 'settings/gym', component: GymSettingsComponent,
                 data: {title: 'Palestra'}
+            },
+            {
+                path: 'appInfo', component: AppInfoComponent,
+                data: {title: 'About the App'}
             },
             { path: '**', redirectTo: 'home' }
         ]},

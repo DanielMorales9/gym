@@ -15,10 +15,8 @@ export class GlobalErrorHandler implements ErrorHandler {
     }
 
     handleError(err) {
-        if (!environment.production) {
-            console.log(err);
-            console.log(err.stack);
-        }
+        console.log(err);
+        console.log(err.stack);
         let message = "";
         if (!!err) {
             message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;

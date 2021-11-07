@@ -10,6 +10,7 @@ import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
 import {SwUpdate} from '@angular/service-worker';
 import {environment} from '../environments/environment.prod';
+import { version } from '../../package.json';
 
 
 @Component({
@@ -24,6 +25,8 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     isBack: boolean;
     desktop: boolean;
     title: string[];
+    version: string = version;
+
 
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
@@ -42,6 +45,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        console.log(`App Version: ${version}`)
         this.authOnNavigation();
         this.authenticate();
         this.desktop = this.isDesktop();
@@ -50,11 +54,11 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     private checkUpdates() {
-        // TODO fix me
-        if (!window.location.href.includes('localhost')) {
+        if (this.swUpdate.isEnabled) {
+            console.log("Check for updates is running every minute...")
             this.swUpdate.available
                 .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(event => {
+                .subscribe(_ => {
                     if (confirm('Aggiornamento disponibile. ' +
                         'Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
                         this.swUpdate.activateUpdate().then(() => {
@@ -63,9 +67,10 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                     }
                 });
 
-            interval(6 * 60 * 60).subscribe(() => {
+            interval(1000 * 60).subscribe(() => {
                 this.swUpdate.checkForUpdate();
             });
+
         }
     }
 

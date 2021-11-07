@@ -21,14 +21,14 @@
               "src/manifest.webmanifest"
             ],
             "allowedCommonJsDependencies": [
-                "hammerjs",
-                "angular-calendar/date-adapters/date-fns",
-                "lodash",
-                "calendar-utils/date-adapters/date-fns",
-                "chart.js",
-                "@mattlewis92/dom-autoscroller",
-                "dom-set",
-                "dom-plane"
+              "hammerjs",
+              "angular-calendar/date-adapters/date-fns",
+              "lodash",
+              "calendar-utils/date-adapters/date-fns",
+              "chart.js",
+              "@mattlewis92/dom-autoscroller",
+              "dom-set",
+              "dom-plane"
             ],
             "styles": [
               "src/styles.scss",
@@ -170,5 +170,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "analytics": "fde07c92-a72c-4de3-958b-3444f17abe12"
   }
 }

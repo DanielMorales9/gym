@@ -46,7 +46,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             });
 
         setTimeout(() => {
-            if (this.auth.isAuthenticated()) {
+            if (this.auth.isAuthenticated() && this.auth.getUser()) {
                 this.roles = this.auth.getUser().roles;
                 this.setCurrentRole(this.currentRoleId || this.roles[0].id);
             }
@@ -83,5 +83,9 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
 
     switchRole(id: number) {
         this.auth.setCurrentUserRole(id);
+    }
+
+    goToAppInfo() {
+        this.router.navigateByUrl(this.roleName + '/appInfo');
     }
 }
