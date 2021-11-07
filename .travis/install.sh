@@ -11,7 +11,10 @@ unzip -qq "${MAVEN_ZIP}"
 echo "========================="
 echo "|  Installing AWS-CLI   |"
 echo "========================="
-sudo snap install aws-cli --classic
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+aws --version
 
 echo "========================="
 echo "|  Installing Terraform |"
