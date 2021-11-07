@@ -1,3 +1,7 @@
+locals {
+  validation_options = tolist(aws_acm_certificate.default.domain_validation_options)
+}
+
 resource "aws_acm_certificate" "default" {
   domain_name               = var.domain
   validation_method         = "DNS"
@@ -15,9 +19,9 @@ data "aws_route53_zone" "public" {
 
 resource "aws_route53_record" "route53_record" {
   depends_on = [aws_acm_certificate.default]
-  name       = aws_acm_certificate.default.domain_validation_options[0]["resource_record_name"]
-  type       = aws_acm_certificate.default.domain_validation_options[0]["resource_record_type"]
-  records    = [aws_acm_certificate.default.domain_validation_options[0]["resource_record_value"]]
+  name       = local.validation_options.0.resource_record_name
+  type       = local.validation_options.0.resource_record_type
+  records    = [local.validation_options.0.resource_record_value]
   zone_id    = data.aws_route53_zone.public.zone_id
   ttl        = 300
 }

@@ -15,12 +15,12 @@ public class ClientLogController {
 
     @PostMapping(path = "/error")
     public void error(@RequestBody String message) {
-        logger.error("Client: " + message);
+        logger.error("Client: " + message.replaceAll("\n", " "));
     }
 
     @PostMapping(path = "/info")
     public void info(@RequestBody String message) {
-        logger.info("Client: " + message);
+        logger.info("Client: " + message.replaceAll("\n", " "));
     }
 
 }

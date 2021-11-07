@@ -87,11 +87,22 @@ logging:
 
 spring:
   profiles: dev
+  http:
+    log-request-details: true
 
 logging:
   level:
     root: info
     org.springframework.beans: off
     org.springframework.web: debug
+    org.springframework.security: debug
+    it:
+      gym:
+        config:
+          ApiLoggerInterceptor: off
+          TenantContext: off
+          MultiTenancyInterceptor: off
+          TenantConnectionProvider: off
+          TokenBasedRememberMeService: off
     it.gym: debug
-    it.gym.config.ApiLoggerInterceptor: off
+

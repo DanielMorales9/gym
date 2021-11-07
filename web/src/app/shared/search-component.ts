@@ -47,11 +47,13 @@ export abstract class SearchComponent<T> extends BaseComponent {
     }
 
     dataSourceSearch($event?) {
-        Object.keys($event).forEach(key => {
-            if ($event[key] === undefined || $event[key] === '' || $event[key] === null) {
-                delete $event[key];
-            }
-        });
+        if ($event) {
+            Object.keys($event).forEach(key => {
+                if ($event[key] === undefined || $event[key] === '' || $event[key] === null) {
+                    delete $event[key];
+                }
+            });
+        }
         this.ds.setQuery($event);
         this.ds.fetchPage(0);
         this.updateQueryParams($event);
