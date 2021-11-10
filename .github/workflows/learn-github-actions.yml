@@ -13,6 +13,5 @@ jobs:
           java-version: '11'
           distribution: 'adopt'
       - name: Build with Maven
-        run:
-          - docker pull postgres:10-alpine
-          - mvn --batch-mode --update-snapshots verify
+      - run: docker pull postgres:10-alpine
+      - run: mvn --batch-mode --update-snapshots verify
