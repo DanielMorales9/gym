@@ -5,6 +5,8 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      - TESTCONTAINERS_RYUK_DISABLED: true
     steps:
       - run: docker pull postgres:10-alpine
       - uses: actions/checkout@v2
