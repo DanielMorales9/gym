@@ -6,7 +6,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      - TESTCONTAINERS_RYUK_DISABLED: true
+      TESTCONTAINERS_RYUK_DISABLED: true
     steps:
       - uses: actions/checkout@v2
       - name: Set up JDK 11
