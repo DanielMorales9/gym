@@ -35,24 +35,24 @@ before_install:
   - export M2_HOME="$PWD/apache-maven-${MVN_VERSION}"
   - export PATH="$M2_HOME/bin:$PATH"
 
-install: bash .travis/install.sh
+install: bash .cicd/install.sh
 
 script:
   - ./terraform validate
-  - bash .travis/script.sh
+  - bash .cicd/script.sh
 
 
 deploy:
   - provider: script
-    script: bash .travis/deploy.sh
+    script: bash .cicd/deploy.sh
     skip_cleanup: true
 
 after_deploy:
-  - bash .travis/push_images.sh -i="app" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
-  - bash .travis/push_images.sh -i="web" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
-  - bash .travis/taint_deploy.sh
+  - bash .cicd/push_images.sh -i="app" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash .cicd/push_images.sh -i="web" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash .cicd/taint_deploy.sh
 
-after_success: bash .travis/after_success.sh
+after_success: bash .cicd/after_success.sh
 
 notifications:
   email: false
