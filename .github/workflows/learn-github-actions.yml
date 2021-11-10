@@ -8,7 +8,6 @@ jobs:
     env:
       - TESTCONTAINERS_RYUK_DISABLED: true
     steps:
-      - run: docker pull postgres:10-alpine
       - uses: actions/checkout@v2
       - name: Set up JDK 11
         uses: actions/setup-java@v2
