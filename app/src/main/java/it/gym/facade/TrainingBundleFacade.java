@@ -1,20 +1,20 @@
 package it.gym.facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.ATrainingBundle;
-import it.gym.model.Customer;
 import it.gym.service.TrainingBundleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 @Component
@@ -26,6 +26,9 @@ public class TrainingBundleFacade {
     @Autowired
     @Qualifier("trainingBundleService")
     private TrainingBundleService service;
+
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public ATrainingBundle findById(Long id) {
         return service.findById(id);
@@ -61,5 +64,16 @@ public class TrainingBundleFacade {
 
     public List<ATrainingBundle> getActiveBundles() {
         return this.service.findBundlesByNotExpired();
+    }
+
+    public ATrainingBundle patchBundle(Long id, HttpServletRequest request) throws IOException {
+        ATrainingBundle bundle = findById(id);
+        bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
+        // TODO why do we do this?
+        if (bundle.isExpired()) {
+            bundle.terminate();
+        }
+        bundle = save(bundle);
+        return bundle;
     }
 }

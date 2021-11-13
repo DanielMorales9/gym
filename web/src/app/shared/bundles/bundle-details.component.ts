@@ -5,7 +5,7 @@ import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
-import {Bundle, BundleType} from '../model';
+import {Bundle, BundleType, CourseBundle, PersonalBundle} from '../model';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
@@ -74,7 +74,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
 
     isNotActive() {
         if (!!this.bundle) {
-            if (this.bundle.type === 'C') {
+            if (this.bundle.type == 'C') {
                 return !this.bundle.startTime;
             }
             else {
@@ -87,7 +87,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     isValid() {
         if (!!this.bundle) {
             if (!this.isExpired()) {
-                if (this.bundle.type === 'C') {
+                if (this.bundle.type == 'C') {
                     return !!this.bundle.startTime;
                 } else {
                     return true;
@@ -111,10 +111,12 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
             .pipe(takeUntil(this.unsubscribe$),
                 filter(v => !!v),
                 switchMap(v => this.editBundle(v)),
-                switchMap(v => this.getBundle(this.bundle.id))
+                switchMap(_ => this.getBundle(this.bundle.id))
             )
-            .subscribe(v => this.bundle = v,
-                err => this.snackBar.open(err.error.message));
+            .subscribe(v => {
+                this.bundle = v;
+                this.cdr.detectChanges();
+            }, err => this.snackBar.open(err.error.message));
     }
 
     deleteBundle() {
@@ -141,7 +143,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
 
     getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
-        this.canEdit = this.policy.get('bundle', 'canEdit');
+        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.type == 'C';
         this.canShowWorkout = this.policy.get('workout', 'canShow');
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }

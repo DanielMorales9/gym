@@ -35,7 +35,7 @@ resource "aws_ecs_cluster" "ecs_cluster" {
   }
 }
 
-resource "aws_ecs_task_definition" "app_task_definition" {
+resource "aws_ecs_task_definition" "api_task_definition" {
   family                = "${var.app_name}_api_ecs_task_definition"
   container_definitions = data.template_file.api_task_definition.rendered
   execution_role_arn    = aws_iam_role.ecs_execution_role.arn
@@ -69,7 +69,7 @@ resource "aws_ecs_task_definition" "web_task_definition" {
 
 resource "aws_ecs_service" "api_service" {
   depends_on = [
-    aws_ecs_task_definition.app_task_definition,
+    aws_ecs_task_definition.api_task_definition,
     aws_cloudwatch_log_group.cloudwatch_log_group,
     aws_iam_role_policy.ecs_service_role_policy,
     aws_alb_target_group.api_alb_target_group,
@@ -78,7 +78,7 @@ resource "aws_ecs_service" "api_service" {
 
   name            = "${var.app_name}_api_ecs_service"
   cluster         = aws_ecs_cluster.ecs_cluster.id
-  task_definition = aws_ecs_task_definition.app_task_definition.arn
+  task_definition = aws_ecs_task_definition.api_task_definition.arn
   desired_count   = var.desired_capacity
 
   //  network_configuration {
