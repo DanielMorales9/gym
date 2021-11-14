@@ -49,12 +49,6 @@ export class BundleModalComponent implements OnInit {
             startTime: new FormControl(new Date(bundle.startTime), Validators.required),
             endTime: new FormControl(new Date(bundle.endTime), Validators.required),
         });
-
-        this.startTime.valueChanges.subscribe(val => {
-            const end = BundleModalComponent.addMonthsToTime(val, bundle.option.number);
-            this.endTime.setValue(end);
-            this.form.updateValueAndValidity();
-        });
     }
 
     submit() {

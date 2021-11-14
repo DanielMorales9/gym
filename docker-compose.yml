@@ -20,7 +20,7 @@ services:
     image: redis:alpine
 #  web:
 #    container_name: web
-#    image: tenentedan9/web:0.0.1-SNAPSHOT
+#    image: tenentedan9/web:${TAG}
 #    volumes:
 #      - ./web/dist:/var/www/ui:rw
 #    depends_on:
@@ -31,7 +31,7 @@ services:
   app:
     restart: always
     container_name: app
-    image: tenentedan9/app:0.0.1-SNAPSHOT
+    image: tenentedan9/app:${TAG}
     command: --spring.profiles.active=dev
     depends_on:
       - redis

@@ -15,14 +15,11 @@ import {Policy} from '../policy.interface';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundlesComponent extends SearchComponent<Bundle> implements Policy, OnInit {
+export class BundlesComponent extends SearchComponent<Bundle> implements OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun pacchetto acquistato';
 
     id: number;
-
-    canDelete: boolean;
-    canEdit: boolean;
 
     filters = [
         {name: 'Attivi', value: false},
@@ -43,7 +40,6 @@ export class BundlesComponent extends SearchComponent<Bundle> implements Policy,
     }
 
     ngOnInit(): void {
-        this.getPolicies();
         this.initQueryParams();
     }
 
@@ -61,23 +57,32 @@ export class BundlesComponent extends SearchComponent<Bundle> implements Policy,
         return $event;
     }
 
-    getPolicies() {
-        this.canDelete = this.policy.get('bundle', 'canDelete');
-        this.canEdit = this.policy.get('bundle', 'canEdit');
-    }
-
     handleEvent($event) {
         if ($event.type === 'info') {
             this.goToDetails($event.bundle);
         } else if ($event.type === 'edit') {
-            this.service.patchBundle($event.bundle)
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe({
-                    error: err => this.snackbar.open(err.error.message)
-                });
+            this.editBundle($event.bundle);
         } else if ($event.type === 'userInfo') {
             this.goToUserDetails($event.user);
+        } else if ($event.type === 'delete') {
+            this.deleteBundle($event.bundle);
         }
+    }
+
+    private deleteBundle(bundle) {
+        this.service.deleteBundle(bundle.id)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                error: err => this.snackbar.open(err.error.message)
+            });
+    }
+
+    private editBundle(bundle) {
+        this.service.patchBundle(bundle)
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe({
+                error: err => this.snackbar.open(err.error.message)
+            });
     }
 
     private goToUserDetails(user) {

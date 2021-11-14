@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {Bundle, CourseBundle, PersonalBundle} from "../../shared/model";
 
 
 @Injectable()
@@ -28,7 +29,30 @@ export class BundleService {
         return this.http.delete(`/bundles/${id}`);
     }
 
-    patchBundle(bundle: any): Observable<any> {
+    patchBundle(bundle: Bundle): Observable<any> {
+        console.log(
+            bundle
+        )
+        bundle = Object.assign({}, bundle);
+
+        if (bundle.sessions) {
+            delete bundle.sessions
+        }
+
+        if (bundle.customer) {
+            delete bundle.customer
+        }
+
+        if (bundle.option) {
+            delete bundle.option
+        }
+
+        if (bundle.bundleSpec) {
+            delete bundle.bundleSpec
+        }
+        console.log(
+            bundle
+        )
         return this.http.patch(`/bundles/${bundle.id}`, bundle);
     }
 

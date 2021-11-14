@@ -12,7 +12,7 @@
     <parent>
         <groupId>it.gym</groupId>
         <artifactId>mgmt</artifactId>
-        <version>0.1.2</version>
+        <version>0.1.1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -67,18 +67,6 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework.security</groupId>
-            <artifactId>spring-security-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- custom dependencies -->
-        <dependency>
             <groupId>org.springframework.session</groupId>
             <artifactId>spring-session-data-redis</artifactId>
             <version>2.1.1.RELEASE</version>
@@ -106,7 +94,6 @@
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
-            <version>42.2.12</version>
             <scope>runtime</scope>
         </dependency>
         <dependency>
@@ -130,6 +117,12 @@
             <version>2.0</version>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+            <version>2.2.2.RELEASE</version>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.20</version>
@@ -144,6 +137,11 @@
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
             <version>1.14.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -220,9 +218,6 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
-                    <compilerArgs>
-                        <arg>-parameters</arg>
-                    </compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
@@ -247,14 +242,11 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>tag-image</id>
-                        <phase>install</phase>
+                        <id>push-image</id>
+                        <phase>deploy</phase>
                         <goals>
-                            <goal>tag</goal>
+                            <goal>push</goal>
                         </goals>
-                        <configuration>
-                            <tag>latest</tag>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -2,6 +2,7 @@ import {AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component,
 import { MatDialog } from '@angular/material/dialog';
 import {BundleType, BundleTypeConstant} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
+import {PolicyService} from "../../core";
 
 @Component({
     selector: 'bundle-item',
@@ -9,17 +10,27 @@ import {BundleModalComponent} from './bundle-modal.component';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleItemComponent {
+export class BundleItemComponent implements OnInit {
 
     @Input() bundle: any;
-    @Input() canEdit: boolean;
-    @Input() canDelete: boolean;
+    canEdit: boolean;
+    canDelete: boolean;
 
     @Output() done = new EventEmitter();
     bundleType = BundleType;
 
     constructor(private dialog: MatDialog,
+                private policy: PolicyService,
                 private cdr: ChangeDetectorRef) {}
+
+    ngOnInit() {
+        this.getPolicies()
+    }
+
+    getPolicies() {
+        this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
+        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.option.type != 'D';
+    }
 
     goToInfo() {
         this.done.emit({type: 'info', bundle: this.bundle});

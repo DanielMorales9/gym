@@ -1,8 +1,6 @@
 package it.gym.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.TrainingBundleFacade;
-import it.gym.hateoas.SaleResource;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
@@ -26,9 +24,6 @@ public class TrainingBundleController {
 
     @Autowired
     private TrainingBundleFacade service;
-
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @GetMapping
     @ResponseBody
@@ -65,12 +60,9 @@ public class TrainingBundleController {
     @PatchMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
                                                         HttpServletRequest request) throws IOException {
-        ATrainingBundle bundle = service.findById(id);
-        bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
-        if (bundle.isExpired()) {
-            bundle.terminate();
-        }
-        bundle = service.save(bundle);
+        // TODO use a DTO instead
+        ATrainingBundle bundle = service.patchBundle(id, request);
         return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
     }
+
 }

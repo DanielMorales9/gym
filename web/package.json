@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "license": "MIT",
   "scripts": {
     "ng": "npm install -g @angular/cli@10.0.3",
@@ -10,7 +10,8 @@
     "test": "ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI",
     "lint": "ng lint",
     "coverage": "ng test --progress=false --watch=true --browsers=ChromeHeadlessCI",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "version": "npm version"
   },
   "private": true,
   "dependencies": {

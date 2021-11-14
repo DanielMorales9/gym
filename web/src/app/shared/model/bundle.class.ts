@@ -1,4 +1,5 @@
 import {Session} from './session.class';
+import {User} from "./user.class";
 
 export enum BundleSpecificationType {
     PERSONAL =  'P',
@@ -86,14 +87,19 @@ export abstract class Bundle {
     id: number;
     name: string;
     expired: boolean;
+    expiredAt: Date;
     type: string;
     option: Option;
+    deletable: boolean;
     sessions: Session[];
+    customer: User
+    bundleSpec: BundleSpecification
 
     protected constructor() {
     }
 
     public abstract getPrice();
+
 }
 
 export class PersonalBundle extends Bundle {
@@ -108,7 +114,9 @@ export class PersonalBundle extends Bundle {
     getPrice() {
         return this.option.price;
     }
+
 }
+
 
 export class CourseBundle extends Bundle {
 
@@ -124,4 +132,5 @@ export class CourseBundle extends Bundle {
     getPrice() {
         return this.option.price;
     }
+
 }

@@ -9,10 +9,6 @@ case ${i} in
     IMAGE="${i#*=}"
     shift # past argument=value
     ;;
-    -t=*|--tag=*)
-    TAG="${i#*=}"
-    shift # past argument=value
-    ;;
     -r=*|--region=*)
     AWS_DEFAULT_REGION="${i#*=}"
     shift # past argument=value
@@ -26,6 +22,13 @@ case ${i} in
     ;;
 esac
 done
+
+# get the account number associated with the current IAM credentials
+echo "========================="
+echo "| Set TAG... |"
+echo "========================="
+TAG=$(mvn -q -Dexec.executable=echo -Dexec.args='${project.version}' --non-recursive exec:exec)
+echo "+${TAG} latest tag"
 
 # get the account number associated with the current IAM credentials
 echo "========================="

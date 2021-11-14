@@ -82,7 +82,7 @@ export class PolicyService implements OnInit, OnDestroy {
             }
         },
         bundle: {
-            canDelete: false,
+            canDelete: true,
             canEdit: true
         },
         payment: {
