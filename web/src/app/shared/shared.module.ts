@@ -279,7 +279,7 @@ import {AppInfoComponent} from "./app-info";
     providers: [
         [ LyTheme2 ],
         [ StyleRenderer ],
-        {provide: MAT_DATE_LOCALE, useValue: 'it-IT'},
+        { provide: MAT_DATE_LOCALE, useValue: 'it-IT' },
         { provide: LY_THEME_NAME, useValue: 'minima-light' },
         { provide: LY_THEME, useClass: MinimaLight, multi: true }, // name: `minima-light`
         { provide: LY_THEME, useClass: MinimaDark, multi: true }, // name: `minima-dark`

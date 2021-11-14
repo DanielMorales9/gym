@@ -43,7 +43,7 @@
                             <goal>npm</goal>
                         </goals>
                         <configuration>
-                            <arguments>run-script version ${version} --allow-same-version</arguments>
+                            <arguments>run-script version ${project.version} --allow-same-version</arguments>
                         </configuration>
                     </execution>
                     <execution>

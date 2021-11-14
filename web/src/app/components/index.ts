@@ -8,3 +8,4 @@ export * from './menu-controls.component';
 export * from './show-role.pipe';
 export * from './current-role.pipe';
 export * from './join-string.pipe';
+export * from './time-ago.pipe';
