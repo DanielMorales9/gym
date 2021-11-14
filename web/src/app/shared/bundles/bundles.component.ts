@@ -8,7 +8,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {PolicyService} from '../../core/policy';
 import {takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 @Component({
     templateUrl: './bundles.component.html',

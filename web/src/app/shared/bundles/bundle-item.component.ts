@@ -1,8 +1,16 @@
-import {AfterViewChecked, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import {BundleType, BundleTypeConstant} from '../model';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output
+} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import {Bundle, BundleType, CourseBundle} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
-import {PolicyService} from "../../core";
+import {PolicyService} from "../../core/policy";
 
 @Component({
     selector: 'bundle-item',
@@ -12,7 +20,7 @@ import {PolicyService} from "../../core";
 })
 export class BundleItemComponent implements OnInit {
 
-    @Input() bundle: any;
+    @Input() bundle: Bundle;
     canEdit: boolean;
     canDelete: boolean;
 
@@ -28,8 +36,8 @@ export class BundleItemComponent implements OnInit {
     }
 
     getPolicies() {
-        this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
-        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.option.type != 'D';
+        this.canDelete = this.policy.canDelete(this.bundle);
+        this.canEdit = this.policy.canEdit(this.bundle);
     }
 
     goToInfo() {
@@ -59,38 +67,25 @@ export class BundleItemComponent implements OnInit {
     }
 
     isExpired() {
-        if (!!this.bundle) {
-            return this.bundle.expiredAt;
-        }
-        return false;
+        return !!this.bundle && !!this.bundle.expiredAt;
     }
 
     isNotActive() {
-        if (!!this.bundle) {
-            if (this.bundle.type === 'C') {
-                return !this.bundle.startTime;
-            }
-            else {
-                return false;
-            }
-        }
-        return false;
+        return !!this.bundle && !this.bundle.isActive();
     }
 
     isValid() {
-        if (!!this.bundle) {
-            if (!this.isExpired()) {
-                if (this.bundle.type === 'C') {
-                    return !!this.bundle.startTime;
-                } else {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return !!this.bundle && !this.isExpired() && !this.isNotActive();
     }
 
     goToUserDetails() {
         this.done.emit({type: 'userInfo', user: this.bundle.customer});
     }
+
+    get(property: string): any {
+        if (!!this.bundle && property in this.bundle) return this.bundle[property];
+        return undefined
+    }
+
+
 }

@@ -28,7 +28,7 @@ export class OptionModalComponent implements OnInit {
             this.option = new Option();
         }
 
-        this.buildForm(hasOption);
+        this.buildForm(!!this.option);
     }
 
     private buildForm(hasOption: boolean) {

@@ -9,7 +9,7 @@ import {ScreenService, SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {catchError, filter, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
 import {PolicyService} from '../../core/policy';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 const CALENDAR_COLUMNS: any = {
     RED: {
@@ -37,7 +37,7 @@ interface EventGroupMeta {
 @Directive()
 @Injectable()
 // tslint:disable-next-line:directive-class-suffix
-export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy, Policy {
+export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDestroy, GetPolicies {
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
