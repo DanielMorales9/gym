@@ -1,5 +1,6 @@
 package it.gym.controller;
 
+import it.gym.exception.BadRequestException;
 import it.gym.facade.TrainingBundleFacade;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
@@ -39,8 +40,7 @@ public class TrainingBundleController {
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
-        ATrainingBundle bundle = service.deleteById(id);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
+        throw new BadRequestException("Per cancellare un pacchetto è sufficiente cancellare la vendita!");
     }
 
     @GetMapping("/search")
