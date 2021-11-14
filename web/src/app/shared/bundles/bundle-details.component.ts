@@ -9,7 +9,7 @@ import {Bundle, BundleType} from '../model';
 import {filter, first, map, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 import {mapToBundle} from "../mappers";
 
 @Component({
@@ -17,7 +17,7 @@ import {mapToBundle} from "../mappers";
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleDetailsComponent extends BaseComponent implements Policy, OnInit, OnDestroy {
+export class BundleDetailsComponent extends BaseComponent implements GetPolicies, OnInit, OnDestroy {
     bundleType = BundleType;
 
     bundle: Bundle;

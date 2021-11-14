@@ -10,14 +10,14 @@ import {BaseComponent} from '../base-component';
 import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
 import {User} from '../model';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 @Component({
     templateUrl: './event-details.component.html',
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventDetailsComponent extends BaseComponent implements Policy, OnInit {
+export class EventDetailsComponent extends BaseComponent implements GetPolicies, OnInit {
 
     event: any;
     users: any;

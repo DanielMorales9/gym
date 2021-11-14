@@ -12,14 +12,14 @@ import {PolicyService} from '../../core/policy';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {SearchComponent} from '../search-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 @Component({
     templateUrl: './users.component.html',
     styleUrls: ['../../styles/search-list.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UsersComponent extends SearchComponent<User> implements Policy, OnInit {
+export class UsersComponent extends SearchComponent<User> implements GetPolicies, OnInit {
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
 

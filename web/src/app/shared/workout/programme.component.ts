@@ -12,7 +12,7 @@ import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {Location} from '@angular/common';
 import {BaseComponent} from '../base-component';
 import {BundleEntity, BundleType} from '../model';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 
 @Component({
@@ -25,7 +25,7 @@ import {Policy} from '../policy.interface';
     ],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProgrammeComponent extends BaseComponent implements Policy, OnInit {
+export class ProgrammeComponent extends BaseComponent implements GetPolicies, OnInit {
 
     session: any;
     users: any;

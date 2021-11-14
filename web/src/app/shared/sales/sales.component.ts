@@ -8,7 +8,7 @@ import {QueryableDatasource, SaleHelperService} from '../../core/helpers';
 import {PolicyService} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 
 @Component({
@@ -16,7 +16,7 @@ import {Policy} from '../policy.interface';
     styleUrls: ['../../styles/search-list.css', '../../styles/root.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SalesComponent extends SearchComponent<Sale> implements Policy, OnInit {
+export class SalesComponent extends SearchComponent<Sale> implements GetPolicies, OnInit {
 
     private SIMPLE_NO_CARD_MESSAGE = 'Nessuna vendita disponibile';
 

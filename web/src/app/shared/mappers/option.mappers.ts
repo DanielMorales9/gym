@@ -20,7 +20,8 @@ export function mapToOption(obj: Object): Option {
             obj['createdAt'],
             obj['type']
         );
-    } else {
+    }
+    else {
         return new OnDemandPurchaseOption(
             obj['id'],
             obj['name'],

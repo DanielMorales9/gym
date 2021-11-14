@@ -4,14 +4,14 @@ import {UserService} from '../../core/controllers';
 import {PolicyService} from '../../core/policy';
 import {User, USER_TYPE} from '../model';
 import {BaseComponent} from '../base-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 @Component({
     templateUrl: './user-controls.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/app.component.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserControlsComponent extends BaseComponent implements Policy,  OnInit {
+export class UserControlsComponent extends BaseComponent implements GetPolicies,  OnInit {
 
     user: User;
     canSell: boolean;

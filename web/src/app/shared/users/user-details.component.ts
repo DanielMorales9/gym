@@ -8,7 +8,7 @@ import {SnackBarService} from '../../core/utilities';
 import {PolicyService} from '../../core/policy';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 
 @Component({
@@ -16,7 +16,7 @@ import {Policy} from '../policy.interface';
     styleUrls: ['../../styles/root.css', '../../styles/card.css', '../../styles/details.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class UserDetailsComponent extends BaseComponent implements Policy, OnInit {
+export class UserDetailsComponent extends BaseComponent implements GetPolicies, OnInit {
 
     user: User;
 

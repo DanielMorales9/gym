@@ -10,7 +10,7 @@ import {SnackBarService} from '../../core/utilities';
 import {of} from 'rxjs';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
-import {Policy} from '../policy.interface';
+import {GetPolicies} from '../policy.interface';
 
 @Component({
     selector: 'bundle-spec-details',
@@ -18,7 +18,7 @@ import {Policy} from '../policy.interface';
     styleUrls: ['../../styles/details.css', '../../styles/root.css', '../../styles/card.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BundleSpecDetailsComponent extends BaseComponent implements Policy, OnInit {
+export class BundleSpecDetailsComponent extends BaseComponent implements GetPolicies, OnInit {
     COURSE   = BundleTypeConstant.COURSE;
 
     bundleSpec: CourseBundleSpecification|PersonalBundleSpecification;
