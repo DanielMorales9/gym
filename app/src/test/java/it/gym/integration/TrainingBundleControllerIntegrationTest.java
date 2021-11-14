@@ -107,12 +107,9 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     }
 
     @Test
-    public void whenDeleteOK() throws Exception {
-        ResultActions result = mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
-                .andExpect(status().isOk());
-
-        expectTrainingBundle(result, courseBundle);
-
+    public void whenDeleteBadRequest() throws Exception {
+        mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
+                .andExpect(status().isBadRequest());
     }
 
     @Test
