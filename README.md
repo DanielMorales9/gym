@@ -10,3 +10,9 @@ mvn install
 docker-compose up
 cd web && npm start
 ````
+
+## Bump child modules versions
+````
+mvn versions:update-child-modules
+````
+

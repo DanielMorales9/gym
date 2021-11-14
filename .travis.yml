@@ -10,7 +10,6 @@ services:
 
 env:
   global:
-    - TAG="0.0.1-SNAPSHOT"
     - DOCKER_USER="tenentedan9"
     - AWS_DEFAULT_REGION="eu-west-1"
     - MAVEN_OPTS="-Dmaven.repo.local=.m2"
@@ -35,24 +34,24 @@ before_install:
   - export M2_HOME="$PWD/apache-maven-${MVN_VERSION}"
   - export PATH="$M2_HOME/bin:$PATH"
 
-install: bash .travis/install.sh
+install: bash scripts/install.sh
 
 script:
   - ./terraform validate
-  - bash .travis/script.sh
+  - bash scripts/script.sh
 
 
 deploy:
   - provider: script
-    script: bash .travis/deploy.sh
+    script: bash scripts/deploy.sh
     skip_cleanup: true
 
 after_deploy:
-  - bash .travis/push_images.sh -i="app" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
-  - bash .travis/push_images.sh -i="web" -t=$TAG -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
-  - bash .travis/taint_deploy.sh
+  - bash scripts/push_images.sh -i="app" -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash scripts/push_images.sh -i="web" -r=$AWS_DEFAULT_REGION -u=$DOCKER_USER
+  - bash scripts/taint_deploy.sh
 
-after_success: bash .travis/after_success.sh
+after_success: bash scripts/after_success.sh
 
 notifications:
   email: false

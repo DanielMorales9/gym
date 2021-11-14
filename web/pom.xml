@@ -3,16 +3,21 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>it.gym</groupId>
     <artifactId>web</artifactId>
     <name>web</name>
-    <version>0.0.1-SNAPSHOT</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <!--suppress UnresolvedMavenProperty -->
         <docker.image.prefix>tenentedan9</docker.image.prefix>
     </properties>
+
+    <parent>
+        <groupId>it.gym</groupId>
+        <artifactId>mgmt</artifactId>
+        <version>0.1.2</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
 
     <build>
         <plugins>
@@ -30,6 +35,16 @@
                         <goals>
                             <goal>install-node-and-npm</goal>
                         </goals>
+                    </execution>
+                    <execution>
+                        <id>npm-version</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run-script version ${version}</arguments>
+                        </configuration>
                     </execution>
                     <execution>
                         <id>npm-install</id>
@@ -58,26 +73,6 @@
                             <arguments>run-script build</arguments>
                         </configuration>
                     </execution>
-<!--                    <execution>-->
-<!--                        <id>npm-e2e</id>-->
-<!--                        <phase>test</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>npm</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <arguments>run-script e2e</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
-<!--                    <execution>-->
-<!--                        <id>npm-karma</id>-->
-<!--                        <phase>test</phase>-->
-<!--                        <goals>-->
-<!--                            <goal>npm</goal>-->
-<!--                        </goals>-->
-<!--                        <configuration>-->
-<!--                            <arguments>run-script test</arguments>-->
-<!--                        </configuration>-->
-<!--                    </execution>-->
                 </executions>
             </plugin>
             <plugin>
@@ -98,11 +93,14 @@
                         </goals>
                     </execution>
                     <execution>
-                        <id>push-image</id>
-                        <phase>deploy</phase>
+                        <id>tag-image</id>
+                        <phase>install</phase>
                         <goals>
-                            <goal>push</goal>
+                            <goal>tag</goal>
                         </goals>
+                        <configuration>
+                            <tag>latest</tag>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

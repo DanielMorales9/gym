@@ -8,9 +8,7 @@
 <cdk-virtual-scroll-viewport [hidden]="ds.empty" itemSize="50" class="scroll-viewport">
 
     <div *cdkVirtualFor="let b of ds; trackBy: trackBy" class="scroll-item">
-        <bundle-item [canEdit]="canEdit"
-                     [canDelete]="canDelete"
-                     [bundle]="b"
+        <bundle-item [bundle]="b" *ngIf="b"
                      (done)="handleEvent($event)"></bundle-item>
     </div>
 </cdk-virtual-scroll-viewport>

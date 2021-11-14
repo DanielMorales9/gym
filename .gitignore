@@ -36,6 +36,5 @@ nbdist/
 e2e/*.js
 e2e/*.map
 .envrc
-.infrastructure/.terraform/
-.infrastructure/*.tfvars
+infra/.terraform/
 .terraform.lock.hcl

@@ -143,7 +143,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
 
     getPolicies() {
         this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
-        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.type == 'C';
+        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.option.type != 'B';
         this.canShowWorkout = this.policy.get('workout', 'canShow');
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }
