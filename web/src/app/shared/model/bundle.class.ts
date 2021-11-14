@@ -93,8 +93,10 @@ export abstract class Bundle implements Policy {
     option: Option;
     deletable: boolean;
     sessions: Session[];
-    customer: User
-    bundleSpec: BundleSpecification
+    customer: User;
+    bundleSpec: BundleSpecification;
+    unlimitedDeletions: boolean;
+    numDeletions: number;
 
 
 
@@ -107,7 +109,9 @@ export abstract class Bundle implements Policy {
                           deletable: boolean,
                           sessions: Session[],
                           customer: User,
-                          bundleSpec: BundleSpecification) {
+                          bundleSpec: BundleSpecification,
+                          unlimitedDeletions: boolean,
+                          numDeletions: number) {
         this.id = id;
         this.name = name;
         this.expired = expired;
@@ -118,6 +122,8 @@ export abstract class Bundle implements Policy {
         this.sessions = sessions;
         this.customer = customer;
         this.bundleSpec = bundleSpec;
+        this.unlimitedDeletions = unlimitedDeletions;
+        this.numDeletions = numDeletions;
     }
 
     public abstract getPrice();
@@ -147,7 +153,9 @@ export class PersonalBundle extends Bundle {
                 deletable: boolean,
                 sessions: Session[],
                 customer: User,
-                bundleSpec: BundleSpecification) {
+                bundleSpec: BundleSpecification,
+                unlimitedDeletions: boolean,
+                numDeletions: number) {
         super(id,
             name,
             expired,
@@ -157,7 +165,9 @@ export class PersonalBundle extends Bundle {
             deletable,
             sessions,
             customer,
-            bundleSpec,);
+            bundleSpec,
+            unlimitedDeletions,
+            numDeletions);
     }
 
     getPrice() {
@@ -188,7 +198,9 @@ export class CourseBundle extends Bundle {
                 customer: User,
                 bundleSpec: BundleSpecification,
                 startTime: number,
-                endTime: number) {
+                endTime: number,
+                unlimitedDeletions: boolean,
+                numDeletions: number) {
         super(id,
             name,
             expired,
@@ -198,7 +210,9 @@ export class CourseBundle extends Bundle {
             deletable,
             sessions,
             customer,
-            bundleSpec,);
+            bundleSpec,
+            unlimitedDeletions,
+            numDeletions);
         this.startTime = startTime;
         this.endTime = endTime;
     }

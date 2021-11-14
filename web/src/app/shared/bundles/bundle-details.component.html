@@ -36,20 +36,20 @@
                     <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon> {{bundle?.sessions.length}} Sessioni /
                     {{bundle?.option.number}} {{bundle?.option.type != 'B' ? 'Mesi': 'Totali'}}
                 </div>
-                <div *ngIf="!!bundle?.startTime">
+                <div *ngIf="!!get('startTime')">
                     <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
-                    Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
+                    Data di inizio&nbsp;&nbsp;{{get('startTime')| date: 'dd/MM/yyyy'}}
                 </div>
-                <div *ngIf="!!bundle?.endTime">
+                <div *ngIf="!!get('endTime')">
                     <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
-                    Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
+                    Data di fine&nbsp;&nbsp;{{get('endTime')| date: 'dd/MM/yyyy'}}
                 </div>
 
-                <div *ngIf="bundle?.unlimitedDeletions">
+                <div *ngIf="get('unlimitedDeletions')">
                     <mat-icon fontSet="fas" fontIcon="fa-infinity"></mat-icon>&nbsp;Cancellazioni illimitate
                 </div>
-                <div *ngIf="!bundle?.unlimitedDeletions && bundle?.numDeletions">
-                    <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{bundle?.numDeletions}}
+                <div *ngIf="!get('unlimitedDeletions') && get('numDeletions')">
+                    <mat-icon fontSet="fas" fontIcon="fa-calendar-times"></mat-icon>&nbsp;Cancellazioni {{get('numDeletions')}}
                 </div>
             </div>
 

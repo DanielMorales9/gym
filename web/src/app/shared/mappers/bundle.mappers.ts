@@ -14,7 +14,10 @@ export function toBundle(obj: Object): Bundle {
             obj['customer'],
             obj['bundleSpec'],
             obj['startTime'],
-            obj['endTime'],);
+            obj['endTime'],
+            obj['unlimitedDeletions'],
+            obj['numDeletions'],
+            );
     }
     else {
         return new PersonalBundle(
@@ -27,6 +30,9 @@ export function toBundle(obj: Object): Bundle {
             obj['deletable'],
             obj['sessions'],
             obj['customer'],
-            obj['bundleSpec']);
+            obj['bundleSpec'],
+            obj['unlimitedDeletions'],
+            obj['numDeletions'],
+        );
     }
 }

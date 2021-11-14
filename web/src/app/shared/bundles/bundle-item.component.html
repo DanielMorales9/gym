@@ -35,13 +35,13 @@
                     {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
                 </a>
             </div>
-            <div *ngIf="!!bundle?.startTime">
+            <div *ngIf="!!get('startTime')">
                 <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
-                Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
+                Data di inizio&nbsp;&nbsp;{{get('startTime') | date: 'dd/MM/yyyy'}}
             </div>
-            <div *ngIf="!!bundle?.endTime">
+            <div *ngIf="!!get('endTime')">
                 <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
-                Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
+                Data di fine&nbsp;&nbsp;{{get('endTime') | date: 'dd/MM/yyyy'}}
             </div>
             <div>
                 <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon> {{bundle?.sessions.length}} Sessioni /

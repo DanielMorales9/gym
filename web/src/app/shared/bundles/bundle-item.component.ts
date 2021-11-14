@@ -8,7 +8,7 @@ import {
     Output
 } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import {Bundle, BundleType} from '../model';
+import {Bundle, BundleType, CourseBundle} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
 import {PolicyService} from "../../core/policy";
 
@@ -81,4 +81,11 @@ export class BundleItemComponent implements OnInit {
     goToUserDetails() {
         this.done.emit({type: 'userInfo', user: this.bundle.customer});
     }
+
+    get(property: string): any {
+        if (!!this.bundle && property in this.bundle) return this.bundle[property];
+        return undefined
+    }
+
+
 }

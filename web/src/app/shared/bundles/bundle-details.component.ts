@@ -153,4 +153,9 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     goToUserDetails() {
         this.router.navigate(['users', this.bundle.customer.id], {relativeTo: this.route.parent.parent});
     }
+
+    get(property: string): any {
+        if (!!this.bundle && property in this.bundle) return this.bundle[property];
+        return undefined
+    }
 }
