@@ -2,6 +2,7 @@ import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
 import {AuthenticationService} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
+import {Policy} from "../../shared/model";
 
 @Directive()
 @Injectable()
@@ -298,14 +299,13 @@ export class PolicyService implements OnInit, OnDestroy {
         this.unsubscribe$.complete();
     }
 
-
-        get(entity: string, ...action) {
+    get(entity: string, ...actions) {
         const myPolicy = this.POLICIES[this.currentRoleId - 1];
         if (entity in myPolicy) {
             let policy = myPolicy[entity];
             let a, index;
-            for (index = 0; index < action.length; ++index) {
-                a = action[index];
+            for (index = 0; index < actions.length; ++index) {
+                a = actions[index];
                 if (a in policy) {
                     policy = policy[a];
                 }
@@ -316,5 +316,9 @@ export class PolicyService implements OnInit, OnDestroy {
             return policy;
         }
         return false;
+    }
+
+    canDelete(obj: Policy) {
+        return this.get(obj.getName(), 'canDelete') && obj.canDelete();
     }
 }

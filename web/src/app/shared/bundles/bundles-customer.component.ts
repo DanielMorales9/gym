@@ -21,9 +21,6 @@ export class BundlesCustomerComponent extends SearchComponent<Bundle> implements
     query: any;
     id: number;
 
-    canDelete: boolean;
-    canEdit: boolean;
-
     filters = [
         {name: 'Attivi', value: false},
         {name: 'Terminati', value: true},
@@ -36,14 +33,12 @@ export class BundlesCustomerComponent extends SearchComponent<Bundle> implements
                 protected route: ActivatedRoute,
                 protected router: Router,
                 private dialog: MatDialog,
-                private policy: PolicyService,
                 private snackbar: SnackBarService) {
         super(router, route);
         this.ds = new QueryableDatasource<Bundle>(helper, this.query);
     }
 
     ngOnInit(): void {
-        this.getPolicies();
         this.route.params.pipe(first()).subscribe(param => {
             this.id = +param['id'];
             this.initQueryParams();
@@ -67,11 +62,6 @@ export class BundlesCustomerComponent extends SearchComponent<Bundle> implements
             $event.id = this.id;
         }
         return $event;
-    }
-
-    getPolicies() {
-        this.canDelete = this.policy.get('bundle', 'canDelete');
-        this.canEdit = this.policy.get('bundle', 'canEdit');
     }
 
     handleEvent($event) {

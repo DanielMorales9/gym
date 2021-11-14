@@ -8,4 +8,3 @@ export * from './events';
 export * from './profile';
 export * from './config';
 export * from './workout';
-

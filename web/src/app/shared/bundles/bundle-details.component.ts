@@ -5,11 +5,12 @@ import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
 import {PolicyService} from '../../core/policy';
-import {Bundle, BundleType, CourseBundle, PersonalBundle} from '../model';
-import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
+import {Bundle, BundleType} from '../model';
+import {filter, first, map, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {Policy} from '../policy.interface';
+import {toBundle} from "../mappers";
 
 @Component({
     templateUrl: './bundle-details.component.html',
@@ -19,7 +20,7 @@ import {Policy} from '../policy.interface';
 export class BundleDetailsComponent extends BaseComponent implements Policy, OnInit, OnDestroy {
     bundleType = BundleType;
 
-    bundle: any;
+    bundle: Bundle;
 
     canEdit: boolean;
     canDelete: boolean;
@@ -33,7 +34,8 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
                 private snackBar: SnackBarService,
                 private policy: PolicyService,
                 private cdr: ChangeDetectorRef,
-                private route: ActivatedRoute) {
+                private route: ActivatedRoute,
+                private snackbar: SnackBarService) {
         super();
     }
 
@@ -43,14 +45,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
                 takeUntil(this.unsubscribe$),
                 switchMap(params => this.getBundle(+params['id'])))
             .subscribe(d => {
-                d.sessions.sort((a, b) => {
-                    if (new Date(b.startTime) < new Date(a.startTime)) {
-                        return -1;
-                    }
-                    else {
-                        return 1;
-                    }
-                });
+                this.sortSessions(d);
                 this.bundle = d;
                 this.getPolicies();
                 if (this.canShowWorkout) {
@@ -61,40 +56,30 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     }
 
 
-    private getBundle(id: number): Observable<any> {
-        return this.service.findById(id);
+    private sortSessions(d: Bundle) {
+        d.sessions.sort((a, b) => {
+            if (new Date(b.startTime) < new Date(a.startTime)) {
+                return -1;
+            } else {
+                return 1;
+            }
+        });
+    }
+
+    private getBundle(id: number): Observable<Bundle> {
+        return this.service.findById(id).pipe(map(toBundle));
     }
 
     isExpired() {
-        if (!!this.bundle) {
-            return this.bundle.expiredAt;
-        }
-        return false;
+        return !!this.bundle && !!this.bundle.expiredAt;
     }
 
     isNotActive() {
-        if (!!this.bundle) {
-            if (this.bundle.type == 'C') {
-                return !this.bundle.startTime;
-            }
-            else {
-                return false;
-            }
-        }
-        return false;
+        return !!this.bundle && !this.bundle.isActive();
     }
 
     isValid() {
-        if (!!this.bundle) {
-            if (!this.isExpired()) {
-                if (this.bundle.type == 'C') {
-                    return !!this.bundle.startTime;
-                } else {
-                    return true;
-                }
-            }
-        }
-        return false;
+        return !!this.bundle && !this.isExpired() && !this.isNotActive();
     }
 
     edit() {
@@ -122,11 +107,11 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     deleteBundle() {
         this.service.deleteBundle(this.bundle.id)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(r => {
+            .subscribe(_ => {
                 this.router.navigateByUrl('/', {
                     replaceUrl: true,
                 });
-            });
+            }, err => this.snackbar.open(err.error.message));
     }
 
     private editBundle(res: any): Observable<any> {
@@ -142,7 +127,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     }
 
     getPolicies() {
-        this.canDelete = this.policy.get('bundle', 'canDelete') && this.bundle.deletable;
+        this.canDelete = this.policy.canDelete(this.bundle);
         this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.option.type != 'B';
         this.canShowWorkout = this.policy.get('workout', 'canShow');
         this.canEditWorkout = this.policy.get('workout', 'canEdit');

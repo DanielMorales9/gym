@@ -3,6 +3,8 @@ import {Bundle} from '../../shared/model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
 import {BundleService} from '../controllers';
+import {map} from "rxjs/operators";
+import {toBundle} from "../../shared/mappers";
 
 @Injectable()
 export class BundleHelperService extends HelperService<Bundle> {
@@ -25,18 +27,23 @@ export class BundleHelperService extends HelperService<Bundle> {
     }
 
     preProcessResources(resources: Bundle[]): Bundle[] {
-        resources = this.extract(resources);
+        // resources = this.extract(resources);
         return resources;
     }
 
-    getOrSearch(query: any, page: number, size: number): Observable<Object> {
+    toBundles(res: Object): Bundle[] {
+        return res['content'].map(toBundle)
+
+    }
+
+    getOrSearch(query: any, page: number, size: number): Observable<Bundle[]> {
         let observable;
         if (query === undefined || query === '') {
             observable = this.get(page, size);
         } else {
             observable = this.search(query, page, size);
         }
-        return observable;
+        return observable.pipe(map(this.toBundles));
     }
 
     extract(res: Object): Bundle[] {
