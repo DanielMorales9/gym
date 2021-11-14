@@ -1,7 +1,7 @@
 # define AWS region
 # =================
 provider "aws" {
-  region  = "eu-west-1"
+  region = "eu-west-1"
 }
 
 # manually define remote state file on S3
