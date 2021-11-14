@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
 import {UserService} from '../controllers';
 import {map} from "rxjs/operators";
-import {toBundle} from "../../shared/mappers/bundle.mappers";
+import {mapToBundle} from "../../shared/mappers/bundle.mappers";
 
 @Injectable()
 export class BundleCustomerHelperService extends HelperService<Bundle> {
@@ -18,7 +18,7 @@ export class BundleCustomerHelperService extends HelperService<Bundle> {
     }
 
     toBundles(res: Object): Bundle[] {
-        return res['content'].map(toBundle)
+        return res['content'].map(mapToBundle)
     }
 
     search(query: any, page: number, size: number): Observable<Bundle[]> {

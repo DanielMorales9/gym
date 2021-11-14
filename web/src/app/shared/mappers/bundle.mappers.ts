@@ -1,6 +1,8 @@
 import {Bundle, CourseBundle, PersonalBundle} from "../model";
+import {mapToOption} from "./option.mappers";
 
-export function toBundle(obj: Object): Bundle {
+export function mapToBundle(obj: Object): Bundle {
+    const option = mapToOption(obj['option']);
     if (obj['type'] == 'C') {
         return new CourseBundle(
             obj['id'],
@@ -8,7 +10,7 @@ export function toBundle(obj: Object): Bundle {
             obj['expired'],
             obj['expiredAt'],
             obj['type'],
-            obj['option'],
+            option,
             obj['deletable'],
             obj['sessions'],
             obj['customer'],
@@ -26,7 +28,7 @@ export function toBundle(obj: Object): Bundle {
             obj['expired'],
             obj['expiredAt'],
             obj['type'],
-            obj['option'],
+            option,
             obj['deletable'],
             obj['sessions'],
             obj['customer'],

@@ -37,7 +37,7 @@ export class BundleItemComponent implements OnInit {
 
     getPolicies() {
         this.canDelete = this.policy.canDelete(this.bundle);
-        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.option.type != 'D';
+        this.canEdit = this.policy.canEdit(this.bundle);
     }
 
     goToInfo() {

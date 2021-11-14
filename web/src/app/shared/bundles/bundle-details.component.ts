@@ -10,7 +10,7 @@ import {filter, first, map, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {Policy} from '../policy.interface';
-import {toBundle} from "../mappers";
+import {mapToBundle} from "../mappers";
 
 @Component({
     templateUrl: './bundle-details.component.html',
@@ -22,8 +22,8 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
 
     bundle: Bundle;
 
-    canEdit: boolean;
-    canDelete: boolean;
+    canEditBundle: boolean;
+    canDeleteBundle: boolean;
     canShowWorkout: boolean;
     canEditWorkout: boolean;
     displayedSessionsColumns = ['date', 'time'];
@@ -67,7 +67,7 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     }
 
     private getBundle(id: number): Observable<Bundle> {
-        return this.service.findById(id).pipe(map(toBundle));
+        return this.service.findById(id).pipe(map(mapToBundle));
     }
 
     isExpired() {
@@ -127,8 +127,8 @@ export class BundleDetailsComponent extends BaseComponent implements Policy, OnI
     }
 
     getPolicies() {
-        this.canDelete = this.policy.canDelete(this.bundle);
-        this.canEdit = this.policy.get('bundle', 'canEdit') && this.bundle.option.type != 'B';
+        this.canDeleteBundle = this.policy.canDelete(this.bundle);
+        this.canEditBundle = this.policy.canEdit(this.bundle);
         this.canShowWorkout = this.policy.get('workout', 'canShow');
         this.canEditWorkout = this.policy.get('workout', 'canEdit');
     }

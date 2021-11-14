@@ -102,12 +102,12 @@
                     <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Tipo Pacchetto
                 </span>
             </button>
-            <button *ngIf="canEdit" mat-button (click)="edit()">
+            <button *ngIf="canEditBundle" mat-button (click)="edit()">
                 <span>
                 <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;{{isNotActive()? 'Attiva' : 'Modifica'}}
                 </span>
             </button>
-            <button *ngIf="canDelete" mat-button color="warn" (click)="deleteBundle()">
+            <button *ngIf="canDeleteBundle" mat-button color="warn" (click)="deleteBundle()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina
             </span>

@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
 import {AuthenticationService} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {Policy} from "../../shared/model";
+import {CanDelete, CanEdit, Policy} from "../../shared/model";
 
 @Directive()
 @Injectable()
@@ -318,7 +318,11 @@ export class PolicyService implements OnInit, OnDestroy {
         return false;
     }
 
-    canDelete(obj: Policy) {
+    canDelete(obj: CanDelete) {
         return this.get(obj.getName(), 'canDelete') && obj.canDelete();
+    }
+
+    canEdit(obj: CanEdit) {
+        return this.get(obj.getName(), 'canEdit') && obj.canEdit();
     }
 }

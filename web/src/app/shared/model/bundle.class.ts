@@ -1,6 +1,6 @@
 import {Session} from './session.class';
 import {User} from "./user.class";
-import {Policy} from "./policy.interface";
+import {CanDelete, CanEdit, Policy} from "./policy.interface";
 
 export enum BundleSpecificationType {
     PERSONAL =  'P',
@@ -35,7 +35,26 @@ export class Option {
     price: number;
     createdAt: Date;
     type: string;
+
+    constructor(id?: number,
+                name?: string,
+                number?: number,
+                price?: number,
+                createdAt?: Date,
+                type?: string) {
+        this.id = id
+        this.name = name
+        this.number = number
+        this.price = price
+        this.createdAt = createdAt
+        this.type = type
+    }
+
 }
+
+export class OnDemandPurchaseOption extends Option {}
+export class TimePurchaseOption extends Option {}
+export class BundlePurchaseOption extends Option {}
 
 export abstract class BundleSpecification {
     id: number;
@@ -84,7 +103,7 @@ export class CourseBundleSpecification extends BundleSpecification {
     }
 }
 
-export abstract class Bundle implements Policy {
+export abstract class Bundle implements CanDelete, CanEdit {
     id: number;
     name: string;
     expired: boolean;
@@ -97,8 +116,6 @@ export abstract class Bundle implements Policy {
     bundleSpec: BundleSpecification;
     unlimitedDeletions: boolean;
     numDeletions: number;
-
-
 
     protected constructor(id: number,
                           name: string,
@@ -138,6 +155,9 @@ export abstract class Bundle implements Policy {
         return "bundle"
     }
 
+    canEdit(): boolean {
+        return !(this.option instanceof BundlePurchaseOption);
+    }
 }
 
 export class PersonalBundle extends Bundle {
