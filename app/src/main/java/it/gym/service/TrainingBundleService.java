@@ -42,7 +42,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
             evict = {
                     @CacheEvict(value = "bundles-single", key = "#var1.id"),
                     @CacheEvict(value = "bundles-all", allEntries = true),
-                    @CacheEvict(value = "bundles-search", allEntries = true)
             }
     )
     public void delete(ATrainingBundle var1) {
@@ -58,7 +57,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
         return this.repository.findAll(pageable);
     }
 
-    @CachePut(value = "bundles-search", condition="#result != null")
     public Page<ATrainingBundle> search(Long specId, Boolean expired, Date time, Pageable pageable) {
 
         Page<ATrainingBundle> bundles;
@@ -94,7 +92,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
             evict = {
                     @CacheEvict(value = "bundles-single", allEntries = true),
                     @CacheEvict(value = "bundles-all", allEntries = true),
-                    @CacheEvict(value = "bundles-search", allEntries = true)
             }
     )
     public void deleteAll(List<ATrainingBundle> bundles) {
@@ -105,7 +102,6 @@ public class TrainingBundleService implements ICrudService<ATrainingBundle, Long
             evict = {
                     @CacheEvict(value = "bundles-single", allEntries = true),
                     @CacheEvict(value = "bundles-all", allEntries = true),
-                    @CacheEvict(value = "bundles-search", allEntries = true)
             }
     )
     public List<ATrainingBundle> saveAll(List<ATrainingBundle> bundles) {
