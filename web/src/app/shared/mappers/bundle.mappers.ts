@@ -1,8 +1,10 @@
 import {Bundle, CourseBundle, PersonalBundle} from "../model";
 import {mapToOption} from "./option.mappers";
+import {mapToBundleSpec} from "./bundleSpec.mappers";
 
 export function mapToBundle(obj: Object): Bundle {
     const option = mapToOption(obj['option']);
+    const bundleSpec = mapToBundleSpec(obj['bundleSpec']);
     if (obj['type'] == 'C') {
         return new CourseBundle(
             obj['id'],
@@ -14,7 +16,7 @@ export function mapToBundle(obj: Object): Bundle {
             obj['deletable'],
             obj['sessions'],
             obj['customer'],
-            obj['bundleSpec'],
+            bundleSpec,
             obj['startTime'],
             obj['endTime'],
             obj['unlimitedDeletions'],
@@ -32,7 +34,7 @@ export function mapToBundle(obj: Object): Bundle {
             obj['deletable'],
             obj['sessions'],
             obj['customer'],
-            obj['bundleSpec'],
+            bundleSpec,
             obj['unlimitedDeletions'],
             obj['numDeletions'],
         );

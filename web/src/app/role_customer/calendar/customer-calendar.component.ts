@@ -21,10 +21,10 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
-                public policyService: PolicyService,
+                public policy: PolicyService,
                 public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
-        super(facade, router, policyService, snackBar, activatedRoute, cdr, screenService);
+        super(facade, router, policy, snackBar, activatedRoute, cdr, screenService);
     }
 
     getEvents() {

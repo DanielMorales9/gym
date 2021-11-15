@@ -1,5 +1,5 @@
 import {User} from './user.class';
-import {SaleLineItem} from './sale_line_item.class';
+import {SaleLineItem} from './saleLineItem.class';
 
 export class Payment {
     id: number;

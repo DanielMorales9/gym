@@ -1,7 +1,9 @@
-import {ChangeDetectionStrategy, Component, EventEmitter, Input, Output} from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {BundleType, BundleTypeConstant} from '../model';
+import {BundleSpecification, BundleType, BundleTypeConstant} from '../model';
+import {GetPolicies} from "../policy.interface";
+import {PolicyService} from "../../core/policy";
 
 
 @Component({
@@ -11,19 +13,24 @@ import {BundleType, BundleTypeConstant} from '../model';
     changeDetection: ChangeDetectionStrategy.OnPush
 
 })
-export class BundleSpecItemComponent {
+export class BundleSpecItemComponent implements GetPolicies, OnInit {
 
     COURSE   = BundleTypeConstant.COURSE;
     PERSONAL = BundleTypeConstant.PERSONAL;
 
-    @Input() bundleSpec: any;
-    @Input() canDelete: boolean;
-    @Input() canDisable: boolean;
+    @Input() bundleSpec: BundleSpecification;
+    canDelete: boolean;
+    canDisable: boolean;
 
     bundleType = BundleType;
 
     @Output() done = new EventEmitter();
-    constructor(private dialog: MatDialog) {
+    constructor(private dialog: MatDialog,
+                private policy: PolicyService) {
+    }
+
+    ngOnInit() {
+        this.getPolicies();
     }
 
 
@@ -54,6 +61,11 @@ export class BundleSpecItemComponent {
 
     goToInfo() {
         this.done.emit({type: 'info', bundleSpec: this.bundleSpec});
+    }
+
+    getPolicies() {
+        this.canDelete = this.policy.canDelete(this.bundleSpec);
+        this.canDisable = this.policy.canDisable(this.bundleSpec);
     }
 
 }

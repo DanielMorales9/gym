@@ -27,7 +27,7 @@
                 </div>
 
                 <div *ngIf="bundleSpec?.type == COURSE">
-                    <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{bundleSpec?.maxCustomers}}
+                    <mat-icon fontSet="fas" fontIcon="fa-users"></mat-icon>Massimo numero di clienti&nbsp;{{this.bundleSpec?.maxCustomers}}
                 </div>
 
                 <div *ngIf="bundleSpec?.options.length == 0;">
@@ -88,7 +88,7 @@
             </ng-container>
         </mat-card-content>
         <mat-card-actions>
-            <ng-container *ngIf="canEdit">
+            <ng-container *ngIf="canEditSpec">
                 <button mat-button color="primary" (click)="editBundleSpec()">
                 <span>
                     <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;Modifica
@@ -102,7 +102,7 @@
                 </span>
                 </button>
             </ng-container>
-            <ng-container *ngIf="canDisable">
+            <ng-container *ngIf="canDisableSpec">
                 <button mat-button color="accent" (click)="toggleDisabled()">
                 <span *ngIf="bundleSpec?.disabled">
                     <mat-icon fontSet="fa" fontIcon="fa-check"></mat-icon>&nbsp;Abilita
@@ -112,7 +112,7 @@
                 </span>
                 </button>
             </ng-container>
-            <ng-container *ngIf="canDelete">
+            <ng-container *ngIf="canDeleteSpec">
                 <button mat-button color="warn" (click)="deleteBundle()">
                 <span>
                     <mat-icon fontSet="fa" fontIcon="fa-trash"></mat-icon>&nbsp;Elimina

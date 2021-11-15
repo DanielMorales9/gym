@@ -1,4 +1,5 @@
-import {Bundle, BundleSpecification} from './bundle.class';
+import {Bundle} from './bundle.class';
+import {BundleSpecification} from "./bundleSpecification.class";
 
 export class SaleLineItem {
 

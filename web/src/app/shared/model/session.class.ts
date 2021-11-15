@@ -1,4 +1,5 @@
-import {Bundle, Workout} from './bundle.class';
+import {Bundle} from './bundle.class';
+import {Workout} from "./workout";
 
 export class Session {
     id: number;

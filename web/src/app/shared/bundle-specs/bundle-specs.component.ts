@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
-import {BundleSpecification} from '../model';
+import {BundleSpecification, CourseBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecsService} from '../../core/controllers';
@@ -22,8 +22,6 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
 
     query: any = {};
 
-    canDelete: boolean;
-    canDisable: boolean;
     canCreate: boolean;
 
     filters = [
@@ -46,9 +44,6 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
 
     ngOnInit(): void {
         this.initQueryParams();
-
-        this.canDelete = this.policy.get('bundleSpec', 'canDelete');
-        this.canDisable = this.policy.get('bundleSpec', 'canDisable');
         this.canCreate = this.policy.get('bundleSpec', 'canCreate');
     }
 

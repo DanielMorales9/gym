@@ -8,9 +8,9 @@
 
     <div *cdkVirtualFor="let b of ds; trackBy: trackBy" class="scroll-item">
         <bundle-spec-item [bundleSpec]="b"
-                          [canDelete]="canDelete"
-                          [canDisable]="canDisable"
-                          (done)="handleEvent($event)"></bundle-spec-item>
+                          *ngIf="!!b"
+                          (done)="handleEvent($event)">
+        </bundle-spec-item>
     </div>
 </cdk-virtual-scroll-viewport>
 <no-item [hidden]="!ds.empty" [message]="SIMPLE_NO_CARD_MESSAGE" ></no-item>
