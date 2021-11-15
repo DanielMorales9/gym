@@ -1,11 +1,8 @@
 import {Session} from './session.class';
 import {User} from "./user.class";
-import {CanDelete, CanEdit, Policy} from "./policy.interface";
-
-export enum BundleSpecificationType {
-    PERSONAL =  'P',
-    COURSE = 'C'
-}
+import {CanDelete, CanEdit} from "./policy.interface";
+import {BundleSpecification, CourseBundleSpecification, PersonalBundleSpecification} from "./";
+import {BundlePurchaseOption, Option} from "./option.class";
 
 export enum BundleTypeConstant {
     PERSONAL =  'P',
@@ -17,90 +14,9 @@ export enum BundleEntity {
     C = 'course'
 }
 
-export enum OptionType {
-    B = 'Pacchetto',
-    T = 'A Tempo',
-    D = 'A Consumo'
-}
-
 export enum BundleType {
     P = 'Allenamento Personalizzato',
     C = 'Corso'
-}
-
-export class Option {
-    id: number;
-    name: string;
-    number: number;
-    price: number;
-    createdAt: Date;
-    type: string;
-
-    constructor(id?: number,
-                name?: string,
-                number?: number,
-                price?: number,
-                createdAt?: Date,
-                type?: string) {
-        this.id = id
-        this.name = name
-        this.number = number
-        this.price = price
-        this.createdAt = createdAt
-        this.type = type
-    }
-
-}
-
-export class OnDemandPurchaseOption extends Option {}
-export class TimePurchaseOption extends Option {}
-export class BundlePurchaseOption extends Option {}
-
-export abstract class BundleSpecification {
-    id: number;
-    name: string;
-    description: string;
-    disabled: boolean;
-    type: string;
-    options: Option[];
-    unlimitedDeletions: boolean;
-    numDeletions: number;
-
-    constructor() {
-
-    }
-}
-
-export class Workout {
-    id: number;
-    name: string;
-    description: string;
-    tag1: string;
-    tag2: string;
-    tag3: string;
-    template: boolean;
-    createdAt: Date;
-    updatedAt: Date;
-
-    constructor() {
-
-    }
-}
-
-
-
-export class PersonalBundleSpecification extends BundleSpecification {
-    constructor() {
-        super();
-        this.type = BundleSpecificationType.PERSONAL;
-    }
-}
-
-export class CourseBundleSpecification extends BundleSpecification {
-    constructor() {
-        super();
-        this.type = BundleSpecificationType.COURSE;
-    }
 }
 
 export abstract class Bundle implements CanDelete, CanEdit {

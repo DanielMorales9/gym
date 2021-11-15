@@ -25,17 +25,17 @@ export class CalendarControlsComponent extends BaseComponent implements OnInit {
     };
 
     constructor(protected router: Router,
-                protected policyService: PolicyService,
+                protected policy: PolicyService,
                 protected cdr: ChangeDetectorRef,
                 protected route: ActivatedRoute) {
         super();
     }
 
     ngOnInit(user?) {
-        this.canShowCourse = this.policyService.get('events', 'canShowCourse');
-        this.canShowPersonal = this.policyService.get('events', 'canShowPersonal');
-        this.canShowTimeOff = this.policyService.get('events', 'canShowTimeOff') && !user;
-        this.canShowHoliday = this.policyService.get('events', 'canShowHoliday');
+        this.canShowCourse = this.policy.get('events', 'canShowCourse');
+        this.canShowPersonal = this.policy.get('events', 'canShowPersonal');
+        this.canShowTimeOff = this.policy.get('events', 'canShowTimeOff') && !user;
+        this.canShowHoliday = this.policy.get('events', 'canShowHoliday');
 
         this.route.queryParams.subscribe(params => {
             let typeNames = params['types'];

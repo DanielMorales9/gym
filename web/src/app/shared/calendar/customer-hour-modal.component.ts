@@ -17,7 +17,7 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
     canBookExternal: boolean;
 
     constructor(public dialogRef: MatDialogRef<CustomerHourModalComponent>,
-                private policyService: PolicyService,
+                private policy: PolicyService,
                 private cdr: ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);
@@ -25,7 +25,7 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
     }
 
     ngOnInit(): void {
-        this.canBookExternal = this.policyService.get('bundleSpec', 'canBookExternal');
+        this.canBookExternal = this.policy.get('bundleSpec', 'canBookExternal');
 
         this.form = new FormGroup({
             bundle: new FormControl({

@@ -20,7 +20,7 @@ export class SessionItemComponent implements OnInit {
 
     constructor(private dialog: MatDialog,
                 private cdr: ChangeDetectorRef,
-                private policyService: PolicyService) {
+                private policy: PolicyService) {
     }
 
     goToInfo() {
@@ -39,7 +39,7 @@ export class SessionItemComponent implements OnInit {
         setTimeout(() => {
             if (this.session) {
                 this.canAssignWorkout =
-                    this.policyService.get(BundleEntity[this.session.type], 'canAssignWorkout');
+                    this.policy.get(BundleEntity[this.session.type], 'canAssignWorkout');
                 this.cdr.detectChanges();
             }
         }, 1000);

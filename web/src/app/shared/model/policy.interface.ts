@@ -15,3 +15,9 @@ export interface CanEdit extends Policy {
     canEdit(): boolean;
 
 }
+
+export interface CanDisable extends Policy {
+
+    canDisable(): boolean;
+
+}
