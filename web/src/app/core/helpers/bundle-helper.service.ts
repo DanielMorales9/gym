@@ -26,24 +26,18 @@ export class BundleHelperService extends HelperService<Bundle> {
         return this.service.search(query, page, size);
     }
 
-    preProcessResources(resources: Bundle[]): Bundle[] {
-        // resources = this.extract(resources);
-        return resources;
+    preProcessResources(resources: Object): Bundle[] {
+        return this.extract(resources).map(mapToBundle);
     }
 
-    toBundles(res: Object): Bundle[] {
-        return res['content'].map(mapToBundle)
-
-    }
-
-    getOrSearch(query: any, page: number, size: number): Observable<Bundle[]> {
+    getOrSearch(query: any, page: number, size: number): Observable<Object> {
         let observable;
         if (query === undefined || query === '') {
             observable = this.get(page, size);
         } else {
             observable = this.search(query, page, size);
         }
-        return observable.pipe(map(this.toBundles));
+        return observable;
     }
 
     extract(res: Object): Bundle[] {

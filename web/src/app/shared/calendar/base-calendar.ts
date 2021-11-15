@@ -41,7 +41,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
-                          public policyService: PolicyService,
+                          public policy: PolicyService,
                           public snackBar: SnackBarService,
                           public activatedRoute: ActivatedRoute,
                           public cdr: ChangeDetectorRef,
@@ -635,10 +635,10 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     getPolicies() {
         const userId = this.activatedRoute.snapshot.paramMap.get('id');
-        this.canShowCourse = this.policyService.get('events', 'canShowCourse');
-        this.canShowPersonal = this.policyService.get('events', 'canShowPersonal');
-        this.canShowTimeOff = this.policyService.get('events', 'canShowTimeOff') && !userId;
-        this.canShowHoliday = this.policyService.get('events', 'canShowHoliday');
+        this.canShowCourse = this.policy.get('events', 'canShowCourse');
+        this.canShowPersonal = this.policy.get('events', 'canShowPersonal');
+        this.canShowTimeOff = this.policy.get('events', 'canShowTimeOff') && !userId;
+        this.canShowHoliday = this.policy.get('events', 'canShowHoliday');
     }
 }
 

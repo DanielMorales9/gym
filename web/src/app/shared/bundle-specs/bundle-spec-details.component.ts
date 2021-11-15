@@ -1,6 +1,13 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BundleSpecsService} from '../../core/controllers';
-import {BundleType, BundleTypeConstant, CourseBundleSpecification, OptionType, PersonalBundleSpecification} from '../model';
+import {
+    BundleSpecification,
+    BundleType,
+    BundleTypeConstant,
+    CourseBundleSpecification,
+    OptionType,
+    PersonalBundleSpecification
+} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
@@ -8,9 +15,10 @@ import {PolicyService} from '../../core/policy';
 import {OptionModalComponent} from './option-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {of} from 'rxjs';
-import {filter, switchMap, takeUntil} from 'rxjs/operators';
+import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
+import {mapToBundleSpec} from "../mappers";
 
 @Component({
     selector: 'bundle-spec-details',
@@ -21,17 +29,18 @@ import {GetPolicies} from '../policy.interface';
 export class BundleSpecDetailsComponent extends BaseComponent implements GetPolicies, OnInit {
     COURSE   = BundleTypeConstant.COURSE;
 
-    bundleSpec: CourseBundleSpecification|PersonalBundleSpecification;
+    bundleSpec: BundleSpecification;
 
     optionNames = OptionType;
 
-    canDelete: boolean;
-    canDisable: boolean;
+    canDeleteSpec: boolean;
+    canDisableSpec: boolean;
     displayedPaymentsColumns: String[];
     canDeleteOption: boolean;
     canMakeOption: boolean;
-    canEdit: boolean;
+    canEditSpec: boolean;
     bundleType = BundleType;
+
 
     constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
@@ -44,7 +53,6 @@ export class BundleSpecDetailsComponent extends BaseComponent implements GetPoli
     }
 
     ngOnInit(): void {
-        this.getPolicies();
         const displayedPaymentsColumns = ['index', 'name', 'number', 'price', 'type'];
 
         if (this.canDeleteOption) {
@@ -59,14 +67,15 @@ export class BundleSpecDetailsComponent extends BaseComponent implements GetPoli
                 switchMap(params => this.getBundleSpec(+params['id'])))
             .subscribe(res => {
                 this.bundleSpec = res;
+                this.getPolicies();
                 this.cdr.detectChanges();
             });
     }
 
     getPolicies() {
-        this.canDelete = this.policy.get('bundleSpec', 'canDelete');
-        this.canDisable = this.policy.get('bundleSpec', 'canDisable');
-        this.canEdit = this.policy.get('bundleSpec', 'canEdit');
+        this.canDeleteSpec = this.policy.canDelete(this.bundleSpec);
+        this.canEditSpec = this.policy.canEdit(this.bundleSpec);
+        this.canDisableSpec = this.policy.canDisable(this.bundleSpec);
         this.canMakeOption = this.policy.get('option', 'canCreate');
         this.canDeleteOption = this.policy.get('option', 'canDelete');
     }
@@ -86,7 +95,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements GetPoli
                 takeUntil(this.unsubscribe$),
                 filter(v => !!v),
                 switchMap(v => this.service.patchBundleSpecs(v)))
-            .subscribe((v: CourseBundleSpecification|PersonalBundleSpecification) => {
+            .subscribe((v: BundleSpecification) => {
                 this.bundleSpec = v;
                 this.cdr.detectChanges();
             });
@@ -112,7 +121,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements GetPoli
     }
 
     private getBundleSpec(id: number) {
-        return this.service.findBundleSpecById(id);
+        return this.service.findBundleSpecById(id).pipe(map(mapToBundleSpec));
     }
 
     createOption() {

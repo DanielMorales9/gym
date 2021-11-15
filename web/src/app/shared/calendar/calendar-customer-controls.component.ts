@@ -17,10 +17,10 @@ export class CalendarCustomerControlsComponent extends CalendarControlsComponent
 
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
-                protected policyService: PolicyService,
+                protected policy: PolicyService,
                 protected cdr: ChangeDetectorRef,
                 private userService: UserService) {
-        super(router, policyService, cdr, route);
+        super(router, policy, cdr, route);
     }
 
 

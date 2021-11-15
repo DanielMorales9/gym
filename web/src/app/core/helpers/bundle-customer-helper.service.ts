@@ -17,21 +17,17 @@ export class BundleCustomerHelperService extends HelperService<Bundle> {
         throw new Error('Qualcosa è andato storto');
     }
 
-    toBundles(res: Object): Bundle[] {
-        return res['content'].map(mapToBundle)
-    }
-
-    search(query: any, page: number, size: number): Observable<Bundle[]> {
+    search(query: any, page: number, size: number): Observable<Object> {
         if (!!query.date) {
             query = Object.assign({}, query);
             const date = new Date(query.date);
             query.date = date.getUTCDate() + '-' + (date.getUTCMonth() + 1) + '-' + date.getUTCFullYear();
         }
-        return this.service.getCustomerBundles(query, page, size).pipe(map(this.toBundles));
+        return this.service.getCustomerBundles(query, page, size);
     }
 
-    preProcessResources(resources: Bundle[]): Bundle[] {
-        return resources;
+    preProcessResources(resources: Object): Bundle[] {
+        return this.extract(resources).map(mapToBundle);
     }
 
     getOrSearch(query: any, page: number, size: number): Observable<Object> {

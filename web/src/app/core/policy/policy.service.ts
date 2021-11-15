@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
 import {AuthenticationService} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {CanDelete, CanEdit, Policy} from "../../shared/model";
+import {CanDelete, CanDisable, CanEdit} from "../../shared/model";
 
 @Directive()
 @Injectable()
@@ -120,6 +120,9 @@ export class PolicyService implements OnInit, OnDestroy {
     };
 
     TRAINER_POLICY = {
+        gym: {
+            canEdit: false
+        },
         events: {
             canShowCourse: true,
             canShowPersonal: true,
@@ -214,6 +217,9 @@ export class PolicyService implements OnInit, OnDestroy {
     };
 
     CUSTOMER_POLICY = {
+        gym: {
+            canEdit: false
+        },
         events: {
             canShowCourse: true,
             canShowPersonal: true,
@@ -325,4 +331,9 @@ export class PolicyService implements OnInit, OnDestroy {
     canEdit(obj: CanEdit) {
         return this.get(obj.getName(), 'canEdit') && obj.canEdit();
     }
+
+    canDisable(obj: CanDisable) {
+        return this.get(obj.getName(), 'canDisable') && obj.canDisable();
+    }
+
 }
