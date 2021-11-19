@@ -6,7 +6,15 @@ import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
 if (environment.production) {
-  enableProdMode();
+    console.log("Production")
+    enableProdMode();
+    const noOp = function(){}; // no-op function
+    window.console.debug = noOp;
+    window.console.error = noOp;
+    window.console.warn = noOp;
+} 
+else {
+    console.log("Development")
 }
 
 platformBrowserDynamic()

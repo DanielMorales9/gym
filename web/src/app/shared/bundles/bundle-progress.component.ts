@@ -1,4 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
+import {Bundle, BundleSpecification} from "../model";
 
 @Component({
     selector: 'bundle-progress',
@@ -14,7 +15,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} fr
 })
 export class BundleProgressComponent implements OnInit {
 
-    @Input() bundle: any;
+    @Input() bundle: Bundle;
 
     percentage = 0;
     percentageText = '';
@@ -30,19 +31,20 @@ export class BundleProgressComponent implements OnInit {
                 return;
             }
 
-            if (this.bundle.option.type === 'B') {
-                this.percentage = this.bundle.sessions.length / this.bundle.option.number;
-            } else if (!!this.bundle.startTime && !!this.bundle.endTime) {
-                const start = new Date(this.bundle.startTime).getTime();
-                const end = new Date(this.bundle.endTime).getTime();
-                const now = new Date().getTime();
-                this.percentage = (now - start) / (end - start);
-            } else {
-                this.percentage = 0;
-            }
+            this.percentage = this.bundle.progress();
 
-            this.percentage = Math.floor(this.percentage * 100);
-            this.percentage = this.percentage > 100 ? 100 : this.percentage;
+            // if (this.bundle.option.type === 'B') {
+            //     this.percentage = this.bundle.progress();
+            // } else if (!!this.bundle.startTime && !!this.bundle.endTime) {
+            //     const start = new Date(this.bundle.startTime).getTime();
+            //     const end = new Date(this.bundle.endTime).getTime();
+            //     const now = new Date().getTime();
+            //     this.percentage = (now - start) / (end - start);
+            // } else {
+            //     this.percentage = 0;
+            // }
+
+            this.percentage = this.percentage * 100;
 
             this.percentageText = `Stato ${this.percentage}%`;
             this.percentageType = this.percentage < 25 ? 'warning' : this.percentage < 50 ? 'secondary' : 'success';

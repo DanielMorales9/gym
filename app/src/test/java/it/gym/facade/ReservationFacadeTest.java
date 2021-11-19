@@ -20,7 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;

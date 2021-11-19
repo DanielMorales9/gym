@@ -16,7 +16,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
 
-import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.createGym;
 import static org.apache.commons.lang3.time.DateUtils.addDays;
 import static org.apache.commons.lang3.time.DateUtils.addHours;

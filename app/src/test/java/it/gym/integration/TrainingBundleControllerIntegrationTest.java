@@ -6,6 +6,7 @@ import it.gym.model.*;
 import it.gym.repository.CustomerRepository;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
+import it.gym.utility.CalendarUtility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,9 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
-import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectTrainingBundle;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -116,7 +120,11 @@ public class TrainingBundleControllerIntegrationTest extends AbstractIntegration
     public void whenPatchOK() throws Exception {
 
         courseBundle.setName("Test");
+        courseBundle.setStartTime(CalendarUtility.getDate(2021, 11, 1));
+        courseBundle.setEndTime(CalendarUtility.getDate(2021, 12, 1));
+
         courseBundle.setBundleSpec(null);
+        courseBundle.setCustomer(null);
         courseBundle.setCustomer(null);
 
         ResultActions result = mockMvc.perform(patch("/bundles/"+courseBundle.getId())

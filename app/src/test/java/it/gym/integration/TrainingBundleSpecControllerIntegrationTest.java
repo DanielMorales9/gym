@@ -20,7 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectOption;
 import static it.gym.utility.HateoasTest.expectTrainingBundleSpec;

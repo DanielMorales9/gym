@@ -14,7 +14,7 @@ import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
 
-import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.apache.commons.lang3.time.DateUtils.addHours;

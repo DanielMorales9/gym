@@ -6,7 +6,6 @@ import org.springframework.hateoas.server.ExposesResourceFor;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.util.ArrayList;
 
 @Entity
 @DiscriminatorValue(value="P")
@@ -49,4 +48,5 @@ public class PersonalTrainingBundle extends ATrainingBundle {
     public String toString() {
         return "PersonalTrainingBundle{ " + super.toString() + " }";
     }
+
 }
