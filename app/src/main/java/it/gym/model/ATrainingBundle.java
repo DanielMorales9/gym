@@ -251,4 +251,8 @@ public abstract class ATrainingBundle implements Comparable<ATrainingBundle>, Se
     public Date getExpiredAt() {
         return expiredAt;
     }
+
+    public void activate() {
+        this.setExpiredAt(null);
+    }
 }

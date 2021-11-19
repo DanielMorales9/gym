@@ -71,17 +71,17 @@ export class BundlesComponent extends SearchComponent<Bundle> implements OnInit 
     private deleteBundle(bundle) {
         this.service.deleteBundle(bundle.id)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe({
-                error: err => this.snackbar.open(err.error.message)
-            });
+            .subscribe(_ => this.ds.refresh(),
+                err => this.snackbar.open(err.error.message)
+            );
     }
 
     private editBundle(bundle) {
         this.service.patchBundle(bundle)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe({
-                error: err => this.snackbar.open(err.error.message)
-            });
+            .subscribe(_ => this.ds.refresh(),
+                err => this.snackbar.open(err.error.message)
+            );
     }
 
     private goToUserDetails(user) {

@@ -35,6 +35,8 @@ export function mapToBundle(obj: Object): Bundle {
             obj['sessions'],
             obj['customer'],
             bundleSpec,
+            obj['startTime'],
+            obj['endTime'],
             obj['unlimitedDeletions'],
             obj['numDeletions'],
         );

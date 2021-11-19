@@ -3,7 +3,7 @@ package it.gym.integration;
 
 import it.gym.model.*;
 import it.gym.repository.*;
-import it.gym.utility.Calendar;
+import it.gym.utility.CalendarUtility;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static it.gym.utility.Calendar.getNextMonday;
+import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
@@ -301,7 +301,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         ResultActions result = mockMvc.perform(get(path)
                 .param("id", String.valueOf(sale.getCustomer().getId()))
-                .param("date", Calendar.yesterday("dd-MM-yyyy")))
+                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -314,7 +314,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path)
                 .param("payed", String.valueOf(false))
                 .param("id", String.valueOf(sale.getCustomer().getId()))
-                .param("date", Calendar.yesterday("dd-MM-yyyy")))
+                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -447,7 +447,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         String path = "/sales/search";
 
         ResultActions result = mockMvc.perform(get(path)
-                .param("date", Calendar.today("dd-MM-yyyy")))
+                .param("date", CalendarUtility.today("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -459,7 +459,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
         ResultActions result = mockMvc.perform(get(path)
                 .param("lastName", customer.getLastName())
-                .param("date", Calendar.yesterday("dd-MM-yyyy")))
+                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);
@@ -472,7 +472,7 @@ public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
         ResultActions result = mockMvc.perform(get(path)
                 .param("payed", String.valueOf(false))
                 .param("lastName", customer.getLastName())
-                .param("date", Calendar.yesterday("dd-MM-yyyy")))
+                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
                 .andExpect(status().isOk());
 
         expectSales(result);

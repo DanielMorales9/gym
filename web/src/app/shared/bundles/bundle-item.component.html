@@ -35,13 +35,13 @@
                     {{ bundle?.customer.firstName || 'Loading...'}} {{ bundle?.customer.lastName }}
                 </a>
             </div>
-            <div *ngIf="!!get('startTime')">
+            <div *ngIf="!!bundle?.startTime">
                 <mat-icon fontSet="fas" fontIcon="fa-hourglass-start"></mat-icon>
-                Data di inizio&nbsp;&nbsp;{{get('startTime') | date: 'dd/MM/yyyy'}}
+                Data di inizio&nbsp;&nbsp;{{bundle?.startTime| date: 'dd/MM/yyyy'}}
             </div>
-            <div *ngIf="!!get('endTime')">
+            <div *ngIf="!!bundle?.endTime">
                 <mat-icon fontSet="fa" fontIcon="fa-hourglass-end"></mat-icon>
-                Data di fine&nbsp;&nbsp;{{get('endTime') | date: 'dd/MM/yyyy'}}
+                Data di fine&nbsp;&nbsp;{{bundle?.endTime| date: 'dd/MM/yyyy'}}
             </div>
             <div>
                 <mat-icon fontSet="fa" fontIcon="fa-running"></mat-icon> {{bundle?.sessions.length}} Sessioni /
@@ -61,7 +61,7 @@
                 <mat-icon fontSet="fas" fontIcon="fa-info"></mat-icon>&nbsp;Info
             </span>
         </button>
-        <button mat-button *ngIf="canEdit && bundle?.type ==='C'" (click)="edit()">
+        <button mat-button *ngIf="canEdit" (click)="edit()">
             <span>
                 <mat-icon fontSet="fas" fontIcon="fa-edit"></mat-icon>&nbsp;{{isNotActive()? 'Attiva' : 'Modifica'}}
             </span>

@@ -69,9 +69,10 @@ public class TrainingBundleFacade {
     public ATrainingBundle patchBundle(Long id, HttpServletRequest request) throws IOException {
         ATrainingBundle bundle = findById(id);
         bundle = objectMapper.readerForUpdating(bundle).readValue(request.getReader());
-        // TODO why do we do this?
         if (bundle.isExpired()) {
             bundle.terminate();
+        } else {
+            bundle.activate();
         }
         bundle = save(bundle);
         return bundle;

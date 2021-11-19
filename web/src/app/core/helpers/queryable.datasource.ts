@@ -43,16 +43,19 @@ export class QueryableDatasource<T> extends DataSource<any> {
 
     setQuery(query: Object) {
         this.query = query;
+        this.initCacheData();
+        this.fetchPage(0);
+    }
+
+    private initCacheData() {
         this.fetchedPages = new Set<number>();
         this.cachedData = [];
-        this.fetchPage(0);
     }
 
     fetchPage(page: number) {
         if (this.fetchedPages.has(page)) {
             return;
         }
-        this.fetchedPages.add(page);
         this.search(page);
     }
 
@@ -69,7 +72,12 @@ export class QueryableDatasource<T> extends DataSource<any> {
                 this.empty = (newLength === 0);
                 this.cachedData.splice(page * this.pageSize, this.pageSize, ...resources);
                 this.dataStream.next(this.cachedData);
+                this.fetchedPages.add(page);
             });
+    }
+
+    public refresh(): void {
+        this.search(0);
     }
 
 }

@@ -32,6 +32,8 @@ export abstract class Bundle implements CanDelete, CanEdit {
     bundleSpec: BundleSpecification;
     unlimitedDeletions: boolean;
     numDeletions: number;
+    startTime: number;
+    endTime: number;
 
     protected constructor(id: number,
                           name: string,
@@ -43,6 +45,8 @@ export abstract class Bundle implements CanDelete, CanEdit {
                           sessions: Session[],
                           customer: User,
                           bundleSpec: BundleSpecification,
+                          startTime: number,
+                          endTime: number,
                           unlimitedDeletions: boolean,
                           numDeletions: number) {
         this.id = id;
@@ -55,6 +59,8 @@ export abstract class Bundle implements CanDelete, CanEdit {
         this.sessions = sessions;
         this.customer = customer;
         this.bundleSpec = bundleSpec;
+        this.startTime = startTime;
+        this.endTime = endTime;
         this.unlimitedDeletions = unlimitedDeletions;
         this.numDeletions = numDeletions;
     }
@@ -74,54 +80,15 @@ export abstract class Bundle implements CanDelete, CanEdit {
     canEdit(): boolean {
         return !(this.option instanceof BundlePurchaseOption);
     }
+
+    progress(): number {
+        return this.option.progress(this);
+    }
 }
 
 export class PersonalBundle extends Bundle {
 
     bundleSpec: PersonalBundleSpecification;
-
-    constructor(id: number,
-                name: string,
-                expired: boolean,
-                expiredAt: Date,
-                type: string,
-                option: Option,
-                deletable: boolean,
-                sessions: Session[],
-                customer: User,
-                bundleSpec: BundleSpecification,
-                unlimitedDeletions: boolean,
-                numDeletions: number) {
-        super(id,
-            name,
-            expired,
-            expiredAt,
-            type,
-            option,
-            deletable,
-            sessions,
-            customer,
-            bundleSpec,
-            unlimitedDeletions,
-            numDeletions);
-    }
-
-    getPrice() {
-        return this.option.price;
-    }
-
-    isActive(): boolean {
-        return true;
-    }
-
-}
-
-
-export class CourseBundle extends Bundle {
-
-    bundleSpec: CourseBundleSpecification;
-    startTime: number;
-    endTime: number;
 
     constructor(id: number,
                 name: string,
@@ -147,10 +114,55 @@ export class CourseBundle extends Bundle {
             sessions,
             customer,
             bundleSpec,
+            startTime,
+            endTime,
             unlimitedDeletions,
             numDeletions);
-        this.startTime = startTime;
-        this.endTime = endTime;
+    }
+
+    getPrice() {
+        return this.option.price;
+    }
+
+    isActive(): boolean {
+        return true;
+    }
+
+}
+
+
+export class CourseBundle extends Bundle {
+
+    bundleSpec: CourseBundleSpecification;
+
+    constructor(id: number,
+                name: string,
+                expired: boolean,
+                expiredAt: Date,
+                type: string,
+                option: Option,
+                deletable: boolean,
+                sessions: Session[],
+                customer: User,
+                bundleSpec: BundleSpecification,
+                startTime: number,
+                endTime: number,
+                unlimitedDeletions: boolean,
+                numDeletions: number) {
+        super(id,
+            name,
+            expired,
+            expiredAt,
+            type,
+            option,
+            deletable,
+            sessions,
+            customer,
+            bundleSpec,
+            startTime,
+            endTime,
+            unlimitedDeletions,
+            numDeletions);
     }
 
     getPrice() {
