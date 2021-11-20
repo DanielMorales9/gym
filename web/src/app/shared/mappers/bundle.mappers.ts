@@ -1,6 +1,6 @@
-import {Bundle, CourseBundle, PersonalBundle} from "../model";
-import {mapToOption} from "./option.mappers";
-import {mapToBundleSpec} from "./bundleSpec.mappers";
+import {Bundle, CourseBundle, PersonalBundle} from '../model';
+import {mapToOption} from './option.mappers';
+import {mapToBundleSpec} from './bundleSpec.mappers';
 
 export function mapToBundle(obj: Object): Bundle {
     const option = mapToOption(obj['option']);

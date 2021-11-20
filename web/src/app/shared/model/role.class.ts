@@ -10,6 +10,12 @@ export let TypeIndex = {
     'C': 3
 };
 
+export let RoleIndex = {
+    'ADMIN': 1,
+    'TRAINER': 2,
+    'CUSTOMER': 3
+};
+
 export let TypeNames = {
     'A': 'Amministratore',
     'T': 'Allenatore',
@@ -40,8 +46,8 @@ export class Role {
     id: number;
     name: string;
 
-    constructor(id: number, name: string) {
-        this.id = id;
+    constructor(name: string) {
+        this.id = RoleIndex[name];
         this.name = name;
     }
 }

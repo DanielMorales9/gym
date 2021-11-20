@@ -3,8 +3,8 @@ import {Bundle} from '../../shared/model';
 import {Observable} from 'rxjs';
 import {HelperService} from './helper.service';
 import {UserService} from '../controllers';
-import {map} from "rxjs/operators";
-import {mapToBundle} from "../../shared/mappers/bundle.mappers";
+import {map} from 'rxjs/operators';
+import {mapToBundle} from '../../shared/mappers/bundle.mappers';
 
 @Injectable()
 export class BundleCustomerHelperService extends HelperService<Bundle> {

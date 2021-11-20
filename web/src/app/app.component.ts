@@ -11,6 +11,7 @@ import {Gym} from './shared/model';
 import {SwUpdate} from '@angular/service-worker';
 import {environment} from '../environments/environment.prod';
 import { version } from '../../package.json';
+import {AppUpdateService} from './services/app-update.service';
 
 
 @Component({
@@ -27,51 +28,26 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     title: string[];
     version: string = version;
 
+    @ViewChild('sideBar', { static: true })
+    public sideBar: SideBarComponent;
 
     constructor(private auth: AuthenticationService,
                 private screenService: ScreenService,
-                private router: Router,
-                private swUpdate: SwUpdate) {
+                private appUpdateService: AppUpdateService,
+                private router: Router) {
         super();
     }
 
-    @ViewChild('sideBar', { static: true })
-    public sideBar: SideBarComponent;
+    ngOnInit(): void {
+        console.log(`App Version: ${version}`);
+        this.authOnNavigation();
+        this.desktop = this.screenService.isDesktop();
+    }
 
     private setTitle(...title) {
         title = title.filter(v => !!v);
         this.title = title;
         document.title = title.join(' - ');
-    }
-
-    ngOnInit(): void {
-        console.log(`App Version: ${version}`)
-        this.authOnNavigation();
-        this.authenticate();
-        this.desktop = this.isDesktop();
-
-        this.checkUpdates();
-    }
-
-    private checkUpdates() {
-        if (this.swUpdate.isEnabled) {
-            console.log("Check for updates is running every minute...")
-            this.swUpdate.available
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(_ => {
-                    if (confirm('Aggiornamento disponibile. ' +
-                        'Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
-                        this.swUpdate.activateUpdate().then(() => {
-                            window.location.reload();
-                        });
-                    }
-                });
-
-            interval(1000 * 60).subscribe(() => {
-                this.swUpdate.checkForUpdate();
-            });
-
-        }
     }
 
     private getTitle(state, parent) {
@@ -94,12 +70,14 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                     this.authenticated = !!data;
                     return data;
                 }),
-                switchMap(v => this.auth.getUserDetails(v)));
+                switchMap(principal => this.auth.getUserDetails(principal))
+            );
     }
 
-    private getAppName(v): Observable<any> {
+    private getAppName(gym: any): Observable<any> {
         if (!this.appName) {
-            return this.auth.getGym().pipe(map((data: Gym) => {
+            return this.auth.getGym()
+                .pipe(map((data: Gym) => {
                 if (!!data) {
                     this.appName = data.name;
                     this.title = [this.appName];
@@ -108,7 +86,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                 return data;
             }));
         }
-        return of(v);
+        return of(gym);
     }
 
     logout() {
@@ -124,15 +102,13 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     private authOnNavigation() {
+        this.authenticate();
         this.router.events
             .pipe(
                 takeUntil(this.unsubscribe$),
                 filter(event => event instanceof NavigationStart),
-                map(v => {
-                    this.closeNav();
-                    return v;
-                }),
-                switchMap(s => this.authenticate()),
+                map(_ => this.closeNav()),
+                switchMap(_ => this.authenticate()),
                 switchMap(s => this.getAppName(s))
             )
             .subscribe(_ => {
@@ -154,12 +130,8 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     }
 
-    isDesktop() {
-        return this.screenService.isDesktop();
-    }
-
     goHome() {
-        if (this.authenticated && this.hasUser()) {
+        if (this.authenticated && this.auth.hasUser()) {
             this.router.navigateByUrl(this.auth.getUserRoleName());
         }
         else {
@@ -183,7 +155,4 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
         }
     }
 
-    private hasUser() {
-        return this.auth.hasUser();
-    }
 }

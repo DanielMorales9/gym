@@ -10,7 +10,7 @@ import {filter, first, map, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
-import {mapToBundle} from "../mappers";
+import {mapToBundle} from '../mappers';
 
 @Component({
     templateUrl: './bundle-details.component.html',
@@ -155,7 +155,7 @@ export class BundleDetailsComponent extends BaseComponent implements GetPolicies
     }
 
     get(property: string): any {
-        if (!!this.bundle && property in this.bundle) return this.bundle[property];
-        return undefined
+        if (!!this.bundle && property in this.bundle) { return this.bundle[property]; }
+        return undefined;
     }
 }

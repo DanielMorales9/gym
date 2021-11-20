@@ -18,7 +18,7 @@ import {of} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
-import {mapToBundleSpec} from "../mappers";
+import {mapToBundleSpec} from '../mappers';
 
 @Component({
     selector: 'bundle-spec-details',

@@ -1,5 +1,5 @@
-import {Option} from "./option.class";
-import {CanDelete, CanDisable, CanEdit} from "./policy.interface";
+import {Option} from './option.class';
+import {CanDelete, CanDisable, CanEdit} from './policy.interface';
 
 export abstract class BundleSpecification implements CanDelete, CanEdit, CanDisable {
     id: number;
@@ -21,23 +21,23 @@ export abstract class BundleSpecification implements CanDelete, CanEdit, CanDisa
                 numDeletions?: number,
                 options?: Option[],
                 type?: string) {
-        this.id = id
-        this.name = name
-        this.description = description
-        this.disabled = disabled
-        this.createdAt = createdAt
-        this.unlimitedDeletions = unlimitedDeletions
-        this.numDeletions = numDeletions
-        this.options = options
-        this.type = type
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.disabled = disabled;
+        this.createdAt = createdAt;
+        this.unlimitedDeletions = unlimitedDeletions;
+        this.numDeletions = numDeletions;
+        this.options = options;
+        this.type = type;
     }
 
     getName(): string {
-        return 'bundleSpec'
+        return 'bundleSpec';
     }
 
     canDelete(): boolean {
-        return true
+        return true;
     }
 
     canEdit(): boolean {
@@ -77,7 +77,7 @@ export class CourseBundleSpecification extends BundleSpecification {
             unlimitedDeletions,
             numDeletions,
             options,
-            type)
+            type);
         this.maxCustomers = maxCustomers;
     }
 }

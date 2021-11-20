@@ -1,4 +1,4 @@
-import {Bundle} from "./bundle.class";
+import {Bundle} from './bundle.class';
 
 export class Option {
     id: number;
@@ -14,12 +14,12 @@ export class Option {
                 price?: number,
                 createdAt?: Date,
                 type?: string) {
-        this.id = id
-        this.name = name
-        this.number = number
-        this.price = price
-        this.createdAt = createdAt
-        this.type = type
+        this.id = id;
+        this.name = name;
+        this.number = number;
+        this.price = price;
+        this.createdAt = createdAt;
+        this.type = type;
     }
 
     progress(bundle: Bundle): number {
@@ -27,13 +27,13 @@ export class Option {
             const start = new Date(bundle.startTime).getTime();
             const end = new Date(bundle.endTime).getTime();
             const now = new Date().getTime();
-            if (now >= end) return 1;
-            else return  Math.floor((now - start) / (end - start));
+            if (now >= end) { return 1; }
+            else { return  Math.floor((now - start) / (end - start)); }
         }
         else {
             return 0;
         }
-    };
+    }
 
 
 }

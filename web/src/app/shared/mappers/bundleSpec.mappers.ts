@@ -1,5 +1,5 @@
-import {BundleSpecification, CourseBundleSpecification, PersonalBundle, PersonalBundleSpecification} from "../model";
-import {mapToOption} from "./option.mappers";
+import {BundleSpecification, CourseBundleSpecification, PersonalBundle, PersonalBundleSpecification} from '../model';
+import {mapToOption} from './option.mappers';
 
 export function mapToBundleSpec(obj: Object): BundleSpecification {
     const options = (obj['options'] || []).map(mapToOption);

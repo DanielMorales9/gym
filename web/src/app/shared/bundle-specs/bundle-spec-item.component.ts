@@ -2,8 +2,8 @@ import {ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output}
 import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {BundleSpecification, BundleType, BundleTypeConstant} from '../model';
-import {GetPolicies} from "../policy.interface";
-import {PolicyService} from "../../core/policy";
+import {GetPolicies} from '../policy.interface';
+import {PolicyService} from '../../core/policy';
 
 
 @Component({

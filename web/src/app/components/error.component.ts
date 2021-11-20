@@ -9,7 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 export class ErrorComponent implements OnInit {
     message: string;
     title: string;
-    showRefreshButton: boolean = false;
+    showRefreshButton = false;
 
     constructor(private route: ActivatedRoute,
                 private router: Router,
@@ -24,8 +24,8 @@ export class ErrorComponent implements OnInit {
             this.message = 'Rivolgiti in segreteria per risolvere il problema.';
             this.showRefreshButton = false;
         } else {
-            this.title = "Qualcosa è andato storto";
-            this.message = "Prova più tardi oppure ricarica la pagina";
+            this.title = 'Qualcosa è andato storto';
+            this.message = 'Prova più tardi oppure ricarica la pagina';
             this.showRefreshButton = true;
         }
         this.cdr.detectChanges();

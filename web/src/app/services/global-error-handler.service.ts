@@ -1,8 +1,7 @@
 import {ErrorHandler, Injectable, Injector} from '@angular/core';
 import {Router} from '@angular/router';
-import {environment} from '../../environments/environment.prod';
-import {HttpClient} from "@angular/common/http";
-import {first} from "rxjs/operators";
+import {HttpClient} from '@angular/common/http';
+import {first} from 'rxjs/operators';
 
 @Injectable()
 export class GlobalErrorHandler implements ErrorHandler {
@@ -17,7 +16,7 @@ export class GlobalErrorHandler implements ErrorHandler {
     handleError(err) {
         console.log(err);
         console.log(err.stack);
-        let message = "";
+        let message = '';
         if (!!err) {
             message = (err.message) ? err.message : (err.error) ? (err.error.message) ? err.error.message : err : err;
             message += '\n' + err.stack;

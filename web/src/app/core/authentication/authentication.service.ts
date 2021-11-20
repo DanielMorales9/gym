@@ -62,7 +62,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
      */
     login(credentials?: Credentials): Observable<any> {
         return this.authenticate(credentials)
-            .pipe(switchMap(data => this.getUserDetails(data)));
+            .pipe(switchMap(principal => this.getUserDetails(principal)));
     }
 
     getUserDetails(principal): Observable<User> {
@@ -118,7 +118,7 @@ export class AuthenticationService implements OnInit, OnDestroy {
                     this.storageService.set(this.CREDENTIAL_KEY);
                 }
                 else {
-                    const roles = v['authorities'].map((d, i) => new Role(TypeIndex[d.authority[0]], d.authority));
+                    const roles = v['authorities'].map(d => new Role(d.authority));
                     this.setRoles(roles);
                 }
                 return v;

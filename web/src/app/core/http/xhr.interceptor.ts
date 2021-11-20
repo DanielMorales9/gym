@@ -9,7 +9,7 @@ export class XhrInterceptor implements HttpInterceptor {
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
         if (!this.authenticationService.isAuthenticated()) {
-            return next.handle(req)
+            return next.handle(req);
         }
         const xhr = req.clone({
             setHeaders: {

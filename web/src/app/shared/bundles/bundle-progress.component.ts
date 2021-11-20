@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit} from '@angular/core';
-import {Bundle, BundleSpecification} from "../model";
+import {Bundle, BundleSpecification} from '../model';
 
 @Component({
     selector: 'bundle-progress',

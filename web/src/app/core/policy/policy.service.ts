@@ -2,7 +2,7 @@ import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
 import {AuthenticationService} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {CanDelete, CanDisable, CanEdit} from "../../shared/model";
+import {CanDelete, CanDisable, CanEdit} from '../../shared/model';
 
 @Directive()
 @Injectable()

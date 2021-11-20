@@ -1,6 +1,6 @@
 // tslint:disable-next-line:use-pipe-transform-interface
-import {Pipe} from "@angular/core";
-import {TimeAgoPipe} from "time-ago-pipe";
+import {Pipe} from '@angular/core';
+import {TimeAgoPipe} from 'time-ago-pipe';
 
 @Pipe({
     name: 'timeAgo',

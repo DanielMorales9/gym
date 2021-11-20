@@ -1,4 +1,4 @@
-import {BundlePurchaseOption, OnDemandPurchaseOption, Option, TimePurchaseOption} from "../model";
+import {BundlePurchaseOption, OnDemandPurchaseOption, Option, TimePurchaseOption} from '../model';
 
 export function mapToOption(obj: Object): Option {
     if (obj['type'] == 'T') {
