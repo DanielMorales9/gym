@@ -15,6 +15,7 @@ export class CalendarHeaderToolbar {
 
     @Input() view: CalendarView;
     @Input() viewDate: Date;
+    @Input() weekStartsOn: number;
     @Input() desktop: boolean;
 
     @Output() done: EventEmitter<any> = new EventEmitter();

@@ -120,7 +120,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     showMarker = true;
     events: CalendarEvent[];
 
-    refresh: Subject<any>;
+    refresh$: Subject<any>;
 
     @ViewChild('next', { static: true }) next: ElementRef<HTMLElement>;
     @ViewChild('prev', { static: true }) prev: ElementRef<HTMLElement>;
@@ -149,7 +149,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     ngOnInit(): void {
-        this.refresh = new Subject();
+        this.refresh$ = new Subject();
 
         this.initView();
         this.initViewDate();
@@ -470,8 +470,8 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     refreshView() {
-        if (this.refresh) {
-            this.refresh.next();
+        if (this.refresh$) {
+            this.refresh$.next();
         }
     }
 

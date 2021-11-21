@@ -10,7 +10,7 @@
             (viewDateChange)="onViewDateChanged()">
         <mat-icon fontSet="fas" fontIcon="fa-backward"></mat-icon>
     </button>
-    <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):'it' }}</h4>
+    <h4>{{ viewDate | calendarDate:(view + 'ViewTitle'):'it': weekStartsOn }}</h4>
 
     <!--    <button mat-button-->
     <!--            (click)="onViewDateChanged(MONTH)"-->

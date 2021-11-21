@@ -1,11 +1,10 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
-import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from '../../shared/calendar';
+import {BaseCalendar, CustomerDeleteModalComponent, CustomerHourModalComponent, CustomerInfoModalComponent} from '../../shared';
 import {ActivatedRoute, Router} from '@angular/router';
 import {CalendarFacade} from '../../services';
 import { MatDialog } from '@angular/material/dialog';
-import {ScreenService, SnackBarService} from '../../core/utilities';
-import {forkJoin} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {ScreenService, SnackBarService} from '../../core';
+import {map, takeUntil} from 'rxjs/operators';
 import {PolicyServiceDirective} from '../../core/policy';
 
 
@@ -32,12 +31,13 @@ export class CustomerCalendarComponent extends BaseCalendar {
 
         const {startDay, endDay} = this.getStartAndEndTimeByView();
 
-        const events = [];
         this.facade.getEvents(startDay, endDay, this.types, this.user.id)
-            .pipe(takeUntil(this.unsubscribe$))
+            .pipe(
+                takeUntil(this.unsubscribe$),
+                map(r => r.map(v => this.formatEvent(v)))
+            )
             .subscribe(r => {
-                this.events = [];
-                this.events.push(...r.map(v => this.formatEvent(v)));
+                this.events = r;
                 this.refreshView();
                 this.cdr.detectChanges();
             });
