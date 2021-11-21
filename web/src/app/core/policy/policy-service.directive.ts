@@ -1,17 +1,16 @@
 import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
-import {AuthenticationService} from '../authentication';
+import {AuthenticationDirective} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {CanDelete, CanDisable, CanEdit} from "../../shared/model";
+import {CanDelete, CanDisable, CanEdit} from '../../shared/model';
 
 @Directive()
 @Injectable()
-export class PolicyService implements OnInit, OnDestroy {
+export class PolicyServiceDirective implements OnDestroy {
 
-    constructor(private auth: AuthenticationService) {}
+    constructor(private auth: AuthenticationDirective) {}
 
     unsubscribe$ = new Subject<void>();
-    currentRoleId = 1;
 
     ADMIN_POLICY = {
         gym: {
@@ -292,13 +291,6 @@ export class PolicyService implements OnInit, OnDestroy {
 
     POLICIES = [this.ADMIN_POLICY, this.TRAINER_POLICY, this.CUSTOMER_POLICY];
 
-    ngOnInit() {
-        this.auth.getObservableCurrentUserRoleId()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                this.currentRoleId = v;
-            });
-    }
 
     ngOnDestroy(): void {
         this.unsubscribe$.next();
@@ -306,7 +298,9 @@ export class PolicyService implements OnInit, OnDestroy {
     }
 
     get(entity: string, ...actions) {
-        const myPolicy = this.POLICIES[this.currentRoleId - 1];
+        const currentRoleId = this.auth.getCurrentUserRoleId();
+
+        const myPolicy = this.POLICIES[currentRoleId - 1];
         if (entity in myPolicy) {
             let policy = myPolicy[entity];
             let a, index;

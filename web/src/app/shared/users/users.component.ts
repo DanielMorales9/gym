@@ -5,10 +5,10 @@ import {GymService} from '../../services';
 import {MatDialog} from '@angular/material/dialog';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserModalComponent} from './user-modal.component';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {SnackBarService} from '../../core/utilities';
 import {QueryableDatasource, UserHelperService} from '../../core/helpers';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {Observable} from 'rxjs';
 import {SearchComponent} from '../search-component';
@@ -23,8 +23,6 @@ export class UsersComponent extends SearchComponent<User> implements GetPolicies
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
 
-    currentUserId: number;
-
     query = {name: ''};
 
     canCreate: boolean;
@@ -37,15 +35,12 @@ export class UsersComponent extends SearchComponent<User> implements GetPolicies
                 private gymService: GymService,
                 protected router: Router,
                 protected route: ActivatedRoute,
-                private auth: AuthenticationService,
+                private auth: AuthenticationDirective,
                 private authService: AuthService,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
         super(router, route);
-        this.auth.getObservableCurrentUserRoleId()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => this.currentUserId = v);
 
         this.ds = new QueryableDatasource<User>(this.helper, this.query);
     }
@@ -118,7 +113,7 @@ export class UsersComponent extends SearchComponent<User> implements GetPolicies
     }
 
     itsMe(id: any) {
-        return this.currentUserId !== id;
+        return this.auth.getUser().id !== id;
     }
 
     private goToDetails(user: any) {

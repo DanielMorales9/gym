@@ -2,10 +2,10 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Sale} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SalesService} from '../../core/controllers';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {SnackBarService} from '../../core/utilities';
 import {QueryableDatasource, SaleHelperService} from '../../core/helpers';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
 import {GetPolicies} from '../policy.interface';
@@ -40,10 +40,10 @@ export class SalesComponent extends SearchComponent<Sale> implements GetPolicies
 
     constructor(private helper: SaleHelperService,
                 private service: SalesService,
-                private auth: AuthenticationService,
+                private auth: AuthenticationDirective,
                 protected router: Router,
                 protected route: ActivatedRoute,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private snackbar: SnackBarService) {
         super(router, route);
         this.noCardMessage = this.SIMPLE_NO_CARD_MESSAGE;
@@ -123,8 +123,7 @@ export class SalesComponent extends SearchComponent<Sale> implements GetPolicies
     }
 
     private goToDetails(sale: Sale) {
-        const roleName = this.auth.getUserRoleName();
-        this.router.navigate([roleName, 'sales', sale.id]);
+        this.auth.navigateByRole( 'sales', sale.id);
     }
 
     sell() {
@@ -136,7 +135,6 @@ export class SalesComponent extends SearchComponent<Sale> implements GetPolicies
     }
 
     private goToUserDetails(user: any) {
-        const roleName = this.auth.getUserRoleName();
-        this.router.navigate([roleName, 'users', user.id]);
+        this.auth.navigateByRole('users', user.id);
     }
 }

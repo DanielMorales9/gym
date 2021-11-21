@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {map, throttleTime} from 'rxjs/operators';
 import {to_promise} from '../functions/decorators';
-import {AuthenticationService} from '../authentication';
+import {AuthenticationDirective} from '../authentication';
 import {Observable} from 'rxjs';
 
 @Injectable({
@@ -23,7 +23,7 @@ export class GymService {
     gym: any;
 
     constructor(private http: HttpClient,
-                private auth: AuthenticationService) {}
+                private auth: AuthenticationDirective) {}
 
     private getDay(date: Date) {
         return this.R_DAY_OF_WEEK[date.getDay()];

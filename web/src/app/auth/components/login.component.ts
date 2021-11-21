@@ -1,7 +1,6 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
 import {Credentials} from '../../shared/model';
@@ -18,9 +17,9 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     credentials: Credentials = {username: '', password: '', remember: false};
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private builder: FormBuilder,
-                private router: Router) {
+                private cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -37,12 +36,14 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
         this.auth.login(this.credentials)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(data => {
-                if (!!data) {
-                    const roleName = this.auth.getUserRoleName(data.roles[0].id);
-                    this.router.navigateByUrl(roleName);
+            .subscribe(user => {
+                if (!!user) {
+                    this.auth.navigateByRole();
                 }
-                this.error = !!data;
+                else {
+                    this.error = true;
+                    this.cdr.detectChanges();
+                }
             });
     }
 
@@ -51,7 +52,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.form = this.builder.group({
             email: [this.credentials.username, [Validators.required]],
             password: [this.credentials.password, Validators.required],
-            remember: [false,]
+            remember: [false, ]
         });
     }
 

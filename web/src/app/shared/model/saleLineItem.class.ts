@@ -1,5 +1,5 @@
 import {Bundle} from './bundle.class';
-import {BundleSpecification} from "./bundleSpecification.class";
+import {BundleSpecification} from './bundleSpecification.class';
 
 export class SaleLineItem {
 

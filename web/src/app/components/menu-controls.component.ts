@@ -1,7 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Router} from '@angular/router';
-import {AuthenticationService} from '../core/authentication';
-import {Role, RoleNames} from '../shared/model';
+import {AuthenticationDirective} from '../core';
+import {Role} from '../shared/model';
 import {BaseComponent} from '../shared/base-component';
 import {takeUntil} from 'rxjs/operators';
 
@@ -19,73 +18,52 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
 
     roles: Role[];
     currentRoleId: number;
-    roleName: string;
 
-    constructor(private auth: AuthenticationService,
-                private cdr: ChangeDetectorRef,
-                private router: Router) {
+    constructor(private auth: AuthenticationDirective,
+                private cdr: ChangeDetectorRef) {
         super();
     }
 
     ngOnInit(): void {
-        this.getRoles();
-    }
-
-    getRoles() {
-        this.auth.getObservableRoles()
+        this.auth.getObservableUser()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe( v => {
-                this.roles = v;
-                this.setCurrentRole(this.currentRoleId || this.roles[0].id);
-            });
-
-        this.auth.getObservableCurrentUserRoleId()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe( v => {
-                this.setCurrentRole(v);
-            });
-
-        setTimeout(() => {
-            if (this.auth.isAuthenticated() && this.auth.getUser()) {
-                this.roles = this.auth.getUser().roles;
-                this.setCurrentRole(this.currentRoleId || this.roles[0].id);
-            }
-        }, 1000);
-    }
-
-    setCurrentRole(v) {
-        if (this.currentRoleId !== v) {
-            this.currentRoleId = v;
-            this.roleName = this.auth.getUserRoleName(this.currentRoleId);
-            this.router.navigateByUrl(this.roleName);
+            .subscribe(user => {
+            this.roles = user.roles;
+            this.currentRoleId = this.auth.getCurrentUserRoleId();
             this.cdr.detectChanges();
+        });
+    }
+
+    switchRole(id: number) {
+        if (this.currentRoleId !== id) {
+            this.currentRoleId = id;
+            this.auth.setCurrentUserRoleId(id);
+            this.cdr.detectChanges();
+            this.auth.navigateByRole();
         }
     }
 
     doLogout() {
         this.currentRoleId = undefined;
         this.roles = undefined;
-        this.roleName = undefined;
         this.logout.emit();
     }
 
+    goToAppInfo() {
+        this.auth.navigateByRole('appInfo');
+    }
+
     goToProfile() {
-        this.router.navigateByUrl(this.roleName + '/profile');
+        this.auth.navigateByRole('profile');
     }
 
     goToGym() {
-        this.router.navigateByUrl(this.roleName + '/settings/gym');
+        this.auth.navigateByRole('settings', 'gym');
     }
 
     gotToStats() {
-        this.router.navigateByUrl(this.roleName + '/stats');
+        this.auth.navigateByRole('stats');
     }
 
-    switchRole(id: number) {
-        this.auth.setCurrentUserRole(id);
-    }
 
-    goToAppInfo() {
-        this.router.navigateByUrl(this.roleName + '/appInfo');
-    }
 }

@@ -4,7 +4,7 @@ import {BundleSpecification, CourseBundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecsService} from '../../core/controllers';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
@@ -36,7 +36,7 @@ export class BundleSpecsComponent extends SearchComponent<BundleSpecification> i
                 protected route: ActivatedRoute,
                 private dialog: MatDialog,
                 private helper: BundleSpecHelperService,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private snackbar: SnackBarService) {
         super(router, route);
         this.ds = new QueryableDatasource<BundleSpecification>(helper, this.query);

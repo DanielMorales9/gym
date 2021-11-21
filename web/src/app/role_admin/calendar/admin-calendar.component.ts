@@ -11,7 +11,7 @@ import {AdminChangeModalComponent} from './admin-change-modal.component';
 import {AdminHourModalComponent} from './admin-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
 import {filter, map, takeUntil} from 'rxjs/operators';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 
 @Component({
@@ -28,7 +28,7 @@ export class AdminCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public screenService: ScreenService,
                 public router: Router,
-                public policy: PolicyService,
+                public policy: PolicyServiceDirective,
                 public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
         super(facade, router, policy, snackBar, activatedRoute, cdr, screenService);

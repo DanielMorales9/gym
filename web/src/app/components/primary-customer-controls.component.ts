@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
-import {AuthenticationService} from '../core/authentication';
+import {AuthenticationDirective} from '../core/authentication';
 import {User} from '../shared/model';
 import {BaseComponent} from '../shared/base-component';
 import {takeUntil} from 'rxjs/operators';
@@ -13,7 +13,7 @@ export class PrimaryCustomerControlsComponent extends BaseComponent implements O
 
     user: User;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private cdr: ChangeDetectorRef) {
         super();
     }

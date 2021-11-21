@@ -1,38 +1,23 @@
-import {ChangeDetectionStrategy, Component, OnInit} from "@angular/core";
-import { version } from '../../../../package.json';
-import {SwUpdate} from "@angular/service-worker";
-import {BaseComponent} from "../base-component";
-import {takeUntil} from "rxjs/operators";
+import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {version} from '../../../../package.json';
+import {AppUpdateService} from '../../services';
 
 @Component({
     templateUrl: './app-info.component.html',
     styleUrls: ['../../styles/root.css', '../../styles/card.css'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AppInfoComponent extends BaseComponent implements OnInit {
+export class AppInfoComponent {
 
     version: string = version;
 
-    constructor(private swUpdate: SwUpdate) {
-        super();
-    }
+    constructor(private updateService: AppUpdateService) {}
 
-    ngOnInit(): void {
-
-    }
-
-    checkUpdate() {
-        this.swUpdate.checkForUpdate().then(()=> {
-            if (confirm('Aggiornamento disponibile. ' +
-                'Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
-                this.swUpdate.activateUpdate().then(() => {
-                    window.location.reload();
-                });
-            }
-        })
+    checkForUpdates() {
+        this.updateService.checkForUpdate();
     }
 
     canCheck() {
-        return this.swUpdate.isEnabled;
+        return this.updateService.isEnabled;
     }
 }

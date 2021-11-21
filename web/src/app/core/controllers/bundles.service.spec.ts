@@ -15,8 +15,8 @@ describe('BundleSpecsService', () => {
         });
 
         // Inject the http service and test controller for each test
-        bundleService = TestBed.get(BundleSpecsService);
-        backend = TestBed.get(HttpTestingController);
+        bundleService = TestBed.inject(BundleSpecsService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

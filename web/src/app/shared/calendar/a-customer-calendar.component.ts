@@ -9,7 +9,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {catchError, filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, of, throwError} from 'rxjs';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 @Component({
     templateUrl: './calendar.component.html',
@@ -23,7 +23,7 @@ export class ACustomerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
-                public policy: PolicyService,
+                public policy: PolicyServiceDirective,
                 public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
         super(facade, router, policy, snackBar, activatedRoute, cdr, screenService);

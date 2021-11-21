@@ -91,7 +91,7 @@ import {SessionItemComponent, SessionsCustomerComponent} from './sessions';
 import {CdkTableModule} from '@angular/cdk/table';
 import {NgbProgressbarModule} from '@ng-bootstrap/ng-bootstrap';
 import {AvatarComponent} from './profile/avatar.component';
-import {AppInfoComponent} from "./app-info";
+import {AppInfoComponent} from './app-info';
 
 // @ts-ignore
 @NgModule({

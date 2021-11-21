@@ -16,8 +16,8 @@ describe('UserService', () => {
         });
 
         // Inject the http service and test controller for each test
-        userService = TestBed.get(UserService);
-        backend = TestBed.get(HttpTestingController);
+        userService = TestBed.injhect(UserService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {

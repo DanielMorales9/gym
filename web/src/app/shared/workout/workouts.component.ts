@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {QueryableDatasource, WorkoutHelperService} from '../../core/helpers';
 import {Workout} from '../model';
 import {WorkoutService} from '../../core/controllers';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {MatDialog} from '@angular/material/dialog';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {SnackBarService} from '../../core/utilities';
@@ -36,7 +36,7 @@ export class WorkoutsComponent extends SearchComponent<Workout> implements OnIni
                 protected route: ActivatedRoute,
                 protected router: Router,
                 private snackbar: SnackBarService,
-                private policy: PolicyService) {
+                private policy: PolicyServiceDirective) {
         super(router, route);
         this.ds = new QueryableDatasource<Workout>(helper, this.query);
     }

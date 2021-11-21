@@ -8,7 +8,7 @@
     "startp": "ng serve --proxy-config proxy.conf.json --host 0.0.0.0 --disableHostCheck --no-live-reload --prod",
     "build": "ng build --prod --extract-css=false",
     "test": "ng test --code-coverage=false --progress=false --watch=false --browsers=ChromeHeadlessCI",
-    "lint": "ng lint",
+    "lint": "ng lint --fix=true",
     "coverage": "ng test --progress=false --watch=true --browsers=ChromeHeadlessCI",
     "e2e": "ng e2e",
     "version": "npm version"

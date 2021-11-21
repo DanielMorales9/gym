@@ -4,13 +4,13 @@ import {MatDialog} from '@angular/material/dialog';
 import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {Bundle, BundleType} from '../model';
 import {filter, first, map, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
-import {mapToBundle} from "../mappers";
+import {mapToBundle} from '../mappers';
 
 @Component({
     templateUrl: './bundle-details.component.html',
@@ -32,7 +32,7 @@ export class BundleDetailsComponent extends BaseComponent implements GetPolicies
                 private dialog: MatDialog,
                 private router: Router,
                 private snackBar: SnackBarService,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private cdr: ChangeDetectorRef,
                 private route: ActivatedRoute,
                 private snackbar: SnackBarService) {
@@ -155,7 +155,7 @@ export class BundleDetailsComponent extends BaseComponent implements GetPolicies
     }
 
     get(property: string): any {
-        if (!!this.bundle && property in this.bundle) return this.bundle[property];
-        return undefined
+        if (!!this.bundle && property in this.bundle) { return this.bundle[property]; }
+        return undefined;
     }
 }

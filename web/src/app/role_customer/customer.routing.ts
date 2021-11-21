@@ -10,7 +10,7 @@ import {GymSettingsComponent} from '../shared/settings';
 import {CalendarControlsComponent} from '../shared/calendar';
 import {EventDetailsComponent} from '../shared/events';
 import {CustomerStatsComponent} from '../shared/stats';
-import {AppInfoComponent} from "../shared/app-info";
+import {AppInfoComponent} from '../shared/app-info';
 
 const routes = [
     { path: '', children : [

@@ -11,14 +11,14 @@ import {
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {OptionModalComponent} from './option-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {of} from 'rxjs';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
-import {mapToBundleSpec} from "../mappers";
+import {mapToBundleSpec} from '../mappers';
 
 @Component({
     selector: 'bundle-spec-details',
@@ -45,7 +45,7 @@ export class BundleSpecDetailsComponent extends BaseComponent implements GetPoli
     constructor(private service: BundleSpecsService,
                 private dialog: MatDialog,
                 private router: Router,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private snackBar: SnackBarService,
                 private cdr: ChangeDetectorRef,
                 private route: ActivatedRoute) {

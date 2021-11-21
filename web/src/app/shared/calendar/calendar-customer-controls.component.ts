@@ -4,7 +4,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
 import {Subscription} from 'rxjs-compat/Subscription';
 import {CalendarControlsComponent} from './calendar-controls.component';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {takeUntil} from 'rxjs/operators';
 
 @Component({
@@ -17,7 +17,7 @@ export class CalendarCustomerControlsComponent extends CalendarControlsComponent
 
     constructor(protected router: Router,
                 protected route: ActivatedRoute,
-                protected policy: PolicyService,
+                protected policy: PolicyServiceDirective,
                 protected cdr: ChangeDetectorRef,
                 private userService: UserService) {
         super(router, policy, cdr, route);

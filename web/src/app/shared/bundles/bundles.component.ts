@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleHelperService, QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
 
@@ -32,7 +32,7 @@ export class BundlesComponent extends SearchComponent<Bundle> implements OnInit 
                 protected route: ActivatedRoute,
                 protected router: Router,
                 private dialog: MatDialog,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private snackbar: SnackBarService) {
         super(router, route);
         this.ds = new QueryableDatasource<Bundle>(helper, this.query);

@@ -1,8 +1,8 @@
 import {Session} from './session.class';
-import {User} from "./user.class";
-import {CanDelete, CanEdit} from "./policy.interface";
-import {BundleSpecification, CourseBundleSpecification, PersonalBundleSpecification} from "./";
-import {BundlePurchaseOption, Option} from "./option.class";
+import {User} from './user.class';
+import {CanDelete, CanEdit} from './policy.interface';
+import {BundleSpecification, CourseBundleSpecification, PersonalBundleSpecification} from './';
+import {BundlePurchaseOption, Option} from './option.class';
 
 export enum BundleTypeConstant {
     PERSONAL =  'P',
@@ -68,13 +68,13 @@ export abstract class Bundle implements CanDelete, CanEdit {
     public abstract getPrice();
 
     public canDelete() {
-        return this.deletable
+        return this.deletable;
     }
 
     public abstract isActive(): boolean;
 
     getName(): string {
-        return "bundle"
+        return 'bundle';
     }
 
     canEdit(): boolean {

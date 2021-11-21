@@ -2,7 +2,7 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Inp
 import {MatDialog} from '@angular/material/dialog';
 import {Session} from '../model/session.class';
 import {BundleEntity, BundleType} from '../model';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 @Component({
     selector: 'session-item',
@@ -20,7 +20,7 @@ export class SessionItemComponent implements OnInit {
 
     constructor(private dialog: MatDialog,
                 private cdr: ChangeDetectorRef,
-                private policy: PolicyService) {
+                private policy: PolicyServiceDirective) {
     }
 
     goToInfo() {

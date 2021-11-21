@@ -1,16 +1,15 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
+import {NavigationStart, Router} from '@angular/router';
 
-import {ScreenService} from './core/utilities';
-import {interval, Observable, of} from 'rxjs';
+import {ScreenService} from './core';
+import {Observable, of} from 'rxjs';
 import {SideBarComponent} from './components';
-import {AuthenticationService} from './core/authentication';
+import {AuthenticationDirective} from './core';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
-import {SwUpdate} from '@angular/service-worker';
-import {environment} from '../environments/environment.prod';
 import { version } from '../../package.json';
+import {AppUpdateService} from './services';
 
 
 @Component({
@@ -21,57 +20,31 @@ import { version } from '../../package.json';
 export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     appName: string;
-    authenticated: boolean;
     isBack: boolean;
     desktop: boolean;
     title: string[];
     version: string = version;
 
+    @ViewChild('sideBar', { static: true })
+    public sideBar: SideBarComponent;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private screenService: ScreenService,
-                private router: Router,
-                private swUpdate: SwUpdate) {
+                private appUpdateService: AppUpdateService,
+                private router: Router) {
         super();
     }
 
-    @ViewChild('sideBar', { static: true })
-    public sideBar: SideBarComponent;
+    ngOnInit(): void {
+        console.log(`App Version: ${version}`);
+        this.authOnNavigation();
+        this.desktop = this.screenService.isDesktop();
+    }
 
     private setTitle(...title) {
         title = title.filter(v => !!v);
         this.title = title;
         document.title = title.join(' - ');
-    }
-
-    ngOnInit(): void {
-        console.log(`App Version: ${version}`)
-        this.authOnNavigation();
-        this.authenticate();
-        this.desktop = this.isDesktop();
-
-        this.checkUpdates();
-    }
-
-    private checkUpdates() {
-        if (this.swUpdate.isEnabled) {
-            console.log("Check for updates is running every minute...")
-            this.swUpdate.available
-                .pipe(takeUntil(this.unsubscribe$))
-                .subscribe(_ => {
-                    if (confirm('Aggiornamento disponibile. ' +
-                        'Vuoi ricaricare la pagina per ottenere la nuova versione?')) {
-                        this.swUpdate.activateUpdate().then(() => {
-                            window.location.reload();
-                        });
-                    }
-                });
-
-            interval(1000 * 60).subscribe(() => {
-                this.swUpdate.checkForUpdate();
-            });
-
-        }
     }
 
     private getTitle(state, parent) {
@@ -90,16 +63,14 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     private authenticate() {
         return this.auth.authenticate()
             .pipe(
-                map(data => {
-                    this.authenticated = !!data;
-                    return data;
-                }),
-                switchMap(v => this.auth.getUserDetails(v)));
+                switchMap(principal => this.auth.getUserDetails(principal))
+            );
     }
 
-    private getAppName(v): Observable<any> {
+    private getAppName(gym: any): Observable<any> {
         if (!this.appName) {
-            return this.auth.getGym().pipe(map((data: Gym) => {
+            return this.auth.findGym()
+                .pipe(map((data: Gym) => {
                 if (!!data) {
                     this.appName = data.name;
                     this.title = [this.appName];
@@ -108,7 +79,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
                 return data;
             }));
         }
-        return of(v);
+        return of(gym);
     }
 
     logout() {
@@ -116,7 +87,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
                 _ => {
-                    this.authenticated = false;
                     this.router.navigateByUrl('/auth');
                     this.sideBar.close();
                 }
@@ -124,15 +94,13 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     private authOnNavigation() {
+        this.authenticate();
         this.router.events
             .pipe(
                 takeUntil(this.unsubscribe$),
                 filter(event => event instanceof NavigationStart),
-                map(v => {
-                    this.closeNav();
-                    return v;
-                }),
-                switchMap(s => this.authenticate()),
+                map(_ => this.closeNav()),
+                switchMap(_ => this.authenticate()),
                 switchMap(s => this.getAppName(s))
             )
             .subscribe(_ => {
@@ -154,13 +122,9 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     }
 
-    isDesktop() {
-        return this.screenService.isDesktop();
-    }
-
     goHome() {
-        if (this.authenticated && this.hasUser()) {
-            this.router.navigateByUrl(this.auth.getUserRoleName());
+        if (this.isAuthenticated()) {
+            this.auth.navigateByRole();
         }
         else {
             this.router.navigateByUrl('/auth');
@@ -174,16 +138,16 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     sideBarOpened() {
-        return this.desktop && this.authenticated;
+        return this.desktop && this.isAuthenticated();
     }
 
     openSideBar() {
-        if (this.authenticated) {
+        if (this.isAuthenticated()) {
             this.sideBar.toggle();
         }
     }
 
-    private hasUser() {
-        return this.auth.hasUser();
+    isAuthenticated() {
+        return this.auth.isAuthenticated();
     }
 }

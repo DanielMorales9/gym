@@ -1,5 +1,5 @@
 import {User} from '../../shared/model';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BaseComponent} from '../../shared/base-component';
 import {takeUntil} from 'rxjs/operators';
@@ -13,7 +13,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
     user: User;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private cdr: ChangeDetectorRef) {
         super();
     }
@@ -28,6 +28,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
                 }
             });
 
+        // TODO fix sync problem
         setTimeout(() => {
             this.user = this.auth.getUser();
             this.cdr.detectChanges();
