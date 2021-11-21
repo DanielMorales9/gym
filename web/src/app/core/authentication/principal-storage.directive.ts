@@ -1,11 +1,11 @@
-import {Directive, Injectable} from "@angular/core";
-import {StorageService} from "./storage.service";
+import {Directive, Injectable} from '@angular/core';
+import {StorageService} from './storage.service';
 
 @Directive()
 @Injectable({
     providedIn: 'root'
 })
-export class PrincipalStorage {
+export class PrincipalStorageDirective {
 
     private readonly PRINCIPAL_KEY = 'principal';
 

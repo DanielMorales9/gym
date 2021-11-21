@@ -1,5 +1,5 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {AuthenticationService} from '../core';
+import {AuthenticationDirective} from '../core';
 import {Role} from '../shared/model';
 import {BaseComponent} from '../shared/base-component';
 import {takeUntil} from 'rxjs/operators';
@@ -19,7 +19,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
     roles: Role[];
     currentRoleId: number;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private cdr: ChangeDetectorRef) {
         super();
     }
@@ -31,7 +31,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             this.roles = user.roles;
             this.currentRoleId = this.auth.getCurrentUserRoleId();
             this.cdr.detectChanges();
-        })
+        });
     }
 
     switchRole(id: number) {
@@ -39,7 +39,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
             this.currentRoleId = id;
             this.auth.setCurrentUserRoleId(id);
             this.cdr.detectChanges();
-            this.auth.navigateByRole()
+            this.auth.navigateByRole();
         }
     }
 

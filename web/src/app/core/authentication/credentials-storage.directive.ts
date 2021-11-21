@@ -1,12 +1,12 @@
-import {Directive, Injectable} from "@angular/core";
-import {StorageService} from "./storage.service";
-import {Credentials} from "../../shared/model";
+import {Directive, Injectable} from '@angular/core';
+import {StorageService} from './storage.service';
+import {Credentials} from '../../shared/model';
 
 @Directive()
 @Injectable({
     providedIn: 'root'
 })
-export class CredentialsStorage {
+export class CredentialsStorageDirective {
     private readonly CREDENTIAL_KEY = 'credentials';
 
     private remember: boolean;
@@ -24,9 +24,9 @@ export class CredentialsStorage {
 
     set(credentials: Credentials) {
         if (!this.remember) {
-            this.remember = credentials ? credentials.remember : false
+            this.remember = credentials ? credentials.remember : false;
         }
-        
+
         if (credentials) {
             this.storageService.set(this.CREDENTIAL_KEY, credentials, this.remember);
         }

@@ -1,9 +1,9 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {SnackBarService} from '../../core/utilities';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {CalendarFacade} from '../../core/facades';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {WorkoutService} from '../../core/controllers';
@@ -42,11 +42,11 @@ export class ProgrammeComponent extends BaseComponent implements GetPolicies, On
                 private dialog: MatDialog,
                 private router: Router,
                 private location: Location,
-                private auth: AuthenticationService,
+                private auth: AuthenticationDirective,
                 private snackBar: SnackBarService,
                 private service: WorkoutService,
                 private cdr: ChangeDetectorRef,
-                private policy: PolicyService) {
+                private policy: PolicyServiceDirective) {
         super();
     }
 

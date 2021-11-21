@@ -10,7 +10,7 @@ import {
 import {MatDialog} from '@angular/material/dialog';
 import {Bundle, BundleType, CourseBundle} from '../model';
 import {BundleModalComponent} from './bundle-modal.component';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 @Component({
     selector: 'bundle-item',
@@ -28,7 +28,7 @@ export class BundleItemComponent implements OnInit {
     bundleType = BundleType;
 
     constructor(private dialog: MatDialog,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private cdr: ChangeDetectorRef) {}
 
     ngOnInit() {

@@ -4,7 +4,7 @@ import {AuthService, UserService} from '../../core/controllers';
 import {MatDialog} from '@angular/material/dialog';
 import {UserModalComponent} from '../users';
 import {ChangePasswordModalComponent} from './change-password-modal.component';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {SnackBarService} from '../../core/utilities';
 import {ImageCropModalComponent} from './image-crop-modal.component';
 import {LyDialog} from '@alyle/ui/dialog';
@@ -23,7 +23,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     user: User;
     mapNames = TypeNames;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private userService: UserService,
                 private authService: AuthService,
                 private snackbar: SnackBarService,

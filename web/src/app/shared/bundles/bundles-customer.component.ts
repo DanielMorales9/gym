@@ -5,7 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
 import {BundleCustomerHelperService, QueryableDatasource} from '../../core/helpers';
 import {MatDialog} from '@angular/material/dialog';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
 

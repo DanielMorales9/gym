@@ -4,11 +4,11 @@ import {HttpClient} from '@angular/common/http';
 import {Credentials, Gym, Roles, TypeIndex, User} from '../../shared/model';
 import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
 import {Observable, of, Subject} from 'rxjs';
-import {Router} from "@angular/router";
-import {CredentialsStorage} from "./credentials.storage";
-import {PrincipalStorage} from "./principal.storage";
-import {UserStorage} from "./user.storage";
-import {CurrentUserRoleIdStorage} from "./current-user-role-id.storage";
+import {Router} from '@angular/router';
+import {CredentialsStorageDirective} from './credentials-storage.directive';
+import {PrincipalStorageDirective} from './principal-storage.directive';
+import {UserStorageDirective} from './user-storage.directive';
+import {CurrentUserRoleIdStorageDirective} from './current-user-role-id-storage.directive';
 
 /**
  * Provides a base for authentication workflow.
@@ -18,18 +18,19 @@ import {CurrentUserRoleIdStorage} from "./current-user-role-id.storage";
 @Injectable({
     providedIn: 'root'
 })
-export class AuthenticationService implements OnDestroy {
+export class AuthenticationDirective implements OnDestroy {
 
     private unsubscribe$ = new Subject<any>();
+    // TODO remove
     private user$ = new Subject<User>();
 
     private gym: Gym;
 
     constructor(private http: HttpClient,
-                private credentialsStorage: CredentialsStorage,
-                private userStorage: UserStorage,
-                private principalStorage: PrincipalStorage,
-                private currentRoleIdStorage: CurrentUserRoleIdStorage,
+                private credentialsStorage: CredentialsStorageDirective,
+                private userStorage: UserStorageDirective,
+                private principalStorage: PrincipalStorageDirective,
+                private currentRoleIdStorage: CurrentUserRoleIdStorageDirective,
                 private router: Router) { }
 
     ngOnDestroy(): void {
@@ -48,14 +49,14 @@ export class AuthenticationService implements OnDestroy {
     }
 
     getUserDetails(principal): Observable<User> {
-        let user = this.userStorage.get()
+        const user = this.userStorage.get();
         let obs;
         if (!!principal && !user) {
-            let email = principal['name'];
+            const email = principal['name'];
             obs = this.findUserByEmail(email).pipe(
-                map((user: any) => {
-                    this.setUser(user);
-                    return user;
+                map((u: any) => {
+                    this.setUser(u);
+                    return u;
                 })
             );
         }
@@ -76,7 +77,7 @@ export class AuthenticationService implements OnDestroy {
      * @return The principal data.
      */
     authenticate(credentials?: Credentials): Observable<any> {
-        this.credentialsStorage.set(credentials)
+        this.credentialsStorage.set(credentials);
         return this.getPrincipal()
             .pipe(map(principal => {
                 if (!principal) {
@@ -87,7 +88,7 @@ export class AuthenticationService implements OnDestroy {
     }
 
     private getPrincipal(): Observable<any> {
-        const principal = this.principalStorage.get()
+        const principal = this.principalStorage.get();
         let ret;
         if (!principal) {
             const rememberMe = this.credentialsStorage.rememberMe();
@@ -140,7 +141,7 @@ export class AuthenticationService implements OnDestroy {
     private setUser(user: User) {
         const currentRoleId = this.getCurrentUserRoleId();
         if (!currentRoleId) {
-            this.setCurrentUserRoleId(TypeIndex[user.type])
+            this.setCurrentUserRoleId(TypeIndex[user.type]);
         }
         this.userStorage.set(user);
         this.user$.next(user);
@@ -199,7 +200,7 @@ export class AuthenticationService implements OnDestroy {
     }
 
     navigateByRole(...paths): void {
-        let currentUserRoleId = this.getCurrentUserRoleId();
+        const currentUserRoleId = this.getCurrentUserRoleId();
         const roleName = Roles[currentUserRoleId - 1];
         const _ = this.router.navigate([roleName, ...paths]);
     }

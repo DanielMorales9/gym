@@ -1,5 +1,5 @@
 import {User} from '../../shared/model';
-import {AuthenticationService} from '../../core';
+import {AuthenticationDirective} from '../../core';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
@@ -13,7 +13,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
 
     user: User;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private cdr: ChangeDetectorRef) {
         super();
     }

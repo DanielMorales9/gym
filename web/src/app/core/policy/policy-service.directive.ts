@@ -1,14 +1,14 @@
 import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
-import {AuthenticationService} from '../authentication';
+import {AuthenticationDirective} from '../authentication';
 import {Subject} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
 import {CanDelete, CanDisable, CanEdit} from '../../shared/model';
 
 @Directive()
 @Injectable()
-export class PolicyService implements OnDestroy {
+export class PolicyServiceDirective implements OnDestroy {
 
-    constructor(private auth: AuthenticationService) {}
+    constructor(private auth: AuthenticationDirective) {}
 
     unsubscribe$ = new Subject<void>();
 

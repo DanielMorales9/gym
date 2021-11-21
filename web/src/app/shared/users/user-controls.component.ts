@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../core/controllers';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {User, USER_TYPE} from '../model';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
@@ -28,7 +28,7 @@ export class UserControlsComponent extends BaseComponent implements GetPolicies,
                 protected route: ActivatedRoute,
                 private userService: UserService,
                 private cdr: ChangeDetectorRef,
-                private policy: PolicyService) {
+                private policy: PolicyServiceDirective) {
         super();
     }
 

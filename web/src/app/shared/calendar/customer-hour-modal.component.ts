@@ -3,7 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import {FormControl, FormGroup, Validators} from '@angular/forms';
 import {BaseCalendarModal} from './base-calendar-modal';
 import { theme } from '../config';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 @Component({
     templateUrl: './customer-hour-modal.component.html',
@@ -17,7 +17,7 @@ export class CustomerHourModalComponent extends BaseCalendarModal implements OnI
     canBookExternal: boolean;
 
     constructor(public dialogRef: MatDialogRef<CustomerHourModalComponent>,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private cdr: ChangeDetectorRef,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         super(dialogRef);

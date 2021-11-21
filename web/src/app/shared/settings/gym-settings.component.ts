@@ -5,8 +5,8 @@ import { MatDialog } from '@angular/material/dialog';
 import {GymModalComponent} from './gym-modal.component';
 import {SnackBarService} from '../../core/utilities';
 import {filter, share, switchMap, take} from 'rxjs/operators';
-import {AuthenticationService} from '../../core/authentication';
-import {PolicyService} from '../../core/policy';
+import {AuthenticationDirective} from '../../core/authentication';
+import {PolicyServiceDirective} from '../../core/policy';
 
 @Component({
     templateUrl: './gym-settings.component.html',
@@ -19,10 +19,10 @@ export class GymSettingsComponent implements OnInit {
     canEdit: boolean;
 
     constructor(private gymService: GymService,
-                private authService: AuthenticationService,
+                private authService: AuthenticationDirective,
                 private snackbar: SnackBarService,
                 private cdr: ChangeDetectorRef,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private dialog: MatDialog) {
     }
 

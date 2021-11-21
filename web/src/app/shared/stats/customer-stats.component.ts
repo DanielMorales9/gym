@@ -6,7 +6,7 @@ import {map, takeUntil} from 'rxjs/operators';
 
 import {ActivatedRoute} from '@angular/router';
 import {BaseComponent} from '../base-component';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {feedChart} from './padding';
 import {of} from 'rxjs';
 
@@ -73,7 +73,7 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
   intervalName: string;
 
   constructor(private statsService: StatsService,
-              private authService: AuthenticationService,
+              private authService: AuthenticationDirective,
               private cdr: ChangeDetectorRef,
               private route: ActivatedRoute) {
     super();

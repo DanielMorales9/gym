@@ -3,7 +3,7 @@ import {WorkoutService} from '../../core/controllers';
 import {Workout} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {WorkoutModalComponent} from './workout-modal.component';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class WorkoutDetailsComponent extends BaseComponent implements GetPolicie
     constructor(private service: WorkoutService,
                 private dialog: MatDialog,
                 private router: Router,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private snackBar: SnackBarService,
                 private cdr: ChangeDetectorRef,
                 private route: ActivatedRoute) {

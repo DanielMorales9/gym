@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {BaseComponent} from '../base-component';
 
 @Component({
@@ -25,7 +25,7 @@ export class CalendarControlsComponent extends BaseComponent implements OnInit {
     };
 
     constructor(protected router: Router,
-                protected policy: PolicyService,
+                protected policy: PolicyServiceDirective,
                 protected cdr: ChangeDetectorRef,
                 protected route: ActivatedRoute) {
         super();

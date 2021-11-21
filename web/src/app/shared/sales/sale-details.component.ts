@@ -6,7 +6,7 @@ import {SalesService} from '../../core/controllers';
 import {SaleHelperService} from '../../core/helpers';
 import {PaySaleModalComponent} from './pay-sale-modal.component';
 import {SnackBarService} from '../../core/utilities';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {of} from 'rxjs';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
@@ -36,7 +36,7 @@ export class SaleDetailsComponent extends BaseComponent implements OnInit {
                 private helper: SaleHelperService,
                 private service: SalesService,
                 private dialog: MatDialog,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private cdr: ChangeDetectorRef,
                 private snackbar: SnackBarService) {
         super();

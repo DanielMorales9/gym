@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {forkJoin} from 'rxjs';
 import {takeUntil} from 'rxjs/operators';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 
 @Component({
@@ -21,7 +21,7 @@ export class CustomerCalendarComponent extends BaseCalendar {
                 public facade: CalendarFacade,
                 public router: Router,
                 public screenService: ScreenService,
-                public policy: PolicyService,
+                public policy: PolicyServiceDirective,
                 public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
         super(facade, router, policy, snackBar, activatedRoute, cdr, screenService);

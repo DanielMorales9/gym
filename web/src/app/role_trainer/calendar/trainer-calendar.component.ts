@@ -11,7 +11,7 @@ import {TrainerChangeModalComponent} from './trainer-change-modal.component';
 import {TrainerHourModalComponent} from './trainer-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
 import {takeUntil} from 'rxjs/operators';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 
 @Component({
@@ -27,7 +27,7 @@ export class TrainerCalendarComponent extends BaseCalendar {
                 private dialog: MatDialog,
                 public router: Router,
                 public screenService: ScreenService,
-                public policy: PolicyService,
+                public policy: PolicyServiceDirective,
                 public cdr: ChangeDetectorRef,
                 public activatedRoute: ActivatedRoute) {
         super(facade, router, policy, snackBar, activatedRoute, cdr, screenService);

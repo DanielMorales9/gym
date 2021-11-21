@@ -1,12 +1,12 @@
-import {Directive, Injectable} from "@angular/core";
-import {StorageService} from "./storage.service";
-import {User} from "../../shared/model";
+import {Directive, Injectable} from '@angular/core';
+import {StorageService} from './storage.service';
+import {User} from '../../shared/model';
 
 @Directive()
 @Injectable({
     providedIn: 'root'
 })
-export class CurrentUserRoleIdStorage {
+export class CurrentUserRoleIdStorageDirective {
     private readonly CURRENT_ROLE_ID = 'currentRoleId';
 
     constructor(private storageService: StorageService) {

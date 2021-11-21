@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {BundleService, BundleSpecsService, EventService, ReservationService, UserService} from '../controllers';
 import {Observable} from 'rxjs';
 import {User} from '../../shared/model';
-import {AuthenticationService} from '../authentication';
+import {AuthenticationDirective} from '../authentication';
 import {DateService, GymService} from '../utilities';
 import {SessionService} from '../controllers/session.service';
 
@@ -11,7 +11,7 @@ import {SessionService} from '../controllers/session.service';
 export class CalendarFacade {
 
     constructor(private userService: UserService,
-                private auth: AuthenticationService,
+                private auth: AuthenticationDirective,
                 private reservationService: ReservationService,
                 private bundleService: BundleService,
                 private specService: BundleSpecsService,

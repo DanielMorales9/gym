@@ -3,7 +3,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {BundleSpecification, BundleType, BundleTypeConstant} from '../model';
 import {GetPolicies} from '../policy.interface';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 
 
 @Component({
@@ -26,7 +26,7 @@ export class BundleSpecItemComponent implements GetPolicies, OnInit {
 
     @Output() done = new EventEmitter();
     constructor(private dialog: MatDialog,
-                private policy: PolicyService) {
+                private policy: PolicyServiceDirective) {
     }
 
     ngOnInit() {

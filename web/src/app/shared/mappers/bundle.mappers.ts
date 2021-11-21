@@ -5,7 +5,7 @@ import {mapToBundleSpec} from './bundleSpec.mappers';
 export function mapToBundle(obj: Object): Bundle {
     const option = mapToOption(obj['option']);
     const bundleSpec = mapToBundleSpec(obj['bundleSpec']);
-    if (obj['type'] == 'C') {
+    if (obj['type'] === 'C') {
         return new CourseBundle(
             obj['id'],
             obj['name'],

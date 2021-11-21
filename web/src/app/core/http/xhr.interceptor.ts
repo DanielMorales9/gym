@@ -1,11 +1,11 @@
 import {HttpHandler, HttpInterceptor, HttpRequest} from '@angular/common/http';
 import {Injectable} from '@angular/core';
-import {CredentialsStorage} from "../authentication";
+import {CredentialsStorageDirective} from '../authentication';
 
 @Injectable()
 export class XhrInterceptor implements HttpInterceptor {
 
-    constructor(private credentialsStorage: CredentialsStorage) {}
+    constructor(private credentialsStorage: CredentialsStorageDirective) {}
 
     public getAuthorizationHeader() {
         const credentials = this.credentialsStorage.get();
@@ -16,7 +16,7 @@ export class XhrInterceptor implements HttpInterceptor {
     }
 
     intercept(req: HttpRequest<any>, next: HttpHandler) {
-        const headers = this.getAuthorizationHeader()
+        const headers = this.getAuthorizationHeader();
         if (!headers) {
             return next.handle(req);
         }

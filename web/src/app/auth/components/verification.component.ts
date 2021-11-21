@@ -3,7 +3,7 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../core/functions';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {AuthService} from '../../core/controllers';
 import {SnackBarService} from '../../core/utilities';
 import {map, switchMap, takeUntil} from 'rxjs/operators';
@@ -26,7 +26,7 @@ export class VerificationComponent extends BaseComponent implements OnInit {
     QUERY_PARAMS = { message: 'Errore di Autenticazione<br>Rivolgiti all\'amministratore per risolvere il problema.'};
 
     constructor(private authService: AuthService,
-                private auth: AuthenticationService,
+                private auth: AuthenticationDirective,
                 private builder: FormBuilder,
                 private snackbar: SnackBarService,
                 private activatedRoute: ActivatedRoute,

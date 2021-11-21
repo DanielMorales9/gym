@@ -21,11 +21,11 @@ import {
     UserHelperService,
     BundleHelperService, BundleCustomerHelperService, WorkoutHelperService,
 } from './helpers';
-import {PolicyService} from './policy';
+import {PolicyServiceDirective} from './policy';
 import {CalendarFacade} from './facades';
 import {SessionService} from './controllers/session.service';
 import {SessionHelperService} from './helpers/session-helper.service';
-import {CredentialsStorage, PrincipalStorage} from "./authentication";
+import {CredentialsStorageDirective, PrincipalStorageDirective} from './authentication';
 
 
 @NgModule({
@@ -74,7 +74,7 @@ import {CredentialsStorage, PrincipalStorage} from "./authentication";
         BundleCustomerHelperService,
         WorkoutService,
         WorkoutHelperService,
-        PolicyService,
+        PolicyServiceDirective,
         SessionService,
         SessionHelperService,
     ]

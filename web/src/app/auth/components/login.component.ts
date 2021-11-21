@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
 import {Credentials} from '../../shared/model';
@@ -17,7 +17,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     credentials: Credentials = {username: '', password: '', remember: false};
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private builder: FormBuilder,
                 private cdr: ChangeDetectorRef) {
         super();
@@ -37,12 +37,12 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.auth.login(this.credentials)
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(user => {
-                if (!!user){
-                    this.auth.navigateByRole()
+                if (!!user) {
+                    this.auth.navigateByRole();
                 }
                 else {
                     this.error = true;
-                    this.cdr.detectChanges()
+                    this.cdr.detectChanges();
                 }
             });
     }
@@ -52,7 +52,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
         this.form = this.builder.group({
             email: [this.credentials.username, [Validators.required]],
             password: [this.credentials.password, Validators.required],
-            remember: [false,]
+            remember: [false, ]
         });
     }
 

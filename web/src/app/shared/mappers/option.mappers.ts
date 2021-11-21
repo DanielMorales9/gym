@@ -1,7 +1,7 @@
 import {BundlePurchaseOption, OnDemandPurchaseOption, Option, TimePurchaseOption} from '../model';
 
 export function mapToOption(obj: Object): Option {
-    if (obj['type'] == 'T') {
+    if (obj['type'] === 'T') {
         return new TimePurchaseOption(
             obj['id'],
             obj['name'],
@@ -11,7 +11,7 @@ export function mapToOption(obj: Object): Option {
             obj['type']
         );
     }
-    else if (obj['type'] == 'B') {
+    else if (obj['type'] === 'B') {
         return new BundlePurchaseOption(
             obj['id'],
             obj['name'],

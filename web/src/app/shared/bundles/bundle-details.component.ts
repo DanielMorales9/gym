@@ -4,7 +4,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {BundleService} from '../../core/controllers';
 import {BundleModalComponent} from './bundle-modal.component';
 import {Observable} from 'rxjs';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {Bundle, BundleType} from '../model';
 import {filter, first, map, switchMap, takeUntil} from 'rxjs/operators';
 import {SnackBarService} from '../../core/utilities';
@@ -32,7 +32,7 @@ export class BundleDetailsComponent extends BaseComponent implements GetPolicies
                 private dialog: MatDialog,
                 private router: Router,
                 private snackBar: SnackBarService,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private cdr: ChangeDetectorRef,
                 private route: ActivatedRoute,
                 private snackbar: SnackBarService) {

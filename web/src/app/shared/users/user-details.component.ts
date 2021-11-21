@@ -5,7 +5,7 @@ import {MatDialog} from '@angular/material/dialog';
 import {UserModalComponent} from './user-modal.component';
 import {ActivatedRoute, Router} from '@angular/router';
 import {SnackBarService} from '../../core/utilities';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {filter, first, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../base-component';
 import {GetPolicies} from '../policy.interface';
@@ -37,7 +37,7 @@ export class UserDetailsComponent extends BaseComponent implements GetPolicies, 
                 private route: ActivatedRoute,
                 private router: Router,
                 private authService: AuthService,
-                private policy: PolicyService,
+                private policy: PolicyServiceDirective,
                 private dialog: MatDialog,
                 private salesService: SalesService,
                 private cdr: ChangeDetectorRef,

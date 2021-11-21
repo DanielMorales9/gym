@@ -4,7 +4,7 @@ import {NavigationStart, Router} from '@angular/router';
 import {ScreenService} from './core';
 import {Observable, of} from 'rxjs';
 import {SideBarComponent} from './components';
-import {AuthenticationService} from './core';
+import {AuthenticationDirective} from './core';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
@@ -28,7 +28,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     @ViewChild('sideBar', { static: true })
     public sideBar: SideBarComponent;
 
-    constructor(private auth: AuthenticationService,
+    constructor(private auth: AuthenticationDirective,
                 private screenService: ScreenService,
                 private appUpdateService: AppUpdateService,
                 private router: Router) {

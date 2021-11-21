@@ -8,7 +8,7 @@ import {CalendarFacade} from '../../services';
 import {ScreenService, SnackBarService} from '../../core/utilities';
 import {BaseComponent} from '../base-component';
 import {catchError, filter, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {GetPolicies} from '../policy.interface';
 
 const CALENDAR_COLUMNS: any = {
@@ -41,7 +41,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
 
     protected constructor(public facade: CalendarFacade,
                           public router: Router,
-                          public policy: PolicyService,
+                          public policy: PolicyServiceDirective,
                           public snackBar: SnackBarService,
                           public activatedRoute: ActivatedRoute,
                           public cdr: ChangeDetectorRef,

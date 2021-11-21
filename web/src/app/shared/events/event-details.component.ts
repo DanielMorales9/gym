@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {CalendarFacade} from '../../core/facades';
 import {ActivatedRoute, Router} from '@angular/router';
-import {PolicyService} from '../../core/policy';
+import {PolicyServiceDirective} from '../../core/policy';
 import {SnackBarService} from '../../core/utilities';
 import {MatDialog} from '@angular/material/dialog';
 import {ReservationModalComponent} from './reservation.modal.component';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core/authentication';
 import {BaseComponent} from '../base-component';
 import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
@@ -56,10 +56,10 @@ export class EventDetailsComponent extends BaseComponent implements GetPolicies,
                 private route: ActivatedRoute,
                 private dialog: MatDialog,
                 private router: Router,
-                private auth: AuthenticationService,
+                private auth: AuthenticationDirective,
                 private snackBar: SnackBarService,
                 private cdr: ChangeDetectorRef,
-                private policy: PolicyService) {
+                private policy: PolicyServiceDirective) {
         super();
     }
 

@@ -14,8 +14,8 @@ describe('SalesService', () => {
         });
 
         // Inject the http service and test controller for each test
-        salesService = TestBed.get(SalesService);
-        backend = TestBed.get(HttpTestingController);
+        salesService = TestBed.inject(SalesService);
+        backend = TestBed.inject(HttpTestingController);
     });
 
     afterEach(() => {
