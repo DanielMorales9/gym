@@ -85,7 +85,7 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
 
     if (!this.id) { this.id = this.authService.getUser().id; }
 
-    this.update()
+    this.update();
   }
 
   private getCustomerReservationsByWeek(interval, id) {

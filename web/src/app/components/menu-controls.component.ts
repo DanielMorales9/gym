@@ -49,7 +49,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
                     this.user = undefined;
                     this.currentRoleId = undefined;
                 }
-                this.cdr.detectChanges()
+                this.cdr.detectChanges();
             });
     }
 

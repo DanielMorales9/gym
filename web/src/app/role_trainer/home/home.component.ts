@@ -2,7 +2,7 @@ import {User} from '../../shared/model';
 import {AuthenticationDirective} from '../../core';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BaseComponent} from '../../shared/base-component';
-import {takeUntil} from "rxjs/operators";
+import {takeUntil} from 'rxjs/operators';
 
 @Component({
     templateUrl: './home.component.html',
@@ -32,7 +32,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
                 } else {
                     this.user = null;
                 }
-                this.cdr.detectChanges()
+                this.cdr.detectChanges();
             });
     }
 }

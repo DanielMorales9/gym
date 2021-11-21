@@ -32,7 +32,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
                 } else {
                     this.user = null;
                 }
-                this.cdr.detectChanges()
+                this.cdr.detectChanges();
             });
     }
 }
