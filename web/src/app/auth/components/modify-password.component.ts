@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {User} from '../../shared/model';
-import {UserHelperService} from '../../core/helpers';
+import {UserHelperService} from '../../core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../core/functions';
 import {AuthService} from '../../core/controllers';
-import {SnackBarService} from '../../core/utilities';
+import {SnackBarService} from '../../core';
 import {BaseComponent} from '../../shared/base-component';
 import {takeUntil} from 'rxjs/operators';
 

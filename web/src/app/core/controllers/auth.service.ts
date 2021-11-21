@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {User} from '../../shared/model';
-import {to_promise} from '../functions/decorators';
 import {Observable} from 'rxjs';
 
 @Injectable()

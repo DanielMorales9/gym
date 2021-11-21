@@ -1,6 +1,6 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {AuthenticationDirective} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
 import {Credentials} from '../../shared/model';

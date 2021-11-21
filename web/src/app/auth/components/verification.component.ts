@@ -3,9 +3,9 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {User} from '../../shared/model';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {passwordMatchValidator} from '../../core/functions';
-import {AuthenticationDirective} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core';
 import {AuthService} from '../../core/controllers';
-import {SnackBarService} from '../../core/utilities';
+import {SnackBarService} from '../../core';
 import {map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';
 

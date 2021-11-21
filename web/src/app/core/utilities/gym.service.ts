@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {map, throttleTime} from 'rxjs/operators';
-import {to_promise} from '../functions/decorators';
+import {map} from 'rxjs/operators';
 import {AuthenticationDirective} from '../authentication';
 import {Observable} from 'rxjs';
 
