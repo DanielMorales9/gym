@@ -1,8 +1,8 @@
 import {User} from '../../shared/model';
-import {AuthenticationDirective} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {BaseComponent} from '../../shared/base-component';
-import {takeUntil} from 'rxjs/operators';
+import {takeUntil} from "rxjs/operators";
 
 @Component({
     templateUrl: './home.component.html',
@@ -19,19 +19,20 @@ export class HomeComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.auth.getObservableUser()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                if (!this.user) {
-                    this.user = v;
-                    this.cdr.detectChanges();
-                }
-            });
+        this.user = this.auth.getUser();
+        this.onAuthenticate();
+    }
 
-        // TODO fix sync problem
-        setTimeout(() => {
-            this.user = this.auth.getUser();
-            this.cdr.detectChanges();
-        }, 300);
+    private onAuthenticate() {
+        this.auth.onAuthenticate()
+            .pipe(takeUntil(this.unsubscribe$))
+            .subscribe(isAuthenticated => {
+                if (isAuthenticated) {
+                    this.user = this.auth.getUser();
+                } else {
+                    this.user = null;
+                }
+                this.cdr.detectChanges()
+            });
     }
 }

@@ -83,21 +83,9 @@ export class CustomerStatsComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id') || this.route.snapshot.queryParamMap.get('id');
 
-    let ob;
-    if (!this.id) {
-      ob = this.authService.getObservableUser()
-          .pipe(
-              takeUntil(this.unsubscribe$),
-              map(v => {
-                this.id = v.id;
-                return this.id;
-              }));
-    }
-    else {
-      ob = of(this.id);
-    }
+    if (!this.id) { this.id = this.authService.getUser().id; }
 
-    ob.subscribe(v => this.update());
+    this.update()
   }
 
   private getCustomerReservationsByWeek(interval, id) {

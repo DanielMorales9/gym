@@ -1,6 +1,14 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    EventEmitter,
+    Input,
+    OnInit,
+    Output
+} from '@angular/core';
 import {AuthenticationDirective} from '../core';
-import {Role} from '../shared/model';
+import {User} from '../shared/model';
 import {BaseComponent} from '../shared/base-component';
 import {takeUntil} from 'rxjs/operators';
 
@@ -16,7 +24,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
     @Input() hideMenu;
     @Output() logout = new EventEmitter();
 
-    roles: Role[];
+    user: User;
     currentRoleId: number;
 
     constructor(private auth: AuthenticationDirective,
@@ -25,13 +33,24 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.auth.getObservableUser()
+        // this.user = this.auth.getUser();
+        // this.currentRoleId = this.auth.getCurrentUserRoleId();
+        this.onAuthenticate();
+    }
+
+    private onAuthenticate() {
+        this.auth.onAuthenticate()
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(user => {
-            this.roles = user.roles;
-            this.currentRoleId = this.auth.getCurrentUserRoleId();
-            this.cdr.detectChanges();
-        });
+            .subscribe(isAuthenticated => {
+                if (isAuthenticated) {
+                    this.user = this.auth.getUser();
+                    this.currentRoleId = this.auth.getCurrentUserRoleId();
+                } else {
+                    this.user = undefined;
+                    this.currentRoleId = undefined;
+                }
+                this.cdr.detectChanges()
+            });
     }
 
     switchRole(id: number) {
@@ -45,7 +64,7 @@ export class MenuControlsComponent extends BaseComponent implements OnInit {
 
     doLogout() {
         this.currentRoleId = undefined;
-        this.roles = undefined;
+        this.user = undefined;
         this.logout.emit();
     }
 

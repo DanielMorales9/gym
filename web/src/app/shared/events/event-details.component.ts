@@ -2,10 +2,10 @@ import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@an
 import {CalendarFacade} from '../../core/facades';
 import {ActivatedRoute, Router} from '@angular/router';
 import {PolicyServiceDirective} from '../../core/policy';
-import {SnackBarService} from '../../core/utilities';
+import {SnackBarService} from '../../core';
 import {MatDialog} from '@angular/material/dialog';
 import {ReservationModalComponent} from './reservation.modal.component';
-import {AuthenticationDirective} from '../../core/authentication';
+import {AuthenticationDirective} from '../../core';
 import {BaseComponent} from '../base-component';
 import {filter, map, mergeMap, switchMap, takeUntil} from 'rxjs/operators';
 import {forkJoin, Observable} from 'rxjs';
@@ -66,11 +66,7 @@ export class EventDetailsComponent extends BaseComponent implements GetPolicies,
     ngOnInit(): void {
         const id = +this.route.snapshot.params['id'];
 
-        this.auth.getObservableUser()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-               this.user = v;
-            });
+        this.user = this.auth.getUser();
 
         this.findById(id).subscribe(
             r => {

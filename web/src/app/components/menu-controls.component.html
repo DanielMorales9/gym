@@ -5,7 +5,7 @@
     <button mat-menu-item *ngIf="!(currentRoleId | currentRole: 2)" (click)="gotToStats()">
         <mat-icon>show_chart</mat-icon>&nbsp;Statistiche</button>
     <button mat-menu-item (click)="goToGym()"><mat-icon>store</mat-icon>&nbsp;La mia palestra</button>
-    <button mat-menu-item *ngIf="roles?.length > 1"
+    <button mat-menu-item *ngIf="user?.roles.length > 1"
             [matMenuTriggerFor]="views">
         <mat-icon>remove_red_eye</mat-icon>&nbsp;Cambia vista
     </button>
@@ -17,15 +17,15 @@
 </button>
 
 <mat-menu #views="matMenu">
-    <button *ngIf="roles | showRole: 1" [disabled]="currentRoleId | currentRole: 1"
+    <button *ngIf="user?.roles| showRole: 1" [disabled]="currentRoleId | currentRole: 1"
             mat-menu-item (click)="switchRole(1)">
         &nbsp;Admin
     </button>
-    <button *ngIf="roles | showRole: 2" [disabled]="currentRoleId | currentRole: 2"
+    <button *ngIf="user?.roles| showRole: 2" [disabled]="currentRoleId | currentRole: 2"
             mat-menu-item (click)="switchRole(2)">
         &nbsp;Trainer
     </button>
-    <button *ngIf="roles | showRole: 3" [disabled]="currentRoleId | currentRole: 3"
+    <button *ngIf="user?.roles| showRole: 3" [disabled]="currentRoleId | currentRole: 3"
             mat-menu-item (click)="switchRole(3)">
         &nbsp;Cliente
     </button>

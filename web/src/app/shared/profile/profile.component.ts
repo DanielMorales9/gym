@@ -34,15 +34,7 @@ export class ProfileComponent extends BaseComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.auth.getObservableUser()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                if (!this.user) {
-                    this.user = v;
-                    this.cdr.detectChanges();
-                }
-            });
-
+        this.user = this.auth.getUser();
     }
 
     openDialog(): void {
