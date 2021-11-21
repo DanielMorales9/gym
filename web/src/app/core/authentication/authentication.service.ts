@@ -128,6 +128,7 @@ export class AuthenticationService implements OnDestroy {
         return !!this.credentialsStorage.get();
     }
 
+    // TODO Remove
     getRoleByUser(user: User) {
         if (user.type) {
             return TypeIndex[user.type];
@@ -149,6 +150,7 @@ export class AuthenticationService implements OnDestroy {
         this.currentRoleIdStorage.set(idx);
     }
 
+    // TODO remove
     getObservableUser(): Observable<User> {
         return this.user$;
     }
