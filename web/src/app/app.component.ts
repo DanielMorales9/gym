@@ -1,17 +1,15 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import {ActivatedRoute, NavigationStart, Router} from '@angular/router';
+import {NavigationStart, Router} from '@angular/router';
 
-import {ScreenService} from './core/utilities';
-import {interval, Observable, of} from 'rxjs';
+import {ScreenService} from './core';
+import {Observable, of} from 'rxjs';
 import {SideBarComponent} from './components';
-import {AuthenticationService} from './core/authentication';
+import {AuthenticationService} from './core';
 import {filter, map, switchMap, takeUntil} from 'rxjs/operators';
 import {BaseComponent} from './shared/base-component';
 import {Gym} from './shared/model';
-import {SwUpdate} from '@angular/service-worker';
-import {environment} from '../environments/environment.prod';
 import { version } from '../../package.json';
-import {AppUpdateService} from './services/app-update.service';
+import {AppUpdateService} from './services';
 
 
 @Component({
@@ -22,7 +20,6 @@ import {AppUpdateService} from './services/app-update.service';
 export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     appName: string;
-    authenticated: boolean;
     isBack: boolean;
     desktop: boolean;
     title: string[];
@@ -66,10 +63,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     private authenticate() {
         return this.auth.authenticate()
             .pipe(
-                map(data => {
-                    this.authenticated = !!data;
-                    return data;
-                }),
                 switchMap(principal => this.auth.getUserDetails(principal))
             );
     }
@@ -94,7 +87,6 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
             .pipe(takeUntil(this.unsubscribe$))
             .subscribe(
                 _ => {
-                    this.authenticated = false;
                     this.router.navigateByUrl('/auth');
                     this.sideBar.close();
                 }
@@ -131,8 +123,8 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     goHome() {
-        if (this.authenticated && this.auth.hasUser()) {
-            this.router.navigateByUrl(this.auth.getUserRoleName());
+        if (this.isAuthenticated()) {
+            this.auth.navigateByRole();
         }
         else {
             this.router.navigateByUrl('/auth');
@@ -146,13 +138,16 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
     }
 
     sideBarOpened() {
-        return this.desktop && this.authenticated;
+        return this.desktop && this.isAuthenticated();
     }
 
     openSideBar() {
-        if (this.authenticated) {
+        if (this.isAuthenticated()) {
             this.sideBar.toggle();
         }
     }
 
+    isAuthenticated() {
+        return this.auth.isAuthenticated();
+    }
 }

@@ -1,5 +1,4 @@
-import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {AuthenticationService} from '../../core/authentication';
 import {takeUntil} from 'rxjs/operators';
@@ -20,7 +19,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
     constructor(private auth: AuthenticationService,
                 private builder: FormBuilder,
-                private router: Router) {
+                private cdr: ChangeDetectorRef) {
         super();
     }
 
@@ -37,12 +36,14 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
         this.auth.login(this.credentials)
             .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(data => {
-                if (!!data) {
-                    const roleName = this.auth.getUserRoleName(data.roles[0].id);
-                    this.router.navigateByUrl(roleName);
+            .subscribe(user => {
+                if (!!user){
+                    this.auth.navigateByRole()
                 }
-                this.error = !!data;
+                else {
+                    this.error = true;
+                    this.cdr.detectChanges()
+                }
             });
     }
 

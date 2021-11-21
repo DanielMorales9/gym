@@ -123,8 +123,7 @@ export class SalesComponent extends SearchComponent<Sale> implements GetPolicies
     }
 
     private goToDetails(sale: Sale) {
-        const roleName = this.auth.getUserRoleName();
-        this.router.navigate([roleName, 'sales', sale.id]);
+        this.auth.navigateByRole( 'sales', sale.id);
     }
 
     sell() {
@@ -136,7 +135,6 @@ export class SalesComponent extends SearchComponent<Sale> implements GetPolicies
     }
 
     private goToUserDetails(user: any) {
-        const roleName = this.auth.getUserRoleName();
-        this.router.navigate([roleName, 'users', user.id]);
+        this.auth.navigateByRole('users', user.id);
     }
 }

@@ -25,6 +25,7 @@ import {PolicyService} from './policy';
 import {CalendarFacade} from './facades';
 import {SessionService} from './controllers/session.service';
 import {SessionHelperService} from './helpers/session-helper.service';
+import {CredentialsStorage, PrincipalStorage} from "./authentication";
 
 
 @NgModule({
@@ -36,6 +37,8 @@ import {SessionHelperService} from './helpers/session-helper.service';
     declarations: [LoaderComponent],
     exports: [LoaderComponent],
     providers: [
+        CredentialsStorage,
+        PrincipalStorage,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: XhrInterceptor,

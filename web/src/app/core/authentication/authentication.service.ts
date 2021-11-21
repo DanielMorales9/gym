@@ -1,11 +1,12 @@
-import { Injectable, OnDestroy, OnInit, Directive } from '@angular/core';
+import {Directive, Injectable, OnDestroy} from '@angular/core';
 
 import {HttpClient} from '@angular/common/http';
-import {Credentials, Gym, Role, Roles, TypeIndex, User} from '../../shared/model';
-import {StorageService} from './storage.service';
-import {catchError, map, switchMap, takeUntil, throttleTime} from 'rxjs/operators';
+import {Credentials, Gym, Roles, TypeIndex, User} from '../../shared/model';
+import {catchError, map, switchMap, throttleTime} from 'rxjs/operators';
 import {Observable, of, Subject} from 'rxjs';
-import {environment} from '../../../environments/environment';
+import {Router} from "@angular/router";
+import {CredentialsStorage} from "./credentials.storage";
+import {PrincipalStorage} from "./principal.storage";
 
 /**
  * Provides a base for authentication workflow.
@@ -15,40 +16,20 @@ import {environment} from '../../../environments/environment';
 @Injectable({
     providedIn: 'root'
 })
-export class AuthenticationService implements OnInit, OnDestroy {
-
-    private readonly CREDENTIAL_KEY = 'credentials';
-    private readonly ROLE_KEY = 'role';
-
-    private readonly PRINCIPAL_EXPIRE_KEY = 'principal_ttl';
-    private readonly TTL = environment.production ? 10000 : 0;
+export class AuthenticationService implements OnDestroy {
 
     private unsubscribe$ = new Subject<any>();
     private currentRoleId$ = new Subject<number>();
-    private roles$ = new Subject<Role[]>();
     private user$ = new Subject<User>();
 
     private user: User;
     private gym: Gym;
     private currentRoleId: number;
-    private remember: boolean;
 
     constructor(private http: HttpClient,
-                private storageService: StorageService) { }
-
-    ngOnInit() {
-        this.currentRoleId$
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                this.currentRoleId = v;
-            });
-
-        this.roles$
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                this.currentRoleId$.next(this.currentRoleId || v[0].id);
-            });
-    }
+                private credentialsStorage: CredentialsStorage,
+                private principalStorage: PrincipalStorage,
+                private router: Router) { }
 
     ngOnDestroy(): void {
         this.unsubscribe$.next();
@@ -69,34 +50,23 @@ export class AuthenticationService implements OnInit, OnDestroy {
         let obs;
         if (!!principal && !this.user) {
             obs = this.findUserByEmail(principal['name']).pipe(
-                map((v: any) => {
-                    if (!!v) {
-                        this.setUser(v);
-                        this.setRoles(v.roles);
+                map((user: any) => {
+                    if (!!user) {
+                        this.setUser(user);
                     }
-                    return v;
+                    return user;
                 })
             );
         }
         else if (!!this.user) {
             obs = of(this.user);
             this.setUser(this.user);
-            this.setRoles(this.user.roles);
         }
         else {
-            obs = of(principal);
+            obs = of(undefined);
         }
 
         return obs;
-    }
-
-    private setRoles(roles: Role[]) {
-        this.roles$.next(roles);
-    }
-
-    private setUser(u: User) {
-        this.user = u;
-        this.user$.next(u);
     }
 
     /**
@@ -105,37 +75,28 @@ export class AuthenticationService implements OnInit, OnDestroy {
      * @return The principal data.
      */
     authenticate(credentials?: Credentials): Observable<any> {
-        if (!this.remember) {
-            this.remember = credentials ? credentials.remember : false
-        }
-
-        if (credentials) {
-            this.storageService.set(this.CREDENTIAL_KEY, credentials, this.remember);
-        }
+        this.credentialsStorage.set(credentials)
         return this.getPrincipal()
             .pipe(map(v => {
                 if (!v) {
-                    this.storageService.set(this.CREDENTIAL_KEY);
-                }
-                else {
-                    const roles = v['authorities'].map(d => new Role(d.authority));
-                    this.setRoles(roles);
+                    this.credentialsStorage.unset();
                 }
                 return v;
             }));
     }
 
-
     private getPrincipal(): Observable<any> {
-        const principal = this.getWithExpiry(this.PRINCIPAL_EXPIRE_KEY);
+        const principal = this.principalStorage.get()
         let ret;
         if (!principal) {
-            ret = this.signIn()
-                .pipe(throttleTime(300),
-                    catchError(err => of(undefined)),
+            const rememberMe = this.credentialsStorage.rememberMe();
+            ret = this.signIn(rememberMe)
+                .pipe(
+                    throttleTime(300),
+                    catchError(_ => of(undefined)),
                     map(v => {
                         if (!!v) {
-                            this.setWithExpiry(this.PRINCIPAL_EXPIRE_KEY, v, this.TTL);
+                            this.principalStorage.set(v);
                         }
                         return v;
                     }));
@@ -144,7 +105,6 @@ export class AuthenticationService implements OnInit, OnDestroy {
         else {
             ret = of(principal);
         }
-
         return ret;
     }
 
@@ -158,22 +118,14 @@ export class AuthenticationService implements OnInit, OnDestroy {
                 this.user = undefined;
                 this.gym = undefined;
                 this.currentRoleId = undefined;
-                this.storageService.set(this.PRINCIPAL_EXPIRE_KEY);
-                this.storageService.set(this.CREDENTIAL_KEY);
+                this.principalStorage.unset();
+                this.credentialsStorage.unset();
             }
         ));
     }
 
-    public getAuthorizationHeader() {
-        if (!this.isAuthenticated()) {
-            return 'Basic ';
-        }
-        const credentials = this.storageService.get(this.CREDENTIAL_KEY);
-        return 'Basic ' + btoa(credentials.username + ':' + credentials.password);
-    }
-
     isAuthenticated() {
-        return !!this.storageService.get(this.CREDENTIAL_KEY);
+        return !!this.credentialsStorage.get();
     }
 
     getRoleByUser(user: User) {
@@ -182,6 +134,19 @@ export class AuthenticationService implements OnInit, OnDestroy {
         } else {
             return 3;
         }
+    }
+
+    private setUser(user: User) {
+        if (!this.currentRoleId) {
+            this.setCurrentUserRoleId(TypeIndex[user.type])
+        }
+        this.user = user;
+        this.user$.next(user);
+    }
+
+    setCurrentUserRoleId(idx?: number) {
+        this.currentRoleId = idx;
+        this.currentRoleId$.next(idx);
     }
 
     getObservableCurrentUserRoleId() {
@@ -196,22 +161,12 @@ export class AuthenticationService implements OnInit, OnDestroy {
         return this.user;
     }
 
-    getUserRoleName(currentRoleId?) {
-        const idx = currentRoleId || this.currentRoleId || 1;
-        return Roles[idx - 1];
+    getCurrentUserRoleId() {
+        return this.currentRoleId;
     }
 
-    getObservableRoles(): Subject<Role[]> {
-        return this.roles$;
-    }
-
-    setCurrentUserRole(idx?: number) {
-        this.currentRoleId = idx;
-        this.currentRoleId$.next(idx);
-    }
-
-    private signIn(): Observable<any> {
-        return this.http.get(`/user?rememberMe=${this.remember}`);
+    private signIn(rememberMe: boolean): Observable<any> {
+        return this.http.get(`/user?rememberMe=${rememberMe}`);
     }
 
     private signOut(): Observable<any> {
@@ -220,10 +175,6 @@ export class AuthenticationService implements OnInit, OnDestroy {
 
     private findUserByEmail(email: string): Observable<any> {
         return this.http.get(`/users/findByEmail?email=${email}`);
-    }
-
-    hasUser() {
-        return !!this.user;
     }
 
     getGym(): Observable<Gym> {
@@ -241,44 +192,15 @@ export class AuthenticationService implements OnInit, OnDestroy {
         return res;
     }
 
-    setWithExpiry(key, value, ttl) {
-        const now = new Date();
-
-        // `item` is an object which contains the original value
-        // as well as the time when it's supposed to expire
-        const item = {
-            value: value,
-            expiry: now.getTime() + ttl
-        };
-        this.storageService.set(key, JSON.stringify(item));
-    }
-
-    getWithExpiry(key) {
-        const itemStr = localStorage.getItem(key);
-        // if the item doesn't exist, return null
-        if (!itemStr) {
-            return null;
-        }
-        const item = JSON.parse(itemStr);
-        const now = new Date();
-        // compare the expiry time of the item with the current time
-        if (now.getTime() > item.expiry) {
-            // If the item is expired, deleteBundleSpecs the item from storage
-            // and return null
-            this.storageService.set(key);
-            return null;
-        }
-        return item.value;
-    }
-
     getConfig(): Observable<Gym> {
         return this.http.get(`/gyms`).pipe(
-            catchError(err => Array([undefined])),
+            catchError(_ => Array([undefined])),
             map((res: Object) => res[0])
         );
     }
 
-    getCurrentUserRoleId() {
-        return this.currentRoleId;
+    navigateByRole(...paths): void {
+        const roleName = Roles[this.currentRoleId - 1];
+        const _ = this.router.navigate([roleName, ...paths]);
     }
 }

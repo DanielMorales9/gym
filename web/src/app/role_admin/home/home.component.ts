@@ -1,5 +1,5 @@
 import {User} from '../../shared/model';
-import {AuthenticationService} from '../../core/authentication';
+import {AuthenticationService} from '../../core';
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
 import {takeUntil} from 'rxjs/operators';
 import {BaseComponent} from '../../shared/base-component';

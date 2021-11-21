@@ -1,6 +1,6 @@
 <loader></loader>
 <div class="main-container">
-    <nav-bar [authenticated]="authenticated"
+    <nav-bar [authenticated]="isAuthenticated()"
              [appName]="appName"
              [title]="title"
              [isMobile]="!desktop"
@@ -11,8 +11,8 @@
     </nav-bar>
     <side-bar #sideBar
               [appName]="appName"
-              [opened]="desktop && authenticated"
-              [mode]="!desktop && authenticated ? 'over' : 'side'"
+              [opened]="desktop && isAuthenticated()"
+              [mode]="!desktop && isAuthenticated() ? 'over' : 'side'"
               [isMobile]="!desktop">
     </side-bar>
 </div>

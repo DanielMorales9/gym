@@ -38,6 +38,7 @@ export class NavBarComponent {
     openSideBar() {
         this.snav.emit();
     }
+
     doLogout() {
         this.logout.emit();
     }
