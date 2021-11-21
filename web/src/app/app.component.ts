@@ -69,7 +69,7 @@ export class AppComponent extends BaseComponent implements OnInit, OnDestroy {
 
     private getAppName(gym: any): Observable<any> {
         if (!this.appName) {
-            return this.auth.getGym()
+            return this.auth.findGym()
                 .pipe(map((data: Gym) => {
                 if (!!data) {
                     this.appName = data.name;

@@ -39,20 +39,19 @@ export class StorageService {
             value: value,
             expiry: now.getTime() + ttl
         };
-        this.set(key, JSON.stringify(item));
+        this.set(key, item);
     }
 
     getWithExpiry(key) {
-        const itemStr = this.get(key);
+        const item = this.get(key);
         // if the item doesn't exist, return null
-        if (!itemStr) {
+        if (!item) {
             return null;
         }
-        const item = JSON.parse(itemStr);
         const now = new Date();
         // compare the expiry time of the item with the current time
         if (now.getTime() > item.expiry) {
-            // If the item is expired, deleteBundleSpecs the item from storage
+            // If the item is expired, delete the item from storage
             // and return null
             this.set(key);
             return null;

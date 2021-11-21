@@ -37,8 +37,6 @@ import {CredentialsStorage, PrincipalStorage} from "./authentication";
     declarations: [LoaderComponent],
     exports: [LoaderComponent],
     providers: [
-        CredentialsStorage,
-        PrincipalStorage,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: XhrInterceptor,

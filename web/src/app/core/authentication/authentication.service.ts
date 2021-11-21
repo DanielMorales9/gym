@@ -7,6 +7,8 @@ import {Observable, of, Subject} from 'rxjs';
 import {Router} from "@angular/router";
 import {CredentialsStorage} from "./credentials.storage";
 import {PrincipalStorage} from "./principal.storage";
+import {UserStorage} from "./user.storage";
+import {CurrentUserRoleIdStorage} from "./current-user-role-id.storage";
 
 /**
  * Provides a base for authentication workflow.
@@ -19,16 +21,15 @@ import {PrincipalStorage} from "./principal.storage";
 export class AuthenticationService implements OnDestroy {
 
     private unsubscribe$ = new Subject<any>();
-    private currentRoleId$ = new Subject<number>();
     private user$ = new Subject<User>();
 
-    private user: User;
     private gym: Gym;
-    private currentRoleId: number;
 
     constructor(private http: HttpClient,
                 private credentialsStorage: CredentialsStorage,
+                private userStorage: UserStorage,
                 private principalStorage: PrincipalStorage,
+                private currentRoleIdStorage: CurrentUserRoleIdStorage,
                 private router: Router) { }
 
     ngOnDestroy(): void {
@@ -37,7 +38,7 @@ export class AuthenticationService implements OnDestroy {
     }
 
     /**
-     * logs-in the user.
+     * logs-in the user
      * @param credentials The login parameters.
      * @return The user data.
      */
@@ -47,20 +48,20 @@ export class AuthenticationService implements OnDestroy {
     }
 
     getUserDetails(principal): Observable<User> {
+        let user = this.userStorage.get()
         let obs;
-        if (!!principal && !this.user) {
-            obs = this.findUserByEmail(principal['name']).pipe(
+        if (!!principal && !user) {
+            let email = principal['name'];
+            obs = this.findUserByEmail(email).pipe(
                 map((user: any) => {
-                    if (!!user) {
-                        this.setUser(user);
-                    }
+                    this.setUser(user);
                     return user;
                 })
             );
         }
-        else if (!!this.user) {
-            obs = of(this.user);
-            this.setUser(this.user);
+        else if (!!user) {
+            obs = of(user);
+            this.setUser(user);
         }
         else {
             obs = of(undefined);
@@ -77,11 +78,11 @@ export class AuthenticationService implements OnDestroy {
     authenticate(credentials?: Credentials): Observable<any> {
         this.credentialsStorage.set(credentials)
         return this.getPrincipal()
-            .pipe(map(v => {
-                if (!v) {
+            .pipe(map(principal => {
+                if (!principal) {
                     this.credentialsStorage.unset();
                 }
-                return v;
+                return principal;
             }));
     }
 
@@ -100,7 +101,6 @@ export class AuthenticationService implements OnDestroy {
                         }
                         return v;
                     }));
-
         }
         else {
             ret = of(principal);
@@ -115,11 +115,11 @@ export class AuthenticationService implements OnDestroy {
     logout(): Observable<any> {
         // Customize credentials invalidation here
         return this.signOut().pipe(map( _ => {
-                this.user = undefined;
-                this.gym = undefined;
-                this.currentRoleId = undefined;
+                this.userStorage.unset();
+                this.currentRoleIdStorage.unset();
                 this.principalStorage.unset();
                 this.credentialsStorage.unset();
+                this.gym = undefined;
             }
         ));
     }
@@ -130,27 +130,23 @@ export class AuthenticationService implements OnDestroy {
 
     getRoleByUser(user: User) {
         if (user.type) {
-            return TypeIndex[this.user.type];
+            return TypeIndex[user.type];
         } else {
             return 3;
         }
     }
 
     private setUser(user: User) {
-        if (!this.currentRoleId) {
+        const currentRoleId = this.getCurrentUserRoleId();
+        if (!currentRoleId) {
             this.setCurrentUserRoleId(TypeIndex[user.type])
         }
-        this.user = user;
+        this.userStorage.set(user);
         this.user$.next(user);
     }
 
     setCurrentUserRoleId(idx?: number) {
-        this.currentRoleId = idx;
-        this.currentRoleId$.next(idx);
-    }
-
-    getObservableCurrentUserRoleId() {
-        return this.currentRoleId$;
+        this.currentRoleIdStorage.set(idx);
     }
 
     getObservableUser(): Observable<User> {
@@ -158,11 +154,11 @@ export class AuthenticationService implements OnDestroy {
     }
 
     getUser(): User {
-        return this.user;
+        return this.userStorage.get();
     }
 
     getCurrentUserRoleId() {
-        return this.currentRoleId;
+        return this.currentRoleIdStorage.get();
     }
 
     private signIn(rememberMe: boolean): Observable<any> {
@@ -177,13 +173,14 @@ export class AuthenticationService implements OnDestroy {
         return this.http.get(`/users/findByEmail?email=${email}`);
     }
 
-    getGym(): Observable<Gym> {
+    findGym(): Observable<Gym> {
         let res;
         if (!this.gym) {
-            res = this.getConfig().pipe(map((v: Gym) => {
-                this.gym = v;
-                return v;
-            }));
+            res = this.getConfig()
+                .pipe(map((v: Gym) => {
+                    this.gym = v;
+                    return v;
+                }));
         }
         else {
             res = of(this.gym);
@@ -200,7 +197,8 @@ export class AuthenticationService implements OnDestroy {
     }
 
     navigateByRole(...paths): void {
-        const roleName = Roles[this.currentRoleId - 1];
+        let currentUserRoleId = this.getCurrentUserRoleId();
+        const roleName = Roles[currentUserRoleId - 1];
         const _ = this.router.navigate([roleName, ...paths]);
     }
 }

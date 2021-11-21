@@ -6,12 +6,11 @@ import {CanDelete, CanDisable, CanEdit} from '../../shared/model';
 
 @Directive()
 @Injectable()
-export class PolicyService implements OnInit, OnDestroy {
+export class PolicyService implements OnDestroy {
 
     constructor(private auth: AuthenticationService) {}
 
     unsubscribe$ = new Subject<void>();
-    currentRoleId = 1;
 
     ADMIN_POLICY = {
         gym: {
@@ -292,13 +291,6 @@ export class PolicyService implements OnInit, OnDestroy {
 
     POLICIES = [this.ADMIN_POLICY, this.TRAINER_POLICY, this.CUSTOMER_POLICY];
 
-    ngOnInit() {
-        this.auth.getObservableCurrentUserRoleId()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => {
-                this.currentRoleId = v;
-            });
-    }
 
     ngOnDestroy(): void {
         this.unsubscribe$.next();
@@ -306,7 +298,9 @@ export class PolicyService implements OnInit, OnDestroy {
     }
 
     get(entity: string, ...actions) {
-        const myPolicy = this.POLICIES[this.currentRoleId - 1];
+        const currentRoleId = this.auth.getCurrentUserRoleId();
+
+        const myPolicy = this.POLICIES[currentRoleId - 1];
         if (entity in myPolicy) {
             let policy = myPolicy[entity];
             let a, index;

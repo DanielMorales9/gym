@@ -1,7 +1,5 @@
 import {Directive, Injectable} from "@angular/core";
 import {StorageService} from "./storage.service";
-import {Credentials} from "../../shared/model";
-import {environment} from "../../../environments/environment";
 
 @Directive()
 @Injectable({

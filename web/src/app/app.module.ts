@@ -5,7 +5,7 @@ import {AppComponent} from './app.component';
 import {AppRouting} from './app.routing';
 import {SharedModule} from './shared/shared.module';
 import {CoreModule} from './core';
-import {GlobalErrorHandler, GymService, AppUpdateService} from './services';
+import {AppUpdateService, GlobalErrorHandler, GymService} from './services';
 import {
     CurrentRolePipe,
     ErrorComponent,
@@ -16,7 +16,8 @@ import {
     PrimaryCustomerControlsComponent,
     PrimaryTrainerControlsComponent,
     ShowRolePipe,
-    SideBarComponent
+    SideBarComponent,
+    TimeAgoExtendsPipe
 } from './components';
 import {MatButtonModule} from '@angular/material/button';
 import {MatCardModule} from '@angular/material/card';
@@ -40,7 +41,6 @@ import {environment} from '../environments/environment';
 import {MatMenuModule} from '@angular/material/menu';
 import '@angular/common/locales/global/it';
 import {MY_DATE_FORMATS} from './config';
-import {TimeAgoExtendsPipe} from './components';
 
 @NgModule({
     declarations: [

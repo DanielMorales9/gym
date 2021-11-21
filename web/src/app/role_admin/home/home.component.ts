@@ -28,6 +28,7 @@ export class HomeComponent extends BaseComponent implements OnInit {
                 }
             });
 
+        // TODO fix sync problem
         setTimeout(() => {
             this.user = this.auth.getUser();
             this.cdr.detectChanges();

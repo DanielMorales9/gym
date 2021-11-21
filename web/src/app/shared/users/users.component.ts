@@ -23,8 +23,6 @@ export class UsersComponent extends SearchComponent<User> implements GetPolicies
 
     SIMPLE_NO_CARD_MESSAGE = 'Nessun utente registrato';
 
-    currentUserId: number;
-
     query = {name: ''};
 
     canCreate: boolean;
@@ -43,9 +41,6 @@ export class UsersComponent extends SearchComponent<User> implements GetPolicies
                 private snackbar: SnackBarService,
                 private dialog: MatDialog) {
         super(router, route);
-        this.auth.getObservableCurrentUserRoleId()
-            .pipe(takeUntil(this.unsubscribe$))
-            .subscribe(v => this.currentUserId = v);
 
         this.ds = new QueryableDatasource<User>(this.helper, this.query);
     }
@@ -118,7 +113,7 @@ export class UsersComponent extends SearchComponent<User> implements GetPolicies
     }
 
     itsMe(id: any) {
-        return this.currentUserId !== id;
+        return this.auth.getUser().id !== id;
     }
 
     private goToDetails(user: any) {
