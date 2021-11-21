@@ -21,8 +21,9 @@ import {CurrentUserRoleIdStorageDirective} from './current-user-role-id-storage.
 export class AuthenticationDirective implements OnDestroy {
 
     private unsubscribe$ = new Subject<any>();
+
     // TODO remove
-    private user$ = new Subject<User>();
+    private onAuthenticate$ = new Subject<boolean>();
 
     private gym: Gym;
 
@@ -121,12 +122,17 @@ export class AuthenticationDirective implements OnDestroy {
                 this.principalStorage.unset();
                 this.credentialsStorage.unset();
                 this.gym = undefined;
+                this.onAuthenticate$.next(false);
             }
         ));
     }
 
     isAuthenticated() {
         return !!this.credentialsStorage.get();
+    }
+
+    onAuthenticate(): Subject<boolean> {
+        return this.onAuthenticate$;
     }
 
     // TODO Remove
@@ -144,16 +150,11 @@ export class AuthenticationDirective implements OnDestroy {
             this.setCurrentUserRoleId(TypeIndex[user.type]);
         }
         this.userStorage.set(user);
-        this.user$.next(user);
+        this.onAuthenticate$.next(true);
     }
 
     setCurrentUserRoleId(idx?: number) {
         this.currentRoleIdStorage.set(idx);
-    }
-
-    // TODO remove
-    getObservableUser(): Observable<User> {
-        return this.user$;
     }
 
     getUser(): User {

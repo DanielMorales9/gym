@@ -1,7 +1,7 @@
 import {ChangeDetectionStrategy, ChangeDetectorRef, Component} from '@angular/core';
 import {EVENT_TYPES} from '../../shared/calendar/event-types.enum';
 import {CalendarFacade} from '../../services';
-import {BaseCalendar} from '../../shared/calendar';
+import {BaseCalendar} from '../../shared';
 import {ActivatedRoute, Router} from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import {AdminHeaderModalComponent} from './admin-header-modal.component';
@@ -9,7 +9,7 @@ import {AdminInfoModalComponent} from './admin-info-modal.component';
 import {AdminDeleteModalComponent} from './admin-delete-modal.component';
 import {AdminChangeModalComponent} from './admin-change-modal.component';
 import {AdminHourModalComponent} from './admin-hour-modal.component';
-import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
+import {DateService, ScreenService, SnackBarService} from '../../core';
 import {filter, map, takeUntil} from 'rxjs/operators';
 import {PolicyServiceDirective} from '../../core/policy';
 

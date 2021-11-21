@@ -2,10 +2,9 @@ import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
 import {Bundle} from '../model';
 import {BundleService} from '../../core/controllers';
 import {ActivatedRoute, Router} from '@angular/router';
-import {SnackBarService} from '../../core/utilities';
-import {BundleCustomerHelperService, QueryableDatasource} from '../../core/helpers';
+import {SnackBarService} from '../../core';
+import {BundleCustomerHelperService, QueryableDatasource} from '../../core';
 import {MatDialog} from '@angular/material/dialog';
-import {PolicyServiceDirective} from '../../core/policy';
 import {first, takeUntil} from 'rxjs/operators';
 import {SearchComponent} from '../search-component';
 

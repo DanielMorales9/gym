@@ -46,10 +46,12 @@ export class ACustomerCalendarComponent extends BaseCalendar {
         obs.pipe(takeUntil(this.unsubscribe$))
             .subscribe(user => {
                 this.facade.getEvents(startDay, endDay, this.types, user.id)
-                    .pipe(takeUntil(this.unsubscribe$))
+                    .pipe(
+                        takeUntil(this.unsubscribe$),
+                        map(r => r.map(v => this.formatEvent(v)))
+                    )
                     .subscribe(r => {
-                        this.events = [];
-                        this.events.push(...r.map(v => this.formatEvent(v)));
+                        this.events = r;
                         this.refreshView();
                         this.cdr.detectChanges();
                     });

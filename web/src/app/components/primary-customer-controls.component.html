@@ -2,7 +2,7 @@
     <h2 matSubheader>Home</h2>
     <a href=# mat-list-item
        [routerLinkActive]="['active-link']"
-       routerLink="/customer/sales" [queryParams]="{id: user?.id}">
+       routerLink="/customer/sales" [queryParams]="{id: user.id}">
         <span>
             <mat-icon fontSet="fas" fontIcon="fa-receipt"></mat-icon>&nbsp;&nbsp;Ordini
         </span>
@@ -16,7 +16,7 @@
     </a>
     <a href=# mat-list-item
        [routerLinkActive]="['active-link']"
-       routerLink="/customer/bundles" [queryParams]="{id: user?.id}">
+       routerLink="/customer/bundles" [queryParams]="{id: user.id}">
         <span>
             <mat-icon fontSet="fas" fontIcon="fa-box-open"></mat-icon>&nbsp;&nbsp;Pacchetti
         </span>

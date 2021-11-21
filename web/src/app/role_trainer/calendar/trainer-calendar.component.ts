@@ -10,7 +10,7 @@ import {TrainerDeleteModalComponent} from './trainer-delete-modal.component';
 import {TrainerChangeModalComponent} from './trainer-change-modal.component';
 import {TrainerHourModalComponent} from './trainer-hour-modal.component';
 import {DateService, ScreenService, SnackBarService} from '../../core/utilities';
-import {takeUntil} from 'rxjs/operators';
+import {map, takeUntil} from 'rxjs/operators';
 import {PolicyServiceDirective} from '../../core/policy';
 
 
@@ -38,11 +38,11 @@ export class TrainerCalendarComponent extends BaseCalendar {
 
         this.facade.getEvents(startDay, endDay, this.types, undefined, this.user.id)
             .pipe(
-                takeUntil(this.unsubscribe$)
+                takeUntil(this.unsubscribe$),
+                map(r => r.map(v => this.formatEvent(v)))
             )
             .subscribe(r => {
-                this.events = [];
-                this.events.push(...r.map(v => this.formatEvent(v)));
+                this.events = r;
                 this.refreshView();
                 this.cdr.detectChanges();
             });

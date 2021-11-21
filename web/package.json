@@ -1,6 +1,6 @@
 {
   "name": "app",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "license": "MIT",
   "scripts": {
     "ng": "npm install -g @angular/cli@10.0.3",
