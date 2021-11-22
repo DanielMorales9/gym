@@ -1,7 +1,6 @@
 import {HttpClient} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {to_promise} from '../functions/decorators';
 import {filter, switchMap} from 'rxjs/operators';
 import {User} from '../../shared/model';
 

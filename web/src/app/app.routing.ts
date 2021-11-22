@@ -6,7 +6,7 @@ import {
     PrimaryCustomerControlsComponent,
     PrimaryTrainerControlsComponent
 } from './components';
-import {NoAuthGuardService, RoleGuardService} from './core/guards';
+import {NoAuthGuardService, RoleGuardService} from './core';
 import {environment} from '../environments/environment';
 
 const routes: Routes = [

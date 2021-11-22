@@ -110,7 +110,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     public dayStartHour: number;
     public dayEndHour: number;
     public hourSegments: number;
-    public weekStartsOn: number;
+    public weekStartsOn: number = 1;
     public activeDayIsOpen: boolean;
     public currentRoleId: number;
     public gym: Gym;
@@ -120,7 +120,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     showMarker = true;
     events: CalendarEvent[];
 
-    refresh$: Subject<any>;
+    refresh$ = new Subject();
 
     @ViewChild('next', { static: true }) next: ElementRef<HTMLElement>;
     @ViewChild('prev', { static: true }) prev: ElementRef<HTMLElement>;
@@ -149,8 +149,6 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     ngOnInit(): void {
-        this.refresh$ = new Subject();
-
         this.initView();
         this.initViewDate();
         this.getPolicies();
@@ -313,6 +311,9 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         const year = this.viewDate.getFullYear();
         const date = this.viewDate.getDate();
         const dayOfWeek = this.viewDate.getDay();
+
+        const from = (7 - this.weekStartsOn + dayOfWeek) % 7
+        const to = 6 - from
         const hour = 0;
         const min = 0;
         const sec = 0;
@@ -324,12 +325,12 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
                 endDay = new Date(year, nextMonth, 0, 23, 59, 59);
                 break;
             case this.WEEK:
-                startDay = new Date(year, month, date - dayOfWeek, hour, min, sec);
-                endDay = new Date(year, month, date + (7 - dayOfWeek), 23, 59, 59);
+                startDay = new Date(year, month, date - from, hour, min, sec);
+                endDay = new Date(year, month, date + to, hour + 23, min + 59, sec + 59);
                 break;
             default:
                 startDay = new Date(year, month, date, hour, min, sec);
-                endDay = new Date(year, month, date, hour + 24, 59, 59);
+                endDay = new Date(year, month, date, hour + 23, 59, 59);
                 break;
         }
         return {startDay, endDay};
@@ -470,9 +471,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     }
 
     refreshView() {
-        if (this.refresh$) {
-            this.refresh$.next();
-        }
+        this.refresh$.next();
     }
 
     protected confirmReservation(data) {
