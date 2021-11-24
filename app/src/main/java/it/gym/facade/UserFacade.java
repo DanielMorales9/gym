@@ -117,11 +117,11 @@ public class UserFacade {
     return service.findById(id).getRoles();
   }
 
-  public AUser patchUser(Long id, HttpServletRequest request)
+  public UserDTO patchUser(Long id, HttpServletRequest request)
       throws IOException {
     AUser u = service.findById(id);
     u = objectMapper.readerForUpdating(u).readValue(request.getReader());
-    return save(u);
+    return userMapper.toDTO(save(u));
   }
 
   public UserDTO findUserById(Long id) {

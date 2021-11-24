@@ -53,10 +53,10 @@ public class UserController {
   }
 
   @PatchMapping(path = "/{id}")
-  public ResponseEntity<AUserResource> patch(
+  public ResponseEntity<UserDTO> patch(
       @PathVariable Long id, HttpServletRequest request) throws IOException {
-    AUser u = facade.patchUser(id, request);
-    return ResponseEntity.ok(new AUserAssembler().toModel(u));
+    UserDTO u = facade.patchUser(id, request);
+    return ResponseEntity.ok(u);
   }
 
   @PostMapping("/{id}/image")
