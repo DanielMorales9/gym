@@ -21,32 +21,35 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserAuthService implements UserDetailsService {
 
-    private static final Logger logger = LoggerFactory.getLogger(UserAuthService.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(UserAuthService.class);
 
-    @Autowired private UserService userService;
+  @Autowired private UserService userService;
 
-    @Override
-    public UserDetails loadUserByUsername(String email) {
-        logger.info(String.format("The email %s", email));
-        AUser user = userService.findByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException(String.format("Nessun utente con questa email: %s", email));
-        }
-        User u = new User(
-                user.getEmail(),
-                user.getPassword(),
-                user.isVerified(),
-                true,
-                true,
-                true,
-                mapRolesToAuthorities(user.getRoles()));
-        return u;
+  @Override
+  public UserDetails loadUserByUsername(String email) {
+    logger.info(String.format("The email %s", email));
+    AUser user = userService.findByEmail(email);
+    if (user == null) {
+      throw new UsernameNotFoundException(
+          String.format("Nessun utente con questa email: %s", email));
     }
+    User u =
+        new User(
+            user.getEmail(),
+            user.getPassword(),
+            user.isVerified(),
+            true,
+            true,
+            true,
+            mapRolesToAuthorities(user.getRoles()));
+    return u;
+  }
 
-    private Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles){
-        return roles.stream()
-                .map(role -> new SimpleGrantedAuthority(role.getName()))
-                .collect(Collectors.toList());
-    }
-
+  private Collection<? extends GrantedAuthority> mapRolesToAuthorities(
+      Collection<Role> roles) {
+    return roles.stream()
+        .map(role -> new SimpleGrantedAuthority(role.getName()))
+        .collect(Collectors.toList());
+  }
 }

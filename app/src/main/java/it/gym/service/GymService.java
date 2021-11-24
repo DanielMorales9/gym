@@ -25,83 +25,95 @@ import static it.gym.utility.CheckEvents.checkInterval;
 @Transactional
 public class GymService implements ICrudService<Gym, Long> {
 
-    @Autowired private GymRepository gymRepository;
+  @Autowired private GymRepository gymRepository;
 
-    @Caching(
-            put = {
-                    @CachePut(value = "gyms-single", key = "#result.id", condition="#result != null"),
-            },
-            evict = {
-                    @CacheEvict(value = "gyms-all", allEntries = true)
-            }
-    )
-    @Override
-    public Gym save(Gym var1) {
-        return this.gymRepository.save(var1);
-    }
+  @Caching(
+      put = {
+        @CachePut(
+            value = "gyms-single",
+            key = "#result.id",
+            condition = "#result != null"),
+      },
+      evict = {@CacheEvict(value = "gyms-all", allEntries = true)})
+  @Override
+  public Gym save(Gym var1) {
+    return this.gymRepository.save(var1);
+  }
 
-    @CachePut(value = "gyms-single", key = "#result.id", condition="#result != null")
-    @Override
-    public Gym findById(Long var1) {
-        return this.gymRepository.findById(var1).orElseThrow(() -> new NotFoundException("La palestra non esiste"));
-    }
+  @CachePut(
+      value = "gyms-single",
+      key = "#result.id",
+      condition = "#result != null")
+  @Override
+  public Gym findById(Long var1) {
+    return this.gymRepository
+        .findById(var1)
+        .orElseThrow(() -> new NotFoundException("La palestra non esiste"));
+  }
 
-    @Caching(
-            evict = {
-                    @CacheEvict(value = "gyms-single", key = "#var1.id"),
-                    @CacheEvict(value = "gyms-all", allEntries = true)
-            }
-    )
-    @Override
-    public void delete(Gym var1) {
-        this.gymRepository.delete(var1);
-    }
+  @Caching(
+      evict = {
+        @CacheEvict(value = "gyms-single", key = "#var1.id"),
+        @CacheEvict(value = "gyms-all", allEntries = true)
+      })
+  @Override
+  public void delete(Gym var1) {
+    this.gymRepository.delete(var1);
+  }
 
-    @Override
-    public List<Gym> findAll() {
-        return this.gymRepository.findAll();
-    }
+  @Override
+  public List<Gym> findAll() {
+    return this.gymRepository.findAll();
+  }
 
-    public boolean isWithinWorkingHours(Gym gym, Date start, Date end) {
-        return gym.isValidDate(start, end);
-    }
+  public boolean isWithinWorkingHours(Gym gym, Date start, Date end) {
+    return gym.isValidDate(start, end);
+  }
 
-    public void checkGymHours(Gym gym, Date startTime, Date endTime) {
-        checkInterval(startTime, endTime);
+  public void checkGymHours(Gym gym, Date startTime, Date endTime) {
+    checkInterval(startTime, endTime);
 
-        checkWorkingHours(gym, startTime, endTime);
-    }
+    checkWorkingHours(gym, startTime, endTime);
+  }
 
-    private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
-        boolean isOk = !isWithinWorkingHours(gym, startTime, endTime);
-        if (isOk)
-            throw new BadRequestException("La palestra è chiusa in questo orario");
-    }
+  private void checkWorkingHours(Gym gym, Date startTime, Date endTime) {
+    boolean isOk = !isWithinWorkingHours(gym, startTime, endTime);
+    if (isOk)
+      throw new BadRequestException("La palestra è chiusa in questo orario");
+  }
 
+  @Cacheable(value = "manifest")
+  public Manifest getManifest() {
+    Gym gym = this.findAll().get(0);
 
-    @Cacheable(value = "manifest")
-    public Manifest getManifest() {
-        Gym gym = this.findAll().get(0);
+    Manifest manifest = new Manifest();
+    manifest.setName(gym.getFullName());
+    manifest.setShort_name(gym.getName());
+    manifest.setTheme_color(gym.getThemeColor());
+    manifest.setBackground_color(gym.getBackgroundColor());
 
-        Manifest manifest = new Manifest();
-        manifest.setName(gym.getFullName());
-        manifest.setShort_name(gym.getName());
-        manifest.setTheme_color(gym.getThemeColor());
-        manifest.setBackground_color(gym.getBackgroundColor());
+    // TODO This is Hard coded and need to be dynamic
+    ArrayList<Icon> icons = new ArrayList<>();
+    Icon icon0 =
+        new Icon(
+            "/src/assets/icons/android-chrome-192x192.png",
+            "192x192",
+            "image/png");
+    Icon icon1 =
+        new Icon(
+            "/src/assets/icons/android-chrome-512x512.png",
+            "512x512",
+            "image/png");
+    Icon icon2 =
+        new Icon("/src/assets/icons/favicon-16x16.png", "16x16", "image/png");
+    Icon icon3 =
+        new Icon("/src/assets/icons/favicon-32x32.png", "32x32", "image/png");
+    icons.add(icon0);
+    icons.add(icon1);
+    icons.add(icon2);
+    icons.add(icon3);
 
-        // TODO This is Hard coded and need to be dynamic
-        ArrayList<Icon> icons = new ArrayList<>();
-        Icon icon0 = new Icon("/src/assets/icons/android-chrome-192x192.png", "192x192", "image/png");
-        Icon icon1 = new Icon("/src/assets/icons/android-chrome-512x512.png", "512x512", "image/png");
-        Icon icon2 = new Icon("/src/assets/icons/favicon-16x16.png", "16x16", "image/png");
-        Icon icon3 = new Icon("/src/assets/icons/favicon-32x32.png", "32x32", "image/png");
-        icons.add(icon0);
-        icons.add(icon1);
-        icons.add(icon2);
-        icons.add(icon3);
-
-        manifest.setIcons(icons);
-        return manifest;
-    }
-
+    manifest.setIcons(icons);
+    return manifest;
+  }
 }

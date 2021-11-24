@@ -20,50 +20,51 @@ import java.util.stream.Stream;
 @Transactional
 public class CustomerService implements ICrudService<Customer, Long> {
 
-    @Autowired
-    private CustomerRepository repository;
+  @Autowired private CustomerRepository repository;
 
-    public Customer save(Customer var1) {
-        return repository.save(var1);
+  public Customer save(Customer var1) {
+    return repository.save(var1);
+  }
+
+  public Customer findById(Long var1) {
+    return repository
+        .findById(var1)
+        .orElseThrow(() -> new NotFoundException("Cliente", var1));
+  }
+
+  public void delete(Customer var1) {
+    this.repository.delete(var1);
+  }
+
+  public List<Customer> findAll() {
+    return this.repository.findAll();
+  }
+
+  public Page<Customer> findAll(Pageable pageable) {
+    return repository.findAll(pageable);
+  }
+
+  public Page<ATrainingBundle> findBundles(
+      Long id, Boolean expired, String name, Date date, Pageable pageable) {
+    Customer customer = this.findById(id);
+    List<ATrainingBundle> bundles;
+    if (expired == null) {
+      bundles = customer.getTrainingBundles();
+    } else {
+      bundles =
+          customer.getTrainingBundles().stream()
+              .filter(a -> a.isExpired() == expired)
+              .collect(Collectors.toList());
     }
 
-    public Customer findById(Long var1) {
-        return repository.findById(var1).orElseThrow(() -> new NotFoundException("Cliente", var1));
+    Stream<ATrainingBundle> stream = bundles.stream();
+    if (name != null) {
+      stream = stream.filter(b -> b.getName().contains(name));
     }
-
-    public void delete(Customer var1) {
-        this.repository.delete(var1);
+    if (date != null) {
+      stream = stream.filter(b -> b.getCreatedAt().after(date));
     }
-
-    public List<Customer> findAll() {
-        return this.repository.findAll();
-    }
-
-    public Page<Customer> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
-    }
-
-    public Page<ATrainingBundle> findBundles(Long id, Boolean expired, String name, Date date, Pageable pageable) {
-        Customer customer = this.findById(id);
-        List<ATrainingBundle> bundles;
-        if (expired == null) {
-            bundles = customer.getTrainingBundles();
-        }
-        else {
-            bundles = customer.getTrainingBundles()
-                    .stream()
-                    .filter(a -> a.isExpired() == expired)
-                    .collect(Collectors.toList());
-        }
-
-        Stream<ATrainingBundle> stream = bundles.stream();
-        if (name != null) {
-            stream = stream.filter(b -> b.getName().contains(name));
-        }
-        if (date != null) {
-            stream = stream.filter(b -> b.getCreatedAt().after(date));
-        }
-        bundles = stream.collect(Collectors.toList());
-        return new PageImpl<>(bundles, pageable, bundles.size());
-    }
+    bundles = stream.collect(Collectors.toList());
+    return new PageImpl<>(bundles, pageable, bundles.size());
+  }
 }

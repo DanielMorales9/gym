@@ -18,24 +18,24 @@ import static org.mockito.ArgumentMatchers.any;
 @RunWith(SpringRunner.class)
 public class MailServiceTest {
 
-    @MockBean @Qualifier("mailSender")
-    private JavaMailSender mailSender;
+  @MockBean
+  @Qualifier("mailSender")
+  private JavaMailSender mailSender;
 
-    @TestConfiguration
-    static class MailServiceTestContextConfiguration {
+  @TestConfiguration
+  static class MailServiceTestContextConfiguration {
 
-        @Bean
-        public MailService service() {
-            return new MailService();
-        }
+    @Bean
+    public MailService service() {
+      return new MailService();
     }
+  }
 
-    @Autowired
-    private MailService service;
+  @Autowired private MailService service;
 
-    @Test
-    public void sendSimpleMessage() {
-        service.sendSimpleMail("admin@admin.com", "MyMessage", "Message");
-        Mockito.verify(mailSender).send(any(SimpleMailMessage.class));
-    }
+  @Test
+  public void sendSimpleMessage() {
+    service.sendSimpleMail("admin@admin.com", "MyMessage", "Message");
+    Mockito.verify(mailSender).send(any(SimpleMailMessage.class));
+  }
 }

@@ -21,73 +21,88 @@ import java.util.stream.Collectors;
 @Transactional
 public class BundlesStatusJob {
 
-    @Autowired
-    private TrainingBundleFacade facade;
+  @Autowired private TrainingBundleFacade facade;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    @Qualifier("mailService")
-    private MailService mailService;
+  @Autowired
+  @Qualifier("mailService")
+  private MailService mailService;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
+  @Scheduled(cron = "0 0 12 * * SUN", zone = "GMT+2:00")
+  public void getBundleStatus() {
+    logger.info("STARTED BundleStatus JOB");
+    List<AUser> admins = userService.findAllAdmins();
+    List<ATrainingBundle> expired = facade.getExpiredBundles();
+    List<ATrainingBundle> activeBundles = facade.getActiveBundles();
 
-    @Scheduled(cron = "0 0 12 * * SUN", zone ="GMT+2:00")
-    public void getBundleStatus() {
-        logger.info("STARTED BundleStatus JOB");
-        List<AUser> admins = userService.findAllAdmins();
-        List<ATrainingBundle> expired = facade.getExpiredBundles();
-        List<ATrainingBundle> activeBundles = facade.getActiveBundles();
+    List<ATrainingBundle> aboutToExpire =
+        activeBundles.stream()
+            .filter(p -> p.percentageStatus() >= 80.0)
+            .collect(Collectors.toList());
 
-        List<ATrainingBundle> aboutToExpire = activeBundles.stream()
-                .filter(p -> p.percentageStatus() >= 80.0)
-                .collect(Collectors.toList());
+    if (!expired.isEmpty() || !aboutToExpire.isEmpty()) {
 
-        if (!expired.isEmpty() || !aboutToExpire.isEmpty()) {
+      String subject = "Stato dei pacchetti";
+      String body = makeBodyMessage(expired, aboutToExpire);
 
-            String subject = "Stato dei pacchetti";
-            String body = makeBodyMessage(expired, aboutToExpire);
-
-            admins.forEach(a -> {
-                String header = String.format("Gentile %s %s,\n\n", a.getFirstName(), a.getLastName());
-                mailService.sendSimpleMail(a.getEmail(), subject, header + body);
-            });
-        }
-        logger.info("FINISHED BundleStatus JOB");
+      admins.forEach(
+          a -> {
+            String header =
+                String.format(
+                    "Gentile %s %s,\n\n", a.getFirstName(), a.getLastName());
+            mailService.sendSimpleMail(a.getEmail(), subject, header + body);
+          });
     }
+    logger.info("FINISHED BundleStatus JOB");
+  }
 
-    @NotNull
-    private String makeBodyMessage(List<ATrainingBundle> expired, List<ATrainingBundle> aboutToExpire) {
-        StringBuilder body = new StringBuilder();
+  @NotNull
+  private String makeBodyMessage(
+      List<ATrainingBundle> expired, List<ATrainingBundle> aboutToExpire) {
+    StringBuilder body = new StringBuilder();
 
-        formatBundleMessage(expired, body, "Nessun pacchetto è terminato recentemente.\n\n", "I seguenti pacchetti sono terminati:\n");
-        body.append("\n");
-        formatBundleMessage(aboutToExpire, body, "Nessun pacchetto sta per terminare\n\n", "I seguenti pacchetti sono in terminazione:\n");
+    formatBundleMessage(
+        expired,
+        body,
+        "Nessun pacchetto è terminato recentemente.\n\n",
+        "I seguenti pacchetti sono terminati:\n");
+    body.append("\n");
+    formatBundleMessage(
+        aboutToExpire,
+        body,
+        "Nessun pacchetto sta per terminare\n\n",
+        "I seguenti pacchetti sono in terminazione:\n");
 
-        return body.toString();
+    return body.toString();
+  }
+
+  private void formatBundleMessage(
+      List<ATrainingBundle> aboutToExpire,
+      StringBuilder body,
+      String s,
+      String s2) {
+    if (aboutToExpire.isEmpty()) {
+      body.append(s);
+    } else {
+      body.append(s2);
+      bundlesFormat(aboutToExpire, body);
     }
+  }
 
-    private void formatBundleMessage(List<ATrainingBundle> aboutToExpire, StringBuilder body, String s, String s2) {
-        if (aboutToExpire.isEmpty()) {
-            body.append(s);
-        } else {
-            body.append(s2);
-            bundlesFormat(aboutToExpire, body);
-        }
+  private void bundlesFormat(
+      List<ATrainingBundle> expired, StringBuilder body) {
+    for (ATrainingBundle aTrainingBundle : expired) {
+      body.append(
+          String.format(
+              "Pacchetto: %s, Opzione %s, Prezzo totale %.2f, Cliente %s %s\n",
+              aTrainingBundle.getName(),
+              aTrainingBundle.getOption().getName(),
+              aTrainingBundle.getOption().getPrice(aTrainingBundle),
+              aTrainingBundle.getCustomer().getFirstName(),
+              aTrainingBundle.getCustomer().getLastName()));
     }
-
-    private void bundlesFormat(List<ATrainingBundle> expired, StringBuilder body) {
-        for (ATrainingBundle aTrainingBundle : expired) {
-            body.append(String.format("Pacchetto: %s, Opzione %s, Prezzo totale %.2f, Cliente %s %s\n",
-                    aTrainingBundle.getName(),
-                    aTrainingBundle.getOption().getName(),
-                    aTrainingBundle.getOption().getPrice(aTrainingBundle),
-                    aTrainingBundle.getCustomer().getFirstName(),
-                    aTrainingBundle.getCustomer().getLastName()));
-        }
-    }
-
-
+  }
 }

@@ -21,54 +21,55 @@ import javax.sql.DataSource;
 @Transactional
 public class TenantService {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private TenantRepository repository;
+  @Autowired private TenantRepository repository;
 
-    @Autowired
-    private DataSource dataSource;
+  @Autowired private DataSource dataSource;
 
-    public Boolean existsByTenant(Tenant tenant) {
-        return repository.existsBySchemaName(tenant.getSchemaName());
+  public Boolean existsByTenant(Tenant tenant) {
+    return repository.existsBySchemaName(tenant.getSchemaName());
+  }
+
+  public Tenant findTenantBySchemaName(String schemaName) {
+    return repository.findBySchemaName(schemaName);
+  }
+
+  public Tenant setTenantSchema(Tenant tenant) {
+    String tenantName = tenant.getTenantName();
+    if (tenant.getSchemaName() == null)
+      tenant.setSchemaName(String.format("tenant_%s", tenantName));
+
+    String schemaName = tenant.getSchemaName();
+
+    // checking whether tenant already exists
+    if (repository.existsBySchemaName(schemaName)) {
+      throw new ConflictException(
+          String.format("Esiste già una palestra con nome %s", tenantName));
     }
+    tenant.setSchemaName(schemaName);
+    return tenant;
+  }
 
-    public Tenant findTenantBySchemaName(String schemaName) {
-        return repository.findBySchemaName(schemaName);
-    }
+  public Tenant createTenant(Tenant tenant) {
+    tenant = this.setTenantSchema(tenant);
+    tenant = repository.save(tenant);
+    String schema = tenant.getSchemaName();
+    Flyway flyway =
+        Flyway.configure()
+            .dataSource(dataSource)
+            .schemas(schema)
+            .locations(FlywayConfig.DB_MIGRATION_TENANTS)
+            .load();
+    flyway.migrate();
+    return tenant;
+  }
 
-    public Tenant setTenantSchema(Tenant tenant) {
-        String tenantName = tenant.getTenantName();
-        if (tenant.getSchemaName() == null) tenant.setSchemaName(String.format("tenant_%s", tenantName));
+  public void deleteById(String uuid) {
+    repository.deleteById(uuid);
+  }
 
-        String schemaName = tenant.getSchemaName();
-
-        // checking whether tenant already exists
-        if (repository.existsBySchemaName(schemaName)) {
-            throw new ConflictException(String.format("Esiste già una palestra con nome %s", tenantName));
-        }
-        tenant.setSchemaName(schemaName);
-        return tenant;
-    }
-
-    public Tenant createTenant(Tenant tenant) {
-        tenant = this.setTenantSchema(tenant);
-        tenant = repository.save(tenant);
-        String schema = tenant.getSchemaName();
-        Flyway flyway = Flyway.configure()
-                .dataSource(dataSource)
-                .schemas(schema)
-                .locations(FlywayConfig.DB_MIGRATION_TENANTS)
-                .load();
-        flyway.migrate();
-        return tenant;
-    }
-
-    public void deleteById(String uuid) {
-        repository.deleteById(uuid);
-    }
-
-    public Page<Tenant> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
-    }
+  public Page<Tenant> findAll(Pageable pageable) {
+    return repository.findAll(pageable);
+  }
 }

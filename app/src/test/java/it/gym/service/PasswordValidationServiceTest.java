@@ -14,25 +14,24 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class PasswordValidationServiceTest {
 
-    @TestConfiguration
-    static class PasswordValidationTestContextConfiguration {
+  @TestConfiguration
+  static class PasswordValidationTestContextConfiguration {
 
-        @Bean
-        public PasswordValidationService service() {
-            return new PasswordValidationService();
-        }
+    @Bean
+    public PasswordValidationService service() {
+      return new PasswordValidationService();
     }
+  }
 
-    @Autowired
-    PasswordValidationService service;
+  @Autowired PasswordValidationService service;
 
-    @Test
-    public void validate() {
-        service.validate("password");
-    }
+  @Test
+  public void validate() {
+    service.validate("password");
+  }
 
-    @Test(expected = BadRequestException.class)
-    public void invalid() {
-        service.validate("pas");
-    }
+  @Test(expected = BadRequestException.class)
+  public void invalid() {
+    service.validate("pas");
+  }
 }

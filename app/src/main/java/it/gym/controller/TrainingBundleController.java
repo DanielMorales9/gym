@@ -23,46 +23,50 @@ import java.util.Date;
 @PreAuthorize("isAuthenticated()")
 public class TrainingBundleController {
 
-    @Autowired
-    private TrainingBundleFacade service;
+  @Autowired private TrainingBundleFacade service;
 
-    @GetMapping
-    @ResponseBody
-    public Page<TrainingBundleResource> findAll(Pageable pageable) {
-        return service.findAll(pageable).map(TrainingBundleResource::new);
-    }
+  @GetMapping
+  @ResponseBody
+  public Page<TrainingBundleResource> findAll(Pageable pageable) {
+    return service.findAll(pageable).map(TrainingBundleResource::new);
+  }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> findById(@PathVariable Long id) {
-        ATrainingBundle bundle = service.findById(id);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
-    }
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleResource> findById(
+      @PathVariable Long id) {
+    ATrainingBundle bundle = service.findById(id);
+    return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
+  }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
-        throw new BadRequestException("Per cancellare un pacchetto è sufficiente cancellare la vendita!");
-    }
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
+    throw new BadRequestException(
+        "Per cancellare un pacchetto è sufficiente cancellare la vendita!");
+  }
 
-    @GetMapping("/search")
-    @ResponseBody
-    public Page<TrainingBundleResource> search(@RequestParam(required = false) Long specId,
-                                               @RequestParam(required = false) Boolean expired,
-                                               @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy",
-                                                iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                               Pageable pageable) {
-        Page<ATrainingBundle> bundles;
+  @GetMapping("/search")
+  @ResponseBody
+  public Page<TrainingBundleResource> search(
+      @RequestParam(required = false) Long specId,
+      @RequestParam(required = false) Boolean expired,
+      @RequestParam(required = false)
+          @DateTimeFormat(
+              pattern = "dd-MM-yyyy",
+              iso = DateTimeFormat.ISO.DATE_TIME)
+          Date date,
+      Pageable pageable) {
+    Page<ATrainingBundle> bundles;
 
-         bundles = service.search(specId, expired, date, pageable);
+    bundles = service.search(specId, expired, date, pageable);
 
-         return bundles.map(TrainingBundleResource::new);
-    }
+    return bundles.map(TrainingBundleResource::new);
+  }
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
-                                                        HttpServletRequest request) throws IOException {
-        // TODO use a DTO instead
-        ATrainingBundle bundle = service.patchBundle(id, request);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
-    }
-
+  @PatchMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleResource> patch(
+      @PathVariable Long id, HttpServletRequest request) throws IOException {
+    // TODO use a DTO instead
+    ATrainingBundle bundle = service.patchBundle(id, request);
+    return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
+  }
 }

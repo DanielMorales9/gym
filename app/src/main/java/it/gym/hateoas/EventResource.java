@@ -9,109 +9,108 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public abstract class EventResource extends RepresentationModel<EventResource> {
-    private final Long id;
-    private final String name;
-    private final Date startTime;
-    private final Date endTime;
-    private final String type;
+  private final Long id;
+  private final String name;
+  private final Date startTime;
+  private final Date endTime;
+  private final String type;
 
-    public EventResource(AEvent event) {
-        this.id = event.getId();
-        this.name = event.getName();
-        this.startTime = event.getStartTime();
-        this.endTime = event.getEndTime();
-        this.type = event.getType();
-    }
+  public EventResource(AEvent event) {
+    this.id = event.getId();
+    this.name = event.getName();
+    this.startTime = event.getStartTime();
+    this.endTime = event.getEndTime();
+    this.type = event.getType();
+  }
 
-    @JsonProperty("id")
-    public Long getEventId() {
-        return id;
-    }
+  @JsonProperty("id")
+  public Long getEventId() {
+    return id;
+  }
 
-    public String getName() {
-        return name;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public Date getStartTime() {
-        return startTime;
-    }
+  public Date getStartTime() {
+    return startTime;
+  }
 
-    public Date getEndTime() {
-        return endTime;
-    }
+  public Date getEndTime() {
+    return endTime;
+  }
 
-    public String getType() {
-        return type;
-    }
+  public String getType() {
+    return type;
+  }
 }
 
 class TrainingEventResource extends EventResource {
 
-    private final InnerTrainingBundleSpecificationResource specification;
-    private final boolean isExternal;
-    private final boolean isTrainingEvent;
-    private final List<InnerReservationResource> reservations;
+  private final InnerTrainingBundleSpecificationResource specification;
+  private final boolean isExternal;
+  private final boolean isTrainingEvent;
+  private final List<InnerReservationResource> reservations;
 
-    public TrainingEventResource(ATrainingEvent event) {
-        super(event);
-        this.specification = new InnerTrainingBundleSpecificationResource(event.getSpecification());
-        this.isExternal = event.isExternal();
-        this.isTrainingEvent = event.isTrainingEvent();
-        reservations = event.getReservations().stream()
-                .map(InnerReservationResource::new).collect(Collectors.toList());
-    }
+  public TrainingEventResource(ATrainingEvent event) {
+    super(event);
+    this.specification =
+        new InnerTrainingBundleSpecificationResource(event.getSpecification());
+    this.isExternal = event.isExternal();
+    this.isTrainingEvent = event.isTrainingEvent();
+    reservations =
+        event.getReservations().stream()
+            .map(InnerReservationResource::new)
+            .collect(Collectors.toList());
+  }
 
-    public InnerTrainingBundleSpecificationResource getSpecification() {
-        return specification;
-    }
+  public InnerTrainingBundleSpecificationResource getSpecification() {
+    return specification;
+  }
 
-    public boolean isExternal() {
-        return isExternal;
-    }
+  public boolean isExternal() {
+    return isExternal;
+  }
 
-    public boolean isTrainingEvent() {
-        return isTrainingEvent;
-    }
+  public boolean isTrainingEvent() {
+    return isTrainingEvent;
+  }
 
-    public List<InnerReservationResource> getReservations() {
-        return reservations;
-    }
+  public List<InnerReservationResource> getReservations() {
+    return reservations;
+  }
 }
 
 class CourseTrainingEventResource extends TrainingEventResource {
-    private final Integer maxCustomer;
+  private final Integer maxCustomer;
 
+  public CourseTrainingEventResource(CourseTrainingEvent event) {
+    super(event);
+    this.maxCustomer = event.getMaxCustomers();
+  }
 
-    public CourseTrainingEventResource(CourseTrainingEvent event) {
-        super(event);
-        this.maxCustomer = event.getMaxCustomers();
-    }
-
-    public Integer getMaxCustomer() {
-        return maxCustomer;
-    }
+  public Integer getMaxCustomer() {
+    return maxCustomer;
+  }
 }
 
 class TimeOffResource extends EventResource {
 
-    private final UserResource user;
+  private final UserResource user;
 
-    public TimeOffResource(TimeOff event) {
-        super(event);
-        user = new UserResource(event.getUser());
-    }
+  public TimeOffResource(TimeOff event) {
+    super(event);
+    user = new UserResource(event.getUser());
+  }
 
-    public UserResource getUser() {
-        return user;
-    }
+  public UserResource getUser() {
+    return user;
+  }
 }
 
 class HolidayResource extends EventResource {
 
-
-    public HolidayResource(Holiday event) {
-        super(event);
-    }
+  public HolidayResource(Holiday event) {
+    super(event);
+  }
 }
-
-

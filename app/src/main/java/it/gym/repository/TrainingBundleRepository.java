@@ -11,13 +11,24 @@ import java.util.Date;
 import java.util.List;
 
 @Repository
-public interface TrainingBundleRepository extends JpaRepository<ATrainingBundle, Long> {
+public interface TrainingBundleRepository
+    extends JpaRepository<ATrainingBundle, Long> {
 
-    List<ATrainingBundle> findATrainingBundleByBundleSpec(ATrainingBundleSpecification spec);
-    Page<ATrainingBundle> findATrainingBundleByBundleSpec_Id(Long id, Pageable pageable);
-    Page<ATrainingBundle> findBundlesByExpiredAtGreaterThan(Date time, Pageable pageable);
-    Page<ATrainingBundle> findBundlesByCreatedAtGreaterThan(Date time, Pageable pageable);
-    Page<ATrainingBundle> findBundlesByExpiredAtNotNull(Pageable pageable);
-    Page<ATrainingBundle> findBundlesByExpiredAtNull(Pageable pageable);
-    List<ATrainingBundle> findBundlesByExpiredAtNull();
+  List<ATrainingBundle> findATrainingBundleByBundleSpec(
+      ATrainingBundleSpecification spec);
+
+  Page<ATrainingBundle> findATrainingBundleByBundleSpec_Id(
+      Long id, Pageable pageable);
+
+  Page<ATrainingBundle> findBundlesByExpiredAtGreaterThan(
+      Date time, Pageable pageable);
+
+  Page<ATrainingBundle> findBundlesByCreatedAtGreaterThan(
+      Date time, Pageable pageable);
+
+  Page<ATrainingBundle> findBundlesByExpiredAtNotNull(Pageable pageable);
+
+  Page<ATrainingBundle> findBundlesByExpiredAtNull(Pageable pageable);
+
+  List<ATrainingBundle> findBundlesByExpiredAtNull();
 }

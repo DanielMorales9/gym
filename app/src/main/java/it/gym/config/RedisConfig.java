@@ -10,15 +10,14 @@ import org.springframework.session.data.redis.config.annotation.web.http.EnableR
 @EnableRedisHttpSession
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 @EnableCaching
 public class RedisConfig {
 
-    @Bean
-    public static ConfigureRedisAction configureRedisAction() {
-        return ConfigureRedisAction.NO_OP;
-    }
-
+  @Bean
+  public static ConfigureRedisAction configureRedisAction() {
+    return ConfigureRedisAction.NO_OP;
+  }
 }

@@ -1,4 +1,3 @@
-
 package it.gym.config;
 
 import org.slf4j.Logger;
@@ -14,27 +13,28 @@ import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityTestConfig extends WebSecurityConfigurerAdapter {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Override
-    protected void configure(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
-                .authorizeRequests()
-                .antMatchers("/")
-                .permitAll()
-                .and()
-                .csrf()
-                .disable();
-    }
+  @Override
+  protected void configure(HttpSecurity httpSecurity) throws Exception {
+    httpSecurity
+        .authorizeRequests()
+        .antMatchers("/")
+        .permitAll()
+        .and()
+        .csrf()
+        .disable();
+  }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        UserDetails user = User.withUsername("user")
-                .password("password")
-                .authorities("ADMIN", "TRAINER", "CUSTOMER")
-                .build();
-        manager.createUser(user);
-        return manager;
-    }
+  @Bean
+  public UserDetailsService userDetailsService() {
+    InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+    UserDetails user =
+        User.withUsername("user")
+            .password("password")
+            .authorities("ADMIN", "TRAINER", "CUSTOMER")
+            .build();
+    manager.createUser(user);
+    return manager;
+  }
 }

@@ -9,32 +9,33 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(value="P")
+@DiscriminatorValue(value = "P")
 @JsonTypeName("P")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Generated //exclude coverage analysis on generated methods
-public class PersonalTrainingBundleSpecification extends ATrainingBundleSpecification {
+@Generated // exclude coverage analysis on generated methods
+public class PersonalTrainingBundleSpecification
+    extends ATrainingBundleSpecification {
 
-    @Override
-    public String getType() {
-        return "P";
-    }
+  @Override
+  public String getType() {
+    return "P";
+  }
 
-    @Override
-    public ATrainingBundle createTrainingBundle(Long optionId) {
-        PersonalTrainingBundle ptb = new PersonalTrainingBundle();
-        ptb.setName(this.getName());
-        ptb.setBundleSpec(this);
-        ptb.setUnlimitedDeletions(this.getUnlimitedDeletions());
-        ptb.setNumDeletions(this.getNumDeletions());
-        setOption(optionId, ptb);
-        return ptb;
-    }
+  @Override
+  public ATrainingBundle createTrainingBundle(Long optionId) {
+    PersonalTrainingBundle ptb = new PersonalTrainingBundle();
+    ptb.setName(this.getName());
+    ptb.setBundleSpec(this);
+    ptb.setUnlimitedDeletions(this.getUnlimitedDeletions());
+    ptb.setNumDeletions(this.getNumDeletions());
+    setOption(optionId, ptb);
+    return ptb;
+  }
 
-    @Override
-    public PersonalTrainingBundleSpecification eager() {
-        super.eager();
-        return this;
-    }
+  @Override
+  public PersonalTrainingBundleSpecification eager() {
+    super.eager();
+    return this;
+  }
 }

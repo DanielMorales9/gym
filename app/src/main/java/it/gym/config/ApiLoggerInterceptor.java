@@ -13,45 +13,52 @@ import javax.servlet.http.HttpServletResponse;
 
 class ProdAndDevCondition extends AnyNestedCondition {
 
-    public ProdAndDevCondition() {
-        super(ConfigurationPhase.PARSE_CONFIGURATION);
-    }
+  public ProdAndDevCondition() {
+    super(ConfigurationPhase.PARSE_CONFIGURATION);
+  }
 
-    @ConditionalOnProperty(name = "spring.profiles", havingValue = "prod")
-    static class Value1Condition {
+  @ConditionalOnProperty(name = "spring.profiles", havingValue = "prod")
+  static class Value1Condition {}
 
-    }
-
-    @ConditionalOnProperty(name = "spring.profiles", havingValue = "dev")
-    static class Value2Condition {
-
-    }
-
+  @ConditionalOnProperty(name = "spring.profiles", havingValue = "dev")
+  static class Value2Condition {}
 }
 
 @Component
 @Conditional(ProdAndDevCondition.class)
 public class ApiLoggerInterceptor implements HandlerInterceptor {
 
-    private static final Logger logger = LoggerFactory.getLogger(ApiLoggerInterceptor.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(ApiLoggerInterceptor.class);
 
-    @Override
-    public boolean preHandle(HttpServletRequest request,
-                             HttpServletResponse response,
-                             Object handler) {
-        long startTime = System.currentTimeMillis();
-        request.setAttribute("startTime", startTime);
-        return true;
-    }
+  @Override
+  public boolean preHandle(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      Object handler) {
+    long startTime = System.currentTimeMillis();
+    request.setAttribute("startTime", startTime);
+    return true;
+  }
 
-    @Override
-    public void afterCompletion(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Object handler, Exception ex) throws Exception {
-        String path = request.getRequestURI().substring(request.getContextPath().length());
-        long startTime = (Long) request.getAttribute("startTime");
-        long endTime = System.currentTimeMillis();
-        long executeTime = endTime - startTime;
-        logger.info("Method: " + request.getMethod() + " Resource: " + path + " Duration: " + executeTime);
-    }
+  @Override
+  public void afterCompletion(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      Object handler,
+      Exception ex)
+      throws Exception {
+    String path =
+        request.getRequestURI().substring(request.getContextPath().length());
+    long startTime = (Long) request.getAttribute("startTime");
+    long endTime = System.currentTimeMillis();
+    long executeTime = endTime - startTime;
+    logger.info(
+        "Method: "
+            + request.getMethod()
+            + " Resource: "
+            + path
+            + " Duration: "
+            + executeTime);
+  }
 }

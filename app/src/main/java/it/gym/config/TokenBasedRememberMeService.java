@@ -10,25 +10,30 @@ import javax.servlet.http.HttpServletRequest;
 
 public class TokenBasedRememberMeService extends TokenBasedRememberMeServices {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenBasedRememberMeService.class);
-    @Autowired CustomProperties customProperties;
+  private static final Logger logger =
+      LoggerFactory.getLogger(TokenBasedRememberMeService.class);
+  @Autowired CustomProperties customProperties;
 
-    public TokenBasedRememberMeService(String key, UserDetailsService userDetailsService) {
-        super(key, userDetailsService);
+  public TokenBasedRememberMeService(
+      String key, UserDetailsService userDetailsService) {
+    super(key, userDetailsService);
+  }
+
+  /**
+   * Locates the Spring Security remember me token in the request and returns
+   * its value.
+   *
+   * @param request the submitted request which is to be authenticated
+   * @return the value of the request header (which was originally provided by
+   *     the cookie - API expects it in header)
+   */
+  @Override
+  protected String extractRememberMeCookie(HttpServletRequest request) {
+    String token = request.getHeader(customProperties.getRememberMeCookie());
+    if ((token == null) || (token.length() == 0)) {
+      return null;
     }
 
-    /**
-     * Locates the Spring Security remember me token in the request and returns its value.
-     *
-     * @param request the submitted request which is to be authenticated
-     * @return the value of the request header (which was originally provided by the cookie - API expects it in header)
-     */
-    @Override protected String extractRememberMeCookie(HttpServletRequest request) {
-        String token = request.getHeader(customProperties.getRememberMeCookie());
-        if ((token == null) || (token.length() == 0)) {
-            return null;
-        }
-
-        return token;
-    }
+    return token;
+  }
 }

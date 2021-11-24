@@ -21,13 +21,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 @Import({ApplicationTestConfig.class, SecurityTestConfig.class})
 @AutoConfigureMockMvc
-@WithMockUser(username = "user@user.com", authorities = {"ADMIN", "TRAINER", "CUSTOMER"})
+@WithMockUser(
+    username = "user@user.com",
+    authorities = {"ADMIN", "TRAINER", "CUSTOMER"})
 public abstract class AbstractIntegrationTest {
 
-    @ClassRule
-    public static CustomPostgresContainer sqlContainer = CustomPostgresContainer.getInstance();
+  @ClassRule
+  public static CustomPostgresContainer sqlContainer =
+      CustomPostgresContainer.getInstance();
 
-    @Autowired
-    public MockMvc mockMvc;
-
+  @Autowired public MockMvc mockMvc;
 }

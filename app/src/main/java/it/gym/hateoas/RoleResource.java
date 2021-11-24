@@ -6,10 +6,9 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class RoleResource extends RepresentationModel<RoleResource> {
 
-    @JsonUnwrapped
-    Role model;
+  @JsonUnwrapped Role model;
 
-    RoleResource(Role model) {
-        this.model = model;
-    }
+  RoleResource(Role model) {
+    this.model = model;
+  }
 }

@@ -27,73 +27,73 @@ import java.util.zip.DataFormatException;
 @PreAuthorize("isAuthenticated()")
 public class UserController {
 
-    @Autowired
-    private UserFacade facade;
+  @Autowired private UserFacade facade;
 
-    @GetMapping
-    @ResponseBody
-    public Page<UserDTO> get(Pageable pageable) {
-        return facade.findAll(pageable);
-    }
+  @GetMapping
+  @ResponseBody
+  public Page<UserDTO> get(Pageable pageable) {
+    return facade.findAll(pageable);
+  }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<AUserResource> get(@PathVariable Long id) {
-        AUser user = facade.findById(id);
-        return ResponseEntity.ok(new AUserAssembler().toModel(user));
-    }
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<UserDTO> get(@PathVariable Long id) {
+    UserDTO user = facade.findUserById(id);
+    return ResponseEntity.ok(user);
+  }
 
-    @GetMapping(path = "/{id}/roles")
-    List<Role> getRoles(@PathVariable Long id) {
-        return facade.getUserRolesById(id);
-    }
+  @GetMapping(path = "/{id}/roles")
+  List<Role> getRoles(@PathVariable Long id) {
+    return facade.getUserRolesById(id);
+  }
 
-    @DeleteMapping(path = "/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<AUserResource> delete(@PathVariable Long id) {
-        AUser user = facade.delete(id);
-        return ResponseEntity.ok(new AUserAssembler().toModel(user));
-    }
+  @DeleteMapping(path = "/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<AUserResource> delete(@PathVariable Long id) {
+    AUser user = facade.delete(id);
+    return ResponseEntity.ok(new AUserAssembler().toModel(user));
+  }
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<AUserResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
-        AUser u = facade.patchUser(id, request);
-        return ResponseEntity.ok(new AUserAssembler().toModel(u));
-    }
+  @PatchMapping(path = "/{id}")
+  public ResponseEntity<AUserResource> patch(
+      @PathVariable Long id, HttpServletRequest request) throws IOException {
+    AUser u = facade.patchUser(id, request);
+    return ResponseEntity.ok(new AUserAssembler().toModel(u));
+  }
 
-    @PostMapping("/{id}/image")
-    public ResponseEntity<AUserResource> uploadImage(@PathVariable("id") Long id,
-                                                     @RequestParam("imageFile") MultipartFile file)
-            throws IOException {
-        AUser u = facade.uploadImage(id, file);
-        return ResponseEntity.ok(new AUserAssembler().toModel(u));
-    }
+  @PostMapping("/{id}/image")
+  public ResponseEntity<AUserResource> uploadImage(
+      @PathVariable("id") Long id,
+      @RequestParam("imageFile") MultipartFile file)
+      throws IOException {
+    AUser u = facade.uploadImage(id, file);
+    return ResponseEntity.ok(new AUserAssembler().toModel(u));
+  }
 
-    @GetMapping("/{id}/image")
-    public ResponseEntity<ImageResource> getImage(@PathVariable("id") Long id)
-            throws DataFormatException, IOException {
-        Image u = facade.retrieveImage(id);
-        return ResponseEntity.ok(new ImageAssembler().toModel(u));
-    }
+  @GetMapping("/{id}/image")
+  public ResponseEntity<ImageResource> getImage(@PathVariable("id") Long id)
+      throws DataFormatException, IOException {
+    Image u = facade.retrieveImage(id);
+    return ResponseEntity.ok(new ImageAssembler().toModel(u));
+  }
 
-    @GetMapping(path = "/findByEmail")
-    public ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
-        AUser user = facade.findByEmail(email);
-        return ResponseEntity.ok(new AUserAssembler().toModel(user));
-    }
+  @GetMapping(path = "/findByEmail")
+  public ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
+    AUser user = facade.findByEmail(email);
+    return ResponseEntity.ok(new AUserAssembler().toModel(user));
+  }
 
-    @GetMapping(path = "/search")
-    @ResponseBody
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public Page<UserDTO> searchByLastName(@RequestParam String query, Pageable pageable) {
-        return facade.findByName(query, pageable);
-    }
+  @GetMapping(path = "/search")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
+  public Page<UserDTO> searchByLastName(
+      @RequestParam String query, Pageable pageable) {
+    return facade.findByName(query, pageable);
+  }
 
-    @GetMapping(path = "/events")
-    @ResponseBody
-    @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public List<AUser> findUserPerEvent(@RequestParam Long eventId) {
-        return facade.findUserByEventId(eventId);
-
-    }
-
+  @GetMapping(path = "/events")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
+  public List<AUser> findUserPerEvent(@RequestParam Long eventId) {
+    return facade.findUserByEventId(eventId);
+  }
 }

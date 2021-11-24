@@ -22,32 +22,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 @RunWith(SpringRunner.class)
 public class TrainingBundleServiceTest {
 
-    @MockBean
-    private TrainingBundleRepository repository;
+  @MockBean private TrainingBundleRepository repository;
 
-    @TestConfiguration
-    static class TrainingBundleServiceTestContextConfiguration {
+  @TestConfiguration
+  static class TrainingBundleServiceTestContextConfiguration {
 
-        @Bean
-        public TrainingBundleService service() {
-            return new TrainingBundleService();
-        }
+    @Bean
+    public TrainingBundleService service() {
+      return new TrainingBundleService();
     }
+  }
 
-    @Autowired
-    private TrainingBundleService service;
+  @Autowired private TrainingBundleService service;
 
+  @Test
+  public void findAll() {
 
-    @Test
-    public void findAll() {
-
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
-        PersonalTrainingBundleSpecification pe = createPersonalBundleSpec(1L, "personal", options);
-        ATrainingBundle bundle = createPersonalBundle(1L, pe, pe.getOptions().get(0));
-        Mockito.when(repository.findAll()).thenAnswer(invocationOnMock -> Collections.singletonList(bundle));
-        List<ATrainingBundle> u = this.service.findAll();
-        assertThat(u).isEqualTo(Collections.singletonList(bundle));
-        Mockito.verify(repository).findAll();
-    }
-
+    List<APurchaseOption> options =
+        createSingletonBundlePurchaseOptions(30, 900.0, null);
+    PersonalTrainingBundleSpecification pe =
+        createPersonalBundleSpec(1L, "personal", options);
+    ATrainingBundle bundle =
+        createPersonalBundle(1L, pe, pe.getOptions().get(0));
+    Mockito.when(repository.findAll())
+        .thenAnswer(invocationOnMock -> Collections.singletonList(bundle));
+    List<ATrainingBundle> u = this.service.findAll();
+    assertThat(u).isEqualTo(Collections.singletonList(bundle));
+    Mockito.verify(repository).findAll();
+  }
 }

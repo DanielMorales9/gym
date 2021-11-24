@@ -21,60 +21,60 @@ import java.util.List;
 @RequestMapping("/workouts")
 public class WorkoutController {
 
-    @Autowired
-    private WorkoutFacade facade;
+  @Autowired private WorkoutFacade facade;
 
-    @GetMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<WorkoutResource> findById(@PathVariable Long id) {
+  @GetMapping(path = "/{id}")
+  @ResponseBody
+  public ResponseEntity<WorkoutResource> findById(@PathVariable Long id) {
 
-        Workout w = facade.findById(id);
+    Workout w = facade.findById(id);
 
-        return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
-    }
+    return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
+  }
 
-    @GetMapping
-    @ResponseBody
-    public Page<Workout> findAll(Pageable pageable) {
-        return facade.findAll(pageable);
-    }
+  @GetMapping
+  @ResponseBody
+  public Page<Workout> findAll(Pageable pageable) {
+    return facade.findAll(pageable);
+  }
 
-    @GetMapping(path = "/tags")
-    @ResponseBody
-    public List<String> getTags() {
-        return facade.getTags();
-    }
+  @GetMapping(path = "/tags")
+  @ResponseBody
+  public List<String> getTags() {
+    return facade.getTags();
+  }
 
-    @PostMapping
-    @ResponseBody
-    public ResponseEntity<WorkoutResource> create(@RequestBody Workout w) {
-         w = facade.save(w);
-        return new ResponseEntity<>(new WorkoutAssembler().toModel(w), HttpStatus.OK);
-    }
+  @PostMapping
+  @ResponseBody
+  public ResponseEntity<WorkoutResource> create(@RequestBody Workout w) {
+    w = facade.save(w);
+    return new ResponseEntity<>(
+        new WorkoutAssembler().toModel(w), HttpStatus.OK);
+  }
 
-    @DeleteMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<String> delete(@PathVariable Long id) {
-        facade.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+  @DeleteMapping(path = "/{id}")
+  @ResponseBody
+  public ResponseEntity<String> delete(@PathVariable Long id) {
+    facade.deleteById(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-    @PatchMapping("/{id}")
-    @ResponseBody
-    public ResponseEntity<WorkoutResource> update(@PathVariable Long id, HttpServletRequest request)
-            throws IOException {
+  @PatchMapping("/{id}")
+  @ResponseBody
+  public ResponseEntity<WorkoutResource> update(
+      @PathVariable Long id, HttpServletRequest request) throws IOException {
 
-        Workout w = facade.patch(id, request);
-        return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
-    }
+    Workout w = facade.patch(id, request);
+    return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
+  }
 
-    @GetMapping("/search")
-    @ResponseBody
-    public Page<Workout> search(@RequestParam(required = false) String name,
-                                @RequestParam(required = false) String tag,
-                                @RequestParam(required = false) Boolean isTemplate,
-                                Pageable pageable) {
-        return facade.search(name, tag, isTemplate, pageable);
-    }
-
+  @GetMapping("/search")
+  @ResponseBody
+  public Page<Workout> search(
+      @RequestParam(required = false) String name,
+      @RequestParam(required = false) String tag,
+      @RequestParam(required = false) Boolean isTemplate,
+      Pageable pageable) {
+    return facade.search(name, tag, isTemplate, pageable);
+  }
 }

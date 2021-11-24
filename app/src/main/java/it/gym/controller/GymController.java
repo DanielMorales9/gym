@@ -24,38 +24,37 @@ import java.util.List;
 @RequestMapping("/gyms")
 public class GymController {
 
-    private Logger logger = LoggerFactory.getLogger(getClass());
+  private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private GymService service;
+  @Autowired private GymService service;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    @GetMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
-        Gym gym = service.findById(id);
-        return ResponseEntity.ok(new GymAssembler().toModel(gym));
-    }
+  @GetMapping("/{id}")
+  @PreAuthorize("isAuthenticated()")
+  public ResponseEntity<GymResource> findGymById(@PathVariable Long id) {
+    Gym gym = service.findById(id);
+    return ResponseEntity.ok(new GymAssembler().toModel(gym));
+  }
 
-    @GetMapping
-    public List<Gym> findGyms() {
-        return service.findAll();
-    }
+  @GetMapping
+  public List<Gym> findGyms() {
+    return service.findAll();
+  }
 
-    @GetMapping("/manifest.webmanifest")
-    @ResponseBody
-    public Manifest getManifest() {
-        return service.getManifest();
-    }
+  @GetMapping("/manifest.webmanifest")
+  @ResponseBody
+  public Manifest getManifest() {
+    return service.getManifest();
+  }
 
-    @PatchMapping(path = "/{id}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<GymResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
-        Gym gym = service.findById(id);
-        gym = objectMapper.readerForUpdating(gym).readValue(request.getReader());
-        gym = service.save(gym);
-        return ResponseEntity.ok(new GymAssembler().toModel(gym));
-    }
+  @PatchMapping(path = "/{id}")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<GymResource> patch(
+      @PathVariable Long id, HttpServletRequest request) throws IOException {
+    Gym gym = service.findById(id);
+    gym = objectMapper.readerForUpdating(gym).readValue(request.getReader());
+    gym = service.save(gym);
+    return ResponseEntity.ok(new GymAssembler().toModel(gym));
+  }
 }

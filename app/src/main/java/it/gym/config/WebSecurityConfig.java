@@ -27,93 +27,106 @@ import org.springframework.security.web.context.request.async.WebAsyncManagerInt
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired CustomProperties properties;
-    @Autowired MultiTenancyInterceptor tenancyInterceptor;
-    @Autowired @Qualifier("userAuthService") UserAuthService userDetailsService;
+  @Autowired CustomProperties properties;
+  @Autowired MultiTenancyInterceptor tenancyInterceptor;
 
-    @Bean
-    public AuthenticationEntryPoint authenticationEntryPoint() {
-        return (request, response, authException) -> {
-            if (request.getUserPrincipal() == null) {
-                response.setStatus(403);
-                response.sendRedirect("/");
-            }
-            else {
-                logger.info(request.getUserPrincipal().toString());
-            }
-        };
-    }
+  @Autowired
+  @Qualifier("userAuthService")
+  UserAuthService userDetailsService;
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
+  @Bean
+  public AuthenticationEntryPoint authenticationEntryPoint() {
+    return (request, response, authException) -> {
+      if (request.getUserPrincipal() == null) {
+        response.setStatus(403);
+        response.sendRedirect("/");
+      } else {
+        logger.info(request.getUserPrincipal().toString());
+      }
+    };
+  }
 
-    @Autowired
-    protected void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(this.userDetailsService).passwordEncoder(passwordEncoder());
-        auth.authenticationProvider(rememberMeAuthenticationProvider());
+  @Bean
+  @Override
+  public AuthenticationManager authenticationManagerBean() throws Exception {
+    return super.authenticationManagerBean();
+  }
 
-    }
+  @Autowired
+  protected void configureGlobal(AuthenticationManagerBuilder auth)
+      throws Exception {
+    auth.userDetailsService(this.userDetailsService)
+        .passwordEncoder(passwordEncoder());
+    auth.authenticationProvider(rememberMeAuthenticationProvider());
+  }
 
-    @Bean
-    public PasswordEncoder passwordEncoder(){
-        return new BCryptPasswordEncoder();
-    }
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
 
-    @Bean
-    public TokenBasedRememberMeService tokenBasedRememberMeService(){
-        TokenBasedRememberMeService service =
-                new TokenBasedRememberMeService(properties.getRememberMeToken(), userDetailsService);
-        service.setAlwaysRemember(properties.getRememberMeAlways());
-        service.setCookieName(properties.getRememberMeCookie());
-        service.setParameter(properties.getRememberMeParameter());
-        return service;
-    }
+  @Bean
+  public TokenBasedRememberMeService tokenBasedRememberMeService() {
+    TokenBasedRememberMeService service =
+        new TokenBasedRememberMeService(
+            properties.getRememberMeToken(), userDetailsService);
+    service.setAlwaysRemember(properties.getRememberMeAlways());
+    service.setCookieName(properties.getRememberMeCookie());
+    service.setParameter(properties.getRememberMeParameter());
+    return service;
+  }
 
-    @Bean public RememberMeAuthenticationFilter rememberMeAuthenticationFilter() throws Exception{
-        return new RememberMeAuthenticationFilter(authenticationManager(), tokenBasedRememberMeService());
-    }
+  @Bean
+  public RememberMeAuthenticationFilter rememberMeAuthenticationFilter()
+      throws Exception {
+    return new RememberMeAuthenticationFilter(
+        authenticationManager(), tokenBasedRememberMeService());
+  }
 
-    @Bean
-    RememberMeAuthenticationProvider rememberMeAuthenticationProvider(){
-        return new RememberMeAuthenticationProvider(properties.getRememberMeToken());
-    }
+  @Bean
+  RememberMeAuthenticationProvider rememberMeAuthenticationProvider() {
+    return new RememberMeAuthenticationProvider(
+        properties.getRememberMeToken());
+  }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf()
-                .disable()
-                .httpBasic()
-                .and()
-                .authorizeRequests()
-                .antMatchers(
-                        "/",
-                        "/user",
-                        "/logout",
-                        "/authentication/**",
-                        "/gyms/**",
-                        "/log/**",
-                        "/login",
-                        "/actuator/*").permitAll()
-                .and().authorizeRequests().anyRequest().authenticated()
-                .and()
-                    .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint())
-                .and()
-                    .addFilterBefore(tenancyInterceptor, BasicAuthenticationFilter.class)
-                    .addFilterBefore(rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
-                .rememberMe()
-                    .rememberMeServices(tokenBasedRememberMeService());
-        ;
-        //.csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
-    }
+  @Override
+  protected void configure(HttpSecurity http) throws Exception {
+    http.csrf()
+        .disable()
+        .httpBasic()
+        .and()
+        .authorizeRequests()
+        .antMatchers(
+            "/",
+            "/user",
+            "/logout",
+            "/authentication/**",
+            "/gyms/**",
+            "/log/**",
+            "/login",
+            "/actuator/*")
+        .permitAll()
+        .and()
+        .authorizeRequests()
+        .anyRequest()
+        .authenticated()
+        .and()
+        .exceptionHandling()
+        .authenticationEntryPoint(authenticationEntryPoint())
+        .and()
+        .addFilterBefore(tenancyInterceptor, BasicAuthenticationFilter.class)
+        .addFilterBefore(
+            rememberMeAuthenticationFilter(), BasicAuthenticationFilter.class)
+        .rememberMe()
+        .rememberMeServices(tokenBasedRememberMeService());
+    ;
+    // .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse());
+  }
 }

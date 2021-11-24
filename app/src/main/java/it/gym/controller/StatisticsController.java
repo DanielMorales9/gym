@@ -17,43 +17,45 @@ import java.util.List;
 @PreAuthorize("isAuthenticated()")
 public class StatisticsController {
 
-    @Autowired
-    private SaleStatsRepository saleStatsRepository;
-    @Autowired
-    private EventStatsRepository eventStatsRepository;
+  @Autowired private SaleStatsRepository saleStatsRepository;
+  @Autowired private EventStatsRepository eventStatsRepository;
 
-    @GetMapping("/getSaleByMonth")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<SaleTimeStatistics> getSaleStatsByMonth(@RequestParam String interval) {
-        return saleStatsRepository.getSalesByMonthInterval(interval);
-    }
+  @GetMapping("/getSaleByMonth")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<SaleTimeStatistics> getSaleStatsByMonth(
+      @RequestParam String interval) {
+    return saleStatsRepository.getSalesByMonthInterval(interval);
+  }
 
-    @GetMapping("/getSaleByBundleType")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<SaleBundleStatistics> getSaleStatsByBundleType(@RequestParam String interval) {
-        return saleStatsRepository.getSaleStatsByBundleType(interval);
-    }
+  @GetMapping("/getSaleByBundleType")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<SaleBundleStatistics> getSaleStatsByBundleType(
+      @RequestParam String interval) {
+    return saleStatsRepository.getSaleStatsByBundleType(interval);
+  }
 
-    @GetMapping("/getReservationsByWeek")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<ReservationTimeStatistics> getReservationsByWeek(@RequestParam String interval) {
-        return eventStatsRepository.getReservationsByWeek(interval);
-    }
+  @GetMapping("/getReservationsByWeek")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<ReservationTimeStatistics> getReservationsByWeek(
+      @RequestParam String interval) {
+    return eventStatsRepository.getReservationsByWeek(interval);
+  }
 
-    @GetMapping("/getCustomerReservationsByWeek")
-    @ResponseBody
-    public List<ReservationTimeStatistics> getCustomerReservationsByWeek(@RequestParam Long id,
-                                                                         @RequestParam String interval) {
-        return eventStatsRepository.getCustomerReservationsByWeek(id, interval);
-    }
+  @GetMapping("/getCustomerReservationsByWeek")
+  @ResponseBody
+  public List<ReservationTimeStatistics> getCustomerReservationsByWeek(
+      @RequestParam Long id, @RequestParam String interval) {
+    return eventStatsRepository.getCustomerReservationsByWeek(id, interval);
+  }
 
-    @GetMapping("/getReservationsByDayOfWeek")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<ReservationDayOfWeekStatistics> getReservationsByDayOfWeek(@RequestParam String interval) {
-        return eventStatsRepository.getReservationsByDayOfWeek(interval);
-    }
+  @GetMapping("/getReservationsByDayOfWeek")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<ReservationDayOfWeekStatistics> getReservationsByDayOfWeek(
+      @RequestParam String interval) {
+    return eventStatsRepository.getReservationsByDayOfWeek(interval);
+  }
 }

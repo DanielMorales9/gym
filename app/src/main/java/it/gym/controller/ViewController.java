@@ -14,10 +14,10 @@ import javax.servlet.http.HttpServletResponse;
 @PreAuthorize("isAuthenticated()")
 public class ViewController {
 
-    @GetMapping(value = "/logout")
-    public void logout(HttpServletRequest rq, HttpServletResponse rs) {
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
-        securityContextLogoutHandler.logout(rq, rs, null);
-    }
-
+  @GetMapping(value = "/logout")
+  public void logout(HttpServletRequest rq, HttpServletResponse rs) {
+    SecurityContextLogoutHandler securityContextLogoutHandler =
+        new SecurityContextLogoutHandler();
+    securityContextLogoutHandler.logout(rq, rs, null);
+  }
 }

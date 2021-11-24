@@ -6,11 +6,9 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class AUserResource extends RepresentationModel<AUserResource> {
 
-    @JsonUnwrapped
-    AUser model;
+  @JsonUnwrapped AUser model;
 
-    AUserResource(AUser model) {
-        this.model = model;
-    }
-
+  AUserResource(AUser model) {
+    this.model = model;
+  }
 }

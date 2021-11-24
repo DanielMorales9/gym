@@ -28,99 +28,104 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.DataFormatException;
 
-
 @Component
 @Transactional
 public class UserFacade {
 
-    @Autowired
-    @Qualifier("verificationTokenService")
-    private VerificationTokenService tokenService;
+  @Autowired
+  @Qualifier("verificationTokenService")
+  private VerificationTokenService tokenService;
 
-    @Autowired
-    private ImageRepository imageRepository;
+  @Autowired private ImageRepository imageRepository;
 
-    @Autowired
-    private UserService service;
+  @Autowired private UserService service;
 
-    @Autowired private UserMapper userMapper;
+  @Autowired private UserMapper userMapper;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    public AUser delete(Long id) {
-        AUser user = this.service.findById(id);
-        if (tokenService.existsByUser(user)) {
-            VerificationToken vtk = this.tokenService.findByUser(user);
-            this.tokenService.delete(vtk);
-        }
-
-        if (!user.isActive()) {
-            this.service.deleteById(id);
-        }
-        else {
-            throw new BadRequestException("Impossibile eliminare un utente con delle transazioni attive");
-        }
-        return user;
+  public AUser delete(Long id) {
+    AUser user = this.service.findById(id);
+    if (tokenService.existsByUser(user)) {
+      VerificationToken vtk = this.tokenService.findByUser(user);
+      this.tokenService.delete(vtk);
     }
 
-    public AUser findById(Long id) {
-        return service.findById(id);
+    if (!user.isActive()) {
+      this.service.deleteById(id);
+    } else {
+      throw new BadRequestException(
+          "Impossibile eliminare un utente con delle transazioni attive");
+    }
+    return user;
+  }
+
+  public AUser save(AUser u) {
+    return this.service.save(u);
+  }
+
+  public AUser findByEmail(String email) {
+    return this.service.findByEmail(email);
+  }
+
+  public Page<UserDTO> findByName(String query, Pageable pageable) {
+    return service
+        .findByName(query.toLowerCase(), pageable)
+        .map(userMapper::toDTO);
+  }
+
+  public Page<UserDTO> findAll(Pageable pageable) {
+    return service.findAll(pageable).map(userMapper::toDTO);
+  }
+
+  public List<AUser> findUserByEventId(Long eventId) {
+    return service.findUserEvent(eventId);
+  }
+
+  @CacheEvict(value = "profile_pictures", key = "#id")
+  public AUser uploadImage(Long id, MultipartFile file) throws IOException {
+    AUser user = this.service.findById(id);
+    Image image1 = user.getImage();
+    if (image1 != null) {
+      id = image1.getId();
+      imageRepository.deleteById(id);
     }
 
-    public AUser save(AUser u) {
-        return this.service.save(u);
+    Image image =
+        new Image(
+            file.getOriginalFilename(),
+            file.getContentType(),
+            BlobUtility.compressBytes(file.getBytes()),
+            user);
+    user.setImage(image);
+    return this.save(user);
+  }
+
+  @CachePut(value = "profile_pictures", key = "#id")
+  public Image retrieveImage(Long id) throws DataFormatException, IOException {
+    AUser user = this.service.findById(id);
+    Image image = user.getImage();
+    if (image != null) {
+      return new Image(
+          image.getName(),
+          image.getType(),
+          BlobUtility.decompressBytes(image.getPicByte()));
     }
+    throw new NotFoundException("Immagine assente");
+  }
 
-    public AUser findByEmail(String email) {
-        return this.service.findByEmail(email);
-    }
+  public List<Role> getUserRolesById(Long id) {
+    return service.findById(id).getRoles();
+  }
 
-    public Page<UserDTO> findByName(String query, Pageable pageable) {
-        return service.findByName(query.toLowerCase(), pageable).map(userMapper::toDTO);
-    }
+  public AUser patchUser(Long id, HttpServletRequest request)
+      throws IOException {
+    AUser u = service.findById(id);
+    u = objectMapper.readerForUpdating(u).readValue(request.getReader());
+    return save(u);
+  }
 
-    public Page<UserDTO> findAll(Pageable pageable) {
-        return service.findAll(pageable).map(userMapper::toDTO);
-    }
-
-    public List<AUser> findUserByEventId(Long eventId) {
-        return service.findUserEvent(eventId);
-    }
-
-    @CacheEvict(value = "profile_pictures", key="#id")
-    public AUser uploadImage(Long id, MultipartFile file) throws IOException {
-        AUser user = this.service.findById(id);
-        Image image1 = user.getImage();
-        if (image1 != null) {
-            id = image1.getId();
-            imageRepository.deleteById(id);
-        }
-
-        Image image = new Image(file.getOriginalFilename(), file.getContentType(), BlobUtility.compressBytes(file.getBytes()), user);
-        user.setImage(image);
-        return this.save(user);
-    }
-
-    @CachePut(value = "profile_pictures", key="#id")
-    public Image retrieveImage(Long id) throws DataFormatException, IOException {
-        AUser user = this.service.findById(id);
-        Image image = user.getImage();
-        if (image != null) {
-            return new Image(image.getName(), image.getType(), BlobUtility.decompressBytes(image.getPicByte()));
-        }
-        throw new NotFoundException("Immagine assente");
-    }
-
-
-    public List<Role> getUserRolesById(Long id) {
-        return findById(id).getRoles();
-    }
-
-    public AUser patchUser(Long id, HttpServletRequest request) throws IOException {
-        AUser u = findById(id);
-        u = objectMapper.readerForUpdating(u).readValue(request.getReader());
-        return save(u);
-    }
-
+  public UserDTO findUserById(Long id) {
+    return userMapper.toDTO(this.service.findById(id));
+  }
 }

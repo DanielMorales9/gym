@@ -19,44 +19,48 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public class TrainingSessionService implements ICrudService<ATrainingSession, Long> {
+public class TrainingSessionService
+    implements ICrudService<ATrainingSession, Long> {
 
-    @Autowired private TrainingSessionRepository repository;
-    private final Logger logger = LoggerFactory.getLogger(getClass());
-    
-    public ATrainingSession save(ATrainingSession var1) {
-        return this.repository.save(var1);
-    }
+  @Autowired private TrainingSessionRepository repository;
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public ATrainingSession findById(Long var1) {
-        return this.repository.findById(var1).orElseThrow(() -> new NotFoundException("Sessione", var1));
-    }
+  public ATrainingSession save(ATrainingSession var1) {
+    return this.repository.save(var1);
+  }
 
-    public void delete(ATrainingSession var1) {
-        this.repository.delete(var1);
-    }
+  public ATrainingSession findById(Long var1) {
+    return this.repository
+        .findById(var1)
+        .orElseThrow(() -> new NotFoundException("Sessione", var1));
+  }
 
-    public List<ATrainingSession> findAll() {
-        return this.repository.findAll();
-    }
+  public void delete(ATrainingSession var1) {
+    this.repository.delete(var1);
+  }
 
-    public Page<ATrainingSession> findAll(Pageable pageable) {
-        return repository.findAll(pageable);
-    }
+  public List<ATrainingSession> findAll() {
+    return this.repository.findAll();
+  }
 
-    public Page<ATrainingSession> findByCustomer(Long customerId, Date date, Pageable pageables) {
-        if (date != null) {
-            logger.info(date.toString());
-            return repository.findByCustomerAndDate(customerId, date, pageables);
-        }
-        return repository.findByCustomer(customerId, pageables);
-    }
+  public Page<ATrainingSession> findAll(Pageable pageable) {
+    return repository.findAll(pageable);
+  }
 
-    public void deleteAll(List<ATrainingSession> sessions) {
-        repository.deleteAll(sessions);
+  public Page<ATrainingSession> findByCustomer(
+      Long customerId, Date date, Pageable pageables) {
+    if (date != null) {
+      logger.info(date.toString());
+      return repository.findByCustomerAndDate(customerId, date, pageables);
     }
+    return repository.findByCustomer(customerId, pageables);
+  }
 
-    public List<ATrainingSession> saveAll(List<ATrainingSession> sessions) {
-        return repository.saveAll(sessions);
-    }
+  public void deleteAll(List<ATrainingSession> sessions) {
+    repository.deleteAll(sessions);
+  }
+
+  public List<ATrainingSession> saveAll(List<ATrainingSession> sessions) {
+    return repository.saveAll(sessions);
+  }
 }

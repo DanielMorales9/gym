@@ -7,18 +7,23 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class TrainingBundleAssembler extends RepresentationModelAssemblerSupport<ATrainingBundle, TrainingBundleResource> {
+public class TrainingBundleAssembler
+    extends RepresentationModelAssemblerSupport<
+        ATrainingBundle, TrainingBundleResource> {
 
-    public TrainingBundleAssembler() {
-        super(ATrainingBundle.class, TrainingBundleResource.class);
-    }
+  public TrainingBundleAssembler() {
+    super(ATrainingBundle.class, TrainingBundleResource.class);
+  }
 
-    @Override
-    public TrainingBundleResource toModel(@NotNull ATrainingBundle bundle) {
-        TrainingBundleResource resource = new TrainingBundleResource(bundle);
-        resource.add(linkTo(TrainingBundleRepository.class).slash("bundles")
-                .slash(bundle.getId()).withSelfRel());
+  @Override
+  public TrainingBundleResource toModel(@NotNull ATrainingBundle bundle) {
+    TrainingBundleResource resource = new TrainingBundleResource(bundle);
+    resource.add(
+        linkTo(TrainingBundleRepository.class)
+            .slash("bundles")
+            .slash(bundle.getId())
+            .withSelfRel());
 
-        return resource;
-    }
+    return resource;
+  }
 }

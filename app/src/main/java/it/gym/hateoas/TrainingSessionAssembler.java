@@ -8,15 +8,16 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class TrainingSessionAssembler extends RepresentationModelAssemblerSupport<ATrainingSession,
-        TrainingSessionResource> {
+public class TrainingSessionAssembler
+    extends RepresentationModelAssemblerSupport<
+        ATrainingSession, TrainingSessionResource> {
 
-    public TrainingSessionAssembler() {
-        super(ATrainingSession.class, TrainingSessionResource.class);
-    }
+  public TrainingSessionAssembler() {
+    super(ATrainingSession.class, TrainingSessionResource.class);
+  }
 
-    @Override
-    public TrainingSessionResource toModel(ATrainingSession session) {
-        return new TrainingSessionResource(session);
-    }
+  @Override
+  public TrainingSessionResource toModel(ATrainingSession session) {
+    return new TrainingSessionResource(session);
+  }
 }

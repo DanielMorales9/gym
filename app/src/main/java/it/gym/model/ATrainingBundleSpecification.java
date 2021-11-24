@@ -11,193 +11,217 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.*;
 
-
-@JsonTypeInfo(
-        use = JsonTypeInfo.Id.NAME,
-        property = "type",
-        visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({
-        @JsonSubTypes.Type(value = PersonalTrainingBundleSpecification.class, name="P"),
-        @JsonSubTypes.Type(value = CourseTrainingBundleSpecification.class, name="C")
+  @JsonSubTypes.Type(
+      value = PersonalTrainingBundleSpecification.class,
+      name = "P"),
+  @JsonSubTypes.Type(
+      value = CourseTrainingBundleSpecification.class,
+      name = "C")
 })
 @Entity
-@Table(name="bundle_specs")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="bundle_spec_type", discriminatorType=DiscriminatorType.STRING, length=1)
+@Table(name = "bundle_specs")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(
+    name = "bundle_spec_type",
+    discriminatorType = DiscriminatorType.STRING,
+    length = 1)
 @Data
 @EqualsAndHashCode
-@Generated //exclude coverage analysis on generated methods
-public abstract class  ATrainingBundleSpecification implements Serializable, Eager<ATrainingBundleSpecification> {
+@Generated // exclude coverage analysis on generated methods
+public abstract class ATrainingBundleSpecification
+    implements Serializable, Eager<ATrainingBundleSpecification> {
 
-    @Id
-    @SequenceGenerator(name = "bundle_specs_spec_id_seq",
-            sequenceName = "bundle_specs_spec_id_seq", allocationSize = 1)
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "bundle_specs_spec_id_seq")
-    @Column(name="bundle_spec_id")
-    private Long id;
+  @Id
+  @SequenceGenerator(
+      name = "bundle_specs_spec_id_seq",
+      sequenceName = "bundle_specs_spec_id_seq",
+      allocationSize = 1)
+  @GeneratedValue(
+      strategy = GenerationType.SEQUENCE,
+      generator = "bundle_specs_spec_id_seq")
+  @Column(name = "bundle_spec_id")
+  private Long id;
 
-    @Column(name = "name", nullable = false)
-    protected String name;
+  @Column(name = "name", nullable = false)
+  protected String name;
 
-    @Column(name = "description", nullable = false)
-    protected String description;
+  @Column(name = "description", nullable = false)
+  protected String description;
 
-    @Column(name = "is_disabled", nullable = false)
-    private Boolean isDisabled;
+  @Column(name = "is_disabled", nullable = false)
+  private Boolean isDisabled;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt;
+  @Column(name = "created_at", nullable = false, updatable = false)
+  @Temporal(TemporalType.TIMESTAMP)
+  private Date createdAt;
 
-    @Column(name = "unlimited_deletions")
-    private Boolean unlimitedDeletions;
+  @Column(name = "unlimited_deletions")
+  private Boolean unlimitedDeletions;
 
-    @Column(name = "n_deletions")
-    private Integer numDeletions;
+  @Column(name = "n_deletions")
+  private Integer numDeletions;
 
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name = "spec_id", nullable = false)
-    private List<APurchaseOption> options;
+  @OneToMany(cascade = CascadeType.ALL)
+  @JoinColumn(name = "spec_id", nullable = false)
+  private List<APurchaseOption> options;
 
-    public List<APurchaseOption> getOptions() {
-        return options;
+  public List<APurchaseOption> getOptions() {
+    return options;
+  }
+
+  public void setOptions(List<APurchaseOption> options) {
+    this.options = options;
+  }
+
+  public void addOption(APurchaseOption option) {
+    if (this.options == null) {
+      this.options = new ArrayList<>();
+    }
+    this.options.add(option);
+  }
+
+  public abstract String getType();
+
+  public abstract ATrainingBundle createTrainingBundle(Long optionId);
+
+  public void setOption(Long optionId, ATrainingBundle bundle) {
+    List<APurchaseOption> options = this.getOptions();
+    if (options == null) {
+      throw new BadRequestException("L'opzione indicata non è disponibile");
+    }
+    Optional<APurchaseOption> op =
+        options.stream().filter(o -> o.getId().equals(optionId)).findFirst();
+
+    if (!op.isPresent()) {
+      throw new BadRequestException("L'opzione indicata non è disponibile");
     }
 
-    public void setOptions(List<APurchaseOption> options) {
-        this.options = options;
-    }
+    bundle.setOption(op.get());
+  }
 
-    public void addOption(APurchaseOption option) {
-        if (this.options == null) {
-            this.options = new ArrayList<>();
-        }
-        this.options.add(option);
-    }
+  public Integer getNumDeletions() {
+    return numDeletions;
+  }
 
-    public abstract String getType();
+  public void setNumDeletions(Integer numDeletions) {
+    this.numDeletions = numDeletions;
+  }
 
-    public abstract ATrainingBundle createTrainingBundle(Long optionId);
+  public Long getId() {
+    return id;
+  }
 
-    public void setOption(Long optionId, ATrainingBundle bundle) {
-        List<APurchaseOption> options = this.getOptions();
-        if (options == null) {
-            throw new BadRequestException("L'opzione indicata non è disponibile");
-        }
-        Optional<APurchaseOption> op = options
-                .stream()
-                .filter(o -> o.getId().equals(optionId))
-                .findFirst();
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-        if (!op.isPresent()) {
-            throw new BadRequestException("L'opzione indicata non è disponibile");
-        }
+  public String getDescription() {
+    return description;
+  }
 
-        bundle.setOption(op.get());
-    }
+  public void setDescription(String description) {
+    this.description = description;
+  }
 
-    public Integer getNumDeletions() {
-        return numDeletions;
-    }
+  public Boolean getDisabled() {
+    return isDisabled;
+  }
 
-    public void setNumDeletions(Integer numDeletions) {
-        this.numDeletions = numDeletions;
-    }
+  public void setDisabled(Boolean disabled) {
+    isDisabled = disabled;
+  }
 
-    public Long getId() {
-        return id;
-    }
+  public String getName() {
+    return name;
+  }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+  public void setName(String name) {
+    this.name = name;
+  }
 
-    public String getDescription() {
-        return description;
-    }
+  public Date getCreatedAt() {
+    return createdAt;
+  }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+  public void setCreatedAt(Date createdAt) {
+    this.createdAt = createdAt;
+  }
 
-    public Boolean getDisabled() {
-        return isDisabled;
-    }
+  public Boolean getUnlimitedDeletions() {
+    return unlimitedDeletions;
+  }
 
-    public void setDisabled(Boolean disabled) {
-        isDisabled = disabled;
-    }
+  public void setUnlimitedDeletions(Boolean unlimitedDeletions) {
+    this.unlimitedDeletions = unlimitedDeletions;
+  }
 
-    public String getName() {
-        return name;
-    }
+  @Override
+  public ATrainingBundleSpecification eager() {
+    if (options != null) options.forEach(APurchaseOption::eager);
+    else options = new ArrayList<>();
+    return this;
+  }
 
-    public void setName(String name) {
-        this.name = name;
-    }
+  @PrePersist
+  protected void prePersist() {
+    this.createdAt = new Date();
+  }
 
-    public Date getCreatedAt() {
-        return createdAt;
-    }
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ATrainingBundleSpecification that = (ATrainingBundleSpecification) o;
+    return Objects.equals(id, that.id)
+        && Objects.equals(name, that.name)
+        && Objects.equals(description, that.description)
+        && Objects.equals(isDisabled, that.isDisabled)
+        && Objects.equals(createdAt, that.createdAt)
+        && Objects.equals(unlimitedDeletions, that.unlimitedDeletions)
+        && Objects.equals(numDeletions, that.numDeletions)
+        && Objects.equals(options, that.options);
+  }
 
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
+  @Override
+  public int hashCode() {
+    return Objects.hash(
+        id,
+        name,
+        description,
+        isDisabled,
+        createdAt,
+        unlimitedDeletions,
+        numDeletions,
+        options);
+  }
 
-    public Boolean getUnlimitedDeletions() {
-        return unlimitedDeletions;
-    }
+  @Override
+  public String toString() {
+    return "ATrainingBundleSpecification{"
+        + "id="
+        + id
+        + ", name='"
+        + name
+        + '\''
+        + ", description='"
+        + description
+        + '\''
+        + ", isDisabled="
+        + isDisabled
+        + ", createdAt="
+        + createdAt
+        + ", unlimitedDeletions="
+        + unlimitedDeletions
+        + ", numDeletions="
+        + numDeletions
+        + ", options="
+        + options
+        + '}';
+  }
 
-    public void setUnlimitedDeletions(Boolean unlimitedDeletions) {
-        this.unlimitedDeletions = unlimitedDeletions;
-    }
-
-    @Override
-    public ATrainingBundleSpecification eager() {
-        if (options != null)
-            options.forEach(APurchaseOption::eager);
-        else
-            options = new ArrayList<>();
-        return this;
-    }
-
-    @PrePersist
-    protected void prePersist() {
-        this.createdAt = new Date();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ATrainingBundleSpecification that = (ATrainingBundleSpecification) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(description, that.description) &&
-                Objects.equals(isDisabled, that.isDisabled) &&
-                Objects.equals(createdAt, that.createdAt) &&
-                Objects.equals(unlimitedDeletions, that.unlimitedDeletions) &&
-                Objects.equals(numDeletions, that.numDeletions) &&
-                Objects.equals(options, that.options);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, description, isDisabled, createdAt, unlimitedDeletions, numDeletions, options);
-    }
-
-    @Override
-    public String toString() {
-        return "ATrainingBundleSpecification{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", isDisabled=" + isDisabled +
-                ", createdAt=" + createdAt +
-                ", unlimitedDeletions=" + unlimitedDeletions +
-                ", numDeletions=" + numDeletions +
-                ", options=" + options +
-                '}';
-    }
-
-    public Integer getMaxCustomers() { return 1; }
+  public Integer getMaxCustomers() {
+    return 1;
+  }
 }

@@ -20,43 +20,47 @@ import java.util.Date;
 @RequestMapping("/trainingSessions")
 public class TrainingSessionController {
 
-    @Autowired
-    private TrainingSessionFacade facade;
+  @Autowired private TrainingSessionFacade facade;
 
+  @GetMapping(path = "/{id}")
+  @ResponseBody
+  public ResponseEntity<TrainingSessionResource> findById(
+      @PathVariable Long id) {
 
-    @GetMapping(path = "/{id}")
-    @ResponseBody
-    public ResponseEntity<TrainingSessionResource> findById(@PathVariable Long id) {
+    ATrainingSession s = facade.findById(id);
 
-        ATrainingSession s = facade.findById(id);
+    return new ResponseEntity<>(
+        new TrainingSessionAssembler().toModel(s), HttpStatus.OK);
+  }
 
-        return new ResponseEntity<>(new TrainingSessionAssembler().toModel(s), HttpStatus.OK);
-    }
+  @GetMapping("/{sessionId}/workouts")
+  @ResponseBody
+  public ResponseEntity<String> assign(
+      @PathVariable Long sessionId, @RequestParam Long workoutId) {
+    facade.assign(sessionId, workoutId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-    @GetMapping("/{sessionId}/workouts")
-    @ResponseBody
-    public ResponseEntity<String> assign(@PathVariable Long sessionId, @RequestParam Long workoutId) {
-        facade.assign(sessionId, workoutId);
-        return new ResponseEntity<>(HttpStatus.OK);
+  @DeleteMapping("/{sessionId}/workouts")
+  @ResponseBody
+  public ResponseEntity<String> remove(
+      @PathVariable Long sessionId, @RequestParam Long workoutId) {
+    facade.remove(sessionId, workoutId);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
-    }
-
-    @DeleteMapping("/{sessionId}/workouts")
-    @ResponseBody
-    public ResponseEntity<String> remove(@PathVariable Long sessionId, @RequestParam Long workoutId) {
-        facade.remove(sessionId, workoutId);
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping
-    @ResponseBody
-    public Page<TrainingSessionResource> getSessionsByCustomer(@RequestParam Long customerId,
-                                                               @RequestParam(required = false)
-                                                               @DateTimeFormat(pattern="dd-MM-yyyy",
-                                                                       iso = DateTimeFormat.ISO.DATE_TIME)
-                                                                       Date date,
-                                                               Pageable pageable) {
-        return facade.findByCustomer(customerId, date, pageable).map(TrainingSessionResource::new);
-    }
-
+  @GetMapping
+  @ResponseBody
+  public Page<TrainingSessionResource> getSessionsByCustomer(
+      @RequestParam Long customerId,
+      @RequestParam(required = false)
+          @DateTimeFormat(
+              pattern = "dd-MM-yyyy",
+              iso = DateTimeFormat.ISO.DATE_TIME)
+          Date date,
+      Pageable pageable) {
+    return facade
+        .findByCustomer(customerId, date, pageable)
+        .map(TrainingSessionResource::new);
+  }
 }

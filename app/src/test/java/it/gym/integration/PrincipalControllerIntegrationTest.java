@@ -1,6 +1,5 @@
 package it.gym.integration;
 
-
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,20 +10,22 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-public class PrincipalControllerIntegrationTest extends AbstractIntegrationTest {
+public class PrincipalControllerIntegrationTest
+    extends AbstractIntegrationTest {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Test
-    public void whenAsksForPrincipal_returnsPrincipal() throws Exception {
-        mockMvc.perform(get("/user"))
-                .andExpect(status().isOk()).andReturn();
-    }
+  @Test
+  public void whenAsksForPrincipal_returnsPrincipal() throws Exception {
+    mockMvc.perform(get("/user")).andExpect(status().isOk()).andReturn();
+  }
 
-    @Test
-    @WithAnonymousUser
-    public void whenAsksForPrincipal_returnsNull() throws Exception {
-        mockMvc.perform(get("/user"))
-                .andExpect(status().isUnauthorized()).andReturn();
-    }
+  @Test
+  @WithAnonymousUser
+  public void whenAsksForPrincipal_returnsNull() throws Exception {
+    mockMvc
+        .perform(get("/user"))
+        .andExpect(status().isUnauthorized())
+        .andReturn();
+  }
 }

@@ -7,11 +7,9 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class ImageResource extends RepresentationModel<ImageResource> {
 
-    @JsonUnwrapped
-    Image model;
+  @JsonUnwrapped Image model;
 
-    ImageResource(Image model) {
-        this.model = model;
-    }
-
+  ImageResource(Image model) {
+    this.model = model;
+  }
 }

@@ -6,17 +6,21 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
-public class AUserAssembler extends RepresentationModelAssemblerSupport<AUser, AUserResource> {
+public class AUserAssembler
+    extends RepresentationModelAssemblerSupport<AUser, AUserResource> {
 
-    public AUserAssembler(){
-        super(AUser.class, AUserResource.class);
-    }
+  public AUserAssembler() {
+    super(AUser.class, AUserResource.class);
+  }
 
-    @Override
-    public AUserResource toModel(AUser user) {
-        AUserResource resource = new AUserResource(user);
-        resource.add(linkTo(UserRepository.class).slash("users")
-                .slash(user.getId()).withSelfRel());
-        return resource;
-    }
+  @Override
+  public AUserResource toModel(AUser user) {
+    AUserResource resource = new AUserResource(user);
+    resource.add(
+        linkTo(UserRepository.class)
+            .slash("users")
+            .slash(user.getId())
+            .withSelfRel());
+    return resource;
+  }
 }

@@ -6,19 +6,21 @@ import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSuppor
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
+public class GymAssembler
+    extends RepresentationModelAssemblerSupport<Gym, GymResource> {
 
-public class GymAssembler extends RepresentationModelAssemblerSupport<Gym, GymResource> {
+  public GymAssembler() {
+    super(Gym.class, GymResource.class);
+  }
 
-    public GymAssembler(){
-        super(Gym.class, GymResource.class);
-
-    }
-
-    @Override
-    public GymResource toModel(Gym gym) {
-        GymResource resource = new GymResource(gym);
-        resource.add(linkTo(GymRepository.class).slash("gyms")
-                .slash(gym.getId()).withSelfRel());
-        return resource;
-    }
+  @Override
+  public GymResource toModel(Gym gym) {
+    GymResource resource = new GymResource(gym);
+    resource.add(
+        linkTo(GymRepository.class)
+            .slash("gyms")
+            .slash(gym.getId())
+            .withSelfRel());
+    return resource;
+  }
 }

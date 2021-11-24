@@ -15,61 +15,60 @@ import java.sql.SQLException;
 @Component
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class TenantConnectionProvider implements MultiTenantConnectionProvider {
 
-    @Autowired
-    CustomProperties properties;
+  @Autowired CustomProperties properties;
 
-    private static final Logger logger = LoggerFactory.getLogger(TenantConnectionProvider.class);
-    private final DataSource dataSource;
+  private static final Logger logger =
+      LoggerFactory.getLogger(TenantConnectionProvider.class);
+  private final DataSource dataSource;
 
-    public TenantConnectionProvider(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
+  public TenantConnectionProvider(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 
-    @Override
-    public Connection getAnyConnection() throws SQLException {
-        return dataSource.getConnection();
-    }
+  @Override
+  public Connection getAnyConnection() throws SQLException {
+    return dataSource.getConnection();
+  }
 
-    @Override
-    public void releaseAnyConnection(Connection connection) throws SQLException {
-        connection.close();
-    }
+  @Override
+  public void releaseAnyConnection(Connection connection) throws SQLException {
+    connection.close();
+  }
 
-    @Override
-    public Connection getConnection(String tenantIdentifier) throws SQLException {
-        logger.debug("Get connection for tenant {}", tenantIdentifier);
-        final Connection connection = getAnyConnection();
-        connection.setSchema(tenantIdentifier);
-        return connection;
-    }
+  @Override
+  public Connection getConnection(String tenantIdentifier) throws SQLException {
+    logger.debug("Get connection for tenant {}", tenantIdentifier);
+    final Connection connection = getAnyConnection();
+    connection.setSchema(tenantIdentifier);
+    return connection;
+  }
 
-    @Override
-    public void releaseConnection(String tenantIdentifier, Connection connection) throws SQLException {
-        logger.debug("Release connection for tenant {}", tenantIdentifier);
-        connection.setSchema(properties.getSchema());
-        releaseAnyConnection(connection);
-    }
+  @Override
+  public void releaseConnection(String tenantIdentifier, Connection connection)
+      throws SQLException {
+    logger.debug("Release connection for tenant {}", tenantIdentifier);
+    connection.setSchema(properties.getSchema());
+    releaseAnyConnection(connection);
+  }
 
-    @Override
-    public boolean supportsAggressiveRelease() {
-        return false;
-    }
+  @Override
+  public boolean supportsAggressiveRelease() {
+    return false;
+  }
 
-    @SuppressWarnings("rawtypes")
-    @Override
-    public boolean isUnwrappableAs(Class unwrapType) {
-        return false;
+  @SuppressWarnings("rawtypes")
+  @Override
+  public boolean isUnwrappableAs(Class unwrapType) {
+    return false;
+  }
 
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> unwrapType) {
-        return null;
-    }
-
+  @Override
+  public <T> T unwrap(Class<T> unwrapType) {
+    return null;
+  }
 }

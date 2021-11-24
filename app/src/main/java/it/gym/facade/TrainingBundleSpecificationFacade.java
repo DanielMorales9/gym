@@ -18,82 +18,88 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.List;
 
-
 @Component
 @Transactional
 public class TrainingBundleSpecificationFacade {
 
-    private static final Logger logger = LoggerFactory.getLogger(TrainingBundleSpecificationFacade.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(TrainingBundleSpecificationFacade.class);
 
-    @Autowired
-    private TrainingBundleSpecificationService service;
+  @Autowired private TrainingBundleSpecificationService service;
 
-    @Autowired
-    private EventService eventService;
+  @Autowired private EventService eventService;
 
-    @Autowired
-    private PurchaseOptionRepository repository;
+  @Autowired private PurchaseOptionRepository repository;
 
-    @Autowired
-    @Qualifier("trainingBundleService")
-    private TrainingBundleService bundleService;
+  @Autowired
+  @Qualifier("trainingBundleService")
+  private TrainingBundleService bundleService;
 
-    public ATrainingBundleSpecification findById(Long id) {
-        return service.findById(id);
+  public ATrainingBundleSpecification findById(Long id) {
+    return service.findById(id);
+  }
+
+  public void delete(ATrainingBundleSpecification spec) {
+    boolean noBundles = bundleService.findBundlesBySpec(spec).isEmpty();
+
+    if (!noBundles) {
+      throw new BadRequestException(
+          "Non è possibile eliminare un pacchetto attualmente in uso.");
     }
 
-    public void delete(ATrainingBundleSpecification spec) {
-        boolean noBundles = bundleService.findBundlesBySpec(spec).isEmpty();
+    boolean noEvents = eventService.findEventsBySpec(spec).isEmpty();
 
-        if (!noBundles) {
-            throw new BadRequestException("Non è possibile eliminare un pacchetto attualmente in uso.");
-        }
-
-        boolean noEvents = eventService.findEventsBySpec(spec).isEmpty();
-
-        if (!noEvents){
-            throw new BadRequestException("Non è possibile eliminare un pacchetto con eventi associati.");
-        }
-
-        service.delete(spec);
+    if (!noEvents) {
+      throw new BadRequestException(
+          "Non è possibile eliminare un pacchetto con eventi associati.");
     }
 
-    public ATrainingBundleSpecification createTrainingBundleSpecification(ATrainingBundleSpecification spec) {
-        return service.save(spec);
-    }
+    service.delete(spec);
+  }
 
-    public Page<ATrainingBundleSpecification> findByNameContains(String name, Boolean disabled, Pageable pageable) {
-       return this.service.search(name, disabled, pageable);
-    }
+  public ATrainingBundleSpecification createTrainingBundleSpecification(
+      ATrainingBundleSpecification spec) {
+    return service.save(spec);
+  }
 
-    public ATrainingBundleSpecification save(ATrainingBundleSpecification spec) {
-        return service.save(spec);
-    }
+  public Page<ATrainingBundleSpecification> findByNameContains(
+      String name, Boolean disabled, Pageable pageable) {
+    return this.service.search(name, disabled, pageable);
+  }
 
-    public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
-        return service.findAll(pageable);
-    }
+  public ATrainingBundleSpecification save(ATrainingBundleSpecification spec) {
+    return service.save(spec);
+  }
 
-    public boolean existsByName(String name) {
-        return service.existsByName(name);
-    }
+  public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
+    return service.findAll(pageable);
+  }
 
-    public ATrainingBundleSpecification createOptionToBundleSpec(Long id, APurchaseOption option) {
-        ATrainingBundleSpecification bundleSpec;
-        bundleSpec = this.service.findById(id);
-        bundleSpec.addOption(option);
-        return service.save(bundleSpec);
-    }
+  public boolean existsByName(String name) {
+    return service.existsByName(name);
+  }
 
-    public List<ATrainingBundleSpecification> list(Boolean disabled, String type) {
-        return this.service.list(disabled, type);
-    }
+  public ATrainingBundleSpecification createOptionToBundleSpec(
+      Long id, APurchaseOption option) {
+    ATrainingBundleSpecification bundleSpec;
+    bundleSpec = this.service.findById(id);
+    bundleSpec.addOption(option);
+    return service.save(bundleSpec);
+  }
 
-    public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
-        ATrainingBundleSpecification c = this.findById(id);
-        APurchaseOption o = this.repository.findById(optionId).orElseThrow(() -> new NotFoundException("Opzione non trovata"));
-        c.getOptions().remove(o);
-        repository.delete(o);
-        return service.save(c);
-    }
+  public List<ATrainingBundleSpecification> list(
+      Boolean disabled, String type) {
+    return this.service.list(disabled, type);
+  }
+
+  public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
+    ATrainingBundleSpecification c = this.findById(id);
+    APurchaseOption o =
+        this.repository
+            .findById(optionId)
+            .orElseThrow(() -> new NotFoundException("Opzione non trovata"));
+    c.getOptions().remove(o);
+    repository.delete(o);
+    return service.save(c);
+  }
 }

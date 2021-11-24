@@ -29,60 +29,60 @@ import java.util.stream.Collectors;
 @Transactional
 public class WorkoutFacade {
 
-    private static final Logger logger = LoggerFactory.getLogger(WorkoutFacade.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(WorkoutFacade.class);
 
-    @Autowired
-    private WorkoutService service;
+  @Autowired private WorkoutService service;
 
-    @Autowired
-    private EventService eventService;
+  @Autowired private EventService eventService;
 
-    @Autowired
-    @Qualifier("trainingSessionService")
-    private TrainingSessionService sessionService;
+  @Autowired
+  @Qualifier("trainingSessionService")
+  private TrainingSessionService sessionService;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  @Autowired private ObjectMapper objectMapper;
 
-    public Workout findById(Long var1) {
-        return service.findById(var1);
-    }
+  public Workout findById(Long var1) {
+    return service.findById(var1);
+  }
 
-    public Workout save(Workout w) {
-        return service.save(w);
-    }
+  public Workout save(Workout w) {
+    return service.save(w);
+  }
 
-    public List<Workout> findAll() {
-        return service.findAll();
-    }
+  public List<Workout> findAll() {
+    return service.findAll();
+  }
 
-    public void deleteById(Long id) {
-        Workout w = service.findById(id);
-        service.delete(w);
-    }
+  public void deleteById(Long id) {
+    Workout w = service.findById(id);
+    service.delete(w);
+  }
 
-    public Page<Workout> findAll(Pageable pageable) {
-        return service.findAll(pageable);
-    }
+  public Page<Workout> findAll(Pageable pageable) {
+    return service.findAll(pageable);
+  }
 
-    public Workout patch(Long id, HttpServletRequest request) throws IOException {
-        Workout w = service.findById(id);
-        w = objectMapper.readerForUpdating(w).readValue(request.getReader());
-        return service.save(w);
-    }
+  public Workout patch(Long id, HttpServletRequest request) throws IOException {
+    Workout w = service.findById(id);
+    w = objectMapper.readerForUpdating(w).readValue(request.getReader());
+    return service.save(w);
+  }
 
-    public Page<Workout> search(String name, String tag, Boolean isTemplate, Pageable pageable) {
-        return this.service.search(name, tag, isTemplate, pageable);
-    }
+  public Page<Workout> search(
+      String name, String tag, Boolean isTemplate, Pageable pageable) {
+    return this.service.search(name, tag, isTemplate, pageable);
+  }
 
-    public List<String> getTags() {
-        return this.findAll().stream()
-                .map(workout -> Arrays.asList(workout.getTag1(), workout.getTag2(), workout.getTag3()))
-                .flatMap(Collection::stream)
-                .filter(Objects::nonNull)
-                .distinct()
-                .collect(Collectors.toList());
-    }
-
-
+  public List<String> getTags() {
+    return this.findAll().stream()
+        .map(
+            workout ->
+                Arrays.asList(
+                    workout.getTag1(), workout.getTag2(), workout.getTag3()))
+        .flatMap(Collection::stream)
+        .filter(Objects::nonNull)
+        .distinct()
+        .collect(Collectors.toList());
+  }
 }

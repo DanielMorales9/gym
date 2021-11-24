@@ -22,61 +22,68 @@ import java.security.Principal;
 @PreAuthorize("isAuthenticated()")
 public class ReservationController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReservationController.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(ReservationController.class);
 
-    @Autowired private ReservationFacade facade;
+  @Autowired private ReservationFacade facade;
 
-    @PostMapping(path = "/{gymId}")
-    public ResponseEntity<ReservationResource> createReservationFromBundle(@PathVariable Long gymId,
-                                                                           @RequestParam("customerId") Long customerId,
-                                                                           @RequestParam("bundleId") Long bundleId,
-                                                                           @RequestBody Event event,
-                                                                           Principal principal) {
+  @PostMapping(path = "/{gymId}")
+  public ResponseEntity<ReservationResource> createReservationFromBundle(
+      @PathVariable Long gymId,
+      @RequestParam("customerId") Long customerId,
+      @RequestParam("bundleId") Long bundleId,
+      @RequestBody Event event,
+      Principal principal) {
 
-        Role r = facade.getRoleFromPrincipal(principal);
-        Reservation res = facade.createReservation(gymId, customerId, bundleId, event, r.getName());
+    Role r = facade.getRoleFromPrincipal(principal);
+    Reservation res =
+        facade.createReservation(
+            gymId, customerId, bundleId, event, r.getName());
 
-        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
+    return ResponseEntity.ok(new ReservationAssembler().toModel(res));
+  }
 
-    }
+  @GetMapping(path = "/{gymId}")
+  public ResponseEntity<ReservationResource> createReservationFromEvent(
+      @PathVariable Long gymId,
+      @RequestParam("customerId") Long customerId,
+      @RequestParam("eventId") Long eventId,
+      @RequestParam("bundleId") Long bundleId,
+      Principal principal) {
 
-    @GetMapping(path = "/{gymId}")
-    public ResponseEntity<ReservationResource> createReservationFromEvent(@PathVariable Long gymId,
-                                                                          @RequestParam("customerId") Long customerId,
-                                                                          @RequestParam("eventId") Long eventId,
-                                                                          @RequestParam("bundleId") Long bundleId,
-                                                                          Principal principal) {
+    Role r = facade.getRoleFromPrincipal(principal);
+    Reservation res =
+        facade.createReservationWithExistingEvent(
+            gymId, customerId, eventId, bundleId, r.getName());
 
-        Role r = facade.getRoleFromPrincipal(principal);
-        Reservation res = facade.createReservationWithExistingEvent(gymId, customerId, eventId, bundleId, r.getName());
+    return ResponseEntity.ok(new ReservationAssembler().toModel(res));
+  }
 
-        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
+  @DeleteMapping(path = "/{reservationId}")
+  public ResponseEntity<ReservationResource> delete(
+      @PathVariable Long reservationId,
+      @RequestParam Long eventId,
+      @RequestParam Long gymId,
+      Principal principal) {
 
-    }
+    Role r = facade.getRoleFromPrincipal(principal);
+    String email = principal.getName();
+    Reservation res =
+        facade.deleteReservation(
+            eventId, reservationId, gymId, email, r.getName());
 
-    @DeleteMapping(path = "/{reservationId}")
-    public ResponseEntity<ReservationResource> delete(@PathVariable Long reservationId,
-                                                      @RequestParam Long eventId,
-                                                      @RequestParam Long gymId,
-                                                      Principal principal) {
+    return ResponseEntity.ok(new ReservationAssembler().toModel(res));
+  }
 
-        Role r = facade.getRoleFromPrincipal(principal);
-        String email = principal.getName();
-        Reservation res = facade.deleteReservation(eventId, reservationId, gymId, email, r.getName());
+  @GetMapping(path = "/{reservationId}/confirm")
+  @ResponseBody
+  @PreAuthorize("hasAnyAuthority('TRAINER', 'ADMIN')")
+  public ResponseEntity<ReservationResource> confirm(
+      @PathVariable Long reservationId) {
 
-        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
-    }
+    logger.info("confirming session");
+    Reservation res = facade.confirm(reservationId);
 
-
-    @GetMapping(path = "/{reservationId}/confirm")
-    @ResponseBody
-    @PreAuthorize("hasAnyAuthority('TRAINER', 'ADMIN')")
-    public ResponseEntity<ReservationResource> confirm(@PathVariable Long reservationId) {
-
-        logger.info("confirming session");
-        Reservation res = facade.confirm(reservationId);
-
-        return ResponseEntity.ok(new ReservationAssembler().toModel(res));
-    }
-
+    return ResponseEntity.ok(new ReservationAssembler().toModel(res));
+  }
 }

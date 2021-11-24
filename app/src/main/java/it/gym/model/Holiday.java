@@ -10,26 +10,28 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 
 @Entity
-@DiscriminatorValue(value="H")
+@DiscriminatorValue(value = "H")
 @JsonTypeName("H")
 @ExposesResourceFor(value = AEvent.class)
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Generated //exclude coverage analysis on generated methods
+@Generated // exclude coverage analysis on generated methods
 public class Holiday extends AEvent {
 
-    public static final String TYPE = "H";
+  public static final String TYPE = "H";
 
-    @Override
-    public String getType() {
-        return TYPE;
-    }
+  @Override
+  public String getType() {
+    return TYPE;
+  }
 
-    @Override
-    public String toString() {
-        return "Holiday{" +
-                "startTime" + this.getStartTime() +
-                "endTime" + this.getEndTime() +
-                '}';
-    }
+  @Override
+  public String toString() {
+    return "Holiday{"
+        + "startTime"
+        + this.getStartTime()
+        + "endTime"
+        + this.getEndTime()
+        + '}';
+  }
 }

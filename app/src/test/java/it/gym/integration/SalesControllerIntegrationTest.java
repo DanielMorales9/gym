@@ -1,6 +1,5 @@
 package it.gym.integration;
 
-
 import it.gym.model.*;
 import it.gym.repository.*;
 import it.gym.utility.CalendarUtility;
@@ -27,486 +26,514 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class SalesControllerIntegrationTest extends AbstractIntegrationTest {
 
-    @Autowired private RoleRepository roleRepository;
-    @Autowired private SaleRepository repository;
-    @Autowired private SalesLineItemRepository sliRepository;
-    @Autowired private UserRepository userRepository;
-    @Autowired private GymRepository gymRepository;
-    @Autowired private TrainingBundleSpecificationRepository bundleSpecRepository;
-    @Autowired private TrainingBundleRepository bundleRepository;
-    @Autowired private PaymentRepository payRepository;
+  @Autowired private RoleRepository roleRepository;
+  @Autowired private SaleRepository repository;
+  @Autowired private SalesLineItemRepository sliRepository;
+  @Autowired private UserRepository userRepository;
+  @Autowired private GymRepository gymRepository;
+  @Autowired private TrainingBundleSpecificationRepository bundleSpecRepository;
+  @Autowired private TrainingBundleRepository bundleRepository;
+  @Autowired private PaymentRepository payRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private Customer customer;
-    private Sale sale;
-    private PersonalTrainingBundleSpecification personalSpec;
-    private CourseTrainingBundleSpecification courseSpec;
+  private Customer customer;
+  private Sale sale;
+  private PersonalTrainingBundleSpecification personalSpec;
+  private CourseTrainingBundleSpecification courseSpec;
 
-    private SalesLineItem sli1;
-    private ATrainingBundle course;
+  private SalesLineItem sli1;
+  private ATrainingBundle course;
 
-    @Before
-    public void before() {
-        List<Role> roles = createCustomerRoles();
-        roles = roleRepository.saveAll(roles);
-        customer = createCustomer(1L,
-                "customer@customer.com",
-                "password",
-                "customer",
-                "customer",
-                true,
-                roles
-        );
-        customer = userRepository.save(customer);
-        sale = createSale(1L, customer);
+  @Before
+  public void before() {
+    List<Role> roles = createCustomerRoles();
+    roles = roleRepository.saveAll(roles);
+    customer =
+        createCustomer(
+            1L,
+            "customer@customer.com",
+            "password",
+            "customer",
+            "customer",
+            true,
+            roles,
+            true);
+    customer = userRepository.save(customer);
+    sale = createSale(1L, customer);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
-        personalSpec = createPersonalBundleSpec(1L, "personal", options);
+    List<APurchaseOption> options =
+        createSingletonBundlePurchaseOptions(30, 900.0, null);
+    personalSpec = createPersonalBundleSpec(1L, "personal", options);
 
-        options = createSingletonTimePurchaseOptions(1, 100.0, null);
-        courseSpec = createCourseBundleSpec(1L, "course", 11, options);
+    options = createSingletonTimePurchaseOptions(1, 100.0, null);
+    courseSpec = createCourseBundleSpec(1L, "course", 11, options);
 
-        personalSpec = bundleSpecRepository.save(personalSpec);
-        courseSpec = bundleSpecRepository.save(courseSpec);
-        APurchaseOption option = courseSpec.getOptions().get(0);
-        course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
-        course = bundleRepository.save(course);
+    personalSpec = bundleSpecRepository.save(personalSpec);
+    courseSpec = bundleSpecRepository.save(courseSpec);
+    APurchaseOption option = courseSpec.getOptions().get(0);
+    course = createCourseBundle(1L, getNextMonday(), courseSpec, option);
+    course = bundleRepository.save(course);
 
-        sli1 = sale.addSalesLineItem(course);
-        sale = repository.save(sale);
-        sli1 = sale.getSalesLineItems().get(0);
+    sli1 = sale.addSalesLineItem(course);
+    sale = repository.save(sale);
+    sli1 = sale.getSalesLineItems().get(0);
+  }
 
-    }
+  @After
+  public void after() {
+    sliRepository.deleteAll();
+    payRepository.deleteAll();
+    repository.deleteAll();
+    bundleRepository.deleteAll();
+    bundleSpecRepository.deleteAll();
+    userRepository.deleteAll();
+    roleRepository.deleteAll();
+    gymRepository.deleteAll();
+  }
 
-    @After
-    public void after() {
-        sliRepository.deleteAll();
-        payRepository.deleteAll();
-        repository.deleteAll();
-        bundleRepository.deleteAll();
-        bundleSpecRepository.deleteAll();
-        userRepository.deleteAll();
-        roleRepository.deleteAll();
-        gymRepository.deleteAll();
-    }
+  @Test
+  public void findSaleByIdOK() throws Exception {
+    ResultActions result =
+        mockMvc
+            .perform(get("/sales/" + sale.getId()))
+            .andExpect(status().isOk());
 
-    @Test
-    public void findSaleByIdOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/sales/" + sale.getId()))
-                .andExpect(status().isOk());
+    expectSale(result, sale);
+    expectSaleUser(result, customer, "customer");
+  }
 
-        expectSale(result, sale);
-        expectSaleUser(result, customer, "customer");
-    }
+  @Test
+  public void findSaleByIdGotNotFound() throws Exception {
+    mockMvc.perform(get("/sales/" + 1000)).andExpect(status().isNotFound());
+  }
 
-    @Test
-    public void findSaleByIdGotNotFound() throws Exception {
-        mockMvc.perform(get("/sales/" + 1000))
-                .andExpect(status().isNotFound());
-    }
+  @Test
+  public void whenCreateSaleOK() throws Exception {
+    String path = "/sales";
 
-    @Test
-    public void whenCreateSaleOK() throws Exception {
-        String path = "/sales";
+    ResultActions result =
+        mockMvc
+            .perform(
+                post(path)
+                    .param("customerId", String.valueOf(customer.getId())))
+            .andExpect(status().isOk());
 
-        ResultActions result = mockMvc.perform(post(path)
-                .param("customerId", String.valueOf(customer.getId())))
-                .andExpect(status().isOk());
+    Sale s =
+        repository.findAll().stream()
+            .filter(sale1 -> !sale.getId().equals(sale1.getId()))
+            .limit(1)
+            .collect(Collectors.toList())
+            .get(0);
 
-        Sale s = repository.findAll()
-                .stream()
-                .filter(sale1 -> !sale.getId().equals(sale1.getId()))
-                .limit(1)
-                .collect(Collectors.toList()).get(0);
+    Sale expected = new Sale();
+    expected.setId(s.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(false);
+    expected.setCustomer(customer);
 
-        Sale expected = new Sale();
-        expected.setId(s.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(false);
-        expected.setCustomer(customer);
+    expectSale(result, expected);
+  }
 
-        expectSale(result, expected);
-    }
+  @Test
+  public void whenAddSliOK() throws Exception {
+    String path = String.format("/sales/%d/salesLineItems", sale.getId());
 
+    Long optionId = personalSpec.getOptions().get(0).getId();
+    ResultActions result =
+        mockMvc
+            .perform(
+                put(path)
+                    .param("bundleSpecId", personalSpec.getId().toString())
+                    .param("optionId", optionId.toString()))
+            .andExpect(status().isOk());
 
-    @Test
-    public void whenAddSliOK() throws Exception {
-        String path = String.format("/sales/%d/salesLineItems", sale.getId());
+    List<SalesLineItem> sli = sliRepository.findAll();
 
-        Long optionId = personalSpec.getOptions().get(0).getId();
-        ResultActions result = mockMvc.perform(put(path)
-                .param("bundleSpecId", personalSpec.getId().toString())
-                .param("optionId", optionId.toString()))
-                .andExpect(status().isOk());
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(false);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
 
-        List<SalesLineItem> sli = sliRepository.findAll();
+    expectSale(result, expected);
+    expectSalesLineItems(result, sli, "salesLineItems");
 
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(false);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
+    expectSaleUser(result, customer, "customer");
+  }
 
-        expectSale(result, expected);
-        expectSalesLineItems(result, sli, "salesLineItems");
+  @Test
+  public void whenAddSliByOptionOK() throws Exception {
+    APurchaseOption option = courseSpec.getOptions().get(0);
+    String path = String.format("/sales/%s/salesLineItems", sale.getId());
 
-        expectSaleUser(result, customer, "customer");
+    ResultActions result =
+        mockMvc
+            .perform(
+                put(path)
+                    .param("bundleSpecId", courseSpec.getId().toString())
+                    .param("optionId", option.getId().toString()))
+            .andExpect(status().isOk());
 
-    }
+    List<SalesLineItem> sli = sliRepository.findAll();
 
-    @Test
-    public void whenAddSliByOptionOK() throws Exception {
-        APurchaseOption option = courseSpec.getOptions().get(0);
-        String path = String.format("/sales/%s/salesLineItems", sale.getId());
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(false);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
 
-        ResultActions result = mockMvc.perform(put(path)
+    expectSale(result, expected);
+    expectSalesLineItems(result, sli, "salesLineItems");
+
+    expectSaleUser(result, customer, "customer");
+  }
+
+  @Test
+  public void whenAddSliThenItFails() throws Exception {
+    String path = "/sales/addSalesLineItem";
+
+    mockMvc
+        .perform(
+            get(path)
                 .param("bundleSpecId", courseSpec.getId().toString())
-                .param("optionId", option.getId().toString()))
-                .andExpect(status().isOk());
+                .param("saleId", sale.getId().toString()))
+        .andExpect(status().isBadRequest());
+  }
 
-        List<SalesLineItem> sli = sliRepository.findAll();
+  @Test
+  public void whenDeleteSliOK() throws Exception {
+    String path = "/sales/" + sale.getId() + "/salesLineItems/" + sli1.getId();
 
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(false);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
+    ResultActions result =
+        mockMvc.perform(delete(path)).andExpect(status().isOk());
 
-        expectSale(result, expected);
-        expectSalesLineItems(result, sli, "salesLineItems");
+    ArrayList<SalesLineItem> sli = new ArrayList<>();
 
-        expectSaleUser(result, customer, "customer");
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(false);
+    expected.setCustomer(customer);
 
+    expectSale(result, expected);
+    result = result.andExpect(jsonPath("$.salesLineItems").value(sli));
+    assertThat(sliRepository.findAll()).isEmpty();
+    logger.info(bundleRepository.findAll().toString());
+    assertThat(bundleRepository.findAll().size()).isEqualTo(0);
+    bundleSpecRepository.findById(courseSpec.getId()).get();
+  }
+
+  @Test
+  public void whenConfirmSaleOK() throws Exception {
+    String path = String.format("/sales/%d/confirm", sale.getId());
+
+    ResultActions result =
+        mockMvc.perform(get(path)).andExpect(status().isOk());
+
+    List<SalesLineItem> sli = sliRepository.findAll();
+
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(true);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
+
+    expectSale(result, expected);
+    expectSalesLineItems(result, sli, "salesLineItems");
+
+    Customer c = customer;
+    expectSaleUser(result, c, "customer");
+    c.setTrainingBundles(null);
+    userRepository.save(c);
+  }
+
+  @Test
+  public void whenDeleteSaleOK() throws Exception {
+    String path = "/sales/" + sale.getId();
+
+    List<SalesLineItem> sli = sliRepository.findAll();
+    ResultActions result =
+        mockMvc.perform(delete(path)).andExpect(status().isOk());
+
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(true);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
+
+    expectSale(result, expected);
+    expectSalesLineItems(result, sli, "salesLineItems");
+
+    Customer c = customer;
+    expectSaleUser(result, c, "customer");
+    assertThat(repository.findAll()).isEmpty();
+    assertThat(sliRepository.findAll()).isEmpty();
+    assertThat(bundleRepository.findAll().size()).isEqualTo(0);
+    bundleSpecRepository.findById(courseSpec.getId()).get();
+  }
+
+  @Test
+  public void whenDeleteSaleWithEvents() throws Exception {
+    String path = "/sales/" + sale.getId();
+
+    List<SalesLineItem> sli = sliRepository.findAll();
+    ResultActions result =
+        mockMvc.perform(delete(path)).andExpect(status().isOk());
+
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setCompleted(true);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
+
+    expectSale(result, expected);
+    expectSalesLineItems(result, sli, "salesLineItems");
+
+    Customer c = customer;
+    expectSaleUser(result, c, "customer");
+    assertThat(repository.findAll()).isEmpty();
+    assertThat(sliRepository.findAll()).isEmpty();
+    assertThat(bundleRepository.findAll().size()).isEqualTo(0);
+    bundleSpecRepository.findById(courseSpec.getId()).get();
+  }
+
+  @Test
+  public void whenSearchByDateAndIdOK() throws Exception {
+    String path = "/sales/findByCustomer";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path)
+                    .param("id", String.valueOf(sale.getCustomer().getId()))
+                    .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenSearchByDateAndIdAndPayedOK() throws Exception {
+    String path = "/sales/search";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path)
+                    .param("payed", String.valueOf(false))
+                    .param("id", String.valueOf(sale.getCustomer().getId()))
+                    .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  private void expectSales(ResultActions result) throws Exception {
+    List<SalesLineItem> sli = sliRepository.findAll();
+    for (int i = 0; i < 1; i++) {
+
+      Sale expected = new Sale();
+      expected.setId(sale.getId());
+      expected.setAmountPayed(0.);
+      expected.setCompleted(true);
+      expected.setCustomer(customer);
+      expected.setSalesLineItems(sli);
+
+      expectSale(result, expected, "content[" + i + "]");
+      expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
     }
+  }
 
-    @Test
-    public void whenAddSliThenItFails() throws Exception {
-        String path = "/sales/addSalesLineItem";
+  @Test
+  public void whenPayOK() throws Exception {
+    String path = "/sales/" + sale.getId() + "/pay?amount=" + 11.0;
 
-        mockMvc.perform(get(path)
-                        .param("bundleSpecId", courseSpec.getId().toString())
-                        .param("saleId", sale.getId().toString()))
-                .andExpect(status().isBadRequest());
+    sale.setCompleted(true);
+    sale = repository.save(sale);
+
+    ResultActions result =
+        mockMvc.perform(get(path)).andExpect(status().isOk());
+
+    List<SalesLineItem> sli = sliRepository.findAll();
+    List<Payment> payments = payRepository.findAll();
+
+    logger.info(payments.toString());
+
+    Payment payment = payments.get(0);
+
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(111.);
+    expected.setCompleted(true);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
+
+    expectSalesLineItems(result, sli, "salesLineItems");
+    expectSaleUser(result, customer, "customer");
+    expectPayment(result, payment, "payments[0]");
+  }
+
+  @Test
+  public void whenDeletePaymentOK() throws Exception {
+    Payment p = createPayment(1L, 11.0, new Date());
+    sale.addPayment(p);
+    sale = this.repository.save(sale);
+    p = sale.getPayments().get(0);
+    sale.setCompleted(true);
+
+    String path = "/sales/" + sale.getId() + "/payments/" + p.getId();
+
+    ResultActions result =
+        mockMvc.perform(delete(path)).andExpect(status().isOk());
+
+    List<SalesLineItem> sli = sliRepository.findAll();
+    List<Payment> payments = payRepository.findAll();
+
+    logger.info(payments.toString());
+
+    Sale expected = new Sale();
+    expected.setId(sale.getId());
+    expected.setAmountPayed(0.);
+    expected.setPayedDate(null);
+    expected.setCompleted(true);
+    expected.setCustomer(customer);
+    expected.setSalesLineItems(sli);
+
+    expectSalesLineItems(result, sli, "salesLineItems");
+    result.andExpect(jsonPath("$.payments").isEmpty());
+    expectSaleUser(result, customer, "customer");
+  }
+
+  @Test
+  public void whenFindAllOK() throws Exception {
+    String path = "/sales/";
+
+    ResultActions result =
+        mockMvc.perform(get(path)).andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenFindAllPayedOK() throws Exception {
+    String path = "/sales?payed=false";
+
+    ResultActions result =
+        mockMvc.perform(get(path)).andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenFindUserSalesOK() throws Exception {
+    String path = "/sales/findByCustomer";
+
+    ResultActions result =
+        mockMvc
+            .perform(get(path).param("id", customer.getId().toString()))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenFindUserSalesAndPayedOK() throws Exception {
+    String path = "/sales/findByCustomer";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path)
+                    .param("payed", String.valueOf(false))
+                    .param("id", customer.getId().toString()))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenSearchByDateOK() throws Exception {
+    String path = "/sales/search";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path).param("date", CalendarUtility.today("dd-MM-yyyy")))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenSearchByLastNameAndDateOK() throws Exception {
+    String path = "/sales/search";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path)
+                    .param("lastName", customer.getLastName())
+                    .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenSearchByLastNameAndDateAndPayedOK() throws Exception {
+    String path = "/sales/search";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path)
+                    .param("payed", String.valueOf(false))
+                    .param("lastName", customer.getLastName())
+                    .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenSearchByLastNameOK() throws Exception {
+    String path = "/sales/search";
+
+    ResultActions result =
+        mockMvc
+            .perform(get(path).param("lastName", customer.getLastName()))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  @Test
+  public void whenSearchByLastNameAndPayedOK() throws Exception {
+    String path = "/sales/search";
+
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(path)
+                    .param("payed", String.valueOf(false))
+                    .param("lastName", customer.getLastName()))
+            .andExpect(status().isOk());
+
+    expectSales(result);
+  }
+
+  private void expectSalesLineItems(
+      ResultActions result, List<SalesLineItem> sli, String prefix)
+      throws Exception {
+    for (int i = 0; i < sli.size(); i++) {
+      SalesLineItem sl = sli.get(i);
+      expectedSalesLineItem(result, sl, prefix + "[" + i + "]");
     }
-
-    @Test
-    public void whenDeleteSliOK() throws Exception {
-        String path = "/sales/" + sale.getId() + "/salesLineItems/" + sli1.getId();
-
-        ResultActions result = mockMvc.perform(delete(path))
-                .andExpect(status().isOk());
-
-        ArrayList<SalesLineItem> sli = new ArrayList<>();
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(false);
-        expected.setCustomer(customer);
-
-        expectSale(result, expected);
-        result = result.andExpect(jsonPath("$.salesLineItems").value(sli));
-        assertThat(sliRepository.findAll()).isEmpty();
-        logger.info(bundleRepository.findAll().toString());
-        assertThat(bundleRepository.findAll().size()).isEqualTo(0);
-        bundleSpecRepository.findById(courseSpec.getId()).get();
-    }
-
-    @Test
-    public void whenConfirmSaleOK() throws Exception {
-        String path = String.format("/sales/%d/confirm", sale.getId());
-
-        ResultActions result = mockMvc.perform(get(path))
-                .andExpect(status().isOk());
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(true);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSale(result, expected);
-        expectSalesLineItems(result, sli, "salesLineItems");
-
-        Customer c = customer;
-        expectSaleUser(result, c, "customer");
-        c.setTrainingBundles(null);
-        userRepository.save(c);
-
-    }
-
-    @Test
-    public void whenDeleteSaleOK() throws Exception {
-        String path = "/sales/" + sale.getId();
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-        ResultActions result = mockMvc.perform(delete(path))
-                .andExpect(status().isOk());
-
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(true);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSale(result, expected);
-        expectSalesLineItems(result, sli, "salesLineItems");
-
-        Customer c = customer;
-        expectSaleUser(result, c, "customer");
-        assertThat(repository.findAll()).isEmpty();
-        assertThat(sliRepository.findAll()).isEmpty();
-        assertThat(bundleRepository.findAll().size()).isEqualTo(0);
-        bundleSpecRepository.findById(courseSpec.getId()).get();
-    }
-
-    @Test
-    public void whenDeleteSaleWithEvents() throws Exception {
-        String path = "/sales/" + sale.getId();
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-        ResultActions result = mockMvc.perform(delete(path))
-                .andExpect(status().isOk());
-
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setCompleted(true);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSale(result, expected);
-        expectSalesLineItems(result, sli, "salesLineItems");
-
-        Customer c = customer;
-        expectSaleUser(result, c, "customer");
-        assertThat(repository.findAll()).isEmpty();
-        assertThat(sliRepository.findAll()).isEmpty();
-        assertThat(bundleRepository.findAll().size()).isEqualTo(0);
-        bundleSpecRepository.findById(courseSpec.getId()).get();
-    }
-
-    @Test
-    public void whenSearchByDateAndIdOK() throws Exception {
-        String path = "/sales/findByCustomer";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("id", String.valueOf(sale.getCustomer().getId()))
-                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenSearchByDateAndIdAndPayedOK() throws Exception {
-        String path = "/sales/search";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("payed", String.valueOf(false))
-                .param("id", String.valueOf(sale.getCustomer().getId()))
-                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    private void expectSales(ResultActions result) throws Exception {
-        List<SalesLineItem> sli = sliRepository.findAll();
-        for (int i = 0; i < 1; i++) {
-
-            Sale expected = new Sale();
-            expected.setId(sale.getId());
-            expected.setAmountPayed(0.);
-            expected.setCompleted(true);
-            expected.setCustomer(customer);
-            expected.setSalesLineItems(sli);
-
-            expectSale(result, expected, "content[" + i + "]");
-            expectSalesLineItems(result, sli, "content[" + i + "].salesLineItems");
-        }
-    }
-
-    @Test
-    public void whenPayOK() throws Exception {
-        String path = "/sales/"+sale.getId()+"/pay?amount="+11.0;
-
-        sale.setCompleted(true);
-        sale = repository.save(sale);
-
-        ResultActions result = mockMvc.perform(get(path))
-                .andExpect(status().isOk());
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-        List<Payment> payments = payRepository.findAll();
-
-        logger.info(payments.toString());
-
-        Payment payment = payments.get(0);
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(111.);
-        expected.setCompleted(true);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSalesLineItems(result, sli, "salesLineItems");
-        expectSaleUser(result, customer, "customer");
-        expectPayment(result, payment, "payments[0]");
-
-    }
-
-    @Test
-    public void whenDeletePaymentOK() throws Exception {
-        Payment p = createPayment(1L, 11.0, new Date());
-        sale.addPayment(p);
-        sale = this.repository.save(sale);
-        p = sale.getPayments().get(0);
-        sale.setCompleted(true);
-
-        String path = "/sales/"+sale.getId()+"/payments/"+ p.getId();
-
-        ResultActions result = mockMvc.perform(delete(path))
-                .andExpect(status().isOk());
-
-        List<SalesLineItem> sli = sliRepository.findAll();
-        List<Payment> payments = payRepository.findAll();
-
-        logger.info(payments.toString());
-
-        Sale expected = new Sale();
-        expected.setId(sale.getId());
-        expected.setAmountPayed(0.);
-        expected.setPayedDate(null);
-        expected.setCompleted(true);
-        expected.setCustomer(customer);
-        expected.setSalesLineItems(sli);
-
-        expectSalesLineItems(result, sli, "salesLineItems");
-        result.andExpect(jsonPath("$.payments").isEmpty());
-        expectSaleUser(result, customer, "customer");
-
-    }
-
-
-    @Test
-    public void whenFindAllOK() throws Exception {
-        String path = "/sales/";
-
-        ResultActions result = mockMvc.perform(get(path))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenFindAllPayedOK() throws Exception {
-        String path = "/sales?payed=false";
-
-        ResultActions result = mockMvc.perform(get(path))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenFindUserSalesOK() throws Exception {
-        String path = "/sales/findByCustomer";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("id",customer.getId().toString()))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenFindUserSalesAndPayedOK() throws Exception {
-        String path = "/sales/findByCustomer";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("payed", String.valueOf(false))
-                .param("id", customer.getId().toString()))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenSearchByDateOK() throws Exception {
-        String path = "/sales/search";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("date", CalendarUtility.today("dd-MM-yyyy")))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenSearchByLastNameAndDateOK() throws Exception {
-        String path = "/sales/search";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("lastName", customer.getLastName())
-                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenSearchByLastNameAndDateAndPayedOK() throws Exception {
-        String path = "/sales/search";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("payed", String.valueOf(false))
-                .param("lastName", customer.getLastName())
-                .param("date", CalendarUtility.yesterday("dd-MM-yyyy")))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenSearchByLastNameOK() throws Exception {
-        String path = "/sales/search";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("lastName", customer.getLastName()))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-    @Test
-    public void whenSearchByLastNameAndPayedOK() throws Exception {
-        String path = "/sales/search";
-
-        ResultActions result = mockMvc.perform(get(path)
-                .param("payed", String.valueOf(false))
-                .param("lastName", customer.getLastName()))
-                .andExpect(status().isOk());
-
-        expectSales(result);
-    }
-
-
-    private void expectSalesLineItems(ResultActions result, List<SalesLineItem> sli, String prefix) throws Exception {
-        for (int i = 0; i < sli.size(); i++) {
-            SalesLineItem sl = sli.get(i);
-            expectedSalesLineItem(result, sl, prefix+"[" + i + "]");
-        }
-    }
-
+  }
 }

@@ -8,10 +8,9 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class GymResource extends RepresentationModel<GymResource> {
 
-    @JsonUnwrapped
-    Gym model;
+  @JsonUnwrapped Gym model;
 
-    GymResource(Gym model) {
-        this.model = model;
-    }
+  GymResource(Gym model) {
+    this.model = model;
+  }
 }

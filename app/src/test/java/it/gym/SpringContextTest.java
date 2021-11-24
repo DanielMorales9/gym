@@ -19,14 +19,14 @@ import static org.springframework.boot.test.context.SpringBootTest.WebEnvironmen
 @Import(ApplicationTestConfig.class)
 public class SpringContextTest {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @ClassRule
-    public static CustomPostgresContainer sqlContainer = CustomPostgresContainer.getInstance();
+  @ClassRule
+  public static CustomPostgresContainer sqlContainer =
+      CustomPostgresContainer.getInstance();
 
-    @Test
-    public void whenSpringContextIsBootstrapped_thenNoExceptions() {
-        assertThat(true).isTrue();
-    }
-
+  @Test
+  public void whenSpringContextIsBootstrapped_thenNoExceptions() {
+    assertThat(true).isTrue();
+  }
 }

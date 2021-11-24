@@ -26,210 +26,220 @@ import java.util.stream.Stream;
 @Component
 @Transactional
 public class SaleFacade {
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
-    private SaleService saleService;
+  @Autowired private SaleService saleService;
 
-    @Autowired
-    private UserService userService;
+  @Autowired private UserService userService;
 
-    @Autowired
-    @Qualifier("trainingBundleSpecificationService")
-    private TrainingBundleSpecificationService bundleSpecService;
+  @Autowired
+  @Qualifier("trainingBundleSpecificationService")
+  private TrainingBundleSpecificationService bundleSpecService;
 
-    @Autowired
-    @Qualifier("trainingBundleService")
-    private TrainingBundleService bundleService;
+  @Autowired
+  @Qualifier("trainingBundleService")
+  private TrainingBundleService bundleService;
 
-    @Autowired
-    private SalesLineItemService salesLineItemService;
+  @Autowired private SalesLineItemService salesLineItemService;
 
-    @Autowired
-    private PaymentService paymentService;
+  @Autowired private PaymentService paymentService;
 
-    @Autowired
-    @Qualifier("trainingSessionService")
-    private TrainingSessionService sessionService;
+  @Autowired
+  @Qualifier("trainingSessionService")
+  private TrainingSessionService sessionService;
 
-    @Autowired
-    private EventService eventService;
+  @Autowired private EventService eventService;
 
-    @Autowired
-    private ReservationService reservationService;
+  @Autowired private ReservationService reservationService;
 
-    private Sale save(Sale sale) {
-        return this.saleService.save(sale);
+  private Sale save(Sale sale) {
+    return this.saleService.save(sale);
+  }
+
+  public Sale findById(Long saleId) {
+    return saleService.findById(saleId);
+  }
+
+  private void delete(Sale sale) {
+    saleService.delete(sale);
+  }
+
+  public Page<Sale> findAll(Boolean payed, Pageable pageable) {
+    return this.saleService.findAll(payed, pageable);
+  }
+
+  public Sale getTotalPriceBySaleId(Long saleId) {
+    Sale sale = this.findById(saleId);
+    sale.getTotalPrice();
+    return sale;
+  }
+
+  public Sale createSale(Long customerId) {
+    Customer customer = (Customer) userService.findById(customerId);
+
+    Sale sale = new Sale();
+    sale.setCreatedAt(new Date());
+    sale.setAmountPayed(0.);
+    sale.setCustomer(customer);
+    return this.save(sale);
+  }
+
+  public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Long optionId) {
+    Sale sale = this.findById(saleId);
+    ATrainingBundleSpecification bundleSpec =
+        this.bundleSpecService.findById(bundleSpecId);
+    ATrainingBundle bundle = bundleSpec.createTrainingBundle(optionId);
+    bundle.setCustomer(sale.getCustomer());
+
+    sale.addSalesLineItem(bundle);
+    return this.save(sale);
+  }
+
+  public Sale deleteSalesLineItem(Long saleId, Long salesLineItemId) {
+    Sale sale = this.findById(saleId);
+    SalesLineItem sli = salesLineItemService.findById(salesLineItemId);
+    if (!sale.deleteSalesLineItem(sli))
+      throw new ConflictException(
+          "Impossibile eliminate riga con id "
+              + saleId
+              + " della vendita con id "
+              + saleId);
+    ATrainingBundle trainingBundle = sli.getTrainingBundle();
+    if (trainingBundle.isDeletable()) {
+      bundleService.delete(trainingBundle);
+    }
+    this.salesLineItemService.delete(sli);
+    return this.save(sale);
+  }
+
+  public Sale confirmSale(Long saleId) {
+    String messageTemplate = "Impossibile confermare vendita (#%d) vuota.";
+    Sale sale = findById(saleId);
+    if (!sale.confirm())
+      throw new BadRequestException(
+          String.format(messageTemplate, sale.getId()));
+    return this.save(sale);
+  }
+
+  public Sale paySale(Long saleId, Double amount) {
+    Sale sale = this.findById(saleId);
+    logger.debug("Paying");
+    logger.debug(sale.toString());
+
+    if (!sale.isCompleted()) {
+      String message =
+          String.format("La vendita (%d) non è stata completata.", saleId);
+      logger.debug(message);
+      throw new BadRequestException(message);
     }
 
-    public Sale findById(Long saleId) {
-        return saleService.findById(saleId);
+    Double amountPayed = sale.getAmountPayed();
+    Double totalPrice = sale.getTotalPrice();
+
+    if (amountPayed + amount > totalPrice) {
+      String message = "Stai pagando più del dovuto!";
+      logger.debug(message);
+      throw new BadRequestException(message);
     }
 
-    private void delete(Sale sale) {
-        saleService.delete(sale);
+    sale.pay(amount);
+
+    return this.save(sale);
+  }
+
+  public Sale deleteSaleById(Long saleId) {
+    Sale sale = this.findById(saleId);
+
+    if (!sale.isDeletable()) {
+      throw new BadRequestException(
+          String.format(
+              "Non è possibile eliminare la vendita per il cliente: %s",
+              sale.getCustomer().getLastName()));
     }
 
-    public Page<Sale> findAll(Boolean payed, Pageable pageable) {
-        return this.saleService.findAll(payed, pageable);
-    }
+    // get bundles from sale
+    List<ATrainingBundle> bundles = getDeletableBundles(sale);
 
-    public Sale getTotalPriceBySaleId(Long saleId) {
-        Sale sale = this.findById(saleId);
-        sale.getTotalPrice();
-        return sale;
-    }
+    List<ATrainingSession> sessions =
+        bundles.stream()
+            .map(ATrainingBundle::getSessions)
+            .flatMap(Collection::stream)
+            .collect(Collectors.toList());
 
-    public Sale createSale(Long customerId) {
-        Customer customer = (Customer) userService.findById(customerId);
+    // get reservations from sessions from bundles
+    List<Reservation> reservations =
+        sessions.stream()
+            .map(ATrainingSession::getReservation)
+            .collect(Collectors.toList());
 
-        Sale sale = new Sale();
-        sale.setCreatedAt(new Date());
-        sale.setAmountPayed(0.);
-        sale.setCustomer(customer);
-        return this.save(sale);
-    }
+    // get events from reservations
+    List<ATrainingEvent> deletableEvents =
+        reservations.stream()
+            .map(Reservation::getEvent)
+            .filter(ATrainingEvent::isDeletable)
+            .collect(Collectors.toList());
 
-    public Sale addSalesLineItem(Long saleId, Long bundleSpecId, Long optionId) {
-        Sale sale = this.findById(saleId);
-        ATrainingBundleSpecification bundleSpec = this.bundleSpecService.findById(bundleSpecId);
-        ATrainingBundle bundle = bundleSpec.createTrainingBundle(optionId);
-        bundle.setCustomer(sale.getCustomer());
+    List<ATrainingEvent> saveEvents =
+        reservations.stream()
+            .filter(a -> !a.getEvent().isDeletable())
+            .peek(r -> r.getEvent().deleteReservation(r))
+            .map(Reservation::getEvent)
+            .collect(Collectors.toList());
 
-        sale.addSalesLineItem(bundle);
-        return this.save(sale);
-    }
+    eventService.saveAll(saveEvents);
+    reservationService.deleteAll(reservations);
+    eventService.deleteAll(deletableEvents);
+    sessionService.deleteAll(sessions);
+    bundleService.deleteAll(bundles);
 
-    public Sale deleteSalesLineItem(Long saleId, Long salesLineItemId) {
-        Sale sale = this.findById(saleId);
-        SalesLineItem sli = salesLineItemService.findById(salesLineItemId);
-        if (!sale.deleteSalesLineItem(sli))
-            throw new ConflictException("Impossibile eliminate riga con id " + saleId + " della vendita con id " + saleId);
-        ATrainingBundle trainingBundle = sli.getTrainingBundle();
-        if (trainingBundle.isDeletable()) {
-            bundleService.delete(trainingBundle);
-        }
-        this.salesLineItemService.delete(sli);
-        return this.save(sale);
-    }
+    this.salesLineItemService.deleteAll(sale.getSalesLineItems());
+    this.paymentService.deleteAll(sale.getPayments());
 
-    public Sale confirmSale(Long saleId) {
-        String messageTemplate = "Impossibile confermare vendita (#%d) vuota.";
-        Sale sale = findById(saleId);
-        if (!sale.confirm()) throw new BadRequestException(String.format(messageTemplate, sale.getId()));
-        return this.save(sale);
-    }
+    this.delete(sale);
+    return sale;
+  }
 
-    public Sale paySale(Long saleId, Double amount) {
-        Sale sale = this.findById(saleId);
-        logger.debug("Paying");
-        logger.debug(sale.toString());
+  private List<ATrainingBundle> getDeletableBundles(Sale sale) {
+    return sale.getSalesLineItems().stream()
+        .map(SalesLineItem::getTrainingBundle)
+        .collect(Collectors.toList());
+  }
 
-        if (!sale.isCompleted()) {
-            String message = String.format("La vendita (%d) non è stata completata.", saleId);
-            logger.debug(message);
-            throw new BadRequestException(message);
-        }
+  public Sale deletePayment(Long saleId, Long paymentId) {
+    Sale sale = this.findById(saleId);
+    Payment p =
+        sale.getPayments().stream()
+            .filter(payment -> payment.getId().equals(paymentId))
+            .findFirst()
+            .orElseThrow(
+                () -> new BadRequestException("Questo pagamento non esiste"));
 
-        Double amountPayed = sale.getAmountPayed();
-        Double totalPrice = sale.getTotalPrice();
+    sale.getPayments().remove(p);
 
-        if (amountPayed + amount > totalPrice) {
-            String message = "Stai pagando più del dovuto!";
-            logger.debug(message);
-            throw new BadRequestException(message);
-        }
+    sale.setAmountPayed(sale.getAmountPayed() - p.getAmount());
+    sale.setPayedDate(null);
 
-        sale.pay(amount);
+    paymentService.delete(p);
 
-        return this.save(sale);
-    }
+    return this.save(sale);
+  }
 
-    public Sale deleteSaleById(Long saleId) {
-        Sale sale = this.findById(saleId);
+  public Page<Sale> getSales(
+      String lastName, Date date, Boolean payed, Pageable pageable) {
+    return this.saleService.getSales(lastName, date, payed, pageable);
+  }
 
-        if (!sale.isDeletable()) {
-            throw new BadRequestException(String.format("Non è possibile eliminare la vendita per il cliente: %s",
-                    sale.getCustomer().getLastName()));
-        }
+  public Page<Sale> findAllUserSales(
+      Long id, Date date, Boolean payed, Pageable pageable) {
+    return this.saleService.findAllUserSales(id, date, payed, pageable);
+  }
 
-        // get bundles from sale
-        List<ATrainingBundle> bundles = getDeletableBundles(sale);
-
-        List<ATrainingSession> sessions = bundles.stream()
-                .map(ATrainingBundle::getSessions)
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
-
-        // get reservations from sessions from bundles
-        List<Reservation> reservations = sessions.stream()
-                .map(ATrainingSession::getReservation)
-                .collect(Collectors.toList());
-
-        // get events from reservations
-        List<ATrainingEvent> deletableEvents = reservations.stream()
-                .map(Reservation::getEvent)
-                .filter(ATrainingEvent::isDeletable)
-                .collect(Collectors.toList());
-
-        List<ATrainingEvent> saveEvents = reservations.stream()
-                .filter(a -> !a.getEvent().isDeletable())
-                .peek(r -> r.getEvent().deleteReservation(r))
-                .map(Reservation::getEvent)
-                .collect(Collectors.toList());
-
-        eventService.saveAll(saveEvents);
-        reservationService.deleteAll(reservations);
-        eventService.deleteAll(deletableEvents);
-        sessionService.deleteAll(sessions);
-        bundleService.deleteAll(bundles);
-        
-        this.salesLineItemService.deleteAll(sale.getSalesLineItems());
-        this.paymentService.deleteAll(sale.getPayments());
-
-        this.delete(sale);
-        return sale;
-    }
-
-    private List<ATrainingBundle> getDeletableBundles(Sale sale) {
-        return sale.getSalesLineItems()
-                .stream()
-                .map(SalesLineItem::getTrainingBundle)
-                .collect(Collectors.toList());
-    }
-
-    public Sale deletePayment(Long saleId, Long paymentId) {
-        Sale sale = this.findById(saleId);
-        Payment p = sale
-                .getPayments()
-                .stream()
-                .filter(payment -> payment.getId().equals(paymentId))
-                .findFirst()
-                .orElseThrow(() -> new BadRequestException("Questo pagamento non esiste"));
-
-        sale.getPayments().remove(p);
-
-        sale.setAmountPayed(sale.getAmountPayed() - p.getAmount());
-        sale.setPayedDate(null);
-
-        paymentService.delete(p);
-
-        return this.save(sale);
-    }
-
-    public Page<Sale> getSales(String lastName, Date date, Boolean payed, Pageable pageable) {
-        return this.saleService.getSales(lastName, date, payed, pageable);
-    }
-
-    public Page<Sale> findAllUserSales(Long id, Date date, Boolean payed, Pageable pageable) {
-        return this.saleService.findAllUserSales(id, date, payed, pageable);
-    }
-
-    public Balance getBalance(Long customerId) {
-        Stream<Sale> streamOfSales = this.saleService.findSalesByCustomerId(customerId).stream();
-        return streamOfSales.map(s -> new Balance(s.getTotalPrice(), s.getAmountPayed()))
-                .reduce(Balance::sum)
-                .orElse(new Balance());
-
-    }
+  public Balance getBalance(Long customerId) {
+    Stream<Sale> streamOfSales =
+        this.saleService.findSalesByCustomerId(customerId).stream();
+    return streamOfSales
+        .map(s -> new Balance(s.getTotalPrice(), s.getAmountPayed()))
+        .reduce(Balance::sum)
+        .orElse(new Balance());
+  }
 }

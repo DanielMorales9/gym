@@ -19,24 +19,22 @@ import javax.transaction.Transactional;
 @RequestMapping(value = "/tenants")
 public class TenantController {
 
-    @Autowired
-    private TenantService service;
+  @Autowired private TenantService service;
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseStatus(HttpStatus.CREATED)
-    public Tenant createTenant(@RequestBody Tenant tenant){
-        return service.createTenant(tenant);
-    }
+  @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+  @ResponseStatus(HttpStatus.CREATED)
+  public Tenant createTenant(@RequestBody Tenant tenant) {
+    return service.createTenant(tenant);
+  }
 
-    @DeleteMapping("/{uuid}")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTenant(@RequestParam String uuid){
-        service.deleteById(uuid);
-    }
+  @DeleteMapping("/{uuid}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void deleteTenant(@RequestParam String uuid) {
+    service.deleteById(uuid);
+  }
 
-    @GetMapping
-    public Page<Tenant> getTenants(Pageable pageable){
-        return service.findAll(pageable);
-    }
-
+  @GetMapping
+  public Page<Tenant> getTenants(Pageable pageable) {
+    return service.findAll(pageable);
+  }
 }

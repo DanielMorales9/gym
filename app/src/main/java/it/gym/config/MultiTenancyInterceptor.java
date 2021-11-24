@@ -18,26 +18,30 @@ import java.io.IOException;
 @Component
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class MultiTenancyInterceptor extends OncePerRequestFilter {
 
-    @Autowired
-    CustomProperties properties;
+  @Autowired CustomProperties properties;
 
-    @Autowired
-    TenantRepository repository;
+  @Autowired TenantRepository repository;
 
-    @Override
-    public void doFilterInternal(HttpServletRequest request,
-                                 @NotNull HttpServletResponse response,
-                                 FilterChain filterChain) throws IOException, ServletException {
-        String tenantUuid = request.getHeader("X-Tenant");
-        logger.debug("preHandle TenantContext");
-        Tenant tenant = tenantUuid != null? repository.findById(tenantUuid).orElse(null): null;
-        String schema = tenant != null ? tenant.getSchemaName(): properties.getSchema();
-        TenantContext.setCurrentTenantSchema(schema);
-        filterChain.doFilter(request, response);
-    }
+  @Override
+  public void doFilterInternal(
+      HttpServletRequest request,
+      @NotNull HttpServletResponse response,
+      FilterChain filterChain)
+      throws IOException, ServletException {
+    String tenantUuid = request.getHeader("X-Tenant");
+    logger.debug("preHandle TenantContext");
+    Tenant tenant =
+        tenantUuid != null
+            ? repository.findById(tenantUuid).orElse(null)
+            : null;
+    String schema =
+        tenant != null ? tenant.getSchemaName() : properties.getSchema();
+    TenantContext.setCurrentTenantSchema(schema);
+    filterChain.doFilter(request, response);
+  }
 }

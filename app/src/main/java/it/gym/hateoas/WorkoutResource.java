@@ -6,11 +6,9 @@ import org.springframework.hateoas.RepresentationModel;
 
 public class WorkoutResource extends RepresentationModel<WorkoutResource> {
 
-    @JsonUnwrapped
-    private Workout model;
+  @JsonUnwrapped private Workout model;
 
-    WorkoutResource(Workout model) {
-        this.model = model;
-    }
-
+  WorkoutResource(Workout model) {
+    this.model = model;
+  }
 }

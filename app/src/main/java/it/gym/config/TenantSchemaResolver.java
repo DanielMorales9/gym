@@ -9,27 +9,25 @@ import org.springframework.stereotype.Component;
 @Component
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class TenantSchemaResolver implements CurrentTenantIdentifierResolver {
 
-    @Autowired
-    CustomProperties properties;
+  @Autowired CustomProperties properties;
 
-    @Override
-    public String resolveCurrentTenantIdentifier() {
-        String t =  TenantContext.getCurrentTenant();
-        if(t!=null){
-            return t;
-        } else {
-            return properties.getSchema();
-        }
+  @Override
+  public String resolveCurrentTenantIdentifier() {
+    String t = TenantContext.getCurrentTenant();
+    if (t != null) {
+      return t;
+    } else {
+      return properties.getSchema();
     }
+  }
 
-    @Override
-    public boolean validateExistingCurrentSessions() {
-        return true;
-    }
-
+  @Override
+  public boolean validateExistingCurrentSessions() {
+    return true;
+  }
 }
