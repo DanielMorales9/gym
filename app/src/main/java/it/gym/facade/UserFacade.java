@@ -82,7 +82,7 @@ public class UserFacade {
   }
 
   @CacheEvict(value = "profile_pictures", key = "#id")
-  public AUser uploadImage(Long id, MultipartFile file) throws IOException {
+  public UserDTO uploadImage(Long id, MultipartFile file) throws IOException {
     AUser user = this.service.findById(id);
     Image image1 = user.getImage();
     if (image1 != null) {
@@ -97,7 +97,7 @@ public class UserFacade {
             BlobUtility.compressBytes(file.getBytes()),
             user);
     user.setImage(image);
-    return this.save(user);
+    return userMapper.toDTO(this.save(user));
   }
 
   @CachePut(value = "profile_pictures", key = "#id")

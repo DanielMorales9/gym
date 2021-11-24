@@ -3,8 +3,6 @@ package it.gym.controller;
 import it.gym.facade.UserFacade;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
-import it.gym.hateoas.ImageAssembler;
-import it.gym.hateoas.ImageResource;
 import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
@@ -60,19 +58,19 @@ public class UserController {
   }
 
   @PostMapping("/{id}/image")
-  public ResponseEntity<AUserResource> uploadImage(
+  public ResponseEntity<UserDTO> uploadImage(
       @PathVariable("id") Long id,
       @RequestParam("imageFile") MultipartFile file)
       throws IOException {
-    AUser u = facade.uploadImage(id, file);
-    return ResponseEntity.ok(new AUserAssembler().toModel(u));
+    UserDTO u = facade.uploadImage(id, file);
+    return ResponseEntity.ok(u);
   }
 
   @GetMapping("/{id}/image")
-  public ResponseEntity<ImageResource> getImage(@PathVariable("id") Long id)
+  public ResponseEntity<Image> getImage(@PathVariable("id") Long id)
       throws DataFormatException, IOException {
     Image u = facade.retrieveImage(id);
-    return ResponseEntity.ok(new ImageAssembler().toModel(u));
+    return ResponseEntity.ok(u);
   }
 
   @GetMapping(path = "/findByEmail")
