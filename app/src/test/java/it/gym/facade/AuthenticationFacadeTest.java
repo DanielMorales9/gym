@@ -1,5 +1,11 @@
 package it.gym.facade;
 
+import static it.gym.utility.Fixture.*;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
@@ -12,6 +18,9 @@ import it.gym.model.VerificationToken;
 import it.gym.pojo.PasswordForm;
 import it.gym.service.*;
 import it.gym.utility.Fixture;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -23,16 +32,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.mail.MailSendException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static it.gym.utility.Fixture.*;
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @RunWith(SpringRunner.class)
 public class AuthenticationFacadeTest {

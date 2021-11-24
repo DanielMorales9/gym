@@ -3,13 +3,12 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import it.gym.exception.BadRequestException;
+import java.io.Serializable;
+import java.util.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.*;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({

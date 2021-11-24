@@ -13,6 +13,11 @@ import it.gym.repository.ImageRepository;
 import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;
 import it.gym.utility.BlobUtility;
+import java.io.IOException;
+import java.util.List;
+import java.util.zip.DataFormatException;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.cache.annotation.CacheEvict;
@@ -21,12 +26,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.List;
-import java.util.zip.DataFormatException;
 
 @Component
 @Transactional
@@ -44,7 +43,7 @@ public class UserFacade {
 
   @Autowired private ObjectMapper objectMapper;
 
-  public AUser delete(Long id) {
+  public UserDTO deleteUserById(Long id) {
     AUser user = this.service.findById(id);
     if (tokenService.existsByUser(user)) {
       VerificationToken vtk = this.tokenService.findByUser(user);
@@ -57,7 +56,7 @@ public class UserFacade {
       throw new BadRequestException(
           "Impossibile eliminare un utente con delle transazioni attive");
     }
-    return user;
+    return userMapper.toDTO(user);
   }
 
   public AUser save(AUser u) {

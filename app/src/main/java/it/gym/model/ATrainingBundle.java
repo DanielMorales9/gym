@@ -3,16 +3,15 @@ package it.gym.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonSubTypes;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.Data;
-import lombok.Generated;
-import org.springframework.data.rest.core.annotation.RestResource;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import javax.persistence.*;
+import lombok.Data;
+import lombok.Generated;
+import org.springframework.data.rest.core.annotation.RestResource;
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, property = "type", visible = true)
 @JsonSubTypes({

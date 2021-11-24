@@ -1,13 +1,12 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.Generated;
-
+import java.util.List;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import java.util.List;
+import lombok.Generated;
 
 @Entity
 @Generated // exclude coverage analysis on generated methods

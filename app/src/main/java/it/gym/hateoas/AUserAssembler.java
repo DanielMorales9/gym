@@ -1,10 +1,10 @@
 package it.gym.hateoas;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import it.gym.model.AUser;
 import it.gym.repository.UserRepository;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class AUserAssembler
     extends RepresentationModelAssemblerSupport<AUser, AUserResource> {

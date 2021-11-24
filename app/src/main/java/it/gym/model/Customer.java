@@ -1,15 +1,14 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import lombok.ToString;
-
-import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "C")

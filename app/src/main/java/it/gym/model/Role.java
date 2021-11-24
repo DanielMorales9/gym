@@ -1,11 +1,10 @@
 package it.gym.model;
 
+import java.io.Serializable;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
-
-import javax.persistence.*;
-import java.io.Serializable;
 
 @Entity
 @Table(name = "roles")

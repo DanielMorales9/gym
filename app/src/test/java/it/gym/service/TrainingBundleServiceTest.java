@@ -1,9 +1,14 @@
 package it.gym.service;
 
+import static it.gym.utility.Fixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.PersonalTrainingBundleSpecification;
 import it.gym.repository.TrainingBundleRepository;
+import java.util.Collections;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -12,12 +17,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.List;
-
-import static it.gym.utility.Fixture.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 public class TrainingBundleServiceTest {

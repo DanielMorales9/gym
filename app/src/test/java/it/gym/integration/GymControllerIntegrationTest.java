@@ -1,5 +1,11 @@
 package it.gym.integration;
 
+import static it.gym.utility.Fixture.createGym;
+import static it.gym.utility.HateoasTest.expectGym;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
@@ -11,12 +17,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import static it.gym.utility.Fixture.createGym;
-import static it.gym.utility.HateoasTest.expectGym;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class GymControllerIntegrationTest extends AbstractIntegrationTest {
 

@@ -1,9 +1,8 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import javax.persistence.*;
 import java.io.Serializable;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "images")

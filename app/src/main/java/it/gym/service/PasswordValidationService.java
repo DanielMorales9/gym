@@ -2,10 +2,9 @@ package it.gym.service;
 
 import com.google.common.base.Joiner;
 import it.gym.exception.BadRequestException;
+import java.util.Arrays;
 import org.passay.*;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 public class PasswordValidationService {

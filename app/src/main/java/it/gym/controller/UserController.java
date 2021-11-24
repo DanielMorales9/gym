@@ -9,6 +9,10 @@ import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
 import it.gym.pojo.UserDTO;
+import java.io.IOException;
+import java.util.List;
+import java.util.zip.DataFormatException;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,11 +20,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
-import java.util.zip.DataFormatException;
 
 @RestController
 @RequestMapping("/users")
@@ -48,9 +47,9 @@ public class UserController {
 
   @DeleteMapping(path = "/{id}")
   @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<AUserResource> delete(@PathVariable Long id) {
-    AUser user = facade.delete(id);
-    return ResponseEntity.ok(new AUserAssembler().toModel(user));
+  public ResponseEntity<UserDTO> delete(@PathVariable Long id) {
+    UserDTO user = facade.deleteUserById(id);
+    return ResponseEntity.ok(user);
   }
 
   @PatchMapping(path = "/{id}")

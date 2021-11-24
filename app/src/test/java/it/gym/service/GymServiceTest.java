@@ -1,9 +1,17 @@
 package it.gym.service;
 
+import static it.gym.utility.CalendarUtility.getNextMonday;
+import static it.gym.utility.Fixture.createGym;
+import static org.apache.commons.lang3.time.DateUtils.addDays;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
+import java.util.*;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,15 +21,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.*;
-
-import static it.gym.utility.CalendarUtility.getNextMonday;
-import static it.gym.utility.Fixture.createGym;
-import static org.apache.commons.lang3.time.DateUtils.addDays;
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class GymServiceTest {

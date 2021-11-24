@@ -1,14 +1,13 @@
 package it.gym.utility;
 
-import it.gym.model.*;
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
+import it.gym.model.*;
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
 public class Fixture {
 

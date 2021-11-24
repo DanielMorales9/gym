@@ -1,25 +1,23 @@
 package it.gym.service;
 
+import static it.gym.utility.CheckEvents.checkInterval;
+
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.pojo.Icon;
 import it.gym.pojo.Manifest;
 import it.gym.repository.GymRepository;
-import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
-import static it.gym.utility.CheckEvents.checkInterval;
 
 @Service
 @Transactional

@@ -1,13 +1,12 @@
 package it.gym.model;
 
 import it.gym.exception.MethodNotAllowedException;
+import java.util.Date;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import java.util.Date;
 
 @Entity
 @DiscriminatorValue(value = "C")

@@ -1,10 +1,17 @@
 package it.gym.service;
 
+import static it.gym.utility.Fixture.createGym;
+import static it.gym.utility.Fixture.createSale;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import it.gym.model.Customer;
 import it.gym.model.Gym;
 import it.gym.model.Sale;
 import it.gym.repository.SaleRepository;
 import it.gym.utility.Fixture;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,14 +20,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static it.gym.utility.Fixture.createGym;
-import static it.gym.utility.Fixture.createSale;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 public class SaleServiceTest {

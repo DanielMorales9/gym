@@ -3,12 +3,11 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.*;
 import it.gym.repository.EventRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 @Service
 public class EventService implements ICrudService<AEvent, Long> {

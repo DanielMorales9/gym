@@ -1,14 +1,13 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
-
+import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import java.util.Objects;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 @Entity
 @DiscriminatorValue(value = "C")

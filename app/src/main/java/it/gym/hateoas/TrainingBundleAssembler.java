@@ -1,11 +1,11 @@
 package it.gym.hateoas;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import it.gym.model.ATrainingBundle;
 import it.gym.repository.TrainingBundleRepository;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class TrainingBundleAssembler
     extends RepresentationModelAssemblerSupport<

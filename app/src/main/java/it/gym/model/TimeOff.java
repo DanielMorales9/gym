@@ -1,15 +1,14 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
-import org.springframework.hateoas.server.ExposesResourceFor;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
+import org.springframework.hateoas.server.ExposesResourceFor;
 
 @Entity
 @DiscriminatorValue(value = "T")

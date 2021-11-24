@@ -6,6 +6,9 @@ import it.gym.service.GymService;
 import it.gym.service.RoleService;
 import it.gym.service.TenantService;
 import it.gym.service.UserService;
+import java.time.DayOfWeek;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.CommandLineRunner;
@@ -14,10 +17,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
-
-import java.time.DayOfWeek;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 @EnableScheduling

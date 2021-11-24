@@ -1,5 +1,8 @@
 package it.gym;
 
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+
 import it.gym.config.ApplicationTestConfig;
 import it.gym.config.CustomPostgresContainer;
 import org.junit.ClassRule;
@@ -10,9 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = RANDOM_PORT)

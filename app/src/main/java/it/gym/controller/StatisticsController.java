@@ -6,11 +6,10 @@ import it.gym.pojo.SaleBundleStatistics;
 import it.gym.pojo.SaleTimeStatistics;
 import it.gym.repository.EventStatsRepository;
 import it.gym.repository.SaleStatsRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/stats")

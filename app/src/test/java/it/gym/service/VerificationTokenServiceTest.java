@@ -1,8 +1,18 @@
 package it.gym.service;
 
+import static it.gym.utility.Fixture.createAdmin;
+import static it.gym.utility.Fixture.createToken;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.*;
+
 import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
 import it.gym.repository.VerificationTokenRepository;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -11,17 +21,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
-
-import static it.gym.utility.Fixture.createAdmin;
-import static it.gym.utility.Fixture.createToken;
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.*;
 
 @RunWith(SpringRunner.class)
 public class VerificationTokenServiceTest {

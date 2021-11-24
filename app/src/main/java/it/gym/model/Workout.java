@@ -1,12 +1,11 @@
 package it.gym.model;
 
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "workouts")

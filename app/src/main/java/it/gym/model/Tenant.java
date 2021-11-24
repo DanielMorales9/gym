@@ -1,14 +1,13 @@
 package it.gym.model;
 
 import it.gym.config.FlywayConfig;
+import java.io.Serializable;
+import java.util.Date;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Table(name = "tenants", schema = FlywayConfig.DEFAULT_SCHEMA)

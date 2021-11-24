@@ -1,12 +1,12 @@
 package it.gym.hateoas;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import it.gym.model.*;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class EventAssembler
     extends RepresentationModelAssemblerSupport<AEvent, EventResource> {

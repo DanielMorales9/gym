@@ -4,6 +4,8 @@ import it.gym.exception.NotFoundException;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingBundleSpecification;
 import it.gym.repository.TrainingBundleRepository;
+import java.util.Date;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
@@ -11,9 +13,6 @@ import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class TrainingBundleService

@@ -1,24 +1,5 @@
 package it.gym.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.model.*;
-import it.gym.repository.TrainingBundleRepository;
-import it.gym.repository.TrainingBundleSpecificationRepository;
-import it.gym.utility.HateoasTest;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectOption;
@@ -28,6 +9,24 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.model.*;
+import it.gym.repository.TrainingBundleRepository;
+import it.gym.repository.TrainingBundleSpecificationRepository;
+import it.gym.utility.HateoasTest;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
 public class TrainingBundleSpecControllerIntegrationTest
     extends AbstractIntegrationTest {

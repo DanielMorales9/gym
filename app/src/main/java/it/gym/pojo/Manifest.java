@@ -1,9 +1,8 @@
 package it.gym.pojo;
 
-import lombok.Data;
-
 import java.io.Serializable;
 import java.util.List;
+import lombok.Data;
 
 @Data
 public class Manifest implements Serializable {

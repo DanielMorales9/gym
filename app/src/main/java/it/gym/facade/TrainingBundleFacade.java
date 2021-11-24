@@ -3,18 +3,17 @@ package it.gym.facade;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.ATrainingBundle;
 import it.gym.service.TrainingBundleService;
+import java.io.IOException;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional

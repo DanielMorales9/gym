@@ -1,6 +1,11 @@
 package it.gym.service;
 
+import static it.gym.utility.Fixture.createCustomer;
+import static it.gym.utility.Fixture.createCustomerRoles;
+import static org.assertj.core.api.Assertions.assertThat;
+
 import it.gym.model.AUser;
+import java.util.Collections;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -13,12 +18,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-
-import static it.gym.utility.Fixture.createCustomer;
-import static it.gym.utility.Fixture.createCustomerRoles;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 @WithMockUser(

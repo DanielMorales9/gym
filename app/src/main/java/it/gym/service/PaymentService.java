@@ -3,11 +3,10 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Payment;
 import it.gym.repository.PaymentRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional

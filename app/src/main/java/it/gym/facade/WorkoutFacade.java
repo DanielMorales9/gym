@@ -1,13 +1,18 @@
 package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.exception.BadRequestException;
-import it.gym.model.ATrainingSession;
-import it.gym.model.PersonalTrainingEvent;
 import it.gym.model.Workout;
 import it.gym.service.EventService;
 import it.gym.service.TrainingSessionService;
 import it.gym.service.WorkoutService;
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
+import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,15 +20,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.transaction.Transactional;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
 @Component
 @Transactional

@@ -2,11 +2,10 @@ package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import it.gym.model.*;
-import org.springframework.hateoas.RepresentationModel;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.hateoas.RepresentationModel;
 
 public abstract class EventResource extends RepresentationModel<EventResource> {
   private final Long id;

@@ -3,10 +3,9 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.SalesLineItem;
 import it.gym.repository.SalesLineItemRepository;
+import java.util.List;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @Transactional

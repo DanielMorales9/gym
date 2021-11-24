@@ -1,10 +1,10 @@
 package it.gym.hateoas;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import it.gym.controller.SaleController;
 import it.gym.model.Sale;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class SaleAssembler
     extends RepresentationModelAssemblerSupport<Sale, SaleResource> {

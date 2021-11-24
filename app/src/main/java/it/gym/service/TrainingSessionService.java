@@ -1,22 +1,16 @@
 package it.gym.service;
 
 import it.gym.exception.NotFoundException;
-import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingSession;
-import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingSessionRepository;
+import java.util.Date;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.CachePut;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class TrainingSessionService

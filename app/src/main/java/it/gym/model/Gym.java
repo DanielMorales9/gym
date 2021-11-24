@@ -1,15 +1,14 @@
 package it.gym.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.DayOfWeek;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
+import javax.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 @Entity
 @Data

@@ -1,14 +1,13 @@
 package it.gym.model;
 
+import static it.gym.utility.Fixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.*;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.*;
-
-import static it.gym.utility.Fixture.*;
-import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
 public class SaleTest {

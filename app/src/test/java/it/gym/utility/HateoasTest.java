@@ -1,14 +1,10 @@
 package it.gym.utility;
 
-import it.gym.model.*;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+
+import it.gym.model.*;
+import java.util.List;
+import org.springframework.test.web.servlet.ResultActions;
 
 public class HateoasTest {
 

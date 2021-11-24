@@ -1,13 +1,12 @@
 package it.gym.model;
 
+import java.util.Collections;
+import java.util.List;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import java.util.Collections;
-import java.util.List;
 
 @Entity
 @DiscriminatorValue(value = "T")

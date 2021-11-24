@@ -1,9 +1,15 @@
 package it.gym.service;
 
+import static it.gym.utility.Fixture.createAdminRole;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+
 import it.gym.exception.NotFoundException;
 import it.gym.model.Role;
 import it.gym.repository.RoleRepository;
-import it.gym.utility.Fixture;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -12,14 +18,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
-
-import static it.gym.utility.Fixture.createAdminRole;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class RoleServiceTest {

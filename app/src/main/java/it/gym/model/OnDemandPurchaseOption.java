@@ -1,15 +1,14 @@
 package it.gym.model;
 
+import static org.apache.commons.lang3.time.DateUtils.addMonths;
+
 import com.fasterxml.jackson.annotation.JsonTypeName;
+import java.util.Date;
+import javax.persistence.DiscriminatorValue;
+import javax.persistence.Entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Generated;
-
-import javax.persistence.DiscriminatorValue;
-import javax.persistence.Entity;
-import java.util.Date;
-
-import static org.apache.commons.lang3.time.DateUtils.addMonths;
 
 @Entity
 @DiscriminatorValue(value = "D")

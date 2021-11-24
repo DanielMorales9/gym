@@ -1,25 +1,24 @@
 package it.gym.integration;
 
+import static it.gym.utility.CalendarUtility.getNextMonday;
+import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.expectTrainingBundle;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.CustomerRepository;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import it.gym.utility.CalendarUtility;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.List;
-
-import static it.gym.utility.CalendarUtility.getNextMonday;
-import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.expectTrainingBundle;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class TrainingBundleControllerIntegrationTest
     extends AbstractIntegrationTest {

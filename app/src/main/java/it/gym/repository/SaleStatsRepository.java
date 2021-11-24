@@ -3,11 +3,10 @@ package it.gym.repository;
 import it.gym.model.Sale;
 import it.gym.pojo.SaleBundleStatistics;
 import it.gym.pojo.SaleTimeStatistics;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
 
 @Repository
 public interface SaleStatsRepository extends JpaRepository<Sale, String> {

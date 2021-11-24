@@ -1,19 +1,13 @@
 package it.gym.controller;
 
-import it.gym.exception.NotFoundException;
 import it.gym.model.Tenant;
-import it.gym.repository.TenantRepository;
 import it.gym.service.TenantService;
-import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.sql.DataSource;
-import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping(value = "/tenants")

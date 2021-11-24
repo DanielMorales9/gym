@@ -1,11 +1,10 @@
 package it.gym.hateoas;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import it.gym.controller.ReservationController;
 import it.gym.model.ATrainingBundleSpecification;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class TrainingBundleSpecificationAssembler
     extends RepresentationModelAssemblerSupport<

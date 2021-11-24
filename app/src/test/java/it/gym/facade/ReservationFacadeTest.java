@@ -1,11 +1,20 @@
 package it.gym.facade;
 
+import static it.gym.utility.CalendarUtility.getNextMonday;
+import static it.gym.utility.Fixture.*;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+
 import it.gym.config.CustomProperties;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
 import it.gym.pojo.Event;
 import it.gym.service.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -15,16 +24,6 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-
-import static it.gym.utility.CalendarUtility.getNextMonday;
-import static it.gym.utility.Fixture.*;
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 
 @RunWith(SpringRunner.class)
 public class ReservationFacadeTest {

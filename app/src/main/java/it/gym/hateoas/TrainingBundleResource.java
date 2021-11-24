@@ -4,11 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingSession;
-import org.springframework.hateoas.RepresentationModel;
-
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.hateoas.RepresentationModel;
 
 public class TrainingBundleResource
     extends RepresentationModel<TrainingBundleResource> {

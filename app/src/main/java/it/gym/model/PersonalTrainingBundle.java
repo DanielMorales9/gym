@@ -1,11 +1,10 @@
 package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
-import lombok.Generated;
-import org.springframework.hateoas.server.ExposesResourceFor;
-
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import lombok.Generated;
+import org.springframework.hateoas.server.ExposesResourceFor;
 
 @Entity
 @DiscriminatorValue(value = "P")

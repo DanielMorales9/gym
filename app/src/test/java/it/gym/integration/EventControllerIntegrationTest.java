@@ -1,19 +1,5 @@
 package it.gym.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.model.*;
-import it.gym.pojo.Event;
-import it.gym.repository.*;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Date;
-import java.util.List;
-
 import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.expectEvent;
@@ -21,6 +7,19 @@ import static org.apache.commons.lang3.time.DateUtils.*;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.model.*;
+import it.gym.pojo.Event;
+import it.gym.repository.*;
+import java.util.Date;
+import java.util.List;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
 public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 

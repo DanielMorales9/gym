@@ -2,13 +2,12 @@ package it.gym.model;
 
 import com.fasterxml.jackson.annotation.JsonTypeName;
 import it.gym.exception.MethodNotAllowedException;
-import lombok.Generated;
-import org.springframework.hateoas.server.ExposesResourceFor;
-
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.persistence.*;
+import lombok.Generated;
+import org.springframework.hateoas.server.ExposesResourceFor;
 
 @Entity
 @DiscriminatorValue(value = "C")

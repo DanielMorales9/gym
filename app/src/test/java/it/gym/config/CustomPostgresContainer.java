@@ -5,8 +5,6 @@ import org.slf4j.LoggerFactory;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.containers.wait.strategy.Wait;
 
-import java.io.IOException;
-
 public class CustomPostgresContainer
     extends PostgreSQLContainer<CustomPostgresContainer> {
 

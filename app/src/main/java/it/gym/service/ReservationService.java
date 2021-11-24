@@ -3,11 +3,9 @@ package it.gym.service;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Reservation;
 import it.gym.repository.ReservationRepository;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-import java.util.List;
 
 @Service
 public class ReservationService implements ICrudService<Reservation, Long> {

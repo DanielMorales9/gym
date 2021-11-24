@@ -1,6 +1,7 @@
 package it.gym.config;
 
 import it.gym.repository.TenantRepository;
+import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,8 +10,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.scheduling.annotation.EnableScheduling;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableScheduling

@@ -3,8 +3,6 @@ package it.gym.utility;
 import it.gym.exception.BadRequestException;
 import it.gym.model.AEvent;
 import it.gym.model.Holiday;
-import it.gym.model.TimeOff;
-
 import java.util.Date;
 import java.util.List;
 

@@ -1,13 +1,12 @@
 package it.gym.model;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.Generated;
-
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import javax.persistence.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Generated;
 
 @Entity
 @Table(name = "verify_token")

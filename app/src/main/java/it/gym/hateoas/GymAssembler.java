@@ -1,10 +1,10 @@
 package it.gym.hateoas;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
 import org.springframework.hateoas.server.mvc.RepresentationModelAssemblerSupport;
-
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 
 public class GymAssembler
     extends RepresentationModelAssemblerSupport<Gym, GymResource> {

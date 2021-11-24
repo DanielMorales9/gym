@@ -1,26 +1,20 @@
 package it.gym.config;
 
+import static it.gym.config.FlywayConfig.DB_MIGRATION_TENANTS;
+
+import java.io.InputStream;
+import javax.mail.internet.MimeMessage;
+import javax.sql.DataSource;
 import org.flywaydb.core.Flyway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.mail.internet.MimeMessage;
-import javax.sql.DataSource;
-
-import java.io.InputStream;
-
-import static it.gym.config.FlywayConfig.DB_MIGRATION_TENANTS;
 
 @TestConfiguration
 public class ApplicationTestConfig {

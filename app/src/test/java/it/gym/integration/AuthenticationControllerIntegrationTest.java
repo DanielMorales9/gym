@@ -1,11 +1,21 @@
 package it.gym.integration;
 
+import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.expectAdminRoles;
+import static it.gym.utility.HateoasTest.expectUser;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.CustomerRepository;
 import it.gym.repository.RoleRepository;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
+import java.util.Date;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,17 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.util.Date;
-import java.util.List;
-
-import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.expectAdminRoles;
-import static it.gym.utility.HateoasTest.expectUser;
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class AuthenticationControllerIntegrationTest
     extends AbstractIntegrationTest {

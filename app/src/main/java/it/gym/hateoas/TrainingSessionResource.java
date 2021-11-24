@@ -1,14 +1,11 @@
 package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import it.gym.model.ATrainingBundleSpecification;
 import it.gym.model.ATrainingSession;
 import it.gym.model.Workout;
-import org.springframework.hateoas.RepresentationModel;
-
 import java.util.Date;
 import java.util.List;
+import org.springframework.hateoas.RepresentationModel;
 
 public class TrainingSessionResource
     extends RepresentationModel<TrainingSessionResource> {

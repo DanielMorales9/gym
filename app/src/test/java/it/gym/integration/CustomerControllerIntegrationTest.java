@@ -1,7 +1,16 @@
 package it.gym.integration;
 
+import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import it.gym.model.*;
 import it.gym.repository.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,16 +18,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.ResultActions;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-
-import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class CustomerControllerIntegrationTest extends AbstractIntegrationTest {
 

@@ -1,19 +1,5 @@
 package it.gym.integration;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gym.model.*;
-import it.gym.repository.*;
-import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.ResultActions;
-
-import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-
 import static it.gym.utility.CalendarUtility.getNextMonday;
 import static it.gym.utility.Fixture.*;
 import static it.gym.utility.HateoasTest.*;
@@ -22,6 +8,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.testcontainers.shaded.org.apache.commons.lang.time.DateUtils.addDays;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.model.*;
+import it.gym.repository.*;
+import java.util.Date;
+import java.util.List;
+import javax.transaction.Transactional;
+import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.ResultActions;
 
 public class ReservationControllerIntegrationTest
     extends AbstractIntegrationTest {
