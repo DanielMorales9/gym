@@ -1,9 +1,6 @@
 package it.gym.controller;
 
 import it.gym.facade.UserFacade;
-import it.gym.hateoas.AUserAssembler;
-import it.gym.hateoas.AUserResource;
-import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
 import it.gym.pojo.UserDTO;
@@ -74,9 +71,9 @@ public class UserController {
   }
 
   @GetMapping(path = "/findByEmail")
-  public ResponseEntity<AUserResource> findByEmail(@RequestParam String email) {
-    AUser user = facade.findByEmail(email);
-    return ResponseEntity.ok(new AUserAssembler().toModel(user));
+  public ResponseEntity<UserDTO> findByEmail(@RequestParam String email) {
+    UserDTO user = facade.findByEmail(email);
+    return ResponseEntity.ok(user);
   }
 
   @GetMapping(path = "/search")
@@ -90,7 +87,7 @@ public class UserController {
   @GetMapping(path = "/events")
   @ResponseBody
   @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-  public List<AUser> findUserPerEvent(@RequestParam Long eventId) {
+  public List<UserDTO> findUserPerEvent(@RequestParam Long eventId) {
     return facade.findUserByEventId(eventId);
   }
 }

@@ -15,6 +15,7 @@ import it.gym.service.VerificationTokenService;
 import it.gym.utility.BlobUtility;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.DataFormatException;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
@@ -56,29 +57,31 @@ public class UserFacade {
       throw new BadRequestException(
           "Impossibile eliminare un utente con delle transazioni attive");
     }
-    return userMapper.toDTO(user);
+    return userMapper.toDTO(user, false);
   }
 
   public AUser save(AUser u) {
     return this.service.save(u);
   }
 
-  public AUser findByEmail(String email) {
-    return this.service.findByEmail(email);
+  public UserDTO findByEmail(String email) {
+    return userMapper.toDTO(this.service.findByEmail(email), true);
   }
 
   public Page<UserDTO> findByName(String query, Pageable pageable) {
     return service
         .findByName(query.toLowerCase(), pageable)
-        .map(userMapper::toDTO);
+        .map(user -> userMapper.toDTO(user, false));
   }
 
   public Page<UserDTO> findAll(Pageable pageable) {
-    return service.findAll(pageable).map(userMapper::toDTO);
+    return service.findAll(pageable).map(user -> userMapper.toDTO(user, false));
   }
 
-  public List<AUser> findUserByEventId(Long eventId) {
-    return service.findUserEvent(eventId);
+  public List<UserDTO> findUserByEventId(Long eventId) {
+    return service.findUserEvent(eventId).stream()
+        .map(aUser -> userMapper.toDTO(aUser, false))
+        .collect(Collectors.toList());
   }
 
   @CacheEvict(value = "profile_pictures", key = "#id")
@@ -97,7 +100,7 @@ public class UserFacade {
             BlobUtility.compressBytes(file.getBytes()),
             user);
     user.setImage(image);
-    return userMapper.toDTO(this.save(user));
+    return userMapper.toDTO(this.save(user), false);
   }
 
   @CachePut(value = "profile_pictures", key = "#id")
@@ -121,10 +124,10 @@ public class UserFacade {
       throws IOException {
     AUser u = service.findById(id);
     u = objectMapper.readerForUpdating(u).readValue(request.getReader());
-    return userMapper.toDTO(save(u));
+    return userMapper.toDTO(save(u), false);
   }
 
   public UserDTO findUserById(Long id) {
-    return userMapper.toDTO(this.service.findById(id));
+    return userMapper.toDTO(this.service.findById(id), false);
   }
 }

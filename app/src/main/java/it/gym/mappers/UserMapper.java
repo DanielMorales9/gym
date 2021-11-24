@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-  public UserDTO toDTO(AUser user) {
+  public UserDTO toDTO(AUser user, boolean mapRoles) {
+
     return new UserDTO(
         user.getId(),
         user.getFirstName(),
@@ -17,6 +18,7 @@ public class UserMapper {
         user.getPhoneNumber(),
         user.getType(),
         user.isVerified(),
-        user.isGender());
+        user.isGender(),
+        mapRoles ? user.getRoles() : null);
   }
 }

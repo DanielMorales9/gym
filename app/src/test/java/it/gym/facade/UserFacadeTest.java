@@ -78,7 +78,7 @@ public class UserFacadeTest {
         .isEqualTo(
             new UserDTO(
                 id, firstName, lastName, email, null, null, "C", verified,
-                gender));
+                gender, null));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class UserFacadeTest {
         .isEqualTo(
             new UserDTO(
                 id, firstName, lastName, email, null, null, "C", verified,
-                gender));
+                gender, null));
   }
 
   @Test
@@ -131,19 +131,21 @@ public class UserFacadeTest {
 
   @Test
   public void findByEmail() {
+    long id = 1L;
+    String email = "customer@customer.com";
+    String firstName = "customer";
+    String lastName = "customer";
+    boolean verified = true;
+    boolean gender = true;
     AUser customer =
         Fixture.createCustomer(
-            1L,
-            "customer@customer.com",
-            "",
-            "customer",
-            "customer",
-            true,
-            null,
-            true);
-    String email = "customer@customer.com";
+            id, email, "", firstName, lastName, verified, null, gender);
     Mockito.doReturn(customer).when(userService).findByEmail(email);
-    AUser user = userFacade.findByEmail(email);
-    assertThat(user).isEqualTo(customer);
+    UserDTO user = userFacade.findByEmail(email);
+    assertThat(user)
+        .isEqualTo(
+            new UserDTO(
+                id, firstName, lastName, email, null, null, "C", verified,
+                verified, null));
   }
 }

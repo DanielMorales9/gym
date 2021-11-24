@@ -1,6 +1,8 @@
 package it.gym.pojo;
 
+import it.gym.model.Role;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 public class UserDTO {
@@ -13,6 +15,7 @@ public class UserDTO {
   private final String type;
   private final boolean verified;
   private final boolean gender;
+  private final List<Role> roles;
 
   public UserDTO(
       Long id,
@@ -23,7 +26,8 @@ public class UserDTO {
       String phoneNumber,
       String type,
       boolean verified,
-      boolean gender) {
+      boolean gender,
+      List<Role> roles) {
     this.id = id;
     this.firstName = firstName;
     this.lastName = lastName;
@@ -33,6 +37,7 @@ public class UserDTO {
     this.type = type;
     this.verified = verified;
     this.gender = gender;
+    this.roles = roles;
   }
 
   public boolean isVerified() {
@@ -128,5 +133,9 @@ public class UserDTO {
         + ", gender="
         + gender
         + '}';
+  }
+
+  public List<Role> getRoles() {
+    return roles;
   }
 }
