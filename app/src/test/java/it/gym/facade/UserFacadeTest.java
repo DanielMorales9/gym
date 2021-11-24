@@ -1,5 +1,7 @@
 package it.gym.facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.mappers.UserMapper;
 import it.gym.model.AUser;
 import it.gym.model.VerificationToken;
 import it.gym.repository.ImageRepository;
@@ -33,6 +35,12 @@ public class UserFacadeTest {
 
     @MockBean
     private ImageRepository imageRepository;
+
+    @MockBean
+    private UserMapper userMapper;
+
+    @MockBean
+    private ObjectMapper objectMapper;
 
     @Autowired
     private UserFacade userFacade;

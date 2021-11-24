@@ -48,7 +48,7 @@ public abstract class AUser implements DefaultRoles, Serializable, Eager<AUser> 
     protected String email;
 
     @Column(name = "gender")
-    protected Boolean gender;
+    protected Boolean gender; // woman is true, man is false
 
     @Column(name = "password")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

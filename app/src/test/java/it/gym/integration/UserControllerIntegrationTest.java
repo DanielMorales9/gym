@@ -59,7 +59,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
                 .andExpect(status().isOk());
         for (int i = 0; i < 1; i++) {
             expectUser(result, admin, "content["+i+"]");
-            expectAdminRoles(result, roles, "content["+i+"].roles");
         }
     }
 
@@ -78,7 +77,6 @@ public class UserControllerIntegrationTest extends AbstractIntegrationTest {
 
         expectUser(result, admin, "content["+0+"]");
         expectUser(result, admin, "content["+0+"]");
-        expectAdminRoles(result, roles, "content["+0+"].roles");
     }
 
     @Test

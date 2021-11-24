@@ -1,6 +1,5 @@
 package it.gym.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.UserFacade;
 import it.gym.hateoas.AUserAssembler;
 import it.gym.hateoas.AUserResource;
@@ -9,6 +8,7 @@ import it.gym.hateoas.ImageResource;
 import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
+import it.gym.pojo.UserDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,12 +29,10 @@ public class UserController {
 
     @Autowired
     private UserFacade facade;
-    @Autowired
-    private ObjectMapper objectMapper;
 
     @GetMapping
     @ResponseBody
-    public Page<AUser> get(Pageable pageable) {
+    public Page<UserDTO> get(Pageable pageable) {
         return facade.findAll(pageable);
     }
 
@@ -46,8 +44,7 @@ public class UserController {
 
     @GetMapping(path = "/{id}/roles")
     List<Role> getRoles(@PathVariable Long id) {
-        AUser user = facade.findById(id);
-        return user.getRoles();
+        return facade.getUserRolesById(id);
     }
 
     @DeleteMapping(path = "/{id}")
@@ -59,9 +56,7 @@ public class UserController {
 
     @PatchMapping(path = "/{id}")
     public ResponseEntity<AUserResource> patch(@PathVariable Long id, HttpServletRequest request) throws IOException {
-        AUser u = facade.findById(id);
-        u = objectMapper.readerForUpdating(u).readValue(request.getReader());
-        u = facade.save(u);
+        AUser u = facade.patchUser(id, request);
         return ResponseEntity.ok(new AUserAssembler().toModel(u));
     }
 
@@ -89,7 +84,7 @@ public class UserController {
     @GetMapping(path = "/search")
     @ResponseBody
     @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
-    public Page<AUser> searchByLastName(@RequestParam String query, Pageable pageable) {
+    public Page<UserDTO> searchByLastName(@RequestParam String query, Pageable pageable) {
         return facade.findByName(query, pageable);
     }
 
@@ -100,6 +95,5 @@ public class UserController {
         return facade.findUserByEventId(eventId);
 
     }
-
 
 }
