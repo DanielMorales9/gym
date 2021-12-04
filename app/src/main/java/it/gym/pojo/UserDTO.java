@@ -13,8 +13,8 @@ public class UserDTO {
   private final Date createdAt;
   private final String phoneNumber;
   private final String type;
-  private final boolean verified;
-  private final boolean gender;
+  private final Boolean verified;
+  private final Boolean gender;
   private final List<Role> roles;
 
   public UserDTO(
@@ -25,8 +25,8 @@ public class UserDTO {
       Date createdAt,
       String phoneNumber,
       String type,
-      boolean verified,
-      boolean gender,
+      Boolean verified,
+      Boolean gender,
       List<Role> roles) {
     this.id = id;
     this.firstName = firstName;
@@ -40,7 +40,7 @@ public class UserDTO {
     this.roles = roles;
   }
 
-  public boolean isVerified() {
+  public Boolean isVerified() {
     return verified;
   }
 
@@ -72,7 +72,7 @@ public class UserDTO {
     return firstName;
   }
 
-  public boolean isGender() {
+  public Boolean isGender() {
     return gender;
   }
 
