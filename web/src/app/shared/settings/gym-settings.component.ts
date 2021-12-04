@@ -27,7 +27,7 @@ export class GymSettingsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.authService.getConfig()
+        this.authService.findGym()
             .pipe(
                 take(1),
                 share()
