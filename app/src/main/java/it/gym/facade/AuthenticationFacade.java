@@ -5,10 +5,12 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
 import it.gym.exception.UnAuthorizedException;
+import it.gym.mappers.UserMapper;
 import it.gym.model.AUser;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
 import it.gym.pojo.PasswordForm;
+import it.gym.pojo.UserDTO;
 import it.gym.service.*;
 import it.gym.utility.PasswordGenerator;
 import java.util.List;
@@ -49,7 +51,9 @@ public class AuthenticationFacade {
 
   @Autowired CustomProperties properties;
 
-  public AUser register(AUser user) {
+  @Autowired private UserMapper userMapper;
+
+  public UserDTO register(AUser user) {
     logger.info(String.format("User is being registered: %s", user.toString()));
 
     logger.info("Registering user");
@@ -87,10 +91,10 @@ public class AuthenticationFacade {
       throw new InternalServerException(message);
     }
 
-    return user;
+    return userMapper.toDTO(user, true);
   }
 
-  public AUser confirmRegistration(String email, String password) {
+  public UserDTO confirmRegistration(String email, String password) {
     passwordValidationService.validate(password);
 
     AUser user = this.userService.findByEmail(email);
@@ -98,10 +102,10 @@ public class AuthenticationFacade {
     setPasswordToUser(user, password);
     invalidateTokenToUser(user);
 
-    return userService.save(user);
+    return userMapper.toDTO(userService.save(user), true);
   }
 
-  public AUser changePassword(Long id, PasswordForm form) {
+  public UserDTO changePassword(Long id, PasswordForm form) {
     confirmPassword(form.getPassword(), form.getConfirmPassword());
     confirmPasswordNotEqualToOld(form.getPassword(), form.getOldPassword());
     passwordValidationService.validate(form.getPassword());
@@ -111,10 +115,10 @@ public class AuthenticationFacade {
     setPasswordToUser(user, form.getPassword());
     invalidateTokenToUser(user);
 
-    return userService.save(user);
+    return userMapper.toDTO(userService.save(user), true);
   }
 
-  public AUser forgotPassword(String email) {
+  public UserDTO forgotPassword(String email) {
     logger.info(String.format("Authentication: Find By Email: %s", email));
     AUser user = userService.findByEmail(email);
     if (user == null)
@@ -128,20 +132,20 @@ public class AuthenticationFacade {
     VerificationToken vk =
         this.tokenService.createOrChangeVerificationToken(user);
     sendChangePasswordTokenToEmail(vk);
-    return user;
+    return userMapper.toDTO(user, true);
   }
 
-  public AUser getUserFromVerificationToken(String token) {
+  public UserDTO getUserFromVerificationToken(String token) {
     VerificationToken vToken = tokenService.findByToken(token);
     logger.info(vToken.toString());
     if (vToken.isExpired()) {
       throw new UnAuthorizedException("Il token è scaduto.");
     }
     logger.info(vToken.getUser().toString());
-    return vToken.getUser();
+    return userMapper.toDTO(vToken.getUser(), true);
   }
 
-  public AUser resendAnonymousToken(Long id) {
+  public UserDTO resendAnonymousToken(Long id) {
     AUser user = this.userService.findById(id);
     if (user.isVerified())
       throw new BadRequestException(
@@ -150,16 +154,16 @@ public class AuthenticationFacade {
     VerificationToken vk =
         this.tokenService.createOrChangeVerificationToken(user);
     sendVerificationEmail(vk);
-    return user;
+    return userMapper.toDTO(user, true);
   }
 
-  public AUser resendToken(String existingToken) {
+  public UserDTO resendToken(String existingToken) {
     VerificationToken vk = this.tokenService.findByToken(existingToken);
     AUser user = vk.getUser();
     this.tokenService.createOrChangeVerificationToken(user);
 
     sendVerificationEmail(vk);
-    return user;
+    return userMapper.toDTO(user, true);
   }
 
   private void rollbackRegistration(VerificationToken vk) {
@@ -210,7 +214,7 @@ public class AuthenticationFacade {
             properties.getBaseURL(), token.getToken());
     String message =
         String.format(
-            "Per registrare autenticati al seguente indirizzo: %s",
+            "Per registrare autenticati al seguente <a href=\"%s\">link</a>",
             confirmationUrl);
     this.mailService.sendSimpleMail(recipientAddress, subject, message);
   }
@@ -224,7 +228,7 @@ public class AuthenticationFacade {
             properties.getBaseURL(), token.getToken());
     String message =
         String.format(
-            "Per modificare la password usa il seguente link: %s",
+            "Per modificare la password usa il seguente <a href=\"%s\">link</a>",
             confirmationUrl);
     this.mailService.sendSimpleMail(recipientAddress, subject, message);
   }
@@ -238,7 +242,7 @@ public class AuthenticationFacade {
             properties.getBaseURL(), token.getToken());
     String message =
         String.format(
-            "Ti abbiamo generato un nuovo link di verifica: %s",
+            "Ti abbiamo generato un nuovo <a href=\"%s\">link di verifica</a>",
             confirmationUrl);
     this.mailService.sendSimpleMail(recipientAddress, subject, message);
   }

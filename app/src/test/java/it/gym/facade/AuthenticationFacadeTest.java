@@ -11,11 +11,13 @@ import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
 import it.gym.exception.UnAuthorizedException;
+import it.gym.mappers.UserMapper;
 import it.gym.model.AUser;
 import it.gym.model.Gym;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
 import it.gym.pojo.PasswordForm;
+import it.gym.pojo.UserDTO;
 import it.gym.service.*;
 import it.gym.utility.Fixture;
 import java.util.Collections;
@@ -52,6 +54,23 @@ public class AuthenticationFacadeTest {
   private VerificationTokenService tokenService;
 
   @MockBean private PasswordValidationService passwordValidationService;
+
+  @TestConfiguration
+  static class AuthenticationFacadeTestContextConfiguration {
+
+    @Bean
+    public UserMapper userMapper() {
+      return new UserMapper();
+    }
+
+    @Bean
+    public AuthenticationFacade authenticationFacade() {
+      return new AuthenticationFacade();
+    }
+  }
+
+  @Autowired private UserMapper userMapper;
+
   @Autowired private AuthenticationFacade facade;
 
   private static final String EMAIL = "admin@admin.com";
@@ -73,7 +92,7 @@ public class AuthenticationFacadeTest {
                     "ababa",
                     invocationOnMock.getArgument(0),
                     addHours(new Date(), 2)));
-    AUser user =
+    UserDTO user =
         facade.register(
             createCustomer(
                 1L,
@@ -86,7 +105,7 @@ public class AuthenticationFacadeTest {
                 true));
 
     Mockito.verify(userService).existsByEmail(EMAIL);
-    Mockito.verify(userService).save(user);
+    Mockito.verify(userService).save(any());
     Mockito.verify(mailService)
         .sendSimpleMail(
             any(String.class), any(String.class), any(String.class));
@@ -163,8 +182,8 @@ public class AuthenticationFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    AUser user = facade.changePassword(1L, new PasswordForm("a", "b", "b"));
-    assertThat(user.getPassword().equals("c")).isTrue();
+    UserDTO user = facade.changePassword(1L, new PasswordForm("a", "b", "b"));
+    assertThat(user.getEmail().equals(EMAIL)).isTrue();
   }
 
   @Test(expected = BadRequestException.class)
@@ -187,7 +206,7 @@ public class AuthenticationFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    AUser user = facade.changePassword(1L, new PasswordForm("a", "b", "c"));
+    facade.changePassword(1L, new PasswordForm("a", "b", "c"));
   }
 
   @Test(expected = BadRequestException.class)
@@ -210,7 +229,7 @@ public class AuthenticationFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    AUser user = facade.changePassword(1L, new PasswordForm("a", "a", "a"));
+    facade.changePassword(1L, new PasswordForm("a", "a", "a"));
   }
 
   @Test
@@ -267,33 +286,23 @@ public class AuthenticationFacadeTest {
 
   @Test
   public void getUserFromVerificationToken() {
+    String firstName = "customer";
+    String lastName = "customer";
+    List<Role> roles = createCustomerRoles();
     VerificationToken token =
         createToken(
             1L,
             "ababa",
             createCustomer(
-                1L,
-                EMAIL,
-                "",
-                "customer",
-                "customer",
-                true,
-                Fixture.createCustomerRoles(),
-                true),
+                1L, EMAIL, "", firstName, lastName, true, roles, true),
             addHours(new Date(), 2));
     Mockito.doReturn(token).when(tokenService).findByToken("ababa");
-    AUser user = facade.getUserFromVerificationToken(token.getToken());
+    UserDTO user = facade.getUserFromVerificationToken(token.getToken());
     assertThat(user)
         .isEqualTo(
-            createCustomer(
-                1L,
-                EMAIL,
-                "",
-                "customer",
-                "customer",
-                true,
-                Fixture.createCustomerRoles(),
-                true));
+            new UserDTO(
+                1L, firstName, lastName, EMAIL, null, null, "C", true, true,
+                roles));
   }
 
   @Test(expected = UnAuthorizedException.class)
@@ -316,48 +325,32 @@ public class AuthenticationFacadeTest {
 
   @Test
   public void confirmRegistration() {
+    String firstName = "customer";
+    String lastName = "customer";
+    List<Role> roles = createCustomerRoles();
     Mockito.doReturn(
             createCustomer(
-                1L,
-                EMAIL,
-                null,
-                "customer",
-                "customer",
-                true,
-                Fixture.createCustomerRoles(),
-                true))
+                1L, EMAIL, "", firstName, lastName, true, roles, true))
         .when(userService)
         .findByEmail(EMAIL);
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    AUser user = facade.confirmRegistration(EMAIL, "a");
+    UserDTO user = facade.confirmRegistration(EMAIL, "a");
     assertThat(user)
         .isEqualTo(
-            createCustomer(
-                1L,
-                EMAIL,
-                null,
-                "customer",
-                "customer",
-                true,
-                Fixture.createCustomerRoles(),
-                true));
+            new UserDTO(
+                1L, firstName, lastName, EMAIL, null, null, "C", true, true,
+                roles));
   }
 
   @Test
   public void resendAnonymousToken() {
+    String firstName = "customer";
+    String lastName = "customer";
+    List<Role> roles = createCustomerRoles();
     AUser customer =
-        createCustomer(
-            1L,
-            EMAIL,
-            "",
-            "customer",
-            "customer",
-            true,
-            Fixture.createCustomerRoles(),
-            true);
-    customer.setVerified(false);
+        createCustomer(1L, EMAIL, "", firstName, lastName, false, roles, true);
     Mockito.doReturn(customer).when(userService).findById(1L);
     Mockito.when(tokenService.createOrChangeVerificationToken(customer))
         .thenAnswer(
@@ -367,8 +360,12 @@ public class AuthenticationFacadeTest {
                     "ababa",
                     invocationOnMock.getArgument(0),
                     addHours(new Date(), 2)));
-    AUser user = facade.resendAnonymousToken(1L);
-    assertThat(user).isEqualTo(customer);
+    UserDTO user = facade.resendAnonymousToken(1L);
+    assertThat(user)
+        .isEqualTo(
+            new UserDTO(
+                1L, firstName, lastName, EMAIL, null, null, "C", false, true,
+                roles));
   }
 
   @Test(expected = BadRequestException.class)
@@ -392,45 +389,25 @@ public class AuthenticationFacadeTest {
                     "ababa",
                     invocationOnMock.getArgument(0),
                     addHours(new Date(), 2)));
-    AUser user = facade.resendAnonymousToken(1L);
+    facade.resendAnonymousToken(1L);
   }
 
   @Test
   public void resendExpiredToken() {
+    String firstName = "customer";
+    String lastName = "customer";
+    List<Role> roles = createCustomerRoles();
     AUser customer =
-        createCustomer(
-            1L,
-            EMAIL,
-            "",
-            "customer",
-            "customer",
-            true,
-            Fixture.createCustomerRoles(),
-            true);
+        createCustomer(1L, EMAIL, "", firstName, lastName, true, roles, true);
     Mockito.doReturn(
             createToken(1L, "ababa", customer, addHours(new Date(), 2)))
         .when(tokenService)
         .findByToken("ababa");
-    AUser user = facade.resendToken("ababa");
+    UserDTO user = facade.resendToken("ababa");
     assertThat(user)
         .isEqualTo(
-            createCustomer(
-                1L,
-                EMAIL,
-                "",
-                "customer",
-                "customer",
-                true,
-                Fixture.createCustomerRoles(),
-                true));
-  }
-
-  @TestConfiguration
-  static class AuthenticationFacadeTestContextConfiguration {
-
-    @Bean
-    public AuthenticationFacade facade() {
-      return new AuthenticationFacade();
-    }
+            new UserDTO(
+                1L, firstName, lastName, EMAIL, null, null, "C", true, true,
+                roles));
   }
 }

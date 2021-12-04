@@ -254,11 +254,12 @@ public class HateoasTest {
       ResultActions result, Customer customer, String p) throws Exception {
     String prefix = handlePrefix(p, false);
     expectAUser(result, customer, prefix);
-    result
-        .andExpect(
-            jsonPath("$" + prefix + "height").value(customer.getHeight()))
-        .andExpect(
-            jsonPath("$" + prefix + "weight").value(customer.getWeight()));
+    //    result
+    //        .andExpect(
+    //            jsonPath("$" + prefix + "height").value(customer.getHeight()))
+    //        .andExpect(
+    //            jsonPath("$" + prefix +
+    // "weight").value(customer.getWeight()));
   }
 
   public static void expectSaleUser(

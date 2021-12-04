@@ -42,7 +42,6 @@ public class AuthenticationControllerIntegrationTest
 
   @Before
   public void before() {
-    Gym gym = createGym(1L);
     roles = createAdminRoles();
     roles = roleRepository.saveAll(roles);
     admin = createAdmin(1L, "admin@admin.com", roles);
