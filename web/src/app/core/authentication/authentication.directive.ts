@@ -9,6 +9,7 @@ import {CredentialsStorageDirective} from './credentials-storage.directive';
 import {PrincipalStorageDirective} from './principal-storage.directive';
 import {UserStorageDirective} from './user-storage.directive';
 import {CurrentUserRoleIdStorageDirective} from './current-user-role-id-storage.directive';
+import {GymStorageDirective} from "./gym-storage.directive";
 
 /**
  * Provides a base for authentication workflow.
@@ -25,11 +26,10 @@ export class AuthenticationDirective implements OnDestroy {
     // TODO remove
     private onAuthenticate$ = new Subject<boolean>();
 
-    private gym: Gym;
-
     constructor(private http: HttpClient,
                 private credentialsStorage: CredentialsStorageDirective,
                 private userStorage: UserStorageDirective,
+                private gymStorage: GymStorageDirective,
                 private principalStorage: PrincipalStorageDirective,
                 private currentRoleIdStorage: CurrentUserRoleIdStorageDirective,
                 private router: Router) { }
@@ -121,7 +121,7 @@ export class AuthenticationDirective implements OnDestroy {
                 this.currentRoleIdStorage.unset();
                 this.principalStorage.unset();
                 this.credentialsStorage.unset();
-                this.gym = undefined;
+                this.gymStorage.unset();
                 this.onAuthenticate$.next(false);
             }
         ));
@@ -179,23 +179,23 @@ export class AuthenticationDirective implements OnDestroy {
 
     findGym(): Observable<Gym> {
         let res;
-        if (!this.gym) {
-            res = this.getConfig()
+        const gym = this.gymStorage.get()
+        if (!gym) {
+            res = this.getGym()
                 .pipe(map((v: Gym) => {
-                    this.gym = v;
+                    this.gymStorage.set(v);
                     return v;
                 }));
         }
         else {
-            res = of(this.gym);
+            res = of(gym);
         }
 
         return res;
     }
 
-    getConfig(): Observable<Gym> {
+    getGym(): Observable<Gym> {
         return this.http.get(`/gyms`).pipe(
-            catchError(_ => Array([undefined])),
             map((res: Object) => res[0])
         );
     }
