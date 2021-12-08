@@ -1,5 +1,7 @@
 package it.gym.facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.mappers.TrainingBundleSpecificationMapper;
 import it.gym.repository.PurchaseOptionRepository;
 import it.gym.service.EventService;
 import it.gym.service.TrainingBundleService;
@@ -27,12 +29,19 @@ public class TrainingBundleSpecificationServiceTest {
   @Qualifier("trainingBundleService")
   private TrainingBundleService bundleService;
 
+  @MockBean private ObjectMapper objectMapper;
+
   @TestConfiguration
   static class TrainingBundleSpecificationFacadeTestContextConfiguration {
 
     @Bean
     public TrainingBundleSpecificationFacade facade() {
       return new TrainingBundleSpecificationFacade();
+    }
+
+    @Bean
+    public TrainingBundleSpecificationMapper mapper() {
+      return new TrainingBundleSpecificationMapper();
     }
   }
 

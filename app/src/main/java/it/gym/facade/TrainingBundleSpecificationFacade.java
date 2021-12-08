@@ -1,13 +1,19 @@
 package it.gym.facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
+import it.gym.mappers.TrainingBundleSpecificationMapper;
 import it.gym.model.*;
+import it.gym.pojo.TrainingBundleSpecificationDTO;
 import it.gym.repository.PurchaseOptionRepository;
 import it.gym.service.EventService;
 import it.gym.service.TrainingBundleService;
 import it.gym.service.TrainingBundleSpecificationService;
+import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,15 +36,21 @@ public class TrainingBundleSpecificationFacade {
 
   @Autowired private PurchaseOptionRepository repository;
 
+  @Autowired private ObjectMapper objectMapper;
+
   @Autowired
   @Qualifier("trainingBundleService")
   private TrainingBundleService bundleService;
 
-  public ATrainingBundleSpecification findById(Long id) {
-    return service.findById(id);
+  @Autowired private TrainingBundleSpecificationMapper mapper;
+
+  public TrainingBundleSpecificationDTO findById(Long id) {
+    return mapper.toDTO(service.findById(id));
   }
 
-  public void delete(ATrainingBundleSpecification spec) {
+  public TrainingBundleSpecificationDTO delete(Long id) {
+    ATrainingBundleSpecification spec = service.findById(id);
+
     boolean noBundles = bundleService.findBundlesBySpec(spec).isEmpty();
 
     if (!noBundles) {
@@ -54,51 +66,61 @@ public class TrainingBundleSpecificationFacade {
     }
 
     service.delete(spec);
+    return mapper.toDTO(spec);
   }
 
-  public ATrainingBundleSpecification createTrainingBundleSpecification(
+  public TrainingBundleSpecificationDTO createTrainingBundleSpecification(
       ATrainingBundleSpecification spec) {
-    return service.save(spec);
+    return mapper.toDTO(service.save(spec));
   }
 
-  public Page<ATrainingBundleSpecification> findByNameContains(
+  public Page<TrainingBundleSpecificationDTO> search(
       String name, Boolean disabled, Pageable pageable) {
-    return this.service.search(name, disabled, pageable);
+    return this.service.search(name, disabled, pageable).map(mapper::toDTO);
   }
 
   public ATrainingBundleSpecification save(ATrainingBundleSpecification spec) {
     return service.save(spec);
   }
 
-  public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
-    return service.findAll(pageable);
+  public Page<TrainingBundleSpecificationDTO> findAll(Pageable pageable) {
+    return service.findAll(pageable).map(mapper::toDTO);
   }
 
   public boolean existsByName(String name) {
     return service.existsByName(name);
   }
 
-  public ATrainingBundleSpecification createOptionToBundleSpec(
+  public TrainingBundleSpecificationDTO createOptionToBundleSpec(
       Long id, APurchaseOption option) {
     ATrainingBundleSpecification bundleSpec;
     bundleSpec = this.service.findById(id);
     bundleSpec.addOption(option);
-    return service.save(bundleSpec);
+    return mapper.toDTO(service.save(bundleSpec));
   }
 
-  public List<ATrainingBundleSpecification> list(
+  public List<TrainingBundleSpecificationDTO> list(
       Boolean disabled, String type) {
-    return this.service.list(disabled, type);
+    return this.service.list(disabled, type).stream()
+        .map(mapper::toDTO)
+        .collect(Collectors.toList());
   }
 
-  public ATrainingBundleSpecification deleteOption(Long id, Long optionId) {
-    ATrainingBundleSpecification c = this.findById(id);
+  public TrainingBundleSpecificationDTO deleteOption(Long id, Long optionId) {
+    ATrainingBundleSpecification c = service.findById(id);
     APurchaseOption o =
         this.repository
             .findById(optionId)
             .orElseThrow(() -> new NotFoundException("Opzione non trovata"));
     c.getOptions().remove(o);
     repository.delete(o);
-    return service.save(c);
+    return mapper.toDTO(service.save(c));
+  }
+
+  public TrainingBundleSpecificationDTO patch(
+      Long id, HttpServletRequest request) throws IOException {
+    ATrainingBundleSpecification spec = service.findById(id);
+    spec = objectMapper.readerForUpdating(spec).readValue(request.getReader());
+    return mapper.toDTO(service.save(spec));
   }
 }

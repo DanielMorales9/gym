@@ -110,7 +110,7 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
     public dayStartHour: number;
     public dayEndHour: number;
     public hourSegments: number;
-    public weekStartsOn: number = 1;
+    public weekStartsOn = 1;
     public activeDayIsOpen: boolean;
     public currentRoleId: number;
     public gym: Gym;
@@ -312,8 +312,8 @@ export abstract class BaseCalendar extends BaseComponent implements OnInit, OnDe
         const date = this.viewDate.getDate();
         const dayOfWeek = this.viewDate.getDay();
 
-        const from = (7 - this.weekStartsOn + dayOfWeek) % 7
-        const to = 6 - from
+        const from = (7 - this.weekStartsOn + dayOfWeek) % 7;
+        const to = 6 - from;
         const hour = 0;
         const min = 0;
         const sec = 0;

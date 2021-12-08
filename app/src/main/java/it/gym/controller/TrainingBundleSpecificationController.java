@@ -1,11 +1,9 @@
 package it.gym.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.facade.TrainingBundleSpecificationFacade;
-import it.gym.hateoas.TrainingBundleSpecificationAssembler;
-import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundleSpecification;
+import it.gym.pojo.TrainingBundleSpecificationDTO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -24,80 +22,69 @@ public class TrainingBundleSpecificationController {
 
   @Autowired private TrainingBundleSpecificationFacade facade;
 
-  @Autowired private ObjectMapper objectMapper;
-
   @DeleteMapping("/{id}")
-  public ResponseEntity<TrainingBundleSpecificationResource> delete(
+  public ResponseEntity<TrainingBundleSpecificationDTO> delete(
       @PathVariable Long id) {
-    ATrainingBundleSpecification specs = facade.findById(id);
-    facade.delete(specs);
-    return ResponseEntity.ok(
-        new TrainingBundleSpecificationAssembler().toModel(specs));
+    TrainingBundleSpecificationDTO spec = facade.delete(id);
+    return ResponseEntity.ok(spec);
   }
 
   @GetMapping(path = "/{id}")
-  public ResponseEntity<TrainingBundleSpecificationResource> findById(
+  public ResponseEntity<TrainingBundleSpecificationDTO> findById(
       @PathVariable Long id) {
-    ATrainingBundleSpecification spec = facade.findById(id);
-    return ResponseEntity.ok(
-        new TrainingBundleSpecificationAssembler().toModel(spec));
+    TrainingBundleSpecificationDTO dto = facade.findById(id);
+    return ResponseEntity.ok(dto);
   }
 
   @PostMapping
-  public ResponseEntity<TrainingBundleSpecificationResource> post(
+  public ResponseEntity<TrainingBundleSpecificationDTO> post(
       @RequestBody ATrainingBundleSpecification spec) {
-    ATrainingBundleSpecification s =
+    TrainingBundleSpecificationDTO dto =
         facade.createTrainingBundleSpecification(spec);
-    return ResponseEntity.ok(
-        new TrainingBundleSpecificationAssembler().toModel(s));
+    return ResponseEntity.ok(dto);
   }
 
   @PostMapping(path = "/{id}/options")
-  public ResponseEntity<TrainingBundleSpecificationResource> createOption(
+  public ResponseEntity<TrainingBundleSpecificationDTO> createOption(
       @PathVariable Long id, @RequestBody APurchaseOption option) {
-    ATrainingBundleSpecification s =
+    TrainingBundleSpecificationDTO s =
         facade.createOptionToBundleSpec(id, option);
-    return ResponseEntity.ok(
-        new TrainingBundleSpecificationAssembler().toModel(s));
+    return ResponseEntity.ok(s);
   }
 
   @DeleteMapping(value = "/{id}/options/{optionId}")
   @PreAuthorize("hasAuthority('ADMIN')")
-  public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(
+  public ResponseEntity<TrainingBundleSpecificationDTO> deleteOption(
       @PathVariable Long id, @PathVariable Long optionId) {
-    ATrainingBundleSpecification b = this.facade.deleteOption(id, optionId);
-    return ResponseEntity.ok(
-        new TrainingBundleSpecificationAssembler().toModel(b));
+    TrainingBundleSpecificationDTO b = this.facade.deleteOption(id, optionId);
+    return ResponseEntity.ok(b);
   }
 
   @PatchMapping(path = "/{id}")
-  public ResponseEntity<TrainingBundleSpecificationResource> patch(
+  public ResponseEntity<TrainingBundleSpecificationDTO> patch(
       @PathVariable Long id, HttpServletRequest request) throws IOException {
-    ATrainingBundleSpecification spec = facade.findById(id);
-    spec = objectMapper.readerForUpdating(spec).readValue(request.getReader());
-    spec = facade.save(spec);
-    return ResponseEntity.ok(
-        new TrainingBundleSpecificationAssembler().toModel(spec));
+    TrainingBundleSpecificationDTO spec = facade.patch(id, request);
+    return ResponseEntity.ok(spec);
   }
 
   @GetMapping
   @ResponseBody
-  public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
+  public Page<TrainingBundleSpecificationDTO> findAll(Pageable pageable) {
     return facade.findAll(pageable);
   }
 
   @GetMapping(path = "/search")
   @ResponseBody
-  public Page<ATrainingBundleSpecification> search(
+  public Page<TrainingBundleSpecificationDTO> search(
       @RequestParam(required = false) String name,
       @RequestParam(required = false) Boolean disabled,
       Pageable pageable) {
-    return facade.findByNameContains(name, disabled, pageable);
+    return facade.search(name, disabled, pageable);
   }
 
   @GetMapping(path = "/list")
   @ResponseBody
-  public List<ATrainingBundleSpecification> list(
+  public List<TrainingBundleSpecificationDTO> list(
       @RequestParam(required = false) Boolean disabled,
       @RequestParam(required = false) String type) {
     return facade.list(disabled, type);
