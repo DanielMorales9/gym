@@ -15,7 +15,7 @@
     <parent>
         <groupId>it.gym</groupId>
         <artifactId>mgmt</artifactId>
-        <version>0.1.9</version>
+        <version>1.0.0</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -71,6 +71,16 @@
                         </goals>
                         <configuration>
                             <arguments>run-script build</arguments>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>npm-lint</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>npm</goal>
+                        </goals>
+                        <configuration>
+                            <arguments>run-script lint</arguments>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,5 +1,7 @@
 package it.gym.facade;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.mappers.TrainingBundleSpecificationMapper;
 import it.gym.repository.PurchaseOptionRepository;
 import it.gym.service.EventService;
 import it.gym.service.TrainingBundleService;
@@ -17,35 +19,37 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class TrainingBundleSpecificationServiceTest {
 
-    @MockBean
-    private TrainingBundleSpecificationService service;
+  @MockBean private TrainingBundleSpecificationService service;
 
-    @MockBean
-    private PurchaseOptionRepository repository;
+  @MockBean private PurchaseOptionRepository repository;
 
-    @MockBean
-    private EventService eventService;
+  @MockBean private EventService eventService;
 
-    @MockBean
-    @Qualifier("trainingBundleService")
-    private TrainingBundleService bundleService;
+  @MockBean
+  @Qualifier("trainingBundleService")
+  private TrainingBundleService bundleService;
 
-    @TestConfiguration
-    static class TrainingBundleSpecificationFacadeTestContextConfiguration {
+  @MockBean private ObjectMapper objectMapper;
 
-        @Bean
-        public TrainingBundleSpecificationFacade facade() {
-            return new TrainingBundleSpecificationFacade();
-        }
+  @TestConfiguration
+  static class TrainingBundleSpecificationFacadeTestContextConfiguration {
+
+    @Bean
+    public TrainingBundleSpecificationFacade facade() {
+      return new TrainingBundleSpecificationFacade();
     }
 
-    @Autowired
-    private TrainingBundleSpecificationFacade facade;
-
-
-    @Test
-    public void existsByName() {
-        this.facade.existsByName("personal");
-        Mockito.verify(service).existsByName("personal");
+    @Bean
+    public TrainingBundleSpecificationMapper mapper() {
+      return new TrainingBundleSpecificationMapper();
     }
+  }
+
+  @Autowired private TrainingBundleSpecificationFacade facade;
+
+  @Test
+  public void existsByName() {
+    this.facade.existsByName("personal");
+    Mockito.verify(service).existsByName("personal");
+  }
 }

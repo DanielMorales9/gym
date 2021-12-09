@@ -5,7 +5,9 @@ import it.gym.facade.TrainingBundleFacade;
 import it.gym.hateoas.TrainingBundleAssembler;
 import it.gym.hateoas.TrainingBundleResource;
 import it.gym.model.ATrainingBundle;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
+import java.util.Date;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -14,55 +16,59 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.Date;
-
 @RepositoryRestController
 @RequestMapping("/bundles")
 @PreAuthorize("isAuthenticated()")
 public class TrainingBundleController {
 
-    @Autowired
-    private TrainingBundleFacade service;
+  private final TrainingBundleFacade service;
 
-    @GetMapping
-    @ResponseBody
-    public Page<TrainingBundleResource> findAll(Pageable pageable) {
-        return service.findAll(pageable).map(TrainingBundleResource::new);
-    }
+  public TrainingBundleController(TrainingBundleFacade service) {
+    this.service = service;
+  }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> findById(@PathVariable Long id) {
-        ATrainingBundle bundle = service.findById(id);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
-    }
+  @GetMapping
+  @ResponseBody
+  public Page<TrainingBundleResource> findAll(Pageable pageable) {
+    return service.findAll(pageable).map(TrainingBundleResource::new);
+  }
 
-    @DeleteMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
-        throw new BadRequestException("Per cancellare un pacchetto è sufficiente cancellare la vendita!");
-    }
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleResource> findById(
+      @PathVariable Long id) {
+    ATrainingBundle bundle = service.findById(id);
+    return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
+  }
 
-    @GetMapping("/search")
-    @ResponseBody
-    public Page<TrainingBundleResource> search(@RequestParam(required = false) Long specId,
-                                               @RequestParam(required = false) Boolean expired,
-                                               @RequestParam(required = false) @DateTimeFormat(pattern="dd-MM-yyyy",
-                                                iso = DateTimeFormat.ISO.DATE_TIME) Date date,
-                                               Pageable pageable) {
-        Page<ATrainingBundle> bundles;
+  @DeleteMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleResource> delete(@PathVariable Long id) {
+    throw new BadRequestException(
+        "Per cancellare un pacchetto è sufficiente cancellare la vendita!");
+  }
 
-         bundles = service.search(specId, expired, date, pageable);
+  @GetMapping("/search")
+  @ResponseBody
+  public Page<TrainingBundleResource> search(
+      @RequestParam(required = false) Long specId,
+      @RequestParam(required = false) Boolean expired,
+      @RequestParam(required = false)
+          @DateTimeFormat(
+              pattern = "dd-MM-yyyy",
+              iso = DateTimeFormat.ISO.DATE_TIME)
+          Date date,
+      Pageable pageable) {
+    Page<ATrainingBundle> bundles;
 
-         return bundles.map(TrainingBundleResource::new);
-    }
+    bundles = service.search(specId, expired, date, pageable);
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleResource> patch(@PathVariable Long id,
-                                                        HttpServletRequest request) throws IOException {
-        // TODO use a DTO instead
-        ATrainingBundle bundle = service.patchBundle(id, request);
-        return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
-    }
+    return bundles.map(TrainingBundleResource::new);
+  }
 
+  @PatchMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleResource> patch(
+      @PathVariable Long id, HttpServletRequest request) throws IOException {
+    // TODO use a DTO instead
+    ATrainingBundle bundle = service.patchBundle(id, request);
+    return ResponseEntity.ok(new TrainingBundleAssembler().toModel(bundle));
+  }
 }

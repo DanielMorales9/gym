@@ -1,211 +1,219 @@
 package it.gym.model;
 
+import static it.gym.utility.Fixture.*;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.*;
 import org.apache.commons.lang3.time.DateUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.*;
-
-import static it.gym.utility.Fixture.*;
-import static org.assertj.core.api.Assertions.assertThat;
-
 @RunWith(SpringRunner.class)
 public class SaleTest {
 
-    @Test
-    public void addPersonalToSalesLineItem() {
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addPersonalToSalesLineItem(sale);
+  @Test
+  public void addPersonalToSalesLineItem() {
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
-        ATrainingBundleSpecification expectedSpecs = createPersonalBundleSpecification();
-        SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, createPersonalBundle(expectedSpecs));
-        assertThat(sli).isEqualTo(expectedSli);
-    }
+    ATrainingBundleSpecification expectedSpecs =
+        createPersonalBundleSpecification();
+    SalesLineItem expectedSli =
+        createSalesLineItem(expectedSpecs, createPersonalBundle(expectedSpecs));
+    assertThat(sli).isEqualTo(expectedSli);
+  }
 
-    @Test
-    public void addCourseToSalesLineItem() {
-        Date start = getDate();
+  @Test
+  public void addCourseToSalesLineItem() {
+    Date start = getDate();
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addCourseToSalesLineItem(sale, start);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0, null);
-        CourseTrainingBundleSpecification expectedSpecs =
-                createCourseBundleSpec(1L, "Course", 11, options);
-        APurchaseOption option = expectedSpecs.getOptions().get(0);
-        CourseTrainingBundle expectedBundle = createCourseBundle(start, expectedSpecs, option);
-        SalesLineItem expectedSli = createSalesLineItem(expectedSpecs, expectedBundle);
+    List<APurchaseOption> options =
+        createSingletonTimePurchaseOptions(1, 100.0, null);
+    CourseTrainingBundleSpecification expectedSpecs =
+        createCourseBundleSpec(1L, "Course", 11, options);
+    APurchaseOption option = expectedSpecs.getOptions().get(0);
+    CourseTrainingBundle expectedBundle =
+        createCourseBundle(start, expectedSpecs, option);
+    SalesLineItem expectedSli =
+        createSalesLineItem(expectedSpecs, expectedBundle);
 
-        assertThat(sli).isEqualTo(expectedSli);
-    }
+    assertThat(sli).isEqualTo(expectedSli);
+  }
 
-    @Test
-    public void deletePersonalToSalesLineItem() {
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addPersonalToSalesLineItem(sale);
-        sale.deleteSalesLineItem(sli);
+  @Test
+  public void deletePersonalToSalesLineItem() {
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addPersonalToSalesLineItem(sale);
+    sale.deleteSalesLineItem(sli);
 
-        assertThat(sale).isEqualTo(createSale(createCustomer()));
-    }
+    assertThat(sale).isEqualTo(createSale(createCustomer()));
+  }
 
-    @Test
-    public void deleteCourseToSalesLineItem() {
-        Date start = getDate();
+  @Test
+  public void deleteCourseToSalesLineItem() {
+    Date start = getDate();
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addCourseToSalesLineItem(sale, start);
-        sale.deleteSalesLineItem(sli);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addCourseToSalesLineItem(sale, start);
+    sale.deleteSalesLineItem(sli);
 
-        Sale expected = createSale(createCustomer());
-        assertThat(sale).isEqualTo(expected);
-    }
+    Sale expected = createSale(createCustomer());
+    assertThat(sale).isEqualTo(expected);
+  }
 
-    @Test
-    public void isPersonalBasedSaleDeletable() {
+  @Test
+  public void isPersonalBasedSaleDeletable() {
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addPersonalToSalesLineItem(sale);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
-        assertThat(sale.isDeletable()).isTrue();
-    }
+    assertThat(sale.isDeletable()).isTrue();
+  }
 
-    @Test
-    public void isCourseBasedSaleDeletable() {
-        Date start = getDate();
+  @Test
+  public void isCourseBasedSaleDeletable() {
+    Date start = getDate();
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addCourseToSalesLineItem(sale, start);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        assertThat(sale.isDeletable()).isTrue();
-    }
+    assertThat(sale.isDeletable()).isTrue();
+  }
 
-    @Test
-    public void confirmPersonalBasedSale() {
+  @Test
+  public void confirmPersonalBasedSale() {
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addPersonalToSalesLineItem(sale);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addPersonalToSalesLineItem(sale);
 
-        assertThat(sale.confirm()).isTrue();
-    }
+    assertThat(sale.confirm()).isTrue();
+  }
 
-    @Test
-    public void confirmCourseBasedSale() {
-        Date start = getDate();
+  @Test
+  public void confirmCourseBasedSale() {
+    Date start = getDate();
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addCourseToSalesLineItem(sale, start);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addCourseToSalesLineItem(sale, start);
 
-        assertThat(sale.confirm()).isTrue();
-    }
+    assertThat(sale.confirm()).isTrue();
+  }
 
-    @Test
-    public void whenConfirmPersonalBasedSaleReturnsFalse() {
+  @Test
+  public void whenConfirmPersonalBasedSaleReturnsFalse() {
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addPersonalToSalesLineItem(sale);
-        sale.deleteSalesLineItem(sli);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addPersonalToSalesLineItem(sale);
+    sale.deleteSalesLineItem(sli);
 
-        assertThat(sale.confirm()).isFalse();
-    }
+    assertThat(sale.confirm()).isFalse();
+  }
 
-    @Test
-    public void whenConfirmCourseBasedSaleReturnsFalse() {
-        Date start = getDate();
+  @Test
+  public void whenConfirmCourseBasedSaleReturnsFalse() {
+    Date start = getDate();
 
-        Sale sale = createSale(createCustomer());
-        SalesLineItem sli = addCourseToSalesLineItem(sale, start);
-        sale.deleteSalesLineItem(sli);
+    Sale sale = createSale(createCustomer());
+    SalesLineItem sli = addCourseToSalesLineItem(sale, start);
+    sale.deleteSalesLineItem(sli);
 
-        assertThat(sale.confirm()).isFalse();
-    }
+    assertThat(sale.confirm()).isFalse();
+  }
 
-    private Date getDate() {
-        Calendar cal = Calendar.getInstance();
-        cal.set(2019, Calendar.JUNE, 21, 0, 0, 0);
-        return cal.getTime();
-    }
+  private Date getDate() {
+    Calendar cal = Calendar.getInstance();
+    cal.set(2019, Calendar.JUNE, 21, 0, 0, 0);
+    return cal.getTime();
+  }
 
-    private SalesLineItem addPersonalToSalesLineItem(Sale sale) {
-        ATrainingBundleSpecification spec = createPersonalBundleSpecification();
-        APurchaseOption option = spec.getOptions().get(0);
-        Long optionId = spec.getOptions().get(0).getId();
-        ATrainingBundle a = spec.createTrainingBundle(optionId);
-        a.setOption(option);
-        return sale.addSalesLineItem(a);
-    }
+  private SalesLineItem addPersonalToSalesLineItem(Sale sale) {
+    ATrainingBundleSpecification spec = createPersonalBundleSpecification();
+    APurchaseOption option = spec.getOptions().get(0);
+    Long optionId = spec.getOptions().get(0).getId();
+    ATrainingBundle a = spec.createTrainingBundle(optionId);
+    a.setOption(option);
+    return sale.addSalesLineItem(a);
+  }
 
-    private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
+  private SalesLineItem addCourseToSalesLineItem(Sale sale, Date start) {
 
-        List<APurchaseOption> options = createSingletonTimePurchaseOptions(1, 100.0, null);
-        CourseTrainingBundleSpecification spec =
-                createCourseBundleSpec(1L, "Course", 11, options);
-        APurchaseOption option = spec.getOptions().get(0);
-        ATrainingBundle a = createCourseBundle(start, spec, option);
-        return sale.addSalesLineItem(a);
-    }
+    List<APurchaseOption> options =
+        createSingletonTimePurchaseOptions(1, 100.0, null);
+    CourseTrainingBundleSpecification spec =
+        createCourseBundleSpec(1L, "Course", 11, options);
+    APurchaseOption option = spec.getOptions().get(0);
+    ATrainingBundle a = createCourseBundle(start, spec, option);
+    return sale.addSalesLineItem(a);
+  }
 
+  private CourseTrainingBundle createCourseBundle(
+      Date start, ATrainingBundleSpecification spec, APurchaseOption option) {
+    CourseTrainingBundle p = new CourseTrainingBundle();
+    p.setName("Course");
+    p.setBundleSpec(spec);
+    p.setOption(option);
+    Date end = DateUtils.addMonths(start, option.getNumber());
+    p.setStartTime(start);
+    p.setEndTime(end);
+    return p;
+  }
 
-    private CourseTrainingBundle createCourseBundle(Date start, ATrainingBundleSpecification spec, APurchaseOption option) {
-        CourseTrainingBundle p = new CourseTrainingBundle();
-        p.setName("Course");
-        p.setBundleSpec(spec);
-        p.setOption(option);
-        Date end = DateUtils.addMonths(start, option.getNumber());
-        p.setStartTime(start);
-        p.setEndTime(end);
-        return p;
-    }
+  private SalesLineItem createSalesLineItem(
+      ATrainingBundleSpecification spec, ATrainingBundle bundle) {
+    SalesLineItem sli = new SalesLineItem();
+    sli.setTrainingBundle(bundle);
+    sli.setBundleSpecification(spec);
+    return sli;
+  }
 
-    private SalesLineItem createSalesLineItem(ATrainingBundleSpecification spec, ATrainingBundle bundle) {
-        SalesLineItem sli = new SalesLineItem();
-        sli.setTrainingBundle(bundle);
-        sli.setBundleSpecification(spec);
-        return sli;
-    }
+  private PersonalTrainingBundle createPersonalBundle(
+      ATrainingBundleSpecification spec) {
+    PersonalTrainingBundle p = new PersonalTrainingBundle();
+    p.setName("Personal");
+    p.setBundleSpec(spec);
+    return p;
+  }
 
+  private PersonalTrainingBundleSpecification
+      createPersonalBundleSpecification() {
+    PersonalTrainingBundleSpecification p =
+        new PersonalTrainingBundleSpecification();
+    p.setId(1L);
+    p.setName("Personal");
+    p.setDescription("Description");
+    p.setDisabled(false);
+    ArrayList<APurchaseOption> options = new ArrayList<>();
+    APurchaseOption option = new BundlePurchaseOption();
+    option.setNumber(11);
+    option.setId((long) 1);
+    option.setPrice(111.0);
+    option.setName(p.getName());
+    options.add(option);
+    p.setOptions(options);
+    return p;
+  }
 
-    private PersonalTrainingBundle createPersonalBundle(ATrainingBundleSpecification spec) {
-        PersonalTrainingBundle p = new PersonalTrainingBundle();
-        p.setName("Personal");
-        p.setBundleSpec(spec);
-        return p;
-    }
+  private Sale createSale(Customer customer) {
+    Sale sale = new Sale();
+    sale.setId(1L);
+    sale.setCompleted(false);
+    sale.setAmountPayed(0.0);
+    sale.setPayedDate(null);
+    sale.setCustomer(customer);
+    return sale;
+  }
 
-    private PersonalTrainingBundleSpecification createPersonalBundleSpecification() {
-        PersonalTrainingBundleSpecification p = new PersonalTrainingBundleSpecification();
-        p.setId(1L);
-        p.setName("Personal");
-        p.setDescription("Description");
-        p.setDisabled(false);
-        ArrayList<APurchaseOption> options = new ArrayList<>();
-        APurchaseOption option = new BundlePurchaseOption();
-        option.setNumber(11);
-        option.setId((long) 1);
-        option.setPrice(111.0);
-        option.setName(p.getName());
-        options.add(option);
-        p.setOptions(options);
-        return p;
-    }
-
-    private Sale createSale(Customer customer) {
-        Sale sale = new Sale();
-        sale.setId(1L);
-        sale.setCompleted(false);
-        sale.setAmountPayed(0.0);
-        sale.setPayedDate(null);
-        sale.setCustomer(customer);
-        return sale;
-    }
-
-    private Customer createCustomer() {
-        Customer user = new Customer();
-        user.setId(1L);
-        user.setEmail("customer@customer.com");
-        user.setFirstName("customer");
-        user.setLastName("customer");
-        user.setVerified(true);
-        return user;
-    }
+  private Customer createCustomer() {
+    Customer user = new Customer();
+    user.setId(1L);
+    user.setEmail("customer@customer.com");
+    user.setFirstName("customer");
+    user.setLastName("customer");
+    user.setVerified(true);
+    return user;
+  }
 }

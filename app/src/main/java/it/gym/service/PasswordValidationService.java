@@ -2,18 +2,19 @@ package it.gym.service;
 
 import com.google.common.base.Joiner;
 import it.gym.exception.BadRequestException;
+import java.util.Arrays;
 import org.passay.*;
 import org.springframework.stereotype.Service;
-
-import java.util.Arrays;
 
 @Service
 public class PasswordValidationService {
 
-    private final PasswordValidator validator;
+  private final PasswordValidator validator;
 
-    public PasswordValidationService(){
-        this.validator = new PasswordValidator(Arrays.asList(
+  public PasswordValidationService() {
+    this.validator =
+        new PasswordValidator(
+            Arrays.asList(
                 new LengthRule(8, 30),
                 /*
                 new UppercaseCharacterRule(1),
@@ -24,15 +25,14 @@ public class PasswordValidationService {
                 new AlphabeticalSequenceRule(3,false),
                 new QwertySequenceRule(3,false),
                 */
-                new WhitespaceRule())
-        );
-    }
+                new WhitespaceRule()));
+  }
 
-    public void validate(String password) {
-        RuleResult res = validator.validate(new PasswordData(password));
-        if (!res.isValid()) {
-            String message = Joiner.on(" ").join(validator.getMessages(res));
-            throw new BadRequestException(message);
-        }
+  public void validate(String password) {
+    RuleResult res = validator.validate(new PasswordData(password));
+    if (!res.isValid()) {
+      String message = Joiner.on(" ").join(validator.getMessages(res));
+      throw new BadRequestException(message);
     }
+  }
 }

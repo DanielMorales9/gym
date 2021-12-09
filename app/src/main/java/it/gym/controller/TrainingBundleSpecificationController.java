@@ -1,96 +1,96 @@
 package it.gym.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.dto.TrainingBundleSpecificationDTO;
 import it.gym.facade.TrainingBundleSpecificationFacade;
-import it.gym.hateoas.TrainingBundleSpecificationAssembler;
-import it.gym.hateoas.TrainingBundleSpecificationResource;
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundleSpecification;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.io.IOException;
+import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.util.List;
 
 @RepositoryRestController
 @RequestMapping("/bundleSpecs")
 @PreAuthorize("isAuthenticated()")
 public class TrainingBundleSpecificationController {
 
-    @Autowired
-    private TrainingBundleSpecificationFacade facade;
+  private final TrainingBundleSpecificationFacade facade;
 
-    @Autowired
-    private ObjectMapper objectMapper;
+  public TrainingBundleSpecificationController(
+      TrainingBundleSpecificationFacade facade) {
+    this.facade = facade;
+  }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<TrainingBundleSpecificationResource> delete(@PathVariable Long id) {
-        ATrainingBundleSpecification specs = facade.findById(id);
-        facade.delete(specs);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(specs));
-    }
+  @DeleteMapping("/{id}")
+  public ResponseEntity<TrainingBundleSpecificationDTO> delete(
+      @PathVariable Long id) {
+    TrainingBundleSpecificationDTO spec = facade.delete(id);
+    return ResponseEntity.ok(spec);
+  }
 
-    @GetMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleSpecificationResource> findById(@PathVariable Long id) {
-        ATrainingBundleSpecification spec = facade.findById(id);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(spec));
-    }
+  @GetMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleSpecificationDTO> findById(
+      @PathVariable Long id) {
+    TrainingBundleSpecificationDTO dto = facade.findById(id);
+    return ResponseEntity.ok(dto);
+  }
 
-    @PostMapping
-    public ResponseEntity<TrainingBundleSpecificationResource> post(@RequestBody ATrainingBundleSpecification spec) {
-        ATrainingBundleSpecification s = facade.createTrainingBundleSpecification(spec);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(s));
-    }
+  @PostMapping
+  public ResponseEntity<TrainingBundleSpecificationDTO> post(
+      @RequestBody ATrainingBundleSpecification spec) {
+    TrainingBundleSpecificationDTO dto =
+        facade.createTrainingBundleSpecification(spec);
+    return ResponseEntity.ok(dto);
+  }
 
-    @PostMapping(path = "/{id}/options")
-    public ResponseEntity<TrainingBundleSpecificationResource> createOption(@PathVariable Long id,
-                                                                            @RequestBody APurchaseOption option) {
-        ATrainingBundleSpecification s = facade.createOptionToBundleSpec(id, option);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(s));
-    }
+  @PostMapping(path = "/{id}/options")
+  public ResponseEntity<TrainingBundleSpecificationDTO> createOption(
+      @PathVariable Long id, @RequestBody APurchaseOption option) {
+    TrainingBundleSpecificationDTO s =
+        facade.createOptionToBundleSpec(id, option);
+    return ResponseEntity.ok(s);
+  }
 
+  @DeleteMapping(value = "/{id}/options/{optionId}")
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public ResponseEntity<TrainingBundleSpecificationDTO> deleteOption(
+      @PathVariable Long id, @PathVariable Long optionId) {
+    TrainingBundleSpecificationDTO b = this.facade.deleteOption(id, optionId);
+    return ResponseEntity.ok(b);
+  }
 
-    @DeleteMapping(value = "/{id}/options/{optionId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public ResponseEntity<TrainingBundleSpecificationResource> deleteOption(@PathVariable Long id, @PathVariable Long optionId) {
-        ATrainingBundleSpecification b = this.facade.deleteOption(id, optionId);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(b));
-    }
+  @PatchMapping(path = "/{id}")
+  public ResponseEntity<TrainingBundleSpecificationDTO> patch(
+      @PathVariable Long id, HttpServletRequest request) throws IOException {
+    TrainingBundleSpecificationDTO spec = facade.patch(id, request);
+    return ResponseEntity.ok(spec);
+  }
 
-    @PatchMapping(path = "/{id}")
-    public ResponseEntity<TrainingBundleSpecificationResource> patch(@PathVariable Long id,
-                                                                     HttpServletRequest request) throws IOException {
-        ATrainingBundleSpecification spec = facade.findById(id);
-        spec = objectMapper.readerForUpdating(spec).readValue(request.getReader());
-        spec = facade.save(spec);
-        return ResponseEntity.ok(new TrainingBundleSpecificationAssembler().toModel(spec));
-    }
+  @GetMapping
+  @ResponseBody
+  public Page<TrainingBundleSpecificationDTO> findAll(Pageable pageable) {
+    return facade.findAll(pageable);
+  }
 
-    @GetMapping
-    @ResponseBody
-    public Page<ATrainingBundleSpecification> findAll(Pageable pageable) {
-        return facade.findAll(pageable);
-    }
+  @GetMapping(path = "/search")
+  @ResponseBody
+  public Page<TrainingBundleSpecificationDTO> search(
+      @RequestParam(required = false) String name,
+      @RequestParam(required = false) Boolean disabled,
+      Pageable pageable) {
+    return facade.search(name, disabled, pageable);
+  }
 
-    @GetMapping(path = "/search")
-    @ResponseBody
-    public Page<ATrainingBundleSpecification> search(@RequestParam(required = false) String name,
-                                                     @RequestParam(required = false) Boolean disabled,
-                                                     Pageable pageable) {
-        return facade.findByNameContains(name, disabled, pageable);
-    }
-
-    @GetMapping(path = "/list")
-    @ResponseBody
-    public List<ATrainingBundleSpecification> list(@RequestParam(required = false) Boolean disabled,
-                                                   @RequestParam(required = false) String type) {
-        return facade.list(disabled, type);
-    }
+  @GetMapping(path = "/list")
+  @ResponseBody
+  public List<TrainingBundleSpecificationDTO> list(
+      @RequestParam(required = false) Boolean disabled,
+      @RequestParam(required = false) String type) {
+    return facade.list(disabled, type);
+  }
 }

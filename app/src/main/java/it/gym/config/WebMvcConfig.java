@@ -10,16 +10,15 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class WebMvcConfig implements WebMvcConfigurer {
 
-    @Autowired
-    ApiLoggerInterceptor apiLoggerInterceptor;
+  @Autowired ApiLoggerInterceptor apiLoggerInterceptor;
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(apiLoggerInterceptor);
-    }
+  @Override
+  public void addInterceptors(InterceptorRegistry registry) {
+    registry.addInterceptor(apiLoggerInterceptor);
+  }
 }

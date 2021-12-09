@@ -1,11 +1,21 @@
 package it.gym.integration;
 
+import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.expectAdminRoles;
+import static it.gym.utility.HateoasTest.expectUser;
+import static org.apache.commons.lang3.time.DateUtils.addHours;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
 import it.gym.repository.CustomerRepository;
 import it.gym.repository.RoleRepository;
 import it.gym.repository.UserRepository;
 import it.gym.repository.VerificationTokenRepository;
+import java.util.Date;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,174 +26,193 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithAnonymousUser;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Date;
-import java.util.List;
+public class AuthenticationControllerIntegrationTest
+    extends AbstractIntegrationTest {
 
-import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.expectAdminRoles;
-import static it.gym.utility.HateoasTest.expectUser;
-import static org.apache.commons.lang3.time.DateUtils.addHours;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-public class AuthenticationControllerIntegrationTest extends AbstractIntegrationTest {
+  @Autowired private UserRepository repository;
+  @Autowired private CustomerRepository customerRepository;
+  @Autowired private VerificationTokenRepository tokenRepository;
+  @Autowired private RoleRepository roleRepository;
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private Admin admin;
+  private List<Role> roles;
+  private VerificationToken token;
 
-    @Autowired private UserRepository repository;
-    @Autowired private CustomerRepository customerRepository;
-    @Autowired private VerificationTokenRepository tokenRepository;
-    @Autowired private RoleRepository roleRepository;
+  @Before
+  public void before() {
+    roles = createAdminRoles();
+    roles = roleRepository.saveAll(roles);
+    admin = createAdmin(1L, "admin@admin.com", roles);
+    admin = repository.save(admin);
+    token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
+    tokenRepository.save(token);
+  }
 
-    private Admin admin;
-    private List<Role> roles;
-    private VerificationToken token;
+  @After
+  public void after() {
+    tokenRepository.deleteAll();
+    repository.deleteAll();
+    roleRepository.deleteAll();
+  }
 
-    @Before
-    public void before() {
-        Gym gym = createGym(1L);
-        roles = createAdminRoles();
-        roles = roleRepository.saveAll(roles);
-        admin = createAdmin(1L, "admin@admin.com", roles);
-        admin = repository.save(admin);
-        token = createToken(1L, "admin_token", admin, addHours(new Date(), 2));
-        tokenRepository.save(token);
-    }
+  @Test
+  public void whenRegister_OK() throws Exception {
+    Customer customer =
+        createCustomer(
+            1L,
+            "customer@customer.com",
+            "password",
+            "customer",
+            "customer",
+            false,
+            null,
+            true);
 
-    @After
-    public void after() {
-        tokenRepository.deleteAll();
-        repository.deleteAll();
-        roleRepository.deleteAll();
-    }
+    ObjectMapper objectMapper = new ObjectMapper();
+    ResultActions result =
+        mockMvc
+            .perform(
+                post("/authentication/registration")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(customer)))
+            .andExpect(status().isOk());
+    customer = customerRepository.findAll().get(0);
+    roles = customer.getRoles();
+    logger.info(roles.toString());
+    expectUser(result, customer);
+  }
 
-    @Test
-    public void whenRegister_OK() throws Exception {
-        Customer customer = createCustomer(1L,
-                "customer@customer.com",
-                "password",
-                "customer",
-                "customer",
-                false, null);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/authentication/registration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(customer)))
-                .andExpect(status().isOk());
-        customer = customerRepository.findAll().get(0);
-        roles = customer.getRoles();
-        logger.info(roles.toString());
-        expectUser(result, customer);
-    }
-
-    @Test
-    @WithAnonymousUser
-    public void whenConfirmRegistration_OK() throws Exception {
-        Object cred = new Object() {
-            public final String email = "admin@admin.com";
-            public final String password = "password";
+  @Test
+  @WithAnonymousUser
+  public void whenConfirmRegistration_OK() throws Exception {
+    Object cred =
+        new Object() {
+          public final String email = "admin@admin.com";
+          public final String password = "password";
         };
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/authentication/confirmRegistration")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cred)))
-                .andExpect(status().isOk());
+    ObjectMapper objectMapper = new ObjectMapper();
+    ResultActions result =
+        mockMvc
+            .perform(
+                post("/authentication/confirmRegistration")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(cred)))
+            .andExpect(status().isOk());
 
-        admin.setVerified(true);
-        roles = admin.getRoles();
-        expectUser(result, admin);
-        expectAdminRoles(result, roles, "roles");
-    }
+    admin.setVerified(true);
+    roles = admin.getRoles();
+    expectUser(result, admin);
+    expectAdminRoles(result, roles, "roles");
+  }
 
-    @Test
-    @WithAnonymousUser
-    public void whenChangePasswordAnonymous_OK() throws Exception {
-        Object cred = new Object() {
-            public final String oldPassword = "password";
-            public final String password = "password1";
-            public final String confirmPassword = "password1";
+  @Test
+  @WithAnonymousUser
+  public void whenChangePasswordAnonymous_OK() throws Exception {
+    Object cred =
+        new Object() {
+          public final String oldPassword = "password";
+          public final String password = "password1";
+          public final String confirmPassword = "password1";
         };
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/authentication/changePasswordAnonymous/"+admin.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cred)))
-                .andExpect(status().isOk());
+    ObjectMapper objectMapper = new ObjectMapper();
+    ResultActions result =
+        mockMvc
+            .perform(
+                post("/authentication/changePasswordAnonymous/" + admin.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(cred)))
+            .andExpect(status().isOk());
 
-        admin.setVerified(true);
-        roles = admin.getRoles();
-        expectUser(result, admin);
-        expectAdminRoles(result, roles, "roles");
-    }
-    @Test
-    public void whenChangePassword_OK() throws Exception {
-        Object cred = new Object() {
-            public final String oldPassword = "password";
-            public final String password = "password1";
-            public final String confirmPassword = "password1";
+    admin.setVerified(true);
+    roles = admin.getRoles();
+    expectUser(result, admin);
+    expectAdminRoles(result, roles, "roles");
+  }
+
+  @Test
+  public void whenChangePassword_OK() throws Exception {
+    Object cred =
+        new Object() {
+          public final String oldPassword = "password";
+          public final String password = "password1";
+          public final String confirmPassword = "password1";
         };
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        ResultActions result = mockMvc.perform(post("/authentication/changePassword/"+admin.getId())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(objectMapper.writeValueAsString(cred)))
-                .andExpect(status().isOk());
+    ObjectMapper objectMapper = new ObjectMapper();
+    ResultActions result =
+        mockMvc
+            .perform(
+                post("/authentication/changePassword/" + admin.getId())
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(cred)))
+            .andExpect(status().isOk());
 
-        admin.setVerified(true);
-        roles = admin.getRoles();
-        expectUser(result, admin);
-        expectAdminRoles(result, roles, "roles");
-    }
+    admin.setVerified(true);
+    roles = admin.getRoles();
+    expectUser(result, admin);
+    expectAdminRoles(result, roles, "roles");
+  }
 
-    @Test
-    @WithAnonymousUser
-    public void whenGetUserFromVerificationToken_OK() throws Exception {
-        ResultActions result = mockMvc
-                .perform(get("/authentication/getUserFromVerificationToken?token="+token.getToken()))
-                .andExpect(status().isOk());
+  @Test
+  @WithAnonymousUser
+  public void whenGetUserFromVerificationToken_OK() throws Exception {
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(
+                    "/authentication/getUserFromVerificationToken?token="
+                        + token.getToken()))
+            .andExpect(status().isOk());
 
-        roles = admin.getRoles();
-        expectUser(result, admin);
-        expectAdminRoles(result, roles, "roles");
-    }
+    roles = admin.getRoles();
+    expectUser(result, admin);
+    expectAdminRoles(result, roles, "roles");
+  }
 
-    @Test
-    @WithAnonymousUser
-    public void whenForgotPassword_OK() throws Exception {
-        admin.setVerified(true);
-        admin = repository.save(admin);
-        ResultActions result = mockMvc
-                .perform(get("/authentication/forgotPassword?email="+admin.getEmail()))
-                .andExpect(status().isOk());
+  @Test
+  @WithAnonymousUser
+  public void whenForgotPassword_OK() throws Exception {
+    admin.setVerified(true);
+    admin = repository.save(admin);
+    ResultActions result =
+        mockMvc
+            .perform(
+                get("/authentication/forgotPassword?email=" + admin.getEmail()))
+            .andExpect(status().isOk());
 
-        testExpectedAdmin(result);
-    }
+    testExpectedAdmin(result);
+  }
 
-    @Test
-    public void whenResendAnonymousToken_OK() throws Exception {
-        ResultActions result = mockMvc
-                .perform(get("/authentication/resendTokenAnonymous?id="+admin.getId()))
-                .andExpect(status().isOk());
+  @Test
+  public void whenResendAnonymousToken_OK() throws Exception {
+    ResultActions result =
+        mockMvc
+            .perform(
+                get("/authentication/resendTokenAnonymous?id=" + admin.getId()))
+            .andExpect(status().isOk());
 
-        testExpectedAdmin(result);
-    }
+    testExpectedAdmin(result);
+  }
 
-    @Test
-    @WithAnonymousUser
-    public void whenResendToken_OK() throws Exception {
-        ResultActions result = mockMvc
-                .perform(get("/authentication/resendToken?token="+token.getToken()))
-                .andExpect(status().isOk());
+  @Test
+  @WithAnonymousUser
+  public void whenResendToken_OK() throws Exception {
+    ResultActions result =
+        mockMvc
+            .perform(
+                get("/authentication/resendToken?token=" + token.getToken()))
+            .andExpect(status().isOk());
 
-        testExpectedAdmin(result);
-    }
+    testExpectedAdmin(result);
+  }
 
-    private void testExpectedAdmin(ResultActions result) throws Exception {
-        roles = admin.getRoles();
-        expectUser(result, admin);
-        expectAdminRoles(result, roles, "roles");
-    }
+  private void testExpectedAdmin(ResultActions result) throws Exception {
+    roles = admin.getRoles();
+    expectUser(result, admin);
+    expectAdminRoles(result, roles, "roles");
+  }
 }

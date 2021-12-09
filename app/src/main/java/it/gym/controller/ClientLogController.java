@@ -11,16 +11,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/log")
 public class ClientLogController {
 
-    private final Logger logger = LoggerFactory.getLogger(getClass());
+  private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    @PostMapping(path = "/error")
-    public void error(@RequestBody String message) {
-        logger.error("Client: " + message.replaceAll("\n", " "));
-    }
+  @PostMapping(path = "/error")
+  public void error(@RequestBody String message) {
+    logger.error("Client: " + message.replaceAll("\n", " "));
+  }
 
-    @PostMapping(path = "/info")
-    public void info(@RequestBody String message) {
-        logger.info("Client: " + message.replaceAll("\n", " "));
-    }
-
+  @PostMapping(path = "/info")
+  public void info(@RequestBody String message) {
+    logger.info("Client: " + message.replaceAll("\n", " "));
+  }
 }

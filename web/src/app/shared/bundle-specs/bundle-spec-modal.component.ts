@@ -1,7 +1,12 @@
 import {ChangeDetectionStrategy, Component, Inject, OnInit} from '@angular/core';
-import {BundleSpecification, BundleSpecificationType, CourseBundleSpecification, PersonalBundleSpecification} from '../model';
-import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import {
+    BundleSpecification,
+    BundleSpecificationType,
+    CourseBundleSpecification,
+    PersonalBundleSpecification
+} from '../model';
+import {FormControl, FormGroup, Validators} from '@angular/forms';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 
 @Component({
     selector: 'bundle-spec-modal',
@@ -11,14 +16,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class BundleSpecModalComponent implements OnInit {
 
-    bundleSpec: any;
+    bundleSpec: BundleSpecification;
     form: FormGroup;
     showPersonal: boolean;
     showCourse: boolean;
     showNumDeletions: boolean;
 
-    constructor(private builder: FormBuilder,
-                public dialogRef: MatDialogRef<BundleSpecModalComponent>,
+    constructor(public dialogRef: MatDialogRef<BundleSpecModalComponent>,
                 @Inject(MAT_DIALOG_DATA) public data: any) {
         this.bundleSpec = this.data.bundle;
     }
@@ -52,14 +56,14 @@ export class BundleSpecModalComponent implements OnInit {
                 disabled: hasBundle,
             }, Validators.required),
             maxCustomers: new FormControl({
-                value: this.bundleSpec.maxCustomers,
+                value: this.bundleSpec.maxCustomers || 1,
                 disabled: this.bundleSpec.type !== BundleSpecificationType.COURSE
             }, [
                 Validators.required,
-                Validators.min(2)
+                Validators.min(1)
             ]),
             unlimitedDeletions: new FormControl({
-                value: !!this.bundleSpec.unlimitedDeletions,
+                value: this.bundleSpec.unlimitedDeletions || false,
                 disabled: false
             }, [
                 Validators.required
@@ -90,13 +94,12 @@ export class BundleSpecModalComponent implements OnInit {
         });
 
         this.unlimitedDeletions.valueChanges.subscribe(val => {
-            if (val === false) {
-                this.showNumDeletions = true;
-                this.numDeletions.enable();
-            }
-            else {
+            if (val) {
                 this.showNumDeletions = false;
                 this.numDeletions.disable();
+            } else {
+                this.showNumDeletions = true;
+                this.numDeletions.enable();
             }
             this.form.updateValueAndValidity();
         });
@@ -135,6 +138,7 @@ export class BundleSpecModalComponent implements OnInit {
         let bundle;
         if (this.type.value === BundleSpecificationType.PERSONAL) {
             bundle = new PersonalBundleSpecification();
+            bundle.maxCustomers = 1;
         }
         else {
             bundle = new CourseBundleSpecification();

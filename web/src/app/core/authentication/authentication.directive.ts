@@ -9,7 +9,7 @@ import {CredentialsStorageDirective} from './credentials-storage.directive';
 import {PrincipalStorageDirective} from './principal-storage.directive';
 import {UserStorageDirective} from './user-storage.directive';
 import {CurrentUserRoleIdStorageDirective} from './current-user-role-id-storage.directive';
-import {GymStorageDirective} from "./gym-storage.directive";
+import {GymStorageDirective} from './gym-storage.directive';
 
 /**
  * Provides a base for authentication workflow.
@@ -179,7 +179,7 @@ export class AuthenticationDirective implements OnDestroy {
 
     findGym(): Observable<Gym> {
         let res;
-        const gym = this.gymStorage.get()
+        const gym = this.gymStorage.get();
         if (!gym) {
             res = this.getGym()
                 .pipe(map((v: Gym) => {

@@ -1,11 +1,11 @@
 import {ChangeDetectionStrategy, Component, OnInit} from '@angular/core';
-import {BundleSpecHelperService, QueryableDatasource} from '../../core/helpers';
-import {BundleSpecification, CourseBundleSpecification} from '../model';
+import {BundleSpecHelperService, QueryableDatasource} from '../../core';
+import {BundleSpecification} from '../model';
 import {ActivatedRoute, Router} from '@angular/router';
 import {MatDialog} from '@angular/material/dialog';
 import {BundleSpecsService} from '../../core/controllers';
 import {PolicyServiceDirective} from '../../core/policy';
-import {SnackBarService} from '../../core/utilities';
+import {SnackBarService} from '../../core';
 import {BundleSpecModalComponent} from './bundle-spec-modal.component';
 import {filter, switchMap, takeUntil} from 'rxjs/operators';
 import {of} from 'rxjs';

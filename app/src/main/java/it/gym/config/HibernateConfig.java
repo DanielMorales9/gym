@@ -1,6 +1,9 @@
 package it.gym.config;
 
 import it.gym.Application;
+import java.util.HashMap;
+import java.util.Map;
+import javax.sql.DataSource;
 import org.hibernate.MultiTenancyStrategy;
 import org.hibernate.cfg.Environment;
 import org.hibernate.context.spi.CurrentTenantIdentifierResolver;
@@ -15,36 +18,39 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
-import javax.sql.DataSource;
-import java.util.HashMap;
-import java.util.Map;
-
 @Configuration
 @EnableScheduling
 @ConditionalOnProperty(
-        name = "it.gym.enabled",
-        havingValue = "true",
-        matchIfMissing = true)
+    name = "it.gym.enabled",
+    havingValue = "true",
+    matchIfMissing = true)
 public class HibernateConfig {
-    @Autowired
-    private JpaProperties jpaProperties;
-    @Bean
-    public JpaVendorAdapter jpaVendorAdapter() {
-        return new HibernateJpaVendorAdapter();
-    }
-    @Bean
-    public LocalContainerEntityManagerFactoryBean entityManagerFactory(DataSource dataSource,
-                                                                       MultiTenantConnectionProvider multiTenantConnectionProviderImpl,
-                                                                       CurrentTenantIdentifierResolver currentTenantIdentifierResolverImpl) {
-        Map<String, Object> properties = new HashMap<>();
-        properties.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
-        properties.put(Environment.MULTI_TENANT_CONNECTION_PROVIDER, multiTenantConnectionProviderImpl);
-        properties.put(Environment.MULTI_TENANT_IDENTIFIER_RESOLVER, currentTenantIdentifierResolverImpl);
-        LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
-        em.setDataSource(dataSource);
-        em.setPackagesToScan(Application.class.getPackage().getName());
-        em.setJpaVendorAdapter(jpaVendorAdapter());
-        em.setJpaPropertyMap(properties);
-        return em;
-    }
+  @Autowired private JpaProperties jpaProperties;
+
+  @Bean
+  public JpaVendorAdapter jpaVendorAdapter() {
+    return new HibernateJpaVendorAdapter();
+  }
+
+  @Bean
+  public LocalContainerEntityManagerFactoryBean entityManagerFactory(
+      DataSource dataSource,
+      MultiTenantConnectionProvider multiTenantConnectionProviderImpl,
+      CurrentTenantIdentifierResolver currentTenantIdentifierResolverImpl) {
+    Map<String, Object> properties = new HashMap<>();
+    properties.put(Environment.MULTI_TENANT, MultiTenancyStrategy.SCHEMA);
+    properties.put(
+        Environment.MULTI_TENANT_CONNECTION_PROVIDER,
+        multiTenantConnectionProviderImpl);
+    properties.put(
+        Environment.MULTI_TENANT_IDENTIFIER_RESOLVER,
+        currentTenantIdentifierResolverImpl);
+    LocalContainerEntityManagerFactoryBean em =
+        new LocalContainerEntityManagerFactoryBean();
+    em.setDataSource(dataSource);
+    em.setPackagesToScan(Application.class.getPackage().getName());
+    em.setJpaVendorAdapter(jpaVendorAdapter());
+    em.setJpaPropertyMap(properties);
+    return em;
+  }
 }

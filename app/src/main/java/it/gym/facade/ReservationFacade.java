@@ -1,12 +1,21 @@
 package it.gym.facade;
 
+import static it.gym.utility.CheckEvents.checkPast;
+import static it.gym.utility.CheckEvents.hasHolidays;
+
 import it.gym.config.CustomProperties;
+import it.gym.dto.EventDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
-import it.gym.pojo.Event;
 import it.gym.service.*;
+import java.security.Principal;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.apache.commons.lang3.time.DateUtils;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -15,389 +24,450 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-import java.security.Principal;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import static it.gym.utility.CheckEvents.checkPast;
-import static it.gym.utility.CheckEvents.hasHolidays;
-
 @Component
 @Transactional
 public class ReservationFacade {
 
-    private static final Logger logger = LoggerFactory.getLogger(ReservationFacade.class);
+  private static final Logger logger =
+      LoggerFactory.getLogger(ReservationFacade.class);
 
-    @Autowired private ReservationService service;
-    @Autowired private GymService gymService;
-    @Autowired private CustomerService customerService;
-    @Autowired private UserService userService;
-    @Autowired private EventService eventService;
-    @Qualifier("trainingSessionService")
-    @Autowired private TrainingSessionService sessionService;
-    @Qualifier("trainingBundleService")
-    @Autowired private TrainingBundleService bundleService;
-    @Qualifier("mailService")
-    @Autowired private MailService mailService;
-    @Autowired private CustomProperties properties;
+  @Autowired private ReservationService service;
+  @Autowired private GymService gymService;
+  @Autowired private CustomerService customerService;
+  @Autowired private UserService userService;
+  @Autowired private EventService eventService;
 
-    private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
-        return customer.getTrainingBundles()
-                .stream()
-                .filter(b -> b.getId().equals(bundleId))
-                .findAny()
-                .orElseThrow(() -> new BadRequestException("Non possiedi questo pacchetto"));
+  @Qualifier("trainingSessionService")
+  @Autowired
+  private TrainingSessionService sessionService;
+
+  @Qualifier("trainingBundleService")
+  @Autowired
+  private TrainingBundleService bundleService;
+
+  @Qualifier("mailService")
+  @Autowired
+  private MailService mailService;
+
+  @Autowired private CustomProperties properties;
+
+  private ATrainingBundle getTrainingBundle(Long bundleId, Customer customer) {
+    return customer.getTrainingBundles().stream()
+        .filter(b -> b.getId().equals(bundleId))
+        .findAny()
+        .orElseThrow(
+            () -> new BadRequestException("Non possiedi questo pacchetto"));
+  }
+
+  private void simpleReservationChecks(
+      Gym gym,
+      Customer customer,
+      ATrainingBundle bundle,
+      Date startTime,
+      Date endTime,
+      boolean checkIsReservedOnTime,
+      boolean checkIsPast,
+      boolean checkNumEvents) {
+
+    if (checkIsPast) checkPast(startTime);
+
+    gymService.checkGymHours(gym, startTime, endTime);
+
+    checkBundleIsReservable(customer, bundle);
+
+    if (checkIsReservedOnTime) {
+      checkIsOnTime(startTime, gym);
     }
 
-    private void simpleReservationChecks(Gym gym, Customer customer, ATrainingBundle bundle, Date startTime,
-                                         Date endTime,
-                                         boolean checkIsReservedOnTime,
-                                         boolean checkIsPast,
-                                         boolean checkNumEvents) {
+    checkHasHolidays(startTime, endTime);
 
-        if (checkIsPast) checkPast(startTime);
-
-        gymService.checkGymHours(gym, startTime, endTime);
-
-        checkBundleIsReservable(customer, bundle);
-
-        if (checkIsReservedOnTime) { checkIsOnTime(startTime, gym); }
-
-        checkHasHolidays(startTime, endTime);
-
-        if (checkNumEvents) {
-            isTimeAvailable(gym, startTime, endTime);
-        }
-
+    if (checkNumEvents) {
+      isTimeAvailable(gym, startTime, endTime);
     }
+  }
 
-    private void checkHasHolidays(Date startTime, Date endTime) {
-        List<AEvent> events = this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
+  private void checkHasHolidays(Date startTime, Date endTime) {
+    List<AEvent> events =
+        this.eventService.findAllEventsLargerThanInterval(startTime, endTime);
 
-        hasHolidays(events);
+    hasHolidays(events);
+  }
+
+  private void checkIsOnTime(Date startTime, Gym gym) {
+    if (isNotOnTime(startTime, gym)) {
+      throw new BadRequestException(
+          String.format(
+              "E' necessario prenotare almeno %s ore prima",
+              gym.getReservationBeforeHours()));
     }
+  }
 
-    private void checkIsOnTime(Date startTime, Gym gym) {
-        if (isNotOnTime(startTime, gym)) {
-            throw new BadRequestException(
-                    String.format("E' necessario prenotare almeno %s ore prima",
-                            gym.getReservationBeforeHours() ));
-        }
+  private Long checkOverlappingEvents(Gym gym, Date startTime, Date endTime) {
+    Integer minutesBetweenEvents = gym.getMinutesBetweenEvents();
+    int minutes = minutesBetweenEvents != null ? minutesBetweenEvents : 0;
+
+    Date rangeStart = addMinutes(startTime, -minutes);
+    Date rangeEnd = addMinutes(endTime, minutes);
+
+    return eventService.findOverlappingEvents(rangeStart, rangeEnd).stream()
+        .map(e -> (ATrainingEvent) e)
+        .filter(ATrainingEvent::isTrainingEvent)
+        .filter(v -> !v.isExternal())
+        .count();
+  }
+
+  @NotNull
+  private Date addMinutes(Date time, int minutes) {
+    Calendar cal;
+    cal = Calendar.getInstance();
+    cal.setTime(time);
+    cal.add(Calendar.MINUTE, minutes);
+    return cal.getTime();
+  }
+
+  private void isTimeAvailable(Gym gym, Date day, Date end) {
+    Long nEventCount = this.checkOverlappingEvents(gym, day, end);
+    if (gym.getNumEvents(day) <= nEventCount) {
+      throw new BadRequestException(
+          "Non abbiamo posti disponibili in questo orario");
     }
+  }
 
-    private Long checkOverlappingEvents(Gym gym, Date startTime, Date endTime) {
-        Integer minutesBetweenEvents = gym.getMinutesBetweenEvents();
-        int minutes = minutesBetweenEvents != null ? minutesBetweenEvents : 0;
-
-        Date rangeStart = addMinutes(startTime, -minutes);
-        Date rangeEnd = addMinutes(endTime, minutes);
-
-        return eventService.findOverlappingEvents(rangeStart, rangeEnd).stream()
-                .map(e -> (ATrainingEvent) e)
-                .filter(ATrainingEvent::isTrainingEvent)
-                .filter(v -> !v.isExternal())
-                .count();
-
+  private void isEventReservable(ATrainingEvent event) {
+    if (!event.isReservable()) {
+      throw new MethodNotAllowedException(
+          "Non è possibile prenotare questo evento");
     }
+  }
 
-    @NotNull
-    private Date addMinutes(Date time, int minutes) {
-        Calendar cal;
-        cal = Calendar.getInstance();
-        cal.setTime(time);
-        cal.add(Calendar.MINUTE, minutes);
-        return cal.getTime();
+  private void checkBundleIsReservable(
+      Customer customer, ATrainingBundle bundle) {
+    if (bundle.isExpired()) {
+      bundle.terminate();
+      List<ATrainingBundle> expiredBundles = getExpiredBundles(customer);
+      expiredBundles.forEach(ATrainingBundle::terminate);
+      customerService.save(customer);
+      sendExpiredBundleEmail(customer, bundle);
+
+      throw new MethodNotAllowedException(
+          "Hai completato tutte le sessioni "
+              + "di allenamento disponibili in questo pacchetto");
     }
+  }
 
-    private void isTimeAvailable(Gym gym, Date day, Date end) {
-        Long nEventCount = this.checkOverlappingEvents(gym, day, end);
-        if (gym.getNumEvents(day) <= nEventCount) {
-            throw new BadRequestException("Non abbiamo posti disponibili in questo orario");
-        }
-    }
+  private void sendExpiredBundleEmail(
+      Customer customer, ATrainingBundle bundle) {
+    List<AUser> admins = userService.findAllAdmins();
 
-    private void isEventReservable(ATrainingEvent event) {
-        if (!event.isReservable()) {
-            throw new MethodNotAllowedException("Non è possibile prenotare questo evento");
-        }
-    }
+    String subject =
+        String.format(
+            "Notifica Terminazione Pacchetto di allenamento  %s",
+            bundle.getName());
 
-    private void checkBundleIsReservable(Customer customer, ATrainingBundle bundle) {
-        if (bundle.isExpired()) {
-            bundle.terminate();
-            List<ATrainingBundle> expiredBundles = getExpiredBundles(customer);
-            expiredBundles.forEach(ATrainingBundle::terminate);
-            customerService.save(customer);
-            sendExpiredBundleEmail(customer, bundle);
+    String adminMessage =
+        String.format(
+            "Il cliente %s %s ha terminato il pacchetto %s.\n"
+                + "Verifica lo stato del pacchetto al seguente"
+                + " link %s/admin/bundle/%s\n",
+            customer.getFirstName(),
+            customer.getLastName(),
+            bundle.getName(),
+            properties.getBaseURL(),
+            bundle.getId());
 
-            throw new MethodNotAllowedException("Hai completato tutte le sessioni " +
-                    "di allenamento disponibili in questo pacchetto");
-        }
-    }
+    String customerMessage =
+        String.format(
+            "Gentile %s %s,\n"
+                + "Hai terminato il pacchetto %s.\n"
+                + "Verifica lo stato del pacchetto al seguente"
+                + " link %s/customer/bundle/%s.\n"
+                + "Rivolgiti in segreteria per rinnovare il tuo pacchetto o sceglierne un altro.",
+            customer.getFirstName(),
+            customer.getLastName(),
+            bundle.getName(),
+            properties.getBaseURL(),
+            bundle.getId());
 
-    private void sendExpiredBundleEmail(Customer customer, ATrainingBundle bundle) {
-        List<AUser> admins = userService.findAllAdmins();
+    mailService.sendSimpleMail(customer.getEmail(), subject, customerMessage);
 
-        String subject = String.format("Notifica Terminazione Pacchetto di allenamento  %s",
-                bundle.getName());
-
-        String adminMessage = String.format(
-                "Il cliente %s %s ha terminato il pacchetto %s.\n" +
-                        "Verifica lo stato del pacchetto al seguente" +
-                        " link %s/admin/bundle/%s\n",
-                customer.getFirstName(), customer.getLastName(),
-                bundle.getName(), properties.getBaseURL(), bundle.getId());
-
-        String customerMessage = String.format(
-                "Gentile %s %s,\n" +
-                        "Hai terminato il pacchetto %s.\n" +
-                        "Verifica lo stato del pacchetto al seguente" +
-                        " link %s/customer/bundle/%s.\n" +
-                        "Rivolgiti in segreteria per rinnovare il tuo pacchetto o sceglierne un altro.",
-                customer.getFirstName(), customer.getLastName(),
-                bundle.getName(), properties.getBaseURL(), bundle.getId());
-
-        mailService.sendSimpleMail(customer.getEmail(), subject, customerMessage);
-
-        admins.forEach(a -> {
-            mailService.sendSimpleMail(a.getEmail(), subject,
-                    String.format("Gentile %s %s,\n\n%s",
-                            a.getFirstName(), a.getLastName(), adminMessage));
+    admins.forEach(
+        a -> {
+          mailService.sendSimpleMail(
+              a.getEmail(),
+              subject,
+              String.format(
+                  "Gentile %s %s,\n\n%s",
+                  a.getFirstName(), a.getLastName(), adminMessage));
         });
+  }
+
+  public void isAvailable(
+      Long gymId,
+      Long customerId,
+      Long bundleId,
+      EventDTO event,
+      String roleName) {
+    Gym gym = this.gymService.findById(gymId);
+    Customer customer = this.customerService.findById(customerId);
+    ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
+
+    boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
+    boolean checkIsPast = "CUSTOMER".equals(roleName);
+    boolean checkNumEvents = "CUSTOMER".equals(roleName);
+    simpleReservationChecks(
+        gym,
+        customer,
+        bundle,
+        event.getStartTime(),
+        event.getEndTime(),
+        checkIsReservedOnTime,
+        checkIsPast,
+        checkNumEvents);
+  }
+
+  private List<ATrainingBundle> getExpiredBundles(Customer customer) {
+    logger.info("Checking whether the bundles are expired");
+    return customer.getTrainingBundles().stream()
+        .filter(ATrainingBundle::isExpired)
+        .collect(Collectors.toList());
+  }
+
+  public boolean isNotOnTime(Date startTime, Gym gym) {
+    logger.info("Checking whether the date is before certain amount of hours");
+    Date date = DateUtils.addHours(startTime, -gym.getReservationBeforeHours());
+    Date now = new Date();
+    return date.before(now);
+  }
+
+  public Role getRoleFromPrincipal(Principal principal) {
+    String email = principal.getName();
+    AUser u = userService.findByEmail(email);
+    return u.getRoles().stream()
+        .reduce((role, role2) -> role.getId() < role2.getId() ? role : role2)
+        .orElseThrow(() -> new InternalServerException("Nessun ruolo"));
+  }
+
+  private boolean isPast(Date startTime) {
+    return startTime.before(new Date());
+  }
+
+  private ATrainingEvent createPersonalTrainingEvent(
+      ATrainingBundle bundle, EventDTO event) {
+    ATrainingEvent evt = new PersonalTrainingEvent();
+    evt.setStartTime(event.getStartTime());
+    evt.setEndTime(event.getEndTime());
+    evt.setExternal(event.getExternal());
+    evt.setSpecification(bundle.getBundleSpec());
+    evt.setName(String.format("Allenamento: %s", bundle.getName()));
+    return evt;
+  }
+
+  private Reservation makeReservation(
+      Customer customer, ATrainingBundle bundle, ATrainingEvent evt) {
+    isEventReservable(evt);
+
+    logger.info("Creating reservation");
+    Reservation res = evt.createReservation(customer);
+
+    logger.info("Creating training session");
+    ATrainingSession session = bundle.createSession(evt);
+
+    logger.info("Saving created session");
+    session = sessionService.save(session);
+
+    logger.info("Adding training session to reservation");
+    res.setSession(session);
+
+    logger.info("Adding training event to reservation");
+    res.setEvent(evt);
+
+    logger.info("Saving reservation");
+    res = service.save(res);
+
+    logger.info("Saving training event");
+    eventService.save(evt);
+
+    logger.info("Adding training session to bundle");
+    bundle.addSession(session);
+
+    logger.info(bundle.toString());
+    logger.info("Saving training session into bundle");
+    bundleService.save(bundle);
+
+    return res;
+  }
+
+  public Reservation createReservation(
+      Long gymId,
+      Long customerId,
+      Long bundleId,
+      EventDTO event,
+      String roleName) {
+    Gym gym = this.gymService.findById(gymId);
+    Customer customer = this.customerService.findById(customerId);
+    ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
+
+    boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
+    boolean checkIsPast = checkIsReservedOnTime;
+    boolean checkNumEvents = checkIsPast;
+    simpleReservationChecks(
+        gym,
+        customer,
+        bundle,
+        event.getStartTime(),
+        event.getEndTime(),
+        checkIsReservedOnTime,
+        checkIsPast,
+        checkNumEvents);
+
+    logger.info("Creating personal training event");
+    ATrainingEvent evt = createPersonalTrainingEvent(bundle, event);
+
+    return makeReservation(customer, bundle, evt);
+  }
+
+  public Reservation createReservationWithExistingEvent(
+      Long gymId,
+      Long customerId,
+      Long eventId,
+      Long bundleId,
+      String roleName) {
+    Gym gym = this.gymService.findById(gymId);
+    Customer customer = this.customerService.findById(customerId);
+    ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
+
+    ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
+
+    boolean checkIsPast = "CUSTOMER".equals(roleName);
+    boolean checkIsReservedOnTime = checkIsPast;
+    boolean checkNumEvents = checkIsPast;
+    simpleReservationChecks(
+        gym,
+        customer,
+        bundle,
+        evt.getStartTime(),
+        evt.getEndTime(),
+        checkIsReservedOnTime,
+        checkIsPast,
+        checkNumEvents);
+
+    return makeReservation(customer, bundle, evt);
+  }
+
+  public Reservation deleteReservation(
+      Long eventId,
+      Long reservationId,
+      Long gymId,
+      String email,
+      String roleName) {
+    logger.info("Getting reservation by id");
+    Gym gym = this.gymService.findById(gymId);
+    ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
+    Reservation res = this.service.findById(reservationId);
+
+    logger.info("Getting session by reservation from event");
+    ATrainingSession session = res.getSession();
+    logger.info("Getting bundle from session");
+    ATrainingBundle bundle = session.getTrainingBundle();
+
+    boolean canCancel;
+    if (!bundle.getUnlimitedDeletions()) {
+      canCancel = bundle.getNumDeletions() > 0;
+    } else {
+      canCancel = true;
     }
 
-    public void isAvailable(Long gymId, Long customerId, Long bundleId, Event event, String roleName) {
-        Gym gym = this.gymService.findById(gymId);
-        Customer customer = this.customerService.findById(customerId);
-        ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
+    boolean isPastEvt = isPast(event.getStartTime());
+    boolean notOnTime = isNotOnTime(event.getStartTime(), gym);
+    boolean youAreCustomer = "CUSTOMER".equals(roleName);
+    boolean isAPersonal = "P".equals(event.getType());
 
-        boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
-        boolean checkIsPast = "CUSTOMER".equals(roleName);
-        boolean checkNumEvents = "CUSTOMER".equals(roleName);
-        simpleReservationChecks(gym, customer, bundle,
-                event.getStartTime(), event.getEndTime(),
-                checkIsReservedOnTime, checkIsPast, checkNumEvents);
-    }
-
-    private List<ATrainingBundle> getExpiredBundles(Customer customer) {
-        logger.info("Checking whether the bundles are expired");
-        return customer
-                .getTrainingBundles()
-                .stream()
-                .filter(ATrainingBundle::isExpired)
-                .collect(Collectors.toList());
-    }
-
-    public boolean isNotOnTime(Date startTime, Gym gym) {
-        logger.info("Checking whether the date is before certain amount of hours");
-        Date date = DateUtils.addHours(startTime, - gym.getReservationBeforeHours());
-        Date now = new Date();
-        return date.before(now);
-    }
-
-    public Role getRoleFromPrincipal(Principal principal) {
-        String email = principal.getName();
-        AUser u = userService.findByEmail(email);
-        return u.getRoles()
-                .stream()
-                .reduce((role, role2) -> role.getId() < role2.getId()? role : role2)
-                .orElseThrow(() -> new InternalServerException("Nessun ruolo"));
-    }
-
-    private boolean isPast(Date startTime) {
-        return startTime.before(new Date());
-    }
-
-    private ATrainingEvent createPersonalTrainingEvent(ATrainingBundle bundle, Event event) {
-        ATrainingEvent evt = new PersonalTrainingEvent();
-        evt.setStartTime(event.getStartTime());
-        evt.setEndTime(event.getEndTime());
-        evt.setExternal(event.getExternal());
-        evt.setSpecification(bundle.getBundleSpec());
-        evt.setName(String.format("Allenamento: %s", bundle.getName()));
-        return evt;
-    }
-
-    private Reservation makeReservation(Customer customer, ATrainingBundle bundle, ATrainingEvent evt) {
-        isEventReservable(evt);
-
-        logger.info("Creating reservation");
-        Reservation res = evt.createReservation(customer);
-
-        logger.info("Creating training session");
-        ATrainingSession session = bundle.createSession(evt);
-
-        logger.info("Saving created session");
-        session = sessionService.save(session);
-
-        logger.info("Adding training session to reservation");
-        res.setSession(session);
-
-        logger.info("Adding training event to reservation");
-        res.setEvent(evt);
-
-        logger.info("Saving reservation");
-        res = service.save(res);
-
-        logger.info("Saving training event");
-        eventService.save(evt);
-
-        logger.info("Adding training session to bundle");
-        bundle.addSession(session);
-
-        logger.info(bundle.toString());
-        logger.info("Saving training session into bundle");
-        bundleService.save(bundle);
-
-        return res;
-    }
-
-
-    public Reservation createReservation(Long gymId,
-                                         Long customerId,
-                                         Long bundleId,
-                                         Event event,
-                                         String roleName) {
-        Gym gym = this.gymService.findById(gymId);
-        Customer customer = this.customerService.findById(customerId);
-        ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
-
-        boolean checkIsReservedOnTime = "CUSTOMER".equals(roleName);
-        boolean checkIsPast = checkIsReservedOnTime;
-        boolean checkNumEvents = checkIsPast;
-        simpleReservationChecks(gym, customer, bundle, event.getStartTime(), event.getEndTime(),
-                checkIsReservedOnTime,
-                checkIsPast,
-                checkNumEvents);
-
-        logger.info("Creating personal training event");
-        ATrainingEvent evt = createPersonalTrainingEvent(bundle, event);
-
-        return makeReservation(customer, bundle, evt);
-    }
-
-    public Reservation createReservationWithExistingEvent(Long gymId,
-                                                          Long customerId,
-                                                          Long eventId,
-                                                          Long bundleId,
-                                                          String roleName) {
-        Gym gym = this.gymService.findById(gymId);
-        Customer customer = this.customerService.findById(customerId);
-        ATrainingBundle bundle = getTrainingBundle(bundleId, customer);
-
-        ATrainingEvent evt = (ATrainingEvent) eventService.findById(eventId);
-
-        boolean checkIsPast = "CUSTOMER".equals(roleName);
-        boolean checkIsReservedOnTime = checkIsPast;
-        boolean checkNumEvents = checkIsPast;
-        simpleReservationChecks(gym, customer, bundle, evt.getStartTime(), evt.getEndTime(),
-                checkIsReservedOnTime, checkIsPast, checkNumEvents);
-
-        return makeReservation(customer, bundle, evt);
-    }
-
-    public Reservation deleteReservation(Long eventId, Long reservationId, Long gymId, String email, String roleName) {
-        logger.info("Getting reservation by id");
-        Gym gym = this.gymService.findById(gymId);
-        ATrainingEvent event = (ATrainingEvent) this.eventService.findById(eventId);
-        Reservation res = this.service.findById(reservationId);
-
-        logger.info("Getting session by reservation from event");
-        ATrainingSession session = res.getSession();
-        logger.info("Getting bundle from session");
-        ATrainingBundle bundle = session.getTrainingBundle();
-
-        boolean canCancel;
-        if (!bundle.getUnlimitedDeletions()) {
-            canCancel = bundle.getNumDeletions() > 0;
+    if (youAreCustomer) {
+      if (isPastEvt) {
+        sendDeleteReservationAttemptEmail(email, event);
+        throw new BadRequestException(
+            "Non è possibile annulare una prenotazione ad un allenamento passato. "
+                + "Rivolgiti in segreteria per maggiori informazioni");
+      } else if (isAPersonal) {
+        if (notOnTime) {
+          sendDeleteReservationAttemptEmail(email, event);
+          throw new BadRequestException(
+              String.format(
+                  "E' necessario annullare una prenotazione almeno %s ore prima. "
+                      + "Rivolgiti in segreteria per maggiori informazioni",
+                  gym.getReservationBeforeHours()));
+        } else if (!canCancel) {
+          sendDeleteReservationAttemptEmail(email, event);
+          throw new BadRequestException(
+              "Hai terminato il numero massimo di cancellazioni. "
+                  + "Rivolgiti in segreteria per maggiori informazioni");
         }
-        else {
-            canCancel = true;
-        }
-
-        boolean isPastEvt = isPast(event.getStartTime());
-        boolean notOnTime = isNotOnTime(event.getStartTime(), gym);
-        boolean youAreCustomer = "CUSTOMER".equals(roleName);
-        boolean isAPersonal = "P".equals(event.getType());
-
-        if (youAreCustomer) {
-            if (isPastEvt) {
-                sendDeleteReservationAttemptEmail(email, event);
-                throw new BadRequestException("Non è possibile annulare una prenotazione ad un allenamento passato. " +
-                        "Rivolgiti in segreteria per maggiori informazioni");
-            }
-            else if (isAPersonal) {
-                if (notOnTime) {
-                    sendDeleteReservationAttemptEmail(email, event);
-                    throw new BadRequestException(
-                            String.format("E' necessario annullare una prenotazione almeno %s ore prima. " +
-                                            "Rivolgiti in segreteria per maggiori informazioni",
-                                    gym.getReservationBeforeHours()));
-                }
-                else if (!canCancel) {
-                    sendDeleteReservationAttemptEmail(email, event);
-                    throw new BadRequestException("Hai terminato il numero massimo di cancellazioni. " +
-                            "Rivolgiti in segreteria per maggiori informazioni");
-
-                }
-            }
-        }
-
-        logger.info("Deleting session from bundle");
-        session.deleteMeFromBundle();
-
-        logger.info("Saving bundle event");
-        this.bundleService.save(bundle);
-
-        logger.info("Deleting reservation from event");
-        event.deleteReservation(res);
-
-        service.delete(res);
-
-        logger.info("Deleting session");
-        sessionService.delete(session);
-
-        if (event.getType().equals("P")) {
-
-            logger.info("Deleting personal training event");
-            this.eventService.delete(event);
-        } else {
-            logger.info("Saving training event");
-            this.eventService.save(event);
-
-        }
-
-        return res;
+      }
     }
 
-    private void sendDeleteReservationAttemptEmail(String email, ATrainingEvent event) {
-        AUser customer = userService.findByEmail(email);
-        List<AUser> admins = userService.findAllAdmins();
+    logger.info("Deleting session from bundle");
+    session.deleteMeFromBundle();
 
-        String subject = String.format("Tentativo di annullamento prenotatione di %s %s",
-                customer.getFirstName(), customer.getLastName());
+    logger.info("Saving bundle event");
+    this.bundleService.save(bundle);
 
-        String message = String.format(
-                "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n" +
-                        "Verifica lo stato dellla prenotazione al seguente" +
-                        " link %s/admin/events/%s\n",
-                customer.getFirstName(), customer.getLastName(),
-                event.getName(), event.getStartTime(), event.getEndTime(),
-                properties.getBaseURL(),
-                event.getId());
-        admins.forEach(a -> {
-            mailService.sendSimpleMail(a.getEmail(), subject,
-                    String.format("Gentile %s %s,\n\n%s",  a.getFirstName(), a.getLastName(), message));
+    logger.info("Deleting reservation from event");
+    event.deleteReservation(res);
+
+    service.delete(res);
+
+    logger.info("Deleting session");
+    sessionService.delete(session);
+
+    if (event.getType().equals("P")) {
+
+      logger.info("Deleting personal training event");
+      this.eventService.delete(event);
+    } else {
+      logger.info("Saving training event");
+      this.eventService.save(event);
+    }
+
+    return res;
+  }
+
+  private void sendDeleteReservationAttemptEmail(
+      String email, ATrainingEvent event) {
+    AUser customer = userService.findByEmail(email);
+    List<AUser> admins = userService.findAllAdmins();
+
+    String subject =
+        String.format(
+            "Tentativo di annullamento prenotatione di %s %s",
+            customer.getFirstName(), customer.getLastName());
+
+    String message =
+        String.format(
+            "Il cliente %s %s ha tentato di annulare la prenotazione di %s dalle %s alle %s.\n"
+                + "Verifica lo stato dellla prenotazione al seguente"
+                + " link %s/admin/events/%s\n",
+            customer.getFirstName(),
+            customer.getLastName(),
+            event.getName(),
+            event.getStartTime(),
+            event.getEndTime(),
+            properties.getBaseURL(),
+            event.getId());
+    admins.forEach(
+        a -> {
+          mailService.sendSimpleMail(
+              a.getEmail(),
+              subject,
+              String.format(
+                  "Gentile %s %s,\n\n%s",
+                  a.getFirstName(), a.getLastName(), message));
         });
-    }
+  }
 
-    public Reservation confirm(Long reservationId) {
-        Reservation res = this.service.findById(reservationId);
-        res.setConfirmed(true);
-        res = this.service.save(res);
-        return res;
-    }
+  public Reservation confirm(Long reservationId) {
+    Reservation res = this.service.findById(reservationId);
+    res.setConfirmed(true);
+    res = this.service.save(res);
+    return res;
+  }
 }

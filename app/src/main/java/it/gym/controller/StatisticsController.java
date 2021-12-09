@@ -1,59 +1,66 @@
 package it.gym.controller;
 
-import it.gym.pojo.ReservationDayOfWeekStatistics;
-import it.gym.pojo.ReservationTimeStatistics;
-import it.gym.pojo.SaleBundleStatistics;
-import it.gym.pojo.SaleTimeStatistics;
+import it.gym.dto.ReservationDayOfWeekStatistics;
+import it.gym.dto.ReservationTimeStatistics;
+import it.gym.dto.SaleBundleStatistics;
+import it.gym.dto.SaleTimeStatistics;
 import it.gym.repository.EventStatsRepository;
 import it.gym.repository.SaleStatsRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import java.util.List;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/stats")
 @PreAuthorize("isAuthenticated()")
 public class StatisticsController {
 
-    @Autowired
-    private SaleStatsRepository saleStatsRepository;
-    @Autowired
-    private EventStatsRepository eventStatsRepository;
+  private final SaleStatsRepository saleStatsRepository;
+  private final EventStatsRepository eventStatsRepository;
 
-    @GetMapping("/getSaleByMonth")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<SaleTimeStatistics> getSaleStatsByMonth(@RequestParam String interval) {
-        return saleStatsRepository.getSalesByMonthInterval(interval);
-    }
+  public StatisticsController(
+      EventStatsRepository eventStatsRepository,
+      SaleStatsRepository saleStatsRepository) {
+    this.eventStatsRepository = eventStatsRepository;
+    this.saleStatsRepository = saleStatsRepository;
+  }
 
-    @GetMapping("/getSaleByBundleType")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<SaleBundleStatistics> getSaleStatsByBundleType(@RequestParam String interval) {
-        return saleStatsRepository.getSaleStatsByBundleType(interval);
-    }
+  @GetMapping("/getSaleByMonth")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<SaleTimeStatistics> getSaleStatsByMonth(
+      @RequestParam String interval) {
+    return saleStatsRepository.getSalesByMonthInterval(interval);
+  }
 
-    @GetMapping("/getReservationsByWeek")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<ReservationTimeStatistics> getReservationsByWeek(@RequestParam String interval) {
-        return eventStatsRepository.getReservationsByWeek(interval);
-    }
+  @GetMapping("/getSaleByBundleType")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<SaleBundleStatistics> getSaleStatsByBundleType(
+      @RequestParam String interval) {
+    return saleStatsRepository.getSaleStatsByBundleType(interval);
+  }
 
-    @GetMapping("/getCustomerReservationsByWeek")
-    @ResponseBody
-    public List<ReservationTimeStatistics> getCustomerReservationsByWeek(@RequestParam Long id,
-                                                                         @RequestParam String interval) {
-        return eventStatsRepository.getCustomerReservationsByWeek(id, interval);
-    }
+  @GetMapping("/getReservationsByWeek")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<ReservationTimeStatistics> getReservationsByWeek(
+      @RequestParam String interval) {
+    return eventStatsRepository.getReservationsByWeek(interval);
+  }
 
-    @GetMapping("/getReservationsByDayOfWeek")
-    @ResponseBody
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public List<ReservationDayOfWeekStatistics> getReservationsByDayOfWeek(@RequestParam String interval) {
-        return eventStatsRepository.getReservationsByDayOfWeek(interval);
-    }
+  @GetMapping("/getCustomerReservationsByWeek")
+  @ResponseBody
+  public List<ReservationTimeStatistics> getCustomerReservationsByWeek(
+      @RequestParam Long id, @RequestParam String interval) {
+    return eventStatsRepository.getCustomerReservationsByWeek(id, interval);
+  }
+
+  @GetMapping("/getReservationsByDayOfWeek")
+  @ResponseBody
+  @PreAuthorize("hasAuthority('ADMIN')")
+  public List<ReservationDayOfWeekStatistics> getReservationsByDayOfWeek(
+      @RequestParam String interval) {
+    return eventStatsRepository.getReservationsByDayOfWeek(interval);
+  }
 }

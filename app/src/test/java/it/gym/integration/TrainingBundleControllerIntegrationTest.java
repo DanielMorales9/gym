@@ -1,5 +1,10 @@
 package it.gym.integration;
 
+import static it.gym.utility.CalendarUtility.getNextMonday;
+import static it.gym.utility.Fixture.*;
+import static it.gym.utility.HateoasTest.expectTrainingBundle;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.*;
@@ -7,6 +12,7 @@ import it.gym.repository.CustomerRepository;
 import it.gym.repository.TrainingBundleRepository;
 import it.gym.repository.TrainingBundleSpecificationRepository;
 import it.gym.utility.CalendarUtility;
+import java.util.List;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -14,126 +20,122 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
-import java.util.TimeZone;
+public class TrainingBundleControllerIntegrationTest
+    extends AbstractIntegrationTest {
 
-import static it.gym.utility.CalendarUtility.getNextMonday;
-import static it.gym.utility.Fixture.*;
-import static it.gym.utility.HateoasTest.expectTrainingBundle;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+  @Autowired private CustomerRepository customerRepository;
+  @Autowired private TrainingBundleRepository repository;
+  @Autowired private TrainingBundleSpecificationRepository specRepository;
+  private PersonalTrainingBundle personalBundle;
+  private CourseTrainingBundle courseBundle;
 
-public class TrainingBundleControllerIntegrationTest extends AbstractIntegrationTest {
+  @Autowired private ObjectMapper objectMapper;
 
-    @Autowired private CustomerRepository customerRepository;
-    @Autowired private TrainingBundleRepository repository;
-    @Autowired private TrainingBundleSpecificationRepository specRepository;
-    private PersonalTrainingBundle personalBundle;
-    private CourseTrainingBundle courseBundle;
+  @Before
+  public void before() {
 
-    @Autowired
-    private ObjectMapper objectMapper;
+    Customer customer =
+        createCustomer(
+            1L, "user@user.com", "", "customer", "customer", true, null, true);
 
-    @Before
-    public void before() {
+    customer = customerRepository.save(customer);
 
-        Customer customer = createCustomer(1L,
-                "user@user.com",
-                "",
-                "customer",
-                "customer",
-                true,
-                null);
+    List<APurchaseOption> options =
+        createSingletonBundlePurchaseOptions(30, 900.0, null);
+    PersonalTrainingBundleSpecification personalBundleSpec =
+        createPersonalBundleSpec(1L, "personal", options);
 
-        customer = customerRepository.save(customer);
+    options = createSingletonTimePurchaseOptions(1, 100.0, null);
+    CourseTrainingBundleSpecification courseBundleSpec =
+        createCourseBundleSpec(1L, "course", 1, options);
 
-        List<APurchaseOption> options = createSingletonBundlePurchaseOptions(30, 900.0, null);
-        PersonalTrainingBundleSpecification personalBundleSpec = createPersonalBundleSpec(1L, "personal", options);
+    courseBundleSpec = specRepository.save(courseBundleSpec);
+    personalBundleSpec = specRepository.save(personalBundleSpec);
 
-        options = createSingletonTimePurchaseOptions(1, 100.0, null);
-        CourseTrainingBundleSpecification courseBundleSpec = createCourseBundleSpec(1L, "course", 1, options);
+    APurchaseOption option = courseBundleSpec.getOptions().get(0);
 
-        courseBundleSpec = specRepository.save(courseBundleSpec);
-        personalBundleSpec = specRepository.save(personalBundleSpec);
+    courseBundle =
+        createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
+    courseBundle.setCustomer(customer);
+    personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
+    personalBundle.setCustomer(customer);
 
-        APurchaseOption option = courseBundleSpec.getOptions().get(0);
+    personalBundle = repository.save(personalBundle);
+    courseBundle = repository.save(courseBundle);
+  }
 
-        courseBundle = createCourseBundle(1L, getNextMonday(), courseBundleSpec, option);
-        courseBundle.setCustomer(customer);
-        personalBundle = createPersonalBundle(1L, personalBundleSpec, option);
-        personalBundle.setCustomer(customer);
+  @After
+  public void after() {
+    repository.deleteAll();
+    specRepository.deleteAll();
+    customerRepository.deleteAll();
+  }
 
-        personalBundle = repository.save(personalBundle);
-        courseBundle = repository.save(courseBundle);
-    }
+  @Test
+  public void whenFindAllOK() throws Exception {
+    ResultActions result =
+        mockMvc.perform(get("/bundles")).andExpect(status().isOk());
 
-    @After
-    public void after() {
-        repository.deleteAll();
-        specRepository.deleteAll();
-        customerRepository.deleteAll();
-    }
+    expectTrainingBundle(result, personalBundle, "content[" + 0 + "]");
+    expectTrainingBundle(result, courseBundle, "content[" + 1 + "]");
+  }
 
-    @Test
-    public void whenFindAllOK() throws Exception {
-        ResultActions result = mockMvc.perform(get("/bundles"))
-                .andExpect(status().isOk());
+  @Test
+  public void whenFindByIdOK() throws Exception {
 
-        expectTrainingBundle(result, personalBundle, "content["+0+"]");
-        expectTrainingBundle(result, courseBundle, "content["+1+"]");
-    }
+    ResultActions result =
+        mockMvc
+            .perform(get("/bundles/" + courseBundle.getId()))
+            .andExpect(status().isOk());
 
-    @Test
-    public void whenFindByIdOK() throws Exception {
+    expectTrainingBundle(result, courseBundle);
+  }
 
-        ResultActions result = mockMvc.perform(get("/bundles/"+courseBundle.getId()))
-                .andExpect(status().isOk());
+  @Test
+  public void whenFindByIdGotNotFound() throws Exception {
+    mockMvc.perform(get("/bundles/1000")).andExpect(status().isNotFound());
+  }
 
-        expectTrainingBundle(result, courseBundle);
-    }
+  @Test
+  public void whenSearchOK() throws Exception {
 
-    @Test
-    public void whenFindByIdGotNotFound() throws Exception {
-        mockMvc.perform(get("/bundles/1000"))
-                .andExpect(status().isNotFound());
-    }
+    ResultActions result =
+        mockMvc
+            .perform(
+                get(
+                    "/bundles/search?specId="
+                        + courseBundle.getBundleSpec().getId()))
+            .andExpect(status().isOk());
 
-    @Test
-    public void whenSearchOK() throws Exception {
+    expectTrainingBundle(result, courseBundle, "content[" + 0 + "]");
+  }
 
-        ResultActions result = mockMvc.perform(get("/bundles/search?specId="+courseBundle
-                .getBundleSpec().getId()))
-                .andExpect(status().isOk());
+  @Test
+  public void whenDeleteBadRequest() throws Exception {
+    mockMvc
+        .perform(delete("/bundles/" + courseBundle.getId()))
+        .andExpect(status().isBadRequest());
+  }
 
-        expectTrainingBundle(result, courseBundle, "content["+0+"]");
-    }
+  @Test
+  public void whenPatchOK() throws Exception {
 
-    @Test
-    public void whenDeleteBadRequest() throws Exception {
-        mockMvc.perform(delete("/bundles/"+courseBundle.getId()))
-                .andExpect(status().isBadRequest());
-    }
+    courseBundle.setName("Test");
+    courseBundle.setStartTime(CalendarUtility.getDate(2021, 11, 1));
+    courseBundle.setEndTime(CalendarUtility.getDate(2021, 12, 1));
 
-    @Test
-    public void whenPatchOK() throws Exception {
+    courseBundle.setBundleSpec(null);
+    courseBundle.setCustomer(null);
+    courseBundle.setCustomer(null);
 
-        courseBundle.setName("Test");
-        courseBundle.setStartTime(CalendarUtility.getDate(2021, 11, 1));
-        courseBundle.setEndTime(CalendarUtility.getDate(2021, 12, 1));
+    ResultActions result =
+        mockMvc
+            .perform(
+                patch("/bundles/" + courseBundle.getId())
+                    .contentType(MediaType.APPLICATION_JSON_VALUE)
+                    .content(objectMapper.writeValueAsString(courseBundle)))
+            .andExpect(status().isOk());
 
-        courseBundle.setBundleSpec(null);
-        courseBundle.setCustomer(null);
-        courseBundle.setCustomer(null);
-
-        ResultActions result = mockMvc.perform(patch("/bundles/"+courseBundle.getId())
-                .contentType(MediaType.APPLICATION_JSON_VALUE)
-                .content(objectMapper.writeValueAsString(courseBundle)))
-                .andExpect(status().isOk());
-
-        expectTrainingBundle(result, courseBundle);
-
-    }
-
+    expectTrainingBundle(result, courseBundle);
+  }
 }

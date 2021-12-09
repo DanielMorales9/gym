@@ -4,5 +4,5 @@ import java.util.List;
 
 public interface DefaultRoles {
 
-    List<Role> defaultRoles();
+  List<Role> defaultRoles();
 }
