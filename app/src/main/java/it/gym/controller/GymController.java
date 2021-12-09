@@ -1,7 +1,7 @@
 package it.gym.controller;
 
+import it.gym.dto.ManifestDTO;
 import it.gym.model.Gym;
-import it.gym.pojo.Manifest;
 import it.gym.service.GymService;
 import java.io.IOException;
 import java.util.List;
@@ -34,7 +34,7 @@ public class GymController {
 
   @GetMapping("/manifest.webmanifest")
   @ResponseBody
-  public Manifest getManifest() {
+  public ManifestDTO getManifest() {
     return service.getManifest();
   }
 

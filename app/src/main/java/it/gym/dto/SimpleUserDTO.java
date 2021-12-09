@@ -1,19 +1,17 @@
-package it.gym.hateoas;
+package it.gym.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import it.gym.model.AUser;
-import org.springframework.hateoas.RepresentationModel;
 
-public class UserResource extends RepresentationModel<UserResource> {
+public class SimpleUserDTO {
 
   private final Long id;
   private final String firstName;
   private final String lastName;
 
-  public UserResource(AUser customer) {
-    this.id = customer.getId();
-    this.firstName = customer.getFirstName();
-    this.lastName = customer.getLastName();
+  public SimpleUserDTO(Long id, String firstName, String lastName) {
+    this.id = id;
+    this.firstName = firstName;
+    this.lastName = lastName;
   }
 
   @JsonProperty("id")

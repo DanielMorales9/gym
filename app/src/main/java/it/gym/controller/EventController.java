@@ -1,10 +1,10 @@
 package it.gym.controller;
 
+import it.gym.dto.EventDTO;
 import it.gym.facade.EventFacade;
 import it.gym.hateoas.EventAssembler;
 import it.gym.hateoas.EventResource;
 import it.gym.model.AEvent;
-import it.gym.pojo.Event;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
@@ -52,7 +52,7 @@ public class EventController {
   @PostMapping(path = "/{gymId}/holiday")
   @PreAuthorize("hasAuthority('ADMIN')")
   public ResponseEntity<EventResource> createHoliday(
-      @PathVariable Long gymId, @RequestBody Event event) {
+      @PathVariable Long gymId, @RequestBody EventDTO event) {
     logger.info("Create holiday");
 
     AEvent holiday = facade.createHoliday(gymId, event);
@@ -75,7 +75,7 @@ public class EventController {
   public ResponseEntity<EventResource> editHoliday(
       @PathVariable Long gymId,
       @PathVariable Long id,
-      @RequestBody Event event) {
+      @RequestBody EventDTO event) {
     logger.info("Edit holiday");
 
     AEvent holiday = facade.editEvent(gymId, id, event);
@@ -87,7 +87,7 @@ public class EventController {
   public ResponseEntity<EventResource> createTimeOff(
       @PathVariable Long gymId,
       @RequestParam Long trainerId,
-      @RequestBody Event event) {
+      @RequestBody EventDTO event) {
     logger.info("Create timeOff");
 
     AEvent timeOff = facade.createTimeOff(gymId, trainerId, event);
@@ -97,7 +97,7 @@ public class EventController {
 
   @PostMapping(path = "/{gymId}/course")
   public ResponseEntity<EventResource> createCourseEvent(
-      @PathVariable Long gymId, @RequestBody Event event) {
+      @PathVariable Long gymId, @RequestBody EventDTO event) {
     logger.debug("Creating CourseEvent");
 
     AEvent course = facade.createCourseEvent(gymId, event);
@@ -130,7 +130,7 @@ public class EventController {
   public ResponseEntity<EventResource> editTimeOff(
       @PathVariable Long gymId,
       @PathVariable Long id,
-      @RequestBody Event event) {
+      @RequestBody EventDTO event) {
     logger.info("Edit TimeOff");
 
     AEvent timeOff = facade.editEvent(gymId, id, event);

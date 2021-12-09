@@ -1,7 +1,7 @@
 package it.gym.mappers;
 
+import it.gym.dto.TrainingBundleSpecificationDTO;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.pojo.TrainingBundleSpecificationDTO;
 import org.springframework.stereotype.Component;
 
 @Component

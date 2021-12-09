@@ -1,6 +1,6 @@
-package it.gym.pojo;
+package it.gym.dto;
 
-public class Credentials {
+public class CredentialsDTO {
 
   private String email;
   private String password;

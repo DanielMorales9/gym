@@ -1,11 +1,11 @@
 package it.gym.controller;
 
+import it.gym.dto.EventDTO;
 import it.gym.facade.ReservationFacade;
 import it.gym.hateoas.ReservationAssembler;
 import it.gym.hateoas.ReservationResource;
 import it.gym.model.Reservation;
 import it.gym.model.Role;
-import it.gym.pojo.Event;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,7 @@ public class ReservationController {
       @PathVariable Long gymId,
       @RequestParam("customerId") Long customerId,
       @RequestParam("bundleId") Long bundleId,
-      @RequestBody Event event,
+      @RequestBody EventDTO event,
       Principal principal) {
 
     Role r = facade.getRoleFromPrincipal(principal);

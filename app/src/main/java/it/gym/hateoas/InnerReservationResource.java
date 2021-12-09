@@ -1,7 +1,9 @@
 package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.gym.dto.SimpleUserDTO;
 import it.gym.model.ATrainingSession;
+import it.gym.model.Customer;
 import it.gym.model.Reservation;
 import org.springframework.hateoas.RepresentationModel;
 
@@ -10,13 +12,16 @@ class InnerReservationResource
 
   private final Long id;
   private final Boolean confirmed;
-  private final UserResource user;
+  private final SimpleUserDTO user;
   private final ATrainingSession session;
 
   public InnerReservationResource(Reservation res) {
     id = res.getId();
     confirmed = res.getConfirmed();
-    user = new UserResource(res.getUser());
+    Customer user = res.getUser();
+    this.user =
+        new SimpleUserDTO(
+            user.getId(), user.getFirstName(), user.getLastName());
     session = res.getSession();
   }
 
@@ -29,7 +34,7 @@ class InnerReservationResource
     return confirmed;
   }
 
-  public UserResource getUser() {
+  public SimpleUserDTO getUser() {
     return user;
   }
 

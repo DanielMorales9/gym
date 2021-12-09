@@ -1,6 +1,7 @@
 package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.gym.dto.SimpleUserDTO;
 import it.gym.model.*;
 import java.util.Date;
 import java.util.List;
@@ -95,14 +96,17 @@ class CourseTrainingEventResource extends TrainingEventResource {
 
 class TimeOffResource extends EventResource {
 
-  private final UserResource user;
+  private final SimpleUserDTO user;
 
   public TimeOffResource(TimeOff event) {
     super(event);
-    user = new UserResource(event.getUser());
+    AUser user = event.getUser();
+    this.user =
+        new SimpleUserDTO(
+            user.getId(), user.getFirstName(), user.getLastName());
   }
 
-  public UserResource getUser() {
+  public SimpleUserDTO getUser() {
     return user;
   }
 }

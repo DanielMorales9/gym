@@ -1,11 +1,11 @@
 package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.dto.TrainingBundleSpecificationDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.mappers.TrainingBundleSpecificationMapper;
 import it.gym.model.*;
-import it.gym.pojo.TrainingBundleSpecificationDTO;
 import it.gym.repository.PurchaseOptionRepository;
 import it.gym.service.EventService;
 import it.gym.service.TrainingBundleService;

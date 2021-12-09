@@ -4,12 +4,12 @@ import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.dto.UserDTO;
 import it.gym.mappers.UserMapper;
 import it.gym.model.AUser;
 import it.gym.model.Customer;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
-import it.gym.pojo.UserDTO;
 import it.gym.repository.ImageRepository;
 import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;

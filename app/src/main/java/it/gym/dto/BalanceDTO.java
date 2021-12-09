@@ -1,15 +1,15 @@
-package it.gym.pojo;
+package it.gym.dto;
 
-public class Balance {
+public class BalanceDTO {
   private Double totalPayed;
   private Double amountPayed;
 
-  public Balance() {
+  public BalanceDTO() {
     this.totalPayed = 0.;
     this.amountPayed = 0.;
   }
 
-  public Balance(Double totalPayed, Double amountPayed) {
+  public BalanceDTO(Double totalPayed, Double amountPayed) {
     this.totalPayed = totalPayed;
     this.amountPayed = amountPayed;
   }
@@ -30,8 +30,8 @@ public class Balance {
     this.amountPayed = amountPayed;
   }
 
-  public Balance sum(Balance b2) {
-    return new Balance(
+  public BalanceDTO sum(BalanceDTO b2) {
+    return new BalanceDTO(
         this.totalPayed + b2.totalPayed, this.amountPayed + b2.amountPayed);
   }
 }

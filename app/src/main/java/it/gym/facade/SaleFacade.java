@@ -1,9 +1,9 @@
 package it.gym.facade;
 
+import it.gym.dto.BalanceDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.ConflictException;
 import it.gym.model.*;
-import it.gym.pojo.Balance;
 import it.gym.service.*;
 import java.util.Collection;
 import java.util.Date;
@@ -230,12 +230,12 @@ public class SaleFacade {
     return this.saleService.findAllUserSales(id, date, payed, pageable);
   }
 
-  public Balance getBalance(Long customerId) {
+  public BalanceDTO getBalance(Long customerId) {
     Stream<Sale> streamOfSales =
         this.saleService.findSalesByCustomerId(customerId).stream();
     return streamOfSales
-        .map(s -> new Balance(s.getTotalPrice(), s.getAmountPayed()))
-        .reduce(Balance::sum)
-        .orElse(new Balance());
+        .map(s -> new BalanceDTO(s.getTotalPrice(), s.getAmountPayed()))
+        .reduce(BalanceDTO::sum)
+        .orElse(new BalanceDTO());
   }
 }

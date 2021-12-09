@@ -7,9 +7,9 @@ import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
+import it.gym.dto.EventDTO;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
-import it.gym.pojo.Event;
 import it.gym.repository.EventRepository;
 import it.gym.service.*;
 import java.util.Collections;
@@ -80,7 +80,7 @@ public class EventFacadeTest {
             })
         .when(service)
         .save(any());
-    Event event = new Event();
+    EventDTO event = new EventDTO();
     event.setStartTime(start);
     event.setEndTime(end);
     event.setName("holiday");
@@ -96,7 +96,7 @@ public class EventFacadeTest {
     Date end = addHours(start, 1);
     CourseTrainingBundleSpecification spec = createCourseBundleSpec();
 
-    Event event = new Event();
+    EventDTO event = new EventDTO();
     event.setStartTime(start);
     event.setEndTime(end);
     event.setExternal(false);
@@ -197,7 +197,7 @@ public class EventFacadeTest {
         .when(service)
         .save(any());
 
-    Event event = new Event();
+    EventDTO event = new EventDTO();
     event.setStartTime(start);
     Date newEnd = addHours(end, 1);
     event.setEndTime(newEnd);
@@ -227,7 +227,7 @@ public class EventFacadeTest {
             })
         .when(service)
         .save(any());
-    Event event = new Event();
+    EventDTO event = new EventDTO();
     event.setStartTime(start);
     event.setEndTime(end);
     event.setName("timeOff");
@@ -254,7 +254,7 @@ public class EventFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(service)
         .save(any());
-    Event event = new Event();
+    EventDTO event = new EventDTO();
     Date newEnd = addHours(end, 1);
     event.setStartTime(start);
     event.setEndTime(newEnd);

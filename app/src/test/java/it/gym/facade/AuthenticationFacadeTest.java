@@ -7,6 +7,8 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 
 import it.gym.config.CustomProperties;
+import it.gym.dto.PasswordFormDTO;
+import it.gym.dto.UserDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
@@ -16,8 +18,6 @@ import it.gym.model.AUser;
 import it.gym.model.Gym;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
-import it.gym.pojo.PasswordForm;
-import it.gym.pojo.UserDTO;
 import it.gym.service.*;
 import it.gym.utility.Fixture;
 import java.util.Collections;
@@ -182,7 +182,8 @@ public class AuthenticationFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    UserDTO user = facade.changePassword(1L, new PasswordForm("a", "b", "b"));
+    UserDTO user =
+        facade.changePassword(1L, new PasswordFormDTO("a", "b", "b"));
     assertThat(user.getEmail().equals(EMAIL)).isTrue();
   }
 
@@ -206,7 +207,7 @@ public class AuthenticationFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    facade.changePassword(1L, new PasswordForm("a", "b", "c"));
+    facade.changePassword(1L, new PasswordFormDTO("a", "b", "c"));
   }
 
   @Test(expected = BadRequestException.class)
@@ -229,7 +230,7 @@ public class AuthenticationFacadeTest {
     Mockito.doAnswer(invocationOnMock -> invocationOnMock.getArgument(0))
         .when(userService)
         .save(any());
-    facade.changePassword(1L, new PasswordForm("a", "a", "a"));
+    facade.changePassword(1L, new PasswordFormDTO("a", "a", "a"));
   }
 
   @Test

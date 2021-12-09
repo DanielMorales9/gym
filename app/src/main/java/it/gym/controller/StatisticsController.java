@@ -1,9 +1,9 @@
 package it.gym.controller;
 
-import it.gym.pojo.ReservationDayOfWeekStatistics;
-import it.gym.pojo.ReservationTimeStatistics;
-import it.gym.pojo.SaleBundleStatistics;
-import it.gym.pojo.SaleTimeStatistics;
+import it.gym.dto.ReservationDayOfWeekStatistics;
+import it.gym.dto.ReservationTimeStatistics;
+import it.gym.dto.SaleBundleStatistics;
+import it.gym.dto.SaleTimeStatistics;
 import it.gym.repository.EventStatsRepository;
 import it.gym.repository.SaleStatsRepository;
 import java.util.List;

@@ -1,9 +1,9 @@
 package it.gym.controller;
 
+import it.gym.dto.TrainingBundleSpecificationDTO;
 import it.gym.facade.TrainingBundleSpecificationFacade;
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundleSpecification;
-import it.gym.pojo.TrainingBundleSpecificationDTO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;

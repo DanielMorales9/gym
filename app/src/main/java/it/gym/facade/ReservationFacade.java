@@ -4,11 +4,11 @@ import static it.gym.utility.CheckEvents.checkPast;
 import static it.gym.utility.CheckEvents.hasHolidays;
 
 import it.gym.config.CustomProperties;
+import it.gym.dto.EventDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
-import it.gym.pojo.Event;
 import it.gym.service.*;
 import java.security.Principal;
 import java.util.Calendar;
@@ -205,7 +205,7 @@ public class ReservationFacade {
       Long gymId,
       Long customerId,
       Long bundleId,
-      Event event,
+      EventDTO event,
       String roleName) {
     Gym gym = this.gymService.findById(gymId);
     Customer customer = this.customerService.findById(customerId);
@@ -252,7 +252,7 @@ public class ReservationFacade {
   }
 
   private ATrainingEvent createPersonalTrainingEvent(
-      ATrainingBundle bundle, Event event) {
+      ATrainingBundle bundle, EventDTO event) {
     ATrainingEvent evt = new PersonalTrainingEvent();
     evt.setStartTime(event.getStartTime());
     evt.setEndTime(event.getEndTime());
@@ -301,7 +301,7 @@ public class ReservationFacade {
       Long gymId,
       Long customerId,
       Long bundleId,
-      Event event,
+      EventDTO event,
       String roleName) {
     Gym gym = this.gymService.findById(gymId);
     Customer customer = this.customerService.findById(customerId);

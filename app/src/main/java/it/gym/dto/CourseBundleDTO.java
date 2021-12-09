@@ -1,8 +1,8 @@
-package it.gym.pojo;
+package it.gym.dto;
 
 import java.util.Date;
 
-public class CourseBundle {
+public class CourseBundleDTO {
   private String name;
   private Date startTime;
   private Long specId;

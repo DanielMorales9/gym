@@ -3,11 +3,11 @@ package it.gym.service;
 import static it.gym.utility.CheckEvents.checkInterval;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.dto.IconDTO;
+import it.gym.dto.ManifestDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
-import it.gym.pojo.Icon;
-import it.gym.pojo.Manifest;
 import it.gym.repository.GymRepository;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -85,31 +85,33 @@ public class GymService implements ICrudService<Gym, Long> {
   }
 
   @Cacheable(value = "manifest")
-  public Manifest getManifest() {
+  public ManifestDTO getManifest() {
     Gym gym = this.findAll().get(0);
 
-    Manifest manifest = new Manifest();
+    ManifestDTO manifest = new ManifestDTO();
     manifest.setName(gym.getFullName());
     manifest.setShort_name(gym.getName());
     manifest.setTheme_color(gym.getThemeColor());
     manifest.setBackground_color(gym.getBackgroundColor());
 
     // TODO This is Hard coded and needs to be dynamic
-    ArrayList<Icon> icons = new ArrayList<>();
-    Icon icon0 =
-        new Icon(
+    ArrayList<IconDTO> icons = new ArrayList<>();
+    IconDTO icon0 =
+        new IconDTO(
             "/src/assets/icons/android-chrome-192x192.png",
             "192x192",
             "image/png");
-    Icon icon1 =
-        new Icon(
+    IconDTO icon1 =
+        new IconDTO(
             "/src/assets/icons/android-chrome-512x512.png",
             "512x512",
             "image/png");
-    Icon icon2 =
-        new Icon("/src/assets/icons/favicon-16x16.png", "16x16", "image/png");
-    Icon icon3 =
-        new Icon("/src/assets/icons/favicon-32x32.png", "32x32", "image/png");
+    IconDTO icon2 =
+        new IconDTO(
+            "/src/assets/icons/favicon-16x16.png", "16x16", "image/png");
+    IconDTO icon3 =
+        new IconDTO(
+            "/src/assets/icons/favicon-32x32.png", "32x32", "image/png");
     icons.add(icon0);
     icons.add(icon1);
     icons.add(icon2);

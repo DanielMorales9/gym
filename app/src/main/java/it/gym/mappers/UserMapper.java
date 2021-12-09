@@ -1,7 +1,7 @@
 package it.gym.mappers;
 
+import it.gym.dto.UserDTO;
 import it.gym.model.AUser;
-import it.gym.pojo.UserDTO;
 import org.springframework.stereotype.Component;
 
 @Component

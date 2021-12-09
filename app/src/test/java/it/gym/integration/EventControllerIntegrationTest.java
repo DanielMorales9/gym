@@ -9,8 +9,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.dto.EventDTO;
 import it.gym.model.*;
-import it.gym.pojo.Event;
 import it.gym.repository.*;
 import java.util.Date;
 import java.util.List;
@@ -82,7 +82,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     Date start = addHours(getNextMonday(), 24);
     Date end = addHours(start, 1);
 
-    Event e = new Event();
+    EventDTO e = new EventDTO();
     e.setStartTime(start);
     e.setEndTime(end);
     e.setName("closed1");
@@ -117,7 +117,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     Date start = addHours(getNextMonday(), 24);
     Date end = addHours(start, 1);
 
-    Event e = new Event();
+    EventDTO e = new EventDTO();
     e.setStartTime(start);
     e.setEndTime(end);
     e.setName("closed1");
@@ -208,7 +208,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
 
   @Test
   public void whenCreateTimeOffReturnsOK() throws Exception {
-    Event e = new Event();
+    EventDTO e = new EventDTO();
     Date start = addHours(getNextMonday(), 24);
     Date end = addHours(start, 1);
     e.setStartTime(start);
@@ -244,7 +244,7 @@ public class EventControllerIntegrationTest extends AbstractIntegrationTest {
     Date start = addHours(getNextMonday(), 24);
     Date end = addHours(start, 1);
 
-    Event e = new Event();
+    EventDTO e = new EventDTO();
     e.setStartTime(start);
     e.setEndTime(end);
     e.setExternal(false);

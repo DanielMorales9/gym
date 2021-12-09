@@ -1,10 +1,10 @@
 package it.gym.controller;
 
+import it.gym.dto.BalanceDTO;
 import it.gym.facade.SaleFacade;
 import it.gym.hateoas.SaleAssembler;
 import it.gym.hateoas.SaleResource;
 import it.gym.model.Sale;
-import it.gym.pojo.Balance;
 import java.util.Date;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -124,7 +124,7 @@ public class SaleController {
   @GetMapping(value = "/balance")
   @PreAuthorize("hasAnyAuthority('ADMIN', 'TRAINER')")
   @ResponseBody
-  Balance getBalance(@RequestParam Long customerId) {
+  BalanceDTO getBalance(@RequestParam Long customerId) {
     return this.facade.getBalance(customerId);
   }
 

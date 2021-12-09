@@ -1,9 +1,9 @@
 package it.gym.controller;
 
+import it.gym.dto.UserDTO;
 import it.gym.facade.UserFacade;
 import it.gym.model.Image;
 import it.gym.model.Role;
-import it.gym.pojo.UserDTO;
 import java.io.IOException;
 import java.util.List;
 import java.util.zip.DataFormatException;

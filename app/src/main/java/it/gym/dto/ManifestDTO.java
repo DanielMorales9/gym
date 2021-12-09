@@ -1,28 +1,28 @@
-package it.gym.pojo;
+package it.gym.dto;
 
 import java.io.Serializable;
 import java.util.List;
 import lombok.Data;
 
 @Data
-public class Manifest implements Serializable {
+public class ManifestDTO implements Serializable {
 
   String name;
   String short_name;
   String theme_color;
   String background_color;
 
-  List<Icon> icons;
+  List<IconDTO> icons;
 
   String display = "standalone";
   String scope = "/";
   String start_url = "/";
 
-  public List<Icon> getIcons() {
+  public List<IconDTO> getIcons() {
     return icons;
   }
 
-  public void setIcons(List<Icon> icons) {
+  public void setIcons(List<IconDTO> icons) {
     this.icons = icons;
   }
 

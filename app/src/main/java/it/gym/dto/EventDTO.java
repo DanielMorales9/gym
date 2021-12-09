@@ -1,8 +1,8 @@
-package it.gym.pojo;
+package it.gym.dto;
 
 import java.util.Date;
 
-public class Event {
+public class EventDTO {
   private String name;
   private Date startTime;
   private Date endTime;

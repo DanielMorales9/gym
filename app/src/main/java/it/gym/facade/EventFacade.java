@@ -2,10 +2,10 @@ package it.gym.facade;
 
 import static it.gym.utility.CheckEvents.hasHolidays;
 
+import it.gym.dto.EventDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
-import it.gym.pojo.Event;
 import it.gym.service.*;
 import java.util.Collection;
 import java.util.Date;
@@ -91,7 +91,7 @@ public class EventFacade {
     return s.collect(Collectors.toList());
   }
 
-  public AEvent createHoliday(Long gymId, Event event) {
+  public AEvent createHoliday(Long gymId, EventDTO event) {
     Gym gym = gymService.findById(gymId);
 
     Date startTime = event.getStartTime();
@@ -114,7 +114,7 @@ public class EventFacade {
     return event;
   }
 
-  public AEvent editEvent(Long gymId, Long id, Event event) {
+  public AEvent editEvent(Long gymId, Long id, EventDTO event) {
     Gym gym = gymService.findById(gymId);
     AEvent evt = this.service.findById(id);
 
@@ -131,7 +131,7 @@ public class EventFacade {
     return this.service.save(evt);
   }
 
-  public AEvent createTimeOff(Long gymId, Long trainerId, Event event) {
+  public AEvent createTimeOff(Long gymId, Long trainerId, EventDTO event) {
     Gym gym = gymService.findById(gymId);
     AUser trainer = userService.findById(trainerId);
 
@@ -150,7 +150,7 @@ public class EventFacade {
     return service.save(timeOff);
   }
 
-  private void checkNoOtherEventsExceptMe(Event event) {
+  private void checkNoOtherEventsExceptMe(EventDTO event) {
     Date startTime = event.getStartTime();
     Date endTime = event.getEndTime();
     List<AEvent> events =
@@ -159,7 +159,7 @@ public class EventFacade {
     if (events.size() > 1) throw new BadRequestException(PRESENT_EVENTS_EX);
   }
 
-  private void checkNoOtherEvents(Event event) {
+  private void checkNoOtherEvents(EventDTO event) {
     Date startTime = event.getStartTime();
     Date endTime = event.getEndTime();
     List<AEvent> events =
@@ -174,7 +174,7 @@ public class EventFacade {
     hasHolidays(events);
   }
 
-  public AEvent createCourseEvent(Long gymId, Event evt) {
+  public AEvent createCourseEvent(Long gymId, EventDTO evt) {
     logger.debug("Looking up gymId");
     Gym gym = gymService.findById(gymId);
     logger.debug("Looking up specId");
@@ -201,7 +201,7 @@ public class EventFacade {
 
   @NotNull
   private CourseTrainingEvent createCourse(
-      Event evt,
+      EventDTO evt,
       ATrainingBundleSpecification spec,
       Date startTime,
       Date endTime) {

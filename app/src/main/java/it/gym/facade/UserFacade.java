@@ -1,6 +1,7 @@
 package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gym.dto.UserDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.mappers.UserMapper;
@@ -8,7 +9,6 @@ import it.gym.model.AUser;
 import it.gym.model.Image;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
-import it.gym.pojo.UserDTO;
 import it.gym.repository.ImageRepository;
 import it.gym.service.UserService;
 import it.gym.service.VerificationTokenService;

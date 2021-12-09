@@ -7,10 +7,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
 import it.gym.config.CustomProperties;
+import it.gym.dto.EventDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.MethodNotAllowedException;
 import it.gym.model.*;
-import it.gym.pojo.Event;
 import it.gym.service.*;
 import java.util.Collections;
 import java.util.Date;
@@ -108,7 +108,7 @@ public class ReservationFacadeTest {
     customer.setTrainingBundles(Collections.singletonList(bundle));
     Date start = getNextMonday();
     Date end = addHours(start, 1);
-    Event event = new Event();
+    EventDTO event = new EventDTO();
     event.setStartTime(start);
     event.setEndTime(end);
     facade.isAvailable(1L, 1L, 1L, event, "ADMIN");
@@ -122,7 +122,7 @@ public class ReservationFacadeTest {
     Customer customer = personalEventFixture.getCustomer();
     Date start = personalEventFixture.getStart();
     Date end = personalEventFixture.getEnd();
-    Event event = personalEventFixture.getEvent();
+    EventDTO event = personalEventFixture.getEvent();
     PersonalTrainingEvent[] e = personalEventFixture.getPersonalEvents();
 
     Mockito.doReturn(gym).when(gymService).findById(1L);
@@ -181,7 +181,7 @@ public class ReservationFacadeTest {
     Customer customer = personalEventFixture.getCustomer();
     Date start = personalEventFixture.getStart();
     Date end = personalEventFixture.getEnd();
-    Event event = personalEventFixture.getEvent();
+    EventDTO event = personalEventFixture.getEvent();
     PersonalTrainingEvent[] e = personalEventFixture.getPersonalEvents();
 
     Mockito.doReturn(gym).when(gymService).findById(1L);
@@ -387,7 +387,7 @@ public class ReservationFacadeTest {
 
     Gym gym = personalEventFixture.getGym();
     Customer customer = personalEventFixture.getCustomer();
-    Event event = personalEventFixture.getEvent();
+    EventDTO event = personalEventFixture.getEvent();
     PersonalTrainingEvent[] e = personalEventFixture.getPersonalEvents();
 
     Mockito.doReturn(gym).when(gymService).findById(1L);
@@ -578,7 +578,7 @@ public class ReservationFacadeTest {
     private Customer customer;
     private Date start;
     private Date end;
-    private Event event;
+    private EventDTO event;
     private ATrainingBundle bundle;
     private PersonalTrainingEvent[] e;
 
@@ -598,7 +598,7 @@ public class ReservationFacadeTest {
       return end;
     }
 
-    public Event getEvent() {
+    public EventDTO getEvent() {
       return event;
     }
 
@@ -634,7 +634,7 @@ public class ReservationFacadeTest {
       start = getNextMonday();
       end = addHours(start, 1);
 
-      event = new Event();
+      event = new EventDTO();
       event.setStartTime(start);
       event.setEndTime(end);
       event.setExternal(false);

@@ -1,8 +1,8 @@
 package it.gym.repository;
 
+import it.gym.dto.SaleBundleStatistics;
+import it.gym.dto.SaleTimeStatistics;
 import it.gym.model.Sale;
-import it.gym.pojo.SaleBundleStatistics;
-import it.gym.pojo.SaleTimeStatistics;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

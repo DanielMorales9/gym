@@ -1,9 +1,11 @@
 package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.gym.dto.SimpleUserDTO;
 import it.gym.model.APurchaseOption;
 import it.gym.model.ATrainingBundle;
 import it.gym.model.ATrainingSession;
+import it.gym.model.Customer;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +24,7 @@ public class TrainingBundleResource
   private final Date endTime;
   private final String type;
   private final Boolean isDeletable;
-  private final UserResource customer;
+  private final SimpleUserDTO customer;
   private final APurchaseOption option;
   private final InnerTrainingBundleSpecificationResource bundleSpec;
   private final List<InnerTrainingSessionResource> sessions;
@@ -38,10 +40,16 @@ public class TrainingBundleResource
     this.endTime = model.getEndTime();
     this.type = model.getType();
     this.isDeletable = model.isDeletable();
-    this.customer =
-        model.getCustomer() != null
-            ? new UserResource(model.getCustomer())
-            : null;
+    if (model.getCustomer() != null) {
+      Customer customer = model.getCustomer();
+      this.customer =
+          new SimpleUserDTO(
+              customer.getId(),
+              customer.getFirstName(),
+              customer.getLastName());
+    } else {
+      this.customer = null;
+    }
     this.bundleSpec =
         model.getBundleSpec() != null
             ? new InnerTrainingBundleSpecificationResource(
@@ -99,7 +107,7 @@ public class TrainingBundleResource
     return isDeletable;
   }
 
-  public UserResource getCustomer() {
+  public SimpleUserDTO getCustomer() {
     return customer;
   }
 

@@ -1,6 +1,8 @@
 package it.gym.facade;
 
 import it.gym.config.CustomProperties;
+import it.gym.dto.PasswordFormDTO;
+import it.gym.dto.UserDTO;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.InternalServerException;
 import it.gym.exception.NotFoundException;
@@ -9,8 +11,6 @@ import it.gym.mappers.UserMapper;
 import it.gym.model.AUser;
 import it.gym.model.Role;
 import it.gym.model.VerificationToken;
-import it.gym.pojo.PasswordForm;
-import it.gym.pojo.UserDTO;
 import it.gym.service.*;
 import it.gym.utility.PasswordGenerator;
 import java.util.List;
@@ -105,7 +105,7 @@ public class AuthenticationFacade {
     return userMapper.toDTO(userService.save(user), true);
   }
 
-  public UserDTO changePassword(Long id, PasswordForm form) {
+  public UserDTO changePassword(Long id, PasswordFormDTO form) {
     confirmPassword(form.getPassword(), form.getConfirmPassword());
     confirmPasswordNotEqualToOld(form.getPassword(), form.getOldPassword());
     passwordValidationService.validate(form.getPassword());

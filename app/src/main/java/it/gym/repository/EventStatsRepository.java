@@ -1,8 +1,8 @@
 package it.gym.repository;
 
+import it.gym.dto.ReservationDayOfWeekStatistics;
+import it.gym.dto.ReservationTimeStatistics;
 import it.gym.model.AEvent;
-import it.gym.pojo.ReservationDayOfWeekStatistics;
-import it.gym.pojo.ReservationTimeStatistics;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -1,4 +1,4 @@
-package it.gym.pojo;
+package it.gym.dto;
 
 import it.gym.model.Role;
 import java.util.Date;

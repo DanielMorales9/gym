@@ -1,10 +1,10 @@
 package it.gym.controller;
 
+import it.gym.dto.CredentialsDTO;
+import it.gym.dto.PasswordFormDTO;
+import it.gym.dto.UserDTO;
 import it.gym.facade.AuthenticationFacade;
 import it.gym.model.AUser;
-import it.gym.pojo.Credentials;
-import it.gym.pojo.PasswordForm;
-import it.gym.pojo.UserDTO;
 import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,7 +37,7 @@ public class AuthenticationController {
   @PostMapping("/confirmRegistration")
   @PreAuthorize("isAnonymous()")
   public ResponseEntity<UserDTO> confirmRegistration(
-      @RequestBody Credentials credentials) {
+      @RequestBody CredentialsDTO credentials) {
     logger.info("About to verify password for user");
     UserDTO user =
         facade.confirmRegistration(
@@ -48,14 +48,14 @@ public class AuthenticationController {
   @PostMapping("/changePasswordAnonymous/{id}")
   @PreAuthorize("isAnonymous()")
   public ResponseEntity<UserDTO> changePasswordAnonymous(
-      @PathVariable Long id, @RequestBody PasswordForm form) {
+      @PathVariable Long id, @RequestBody PasswordFormDTO form) {
     UserDTO user = this.facade.changePassword(id, form);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }
 
   @PostMapping("/changePassword/{id}")
   public ResponseEntity<UserDTO> changePassword(
-      @PathVariable Long id, @RequestBody PasswordForm form) {
+      @PathVariable Long id, @RequestBody PasswordFormDTO form) {
     UserDTO user = this.facade.changePassword(id, form);
     return new ResponseEntity<>(user, HttpStatus.OK);
   }

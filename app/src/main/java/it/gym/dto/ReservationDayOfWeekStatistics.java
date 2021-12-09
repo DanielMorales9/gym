@@ -1,4 +1,4 @@
-package it.gym.pojo;
+package it.gym.dto;
 
 public interface ReservationDayOfWeekStatistics {
   public Double getDayofweek();

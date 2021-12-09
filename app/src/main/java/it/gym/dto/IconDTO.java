@@ -1,14 +1,14 @@
-package it.gym.pojo;
+package it.gym.dto;
 
 import java.io.Serializable;
 
-public class Icon implements Serializable {
+public class IconDTO implements Serializable {
 
   String src;
   String sizes;
   String type;
 
-  public Icon(String src, String sizes, String type) {
+  public IconDTO(String src, String sizes, String type) {
     this.src = src;
     this.sizes = sizes;
     this.type = type;

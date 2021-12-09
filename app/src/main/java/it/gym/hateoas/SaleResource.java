@@ -1,6 +1,7 @@
 package it.gym.hateoas;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import it.gym.dto.SimpleUserDTO;
 import it.gym.model.*;
 import java.util.Date;
 import java.util.List;
@@ -18,7 +19,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
   private final Date payedDate;
   private final Date createdAt;
   private final List<Payment> payments;
-  private final UserResource customer;
+  private final SimpleUserDTO customer;
   private final List<SalesLineItemResource> salesLineItems;
 
   public SaleResource(Sale model) {
@@ -31,7 +32,10 @@ public class SaleResource extends RepresentationModel<SaleResource> {
     payedDate = model.getPayedDate();
     totalPrice = model.getTotalPrice();
     payments = model.getPayments();
-    customer = new UserResource(model.getCustomer());
+    Customer customer = model.getCustomer();
+    this.customer =
+        new SimpleUserDTO(
+            customer.getId(), customer.getFirstName(), customer.getLastName());
     this.salesLineItems = getSalesLineItems(model);
   }
 
@@ -78,7 +82,7 @@ public class SaleResource extends RepresentationModel<SaleResource> {
     return payments;
   }
 
-  public UserResource getCustomer() {
+  public SimpleUserDTO getCustomer() {
     return customer;
   }
 

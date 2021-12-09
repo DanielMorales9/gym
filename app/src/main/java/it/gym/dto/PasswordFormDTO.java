@@ -1,13 +1,13 @@
-package it.gym.pojo;
+package it.gym.dto;
 
-public class PasswordForm {
+public class PasswordFormDTO {
   private String oldPassword;
   private String password;
   private String confirmPassword;
 
-  PasswordForm() {}
+  public PasswordFormDTO() {}
 
-  public PasswordForm(
+  public PasswordFormDTO(
       String oldPassword, String password, String confirmPassword) {
     this.oldPassword = oldPassword;
     this.password = password;
