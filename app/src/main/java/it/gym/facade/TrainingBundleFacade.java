@@ -9,8 +9,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -19,14 +17,15 @@ import org.springframework.stereotype.Component;
 @Transactional
 public class TrainingBundleFacade {
 
-  //    private static final Logger logger =
-  // LoggerFactory.getLogger(TrainingBundleFacade.class);
+  private final TrainingBundleService service;
 
-  @Autowired
-  @Qualifier("trainingBundleService")
-  private TrainingBundleService service;
+  private final ObjectMapper objectMapper;
 
-  @Autowired private ObjectMapper objectMapper;
+  public TrainingBundleFacade(
+      TrainingBundleService service, ObjectMapper objectMapper) {
+    this.service = service;
+    this.objectMapper = objectMapper;
+  }
 
   public ATrainingBundle findById(Long id) {
     return service.findById(id);
