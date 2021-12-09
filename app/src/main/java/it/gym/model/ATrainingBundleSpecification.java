@@ -62,6 +62,9 @@ public abstract class ATrainingBundleSpecification
   @Column(name = "n_deletions")
   private Integer numDeletions;
 
+  @Column(name = "max_customers")
+  private Integer maxCustomers;
+
   @OneToMany(cascade = CascadeType.ALL)
   @JoinColumn(name = "spec_id", nullable = false)
   private List<APurchaseOption> options;
@@ -180,6 +183,7 @@ public abstract class ATrainingBundleSpecification
         && Objects.equals(createdAt, that.createdAt)
         && Objects.equals(unlimitedDeletions, that.unlimitedDeletions)
         && Objects.equals(numDeletions, that.numDeletions)
+        && Objects.equals(maxCustomers, that.maxCustomers)
         && Objects.equals(options, that.options);
   }
 
@@ -221,6 +225,10 @@ public abstract class ATrainingBundleSpecification
   }
 
   public Integer getMaxCustomers() {
-    return 1;
+    return maxCustomers;
+  }
+
+  public void setMaxCustomers(Integer maxCustomers) {
+    this.maxCustomers = maxCustomers;
   }
 }

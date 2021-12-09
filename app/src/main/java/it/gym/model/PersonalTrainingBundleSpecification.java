@@ -31,10 +31,4 @@ public class PersonalTrainingBundleSpecification
     setOption(optionId, ptb);
     return ptb;
   }
-
-  @Override
-  public PersonalTrainingBundleSpecification eager() {
-    super.eager();
-    return this;
-  }
 }

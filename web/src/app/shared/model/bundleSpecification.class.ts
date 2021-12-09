@@ -11,6 +11,7 @@ export abstract class BundleSpecification implements CanDelete, CanEdit, CanDisa
     numDeletions: number;
     options: Option[];
     type: string;
+    maxCustomers: number;
 
     constructor(id?: number,
                 name?: string,
@@ -20,7 +21,8 @@ export abstract class BundleSpecification implements CanDelete, CanEdit, CanDisa
                 unlimitedDeletions?: boolean,
                 numDeletions?: number,
                 options?: Option[],
-                type?: string) {
+                type?: string,
+                maxCustomers?: number) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -30,6 +32,7 @@ export abstract class BundleSpecification implements CanDelete, CanEdit, CanDisa
         this.numDeletions = numDeletions;
         this.options = options;
         this.type = type;
+        this.maxCustomers = maxCustomers;
     }
 
     getName(): string {
@@ -57,29 +60,6 @@ export class PersonalBundleSpecification extends BundleSpecification {
 }
 
 export class CourseBundleSpecification extends BundleSpecification {
-    maxCustomers: number;
-
-    constructor(id?: number,
-                name?: string,
-                description?: string,
-                disabled?: boolean,
-                createdAt?: Date,
-                unlimitedDeletions?: boolean,
-                numDeletions?: number,
-                options?: Option[],
-                type?: string,
-                maxCustomers?: number) {
-        super(id,
-            name,
-            description,
-            disabled,
-            createdAt,
-            unlimitedDeletions,
-            numDeletions,
-            options,
-            type);
-        this.maxCustomers = maxCustomers;
-    }
 }
 
 export enum BundleSpecificationType {
