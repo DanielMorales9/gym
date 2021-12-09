@@ -1,8 +1,6 @@
 package it.gym.controller;
 
 import it.gym.facade.WorkoutFacade;
-import it.gym.hateoas.WorkoutAssembler;
-import it.gym.hateoas.WorkoutResource;
 import it.gym.model.Workout;
 import java.io.IOException;
 import java.util.List;
@@ -27,11 +25,11 @@ public class WorkoutController {
 
   @GetMapping(path = "/{id}")
   @ResponseBody
-  public ResponseEntity<WorkoutResource> findById(@PathVariable Long id) {
+  public ResponseEntity<Workout> findById(@PathVariable Long id) {
 
     Workout w = facade.findById(id);
 
-    return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
+    return ResponseEntity.ok(w);
   }
 
   @GetMapping
@@ -48,10 +46,9 @@ public class WorkoutController {
 
   @PostMapping
   @ResponseBody
-  public ResponseEntity<WorkoutResource> create(@RequestBody Workout w) {
+  public ResponseEntity<Workout> create(@RequestBody Workout w) {
     w = facade.save(w);
-    return new ResponseEntity<>(
-        new WorkoutAssembler().toModel(w), HttpStatus.OK);
+    return new ResponseEntity<>(w, HttpStatus.OK);
   }
 
   @DeleteMapping(path = "/{id}")
@@ -63,11 +60,11 @@ public class WorkoutController {
 
   @PatchMapping("/{id}")
   @ResponseBody
-  public ResponseEntity<WorkoutResource> update(
+  public ResponseEntity<Workout> update(
       @PathVariable Long id, HttpServletRequest request) throws IOException {
 
     Workout w = facade.patch(id, request);
-    return ResponseEntity.ok(new WorkoutAssembler().toModel(w));
+    return ResponseEntity.ok(w);
   }
 
   @GetMapping("/search")

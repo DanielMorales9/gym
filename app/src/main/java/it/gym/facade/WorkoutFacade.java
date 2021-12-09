@@ -2,8 +2,6 @@ package it.gym.facade;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.model.Workout;
-import it.gym.service.EventService;
-import it.gym.service.TrainingSessionService;
 import it.gym.service.WorkoutService;
 import java.io.IOException;
 import java.util.Arrays;
@@ -13,10 +11,6 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletRequest;
 import javax.transaction.Transactional;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
@@ -25,18 +19,14 @@ import org.springframework.stereotype.Component;
 @Transactional
 public class WorkoutFacade {
 
-  private static final Logger logger =
-      LoggerFactory.getLogger(WorkoutFacade.class);
+  private final WorkoutService service;
 
-  @Autowired private WorkoutService service;
+  private final ObjectMapper objectMapper;
 
-  @Autowired private EventService eventService;
-
-  @Autowired
-  @Qualifier("trainingSessionService")
-  private TrainingSessionService sessionService;
-
-  @Autowired private ObjectMapper objectMapper;
+  public WorkoutFacade(WorkoutService service, ObjectMapper objectMapper) {
+    this.service = service;
+    this.objectMapper = objectMapper;
+  }
 
   public Workout findById(Long var1) {
     return service.findById(var1);
