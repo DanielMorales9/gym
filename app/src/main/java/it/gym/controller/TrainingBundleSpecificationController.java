@@ -7,7 +7,6 @@ import it.gym.pojo.TrainingBundleSpecificationDTO;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -20,7 +19,12 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("isAuthenticated()")
 public class TrainingBundleSpecificationController {
 
-  @Autowired private TrainingBundleSpecificationFacade facade;
+  private final TrainingBundleSpecificationFacade facade;
+
+  public TrainingBundleSpecificationController(
+      TrainingBundleSpecificationFacade facade) {
+    this.facade = facade;
+  }
 
   @DeleteMapping("/{id}")
   public ResponseEntity<TrainingBundleSpecificationDTO> delete(

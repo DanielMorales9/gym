@@ -7,7 +7,6 @@ import it.gym.pojo.SaleTimeStatistics;
 import it.gym.repository.EventStatsRepository;
 import it.gym.repository.SaleStatsRepository;
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +15,15 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("isAuthenticated()")
 public class StatisticsController {
 
-  @Autowired private SaleStatsRepository saleStatsRepository;
-  @Autowired private EventStatsRepository eventStatsRepository;
+  private final SaleStatsRepository saleStatsRepository;
+  private final EventStatsRepository eventStatsRepository;
+
+  public StatisticsController(
+      EventStatsRepository eventStatsRepository,
+      SaleStatsRepository saleStatsRepository) {
+    this.eventStatsRepository = eventStatsRepository;
+    this.saleStatsRepository = saleStatsRepository;
+  }
 
   @GetMapping("/getSaleByMonth")
   @ResponseBody

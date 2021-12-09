@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.zip.DataFormatException;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 @PreAuthorize("isAuthenticated()")
 public class UserController {
 
-  @Autowired private UserFacade facade;
+  private final UserFacade facade;
+
+  public UserController(UserFacade facade) {
+    this.facade = facade;
+  }
 
   @GetMapping
   @ResponseBody

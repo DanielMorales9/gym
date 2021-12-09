@@ -2,7 +2,6 @@ package it.gym.controller;
 
 import it.gym.model.Tenant;
 import it.gym.service.TenantService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -13,7 +12,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping(value = "/tenants")
 public class TenantController {
 
-  @Autowired private TenantService service;
+  private final TenantService service;
+
+  public TenantController(TenantService service) {
+    this.service = service;
+  }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
   @ResponseStatus(HttpStatus.CREATED)

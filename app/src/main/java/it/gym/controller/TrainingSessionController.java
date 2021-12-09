@@ -5,7 +5,6 @@ import it.gym.hateoas.TrainingSessionAssembler;
 import it.gym.hateoas.TrainingSessionResource;
 import it.gym.model.ATrainingSession;
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,7 +18,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/trainingSessions")
 public class TrainingSessionController {
 
-  @Autowired private TrainingSessionFacade facade;
+  private final TrainingSessionFacade facade;
+
+  public TrainingSessionController(TrainingSessionFacade facade) {
+    this.facade = facade;
+  }
 
   @GetMapping(path = "/{id}")
   @ResponseBody

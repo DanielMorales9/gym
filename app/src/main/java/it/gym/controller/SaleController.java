@@ -6,7 +6,6 @@ import it.gym.hateoas.SaleResource;
 import it.gym.model.Sale;
 import it.gym.pojo.Balance;
 import java.util.Date;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +19,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/sales")
 public class SaleController {
 
-  @Autowired private SaleFacade facade;
+  private final SaleFacade facade;
+
+  public SaleController(SaleFacade facade) {
+    this.facade = facade;
+  }
 
   @GetMapping(path = "/{id}")
   @ResponseBody

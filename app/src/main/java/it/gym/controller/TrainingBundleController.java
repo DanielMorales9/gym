@@ -8,7 +8,6 @@ import it.gym.model.ATrainingBundle;
 import java.io.IOException;
 import java.util.Date;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
@@ -22,7 +21,11 @@ import org.springframework.web.bind.annotation.*;
 @PreAuthorize("isAuthenticated()")
 public class TrainingBundleController {
 
-  @Autowired private TrainingBundleFacade service;
+  private final TrainingBundleFacade service;
+
+  public TrainingBundleController(TrainingBundleFacade service) {
+    this.service = service;
+  }
 
   @GetMapping
   @ResponseBody

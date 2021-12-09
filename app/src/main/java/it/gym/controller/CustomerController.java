@@ -8,7 +8,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -20,7 +19,11 @@ public class CustomerController {
 
   private final Logger logger = LoggerFactory.getLogger(getClass());
 
-  @Autowired private CustomerService service;
+  private final CustomerService service;
+
+  public CustomerController(CustomerService service) {
+    this.service = service;
+  }
 
   @GetMapping(path = "/bundles")
   @ResponseBody

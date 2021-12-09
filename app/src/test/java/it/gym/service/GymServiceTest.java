@@ -7,11 +7,15 @@ import static org.apache.commons.lang3.time.DateUtils.addHours;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gym.exception.BadRequestException;
 import it.gym.exception.NotFoundException;
 import it.gym.model.Gym;
 import it.gym.repository.GymRepository;
-import java.util.*;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
 import org.assertj.core.api.AssertionsForClassTypes;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +29,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 @RunWith(SpringRunner.class)
 public class GymServiceTest {
 
-  @MockBean private GymRepository repository;
+  @MockBean GymRepository repository;
+  @MockBean ObjectMapper mapper;
 
   @TestConfiguration
   static class GymServiceTestContextConfiguration {

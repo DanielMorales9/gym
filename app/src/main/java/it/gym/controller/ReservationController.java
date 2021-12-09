@@ -9,7 +9,6 @@ import it.gym.pojo.Event;
 import java.security.Principal;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.RepositoryRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -23,7 +22,11 @@ public class ReservationController {
   private static final Logger logger =
       LoggerFactory.getLogger(ReservationController.class);
 
-  @Autowired private ReservationFacade facade;
+  private final ReservationFacade facade;
+
+  public ReservationController(ReservationFacade facade) {
+    this.facade = facade;
+  }
 
   @PostMapping(path = "/{gymId}")
   public ResponseEntity<ReservationResource> createReservationFromBundle(

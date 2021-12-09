@@ -7,7 +7,6 @@ import it.gym.model.Workout;
 import java.io.IOException;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -20,7 +19,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/workouts")
 public class WorkoutController {
 
-  @Autowired private WorkoutFacade facade;
+  private final WorkoutFacade facade;
+
+  public WorkoutController(WorkoutFacade facade) {
+    this.facade = facade;
+  }
 
   @GetMapping(path = "/{id}")
   @ResponseBody
